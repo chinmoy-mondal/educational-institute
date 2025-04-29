@@ -13,10 +13,10 @@ class App extends BaseConfig
      *
      * URL to your CodeIgniter root. Typically, this will be your base URL,
      * WITH a trailing slash:
-     *
+     *s
      * E.g., http://example.com/
      */
-    public string $baseURL = 'http://mulss.edu.bd/';
+    public string $baseURL = 'https://mulss.edu.bd/';
 
     /**
      * Allowed Hostnames in the Site URL other than the hostname in the baseURL.
