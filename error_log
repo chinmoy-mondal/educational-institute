@@ -1,0 +1,3 @@
+[29-Mar-2025 01:07:18 UTC] PHP Fatal error:  Constant expression contains invalid operations in /home10/purnota/public_html/ci/app/Controllers/BaseController.php on line 24
+[29-Mar-2025 01:08:17 UTC] PHP Fatal error:  Constant expression contains invalid operations in /home10/purnota/public_html/ci/app/Controllers/BaseController.php on line 24
+[29-Mar-2025 01:08:20 UTC] PHP Fatal error:  Constant expression contains invalid operations in /home10/purnota/public_html/ci/app/Controllers/BaseController.php on line 24

@@ -1,0 +1,11 @@
+CRITICAL - 2025-03-30 17:44:49 --> Error: Class "Faker\Factory" not found
+[Method: GET, Route: seeder]
+in APPPATH/Database/Seeds/UserSeeder.php on line 12.
+ 1 SYSTEMPATH/Database/Seeder.php(147): App\Database\Seeds\UserSeeder->run()
+ 2 APPPATH/Controllers/SeederController.php(13): CodeIgniter\Database\Seeder->call()
+ 3 SYSTEMPATH/CodeIgniter.php(933): App\Controllers\SeederController->runSeeder()
+ 4 SYSTEMPATH/CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController()
+ 5 SYSTEMPATH/CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest()
+ 6 SYSTEMPATH/Boot.php(334): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH/Boot.php(67): CodeIgniter\Boot::runCodeIgniter()
+ 8 FCPATH/index.php(56): CodeIgniter\Boot::bootWeb()
