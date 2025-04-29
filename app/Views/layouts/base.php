@@ -10,7 +10,7 @@
 
 
 
-        <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
+        <script src="https://kit.fontawesome.com/cbc3035612.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
         <style>
@@ -94,7 +94,7 @@
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background-image: url('img/your-background.jpg');  /* Replace with your background image */
+                background-image: url('<?= base_url('public/assets/img/ima1.jpg'); ?>');  /* Replace with your background image */
                 background-size: cover;
                 background-position: center;
                 opacity: 0.1;  /* Light opacity for subtle background image */
