@@ -2,7 +2,7 @@
                     <div class="row">
                         <div class="col-md-4 mb-4">
                             <div class="course-card">
-                                <img src="<?= base_url('assets/img/ima2.jpg'); ?>" alt="Course 1">
+                                <img src="<?= base_url('public/assets/img/ima2.jpg'); ?>" alt="Course 1">
                                 <h3>Course Title 1</h3>
                                 <p>Short description of the course content.</p>
                                 <a href="#" class="btn btn-light-custom">Learn More</a>
