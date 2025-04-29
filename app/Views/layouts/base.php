@@ -5,9 +5,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Mulgram Secondary School</title>
 
-        <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap.min.css') ?>">
-        <script src="<?= base_url('assets/js/jquery.min.js') ?>"></script>
-        <script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
+        <link rel="stylesheet" href="<?= base_url('index.php/assets/css/bootstrap.min.css') ?>">
+        <script src="<?= base_url('index.php/assets/js/jquery.min.js') ?>"></script>
+        <script src="<?= base_url('index.php/assets/js/bootstrap.bundle.min.js') ?>"></script>
 
 
 
