@@ -6,7 +6,7 @@ class Account extends BaseController
 {
     public function Register()
     {
-        echo "regi"
+        echo "regi";
         // return view('regi');
     }
     public function Login()
