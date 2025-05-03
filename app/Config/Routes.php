@@ -32,10 +32,8 @@ $routes->get('/activity-details/(:num)', 'Home::activityDetails/$1');
 
 $routes->get('/page', 'Page::index');
 
-$routes->get('register', 'Register::index');
-$routes->post('register/submit', 'Register::submit');
-
-$routes->get('login', 'Login::index');
+$routes->get('register', 'Account::register');
+$routes->get('login', 'Account::login');
 
 $routes->set404Override(function () {
     $controller = new \App\Controllers\ErrorController();
