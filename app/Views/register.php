@@ -7,54 +7,136 @@
     <?= $this->include("structure/header"); ?>
 </div>
 
-<!-- Registration Form -->
-<div class="container content mb-5 pb-5"> <!-- Added spacing with mb-5 pb-5 -->
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-lg rounded">
-                <div class="card-body">
-                    <h3 class="card-title text-center mb-4">Student Registration</h3>
-                    <form action="#" method="post">
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter full name" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="class" class="form-label">Class</label>
-                            <select class="form-select" id="class" name="class" required>
-                                <option value="">Select Class</option>
-                                <?php for ($i = 1; $i <= 10; $i++): ?>
-                                    <option value="<?= $i ?>">Class <?= $i ?></option>
-                                <?php endfor; ?>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Create password" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="confirm_password" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Repeat password" required>
-                        </div>
-
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Register</button>
-                        </div>
-                    </form>
-                    <p class="text-center mt-3">Already have an account? <a href="#">Login here</a></p>
-                </div>
+<section class="h-100 bg-dark">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col">
+        <div class="card card-registration my-4">
+          <div class="row g-0">
+            <div class="col-xl-6 d-none d-xl-block">
+              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img4.webp"
+                alt="Sample photo" class="img-fluid"
+                style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;" />
             </div>
+            <div class="col-xl-6">
+              <div class="card-body p-md-5 text-black">
+                <h3 class="mb-5 text-uppercase">Student registration form</h3>
+
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <div data-mdb-input-init class="form-outline">
+                      <input type="text" id="form3Example1m" class="form-control form-control-lg" />
+                      <label class="form-label" for="form3Example1m">First name</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div data-mdb-input-init class="form-outline">
+                      <input type="text" id="form3Example1n" class="form-control form-control-lg" />
+                      <label class="form-label" for="form3Example1n">Last name</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+                    <div data-mdb-input-init class="form-outline">
+                      <input type="text" id="form3Example1m1" class="form-control form-control-lg" />
+                      <label class="form-label" for="form3Example1m1">Mother's name</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-4">
+                    <div data-mdb-input-init class="form-outline">
+                      <input type="text" id="form3Example1n1" class="form-control form-control-lg" />
+                      <label class="form-label" for="form3Example1n1">Father's name</label>
+                    </div>
+                  </div>
+                </div>
+
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input type="text" id="form3Example8" class="form-control form-control-lg" />
+                  <label class="form-label" for="form3Example8">Address</label>
+                </div>
+
+                <div class="d-md-flex justify-content-start align-items-center mb-4 py-2">
+
+                  <h6 class="mb-0 me-4">Gender: </h6>
+
+                  <div class="form-check form-check-inline mb-0 me-4">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="femaleGender"
+                      value="option1" />
+                    <label class="form-check-label" for="femaleGender">Female</label>
+                  </div>
+
+                  <div class="form-check form-check-inline mb-0 me-4">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="maleGender"
+                      value="option2" />
+                    <label class="form-check-label" for="maleGender">Male</label>
+                  </div>
+
+                  <div class="form-check form-check-inline mb-0">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="otherGender"
+                      value="option3" />
+                    <label class="form-check-label" for="otherGender">Other</label>
+                  </div>
+
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-4">
+
+                    <select data-mdb-select-init>
+                      <option value="1">State</option>
+                      <option value="2">Option 1</option>
+                      <option value="3">Option 2</option>
+                      <option value="4">Option 3</option>
+                    </select>
+
+                  </div>
+                  <div class="col-md-6 mb-4">
+
+                    <select data-mdb-select-init>
+                      <option value="1">City</option>
+                      <option value="2">Option 1</option>
+                      <option value="3">Option 2</option>
+                      <option value="4">Option 3</option>
+                    </select>
+
+                  </div>
+                </div>
+
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input type="text" id="form3Example9" class="form-control form-control-lg" />
+                  <label class="form-label" for="form3Example9">DOB</label>
+                </div>
+
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input type="text" id="form3Example90" class="form-control form-control-lg" />
+                  <label class="form-label" for="form3Example90">Pincode</label>
+                </div>
+
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input type="text" id="form3Example99" class="form-control form-control-lg" />
+                  <label class="form-label" for="form3Example99">Course</label>
+                </div>
+
+                <div data-mdb-input-init class="form-outline mb-4">
+                  <input type="text" id="form3Example97" class="form-control form-control-lg" />
+                  <label class="form-label" for="form3Example97">Email ID</label>
+                </div>
+
+                <div class="d-flex justify-content-end pt-3">
+                  <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-light btn-lg">Reset all</button>
+                  <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-warning btn-lg ms-2">Submit form</button>
+                </div>
+
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+  </div>
+</section>
 
 <!-- Footer Include -->
 <?= $this->include("structure/footer"); ?>
