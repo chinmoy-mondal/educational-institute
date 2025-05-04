@@ -28,6 +28,10 @@ $routes->get('/apply', 'Home::apply');
 $routes->get('/course-details/(:num)', 'Home::courseDetails/$1');
 $routes->get('/activity-details/(:num)', 'Home::activityDetails/$1');
 
+$routes->get('/student', 'Student::index');
+$routes->post('/student/save', 'Student::save');
+
+
 
 
 $routes->get('/page', 'Page::index');

@@ -8,8 +8,10 @@
 </div>
 
 <!-- Registration Form -->
-<div class="container content mb-5 pb-5"> <!-- Added spacing with mb-5 pb-5 -->
-hello
+<div class="container content mb-5 pb-5"> 
+    <div class="col col-sm-6 col-md-6 col-lg-4 col-xl-3">
+        Register
+    </div>
 </div>
 
 <!-- Footer Include -->
