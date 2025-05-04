@@ -65,6 +65,11 @@
                             <input type="text" name="phone" class="form-control" required>
                         </div>
                         <div class="col-md-6">
+                            <label class="form-label">Student Picture</label>
+                            <input type="file" name="student_pic" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
                             <label class="form-label">Student Birth Registration Card</label>
                             <input type="file" name="birth_registration_pic" class="form-control" required>
                         </div>

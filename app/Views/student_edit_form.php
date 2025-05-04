@@ -46,6 +46,15 @@
                             <input type="text" name="phone" class="form-control" value="<?= esc($student['phone']) ?>">
                         </div>
                         <div class="col-md-6">
+                            <label class="form-label">Student Picture (leave empty to keep existing)</label>
+                            <?php if (!empty($student['student_pic'])): ?>
+                                <div class="mb-2">
+                                    <img src="/<?= esc($student['student_pic']) ?>" class="img-thumbnail" width="100">
+                                </div>
+                            <?php endif; ?>
+                            <input type="file" name="student_pic" class="form-control">
+                        </div>
+                        <div class="col-md-6">
                             <label class="form-label">Birth Reg. Card (leave empty to keep existing)</label>
                             <input type="file" name="birth_registration_pic" class="form-control">
                         </div>

@@ -15,6 +15,7 @@ class Student extends BaseController
 
         $validation = \Config\Services::validation();
 
+        // Validation rules, including new 'student_pic'
         $validation->setRules([
             'student_name' => 'required',
             'roll' => 'required',
@@ -26,6 +27,7 @@ class Student extends BaseController
             'birth_registration_pic' => 'uploaded[birth_registration_pic]|is_image[birth_registration_pic]',
             'father_id_pic' => 'uploaded[father_id_pic]|is_image[father_id_pic]',
             'mother_id_pic' => 'uploaded[mother_id_pic]|is_image[mother_id_pic]',
+            'student_pic' => 'uploaded[student_pic]|is_image[student_pic]',
         ]);
 
         if (!$validation->withRequest($this->request)->run()) {
@@ -34,6 +36,7 @@ class Student extends BaseController
 
         $model = new StudentModel();
 
+        // Prepare data for saving
         $data = [
             'student_name' => $this->request->getPost('student_name'),
             'roll' => $this->request->getPost('roll'),
@@ -45,6 +48,7 @@ class Student extends BaseController
             'birth_registration_pic' => $this->uploadFile('birth_registration_pic'),
             'father_id_pic' => $this->uploadFile('father_id_pic'),
             'mother_id_pic' => $this->uploadFile('mother_id_pic'),
+            'student_pic' => $this->uploadFile('student_pic'),
         ];
 
         $model->save($data);
@@ -52,6 +56,7 @@ class Student extends BaseController
         return redirect()->to('/student')->with('success', 'Student Info Saved!');
     }
 
+    // Reusable file upload handler
     private function uploadFile($field)
     {
         $file = $this->request->getFile($field);
@@ -65,14 +70,14 @@ class Student extends BaseController
 
     public function list()
     {
-        $model = new \App\Models\StudentModel();
+        $model = new StudentModel();
         $data['students'] = $model->findAll();
         return view('student_list', $data);
     }
 
     public function edit($id)
     {
-        $model = new \App\Models\StudentModel();
+        $model = new StudentModel();
         $student = $model->find($id);
 
         if (!$student) {
@@ -84,7 +89,7 @@ class Student extends BaseController
 
     public function update($id)
     {
-        $model = new \App\Models\StudentModel();
+        $model = new StudentModel();
         $student = $model->find($id);
 
         if (!$student) {
@@ -93,12 +98,12 @@ class Student extends BaseController
 
         $data = $this->request->getPost();
 
-        // Handle image updates
-        foreach (['birth_registration_pic', 'father_id_pic', 'mother_id_pic'] as $field) {
+        // Handle file updates including 'student_pic'
+        foreach (['birth_registration_pic', 'father_id_pic', 'mother_id_pic', 'student_pic'] as $field) {
             $file = $this->request->getFile($field);
 
             if ($file && $file->isValid() && !$file->hasMoved()) {
-                // Delete old image if it exists
+                // Delete old image
                 if (!empty($student[$field]) && file_exists($student[$field])) {
                     unlink($student[$field]);
                 }
@@ -107,7 +112,7 @@ class Student extends BaseController
                 $file->move('uploads/', $newName);
                 $data[$field] = 'uploads/' . $newName;
             } else {
-                unset($data[$field]); // Keep old if not replaced
+                unset($data[$field]); // Keep old one
             }
         }
 
@@ -115,18 +120,17 @@ class Student extends BaseController
         return redirect()->to('/student/list')->with('success', 'Student updated successfully.');
     }
 
-
     public function delete($id)
     {
-        $model = new \App\Models\StudentModel();
+        $model = new StudentModel();
         $student = $model->find($id);
 
         if (!$student) {
             return redirect()->to('/student/list')->with('error', 'Student not found');
         }
 
-        // Delete images
-        foreach (['birth_registration_pic', 'father_id_pic', 'mother_id_pic'] as $field) {
+        // Delete all related images including student_pic
+        foreach (['birth_registration_pic', 'father_id_pic', 'mother_id_pic', 'student_pic'] as $field) {
             if (!empty($student[$field]) && file_exists($student[$field])) {
                 unlink($student[$field]);
             }
@@ -136,8 +140,4 @@ class Student extends BaseController
 
         return redirect()->to('/student/list')->with('success', 'Student deleted successfully.');
     }
-
-
-
-
 }

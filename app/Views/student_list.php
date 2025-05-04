@@ -30,6 +30,7 @@
                         <table class="table table-bordered table-striped align-middle text-center">
                             <thead class="table-dark">
                                 <tr>
+                                    <th>Student Pic</th>
                                     <th>Name</th>
                                     <th>Roll</th>
                                     <th>Class</th>
@@ -47,6 +48,12 @@
                                 <?php if (!empty($students)): ?>
                                     <?php foreach ($students as $student): ?>
                                         <tr>
+                                            <td>
+                                                <?php if ($student['student_pic']): ?>
+                                                    <img src="/<?= esc($student['student_pic']) ?>" class="img-thumbnail" width="80">
+                                                <?php endif; ?>
+                                            </td>
+
                                             <td><?= esc($student['student_name']) ?></td>
                                             <td><?= esc($student['roll']) ?></td>
                                             <td><?= esc($student['class']) ?></td>
