@@ -1,41 +1,94 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Student Info Form</title>
-</head>
-<body>
-    <h2>Student Info Form</h2>
+<?= $this->extend("layouts/base.php") ?>
 
-    <?php if (session()->getFlashdata('success')): ?>
-        <p style="color: green;"><?= session()->getFlashdata('success') ?></p>
-    <?php endif; ?>
+<?= $this->section("content"); ?>
 
-    <?php if (session('errors')): ?>
-        <ul style="color: red;">
-            <?php foreach (session('errors') as $error): ?>
-                <li><?= esc($error) ?></li>
-            <?php endforeach; ?>
-        </ul>
-    <?php endif; ?>
+<!-- Fixed Wrapper for Navbar -->
+<div class="fixed-header">
+    <?= $this->include("structure/header"); ?>
+</div>
 
-    <form action="/student/save" method="post" enctype="multipart/form-data">
-        <?= csrf_field() ?>
-        <label>Name:</label><input type="text" name="student_name"><br>
-        <label>Roll:</label><input type="text" name="roll"><br>
-        <label>Class:</label><input type="text" name="class"><br>
-        <label>ESIF:</label><input type="text" name="esif"><br>
-        <label>Section:</label>
-		<select name="section">
-		    <option value="">Select Section</option>
-		    <option value="General">General</option>
-		    <option value="BM">BM</option>
-		</select><br>
-        <label>Date of Birth:</label><input type="date" name="dob"><br>
-        <label>Phone:</label><input type="text" name="phone"><br>
-        <label>Birth Reg. Card:</label><input type="file" name="birth_registration_pic"><br>
-        <label>Father ID:</label><input type="file" name="father_id_pic"><br>
-        <label>Mother ID:</label><input type="file" name="mother_id_pic"><br>
-        <button type="submit">Submit</button>
-    </form>
-</body>
-</html>
+<!-- Student Registration Form -->
+<div class="container content mb-5 pb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-lg rounded">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Student Registration</h3>
+
+                    <?php if (session()->getFlashdata('success')): ?>
+                        <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
+                    <?php endif; ?>
+
+                    <?php if (session('errors')): ?>
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                <?php foreach (session('errors') as $error): ?>
+                                    <li><?= esc($error) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+
+                    <form action="/student/save" method="post" enctype="multipart/form-data" class="row g-3">
+                        <?= csrf_field() ?>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Student Name</label>
+                            <input type="text" name="student_name" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Roll</label>
+                            <input type="text" name="roll" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Class</label>
+                            <input type="text" name="class" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Section</label>
+                            <select name="section" class="form-select" required>
+                                <option value="">Select Section</option>
+                                <option value="General">General</option>
+                                <option value="BM">BM</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">ESIF</label>
+                            <input type="text" name="esif" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Date of Birth</label>
+                            <input type="date" name="dob" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone Number</label>
+                            <input type="text" name="phone" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Student Birth Registration Card</label>
+                            <input type="file" name="birth_registration_pic" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Father's ID Card</label>
+                            <input type="file" name="father_id_pic" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Mother's ID Card</label>
+                            <input type="file" name="mother_id_pic" class="form-control" required>
+                        </div>
+
+                        <div class="col-12 text-center">
+                            <button type="submit" class="btn btn-primary px-5">Submit</button>
+                            <a href="/student/list" class="btn btn-secondary">View All Students</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer Include -->
+<?= $this->include("structure/footer"); ?>
+
+<?= $this->endSection(); ?>
