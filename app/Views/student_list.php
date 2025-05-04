@@ -87,7 +87,7 @@
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
-                                        <td colspan="11" class="text-center">No students found.</td>
+                                        <td colspan="12" class="text-center">No students found.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
