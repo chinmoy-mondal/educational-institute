@@ -62,4 +62,11 @@ class Student extends BaseController
         }
         return null;
     }
+    
+    public function list()
+    {
+        $model = new \App\Models\StudentModel();
+        $data['students'] = $model->findAll();
+        return view('student_list', $data);
+    }
 }

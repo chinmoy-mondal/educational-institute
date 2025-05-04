@@ -30,6 +30,8 @@ $routes->get('/activity-details/(:num)', 'Home::activityDetails/$1');
 
 $routes->get('/student', 'Student::index');
 $routes->post('/student/save', 'Student::save');
+$routes->get('/student/list', 'Student::list');
+
 
 
 
