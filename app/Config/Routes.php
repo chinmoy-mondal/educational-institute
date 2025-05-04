@@ -32,7 +32,9 @@ $routes->get('/student', 'Student::index');
 $routes->post('/student/save', 'Student::save');
 $routes->get('/student/list', 'Student::list');
 
-
+$routes->get('/student/edit/(:num)', 'Student::edit/$1');
+$routes->post('/student/update/(:num)', 'Student::update/$1');
+$routes->post('/student/delete/(:num)', 'Student::delete/$1');
 
 
 

@@ -62,11 +62,60 @@ class Student extends BaseController
         }
         return null;
     }
-    
+
     public function list()
     {
         $model = new \App\Models\StudentModel();
         $data['students'] = $model->findAll();
         return view('student_list', $data);
     }
+
+    public function edit($id)
+    {
+        $model = new \App\Models\StudentModel();
+        $student = $model->find($id);
+
+        if (!$student) {
+            return redirect()->to('/student/list')->with('error', 'Student not found');
+        }
+
+        return view('student_edit_form', ['student' => $student]);
+    }
+
+    public function update($id)
+    {
+        $model = new \App\Models\StudentModel();
+        $student = $model->find($id);
+
+        if (!$student) {
+            return redirect()->to('/student/list')->with('error', 'Student not found');
+        }
+
+        $data = $this->request->getPost();
+
+        // Handle optional file uploads
+        foreach (['birth_registration_pic', 'father_id_pic', 'mother_id_pic'] as $field) {
+            $file = $this->request->getFile($field);
+            if ($file && $file->isValid() && !$file->hasMoved()) {
+                $newName = $file->getRandomName();
+                $file->move('uploads/', $newName);
+                $data[$field] = 'uploads/' . $newName;
+            } else {
+                unset($data[$field]);
+            }
+        }
+
+        $model->update($id, $data);
+        return redirect()->to('/student/list')->with('success', 'Student updated successfully.');
+    }
+
+    public function delete($id)
+    {
+        $model = new \App\Models\StudentModel();
+        $model->delete($id);
+        return redirect()->to('/student/list')->with('success', 'Student deleted.');
+    }
+
+
+
 }
