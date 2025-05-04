@@ -93,15 +93,21 @@ class Student extends BaseController
 
         $data = $this->request->getPost();
 
-        // Handle optional file uploads
+        // Handle image updates
         foreach (['birth_registration_pic', 'father_id_pic', 'mother_id_pic'] as $field) {
             $file = $this->request->getFile($field);
+
             if ($file && $file->isValid() && !$file->hasMoved()) {
+                // Delete old image if it exists
+                if (!empty($student[$field]) && file_exists($student[$field])) {
+                    unlink($student[$field]);
+                }
+
                 $newName = $file->getRandomName();
                 $file->move('uploads/', $newName);
                 $data[$field] = 'uploads/' . $newName;
             } else {
-                unset($data[$field]);
+                unset($data[$field]); // Keep old if not replaced
             }
         }
 
@@ -109,12 +115,28 @@ class Student extends BaseController
         return redirect()->to('/student/list')->with('success', 'Student updated successfully.');
     }
 
+
     public function delete($id)
     {
         $model = new \App\Models\StudentModel();
+        $student = $model->find($id);
+
+        if (!$student) {
+            return redirect()->to('/student/list')->with('error', 'Student not found');
+        }
+
+        // Delete images
+        foreach (['birth_registration_pic', 'father_id_pic', 'mother_id_pic'] as $field) {
+            if (!empty($student[$field]) && file_exists($student[$field])) {
+                unlink($student[$field]);
+            }
+        }
+
         $model->delete($id);
-        return redirect()->to('/student/list')->with('success', 'Student deleted.');
+
+        return redirect()->to('/student/list')->with('success', 'Student deleted successfully.');
     }
+
 
 
 
