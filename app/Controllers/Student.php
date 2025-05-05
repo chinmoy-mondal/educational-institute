@@ -24,10 +24,10 @@ class Student extends BaseController
             'section' => 'required|in_list[General - Science,General - Arts,Vocational - Food Processing and Preservation,Vocational - IT Support and IoT Basics]',
             'dob' => 'required|valid_date',
             'phone' => 'required',
-            'birth_registration_pic' => 'uploaded[birth_registration_pic]|is_image[birth_registration_pic]',
-            'father_id_pic' => 'uploaded[father_id_pic]|is_image[father_id_pic]',
-            'mother_id_pic' => 'uploaded[mother_id_pic]|is_image[mother_id_pic]',
-            'student_pic' => 'uploaded[student_pic]|is_image[student_pic]',
+            'birth_registration_pic' => 'uploaded[birth_registration_pic]|is_image[birth_registration_pic]|max_size[birth_registration_pic,1024]',
+            'father_id_pic' => 'uploaded[father_id_pic]|is_image[father_id_pic]|max_size[father_id_pic,1024]',
+            'mother_id_pic' => 'uploaded[mother_id_pic]|is_image[mother_id_pic]|max_size[mother_id_pic,1024]',
+            'student_pic' => 'uploaded[student_pic]|is_image[student_pic]|max_size[student_pic,100]|max_dims[student_pic,300,300]',
         ]);
 
         if (!$validation->withRequest($this->request)->run()) {
