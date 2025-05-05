@@ -44,12 +44,14 @@
                             <label class="form-label">Class</label>
                             <input type="text" name="class" class="form-control" required>
                         </div>
-                        <div class="col-md-6">
+                       <div class="col-md-6">
                             <label class="form-label">Section</label>
                             <select name="section" class="form-select" required>
                                 <option value="">Select Section</option>
-                                <option value="General">General</option>
-                                <option value="BM">BM</option>
+                                <option value="General - Science">General → Science</option>
+                                <option value="General - Arts">General → Arts</option>
+                                <option value="Vocational - Food Processing and Preservation">Vocational → Food Processing and Preservation</option>
+                                <option value="Vocational - IT Support and IoT Basics">Vocational → IT Support and IoT Basics</option>
                             </select>
                         </div>
                         <div class="col-md-6">
