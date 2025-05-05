@@ -21,7 +21,7 @@ class Student extends BaseController
             'roll' => 'required',
             'class' => 'required',
             'esif' => 'required',
-            'section' => 'required|in_list[General,BM]',
+            'section' => 'required|in_list[General - Science,General - Arts,Vocational - Food Processing and Preservation,Vocational - IT Support and IoT Basics]',
             'dob' => 'required|valid_date',
             'phone' => 'required',
             'birth_registration_pic' => 'uploaded[birth_registration_pic]|is_image[birth_registration_pic]',
