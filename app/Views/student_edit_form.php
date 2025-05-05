@@ -26,6 +26,7 @@
                             <label class="form-label">Class</label>
                             <input type="text" name="class" class="form-control" value="<?= esc($student['class']) ?>">
                         </div>
+                        <!-- chinmoy -->
                        <div class="col-md-6">
                             <label class="form-label">Section</label>
                             <select name="section" class="form-select" required>
