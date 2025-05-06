@@ -1,28 +1,44 @@
 <?= $this->extend("layouts/base.php") ?>
 <?= $this->section("content"); ?>
 
+<!-- Fixed Wrapper for Navbar -->
 <div class="fixed-header">
     <?= $this->include("structure/header"); ?>
 </div>
 
+<!-- Student Registration Form -->
 <div class="container content mb-5 pb-5">
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card shadow-lg rounded">
                 <div class="card-body">
-                    <h3 class="card-title text-center mb-4">Edit Student</h3>
+                    <h3 class="card-title text-center mb-4">Student Registration</h3>
 
-                    <form action="/student/update/<?= $student['id'] ?>" method="post" enctype="multipart/form-data" class="row g-3">
+                    <?php if (session()->getFlashdata('success')): ?>
+                        <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
+                    <?php endif; ?>
+
+                    <?php if (session('errors')): ?>
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                <?php foreach (session('errors') as $error): ?>
+                                    <li><?= esc($error) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+
+                    <form action="/student/save" method="post" enctype="multipart/form-data" class="row g-3">
                         <?= csrf_field() ?>
 
                         <div class="col-md-6">
                             <label class="form-label">Student Name</label>
-                            <input type="text" name="student_name" class="form-control" value="<?= esc($student['student_name']) ?>" required>
+                            <input type="text" name="student_name" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Roll</label>
-                            <input type="text" name="roll" class="form-control" value="<?= esc($student['roll']) ?>" required>
+                            <input type="text" name="roll" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
@@ -30,7 +46,7 @@
                             <select name="class" id="class-select" class="form-select" required>
                                 <option value="">Select Class</option>
                                 <?php for ($i = 6; $i <= 10; $i++): ?>
-                                    <option value="<?= $i ?>" <?= ($student['class'] == $i) ? 'selected' : '' ?>>Class <?= $i ?></option>
+                                    <option value="<?= $i ?>">Class <?= $i ?></option>
                                 <?php endfor; ?>
                             </select>
                         </div>
@@ -39,56 +55,51 @@
                             <label class="form-label">Section (Only for Class 9 & 10)</label>
                             <select name="section" class="form-select">
                                 <option value="">Select Section (Optional)</option>
-                                <option value="General - Science" <?= ($student['section'] === 'General - Science') ? 'selected' : '' ?>>General → Science</option>
-                                <option value="General - Arts" <?= ($student['section'] === 'General - Arts') ? 'selected' : '' ?>>General → Arts</option>
-                                <option value="Vocational - Food Processing and Preservation" <?= ($student['section'] === 'Vocational - Food Processing and Preservation') ? 'selected' : '' ?>>Vocational → Food Processing and Preservation</option>
-                                <option value="Vocational - IT Support and IoT Basics" <?= ($student['section'] === 'Vocational - IT Support and IoT Basics') ? 'selected' : '' ?>>Vocational → IT Support and IoT Basics</option>
+                                <option value="General - Science">General → Science</option>
+                                <option value="General - Arts">General → Arts</option>
+                                <option value="Vocational - Food Processing and Preservation">Vocational → Food Processing and Preservation</option>
+                                <option value="Vocational - IT Support and IoT Basics">Vocational → IT Support and IoT Basics</option>
                             </select>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">ESIF</label>
-                            <input type="text" name="esif" class="form-control" value="<?= esc($student['esif']) ?>" required>
+                            <input type="text" name="esif" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Date of Birth</label>
-                            <input type="date" name="dob" class="form-control" value="<?= esc($student['dob']) ?>" required>
+                            <input type="date" name="dob" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Phone</label>
-                            <input type="text" name="phone" class="form-control" value="<?= esc($student['phone']) ?>" required>
+                            <label class="form-label">Phone Number</label>
+                            <input type="text" name="phone" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Student Picture (leave empty to keep existing)</label>
-                            <?php if (!empty($student['student_pic'])): ?>
-                                <div class="mb-2">
-                                    <img src="/<?= esc($student['student_pic']) ?>" class="img-thumbnail" width="100">
-                                </div>
-                            <?php endif; ?>
-                            <input type="file" name="student_pic" class="form-control">
+                            <label class="form-label">Student Picture</label>
+                            <input type="file" name="student_pic" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Birth Registration Number</label>
-                            <input type="text" name="birth_registration_number" class="form-control" value="<?= esc($student['birth_registration_number']) ?>" required>
+                            <input type="text" name="birth_registration_number" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Father NID Number</label>
-                            <input type="text" name="father_nid_number" class="form-control" value="<?= esc($student['father_nid_number']) ?>" required>
+                            <input type="text" name="father_nid_number" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Mother NID Number</label>
-                            <input type="text" name="mother_nid_number" class="form-control" value="<?= esc($student['mother_nid_number']) ?>" required>
+                            <input type="text" name="mother_nid_number" class="form-control" required>
                         </div>
 
                         <div class="col-12 text-center">
-                            <button type="submit" class="btn btn-primary px-5">Update</button>
-                            <a href="/student/list" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-5">Submit</button>
+                            <a href="/student/list" class="btn btn-secondary">View All Students</a>
                         </div>
                     </form>
                 </div>
@@ -99,6 +110,7 @@
 
 <?= $this->include("structure/footer"); ?>
 
+<!-- JavaScript to toggle section -->
 <script>
     function toggleSectionField() {
         const classSelect = document.getElementById('class-select');
@@ -122,28 +134,44 @@
 <?= $this->extend("layouts/base.php") ?>
 <?= $this->section("content"); ?>
 
+<!-- Fixed Wrapper for Navbar -->
 <div class="fixed-header">
     <?= $this->include("structure/header"); ?>
 </div>
 
+<!-- Student Registration Form -->
 <div class="container content mb-5 pb-5">
     <div class="row justify-content-center">
         <div class="col-md-10">
             <div class="card shadow-lg rounded">
                 <div class="card-body">
-                    <h3 class="card-title text-center mb-4">Edit Student</h3>
+                    <h3 class="card-title text-center mb-4">Student Registration</h3>
 
-                    <form action="/student/update/<?= $student['id'] ?>" method="post" enctype="multipart/form-data" class="row g-3">
+                    <?php if (session()->getFlashdata('success')): ?>
+                        <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
+                    <?php endif; ?>
+
+                    <?php if (session('errors')): ?>
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                <?php foreach (session('errors') as $error): ?>
+                                    <li><?= esc($error) ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+
+                    <form action="/student/save" method="post" enctype="multipart/form-data" class="row g-3">
                         <?= csrf_field() ?>
 
                         <div class="col-md-6">
                             <label class="form-label">Student Name</label>
-                            <input type="text" name="student_name" class="form-control" value="<?= esc($student['student_name']) ?>" required>
+                            <input type="text" name="student_name" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Roll</label>
-                            <input type="text" name="roll" class="form-control" value="<?= esc($student['roll']) ?>" required>
+                            <input type="text" name="roll" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
@@ -151,7 +179,7 @@
                             <select name="class" id="class-select" class="form-select" required>
                                 <option value="">Select Class</option>
                                 <?php for ($i = 6; $i <= 10; $i++): ?>
-                                    <option value="<?= $i ?>" <?= ($student['class'] == $i) ? 'selected' : '' ?>>Class <?= $i ?></option>
+                                    <option value="<?= $i ?>">Class <?= $i ?></option>
                                 <?php endfor; ?>
                             </select>
                         </div>
@@ -160,56 +188,51 @@
                             <label class="form-label">Section (Only for Class 9 & 10)</label>
                             <select name="section" class="form-select">
                                 <option value="">Select Section (Optional)</option>
-                                <option value="General - Science" <?= ($student['section'] === 'General - Science') ? 'selected' : '' ?>>General → Science</option>
-                                <option value="General - Arts" <?= ($student['section'] === 'General - Arts') ? 'selected' : '' ?>>General → Arts</option>
-                                <option value="Vocational - Food Processing and Preservation" <?= ($student['section'] === 'Vocational - Food Processing and Preservation') ? 'selected' : '' ?>>Vocational → Food Processing and Preservation</option>
-                                <option value="Vocational - IT Support and IoT Basics" <?= ($student['section'] === 'Vocational - IT Support and IoT Basics') ? 'selected' : '' ?>>Vocational → IT Support and IoT Basics</option>
+                                <option value="General - Science">General → Science</option>
+                                <option value="General - Arts">General → Arts</option>
+                                <option value="Vocational - Food Processing and Preservation">Vocational → Food Processing and Preservation</option>
+                                <option value="Vocational - IT Support and IoT Basics">Vocational → IT Support and IoT Basics</option>
                             </select>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">ESIF</label>
-                            <input type="text" name="esif" class="form-control" value="<?= esc($student['esif']) ?>" required>
+                            <input type="text" name="esif" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Date of Birth</label>
-                            <input type="date" name="dob" class="form-control" value="<?= esc($student['dob']) ?>" required>
+                            <input type="date" name="dob" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Phone</label>
-                            <input type="text" name="phone" class="form-control" value="<?= esc($student['phone']) ?>" required>
+                            <label class="form-label">Phone Number</label>
+                            <input type="text" name="phone" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Student Picture (leave empty to keep existing)</label>
-                            <?php if (!empty($student['student_pic'])): ?>
-                                <div class="mb-2">
-                                    <img src="/<?= esc($student['student_pic']) ?>" class="img-thumbnail" width="100">
-                                </div>
-                            <?php endif; ?>
-                            <input type="file" name="student_pic" class="form-control">
+                            <label class="form-label">Student Picture</label>
+                            <input type="file" name="student_pic" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Birth Registration Number</label>
-                            <input type="text" name="birth_registration_number" class="form-control" value="<?= esc($student['birth_registration_number']) ?>" required>
+                            <input type="text" name="birth_registration_number" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Father NID Number</label>
-                            <input type="text" name="father_nid_number" class="form-control" value="<?= esc($student['father_nid_number']) ?>" required>
+                            <input type="text" name="father_nid_number" class="form-control" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Mother NID Number</label>
-                            <input type="text" name="mother_nid_number" class="form-control" value="<?= esc($student['mother_nid_number']) ?>" required>
+                            <input type="text" name="mother_nid_number" class="form-control" required>
                         </div>
 
                         <div class="col-12 text-center">
-                            <button type="submit" class="btn btn-primary px-5">Update</button>
-                            <a href="/student/list" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-5">Submit</button>
+                            <a href="/student/list" class="btn btn-secondary">View All Students</a>
                         </div>
                     </form>
                 </div>
@@ -220,6 +243,7 @@
 
 <?= $this->include("structure/footer"); ?>
 
+<!-- JavaScript to toggle section -->
 <script>
     function toggleSectionField() {
         const classSelect = document.getElementById('class-select');
