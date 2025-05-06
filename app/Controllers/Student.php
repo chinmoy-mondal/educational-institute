@@ -15,20 +15,20 @@ class Student extends BaseController
 
         $validation = \Config\Services::validation();
 
-        // Validation rules, including new 'student_pic'
         $validation->setRules([
             'student_name' => 'required',
             'roll' => 'required',
-            'class' => 'required',
+            'class' => 'required|in_list[6,7,8,9,10]',
             'esif' => 'required',
-            'section' => 'required|in_list[General - Science,General - Arts,Vocational - Food Processing and Preservation,Vocational - IT Support and IoT Basics]',
+            'section' => 'permit_empty|in_list[General - Science,General - Arts,Vocational - Food Processing and Preservation,Vocational - IT Support and IoT Basics]',
             'dob' => 'required|valid_date',
             'phone' => 'required',
-            'birth_registration_pic' => 'uploaded[birth_registration_pic]|is_image[birth_registration_pic]|max_size[birth_registration_pic,1024]',
-            'father_id_pic' => 'uploaded[father_id_pic]|is_image[father_id_pic]|max_size[father_id_pic,1024]',
-            'mother_id_pic' => 'uploaded[mother_id_pic]|is_image[mother_id_pic]|max_size[mother_id_pic,1024]',
+            'birth_registration_number' => 'required',
+            'father_nid_number' => 'required',
+            'mother_nid_number' => 'required',
             'student_pic' => 'uploaded[student_pic]|is_image[student_pic]|max_size[student_pic,100]|max_dims[student_pic,300,300]',
         ]);
+
 
         if (!$validation->withRequest($this->request)->run()) {
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
@@ -36,7 +36,8 @@ class Student extends BaseController
 
         $model = new StudentModel();
 
-        // Prepare data for saving
+        $student_pic = $this->uploadFile('student_pic');
+
         $data = [
             'student_name' => $this->request->getPost('student_name'),
             'roll' => $this->request->getPost('roll'),
@@ -45,10 +46,10 @@ class Student extends BaseController
             'section' => $this->request->getPost('section'),
             'dob' => $this->request->getPost('dob'),
             'phone' => $this->request->getPost('phone'),
-            'birth_registration_pic' => $this->uploadFile('birth_registration_pic'),
-            'father_id_pic' => $this->uploadFile('father_id_pic'),
-            'mother_id_pic' => $this->uploadFile('mother_id_pic'),
-            'student_pic' => $this->uploadFile('student_pic'),
+            'birth_registration_number' => $this->request->getPost('birth_registration_number'),
+            'father_nid_number' => $this->request->getPost('father_nid_number'),
+            'mother_nid_number' => $this->request->getPost('mother_nid_number'),
+            'student_pic' => $student_pic,
         ];
 
         $model->save($data);
@@ -56,7 +57,6 @@ class Student extends BaseController
         return redirect()->to('/student')->with('success', 'Student Info Saved!');
     }
 
-    // Reusable file upload handler
     private function uploadFile($field)
     {
         $file = $this->request->getFile($field);
@@ -98,22 +98,18 @@ class Student extends BaseController
 
         $data = $this->request->getPost();
 
-        // Handle file updates including 'student_pic'
-        foreach (['birth_registration_pic', 'father_id_pic', 'mother_id_pic', 'student_pic'] as $field) {
-            $file = $this->request->getFile($field);
-
-            if ($file && $file->isValid() && !$file->hasMoved()) {
-                // Delete old image
-                if (!empty($student[$field]) && file_exists($student[$field])) {
-                    unlink($student[$field]);
-                }
-
-                $newName = $file->getRandomName();
-                $file->move('uploads/', $newName);
-                $data[$field] = 'uploads/' . $newName;
-            } else {
-                unset($data[$field]); // Keep old one
+        // Handle student_pic update
+        $file = $this->request->getFile('student_pic');
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            if (!empty($student['student_pic']) && file_exists($student['student_pic'])) {
+                unlink($student['student_pic']);
             }
+
+            $newName = $file->getRandomName();
+            $file->move('uploads/', $newName);
+            $data['student_pic'] = 'uploads/' . $newName;
+        } else {
+            unset($data['student_pic']);
         }
 
         $model->update($id, $data);
@@ -129,11 +125,8 @@ class Student extends BaseController
             return redirect()->to('/student/list')->with('error', 'Student not found');
         }
 
-        // Delete all related images including student_pic
-        foreach (['birth_registration_pic', 'father_id_pic', 'mother_id_pic', 'student_pic'] as $field) {
-            if (!empty($student[$field]) && file_exists($student[$field])) {
-                unlink($student[$field]);
-            }
+        if (!empty($student['student_pic']) && file_exists($student['student_pic'])) {
+            unlink($student['student_pic']);
         }
 
         $model->delete($id);

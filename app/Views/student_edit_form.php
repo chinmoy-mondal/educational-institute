@@ -24,9 +24,14 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Class</label>
-                            <input type="text" name="class" class="form-control" value="<?= esc($student['class']) ?>">
+                            <select name="class" id="class-select" class="form-select" required>
+                                <option value="">Select Class</option>
+                                <?php for ($i = 6; $i <= 10; $i++): ?>
+                                    <option value="<?= $i ?>" <?= (isset($student['class']) && $student['class'] == $i) ? 'selected' : '' ?>>Class <?= $i ?></option>
+                                <?php endfor; ?>
+                            </select>
                         </div>
-                        <!-- chinmoy -->
+
                        <div class="col-md-6">
                             <label class="form-label">Section</label>
                             <select name="section" class="form-select" required>
@@ -59,17 +64,18 @@
                             <input type="file" name="student_pic" class="form-control">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Birth Reg. Card (leave empty to keep existing)</label>
-                            <input type="file" name="birth_registration_pic" class="form-control">
+                            <label class="form-label">Birth Registration Number</label>
+                            <input type="text" name="birth_registration_number" class="form-control" value="<?= esc($student['birth_registration_number']) ?>">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Father's ID Card</label>
-                            <input type="file" name="father_id_pic" class="form-control">
+                            <label class="form-label">Father NID Number</label>
+                            <input type="text" name="father_nid_number" class="form-control" value="<?= esc($student['father_nid_number']) ?>">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Mother's ID Card</label>
-                            <input type="file" name="mother_id_pic" class="form-control">
+                            <label class="form-label">Mother NID Number</label>
+                            <input type="text" name="mother_nid_number" class="form-control" value="<?= esc($student['mother_nid_number']) ?>">
                         </div>
+
 
                         <div class="col-12 text-center">
                             <button type="submit" class="btn btn-primary px-5">Update</button>
