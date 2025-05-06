@@ -38,9 +38,9 @@
                                     <th>ESIF</th>
                                     <th>DOB</th>
                                     <th>Phone</th>
-                                    <th>Birth Reg.</th>
-                                    <th>Father ID</th>
-                                    <th>Mother ID</th>
+                                    <th>Birth Reg. No</th>
+                                    <th>Father NID</th>
+                                    <th>Mother NID</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -53,7 +53,6 @@
                                                     <img src="/<?= esc($student['student_pic']) ?>" class="img-thumbnail" width="80">
                                                 <?php endif; ?>
                                             </td>
-
                                             <td><?= esc($student['student_name']) ?></td>
                                             <td><?= esc($student['roll']) ?></td>
                                             <td><?= esc($student['class']) ?></td>
@@ -61,21 +60,9 @@
                                             <td><?= esc($student['esif']) ?></td>
                                             <td><?= esc($student['dob']) ?></td>
                                             <td><?= esc($student['phone']) ?></td>
-                                            <td>
-                                                <?php if ($student['birth_registration_pic']): ?>
-                                                    <img src="/<?= esc($student['birth_registration_pic']) ?>" class="img-thumbnail" width="80">
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <?php if ($student['father_id_pic']): ?>
-                                                    <img src="/<?= esc($student['father_id_pic']) ?>" class="img-thumbnail" width="80">
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <?php if ($student['mother_id_pic']): ?>
-                                                    <img src="/<?= esc($student['mother_id_pic']) ?>" class="img-thumbnail" width="80">
-                                                <?php endif; ?>
-                                            </td>
+                                            <td><?= esc($student['birth_registration_number']) ?></td>
+                                            <td><?= esc($student['father_nid_number']) ?></td>
+                                            <td><?= esc($student['mother_nid_number']) ?></td>
                                             <td>
                                                 <a href="/student/edit/<?= $student['id'] ?>" class="btn btn-sm btn-primary mb-1">Edit</a>
                                                 <form action="/student/delete/<?= $student['id'] ?>" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this student?');">
@@ -102,5 +89,4 @@
 
 <!-- Footer Include -->
 <?= $this->include("structure/footer"); ?>
-
 <?= $this->endSection(); ?>
