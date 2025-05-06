@@ -24,9 +24,10 @@
             <!-- Google Map Embed -->
             <div class="col-md-4">
                 <h5>Our Location</h5>
-                
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d32110.368378368563!2d89.19764134292312!3d22.919044334715988!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ff6c3a2047b9a1%3A0xd4f2101c4df0c706!2z4Kau4KeC4Kay4KaX4KeN4Kaw4Ka-4KauIOCmruCmvuCmp-CnjeCmr-CmruCmv-CmlSDgpqzgpr_gpqbgp43gpq_gpr7gprLgp58!5e0!3m2!1sbn!2sbd!4v1746510330645!5m2!1sbn!2sbd" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+<!-- 
                 <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2598.820201745383!2d89.34086727973501!3d22.912104057596576!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sbd!4v1743569417106!5m2!1sen!2sbd" 
-                width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy"></iframe> -->
             </div>
         </div>
 
