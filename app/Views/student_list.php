@@ -37,6 +37,7 @@
                                     <th>Section</th>
                                     <th>ESIF</th>
                                     <th>DOB</th>
+                                    <th>Gender</th>
                                     <th>Phone</th>
                                     <th>Birth Reg. No</th>
                                     <th>Father NID</th>
@@ -59,6 +60,7 @@
                                             <td><?= esc($student['section']) ?></td>
                                             <td><?= esc($student['esif']) ?></td>
                                             <td><?= esc($student['dob']) ?></td>
+                                            <td><?= esc($student['gender']) ?></td>
                                             <td><?= esc($student['phone']) ?></td>
                                             <td><?= esc($student['birth_registration_number']) ?></td>
                                             <td><?= esc($student['father_nid_number']) ?></td>
