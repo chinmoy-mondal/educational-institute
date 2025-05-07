@@ -47,13 +47,23 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">ESIF</label>
+                            <label class="form-label">Board id</label>
                             <input type="text" name="esif" class="form-control" value="<?= esc($student['esif']) ?>" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Date of Birth</label>
                             <input type="date" name="dob" class="form-control" value="<?= esc($student['dob']) ?>" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Gender</label>
+                            <select name="gender" class="form-select" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male" <?= $student['gender'] == 'Male' ? 'selected' : '' ?>>Male</option>
+                                <option value="Female" <?= $student['gender'] == 'Female' ? 'selected' : '' ?>>Female</option>
+                                <option value="Other" <?= $student['gender'] == 'Other' ? 'selected' : '' ?>>Other</option>
+                            </select>
                         </div>
 
                         <div class="col-md-6">
