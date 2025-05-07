@@ -18,26 +18,26 @@
 
                         <div class="mb-3">
                             <label for="name" class="form-label">Full Name</label>
-                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter full name" required>
+                            <input type="text" class="form-control form-control-lg" id="name" name="name" placeholder="Enter full name" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="email" class="form-label">Email address</label>
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+                            <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="Enter email" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Create password" required>
+                            <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Create password" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="confirm_password" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm password" required>
+                            <input type="password" class="form-control form-control-lg" id="confirm_password" name="confirm_password" placeholder="Confirm password" required>
                         </div>
 
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-success">Register</button>
+                            <button type="submit" class="btn btn-success btn-lg">Register</button>
                         </div>
                     </form>
                     <p class="text-center mt-3">Already have an account? <a href="<?= base_url('/login') ?>">Login here</a></p>
