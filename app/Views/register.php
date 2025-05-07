@@ -53,7 +53,7 @@
                         <!-- Subject (only for Teachers) -->
                         <div class="mb-3" id="subjectGroup" style="display: none;">
                             <label for="subject" class="form-label">Subject</label>
-                            <select class="form-select form-control-lg" id="subject" name="subject">
+                            <select class="form-select form-control-lg" id="subject" name="subject" required>
                                 <option selected disabled>Select Subject</option>
                                 <option>Mathematics</option>
                                 <option>English</option>
@@ -77,9 +77,15 @@
                             </select>
                         </div>
 
+                        <!-- Phone Number -->
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control form-control-lg" id="phone" name="phone" placeholder="Enter phone number" required>
+                        </div>
+
                         <!-- Email -->
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email address</label>
+                            <label for="email" class="form-label">Email Address</label>
                             <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="Enter email" required>
                         </div>
 
@@ -95,7 +101,7 @@
                             <input type="password" class="form-control form-control-lg" id="confirm_password" name="confirm_password" placeholder="Confirm password" required>
                         </div>
 
-                        <!-- Submit -->
+                        <!-- Submit Button -->
                         <div class="d-grid">
                             <button type="submit" class="btn btn-success btn-lg">Register</button>
                         </div>
@@ -112,7 +118,7 @@
 
 <?= $this->endSection(); ?>
 
-<!-- JavaScript to show/hide the Subject field based on Role -->
+<!-- JavaScript to toggle subject field based on Role selection -->
 <script>
     document.getElementById('role').addEventListener('change', function () {
         const subjectGroup = document.getElementById('subjectGroup');
