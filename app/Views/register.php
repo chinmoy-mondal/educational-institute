@@ -27,7 +27,6 @@
                             <select class="form-select form-control-lg" id="role" name="role" required>
                                 <option selected disabled>Select Role</option>
                                 <option value="Teacher">Teacher</option>
-                                <option value="Admin">Admin</option>
                                 <option value="Staff">Staff</option>
                             </select>
                         </div>
@@ -126,7 +125,7 @@
             const selectedRole = this.value;
 
             // Show designation for all staff/teachers/admin
-            if (selectedRole === "Teacher" || selectedRole === "Staff" || selectedRole === "Admin") {
+            if (selectedRole === "Teacher" || selectedRole === "Staff") {
                 designationGroup.classList.remove("d-none");
             } else {
                 designationGroup.classList.add("d-none");
