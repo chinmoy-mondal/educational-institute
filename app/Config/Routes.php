@@ -40,7 +40,8 @@ $routes->post('/student/delete/(:num)', 'Student::delete/$1');
 
 $routes->get('/page', 'Page::index');
 
-$routes->get('register', 'Account::register');
+$routes->get('/register', 'RegisterController::index');
+$routes->post('/register', 'RegisterController::register');
 $routes->get('login', 'Account::login');
 
 $routes->set404Override(function () {

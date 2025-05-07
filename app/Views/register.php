@@ -75,6 +75,17 @@
                             </select>
                         </div>
 
+                        <!-- Gender -->
+                        <div class="mb-3 d-none" id="genderGroup">
+                            <label for="gender" class="form-label">Gender</label>
+                            <select class="form-select form-control-lg" id="gender" name="gender">
+                                <option selected disabled>Select gender</option>
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>Others</option>
+                            </select>
+                        </div>
+
                         <!-- Phone Number -->
                         <div class="mb-3">
                             <label for="phone" class="form-label">Phone Number</label>
