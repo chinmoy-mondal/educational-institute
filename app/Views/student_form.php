@@ -61,13 +61,23 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">ESIF</label>
+                            <label class="form-label">Board id</label>
                             <input type="text" name="esif" class="form-control" value="<?= old('esif') ?>" required>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Date of Birth</label>
                             <input type="date" name="dob" class="form-control" value="<?= old('dob') ?>" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Gender</label>
+                            <select name="gender" class="form-select" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male" <?= old('gender') == 'Male' ? 'selected' : '' ?>>Male</option>
+                                <option value="Female" <?= old('gender') == 'Female' ? 'selected' : '' ?>>Female</option>
+                                <option value="Other" <?= old('gender') == 'Other' ? 'selected' : '' ?>>Other</option>
+                            </select>
                         </div>
 
                         <div class="col-md-6">
