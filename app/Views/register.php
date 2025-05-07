@@ -33,10 +33,10 @@
                             </select>
                         </div>
 
-                        <!-- Designation -->
-                        <div class="mb-3">
+                        <!-- Designation (hidden by default) -->
+                        <div class="mb-3" id="designationGroup" style="display: none;">
                             <label for="designation" class="form-label">Designation</label>
-                            <select class="form-select form-control-lg" id="designation" name="designation" required>
+                            <select class="form-select form-control-lg" id="designation" name="designation">
                                 <option selected disabled>Select Designation</option>
                                 <option>Head Sir</option>
                                 <option>Senior Teacher</option>
@@ -50,10 +50,10 @@
                             </select>
                         </div>
 
-                        <!-- Subject (only for Teachers) -->
+                        <!-- Subject (hidden by default) -->
                         <div class="mb-3" id="subjectGroup" style="display: none;">
                             <label for="subject" class="form-label">Subject</label>
-                            <select class="form-select form-control-lg" id="subject" name="subject" required>
+                            <select class="form-select form-control-lg" id="subject" name="subject">
                                 <option selected disabled>Select Subject</option>
                                 <option>Mathematics</option>
                                 <option>English</option>
@@ -118,14 +118,18 @@
 
 <?= $this->endSection(); ?>
 
-<!-- JavaScript to toggle subject field based on Role selection -->
+<!-- JavaScript to toggle subject and designation fields -->
 <script>
     document.getElementById('role').addEventListener('change', function () {
         const subjectGroup = document.getElementById('subjectGroup');
+        const designationGroup = document.getElementById('designationGroup');
+
         if (this.value === 'Teacher') {
             subjectGroup.style.display = 'block';
+            designationGroup.style.display = 'block';
         } else {
             subjectGroup.style.display = 'none';
+            designationGroup.style.display = 'none';
         }
     });
 </script>
