@@ -22,6 +22,7 @@ class Student extends BaseController
             'esif' => 'required',
             'section' => 'permit_empty|in_list[General - Science,General - Arts,Vocational - Food Processing and Preservation,Vocational - IT Support and IoT Basics]',
             'dob' => 'required|valid_date',
+            'gender' => 'required|in_list[Male,Female,Other]',
             'phone' => 'required',
             'birth_registration_number' => 'required',
             'father_nid_number' => 'required',
@@ -45,6 +46,7 @@ class Student extends BaseController
             'esif' => $this->request->getPost('esif'),
             'section' => $this->request->getPost('section'),
             'dob' => $this->request->getPost('dob'),
+            'gender' => $this->request->getPost('gender'), 
             'phone' => $this->request->getPost('phone'),
             'birth_registration_number' => $this->request->getPost('birth_registration_number'),
             'father_nid_number' => $this->request->getPost('father_nid_number'),
@@ -97,7 +99,8 @@ class Student extends BaseController
         }
 
         $data = $this->request->getPost();
-
+        $data['gender'] = $this->request->getPost('gender'); 
+        
         // Handle student_pic update
         $file = $this->request->getFile('student_pic');
         if ($file && $file->isValid() && !$file->hasMoved()) {
