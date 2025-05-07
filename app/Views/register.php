@@ -1,5 +1,4 @@
 <?= $this->extend("layouts/base.php") ?>
-
 <?= $this->section("content"); ?>
 
 <!-- Fixed Wrapper for Navbar -->
@@ -14,7 +13,7 @@
             <div class="card shadow-lg rounded">
                 <div class="card-body">
                     <h3 class="card-title text-center mb-4">Register</h3>
-                    <form action="<?= base_url('/register') ?>" method="post">
+                    <form action="<?= base_url('/register') ?>" method="post" id="registerForm">
 
                         <!-- Full Name -->
                         <div class="mb-3">
@@ -33,8 +32,8 @@
                             </select>
                         </div>
 
-                        <!-- Designation (hidden by default) -->
-                        <div class="mb-3" id="designationGroup" style="display: none;">
+                        <!-- Designation -->
+                        <div class="mb-3 d-none" id="designationGroup">
                             <label for="designation" class="form-label">Designation</label>
                             <select class="form-select form-control-lg" id="designation" name="designation">
                                 <option selected disabled>Select Designation</option>
@@ -50,8 +49,8 @@
                             </select>
                         </div>
 
-                        <!-- Subject (hidden by default) -->
-                        <div class="mb-3" id="subjectGroup" style="display: none;">
+                        <!-- Subject -->
+                        <div class="mb-3 d-none" id="subjectGroup">
                             <label for="subject" class="form-label">Subject</label>
                             <select class="form-select form-control-lg" id="subject" name="subject">
                                 <option selected disabled>Select Subject</option>
@@ -113,23 +112,34 @@
     </div>
 </div>
 
-<!-- Footer Include -->
+<!-- Footer -->
 <?= $this->include("structure/footer"); ?>
 
-<?= $this->endSection(); ?>
-
-<!-- JavaScript to toggle subject and designation fields -->
+<!-- JS to Handle Role Selection -->
 <script>
-    document.getElementById('role').addEventListener('change', function () {
-        const subjectGroup = document.getElementById('subjectGroup');
-        const designationGroup = document.getElementById('designationGroup');
+    document.addEventListener("DOMContentLoaded", function () {
+        const roleSelect = document.getElementById("role");
+        const designationGroup = document.getElementById("designationGroup");
+        const subjectGroup = document.getElementById("subjectGroup");
 
-        if (this.value === 'Teacher') {
-            subjectGroup.style.display = 'block';
-            designationGroup.style.display = 'block';
-        } else {
-            subjectGroup.style.display = 'none';
-            designationGroup.style.display = 'none';
-        }
+        roleSelect.addEventListener("change", function () {
+            const selectedRole = this.value;
+
+            // Show designation for all staff/teachers/admin
+            if (selectedRole === "Teacher" || selectedRole === "Staff" || selectedRole === "Admin") {
+                designationGroup.classList.remove("d-none");
+            } else {
+                designationGroup.classList.add("d-none");
+            }
+
+            // Show subject field only for teachers
+            if (selectedRole === "Teacher") {
+                subjectGroup.classList.remove("d-none");
+            } else {
+                subjectGroup.classList.add("d-none");
+            }
+        });
     });
 </script>
+
+<?= $this->endSection(); ?>
