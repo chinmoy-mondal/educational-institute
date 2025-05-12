@@ -78,7 +78,7 @@ public function list()
     $studentModel = new StudentModel();
 
     // Items per page
-    $perPage = 10;
+    $perPage = 20;
 
     // Correct usage: No need to manually pass current page
     $students = $studentModel->paginate($perPage, 'default');
