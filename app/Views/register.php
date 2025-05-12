@@ -36,15 +36,21 @@
                             <label for="designation" class="form-label">Designation</label>
                             <select class="form-select form-control-lg" id="designation" name="designation">
                                 <option selected disabled>Select Designation</option>
-                                <option>Head Sir</option>
-                                <option>Senior Teacher</option>
-                                <option>Assistant Teacher</option>
-                                <option>Junior Teacher</option>
-                                <option>Lab Assistant</option>
-                                <option>Clerk</option>
-                                <option>Librarian</option>
-                                <option>Peon</option>
+                                <option>Head Master</option>
+                                <option>Assistant Head Master</option>
+                                <option>Assistant teacher</option>
+                                <option>Muslim R.Teacher</option>
+                                <option>Hindu R.Teacher</option>
+                                <option>Physical Teacher</option>
+                                <option>Computer Teacher</option>
+                                <option>Agriculture</option>
+                                <option>Trade Instructor</option>
+                                <option>Office Assistant (MLSS)</option>
+                                <option>3rd Class Employee</option>
+                                <option>4th Class Employee</option>
+                                <option>Security Guard</option>
                                 <option>Cleaner</option>
+                                <option>Ayah</option>
                             </select>
                         </div>
 
