@@ -52,6 +52,16 @@
                         </div>
 
                         <div class="col-md-6">
+                            <label class="form-label">Father's Name</label>
+                            <input type="text" name="father_name" class="form-control" value="<?= esc($student['father_name']) ?>" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Mother's Name</label>
+                            <input type="text" name="mother_name" class="form-control" value="<?= esc($student['mother_name']) ?>" required>
+                        </div>                        
+
+                        <div class="col-md-6">
                             <label class="form-label">Date of Birth</label>
                             <input type="date" name="dob" class="form-control" value="<?= esc($student['dob']) ?>" required>
                         </div>
