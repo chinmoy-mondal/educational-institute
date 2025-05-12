@@ -61,7 +61,6 @@
                                             <td><?= esc($student['class']) ?></td>
                                             <td><?= esc($student['section']) ?></td>
                                             <td><?= esc($student['esif']) ?></td>
-                                            <td><?= esc($student['student_name']) ?></td>
                                             <td><?= esc($student['father_name']) ?></td>
                                             <td><?= esc($student['mother_name']) ?></td>
                                             <td><?= esc($student['dob']) ?></td>
