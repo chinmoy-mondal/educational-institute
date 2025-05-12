@@ -73,29 +73,22 @@ class Student extends BaseController
         }
         return null;
     }
-    public function list()
-    {
-        // Get the current page from the query parameter (default to page 1)
-        $page = $this->request->getVar('page') ?? 1;
+public function list()
+{
+    $studentModel = new StudentModel();
 
-        // Create a new instance of the Student model
-        $studentModel = new StudentModel();
+    // Items per page
+    $perPage = 10;
 
-        // Define the number of students per page
-        $perPage = 10;
+    // Correct usage: No need to manually pass current page
+    $students = $studentModel->paginate($perPage, 'default');
 
-        // Get students data with pagination
-        $students = $studentModel->paginate($perPage, 'default', $page);
-
-        // Get the pager instance
-        $pager = $studentModel->pager;
-
-        // Pass data to the view
-        return view('student_list', [
-            'students' => $students,
-            'pager' => $pager
-        ]);
-    }
+    // Pass pager and students to view
+    return view('student_list', [
+        'students' => $students,
+        'pager' => $studentModel->pager
+    ]);
+}
 
     public function edit($id)
     {

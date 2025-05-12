@@ -50,7 +50,7 @@
                             </thead>
                             <tbody>
                                 <?php if (!empty($students)): ?>
-                                    <?php $serial = ($pager->getCurrentPage() - 1) * $pager->getPerPage() + 1; ?>
+                                    <?php $serial = ($pager->getCurrentPage('default') - 1) * $pager->getPerPage('default') + 1; ?>
                                     <?php foreach ($students as $student): ?>
                                         <tr>
                                             <td><?= $serial++ ?></td>
@@ -92,7 +92,7 @@
 
                     <!-- Pagination Section -->
                     <div class="d-flex justify-content-center">
-                        <?= $pager->links() ?>
+                        <?= $pager->links('default', 'bootstrap') ?>
                     </div>
 
                 </div>
