@@ -30,7 +30,7 @@
                         <table class="table table-bordered table-striped align-middle text-center">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>SL</th>
+                                    <th>S/N</th>
                                     <th>Student Pic</th>
                                     <th>Name</th>
                                     <th>Roll</th>
@@ -49,57 +49,77 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php 
-                                    $perPage = 10;
-                                    $start = ($currentPage - 1) * $perPage + 1;
-                                    if (!empty($students)):
-                                        foreach ($students as $index => $student): 
-                                ?>
+                                <?php if (!empty($students)): ?>
+                                    <?php $serial = 1; ?>
+                                    <?php foreach ($students as $student): ?>
+                                        <tr>
+                                            <td><?= $serial++ ?></td>
+                                            <td>
+                                                <?php if ($student['student_pic']): ?>
+                                                    <img src="/<?= esc($student['student_pic']) ?>" class="img-thumbnail" width="80">
+                                                <?php endif; ?>
+                                            </td>
+                                            <td><?= esc($student['student_name']) ?></td>
+                                            <td><?= esc($student['roll']) ?></td>
+                                            <td><?= esc($student['class']) ?></td>
+                                            <td><?= esc($student['section']) ?></td>
+                                            <td><?= esc($student['esif']) ?></td>
+                                            <td><?= esc($student['father_name']) ?></td>
+                                            <td><?= esc($student['mother_name']) ?></td>
+                                            <td><?= esc($student['dob']) ?></td>
+                                            <td><?= esc($student['gender']) ?></td>
+                                            <td><?= esc($student['phone']) ?></td>
+                                            <td><?= esc($student['birth_registration_number']) ?></td>
+                                            <td><?= esc($student['father_nid_number']) ?></td>
+                                            <td><?= esc($student['mother_nid_number']) ?></td>
+                                            <td>
+                                                <a href="/student/edit/<?= $student['id'] ?>" class="btn btn-sm btn-primary mb-1">Edit</a>
+                                                <form action="/student/delete/<?= $student['id'] ?>" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this student?');">
+                                                    <?= csrf_field() ?>
+                                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
                                     <tr>
-                                        <td><?= $start + $index ?></td>
-                                        <td>
-                                            <?php if ($student['student_pic']): ?>
-                                                <img src="/<?= esc($student['student_pic']) ?>" class="img-thumbnail" width="80">
-                                            <?php endif; ?>
-                                        </td>
-                                        <td><?= esc($student['student_name']) ?></td>
-                                        <td><?= esc($student['roll']) ?></td>
-                                        <td><?= esc($student['class']) ?></td>
-                                        <td><?= esc($student['section']) ?></td>
-                                        <td><?= esc($student['esif']) ?></td>
-                                        <td><?= esc($student['father_name']) ?></td>
-                                        <td><?= esc($student['mother_name']) ?></td>
-                                        <td><?= esc($student['dob']) ?></td>
-                                        <td><?= esc($student['gender']) ?></td>
-                                        <td><?= esc($student['phone']) ?></td>
-                                        <td><?= esc($student['birth_registration_number']) ?></td>
-                                        <td><?= esc($student['father_nid_number']) ?></td>
-                                        <td><?= esc($student['mother_nid_number']) ?></td>
-                                        <td>
-                                            <a href="/student/edit/<?= $student['id'] ?>" class="btn btn-sm btn-primary mb-1">Edit</a>
-                                            <form action="/student/delete/<?= $student['id'] ?>" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this student?');">
-                                                <?= csrf_field() ?>
-                                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                <?php 
-                                        endforeach;
-                                    else: 
-                                ?>
-                                    <tr>
-                                        <td colspan="16" class="text-center">No students found.</td>
+                                        <td colspan="15" class="text-center">No students found.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
 
-                    <!-- Pagination Links -->
-                    <div class="mt-4 d-flex justify-content-center">
-                        <?= $pager->links('students', 'bootstrap_custom') ?>
-                    </div>
+                    <!-- Pagination Section -->
+                    <?php if ($pager->hasPrevious($pagerGroup) || $pager->hasNext($pagerGroup)): ?>
+                        <nav aria-label="Student Pagination">
+                            <ul class="pagination justify-content-center">
+                                <?php if ($pager->hasPrevious($pagerGroup)): ?>
+                                    <li class="page-item">
+                                        <a class="page-link" href="<?= $pager->getPreviousPage($pagerGroup) ?>" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
 
+                                <?php foreach ($pager->links($pagerGroup) as $link): ?>
+                                    <li class="page-item <?= $link['active'] ? 'active' : '' ?>">
+                                        <a class="page-link" href="<?= $link['uri'] ?>">
+                                            <?= $link['title'] ?>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+
+                                <?php if ($pager->hasNext($pagerGroup)): ?>
+                                    <li class="page-item">
+                                        <a class="page-link" href="<?= $pager->getNextPage($pagerGroup) ?>" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
+                            </ul>
+                        </nav>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
