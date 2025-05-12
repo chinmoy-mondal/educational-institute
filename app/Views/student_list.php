@@ -36,7 +36,7 @@
                                     <th>Roll</th>
                                     <th>Class</th>
                                     <th>Section</th>
-                                    <th>ESIF</th>
+                                    <th>Board ID</th>
                                     <th>Father Name</th>
                                     <th>Mother Name</th>
                                     <th>DOB</th>
