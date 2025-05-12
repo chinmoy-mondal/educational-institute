@@ -30,6 +30,7 @@
                         <table class="table table-bordered table-striped align-middle text-center">
                             <thead class="table-dark">
                                 <tr>
+                                    <th>SL</th>
                                     <th>Student Pic</th>
                                     <th>Name</th>
                                     <th>Roll</th>
@@ -48,43 +49,55 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if (!empty($students)): ?>
-                                    <?php foreach ($students as $student): ?>
-                                        <tr>
-                                            <td>
-                                                <?php if ($student['student_pic']): ?>
-                                                    <img src="/<?= esc($student['student_pic']) ?>" class="img-thumbnail" width="80">
-                                                <?php endif; ?>
-                                            </td>
-                                            <td><?= esc($student['student_name']) ?></td>
-                                            <td><?= esc($student['roll']) ?></td>
-                                            <td><?= esc($student['class']) ?></td>
-                                            <td><?= esc($student['section']) ?></td>
-                                            <td><?= esc($student['esif']) ?></td>
-                                            <td><?= esc($student['father_name']) ?></td>
-                                            <td><?= esc($student['mother_name']) ?></td>
-                                            <td><?= esc($student['dob']) ?></td>
-                                            <td><?= esc($student['gender']) ?></td>
-                                            <td><?= esc($student['phone']) ?></td>
-                                            <td><?= esc($student['birth_registration_number']) ?></td>
-                                            <td><?= esc($student['father_nid_number']) ?></td>
-                                            <td><?= esc($student['mother_nid_number']) ?></td>
-                                            <td>
-                                                <a href="/student/edit/<?= $student['id'] ?>" class="btn btn-sm btn-primary mb-1">Edit</a>
-                                                <form action="/student/delete/<?= $student['id'] ?>" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this student?');">
-                                                    <?= csrf_field() ?>
-                                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
+                                <?php 
+                                    $perPage = 10;
+                                    $start = ($currentPage - 1) * $perPage + 1;
+                                    if (!empty($students)):
+                                        foreach ($students as $index => $student): 
+                                ?>
                                     <tr>
-                                        <td colspan="12" class="text-center">No students found.</td>
+                                        <td><?= $start + $index ?></td>
+                                        <td>
+                                            <?php if ($student['student_pic']): ?>
+                                                <img src="/<?= esc($student['student_pic']) ?>" class="img-thumbnail" width="80">
+                                            <?php endif; ?>
+                                        </td>
+                                        <td><?= esc($student['student_name']) ?></td>
+                                        <td><?= esc($student['roll']) ?></td>
+                                        <td><?= esc($student['class']) ?></td>
+                                        <td><?= esc($student['section']) ?></td>
+                                        <td><?= esc($student['esif']) ?></td>
+                                        <td><?= esc($student['father_name']) ?></td>
+                                        <td><?= esc($student['mother_name']) ?></td>
+                                        <td><?= esc($student['dob']) ?></td>
+                                        <td><?= esc($student['gender']) ?></td>
+                                        <td><?= esc($student['phone']) ?></td>
+                                        <td><?= esc($student['birth_registration_number']) ?></td>
+                                        <td><?= esc($student['father_nid_number']) ?></td>
+                                        <td><?= esc($student['mother_nid_number']) ?></td>
+                                        <td>
+                                            <a href="/student/edit/<?= $student['id'] ?>" class="btn btn-sm btn-primary mb-1">Edit</a>
+                                            <form action="/student/delete/<?= $student['id'] ?>" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this student?');">
+                                                <?= csrf_field() ?>
+                                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php 
+                                        endforeach;
+                                    else: 
+                                ?>
+                                    <tr>
+                                        <td colspan="16" class="text-center">No students found.</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>
                         </table>
+                    </div>
+
+                    <!-- Pagination Links -->
+                    <div class="mt-4 d-flex justify-content-center">
+                        <?= $pager->links() ?>
                     </div>
 
                 </div>

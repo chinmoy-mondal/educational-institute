@@ -77,7 +77,12 @@ class Student extends BaseController
     public function list()
     {
         $model = new StudentModel();
-        $data['students'] = $model->findAll();
+        $data['students'] = $model->paginate(10); // 10 students per page
+        $data['pager'] = $model->pager;
+
+        // Pass current page number for serial number
+        $data['currentPage'] = $this->request->getGet('page') ?? 1;
+
         return view('student_list', $data);
     }
 
