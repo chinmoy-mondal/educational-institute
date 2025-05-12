@@ -50,7 +50,7 @@
                             </thead>
                             <tbody>
                                 <?php if (!empty($students)): ?>
-                                    <?php $serial = 1; ?>
+                                    <?php $serial = ($pager->getCurrentPage() - 1) * $pager->getPerPage() + 1; ?>
                                     <?php foreach ($students as $student): ?>
                                         <tr>
                                             <td><?= $serial++ ?></td>
