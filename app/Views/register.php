@@ -81,14 +81,13 @@
                             </select>
                         </div>
 
-                        <!-- Gender -->
-                        <div class="mb-3 d-none" id="genderGroup">
+                        <div class="mb-3">
                             <label for="gender" class="form-label">Gender</label>
-                            <select class="form-select form-control-lg" id="gender" name="gender">
-                                <option selected disabled>Select gender</option>
-                                <option>Male</option>
-                                <option>Female</option>
-                                <option>Others</option>
+                            <select class="form-select form-control-lg" id="gender" name="gender" required>
+                                <option selected disabled>Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Others">Others</option>
                             </select>
                         </div>
 
