@@ -91,35 +91,8 @@
                     </div>
 
                     <!-- Pagination Section -->
-                    <?php if ($pager->hasPrevious($pagerGroup) || $pager->hasNext($pagerGroup)): ?>
-                        <nav aria-label="Student Pagination">
-                            <ul class="pagination justify-content-center">
-                                <?php if ($pager->hasPrevious($pagerGroup)): ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="<?= $pager->getPreviousPage($pagerGroup) ?>" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
-                                        </a>
-                                    </li>
-                                <?php endif; ?>
+                    <?= $pager->links('default', 'bootstrap_pagination') ?>
 
-                                <?php foreach ($pager->links($pagerGroup) as $link): ?>
-                                    <li class="page-item <?= $link['active'] ? 'active' : '' ?>">
-                                        <a class="page-link" href="<?= $link['uri'] ?>">
-                                            <?= $link['title'] ?>
-                                        </a>
-                                    </li>
-                                <?php endforeach; ?>
-
-                                <?php if ($pager->hasNext($pagerGroup)): ?>
-                                    <li class="page-item">
-                                        <a class="page-link" href="<?= $pager->getNextPage($pagerGroup) ?>" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                        </a>
-                                    </li>
-                                <?php endif; ?>
-                            </ul>
-                        </nav>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
