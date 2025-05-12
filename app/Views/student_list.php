@@ -91,7 +91,9 @@
                     </div>
 
                     <!-- Pagination Section -->
-                    <?= $pager->links('default', 'bootstrap_pagination') ?>
+                    <div class="d-flex justify-content-center">
+                        <?= $pager->links() ?>
+                    </div>
 
                 </div>
             </div>
