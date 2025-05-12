@@ -92,7 +92,7 @@
 
                     <!-- Pagination Section -->
                     <div class="d-flex justify-content-center">
-                        <?= $pager->links('default', 'bootstrap_full') ?>
+                        <?= $pager->links('default', 'default_full') ?>
                     </div>
 
                 </div>
