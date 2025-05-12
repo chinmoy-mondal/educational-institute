@@ -97,7 +97,7 @@
 
                     <!-- Pagination Links -->
                     <div class="mt-4 d-flex justify-content-center">
-                        <?= $pager->links(null, 'bootstrap_custom') ?>
+                        <?= $pager->links('students', 'bootstrap_custom') ?>
                     </div>
 
                 </div>
