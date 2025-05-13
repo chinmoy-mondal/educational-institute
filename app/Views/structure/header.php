@@ -86,11 +86,8 @@
                                     Account
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="#">Register</a></li>
-                                    <li><a class="dropdown-item" href="#">Login</a></li>
-                                    <li><a class="dropdown-item" href="#">Profile</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="#">Logout</a></li>
+                                    <li><a class="dropdown-item" href="<?= base_url('register'); ?>">Register</a></li>
+                                    <li><a class="dropdown-item" href="<?= base_url('login'); ?>">Login</a></li>
                                 </ul>
                             </li>
                         </ul>
