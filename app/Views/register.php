@@ -59,25 +59,27 @@
                             <label for="subject" class="form-label">Subject</label>
                             <select class="form-select form-control-lg" id="subject" name="subject">
                                 <option selected disabled>Select Subject</option>
-                                <option>Mathematics</option>
+                                <option>Bangla</option>
                                 <option>English</option>
+                                <option>Mathematics</option>
                                 <option>Science</option>
-                                <option>Biology</option>
                                 <option>Physics</option>
                                 <option>Chemistry</option>
-                                <option>Social Studies</option>
-                                <option>Geography</option>
+                                <option>Biology</option>
+                                <option>ICT (Information and Communication Technology)</option>
+                                <option>Bangladesh and Global Studies</option>
+                                <option>Religion</option>
+                                <option>Physical Education and Health</option>
                                 <option>History</option>
-                                <option>Computer Science</option>
-                                <option>Physical Education</option>
-                                <option>Art</option>
-                                <option>Music</option>
-                                <option>Hindi</option>
-                                <option>Bengali</option>
-                                <option>Urdu</option>
-                                <option>Islamic Studies</option>
-                                <option>Moral Science</option>
-                                <option>Environmental Studies</option>
+                                <option>Civics</option>
+                                <option>Sociology</option>
+                                <option>Geography</option>
+                                <option>Accounting</option>
+                                <option>Finance</option>
+                                <option>Agriculture</option>
+                                <option>Food Processing & Preservation</option>
+                                <option>Library and Information Science</option>
+                                <option>N/A</option>
                             </select>
                         </div>
 
