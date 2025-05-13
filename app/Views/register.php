@@ -14,6 +14,7 @@
                 <div class="card-body">
                     <h3 class="card-title text-center mb-4">Register</h3>
 
+                    <!-- Error Flash Messages -->
                     <?php if (session()->getFlashdata('errors')) : ?>
                         <div class="alert alert-danger">
                             <ul class="mb-0">
@@ -23,96 +24,84 @@
                             </ul>
                         </div>
                     <?php endif; ?>
+
                     <form action="<?= base_url('/register') ?>" method="post" id="registerForm">
 
                         <!-- Full Name -->
                         <div class="mb-3">
                             <label for="name" class="form-label">Full Name</label>
-                            <input type="text" class="form-control form-control-lg" id="name" name="name" placeholder="Enter full name" required>
+                            <input type="text" class="form-control form-control-lg" id="name" name="name" value="<?= old('name') ?>" placeholder="Enter full name" required>
                         </div>
 
-                        <!-- Role Selection -->
+                        <!-- Role -->
                         <div class="mb-3">
                             <label for="role" class="form-label">Role</label>
                             <select class="form-select form-control-lg" id="role" name="role" required>
-                                <option selected disabled>Select Role</option>
-                                <option value="Teacher">Teacher</option>
-                                <option value="Staff">Staff</option>
+                                <option disabled <?= old('role') ? '' : 'selected' ?>>Select Role</option>
+                                <option value="Teacher" <?= old('role') === 'Teacher' ? 'selected' : '' ?>>Teacher</option>
+                                <option value="Staff" <?= old('role') === 'Staff' ? 'selected' : '' ?>>Staff</option>
                             </select>
                         </div>
 
                         <!-- Designation -->
-                        <div class="mb-3 d-none" id="designationGroup">
+                        <div class="mb-3 <?= old('role') ? '' : 'd-none' ?>" id="designationGroup">
                             <label for="designation" class="form-label">Designation</label>
                             <select class="form-select form-control-lg" id="designation" name="designation">
-                                <option selected disabled>Select Designation</option>
-                                <option>Head Master</option>
-                                <option>Assistant Head Master</option>
-                                <option>Assistant teacher</option>
-                                <option>Muslim R.Teacher</option>
-                                <option>Hindu R.Teacher</option>
-                                <option>Physical Teacher</option>
-                                <option>Computer Teacher</option>
-                                <option>Agriculture</option>
-                                <option>Trade Instructor</option>
-                                <option>Office Assistant (MLSS)</option>
-                                <option>3rd Class Employee</option>
-                                <option>4th Class Employee</option>
-                                <option>Security Guard</option>
-                                <option>Cleaner</option>
-                                <option>Ayah</option>
+                                <option disabled <?= old('designation') ? '' : 'selected' ?>>Select Designation</option>
+                                <?php
+                                $designations = [
+                                    'Head Master', 'Assistant Head Master', 'Assistant teacher', 'Muslim R.Teacher', 'Hindu R.Teacher',
+                                    'Physical Teacher', 'Computer Teacher', 'Agriculture', 'Trade Instructor',
+                                    'Office Assistant (MLSS)', '3rd Class Employee', '4th Class Employee', 'Security Guard', 'Cleaner', 'Ayah'
+                                ];
+                                foreach ($designations as $des) :
+                                ?>
+                                    <option <?= old('designation') === $des ? 'selected' : '' ?>><?= $des ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
                         <!-- Subject -->
-                        <div class="mb-3 d-none" id="subjectGroup">
+                        <div class="mb-3 <?= old('role') === 'Teacher' ? '' : 'd-none' ?>" id="subjectGroup">
                             <label for="subject" class="form-label">Subject</label>
                             <select class="form-select form-control-lg" id="subject" name="subject">
-                                <option selected disabled>Select Subject</option>
-                                <option>Bangla</option>
-                                <option>English</option>
-                                <option>Mathematics</option>
-                                <option>Science</option>
-                                <option>Physics</option>
-                                <option>Chemistry</option>
-                                <option>Biology</option>
-                                <option>ICT (Information and Communication Technology)</option>
-                                <option>Bangladesh and Global Studies</option>
-                                <option>Religion</option>
-                                <option>Physical Education and Health</option>
-                                <option>History</option>
-                                <option>Civics</option>
-                                <option>Sociology</option>
-                                <option>Geography</option>
-                                <option>Accounting</option>
-                                <option>Finance</option>
-                                <option>Agriculture</option>
-                                <option>Food Processing & Preservation</option>
-                                <option>Library and Information Science</option>
-                                <option>N/A</option>
+                                <option disabled <?= old('subject') ? '' : 'selected' ?>>Select Subject</option>
+                                <?php
+                                $subjects = [
+                                    'Bangla', 'English', 'Mathematics', 'Science', 'Physics', 'Chemistry', 'Biology',
+                                    'ICT (Information and Communication Technology)', 'Bangladesh and Global Studies',
+                                    'Religion', 'Physical Education and Health', 'History', 'Civics', 'Sociology',
+                                    'Geography', 'Accounting', 'Finance', 'Agriculture', 'Food Processing & Preservation',
+                                    'Library and Information Science', 'N/A'
+                                ];
+                                foreach ($subjects as $subj) :
+                                ?>
+                                    <option <?= old('subject') === $subj ? 'selected' : '' ?>><?= $subj ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
+                        <!-- Gender -->
                         <div class="mb-3">
                             <label for="gender" class="form-label">Gender</label>
                             <select class="form-select form-control-lg" id="gender" name="gender" required>
-                                <option selected disabled>Select Gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Others">Others</option>
+                                <option disabled <?= old('gender') ? '' : 'selected' ?>>Select Gender</option>
+                                <option value="Male" <?= old('gender') === 'Male' ? 'selected' : '' ?>>Male</option>
+                                <option value="Female" <?= old('gender') === 'Female' ? 'selected' : '' ?>>Female</option>
+                                <option value="Others" <?= old('gender') === 'Others' ? 'selected' : '' ?>>Others</option>
                             </select>
                         </div>
 
-                        <!-- Phone Number -->
+                        <!-- Phone -->
                         <div class="mb-3">
                             <label for="phone" class="form-label">Phone Number</label>
-                            <input type="tel" class="form-control form-control-lg" id="phone" name="phone" placeholder="Enter phone number" required>
+                            <input type="tel" class="form-control form-control-lg" id="phone" name="phone" value="<?= old('phone') ?>" placeholder="Enter phone number" required>
                         </div>
 
                         <!-- Email -->
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
-                            <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="Enter email" required>
+                            <input type="email" class="form-control form-control-lg" id="email" name="email" value="<?= old('email') ?>" placeholder="Enter email" required>
                         </div>
 
                         <!-- Password -->
@@ -127,7 +116,7 @@
                             <input type="password" class="form-control form-control-lg" id="confirm_password" name="confirm_password" placeholder="Confirm password" required>
                         </div>
 
-                        <!-- Submit Button -->
+                        <!-- Submit -->
                         <div class="d-grid">
                             <button type="submit" class="btn btn-success btn-lg">Register</button>
                         </div>
@@ -142,30 +131,30 @@
 <!-- Footer -->
 <?= $this->include("structure/footer"); ?>
 
-<!-- JS to Handle Role Selection -->
+<!-- JS to Show/Hide Designation and Subject -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const roleSelect = document.getElementById("role");
         const designationGroup = document.getElementById("designationGroup");
         const subjectGroup = document.getElementById("subjectGroup");
 
-        roleSelect.addEventListener("change", function () {
-            const selectedRole = this.value;
-
-            // Show designation for all staff/teachers/admin
+        function toggleFields() {
+            const selectedRole = roleSelect.value;
             if (selectedRole === "Teacher" || selectedRole === "Staff") {
                 designationGroup.classList.remove("d-none");
             } else {
                 designationGroup.classList.add("d-none");
             }
 
-            // Show subject field only for teachers
             if (selectedRole === "Teacher") {
                 subjectGroup.classList.remove("d-none");
             } else {
                 subjectGroup.classList.add("d-none");
             }
-        });
+        }
+
+        roleSelect.addEventListener("change", toggleFields);
+        toggleFields(); // Run on page load in case old('role') is set
     });
 </script>
 
