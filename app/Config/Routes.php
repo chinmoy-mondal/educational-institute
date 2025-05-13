@@ -42,7 +42,12 @@ $routes->get('/page', 'Page::index');
 
 $routes->get('/register', 'Account::register');
 $routes->post('/register', 'Account::store');
-$routes->get('login', 'Account::login');
+
+$routes->get('/login', 'Account::login');
+$routes->post('/login', 'Account::login');
+
+$routes->get('/logout', 'Account::logout');
+$routes->get('/dashboard', 'Dashboard::index');
 
 $routes->set404Override(function () {
     $controller = new \App\Controllers\ErrorController();
