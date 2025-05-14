@@ -26,7 +26,7 @@
                     <?php endif; ?>
 
                     <form action="<?= base_url('/register') ?>" method="post" id="registerForm">
-
+                        <?= csrf_field() ?>
                         <!-- Full Name -->
                         <div class="mb-3">
                             <label for="name" class="form-label">Full Name</label>
