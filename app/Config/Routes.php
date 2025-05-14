@@ -41,7 +41,7 @@ $routes->post('/student/delete/(:num)', 'Student::delete/$1');
 $routes->get('/page', 'Page::index');
 
 $routes->get('/register', 'Account::register');
-$routes->post('/register', 'Account::store');
+$routes->post('/register', 'Account::register');
 
 $routes->get('/login', 'Account::login');
 $routes->post('/login', 'Account::login');
