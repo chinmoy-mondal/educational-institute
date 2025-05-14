@@ -40,7 +40,7 @@ class Account extends BaseController
 
             $model->save($data);
 
-            return redirect()->to('/login')->with('success', 'Registration successful. Please login.');
+            return redirect()->to('auth/login')->with('success', 'Registration successful. Please login.');
         }
 
         return view('auth/register');
