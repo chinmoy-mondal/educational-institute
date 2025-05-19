@@ -44,20 +44,15 @@
                         </div>
 
                         <!-- Designation -->
-                        <div class="mb-3 <?= old('role') ? '' : 'd-none' ?>" id="designationGroup">
-                            <label for="designation" class="form-label">Designation</label>
-                            <select class="form-select form-control-lg" id="designation" name="designation">
-                                <option disabled <?= old('designation') ? '' : 'selected' ?>>Select Designation</option>
-                                <?php
-                                $designations = [
-                                    'Head Teacher', 'Asst. Head Teacher', 'Asst. Teacher','Trade Instructor','Trade assistant','3rd Classs Employee','4th  Class Employee','Officeassistant(mlss)','Security Guard','Cleaner','Ayah'
-                                ];
-                                foreach ($designations as $des) :
-                                ?>
-                                    <option <?= old('designation') === $des ? 'selected' : '' ?>><?= $des ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
+			<div class="mb-3 <?= old('role') ? '' : 'd-none' ?>" id="designationGroup">
+			    <label for="designation" class="form-label">Designation</label>
+			    <select class="form-select form-control-lg" id="designation" name="designation">
+				<option disabled selected>Select Designation</option>
+				<!-- Options will be populated by JavaScript -->
+			    </select>
+			</div>
+
+                                
 
                         <!-- Subject -->
                         <div class="mb-3 <?= old('role') === 'Teacher' ? '' : 'd-none' ?>" id="subjectGroup">
@@ -132,28 +127,59 @@
 <!-- JS to Show/Hide Designation and Subject -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const roleSelect = document.getElementById("role");
-        const designationGroup = document.getElementById("designationGroup");
-        const subjectGroup = document.getElementById("subjectGroup");
+    const roleSelect = document.getElementById("role");
+    const designationSelect = document.getElementById("designation");
+    const subjectGroup = document.getElementById("subjectGroup");
+    const designationGroup = document.getElementById("designationGroup");
 
-        function toggleFields() {
-            const selectedRole = roleSelect.value;
-            if (selectedRole === "Teacher" || selectedRole === "Staff") {
-                designationGroup.classList.remove("d-none");
-            } else {
-                designationGroup.classList.add("d-none");
-            }
+    // The role-based designation options
+    const teacherDesignations = [
+        'Head Teacher', 'Asst. Head Teacher', 'Asst. Teacher', 'Trade Instructor'
+    ];
 
-            if (selectedRole === "Teacher") {
-                subjectGroup.classList.remove("d-none");
-            } else {
-                subjectGroup.classList.add("d-none");
-            }
+    const staffDesignations = [
+        'Trade assistant', '3rd Classs Employee', '4th Class Employee', 
+        'Officeassistant(mlss)', 'Security Guard', 'Cleaner', 'Ayah'
+    ];
+
+    function toggleFields() {
+        const selectedRole = roleSelect.value;
+        
+        // Show or hide the Designation group
+        if (selectedRole === "Teacher" || selectedRole === "Staff") {
+            designationGroup.classList.remove("d-none");
+        } else {
+            designationGroup.classList.add("d-none");
         }
 
-        roleSelect.addEventListener("change", toggleFields);
-        toggleFields(); // Run on page load in case old('role') is set
-    });
+        // Populate the Designation dropdown based on role
+        if (selectedRole === "Teacher") {
+            populateDesignation(teacherDesignations);
+            subjectGroup.classList.remove("d-none");
+        } else if (selectedRole === "Staff") {
+            populateDesignation(staffDesignations);
+            subjectGroup.classList.add("d-none");
+        } else {
+            designationSelect.innerHTML = '<option disabled selected>Select Designation</option>';
+            subjectGroup.classList.add("d-none");
+        }
+    }
+
+    // Populate the Designation dropdown with given options
+    function populateDesignation(designationOptions) {
+        designationSelect.innerHTML = '<option disabled selected>Select Designation</option>'; // Clear existing options
+        designationOptions.forEach(function(designation) {
+            const option = document.createElement("option");
+            option.value = designation;
+            option.textContent = designation;
+            designationSelect.appendChild(option);
+        });
+    }
+
+    roleSelect.addEventListener("change", toggleFields);
+    toggleFields(); // Run on page load in case old('role') is set
+});
+ 
 </script>
 
 <?= $this->endSection(); ?>
