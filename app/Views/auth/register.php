@@ -50,9 +50,7 @@
                                 <option disabled <?= old('designation') ? '' : 'selected' ?>>Select Designation</option>
                                 <?php
                                 $designations = [
-                                    'Head Master', 'Assistant Head Master', 'Assistant teacher', 'Muslim R.Teacher', 'Hindu R.Teacher',
-                                    'Physical Teacher', 'Computer Teacher', 'Agriculture', 'Trade Instructor',
-                                    'Office Assistant (MLSS)', '3rd Class Employee', '4th Class Employee', 'Security Guard', 'Cleaner', 'Ayah'
+                                    'Head Teacher', 'Asst. Head Teacher', 'Asst. Teacher','Trade Instructor','Trade assistant','3rd Classs Employee','4th  Class Employee','Officeassistant(mlss)','Security Guard','Cleaner','Ayah'
                                 ];
                                 foreach ($designations as $des) :
                                 ?>
