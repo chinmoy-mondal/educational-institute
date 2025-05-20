@@ -40,13 +40,13 @@ $routes->post('/student/delete/(:num)', 'Student::delete/$1');
 
 $routes->get('/page', 'Page::index');
 
-$routes->get('/register', 'Account::register');
-$routes->post('/register', 'Account::register');
+$routes->get('/register', 'Auth::register');
+$routes->post('/register', 'Auth::register');
 
-$routes->get('/login', 'Account::login');
-$routes->post('/login', 'Account::login');
+$routes->get('/login', 'Auth::login');
+$routes->post('/login', 'Auth::login');
+$routes->get('/logout', 'Auth::logout');
 
-$routes->get('/logout', 'Account::logout');
 $routes->get('/dashboard', 'Dashboard::index');
 
 $routes->set404Override(function () {
