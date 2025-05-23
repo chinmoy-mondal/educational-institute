@@ -30,13 +30,13 @@
                         <!-- Full Name -->
                         <div class="mb-3">
                             <label for="name" class="form-label">Full Name</label>
-                            <input type="text" class="form-control form-control-lg" id="name" name="name" value="<?= old('name') ?>" placeholder="Enter full name" required>
+                            <input type="text" class="form-control form-control-lg" id="name" name="name" value="<?= old('name') ?>" placeholder="Enter full name" >
                         </div>
 
                         <!-- Role -->
                         <div class="mb-3">
                             <label for="role" class="form-label">Role</label>
-                            <select class="form-select form-control-lg" id="role" name="role" required>
+                            <select class="form-select form-control-lg" id="role" name="role" >
                                 <option disabled <?= old('role') ? '' : 'selected' ?>>Select Role</option>
                                 <option value="Teacher" <?= old('role') === 'Teacher' ? 'selected' : '' ?>>Teacher</option>
                                 <option value="Staff" <?= old('role') === 'Staff' ? 'selected' : '' ?>>Staff</option>
@@ -77,7 +77,7 @@
                         <!-- Gender -->
                         <div class="mb-3">
                             <label for="gender" class="form-label">Gender</label>
-                            <select class="form-select form-control-lg" id="gender" name="gender" required>
+                            <select class="form-select form-control-lg" id="gender" name="gender" >
                                 <option disabled <?= old('gender') ? '' : 'selected' ?>>Select Gender</option>
                                 <option value="Male" <?= old('gender') === 'Male' ? 'selected' : '' ?>>Male</option>
                                 <option value="Female" <?= old('gender') === 'Female' ? 'selected' : '' ?>>Female</option>
@@ -88,25 +88,25 @@
                         <!-- Phone -->
                         <div class="mb-3">
                             <label for="phone" class="form-label">Phone Number</label>
-                            <input type="tel" class="form-control form-control-lg" id="phone" name="phone" value="<?= old('phone') ?>" placeholder="Enter phone number" required>
+                            <input type="tel" class="form-control form-control-lg" id="phone" name="phone" value="<?= old('phone') ?>" placeholder="Enter phone number" >
                         </div>
 
                         <!-- Email -->
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
-                            <input type="email" class="form-control form-control-lg" id="email" name="email" value="<?= old('email') ?>" placeholder="Enter email" required>
+                            <input type="email" class="form-control form-control-lg" id="email" name="email" value="<?= old('email') ?>" placeholder="Enter email" >
                         </div>
 
                         <!-- Password -->
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Create password" required>
+                            <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Create password" >
                         </div>
 
                         <!-- Confirm Password -->
                         <div class="mb-3">
                             <label for="confirm_password" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control form-control-lg" id="confirm_password" name="confirm_password" placeholder="Confirm password" required>
+                            <input type="password" class="form-control form-control-lg" id="confirm_password" name="confirm_password" placeholder="Confirm password" >
                         </div>
 
                         <!-- Submit -->
