@@ -6,7 +6,7 @@ use App\Models\UserModel;
 
 class Account extends BaseController
 {
-    public function register()
+    public function showRegisterForm()
     {
         return view('auth/register');
     }
