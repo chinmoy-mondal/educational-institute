@@ -18,16 +18,42 @@ class Account extends BaseController
         helper(['form']);
 
         $rules = [
-            'name'             => 'required|min_length[3]',
-            'role'             => 'required|in_list[Teacher,Staff]',
-            'designation'      => 'required',
-            'gender'           => 'required|in_list[Male,Female,Others]',
-            'phone'            => 'required|min_length[6]|max_length[20]',
-            'email'            => 'required|valid_email|is_unique[users.email]',
-            'password'         => 'required|min_length[6]',
-            'confirm_password' => 'matches[password]',
-        ];
-
+	    'name' => [
+		'label' => 'Full Name',
+		'rules' => 'required|min_length[3]'
+	    ],
+	    'role' => [
+		'label' => 'Role',
+		'rules' => 'required|in_list[Teacher,Staff]'
+	    ],
+	    'designation' => [
+		'label' => 'Designation',
+		'rules' => 'required'
+	    ],
+	    'gender' => [
+		'label' => 'Gender',
+		'rules' => 'required|in_list[Male,Female,Others]'
+	    ],
+	    'phone' => [
+		'label' => 'Phone Number',
+		'rules' => 'required|regex_match[/^(013|014|015|016|017|018|019)\d{8}$/]',
+		'errors' => [
+		    'regex_match' => 'The {field} must be 11 digits and start with a valid prefix (013, 014, 015, 016, 017, 018, 019).'
+		]
+	    ],
+	    'email' => [
+		'label' => 'Email',
+		'rules' => 'required|valid_email|is_unique[users.email]'
+	    ],
+	    'password' => [
+		'label' => 'Password',
+		'rules' => 'required|min_length[6]'
+	    ],
+	    'confirm_password' => [
+		'label' => 'Confirm Password',
+		'rules' => 'required|matches[password]'
+	    ],
+	];
         if ($this->request->getPost('role') === 'Teacher') {
             $rules['subject'] = 'required';
         }
