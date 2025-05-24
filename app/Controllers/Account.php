@@ -49,6 +49,6 @@ class Account extends BaseController
             'password'    => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
         ]);
 
-        return redirect()->to('auth/login')->with('success', 'Registration successful!');
+        return redirect()->to('login')->with('success', 'Registration successful!');
     }
 }

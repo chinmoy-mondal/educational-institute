@@ -126,13 +126,14 @@
 
 <!-- JS to Show/Hide Designation and Subject -->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     const roleSelect = document.getElementById("role");
     const designationSelect = document.getElementById("designation");
     const subjectGroup = document.getElementById("subjectGroup");
     const designationGroup = document.getElementById("designationGroup");
 
-    // The role-based designation options
+    const oldDesignation = "<?= old('designation') ?>";
+
     const teacherDesignations = [
         'Head Teacher', 'Asst. Head Teacher', 'Asst. Teacher', 'Trade Instructor'
     ];
@@ -144,15 +145,13 @@
 
     function toggleFields() {
         const selectedRole = roleSelect.value;
-        
-        // Show or hide the Designation group
+
         if (selectedRole === "Teacher" || selectedRole === "Staff") {
             designationGroup.classList.remove("d-none");
         } else {
             designationGroup.classList.add("d-none");
         }
 
-        // Populate the Designation dropdown based on role
         if (selectedRole === "Teacher") {
             populateDesignation(teacherDesignations);
             subjectGroup.classList.remove("d-none");
@@ -165,21 +164,24 @@
         }
     }
 
-    // Populate the Designation dropdown with given options
     function populateDesignation(designationOptions) {
-        designationSelect.innerHTML = '<option disabled selected>Select Designation</option>'; // Clear existing options
+        designationSelect.innerHTML = '<option disabled>Select Designation</option>';
         designationOptions.forEach(function(designation) {
             const option = document.createElement("option");
             option.value = designation;
             option.textContent = designation;
+
+            // Check if this was previously selected
+            if (designation === oldDesignation) {
+                option.selected = true;
+            }
+
             designationSelect.appendChild(option);
         });
     }
 
     roleSelect.addEventListener("change", toggleFields);
-    toggleFields(); // Run on page load in case old('role') is set
+    toggleFields(); // run on page load
 });
- 
 </script>
-
 <?= $this->endSection(); ?>
