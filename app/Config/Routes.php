@@ -40,8 +40,8 @@ $routes->post('/student/delete/(:num)', 'Student::delete/$1');
 
 $routes->get('/page', 'Page::index');
 
-$routes->get('/register', 'Auth::register');
-$routes->post('/register', 'Auth::register');
+$routes->get('register', 'Account::showRegisterForm');
+$routes->post('register', 'Account::processRegister');
 
 $routes->get('/login', 'Auth::login');
 $routes->post('/login', 'Auth::login');
