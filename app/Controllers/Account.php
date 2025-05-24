@@ -61,7 +61,7 @@ class Account extends BaseController
         $userModel = new UserModel();
 
         // Count existing users
-        $userCount = $userModel->countAllResults(false); // false to not reset query builder
+        $userCount = $userModel->countAll(); // false to not reset query builder
 
         // Determine account_status: 1 if first user, else 0
         $accountStatus = ($userCount === 0) ? 1 : 0;
