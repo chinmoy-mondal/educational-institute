@@ -8,7 +8,7 @@ class Account extends BaseController
 {
     public function register()
     {
-        return view('register');
+        return view('auth/register');
     }
 
     public function processRegister()
