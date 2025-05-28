@@ -57,15 +57,6 @@ class Account extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        // Load UserModel
-        $userModel = new UserModel();
-
-        // Count existing users
-        $userCount = $userModel->countAll(); // false to not reset query builder
-
-        // Determine account_status: 1 if first user, else 0
-        $accountStatus = ($userCount === 0) ? 1 : 0;
-
         // Prepare data for insertion
         $data = [
             'name'           => $this->request->getPost('name'),
@@ -76,12 +67,13 @@ class Account extends BaseController
             'phone'          => $this->request->getPost('phone'),
             'email'          => $this->request->getPost('email'),
             'password'       => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-            'account_status' => $accountStatus,
+            'account_status' => 0,
             'created_at'     => date('Y-m-d H:i:s'),
             'updated_at'     => date('Y-m-d H:i:s'),
         ];
 
-        // Insert user
+        // Insert user into database
+        $userModel = new UserModel();
         $userModel->insert($data);
 
         // Redirect to login with success message
