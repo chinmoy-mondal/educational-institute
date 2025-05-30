@@ -83,7 +83,7 @@
               <?php foreach ($students as $student): ?>
                 <tr>
                   <td><?= esc($student['id']) ?></td>
-                  <td><?= esc($student['name']) ?></td>
+                  <td><?= esc($student['student_name']) ?></td>
                   <td><?= esc($student['roll']) ?></td>
                   <td><?= esc($student['class']) ?></td>
                   <td><?= esc($student['email']) ?></td>
