@@ -43,9 +43,9 @@ $routes->get('/page', 'Page::index');
 $routes->get('register', 'Account::showRegisterForm');
 $routes->post('register', 'Account::processRegister');
 
-$routes->get('/login', 'Auth::login');
-$routes->post('/login', 'Auth::login');
-$routes->get('/logout', 'Auth::logout');
+$routes->get('login', 'Account::showLoginForm');
+$routes->post('login', 'Account::processLogin');
+$routes->get('logout', 'Account::logout');
 
 $routes->get('/dashboard', 'Dashboard::index');
 

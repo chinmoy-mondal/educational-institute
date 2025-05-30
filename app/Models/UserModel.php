@@ -10,7 +10,17 @@ class UserModel extends Model
     protected $primaryKey = 'id';
 
     protected $allowedFields = [
-        'name', 'role', 'designation', 'subject', 'gender', 'phone', 'email', 'password', 'created_at', 'updated_at'
+        'name',
+        'role',
+        'designation',
+        'subject',
+        'gender',
+        'phone',
+        'email',
+        'password',
+        'account_status', // ✅ Important for filtering approved users
+        'created_at',
+        'updated_at'
     ];
 
     protected $useTimestamps = true;

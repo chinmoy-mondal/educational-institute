@@ -79,4 +79,45 @@ class Account extends BaseController
         // Redirect to login with success message
         return redirect()->to('/login')->with('success', 'Registration successful.');
     }
+
+    public function showLoginForm()
+    {
+	return view('auth/login');
+    }
+
+    public function processLogin()
+    {
+	$session = session();
+	$userModel = new UserModel();
+
+	$email = $this->request->getPost('email');
+	$password = $this->request->getPost('password');
+
+	$user = $userModel->where('email', $email)->first();
+
+	if ($user) {
+	    if (password_verify($password, $user['password'])) {
+		// Set session data
+		$session->set([
+		    'user_id' => $user['id'],
+		    'user_name' => $user['name'],
+		    'user_email' => $user['email'],
+		    'user_role' => $user['role'],
+		    'isLoggedIn' => true
+		]);
+
+		return redirect()->to('/dashboard'); // Adjust your redirect path
+	    } else {
+		return redirect()->back()->withInput()->with('error', 'Invalid password.');
+	    }
+	} else {
+	    return redirect()->back()->withInput()->with('error', 'Email not found.');
+	}
+    }
+
+    public function logout()
+    {
+	session()->destroy();
+	return redirect()->to('/login')->with('success', 'You are logged out.');
+    }
 }
