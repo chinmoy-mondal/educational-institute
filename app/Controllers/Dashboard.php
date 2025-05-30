@@ -11,6 +11,8 @@ class Dashboard extends BaseController
             echo "session is not working";
         }
 
-        return view('dashboard/index');
+        return view('dashboard/index',[
+		'title'=> 'Admin Dashboard'
+	]);
     }
 }
