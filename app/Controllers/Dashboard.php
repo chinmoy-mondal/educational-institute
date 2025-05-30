@@ -10,9 +10,14 @@ class Dashboard extends BaseController
             // return redirect()->to('/login');
             echo "session is not working";
         }
+	
+	$studentModel = new StudentModel();
+
+	$data['students'] = $studentModel->findAll();
 
         return view('dashboard/index',[
-		'title'=> 'Admin Dashboard'
+		'title'=> 'Admin Dashboard',
+		'students' =>$students
 	]);
     }
 }

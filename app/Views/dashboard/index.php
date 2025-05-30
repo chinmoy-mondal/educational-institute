@@ -60,4 +60,45 @@
     </div>
   </div>
 </div>
+
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">All Students</h3>
+      </div>
+      <div class="card-body table-responsive p-0" style="max-height: 400px;">
+        <table class="table table-hover text-nowrap">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Roll</th>
+              <th>Class</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php if (!empty($students)): ?>
+              <?php foreach ($students as $student): ?>
+                <tr>
+                  <td><?= esc($student['id']) ?></td>
+                  <td><?= esc($student['name']) ?></td>
+                  <td><?= esc($student['roll']) ?></td>
+                  <td><?= esc($student['class']) ?></td>
+                  <td><?= esc($student['email']) ?></td>
+                </tr>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <tr>
+                <td colspan="5">No students found.</td>
+              </tr>
+            <?php endif; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
 <?= $this->endSection() ?>
