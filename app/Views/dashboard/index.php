@@ -75,7 +75,7 @@
               <th>Name</th>
               <th>Roll</th>
               <th>Class</th>
-              <th>Email</th>
+              <th>Phone</th>
             </tr>
           </thead>
           <tbody>
@@ -86,7 +86,7 @@
                   <td><?= esc($student['student_name']) ?></td>
                   <td><?= esc($student['roll']) ?></td>
                   <td><?= esc($student['class']) ?></td>
-                  <td><?= esc($student['email']) ?></td>
+                  <td><?= esc($student['phone']) ?></td>
                 </tr>
               <?php endforeach; ?>
             <?php else: ?>
