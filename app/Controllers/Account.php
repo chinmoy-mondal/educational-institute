@@ -87,7 +87,7 @@ class Account extends BaseController
 
     public function processLogin()
     {
-	$session = session();
+	$ession = session();
 	$userModel = new UserModel();
 
 	$email = $this->request->getPost('email');
