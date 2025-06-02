@@ -12,27 +12,32 @@ class Dashboard extends BaseController
         $studentModel = new StudentModel();
         $userModel = new UserModel();
 
-        // Fetch real data
-        $totalStudents = $studentModel->countAll();
-        $totalTeachers = $userModel->where('role', 'teacher')->countAllResults();
+        // Total students
+        $total_students = $studentModel->countAll();
 
-        // Dummy values (replace with actual logic if available)
-        $totalApplications = 10;
-        $totalIncome = 1200;
-        $totalExpenses = 300;
-        $totalExams = 5;
+        // Total teachers
+        $total_teachers = $userModel->where('role', 'teacher')->countAllResults();
 
-        // Fetch all students for the table
-        $students = $studentModel->findAll();
+        // Dummy values (you can replace them with model logic later)
+        $total_applications = 10;
+        $total_exams = 5;
+        $total_income = 150000.00;
+        $total_cost = 42000.00;
+
+        // All students data for the table
+        $students = $studentModel
+            ->select('id, student_name, roll, class, phone')
+            ->orderBy('id', 'DESC')
+            ->findAll();
 
         return view('dashboard/index', [
             'title' => 'Admin Dashboard',
-            'total_students' => $totalStudents,
-            'total_teachers' => $totalTeachers,
-            'total_applications' => $totalApplications,
-            'total_income' => $totalIncome,
-            'total_expenses' => $totalExpenses,
-            'total_exams' => $totalExams,
+            'total_students' => $total_students,
+            'total_teachers' => $total_teachers,
+            'total_applications' => $total_applications,
+            'total_exams' => $total_exams,
+            'total_income' => $total_income,
+            'total_cost' => $total_cost,
             'students' => $students
         ]);
     }
