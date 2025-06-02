@@ -12,14 +12,17 @@ class Dashboard extends BaseController
         $studentModel = new StudentModel();
         $userModel = new UserModel();
 
-        // Fetch total counts
+        // Fetch real data
         $totalStudents = $studentModel->countAll();
         $totalTeachers = $userModel->where('role', 'teacher')->countAllResults();
-        $totalApplications = 10; // Replace with actual logic
-        $totalIncome = 1200;     // Replace with actual logic
-        $totalExpenses = 300;    // Replace with actual logic
 
-        // Fetch all students
+        // Dummy values (replace with actual logic if available)
+        $totalApplications = 10;
+        $totalIncome = 1200;
+        $totalExpenses = 300;
+        $totalExams = 5;
+
+        // Fetch all students for the table
         $students = $studentModel->findAll();
 
         return view('dashboard/index', [
@@ -29,6 +32,7 @@ class Dashboard extends BaseController
             'total_applications' => $totalApplications,
             'total_income' => $totalIncome,
             'total_expenses' => $totalExpenses,
+            'total_exams' => $totalExams,
             'students' => $students
         ]);
     }
