@@ -14,6 +14,14 @@
 
   <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto">
+    <!-- Profile Button -->
+    <li class="nav-item">
+      <a href="<?= base_url('profile') ?>" class="nav-link">
+        <i class="fas fa-user"></i> Profile
+      </a>
+    </li>
+
+    <!-- Logout Button -->
     <li class="nav-item">
       <a href="<?= base_url('logout') ?>" class="nav-link text-danger">
         <i class="fas fa-sign-out-alt"></i> Logout
