@@ -70,7 +70,7 @@
         <div class="small-box bg-success">
           <div class="inner">
             <h3>৳<?= esc(number_format($total_income, 2)) ?></h3>
-            <p>Total Income</p>
+            <p>Total Income test chinmoy</p>
           </div>
           <div class="icon"><i class="fas fa-coins"></i></div>
           <a href="<?= base_url('admin/income') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
