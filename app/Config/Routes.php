@@ -48,6 +48,7 @@ $routes->post('login', 'Account::processLogin');
 $routes->get('logout', 'Account::logout');
 
 $routes->get('/dashboard', 'Dashboard::index');
+$routes->get('/profile', 'Dashboard::profile');
 
 $routes->set404Override(function () {
     $controller = new \App\Controllers\ErrorController();

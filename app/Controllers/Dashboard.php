@@ -4,27 +4,28 @@ namespace App\Controllers;
 
 use App\Models\StudentModel;
 use App\Models\UserModel;
+use CodeIgniter\Controller;
 
-class Dashboard extends BaseController
+class Dashboard extends Controller
 {
     public function index()
     {
+        $session = session();
+        if (!$session->get('isLoggedIn')) {
+            return redirect()->to(base_url('login'));
+        }
+
         $studentModel = new StudentModel();
         $userModel = new UserModel();
 
-        // Total students
         $total_students = $studentModel->countAll();
-
-        // Total teachers
         $total_teachers = $userModel->where('role', 'teacher')->countAllResults();
 
-        // Dummy values (you can replace them with model logic later)
         $total_applications = 10;
         $total_exams = 5;
         $total_income = 150000.00;
         $total_cost = 42000.00;
 
-        // All students data for the table
         $students = $studentModel
             ->select('id, student_name, roll, class, phone')
             ->orderBy('id', 'DESC')
@@ -40,5 +41,22 @@ class Dashboard extends BaseController
             'total_cost' => $total_cost,
             'students' => $students
         ]);
+    }
+
+    public function profile()
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn')) {
+            return redirect()->to(base_url('login'));
+        }
+
+        $user = [
+            'name' => $session->get('name'),
+            'email' => $session->get('email'),
+            'phone' => $session->get('phone'),
+            'role' => $session->get('role')
+        ];
+
+        return view('dashboard/profile', ['user' => $user]);
     }
 }
