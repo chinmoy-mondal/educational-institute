@@ -98,14 +98,21 @@ class Account extends BaseController
 	if ($user) {
 	    if (password_verify($password, $user['password'])) {
 		// Set session data
-		$session->set([
-		    'user_id' => $user['id'],
-		    'user_name' => $user['name'],
-		    'user_email' => $user['email'],
-		    'user_role' => $user['role'],
-		    'isLoggedIn' => true
-		]);
-
+            $session->set([
+                'user_id'        => $user['id'],
+                'user_name'      => $user['name'],
+                'user_email'     => $user['email'],
+                'user_role'      => $user['role'],
+                'designation'    => $user['designation'],
+                'subject'        => $user['subject'],
+                'gender'         => $user['gender'],
+                'phone'          => $user['phone'],
+                'password'       => $user['password'], // ❗ Consider excluding for security
+                'account_status' => $user['account_status'],
+                'created_at'     => $user['created_at'],
+                'updated_at'     => $user['updated_at'],
+                'isLoggedIn'     => true
+            ]);
 		return redirect()->to('/dashboard'); // Adjust your redirect path
 	    } else {
 		return redirect()->back()->withInput()->with('error', 'Invalid password.');
