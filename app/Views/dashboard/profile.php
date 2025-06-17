@@ -1,4 +1,4 @@
-<?= $this->extend('layouts/admin') ?>
+<?= $this->extend('layouts/base') ?>
 <?= $this->section('content') ?>
 
 <div class="container py-5">
