@@ -1,20 +1,31 @@
 <?php 
+
 namespace App\Controllers;
 
-use CodeIgniter\Controller;
+use App\Controllers\BaseController;
+use Config\Services;
 
 class DevTools extends BaseController
 {
     public function migrate()
     {
-        \CodeIgniter\Commands::migrate(0); // or use Services::migrations()->latest();
-        return 'Migration completed.';
+        $migrations = Services::migrations();
+        try {
+            $migrations->latest();
+            return 'Migration completed.';
+        } catch (\Throwable $e) {
+            return 'Migration failed: ' . $e->getMessage();
+        }
     }
 
     public function seed()
     {
         $seeder = \Config\Database::seeder();
-        $seeder->call('NoticeSeeder');
-        return 'Seeding completed.';
+        try {
+            $seeder->call('NoticeSeeder');
+            return 'Seeding completed.';
+        } catch (\Throwable $e) {
+            return 'Seeding failed: ' . $e->getMessage();
+        }
     }
 }
