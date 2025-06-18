@@ -7,8 +7,14 @@ use Config\Services;
 
 class DevTools extends BaseController
 {
-    public function migrate()
+    private $secret = 'purnota'; // ✅ Your custom secret key
+
+    public function migrate($key = null)
     {
+        if ($key !== $this->secret) {
+            return $this->response->setStatusCode(403)->setBody('Unauthorized');
+        }
+
         $migrations = Services::migrations();
         try {
             $migrations->latest();
@@ -18,8 +24,12 @@ class DevTools extends BaseController
         }
     }
 
-    public function seed()
+    public function seed($key = null)
     {
+        if ($key !== $this->secret) {
+            return $this->response->setStatusCode(403)->setBody('Unauthorized');
+        }
+
         $seeder = \Config\Database::seeder();
         try {
             $seeder->call('NoticeSeeder');

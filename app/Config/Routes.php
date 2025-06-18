@@ -15,7 +15,6 @@ $routes->get('/home/mission', 'Home::mission');
 $routes->get('/home/staff', 'Home::staff');
 $routes->get('/user', 'User::index');
 
-//$routes->get('database/migrate', 'DatabaseController::migrate');
 
 
 $routes->get('/contain', 'Contain::index');
@@ -35,9 +34,8 @@ $routes->get('/student/list', 'Student::list');
 $routes->get('/student/edit/(:num)', 'Student::edit/$1');
 $routes->post('/student/update/(:num)', 'Student::update/$1');
 $routes->post('/student/delete/(:num)', 'Student::delete/$1');
-
-$routes->get('run-migration', 'DevTools::migrate');
-$routes->get('run-seed', 'DevTools::seed');
+$routes->get('run-migration/(:any)', 'DevTools::migrate/$1');
+$routes->get('run-seed/(:any)', 'DevTools::seed/$1');
 
 $routes->get('/page', 'Page::index');
 
