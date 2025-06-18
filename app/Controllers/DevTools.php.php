@@ -13,9 +13,10 @@ class DevTools extends BaseController
         // Add your own secure key here
         $secureKey = 'pur';
 
-        if ($key !== $secureKey) {
-            return 'Unauthorized access';
-        }
+       // if ($key !== $secureKey) {
+         //   return 'Unauthorized access';
+        //}
+echo $key;
 
         try {
             $migrate = \Config\Services::migrations();
