@@ -15,7 +15,7 @@ $routes->get('/home/mission', 'Home::mission');
 $routes->get('/home/staff', 'Home::staff');
 $routes->get('/user', 'User::index');
 
-$routes->get('database/migrate', 'DatabaseController::migrate');
+//$routes->get('database/migrate', 'DatabaseController::migrate');
 
 
 $routes->get('/contain', 'Contain::index');

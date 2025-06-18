@@ -11,7 +11,7 @@ class DevTools extends BaseController
     public function migrate($key = null)
     {
         // Add your own secure key here
-        $secureKey = 'purnota@s';
+        $secureKey = 'pur';
 
         if ($key !== $secureKey) {
             return 'Unauthorized access';
