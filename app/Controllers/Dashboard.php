@@ -79,19 +79,26 @@ class Dashboard extends Controller
 
 	public function events()
 	{
-	    $model = new CalendarModel();
+	    $model = new \App\Models\CalendarModel();
 	    $events = $model->findAll();
 
 	    $data = array_map(function ($event) {
+		// Determine if end_date has time part (T separator)
+		$hasTime = strpos($event['end_date'], 'T') !== false;
+
+		// If end_date is date only, add +1 day to make FullCalendar inclusive
+		$endDate = $hasTime
+		    ? $event['end_date']
+		    : date('Y-m-d', strtotime($event['end_date'] . ' +1 day'));
+
 		return [
-		    'id'    => $event['id'],
-		    'title' => $event['title'],
-		    'start' => $event['start_date'],
-		    'end'   => $hasTime
-                                ? $event['end_date']
-                                : date('Y-m-d', strtotime($event['end_date'] . ' +1 day')), // fix for full-day events
-		    'color' => $event['color'],
-		    'description' => $event['description']
+		    'id'          => $event['id'],
+		    'title'       => $event['title'],
+		    'start'       => $event['start_date'],
+		    'end'         => $endDate,
+		    'color'       => $event['color'],
+		    'description' => $event['description'],
+		    'allDay'      => true // important for date-only events
 		];
 	    }, $events);
 
