@@ -48,6 +48,7 @@ $routes->get('logout', 'Account::logout');
 
 $routes->get('/dashboard', 'Dashboard::index');
 $routes->get('/profile', 'Dashboard::profile');
+$routes->get('/calendar', 'Dashboard::calendar');
 
 $routes->set404Override(function () {
     $controller = new \App\Controllers\ErrorController();

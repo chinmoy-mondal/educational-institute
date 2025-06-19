@@ -10,6 +10,9 @@
     <li class="nav-item d-none d-sm-inline-block">
       <a href="<?= base_url('dashboard') ?>" class="nav-link">Dashboard</a>
     </li>
+    <li class="nav-item d-none d-sm-inline-block">
+      <a href="<?= base_url('calendar') ?>" class="nav-link">Calendar</a>
+    </li>
   </ul>
 
   <!-- Right navbar links -->

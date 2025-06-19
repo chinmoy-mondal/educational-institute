@@ -59,4 +59,21 @@ class Dashboard extends Controller
 
         return view('dashboard/profile', ['user' => $user]);
     }
+
+    public function calendar()
+    {
+        $session = session();
+        if (!$session->get('isLoggedIn')) {
+            return redirect()->to(base_url('login'));
+        }
+
+        $user = [
+            'name' => $session->get('name'),
+            'email' => $session->get('email'),
+            'phone' => $session->get('phone'),
+            'role' => $session->get('role')
+        ];
+
+        return view('dashboard/calendar', ['user' => $user]);
+    }
 }
