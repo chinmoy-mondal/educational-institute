@@ -87,7 +87,9 @@ class Dashboard extends Controller
 		    'id'    => $event['id'],
 		    'title' => $event['title'],
 		    'start' => $event['start_date'],
-		    'end'   => $event['end_date'],
+		    'end'   => $hasTime
+                                ? $event['end_date']
+                                : date('Y-m-d', strtotime($event['end_date'] . ' +1 day')), // fix for full-day events
 		    'color' => $event['color'],
 		    'description' => $event['description']
 		];
