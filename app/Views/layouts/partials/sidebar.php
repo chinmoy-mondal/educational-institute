@@ -7,7 +7,7 @@
       <ul class="nav nav-pills nav-sidebar flex-column" role="menu">
 	<li class="nav-item"><a href="<?= base_url('dashboard') ?>" class="nav-link"><i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p></a></li>
         <li class="nav-item"><a href="<?= base_url('student') ?>" class="nav-link"><i class="nav-icon fas fa-user-graduate"></i><p>Student Management</p></a></li>
-        <li class="nav-item"><a href="<?= base_url('calendar') ?>" class="nav-link"><i class="nav-icon fas fa-user-graduate"></i><p>Calender</p></a></li>
+        <li class="nav-item"><a href="<?= base_url('calendar') ?>" class="nav-link"><i class="nav-icon fas fa-calendar-alt"></i><p>Calender</p></a></li>
         <!-- Add more sidebar items similarly -->
       </ul>
     </nav>
