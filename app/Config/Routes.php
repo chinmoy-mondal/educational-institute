@@ -56,6 +56,9 @@ $routes->post('calendar/add', 'Dashboard::addEvent');
 $routes->post('calendar/update', 'Dashboard::updateEvent');
 $routes->post('calendar/delete', 'Dashboard::deleteEvent');
 
+$routes->get('public-calendar', 'PublicCalendar::index');
+$routes->get('public-calendar/events', 'PublicCalendar::events');
+
 
 $routes->set404Override(function () {
     $controller = new \App\Controllers\ErrorController();
