@@ -59,21 +59,53 @@ class Dashboard extends Controller
 
         return view('dashboard/profile', ['user' => $user]);
     }
+	public function calendar()
+	{
+	    $session = session();
+	    if (!$session->get('isLoggedIn')) {
+		return redirect()->to(base_url('login'));
+	    }
 
-    public function calendar()
-    {
-        $session = session();
-        if (!$session->get('isLoggedIn')) {
-            return redirect()->to(base_url('login'));
-        }
+	    $user = [
+		'name' => $session->get('name'),
+		'email' => $session->get('email'),
+		'phone' => $session->get('phone'),
+		'role' => $session->get('role')
+	    ];
 
-        $user = [
-            'name' => $session->get('name'),
-            'email' => $session->get('email'),
-            'phone' => $session->get('phone'),
-            'role' => $session->get('role')
-        ];
+	    return view('dashboard/calendar', ['user' => $user]);
+	}
 
-        return view('dashboard/calendar', ['user' => $user]);
-    }
+	public function events()
+	{
+	    $model = new CalendarModel();
+	    $events = $model->findAll();
+
+	    $data = array_map(function ($event) {
+		return [
+		    'id'    => $event['id'],
+		    'title' => $event['title'],
+		    'start' => $event['start_date'],
+		    'end'   => $event['end_date'],
+		    'color' => $event['color'],
+		    'description' => $event['description']
+		];
+	    }, $events);
+
+	    return $this->response->setJSON($data);
+	}
+
+	public function addEvent()
+	{
+	    $model = new CalendarModel();
+	    $model->save([
+		'title' => $this->request->getPost('title'),
+		'description' => $this->request->getPost('description'),
+		'start_date' => $this->request->getPost('start'),
+		'end_date' => $this->request->getPost('end'),
+		'color' => $this->request->getPost('color') ?? '#007bff'
+	    ]);
+
+	    return $this->response->setJSON(['status' => 'success']);
+	}
 }

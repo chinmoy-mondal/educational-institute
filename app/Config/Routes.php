@@ -34,6 +34,7 @@ $routes->get('/student/list', 'Student::list');
 $routes->get('/student/edit/(:num)', 'Student::edit/$1');
 $routes->post('/student/update/(:num)', 'Student::update/$1');
 $routes->post('/student/delete/(:num)', 'Student::delete/$1');
+
 $routes->get('run-migration/(:any)', 'DevTools::migrate/$1');
 $routes->get('run-seed/(:any)', 'DevTools::seed/$1');
 
@@ -48,7 +49,12 @@ $routes->get('logout', 'Account::logout');
 
 $routes->get('/dashboard', 'Dashboard::index');
 $routes->get('/profile', 'Dashboard::profile');
-$routes->get('/calendar', 'Dashboard::calendar');
+
+$routes->get('calendar', 'Dashboard::calendar');
+$routes->get('calendar/events', 'Dashboard::events');
+$routes->post('calendar/add', 'Dashboard::addEvent');
+
+
 
 $routes->set404Override(function () {
     $controller = new \App\Controllers\ErrorController();
