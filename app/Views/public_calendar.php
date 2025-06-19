@@ -1,42 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Public Calendar</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
+<!-- chinmoy is testing calendar page only -->
 
-<div class="container py-5">
-  <h3 class="text-center mb-4">Public School Events</h3>
-  <div class="card">
-    <div class="card-body">
-      <div id="calendar"></div>
-    </div>
-  </div>
+<?= $this->extend("layouts/base.php") ?>
+
+<?= $this->section("content"); ?>
+
+<!-- Fixed Wrapper for Navbar -->
+<div class="fixed-header">
+    <?= $this->include("structure/header"); ?>
 </div>
 
+<div class="container content">
+
+    <!-- Start: Calendar Section -->
+    <section class="calendar-section py-5 bg-white">
+        <div class="container">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">School Event Calendar</h2>
+                <p class="text-muted">Stay updated with holidays, exams, and more.</p>
+            </div>
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<?= $this->include("structure/footer"); ?>
+
+<!-- FullCalendar CSS & JS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+<!-- Calendar Init -->
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
-      initialView: 'dayGridMonth',
-      height: 600,
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek'
-      },
-      events: '/public-calendar/events',
-      eventClick: function (info) {
-        alert(info.event.title + "\n\n" + (info.event.extendedProps.description || ''));
-      }
+document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        height: 600,
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek'
+        },
+        events: '/public-calendar/events', // Make sure this route returns JSON
+        eventClick: function (info) {
+            alert(info.event.title + "\n\n" + (info.event.extendedProps.description || ''));
+        }
     });
 
     calendar.render();
-  });
+});
 </script>
-</body>
-</html>
+
+<?= $this->endSection(); ?>
