@@ -62,6 +62,47 @@
     </div>
 </div>
 
+<!-- Edit Event Modal -->
+<div class="modal fade" id="editEventModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form id="editEventForm">
+        <input type="hidden" name="id" id="edit-id">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Event</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" name="title" id="edit-title" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" id="edit-description" class="form-control"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Start Date</label>
+            <input type="date" name="start" id="edit-start" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>End Date</label>
+            <input type="date" name="end" id="edit-end" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label>Color</label>
+            <input type="color" name="color" id="edit-color" class="form-control">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Update</button>
+          <button type="button" class="btn btn-danger" id="deleteEvent">Delete</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -99,6 +140,56 @@ document.addEventListener('DOMContentLoaded', function () {
           });
     });
 });
+
+calendar.on('eventClick', function(info) {
+  const event = info.event;
+
+  // Fill modal with event data
+  document.getElementById('edit-id').value = event.id;
+  document.getElementById('edit-title').value = event.title;
+  document.getElementById('edit-description').value = event.extendedProps.description;
+  document.getElementById('edit-start').value = event.startStr.split('T')[0];
+  document.getElementById('edit-end').value = event.endStr ? event.endStr.split('T')[0] : event.startStr.split('T')[0];
+  document.getElementById('edit-color').value = event.backgroundColor || '#007bff';
+
+  $('#editEventModal').modal('show');
+});
+
+// Submit update
+document.getElementById('editEventForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+
+  fetch('/calendar/update', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(response => {
+    if (response.status === 'success') {
+      $('#editEventModal').modal('hide');
+      calendar.refetchEvents();
+    }
+  });
+});
+
+// Delete event
+document.getElementById('deleteEvent').addEventListener('click', function () {
+  const id = document.getElementById('edit-id').value;
+
+  fetch('/calendar/delete', {
+    method: 'POST',
+    body: new URLSearchParams({ id })
+  })
+  .then(res => res.json())
+  .then(response => {
+    if (response.status === 'success') {
+      $('#editEventModal').modal('hide');
+      calendar.refetchEvents();
+    }
+  });
+});
+
 </script>
 
 <?= $this->endSection() ?>

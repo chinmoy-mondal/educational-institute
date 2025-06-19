@@ -118,4 +118,28 @@ class Dashboard extends Controller
 
 	    return $this->response->setJSON(['status' => 'success']);
 	}
+
+	public function updateEvent()
+	{
+	    $model = new \App\Models\CalendarModel();
+
+	    $model->update($this->request->getPost('id'), [
+		'title'       => $this->request->getPost('title'),
+		'description' => $this->request->getPost('description'),
+		'start_date'  => $this->request->getPost('start'),
+		'end_date'    => $this->request->getPost('end'),
+		'color'       => $this->request->getPost('color')
+	    ]);
+
+	    return $this->response->setJSON(['status' => 'success']);
+	}
+
+	public function deleteEvent()
+	{
+	    $model = new \App\Models\CalendarModel();
+	    $model->delete($this->request->getPost('id'));
+
+	    return $this->response->setJSON(['status' => 'success']);
+	}
+
 }
