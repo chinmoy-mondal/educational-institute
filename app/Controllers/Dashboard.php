@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\StudentModel;
 use App\Models\UserModel;
 use CodeIgniter\Controller;
+use App\Models\CalendarModel;
 
 class Dashboard extends Controller
 {
