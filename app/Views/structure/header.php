@@ -50,12 +50,7 @@
             
                             <!-- Admissions -->
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Admissions</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">How to Apply</a></li>
-                                    <li><a class="dropdown-item" href="#">Fee Structure</a></li>
-                                    <li><a class="dropdown-item" href="#">Scholarships</a></li>
-                                </ul>
+                                <a class="nav-link dropdown-toggle" href="<?= base_url('home/staff'); ?>" role="button" data-bs-toggle="dropdown">Calendar</a>
                             </li>
             
                             <!-- Students -->
