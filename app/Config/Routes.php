@@ -14,7 +14,7 @@ $routes->get('/home/history', 'Home::history');
 $routes->get('/home/mission', 'Home::mission');
 $routes->get('/home/staff', 'Home::staff');
 $routes->get('/user', 'User::index');
-
+$routes->get('print-admit', 'AdmitCard::print');
 
 
 $routes->get('/contain', 'Contain::index');
