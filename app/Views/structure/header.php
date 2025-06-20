@@ -49,8 +49,8 @@
                             </li>
             
                             <!-- Admissions -->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="<?= base_url('public-calendar'); ?>" role="button" data-bs-toggle="dropdown">Calendar</a>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('public-calendar'); ?>">Calendar</a>
                             </li>
             
                             <!-- Students -->
