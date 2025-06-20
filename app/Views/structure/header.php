@@ -50,7 +50,7 @@
             
                             <!-- Admissions -->
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="<?= base_url('home/staff'); ?>" role="button" data-bs-toggle="dropdown">Calendar</a>
+                                <a class="nav-link dropdown-toggle" href="<?= base_url('public-calendar'); ?>" role="button" data-bs-toggle="dropdown">Calendar</a>
                             </li>
             
                             <!-- Students -->
