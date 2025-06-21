@@ -53,15 +53,14 @@
     }
 
     .routine-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12px;
+       font-size: 12px;
+       margin-bottom: 10px;
     }
-
-    .routine-table th, .routine-table td {
-      border: 1px solid #000;
-      text-align: center;
-      padding: 4px;
+    
+    .routine-table th, td {
+	  padding: 2px 6px;
+	  font-size: 12px;
+	  line-height: 1.2;
     }
 
     .footer-note {
