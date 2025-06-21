@@ -6,14 +6,17 @@
   <style>
     @media print {
       @page {
-        size: A4 portrait;
+        size: A4;
+        margin: 0;
+      }
+      body {
         margin: 0;
       }
     }
 
     body {
-      margin: 0;
       font-family: 'Kalpurush', 'Noto Sans Bengali', sans-serif;
+      background-color: #fff;
     }
 
     .page {
@@ -29,8 +32,9 @@
 
     .admit-card {
       border: 1px solid #000;
-      padding: 10px;
+      padding: 12px;
       height: 48%;
+      margin-bottom: 8px;
       box-sizing: border-box;
     }
 
@@ -43,14 +47,15 @@
     }
 
     .info {
-      font-size: 12px;
-      margin-bottom: 10px;
+      font-size: 13px;
+      margin-bottom: 8px;
+      line-height: 1.5;
     }
 
     .routine-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 11px;
+      font-size: 12px;
     }
 
     .routine-table th, .routine-table td {
@@ -60,14 +65,14 @@
     }
 
     .footer-note {
-      font-size: 10px;
-      margin-top: 6px;
+      font-size: 11px;
+      margin-top: 8px;
     }
 
     .sign {
       display: flex;
       justify-content: space-between;
-      margin-top: 6px;
+      margin-top: 10px;
       font-size: 12px;
     }
   </style>
@@ -82,30 +87,36 @@
           Mulgram Secondary School<br>
           Keshabpur, Jashore<br>
           ADMIT CARD<br>
-          Annual Summitive Assessment-2024
+          Annual Summative Assessment-2024
         </div>
 
         <div class="info">
-          Name: <?= $students[$j]['student_name'] ?><br>
-          Roll No.: <?= $students[$j]['roll'] ?><br>
-          Father's Name: <?= $students[$j]['father_name'] ?><br>
-          Mother's Name: <?= $students[$j]['mother_name'] ?><br>
-          Class: <?= $students[$j]['class'] ?> | Section: <?= $students[$j]['section'] ?? 'N/A' ?>
+          Name: <?= esc($students[$j]['student_name']) ?><br>
+          Roll No.: <?= esc($students[$j]['roll']) ?><br>
+          Father's Name: <?= esc($students[$j]['father_name']) ?><br>
+          Mother's Name: <?= esc($students[$j]['mother_name']) ?><br>
+          Class: <?= esc($students[$j]['class']) ?> | Section: <?= esc($students[$j]['section'] ?? 'N/A') ?>
         </div>
 
         <table class="routine-table">
           <tr>
-            <th>ক্রমিক</th><th>তারিখ</th><th>দিন</th><th>বিষয়</th>
+            <th>ক্রমিক</th>
+            <th>তারিখ</th>
+            <th>দিন</th>
+            <th>বিষয়</th>
           </tr>
-          <?php $count = 1; ?>
-          <?php foreach ($events as $event): ?>
+          <?php
+            $count = 1;
+            foreach ($events as $event):
+              if ($event['class'] == $students[$j]['class']): // Filter by class
+          ?>
             <tr>
               <td><?= $count++ ?></td>
               <td><?= date('d/m/Y', strtotime($event['start_date'])) ?></td>
-              <td><?= date('l', strtotime($event['start_date'])) ?></td>
-              <td><?= $event['title'] ?></td>
+              <td><?= bangla_day(date('l', strtotime($event['start_date']))) ?></td>
+              <td><?= esc($event['title']) ?></td>
             </tr>
-          <?php endforeach; ?>
+          <?php endif; endforeach; ?>
         </table>
 
         <div class="footer-note">
