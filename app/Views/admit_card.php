@@ -86,7 +86,7 @@
         </div>
 
         <div class="info">
-          Name: <?= $students[$j]['name'] ?><br>
+          Name: <?= $students[$j]['student_name'] ?><br>
           Roll No.: <?= $students[$j]['roll'] ?><br>
           Father's Name: <?= $students[$j]['father_name'] ?><br>
           Mother's Name: <?= $students[$j]['mother_name'] ?><br>
