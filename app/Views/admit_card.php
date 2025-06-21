@@ -113,14 +113,14 @@
   </tr>
 </table><div class="info-two-line">
 	  <div>
-	    <strong>Name:</strong> <?= esc($students[$j]['student_name']) ?> |
-	    <strong>Roll:</strong> <?= esc($students[$j]['roll']) ?> |
-	    <strong>Class:</strong> <?= esc($students[$j]['class']) ?> |
+	    <strong>Name:</strong> <?= esc($students[$j]['student_name']) ?>  
+	    <strong>Roll:</strong> <?= esc($students[$j]['roll']) ?>  
+	    <strong>Class:</strong> <?= esc($students[$j]['class']) ?>  
 	    <strong>Section:</strong> <?= esc($students[$j]['section'] ?? 'N/A') ?>
 	  </div>
 	  <div>
-	    <strong>Father:</strong> <?= esc($students[$j]['father_name']) ?>
-	    <strong>Mother:</strong> <?= esc($students[$j]['mother_name']) ?> |
+	    <strong>Father's Name:</strong> <?= esc($students[$j]['father_name']) ?>
+	    <strong>Mother's Name:</strong> <?= esc($students[$j]['mother_name']) ?> 
 	  </div>
 	</div>
 
@@ -151,7 +151,7 @@
 
         <div class="sign">
           <span>Class Teacher</span>
-          <span>Head Sir</span>
+          <span>Head Teacher</span>
         </div>
       </div>
     <?php endfor; ?>

@@ -13,7 +13,10 @@ class AdmitCard extends BaseController
         $studentModel = new StudentModel();
         $eventModel = new CalendarModel();
 
-        $students = $studentModel->findAll();
+        $students = $studentModel
+			->where('class !=','10')
+			->orderBy('class','ASC')
+			->findAll();
         $events = $eventModel->findAll();
 
         return view('admit_card', [
