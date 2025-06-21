@@ -108,7 +108,7 @@
           <?php
             $count = 1;
             foreach ($events as $event):
-              if ($event['class'] == $students[$j]['class']): // Filter by class
+              if ($event['title'] == $students[$j]['class']): // Filter by class
           ?>
             <tr>
               <td><?= $count++ ?></td>
