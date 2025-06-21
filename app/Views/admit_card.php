@@ -1,78 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <title>Admit Cards</title>
   <style>
-    @media print {
-      @page {
-        size: A4;
-        margin: 0;
-      }
-      body {
-        margin: 0;
-      }
-    }
-
     body {
-      font-family: 'Kalpurush', 'Noto Sans Bengali', sans-serif;
-      background-color: #fff;
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
     }
 
     .page {
       width: 210mm;
       height: 297mm;
-      padding: 15mm;
+      padding: 10mm;
       box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
       page-break-after: always;
     }
 
     .admit-card {
-      border: 1px solid #000;
-      padding: 12px;
+      width: 100%;
       height: 48%;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      padding: 8px;
       box-sizing: border-box;
     }
 
-    .title {
+    .admit-header {
       text-align: center;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: bold;
-      text-decoration: underline;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
-    .info {
-      font-size: 13px;
-      margin-bottom: 8px;
-      line-height: 1.5;
-    }
-
-    .routine-table {
-       font-size: 12px;
-       margin-bottom: 10px;
-    }
-    
-    .routine-table th, td {
-	  padding: 2px 6px;
-	  font-size: 12px;
-	  line-height: 1.2;
-    }
-
-    .footer-note {
-      font-size: 11px;
-      margin-top: 8px;
-    }
-
-    .sign {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 10px;
+    .student-info-table {
+      width: 100%;
       font-size: 12px;
+      border-collapse: collapse;
+      margin-bottom: 8px;
+    }
+
+    .student-info-table th,
+    .student-info-table td {
+      padding: 4px 6px;
+      border: 1px solid #aaa;
+      text-align: left;
+    }
+
+    .routine-table-horizontal {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 11px;
+      margin-top: 5px;
+    }
+
+    .routine-table-horizontal th,
+    .routine-table-horizontal td {
+      border: 1px solid #999;
+      padding: 3px 4px;
+      text-align: center;
+    }
+
+    @media print {
+      body {
+        margin: 0;
+      }
+
+      .page {
+        page-break-after: always;
+      }
     }
   </style>
 </head>
@@ -82,63 +79,57 @@
   <div class="page">
     <?php for ($j = $i; $j < $i + 2 && $j < count($students); $j++): ?>
       <div class="admit-card">
-        <div class="title">
-          Mulgram Secondary School<br>
-          Keshabpur, Jashore<br>
-          ADMIT CARD<br>
-          Annual Summative Assessment-2024
-        </div>
+        <div class="admit-header">Exam Admit Card</div>
 
-	<div class="info-two-line">
-	  <div>
-	    <strong>Name:</strong> <?= esc($students[$j]['student_name']) ?> |
-	    <strong>Roll:</strong> <?= esc($students[$j]['roll']) ?> |
-	    <strong>Father:</strong> <?= esc($students[$j]['father_name']) ?>
-	  </div>
-	  <div>
-	    <strong>Mother:</strong> <?= esc($students[$j]['mother_name']) ?> |
-	    <strong>Class:</strong> <?= esc($students[$j]['class']) ?> |
-	    <strong>Section:</strong> <?= esc($students[$j]['section'] ?? 'N/A') ?>
-	  </div>
-	</div>
-
-        <table class="routine-table">
+        <table class="student-info-table">
           <tr>
-            <th>ক্রমিক</th>
-            <th>তারিখ</th>
-            <th>দিন</th>
-            <th>বিষয়</th>
+            <th>Name</th>
+            <td><?= esc($students[$j]['student_name']) ?></td>
+            <th>Roll No.</th>
+            <td><?= esc($students[$j]['roll']) ?></td>
           </tr>
-          <?php
-            $count = 1;
-            foreach ($events as $event):
-              if ($event['title'] == $students[$j]['class']): // Filter by class
-          ?>
-            <tr>
-              <td><?= $count++ ?></td>
-              <td><?= date('d/m/Y', strtotime($event['start_date'])) ?></td>
-              <td><?= bangla_day(date('l', strtotime($event['start_date']))) ?></td>
-              <td><?= esc($event['title']) ?></td>
-            </tr>
-          <?php endif; endforeach; ?>
+          <tr>
+            <th>Father's Name</th>
+            <td><?= esc($students[$j]['father_name']) ?></td>
+            <th>Mother's Name</th>
+            <td><?= esc($students[$j]['mother_name']) ?></td>
+          </tr>
+          <tr>
+            <th>Class</th>
+            <td><?= esc($students[$j]['class']) ?></td>
+            <th>Section</th>
+            <td><?= esc($students[$j]['section']) ?></td>
+          </tr>
         </table>
 
-        <div class="footer-note">
-          পরীক্ষার দিন নির্ধারিত সময়ের ৩০ মিনিট পূর্বে কেন্দ্রে উপস্থিত থাকতে হবে।
-        </div>
-
-        <div class="sign">
-          <span>Class Teacher</span>
-          <span>Head Sir</span>
-        </div>
+        <table class="routine-table-horizontal">
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Sunday</th>
+              <th>Monday</th>
+              <th>Tuesday</th>
+              <th>Wednesday</th>
+              <th>Thursday</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($routineSlots as $slot): ?>
+              <tr>
+                <td><?= esc($slot['time']) ?></td>
+                <td><?= esc($routineData[$j]['Sunday'][$slot['time']] ?? '') ?></td>
+                <td><?= esc($routineData[$j]['Monday'][$slot['time']] ?? '') ?></td>
+                <td><?= esc($routineData[$j]['Tuesday'][$slot['time']] ?? '') ?></td>
+                <td><?= esc($routineData[$j]['Wednesday'][$slot['time']] ?? '') ?></td>
+                <td><?= esc($routineData[$j]['Thursday'][$slot['time']] ?? '') ?></td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
       </div>
     <?php endfor; ?>
   </div>
 <?php endfor; ?>
-
-<script>
-  window.onload = () => window.print();
-</script>
 
 </body>
 </html>
