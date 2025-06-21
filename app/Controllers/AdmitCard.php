@@ -11,7 +11,7 @@ class AdmitCard extends BaseController
     public function index()
     {
         $studentModel = new StudentModel();
-        $eventModel = new EventModel();
+        $eventModel = new CalendarModel();
 
         $students = $studentModel->findAll();
         $events = $eventModel->findAll();
