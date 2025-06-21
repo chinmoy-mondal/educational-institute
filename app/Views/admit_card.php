@@ -92,19 +92,26 @@
   <div class="page">
     <?php for ($j = $i; $j < $i + 2 && $j < count($students); $j++): ?>
       <div class="admit-card">
-<div class="title-container">
-  <img src="<?= base_url('public/assets/img/logo.jpg') ?>" class="title-logo" alt="Left Logo">
-  
-  <div class="title">
-    Mulgram Secondary School<br>
-    Keshabpur, Jashore<br>
-    ADMIT CARD<br>
-    Annual Summative Assessment-2024
-  </div>
-  
-  <img src="<?= base_url('public/images/logo-right.png') ?>" class="title-logo" alt="Right Logo">
-</div>
-	<div class="info-two-line">
+	<table style="width: 100%; text-align: center;">
+  <tr>
+    <td style="width: 80px;">
+      <img src="<?= base_url('public/assets/img/logo.jpg') ?>" style="width: 80px; height: 80px;" alt="Left Logo">
+    </td>
+    
+    <td>
+      <div style="font-size: 16px; font-weight: bold; line-height: 1.5;">
+        Mulgram Secondary School<br>
+        Keshabpur, Jashore<br>
+        <strong>ADMIT CARD</strong><br>
+       Half yearly exam - 2025
+      </div>
+    </td>
+    
+    <td style="width: 80px;">
+      <img src="<?= esc($students[$j]['student_pic']) ?>" style="width: 80px; height: 80px;" alt="Right Logo">
+    </td>
+  </tr>
+</table><div class="info-two-line">
 	  <div>
 	    <strong>Name:</strong> <?= esc($students[$j]['student_name']) ?> |
 	    <strong>Roll:</strong> <?= esc($students[$j]['roll']) ?> |
