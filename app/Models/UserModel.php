@@ -6,8 +6,8 @@ use CodeIgniter\Model;
 
 class UserModel extends Model
 {
-    protected $table = 'users'; // name of your table
-    protected $primaryKey = 'id'; // primary key
+    protected $table      = 'users';
+    protected $primaryKey = 'id';
 
     protected $allowedFields = [
         'name',
@@ -18,19 +18,12 @@ class UserModel extends Model
         'phone',
         'email',
         'password',
-        'is_active'
+        'account_status', // ✅ Important for filtering approved users
+        'created_at',
+        'updated_at'
     ];
 
-    protected $useTimestamps = true; // if you have created_at and updated_at columns
-
-    protected $beforeInsert = ['hashPassword'];
-    protected $beforeUpdate = ['hashPassword'];
-
-    protected function hashPassword(array $data)
-    {
-        if (!empty($data['data']['password'])) {
-            $data['data']['password'] = password_hash($data['data']['password'], PASSWORD_DEFAULT);
-        }
-        return $data;
-    }
+    protected $useTimestamps = true;
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
 }

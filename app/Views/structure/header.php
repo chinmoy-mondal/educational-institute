@@ -49,13 +49,8 @@
                             </li>
             
                             <!-- Admissions -->
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Admissions</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">How to Apply</a></li>
-                                    <li><a class="dropdown-item" href="#">Fee Structure</a></li>
-                                    <li><a class="dropdown-item" href="#">Scholarships</a></li>
-                                </ul>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= base_url('public-calendar'); ?>">Calendar</a>
                             </li>
             
                             <!-- Students -->

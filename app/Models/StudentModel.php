@@ -5,6 +5,7 @@ use CodeIgniter\Model;
 class StudentModel extends Model
 {
     protected $table = 'students';
+    protected $primaryKey = 'id';
     protected $allowedFields = [
         'student_name', 
         'roll', 
