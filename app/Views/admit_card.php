@@ -78,6 +78,12 @@
       margin-top: 10px;
       font-size: 12px;
     }
+
+.title-logo {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+}
   </style>
 </head>
 <body>
@@ -86,23 +92,28 @@
   <div class="page">
     <?php for ($j = $i; $j < $i + 2 && $j < count($students); $j++): ?>
       <div class="admit-card">
-        <div class="title">
-          Mulgram Secondary School<br>
-          Keshabpur, Jashore<br>
-          ADMIT CARD<br>
-          Annual Summative Assessment-2024
-        </div>
-
+<div class="title-container">
+  <img src="<?= base_url('public/assets/img/logo.jpg') ?>" class="title-logo" alt="Left Logo">
+  
+  <div class="title">
+    Mulgram Secondary School<br>
+    Keshabpur, Jashore<br>
+    ADMIT CARD<br>
+    Annual Summative Assessment-2024
+  </div>
+  
+  <img src="<?= base_url('public/images/logo-right.png') ?>" class="title-logo" alt="Right Logo">
+</div>
 	<div class="info-two-line">
 	  <div>
 	    <strong>Name:</strong> <?= esc($students[$j]['student_name']) ?> |
 	    <strong>Roll:</strong> <?= esc($students[$j]['roll']) ?> |
-	    <strong>Father:</strong> <?= esc($students[$j]['father_name']) ?>
-	  </div>
-	  <div>
-	    <strong>Mother:</strong> <?= esc($students[$j]['mother_name']) ?> |
 	    <strong>Class:</strong> <?= esc($students[$j]['class']) ?> |
 	    <strong>Section:</strong> <?= esc($students[$j]['section'] ?? 'N/A') ?>
+	  </div>
+	  <div>
+	    <strong>Father:</strong> <?= esc($students[$j]['father_name']) ?>
+	    <strong>Mother:</strong> <?= esc($students[$j]['mother_name']) ?> |
 	  </div>
 	</div>
 
