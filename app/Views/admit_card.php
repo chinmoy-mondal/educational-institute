@@ -52,17 +52,21 @@
       line-height: 1.5;
     }
 
-    .routine-table {
-       font-size: 12px;
-       margin-bottom: 10px;
-    }
-    
-    .routine-table th, td {
-	  padding: 2px 6px;
-	  font-size: 12px;
-	  line-height: 1.2;
-    }
+.routine-table {
+  font-size: 12px;
+  margin-bottom: 10px;
+  border-collapse: collapse;
+  width: 100%;
+}
 
+.routine-table th,
+.routine-table td {
+  padding: 2px 6px;
+  font-size: 12px;
+  line-height: 1.2;
+  text-align: center;
+  border: 1px solid #000;
+}
     .footer-note {
       font-size: 11px;
       margin-top: 8px;
