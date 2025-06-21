@@ -108,8 +108,7 @@
     </td>
     
     <td style="width: 80px;">
-      <img src="<?= esc($students[$j]['student_pic']) ?>" style="width: 80px; height: 80px;" alt="Right Logo">
-    </td>
+    <img src="<?= base_url( esc($students[$j]['student_pic'])) ?>" width="60" height="70" alt="Student Photo"></td>
   </tr>
 </table><div class="info-two-line">
 	  <div>
