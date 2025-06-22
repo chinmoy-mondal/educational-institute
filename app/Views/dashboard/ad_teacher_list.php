@@ -31,8 +31,7 @@
                 <?php foreach ($teachers as $teacher): ?>
                   <tr>
                     <td class="text-center">
-                      <img src="<?= base_url($teacher['picture']) ?>" alt="Photo" width="50" height="50" class="rounded-circle shadow-sm">
-                    </td>
+                    <img src="<?= base_url('uploads/' . (!empty($teacher['photo']) ? $teacher['photo'] : 'default.png')) ?>" width="50" height="50" class="rounded-circle"></td>
                     <td><?= esc($teacher['name']) ?></td>
                     <td><?= esc($teacher['designation']) ?></td>
                     <td><?= esc($teacher['subject']) ?></td>
