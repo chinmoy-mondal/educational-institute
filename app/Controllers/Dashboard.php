@@ -158,6 +158,6 @@ class Dashboard extends Controller
 		'phone' => $session->get('phone'),
 		'role' => $session->get('role')
 	    ];
-	    return view('ad_teacher_list', ['teachers' => $teachers]);
+	    return view('dashboard/ad_teacher_list', ['teachers' => $teachers]);
 	}
 }
