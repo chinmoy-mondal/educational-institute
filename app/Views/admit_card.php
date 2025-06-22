@@ -134,39 +134,41 @@
 
 
 
-	<?php
-	  $count = 1;
-	  foreach ($events as $event):
-	    $eventTitle = strtolower(str_replace(['(', ')'], '', $event['title']));
-	    $studentClass = strtolower($students[$j]['class']);
-	    $studentSection = strtolower($students[$j]['section'] ?? '');
+<?php
+  $count = 1;
+  foreach ($events as $event):
+    $eventTitle = strtolower(str_replace(['(', ')'], '', $event['title']));
+    $studentClass = strtolower($students[$j]['class']);
+    $studentSection = strtolower($students[$j]['section'] ?? '');
 
-	    if ($eventTitle === $studentClass):
-	?>
-	      <tr>
-		<td><?= $count++ ?></td>
-		<td><?= date('d/m/Y', strtotime($event['start_date'])) ?></td>
-		<td><?= bangla_day(date('l', strtotime($event['start_date']))) ?></td>
-		<td><?= esc($event['description']) ?></td>
-	      </tr>
-	<?php
-	    elseif (
-	      $studentClass === '9' &&
-	      $studentSection === 'voc' &&
-	      $eventTitle === '9voc'
-	    ):
-	?>
-	      <tr>
-		<td><?= $count++ ?></td>
-		<td><?= date('d/m/Y', strtotime($event['start_date'])) ?></td>
-		<td><?= bangla_day(date('l', strtotime($event['start_date']))) ?></td>
-		<td><?= esc($event['description']) ?> (Vocational)</td>
-	      </tr>
-	<?php
-	    endif;
-	  endforeach;
-	?>
-
+    if (
+      $eventTitle === $studentClass &&
+      strpos($studentSection, 'voc') === false // Not vocational
+    ):
+?>
+      <tr>
+        <td><?= $count++ ?></td>
+        <td><?= date('d/m/Y', strtotime($event['start_date'])) ?></td>
+        <td><?= bangla_day(date('l', strtotime($event['start_date']))) ?></td>
+        <td><?= esc($event['description']) ?></td>
+      </tr>
+<?php
+    elseif (
+      $studentClass === '9' &&
+      strpos($studentSection, 'voc') !== false &&
+      $eventTitle === '9voc'
+    ):
+?>
+      <tr>
+        <td><?= $count++ ?></td>
+        <td><?= date('d/m/Y', strtotime($event['start_date'])) ?></td>
+        <td><?= bangla_day(date('l', strtotime($event['start_date']))) ?></td>
+        <td><?= esc($event['description']) ?> (Vocational)</td>
+      </tr>
+<?php
+    endif;
+  endforeach;
+?>
 
 
         </table>
