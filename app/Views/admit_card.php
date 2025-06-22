@@ -52,21 +52,21 @@
       line-height: 1.5;
     }
 
-.routine-table {
-  font-size: 12px;
-  margin-bottom: 10px;
-  border-collapse: collapse;
-  width: 100%;
-}
+	.routine-table {
+	  font-size: 12px;
+	  margin-bottom: 10px;
+	  border-collapse: collapse;
+	  width: 100%;
+	}
 
-.routine-table th,
-.routine-table td {
-  padding: 2px 6px;
-  font-size: 12px;
-  line-height: 1.2;
-  text-align: center;
-  border: 1px solid #000;
-}
+	.routine-table th,
+	.routine-table td {
+	  padding: 2px 6px;
+	  font-size: 12px;
+	  line-height: 1.2;
+	  text-align: center;
+	  border: 1px solid #000;
+	}
     .footer-note {
       font-size: 11px;
       margin-top: 8px;
@@ -131,18 +131,44 @@
             <th>দিন</th>
             <th>বিষয়</th>
           </tr>
-          <?php
-            $count = 1;
-            foreach ($events as $event):
-              if ($event['title'] == $students[$j]['class']): // Filter by class
-          ?>
-            <tr>
-              <td><?= $count++ ?></td>
-              <td><?= date('d/m/Y', strtotime($event['start_date'])) ?></td>
-              <td><?= bangla_day(date('l', strtotime($event['start_date']))) ?></td>
-              <td><?= esc($event['description']) ?></td>
-            </tr>
-          <?php endif; endforeach; ?>
+
+
+
+	<?php
+	  $count = 1;
+	  foreach ($events as $event):
+	    $eventTitle = strtolower(str_replace(['(', ')'], '', $event['title']));
+	    $studentClass = strtolower($students[$j]['class']);
+	    $studentSection = strtolower($students[$j]['section'] ?? '');
+
+	    if ($eventTitle === $studentClass):
+	?>
+	      <tr>
+		<td><?= $count++ ?></td>
+		<td><?= date('d/m/Y', strtotime($event['start_date'])) ?></td>
+		<td><?= bangla_day(date('l', strtotime($event['start_date']))) ?></td>
+		<td><?= esc($event['description']) ?></td>
+	      </tr>
+	<?php
+	    elseif (
+	      $studentClass === '9' &&
+	      $studentSection === 'voc' &&
+	      $eventTitle === '9voc'
+	    ):
+	?>
+	      <tr>
+		<td><?= $count++ ?></td>
+		<td><?= date('d/m/Y', strtotime($event['start_date'])) ?></td>
+		<td><?= bangla_day(date('l', strtotime($event['start_date']))) ?></td>
+		<td><?= esc($event['description']) ?> (Vocational)</td>
+	      </tr>
+	<?php
+	    endif;
+	  endforeach;
+	?>
+
+
+
         </table>
 
         <div class="footer-note">
