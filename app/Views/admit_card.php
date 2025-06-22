@@ -7,7 +7,7 @@
     @media print {
       @page {
         size: A4;
-        margin: 5mm 15mm;
+        margin: 1mm 15mm;
       }
       body {
         margin: 0;
@@ -32,9 +32,9 @@
 
     .admit-card {
       border: 1px solid #000;
-      padding: 12px;
+      padding: 6px;
       height: 48%;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
       box-sizing: border-box;
     }
 
