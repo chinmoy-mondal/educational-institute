@@ -79,11 +79,11 @@
       font-size: 12px;
     }
 
-.title-logo {
-  width: 70px;
-  height: 70px;
-  object-fit: contain;
-}
+    .title-logo {
+       width: 70px;
+       height: 70px;
+       object-fit: contain;
+    }
   </style>
 </head>
 <body>
@@ -93,24 +93,25 @@
     <?php for ($j = $i; $j < $i + 2 && $j < count($students); $j++): ?>
       <div class="admit-card">
 	<table style="width: 100%; text-align: center;">
-  <tr>
-    <td style="width: 80px;">
-      <img src="<?= base_url('public/assets/img/logo.jpg') ?>" style="width: 80px; height: 80px;" alt="Left Logo">
-    </td>
-    
-    <td>
-      <div style="font-size: 16px; font-weight: bold; line-height: 1.5;">
-        Mulgram Secondary School<br>
-        Keshabpur, Jashore<br>
-        <strong>ADMIT CARD</strong><br>
-       Half yearly exam - 2025
-      </div>
-    </td>
-    
-    <td style="width: 80px;">
-    <img src="<?= base_url( esc($students[$j]['student_pic'])) ?>" width="60" height="70" alt="Student Photo"></td>
-  </tr>
-</table><div class="info-two-line">
+	  <tr>
+	    <td style="width: 80px;">
+	      <img src="<?= base_url('public/assets/img/logo.jpg') ?>" style="width: 80px; height: 80px;" alt="Left Logo">
+	    </td>
+	    
+	    <td>
+	      <div style="font-size: 16px; font-weight: bold; line-height: 1.5;">
+		Mulgram Secondary School<br>
+		Keshabpur, Jashore<br>
+		<strong>ADMIT CARD</strong><br>
+	       Half yearly exam - 2025
+	      </div>
+	    </td>
+	    
+	    <td style="width: 80px;">
+	    <img src="<?= base_url( esc($students[$j]['student_pic'])) ?>" width="60" height="70" alt="Student Photo"></td>
+	  </tr>
+	</table>
+	<div class="info-two-line">
 	  <div>
 	    <strong>Name:</strong> <?= esc($students[$j]['student_name']) ?>  
 	    <strong>Roll:</strong> <?= esc($students[$j]['roll']) ?>  
@@ -148,10 +149,17 @@
           পরীক্ষার দিন নির্ধারিত সময়ের ৩০ মিনিট পূর্বে কেন্দ্রে উপস্থিত থাকতে হবে।
         </div>
 
-        <div class="sign">
-          <span>Class Teacher</span>
-          <span>Head Teacher</span>
-        </div>
+
+
+	<div class="sign">
+	  <span>Class Teacher</span>
+	  <span style="text-align: center;">
+	    <img src="<?= base_url('public/assets/img/sign.png') ?>" alt="Signature" style="width: 100px; height: auto; display: block; margin: 0 auto;">
+	    Head Teacher
+	  </span>
+	</div>
+
+
       </div>
     <?php endfor; ?>
   </div>
