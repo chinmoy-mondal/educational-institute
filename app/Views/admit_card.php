@@ -128,6 +128,7 @@
           <tr>
             <th>ক্রমিক</th>
             <th>তারিখ</th>
+            <th>সময়</th>
             <th>দিন</th>
             <th>বিষয়</th>
           </tr>
@@ -149,6 +150,7 @@
       <tr>
         <td><?= $count++ ?></td>
         <td><?= date('d/m/Y', strtotime($event['start_date'])) ?></td>
+	<td>10.00 AM to 1.00 PM</td>
         <td><?= bangla_day(date('l', strtotime($event['start_date']))) ?></td>
         <td><?= esc($event['description']) ?></td>
       </tr>
@@ -162,6 +164,7 @@
       <tr>
         <td><?= $count++ ?></td>
         <td><?= date('d/m/Y', strtotime($event['start_date'])) ?></td>
+	<td>10.00 AM to 1.00 PM</td>
         <td><?= bangla_day(date('l', strtotime($event['start_date']))) ?></td>
         <td><?= esc($event['description']) ?> (Vocational)</td>
       </tr>
