@@ -21,7 +21,7 @@
 
     .page {
       width: 210mm;
-      height: 297mm;
+      height: 335mm;
       padding: 15mm;
       box-sizing: border-box;
       display: flex;
@@ -152,7 +152,7 @@
 
 
 	<div class="sign">
-	  <span>Class Teacher</span>
+	  <span><br><br><br>Class Teacher</span>
 	  <span style="text-align: center;">
 	    <img src="<?= base_url('public/assets/img/sign.png') ?>" alt="Signature" style="width: 100px; height: auto; display: block; margin: 0 auto;">
 	    Head Teacher
