@@ -142,7 +142,7 @@ class Dashboard extends Controller
 	    return $this->response->setJSON(['status' => 'success']);
 	}
 
-	public function index()
+	public function teachers()
 	{
 	    $teacherModel = new \App\Models\UserModel();
 	    $teachers = $teacherModel->findAll();
