@@ -6,7 +6,7 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-
+# website page
 $routes->get('/', 'Home::index');
 $routes->get('/home', 'Home::index');
 $routes->get('/home/welcome', 'Home::welcome');
@@ -47,14 +47,16 @@ $routes->get('login', 'Account::showLoginForm');
 $routes->post('login', 'Account::processLogin');
 $routes->get('logout', 'Account::logout');
 
+#Dashboard
 $routes->get('/dashboard', 'Dashboard::index');
 $routes->get('/profile', 'Dashboard::profile');
-
 $routes->get('calendar', 'Dashboard::calendar');
 $routes->get('calendar/events', 'Dashboard::events');
 $routes->post('calendar/add', 'Dashboard::addEvent');
 $routes->post('calendar/update', 'Dashboard::updateEvent');
 $routes->post('calendar/delete', 'Dashboard::deleteEvent');
+$routes->post('ad_teacher_list', 'Dashboard::teachers');
+
 
 $routes->get('public-calendar', 'PublicCalendar::index');
 $routes->get('public-calendar/events', 'PublicCalendar::events');

@@ -142,4 +142,22 @@ class Dashboard extends Controller
 	    return $this->response->setJSON(['status' => 'success']);
 	}
 
+	public function index()
+	{
+	    $teacherModel = new \App\Models\UserModel();
+	    $teachers = $teacherModel->findAll();
+
+	    $session = session();
+	    if (!$session->get('isLoggedIn')) {
+		return redirect()->to(base_url('login'));
+	    }
+
+	    $user = [
+		'name' => $session->get('name'),
+		'email' => $session->get('email'),
+		'phone' => $session->get('phone'),
+		'role' => $session->get('role')
+	    ];
+	    return view('ad_teacher_list', ['teachers' => $teachers]);
+	}
 }
