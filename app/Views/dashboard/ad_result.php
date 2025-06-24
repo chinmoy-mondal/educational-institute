@@ -36,28 +36,12 @@
                                         <td><?= $index + 1 ?></td>
 
                                         <td>
-                                            <input type="text" 
-                                                name="students[<?= $index ?>][name]" 
-                                                class="form-control" 
-                                                value="<?= esc($student['student_name']) ?>" readonly>
-                                            <input type="hidden" 
-                                                name="students[<?= $index ?>][id]" 
-                                                value="<?= esc($student['id']) ?>">
+                                            <?= esc($student['student_name']) ?>
+                                            <input type="hidden" name="students[<?= $index ?>][id]" value="<?= esc($student['id']) ?>">
                                         </td>
 
-                                        <td>
-                                            <input type="text" 
-                                                name="students[<?= $index ?>][roll]" 
-                                                class="form-control bg-light" 
-                                                value="<?= esc($student['roll']) ?>" readonly>
-                                        </td>
-
-                                        <td>
-                                            <input type="text" 
-                                                name="students[<?= $index ?>][class]" 
-                                                class="form-control bg-light" 
-                                                value="<?= esc($student['class']) ?>" readonly>
-                                        </td>
+                                        <td><?= esc($student['roll']) ?></td>
+                                        <td><?= esc($student['class']) ?></td>
 
                                         <td class="mark-cell">
                                             <input type="number" 
