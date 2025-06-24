@@ -15,7 +15,8 @@
     </li>
   </ul>
 
-  <!-- Right navbar links -->
+  
+ <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto">
     <!-- Profile Button -->
     <li class="nav-item">
