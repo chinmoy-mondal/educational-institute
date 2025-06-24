@@ -160,7 +160,14 @@ class Dashboard extends Controller
 	    ];
 	    return view('dashboard/ad_teacher_list', ['teachers' => $teachers]);
 	}
-	public function result(){
-		return view('dashboard/ad_result');
+
+	public function result()
+	{
+	    $studentModel = new StudentModel();
+
+	    // Fetch 10 students — adjust the `->findAll(10)` to suit your case
+	    $students = $studentModel->orderBy('roll', 'ASC')->findAll(10);
+
+	    return view('dashboard/ad_result', ['students' => $students]);
 	}
 }

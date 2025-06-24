@@ -7,7 +7,13 @@
 
             <div class="card shadow border-0 rounded-4">
                 <div class="card-body p-5">
-                    <h4 class="mb-4 text-center">Enter Marks for 10 Demo Students</h4>
+                    <h4 class="mb-4 text-center">Enter Marks for Students</h4>
+
+                    <?php if (session()->getFlashdata('message')): ?>
+                        <div class="alert alert-success">
+                            <?= session()->getFlashdata('message') ?>
+                        </div>
+                    <?php endif; ?>
 
                     <form method="post" action="<?= site_url('results/submit-demo') ?>">
                         <div class="table-responsive">
@@ -16,6 +22,8 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Student Name</th>
+                                        <th>Roll</th>
+                                        <th>Class</th>
                                         <th>Written</th>
                                         <th>MCQ</th>
                                         <th>Practical</th>
@@ -23,29 +31,61 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                        $demoNames = [
-                                            "Ayesha Akter", "Sakib Hasan", "Nusrat Jahan", "Fahim Ahmed", "Tanjim Alam",
-                                            "Jannatul Ferdous", "Imran Hossain", "Mim Sultana", "Raihan Islam", "Shorna Akter"
-                                        ];
-                                        foreach ($demoNames as $index => $name):
-                                    ?>
+                                    <?php foreach ($students as $index => $student): ?>
                                     <tr>
                                         <td><?= $index + 1 ?></td>
+
                                         <td>
-                                            <input type="text" name="students[<?= $index ?>][name]" class="form-control" value="<?= $name ?>" readonly>
+                                            <input type="text" 
+                                                name="students[<?= $index ?>][name]" 
+                                                class="form-control" 
+                                                value="<?= esc($student['student_name']) ?>" readonly>
+                                            <input type="hidden" 
+                                                name="students[<?= $index ?>][id]" 
+                                                value="<?= esc($student['id']) ?>">
                                         </td>
+
                                         <td>
-                                            <input type="number" name="students[<?= $index ?>][written]" class="form-control mark-input" oninput="updateTotal(<?= $index ?>)">
+                                            <input type="text" 
+                                                name="students[<?= $index ?>][roll]" 
+                                                class="form-control bg-light" 
+                                                value="<?= esc($student['roll']) ?>" readonly>
                                         </td>
+
                                         <td>
-                                            <input type="number" name="students[<?= $index ?>][mcq]" class="form-control mark-input" oninput="updateTotal(<?= $index ?>)">
+                                            <input type="text" 
+                                                name="students[<?= $index ?>][class]" 
+                                                class="form-control bg-light" 
+                                                value="<?= esc($student['class']) ?>" readonly>
                                         </td>
+
                                         <td>
-                                            <input type="number" name="students[<?= $index ?>][practical]" class="form-control mark-input" oninput="updateTotal(<?= $index ?>)">
+                                            <input type="number" 
+                                                name="students[<?= $index ?>][written]" 
+                                                class="form-control mark-input" 
+                                                oninput="updateTotal(<?= $index ?>)">
                                         </td>
+
                                         <td>
-                                            <input type="number" name="students[<?= $index ?>][total]" class="form-control bg-light" readonly id="total-<?= $index ?>">
+                                            <input type="number" 
+                                                name="students[<?= $index ?>][mcq]" 
+                                                class="form-control mark-input" 
+                                                oninput="updateTotal(<?= $index ?>)">
+                                        </td>
+
+                                        <td>
+                                            <input type="number" 
+                                                name="students[<?= $index ?>][practical]" 
+                                                class="form-control mark-input" 
+                                                oninput="updateTotal(<?= $index ?>)">
+                                        </td>
+
+                                        <td>
+                                            <input type="number" 
+                                                name="students[<?= $index ?>][total]" 
+                                                class="form-control bg-light" 
+                                                id="total-<?= $index ?>" 
+                                                readonly>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>
@@ -53,7 +93,7 @@
                             </table>
                         </div>
 
-                        <div class="text-end">
+                        <div class="text-end mt-3">
                             <button type="submit" class="btn btn-primary px-4">Submit Results</button>
                         </div>
                     </form>
