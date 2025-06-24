@@ -62,29 +62,39 @@
                                         <td>
                                             <input type="number" 
                                                 name="students[<?= $index ?>][written]" 
-                                                class="form-control mark-input" 
-                                                oninput="updateTotal(<?= $index ?>)">
+                                                class="form-control mark-input text-center" 
+                                                style="width: 100px;" 
+                                                min="0" max="100" maxlength="3"
+                                                oninput="updateTotal(<?= $index ?>)"
+                                                onkeydown="moveWithArrow(event)">
                                         </td>
 
                                         <td>
                                             <input type="number" 
                                                 name="students[<?= $index ?>][mcq]" 
-                                                class="form-control mark-input" 
-                                                oninput="updateTotal(<?= $index ?>)">
+                                                class="form-control mark-input text-center" 
+                                                style="width: 100px;" 
+                                                min="0" max="100" maxlength="3"
+                                                oninput="updateTotal(<?= $index ?>)"
+                                                onkeydown="moveWithArrow(event)">
                                         </td>
 
                                         <td>
                                             <input type="number" 
                                                 name="students[<?= $index ?>][practical]" 
-                                                class="form-control mark-input" 
-                                                oninput="updateTotal(<?= $index ?>)">
+                                                class="form-control mark-input text-center" 
+                                                style="width: 100px;" 
+                                                min="0" max="100" maxlength="3"
+                                                oninput="updateTotal(<?= $index ?>)"
+                                                onkeydown="moveWithArrow(event)">
                                         </td>
 
                                         <td>
                                             <input type="number" 
                                                 name="students[<?= $index ?>][total]" 
-                                                class="form-control bg-light" 
+                                                class="form-control bg-light text-center" 
                                                 id="total-<?= $index ?>" 
+                                                style="width: 100px;" 
                                                 readonly>
                                         </td>
                                     </tr>
@@ -105,7 +115,42 @@
                             const practical = parseFloat(document.querySelector(`[name="students[${index}][practical]"]`).value) || 0;
                             document.getElementById(`total-${index}`).value = written + mcq + practical;
                         }
+
+                        function moveWithArrow(event) {
+                            const key = event.key;
+                            const td = event.target.closest('td');
+                            if (!td) return;
+
+                            let targetInput;
+
+                            switch (key) {
+                                case "ArrowRight":
+                                    targetInput = td.nextElementSibling?.querySelector('input');
+                                    break;
+                                case "ArrowLeft":
+                                    targetInput = td.previousElementSibling?.querySelector('input');
+                                    break;
+                                case "ArrowUp":
+                                case "ArrowDown":
+                                    const cellIndex = td.cellIndex;
+                                    const row = td.closest('tr');
+                                    const siblingRow = (key === "ArrowUp")
+                                        ? row.previousElementSibling
+                                        : row.nextElementSibling;
+
+                                    if (siblingRow) {
+                                        targetInput = siblingRow.cells[cellIndex]?.querySelector('input');
+                                    }
+                                    break;
+                            }
+
+                            if (targetInput) {
+                                event.preventDefault();
+                                targetInput.focus();
+                            }
+                        }
                     </script>
+
                 </div>
             </div>
 
