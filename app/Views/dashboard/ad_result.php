@@ -3,75 +3,67 @@
 
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-lg-10">
+        <div class="col-lg-12">
 
-            <!-- Result Entry Form -->
             <div class="card shadow border-0 rounded-4">
                 <div class="card-body p-5">
-                    <h4 class="mb-4 text-center">Enter Marks for All Students</h4>
+                    <h4 class="mb-4 text-center">Enter Marks for 10 Demo Students</h4>
 
-                    <form method="post" action="<?= site_url('results/submit-all') ?>" id="resultForm">
-                        <div id="students-container">
-                            <!-- Student Row Template -->
-                            <div class="student-row row g-3 mb-4 border rounded p-3 position-relative">
-                                <div class="col-md-4">
-                                    <label class="form-label">Student Name</label>
-                                    <input type="text" name="students[0][name]" class="form-control" required>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label">Written</label>
-                                    <input type="number" name="students[0][written]" class="form-control mark-input" oninput="updateTotal(this)" required>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label">MCQ</label>
-                                    <input type="number" name="students[0][mcq]" class="form-control mark-input" oninput="updateTotal(this)" required>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label">Practical</label>
-                                    <input type="number" name="students[0][practical]" class="form-control mark-input" oninput="updateTotal(this)" required>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label">Total</label>
-                                    <input type="number" name="students[0][total]" class="form-control bg-light" readonly>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mb-3 text-end">
-                            <button type="button" class="btn btn-outline-success" onclick="addStudentRow()">+ Add Student</button>
+                    <form method="post" action="<?= site_url('results/submit-demo') ?>">
+                        <div class="table-responsive">
+                            <table class="table table-bordered align-middle text-center">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Student Name</th>
+                                        <th>Written</th>
+                                        <th>MCQ</th>
+                                        <th>Practical</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                        $demoNames = [
+                                            "Ayesha Akter", "Sakib Hasan", "Nusrat Jahan", "Fahim Ahmed", "Tanjim Alam",
+                                            "Jannatul Ferdous", "Imran Hossain", "Mim Sultana", "Raihan Islam", "Shorna Akter"
+                                        ];
+                                        foreach ($demoNames as $index => $name):
+                                    ?>
+                                    <tr>
+                                        <td><?= $index + 1 ?></td>
+                                        <td>
+                                            <input type="text" name="students[<?= $index ?>][name]" class="form-control" value="<?= $name ?>" readonly>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="students[<?= $index ?>][written]" class="form-control mark-input" oninput="updateTotal(<?= $index ?>)">
+                                        </td>
+                                        <td>
+                                            <input type="number" name="students[<?= $index ?>][mcq]" class="form-control mark-input" oninput="updateTotal(<?= $index ?>)">
+                                        </td>
+                                        <td>
+                                            <input type="number" name="students[<?= $index ?>][practical]" class="form-control mark-input" oninput="updateTotal(<?= $index ?>)">
+                                        </td>
+                                        <td>
+                                            <input type="number" name="students[<?= $index ?>][total]" class="form-control bg-light" readonly id="total-<?= $index ?>">
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
                         </div>
 
                         <div class="text-end">
-                            <button type="submit" class="btn btn-primary px-4">Submit All Results</button>
+                            <button type="submit" class="btn btn-primary px-4">Submit Results</button>
                         </div>
                     </form>
 
                     <script>
-                        let studentIndex = 1;
-
-                        function updateTotal(input) {
-                            const row = input.closest('.student-row');
-                            const written = parseFloat(row.querySelector('input[name$="[written]"]').value) || 0;
-                            const mcq = parseFloat(row.querySelector('input[name$="[mcq]"]').value) || 0;
-                            const practical = parseFloat(row.querySelector('input[name$="[practical]"]').value) || 0;
-                            const totalInput = row.querySelector('input[name$="[total]"]');
-                            totalInput.value = written + mcq + practical;
-                        }
-
-                        function addStudentRow() {
-                            const container = document.getElementById('students-container');
-                            const rows = container.querySelectorAll('.student-row');
-                            const newRow = rows[0].cloneNode(true);
-
-                            // Clear inputs and update names
-                            newRow.querySelectorAll('input').forEach(input => {
-                                const name = input.name.replace(/\[\d+\]/, `[${studentIndex}]`);
-                                input.name = name;
-                                input.value = '';
-                            });
-
-                            container.appendChild(newRow);
-                            studentIndex++;
+                        function updateTotal(index) {
+                            const written = parseFloat(document.querySelector(`[name="students[${index}][written]"]`).value) || 0;
+                            const mcq = parseFloat(document.querySelector(`[name="students[${index}][mcq]"]`).value) || 0;
+                            const practical = parseFloat(document.querySelector(`[name="students[${index}][practical]"]`).value) || 0;
+                            document.getElementById(`total-${index}`).value = written + mcq + practical;
                         }
                     </script>
                 </div>
