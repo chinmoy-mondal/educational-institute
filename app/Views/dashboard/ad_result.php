@@ -47,7 +47,7 @@
                                             <input type="number" 
                                                 name="students[<?= $index ?>][written]" 
                                                 class="form-control mark-input text-center" 
-                                                style="width: 100px;" 
+                                                style="width: 80px;" 
                                                 min="0" max="100" maxlength="3"
                                                 oninput="updateTotal(<?= $index ?>)"
                                                 onkeydown="moveWithArrow(event)">
@@ -57,7 +57,7 @@
                                             <input type="number" 
                                                 name="students[<?= $index ?>][mcq]" 
                                                 class="form-control mark-input text-center" 
-                                                style="width: 100px;" 
+                                                style="width:80px;" 
                                                 min="0" max="100" maxlength="3"
                                                 oninput="updateTotal(<?= $index ?>)"
                                                 onkeydown="moveWithArrow(event)">
@@ -67,7 +67,7 @@
                                             <input type="number" 
                                                 name="students[<?= $index ?>][practical]" 
                                                 class="form-control mark-input text-center" 
-                                                style="width: 100px;" 
+                                                style="width: 80px;" 
                                                 min="0" max="100" maxlength="3"
                                                 oninput="updateTotal(<?= $index ?>)"
                                                 onkeydown="moveWithArrow(event)">
