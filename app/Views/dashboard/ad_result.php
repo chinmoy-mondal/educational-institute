@@ -59,7 +59,7 @@
                                                 value="<?= esc($student['class']) ?>" readonly>
                                         </td>
 
-                                        <td>
+                                        <td class="mark-cell">
                                             <input type="number" 
                                                 name="students[<?= $index ?>][written]" 
                                                 class="form-control mark-input text-center" 
@@ -69,7 +69,7 @@
                                                 onkeydown="moveWithArrow(event)">
                                         </td>
 
-                                        <td>
+                                        <td class="mark-cell">
                                             <input type="number" 
                                                 name="students[<?= $index ?>][mcq]" 
                                                 class="form-control mark-input text-center" 
@@ -79,7 +79,7 @@
                                                 onkeydown="moveWithArrow(event)">
                                         </td>
 
-                                        <td>
+                                        <td class="mark-cell">
                                             <input type="number" 
                                                 name="students[<?= $index ?>][practical]" 
                                                 class="form-control mark-input text-center" 
@@ -119,17 +119,27 @@
                         function moveWithArrow(event) {
                             const key = event.key;
                             const td = event.target.closest('td');
-                            if (!td) return;
+                            if (!td || !td.classList.contains('mark-cell')) return;
 
                             let targetInput;
 
                             switch (key) {
                                 case "ArrowRight":
-                                    targetInput = td.nextElementSibling?.querySelector('input');
+                                    let next = td.nextElementSibling;
+                                    while (next && !next.classList.contains('mark-cell')) {
+                                        next = next.nextElementSibling;
+                                    }
+                                    targetInput = next?.querySelector('input');
                                     break;
+
                                 case "ArrowLeft":
-                                    targetInput = td.previousElementSibling?.querySelector('input');
+                                    let prev = td.previousElementSibling;
+                                    while (prev && !prev.classList.contains('mark-cell')) {
+                                        prev = prev.previousElementSibling;
+                                    }
+                                    targetInput = prev?.querySelector('input');
                                     break;
+
                                 case "ArrowUp":
                                 case "ArrowDown":
                                     const cellIndex = td.cellIndex;
@@ -138,8 +148,8 @@
                                         ? row.previousElementSibling
                                         : row.nextElementSibling;
 
-                                    if (siblingRow) {
-                                        targetInput = siblingRow.cells[cellIndex]?.querySelector('input');
+                                    if (siblingRow && siblingRow.cells[cellIndex]?.classList.contains('mark-cell')) {
+                                        targetInput = siblingRow.cells[cellIndex].querySelector('input');
                                     }
                                     break;
                             }
