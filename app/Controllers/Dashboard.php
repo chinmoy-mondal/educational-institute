@@ -79,7 +79,8 @@ class Dashboard extends Controller
 
 	public function events()
 	{
-	    $model = new \App\Models\CalendarModel();
+
+	    $model = new CalendarModel();
 	    $events = $model->findAll();
 
 	    $data = array_map(function ($event) {
@@ -121,7 +122,7 @@ class Dashboard extends Controller
 
 	public function updateEvent()
 	{
-	    $model = new \App\Models\CalendarModel();
+	    $model = new CalendarModel();
 
 	    $model->update($this->request->getPost('id'), [
 		'title'       => $this->request->getPost('title'),
@@ -136,7 +137,7 @@ class Dashboard extends Controller
 
 	public function deleteEvent()
 	{
-	    $model = new \App\Models\CalendarModel();
+	    $model = new CalendarModel();
 	    $model->delete($this->request->getPost('id'));
 
 	    return $this->response->setJSON(['status' => 'success']);
@@ -144,7 +145,7 @@ class Dashboard extends Controller
 
 	public function teachers()
 	{
-	    $teacherModel = new \App\Models\UserModel();
+	    $teacherModel = new UserModel();
 	    $teachers = $teacherModel->findAll();
 
 	    $session = session();
@@ -165,8 +166,13 @@ class Dashboard extends Controller
 	{
 	    $studentModel = new StudentModel();
 
-	    // Fetch 10 students — adjust the `->findAll(10)` to suit your case
-	    $students = $studentModel->orderBy('roll', 'ASC')->findAll(10);
+	    $session = session();
+	    if (!$session->get('isLoggedIn')) {
+		return redirect()->to(base_url('login'));
+	    }
+	    $students = $studentModel	->orderBy('roll', 'ASC')
+					->where('class',10)
+					->findAll();
 
 	    return view('dashboard/ad_result', ['students' => $students]);
 	}
