@@ -11,7 +11,7 @@
       <a href="<?= base_url('calendar') ?>" class="nav-link">Calendar</a>
     </li>
     <li class="nav-item d-none d-sm-inline-block">
-      <a href="<?= base_url('ad-result') ?>" class="nav-link">Calendar</a>
+      <a href="<?= base_url('ad-result') ?>" class="nav-link">Result</a>
     </li>
   </ul>
 
