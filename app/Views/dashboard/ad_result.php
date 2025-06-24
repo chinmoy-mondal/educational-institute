@@ -3,86 +3,75 @@
 
 <div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-lg-10">
 
-            <!-- Profile Card -->
-            <div class="card shadow-lg border-0 rounded-4 mb-5">
-                <div class="card-body p-5">
-                    <div class="text-center mb-4">
-                        <img src="<?= base_url('public/images/profile-placeholder.png') ?>" class="rounded-circle" width="120" height="120" alt="Profile Picture">
-                        <h3 class="mt-3 mb-0"><?= esc(session('user_name')) ?></h3>
-                        <span class="text-muted"><?= esc(session('user_role')) ?></span>
-                    </div>
-                    <hr>
-                    <div class="row mb-3">
-                        <div class="col-sm-4 fw-bold">Designation</div>
-                        <div class="col-sm-8"><?= esc(session('designation') ?? 'N/A') ?></div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-sm-4 fw-bold">Subject</div>
-                        <div class="col-sm-8"><?= esc(session('subject') ?? 'N/A') ?></div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-sm-4 fw-bold">Gender</div>
-                        <div class="col-sm-8"><?= esc(session('gender') ?? 'N/A') ?></div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-sm-4 fw-bold">Phone</div>
-                        <div class="col-sm-8"><?= esc(session('phone') ?? 'N/A') ?></div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-sm-4 fw-bold">Email</div>
-                        <div class="col-sm-8"><?= esc(session('user_email')) ?></div>
-                    </div>
-                    <div class="text-end">
-                        <small class="text-muted">Last updated: <?= esc(session('updated_at') ?? 'Unknown') ?></small>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Result Input Form -->
+            <!-- Result Entry Form -->
             <div class="card shadow border-0 rounded-4">
                 <div class="card-body p-5">
-                    <h4 class="mb-4 text-center">Enter Student Result</h4>
+                    <h4 class="mb-4 text-center">Enter Marks for All Students</h4>
 
-                    <form method="post" action="<?= site_url('results/submit') ?>">
-                        <div class="mb-3">
-                            <label for="student_name" class="form-label">Student Name</label>
-                            <input type="text" class="form-control" id="student_name" name="student_name" required>
+                    <form method="post" action="<?= site_url('results/submit-all') ?>" id="resultForm">
+                        <div id="students-container">
+                            <!-- Student Row Template -->
+                            <div class="student-row row g-3 mb-4 border rounded p-3 position-relative">
+                                <div class="col-md-4">
+                                    <label class="form-label">Student Name</label>
+                                    <input type="text" name="students[0][name]" class="form-control" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Written</label>
+                                    <input type="number" name="students[0][written]" class="form-control mark-input" oninput="updateTotal(this)" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">MCQ</label>
+                                    <input type="number" name="students[0][mcq]" class="form-control mark-input" oninput="updateTotal(this)" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Practical</label>
+                                    <input type="number" name="students[0][practical]" class="form-control mark-input" oninput="updateTotal(this)" required>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">Total</label>
+                                    <input type="number" name="students[0][total]" class="form-control bg-light" readonly>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="written" class="form-label">Written Marks</label>
-                            <input type="number" class="form-control" id="written" name="written" oninput="calculateTotal()" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="mcq" class="form-label">MCQ Marks</label>
-                            <input type="number" class="form-control" id="mcq" name="mcq" oninput="calculateTotal()" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="practical" class="form-label">Practical Marks</label>
-                            <input type="number" class="form-control" id="practical" name="practical" oninput="calculateTotal()" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="total" class="form-label">Total Marks</label>
-                            <input type="number" class="form-control bg-light" id="total" name="total" readonly>
+                        <div class="mb-3 text-end">
+                            <button type="button" class="btn btn-outline-success" onclick="addStudentRow()">+ Add Student</button>
                         </div>
 
                         <div class="text-end">
-                            <button type="submit" class="btn btn-primary px-4">Submit Result</button>
+                            <button type="submit" class="btn btn-primary px-4">Submit All Results</button>
                         </div>
                     </form>
 
                     <script>
-                        function calculateTotal() {
-                            const written = parseFloat(document.getElementById('written').value) || 0;
-                            const mcq = parseFloat(document.getElementById('mcq').value) || 0;
-                            const practical = parseFloat(document.getElementById('practical').value) || 0;
-                            const total = written + mcq + practical;
-                            document.getElementById('total').value = total;
+                        let studentIndex = 1;
+
+                        function updateTotal(input) {
+                            const row = input.closest('.student-row');
+                            const written = parseFloat(row.querySelector('input[name$="[written]"]').value) || 0;
+                            const mcq = parseFloat(row.querySelector('input[name$="[mcq]"]').value) || 0;
+                            const practical = parseFloat(row.querySelector('input[name$="[practical]"]').value) || 0;
+                            const totalInput = row.querySelector('input[name$="[total]"]');
+                            totalInput.value = written + mcq + practical;
+                        }
+
+                        function addStudentRow() {
+                            const container = document.getElementById('students-container');
+                            const rows = container.querySelectorAll('.student-row');
+                            const newRow = rows[0].cloneNode(true);
+
+                            // Clear inputs and update names
+                            newRow.querySelectorAll('input').forEach(input => {
+                                const name = input.name.replace(/\[\d+\]/, `[${studentIndex}]`);
+                                input.name = name;
+                                input.value = '';
+                            });
+
+                            container.appendChild(newRow);
+                            studentIndex++;
                         }
                     </script>
                 </div>
