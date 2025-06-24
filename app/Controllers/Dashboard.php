@@ -160,4 +160,7 @@ class Dashboard extends Controller
 	    ];
 	    return view('dashboard/ad_teacher_list', ['teachers' => $teachers]);
 	}
+	public function result(){
+		return view('dashboard/ad_result');
+	}
 }

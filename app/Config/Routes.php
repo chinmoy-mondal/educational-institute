@@ -56,6 +56,7 @@ $routes->post('/calendar/add', 'Dashboard::addEvent');
 $routes->post('/calendar/update', 'Dashboard::updateEvent');
 $routes->post('/calendar/delete', 'Dashboard::deleteEvent');
 $routes->get('/ad_teacher_list', 'Dashboard::teachers');
+$routes->get('/ad-result', 'Dashboard::result');
 
 
 $routes->get('public-calendar', 'PublicCalendar::index');
