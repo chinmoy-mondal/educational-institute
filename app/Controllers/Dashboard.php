@@ -159,7 +159,7 @@ class Dashboard extends Controller
 
 		$userModel = new UserModel();
 
-		$newUsers = $userMosel
+		$newUsers = $userModel
 			->where('accont_status',0)
 			->findAll();
 		$totalNewUsers = count($newUsers);
