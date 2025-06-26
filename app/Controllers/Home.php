@@ -27,15 +27,11 @@ class Home extends BaseController
 	{
 		return view('staff');
 	}
-public function subjects()
-{
-    $model = new SubjectModel();  // ✅ Correct instantiation
+	public function subjects()
+	{
+		$model = new SubjectModel();  // ✅ Correct instantiation
 
-    $subjects = $model->whereIn('class', [6, 7, 8, 9])
-                      ->orderBy('class', 'ASC')
-                      ->orderBy('subject', 'ASC')
-                      ->findAll();
-
-    return view('p_subject', ['subjects' => $subjects]);
-}
+		$subjects = $subjectModel->findAll();
+		return view('p_subject', ['subjects' => $subjects]);
+	}
 }

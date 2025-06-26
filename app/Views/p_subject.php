@@ -1,24 +1,28 @@
 <?= $this->extend("layouts/base.php") ?>
 <?= $this->section("content"); ?>
 
-<!-- Fixed Header -->
 <div class="fixed-header">
     <?= $this->include("structure/header"); ?>
 </div>
 
 <div class="container content">
-
-<!-- Subject Table Section -->
 <section class="py-5">
     <div class="container">
         <h3 class="text-center mb-4 fw-bold">Subjects Offered (Classes 6 to 9 & Vocational)</h3>
 
         <?php
-        // Group subjects by class
+        // Separate 9 and 9 Vocational
         $groupedSubjects = [];
+
         foreach ($subjects as $subject) {
-            $groupedSubjects[$subject['class']][] = $subject;
+            if (trim($subject['class']) === '9 Vocational') {
+                $groupedSubjects['9 Vocational'][] = $subject;
+            } else {
+                $groupedSubjects[$subject['class']][] = $subject;
+            }
         }
+
+        ksort($groupedSubjects); // Optional: Sort by class name
         ?>
 
         <?php foreach ($groupedSubjects as $class => $classSubjects): ?>
@@ -46,47 +50,6 @@
         <?php endforeach; ?>
     </div>
 </section>
-
-<style>
-    .head-sir-message {
-        background: url('<?= base_url("public/assets/img/head-sir-bg.jpg"); ?>') no-repeat center center/cover;
-        position: relative;
-        padding: 80px 0;
-    }
-
-    .overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-    }
-
-    .sir-image img {
-        width: 100%;
-        height: 300px;
-        object-fit: cover;
-        border-radius: 10px;
-        border: 5px solid #fff;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    @media (max-width: 768px) {
-        .sir-image img {
-            height: 250px;
-        }
-
-        .head-sir-message h2 {
-            font-size: 1.8rem;
-        }
-
-        .head-sir-message p {
-            font-size: 1rem;
-        }
-    }
-</style>
-
 </div>
 
 <?= $this->include("structure/footer"); ?>
