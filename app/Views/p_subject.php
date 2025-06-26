@@ -11,29 +11,27 @@
         <h3 class="text-center mb-4 fw-bold">Subjects Offered (Classes 6 to 9 & Vocational)</h3>
 
         <?php
-        // Step 1: Separate class 9 general and 9 vocational
-        $subjectsByClass = [];
+        // Separate Class 9 (general), Class 9 Vocational, and others
+        $class9 = [];
+        $class9voc = [];
+        $otherClasses = [];
 
         foreach ($subjects as $subject) {
-            if (trim($subject['class']) === '9 Vocational') {
-                $subjectsByClass['9 Vocational'][] = $subject;
-            } elseif (trim($subject['class']) === '9') {
-                $subjectsByClass['9'][] = $subject;
+            $class = trim($subject['class']);
+            if ($class === '9') {
+                $class9[] = $subject;
+            } elseif ($class === '9 Vocational') {
+                $class9voc[] = $subject;
             } else {
-                $subjectsByClass[$subject['class']][] = $subject;
+                $otherClasses[$class][] = $subject;
             }
         }
 
-        // Optional: sort by class number (6,7,8,9,9 Vocational)
-        uksort($subjectsByClass, function($a, $b) {
-            // push '9 Vocational' to the end
-            if ($a === '9 Vocational') return 1;
-            if ($b === '9 Vocational') return -1;
-            return $a <=> $b;
-        });
+        ksort($otherClasses); // Sort other classes like 6, 7, 8
         ?>
 
-        <?php foreach ($subjectsByClass as $class => $classSubjects): ?>
+        <!-- Show other classes -->
+        <?php foreach ($otherClasses as $class => $classSubjects): ?>
             <h4 class="mb-3 mt-5 text-primary fw-bold">Class <?= esc($class) ?></h4>
             <div class="table-responsive mb-4">
                 <table class="table table-striped table-bordered align-middle text-center">
@@ -56,6 +54,56 @@
                 </table>
             </div>
         <?php endforeach; ?>
+
+        <!-- Class 9 Table -->
+        <?php if (!empty($class9)): ?>
+            <h4 class="mb-3 mt-5 text-success fw-bold">Class 9 (General)</h4>
+            <div class="table-responsive mb-4">
+                <table class="table table-striped table-bordered align-middle text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Class</th>
+                            <th>Section</th>
+                            <th>Subject</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($class9 as $subject): ?>
+                            <tr>
+                                <td><?= esc($subject['class']) ?></td>
+                                <td><?= esc($subject['section']) ?></td>
+                                <td><?= esc($subject['subject']) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endif; ?>
+
+        <!-- Class 9 Vocational Table -->
+        <?php if (!empty($class9voc)): ?>
+            <h4 class="mb-3 mt-5 text-danger fw-bold">Class 9 (Vocational)</h4>
+            <div class="table-responsive mb-4">
+                <table class="table table-striped table-bordered align-middle text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Class</th>
+                            <th>Section</th>
+                            <th>Subject</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($class9voc as $subject): ?>
+                            <tr>
+                                <td><?= esc($subject['class']) ?></td>
+                                <td><?= esc($subject['section']) ?></td>
+                                <td><?= esc($subject['subject']) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endif; ?>
     </div>
 </section>
 </div>
