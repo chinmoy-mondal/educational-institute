@@ -147,21 +147,35 @@ class Dashboard extends Controller
 
 	public function teachers()
 	{
-		$teacherModel = new UserModel();
-		$teachers = $teacherModel->findAll();
+
 
 		$session = session();
 		if (!$session->get('isLoggedIn')) {
 			return redirect()->to(base_url('login'));
 		}
 
-		$user = [
-			'name' => $session->get('name'),
-			'email' => $session->get('email'),
-			'phone' => $session->get('phone'),
-			'role' => $session->get('role')
-		];
-		return view('dashboard/ad_teacher_list', ['teachers' => $teachers]);
+
+
+
+		$userModel = new UserModel();
+
+		$newUsers = $userMosel
+			->where('accont_status',0)
+			->findAll();
+		$totalNewUsers = count($newUsers);
+
+		$users = $userModel
+			->where('accont_status !=',0)
+			->findAll();
+		$totalUsers = count($newUsers);
+		return view('dashboard/ad_teacher_list', [
+				'title' => 'Admin Dashboard',
+				'newUsers' => $newUsers,
+				'total_newUsers' => $totalNewUsers,
+				'users'=>$users,
+				'total_users'=>$totalUsers
+		]);
+
 	}
 
 	public function result()

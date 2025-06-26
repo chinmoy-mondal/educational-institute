@@ -16,7 +16,7 @@
       <div class="col-lg-3 col-6">
         <div class="small-box bg-primary">
           <div class="inner">
-            <h3>22</h3>
+            <h3><?= esc('total_users')?></h3>
             <p>Current User</p>
           </div>
           <div class="icon"><i class="fas fa-user-graduate"></i></div>
@@ -28,7 +28,7 @@
       <div class="col-lg-3 col-6">
         <div class="small-box bg-success">
           <div class="inner">
-            <h3>10</h3>
+            <h3><?= esc('total_newUsers') ?></h3>
             <p>New Applied</p>
           </div>
           <div class="icon"><i class="fas fa-chalkboard-teacher"></i></div>
@@ -65,22 +65,22 @@
               </tr>
             </thead>
             <tbody>
-              <?php if (!empty($teachers)): ?>
-                <?php foreach ($teachers as $teacher): ?>
+              <?php if (!empty($users)): ?>
+                <?php foreach ($users as $user): ?>
                   <tr>
                     <td class="text-center">
-                    <img src="<?= base_url('uploads/' . (!empty($teacher['photo']) ? $teacher['photo'] : 'default.png')) ?>" width="50" height="50" class="rounded-circle"></td>
-                    <td><?= esc($teacher['name']) ?></td>
-                    <td><?= esc($teacher['designation']) ?></td>
-                    <td><?= esc($teacher['subject']) ?></td>
-                    <td><?= esc($teacher['email']) ?></td>
-                    <td><?= esc($teacher['phone']) ?></td>
-                    <td class="text-center"><?= esc(ucfirst($teacher['gender'])) ?></td>
+                    <img src="<?= base_url('uploads/' . (!empty($user['photo']) ? $teacher['photo'] : 'default.png')) ?>" width="50" height="50" class="rounded-circle"></td>
+                    <td><?= esc($user['name']) ?></td>
+                    <td><?= esc($user['designation']) ?></td>
+                    <td><?= esc($user['subject']) ?></td>
+                    <td><?= esc($user['email']) ?></td>
+                    <td><?= esc($user['phone']) ?></td>
+                    <td class="text-center"><?= esc(ucfirst($user['gender'])) ?></td>
                     <td class="text-center">
-                      <a href="<?= base_url('teacher/edit/' . $teacher['id']) ?>" class="btn btn-sm btn-info">
+                      <a href="<?= base_url('teacher/edit/' . $user['id']) ?>" class="btn btn-sm btn-info">
                         <i class="fas fa-edit"></i>
                       </a>
-                      <a href="<?= base_url('teacher/delete/' . $teacher['id']) ?>" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger">
+                      <a href="<?= base_url('teacher/delete/' . $user['id']) ?>" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger">
                         <i class="fas fa-trash-alt"></i>
                       </a>
                     </td>
