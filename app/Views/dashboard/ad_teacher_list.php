@@ -3,12 +3,50 @@
 
 <section class="content">
   <div class="container-fluid">
+
+
+
+
+
+
+
+    <!-- Summary Cards -->
+    <div class="row">
+      <!-- Total Students -->
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-primary">
+          <div class="inner">
+            <h3><?= //esc($total_students) ?></h3>
+            <p>Current User</p>
+          </div>
+          <div class="icon"><i class="fas fa-user-graduate"></i></div>
+          <a href="<?=// base_url('admin/students') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+
+      <!-- Total Teachers -->
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+          <div class="inner">
+            <h3><?=// esc($total_teachers) ?></h3>
+            <p>New Applied</p>
+          </div>
+          <div class="icon"><i class="fas fa-chalkboard-teacher"></i></div>
+          <a href="<?=// base_url('ad_teacher_list') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
     <div class="card card-primary card-outline shadow">
       <div class="card-header d-flex justify-content-between align-items-center">
         <h3 class="card-title mb-0"><i class="fas fa-chalkboard-teacher"></i> Teacher List</h3>
-        <a href="<?= base_url('teacher/create') ?>" class="btn btn-sm btn-primary">
-          <i class="fas fa-plus"></i> Add Teacher
-        </a>
       </div>
 
       <div class="card-body">
