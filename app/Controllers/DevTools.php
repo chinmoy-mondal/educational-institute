@@ -32,8 +32,9 @@ class DevTools extends BaseController
 
         $seeder = \Config\Database::seeder();
         try {
-            $seeder->call('NoticeSeeder');
-	    $seeder->call('ImportSbjectsSeeder');
+	   // select the database when needed
+           //  $seeder->call('NoticeSeeder');
+	   //  $seeder->call('ImportSbjectsSeeder'); now call everytime
             return 'Seeding completed.';
         } catch (\Throwable $e) {
             return 'Seeding failed: ' . $e->getMessage();

@@ -24,6 +24,7 @@ $routes->get('/result', 'Home::result');
 $routes->get('/courses', 'Home::courses');
 $routes->get('/contact', 'Home::contact');
 $routes->get('/apply', 'Home::apply');
+$routes->get('/subjects', 'Home::subjects');
 $routes->get('/course-details/(:num)', 'Home::courseDetails/$1');
 $routes->get('/activity-details/(:num)', 'Home::activityDetails/$1');
 
