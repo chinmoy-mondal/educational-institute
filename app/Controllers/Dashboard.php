@@ -25,7 +25,7 @@ class Dashboard extends Controller
 			->countAllResults();
 
 		$total_new_users = $userModel
-			->where('account_status', 0)
+			->where('account_status=', 0)
 			->countAllResults();
 
 		$total_applications = 10;
@@ -160,14 +160,14 @@ class Dashboard extends Controller
 		$userModel = new UserModel();
 
 		$newUsers = $userModel
-			->where('account_status',0)
+			->where('account_status=',0)
 			->findAll();
 		$totalNewUsers = count($newUsers);
 
 		$users = $userModel
 			->where('account_status !=',0)
 			->findAll();
-		$totalUsers = count($newUsers);
+		$totalUsers = count($users);
 		return view('dashboard/ad_teacher_list', [
 				'title' => 'Admin Dashboard',
 				'newUsers' => $newUsers,
