@@ -16,11 +16,11 @@
       <div class="col-lg-3 col-6">
         <div class="small-box bg-primary">
           <div class="inner">
-            <h3><?=; //esc($total_students) ?></h3>
+            <h3>22</h3>
             <p>Current User</p>
           </div>
           <div class="icon"><i class="fas fa-user-graduate"></i></div>
-          <a href="<?=;// base_url('admin/students') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
 
@@ -28,11 +28,11 @@
       <div class="col-lg-3 col-6">
         <div class="small-box bg-success">
           <div class="inner">
-            <h3><?=;// esc($total_teachers) ?></h3>
+            <h3>10</h3>
             <p>New Applied</p>
           </div>
           <div class="icon"><i class="fas fa-chalkboard-teacher"></i></div>
-          <a href="<?=;// base_url('ad_teacher_list') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
 
