@@ -160,12 +160,12 @@ class Dashboard extends Controller
 		$userModel = new UserModel();
 
 		$newUsers = $userModel
-			->where('accont_status',0)
+			->where('account_status',0)
 			->findAll();
 		$totalNewUsers = count($newUsers);
 
 		$users = $userModel
-			->where('accont_status !=',0)
+			->where('account_status !=',0)
 			->findAll();
 		$totalUsers = count($newUsers);
 		return view('dashboard/ad_teacher_list', [
