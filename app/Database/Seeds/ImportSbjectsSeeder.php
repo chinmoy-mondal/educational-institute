@@ -4,7 +4,7 @@ namespace App\Database\Seeds;
 
 use CodeIgniter\Database\Seeder;
 
-class ImportSubjectsSeeder extends Seeder
+class ImportSbjectsSeeder extends Seeder
 {
     public function run()
     {
