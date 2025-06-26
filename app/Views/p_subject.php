@@ -11,21 +11,29 @@
         <h3 class="text-center mb-4 fw-bold">Subjects Offered (Classes 6 to 9 & Vocational)</h3>
 
         <?php
-        // Separate 9 and 9 Vocational
-        $groupedSubjects = [];
+        // Step 1: Separate class 9 general and 9 vocational
+        $subjectsByClass = [];
 
         foreach ($subjects as $subject) {
             if (trim($subject['class']) === '9 Vocational') {
-                $groupedSubjects['9 Vocational'][] = $subject;
+                $subjectsByClass['9 Vocational'][] = $subject;
+            } elseif (trim($subject['class']) === '9') {
+                $subjectsByClass['9'][] = $subject;
             } else {
-                $groupedSubjects[$subject['class']][] = $subject;
+                $subjectsByClass[$subject['class']][] = $subject;
             }
         }
 
-        ksort($groupedSubjects); // Optional: Sort by class name
+        // Optional: sort by class number (6,7,8,9,9 Vocational)
+        uksort($subjectsByClass, function($a, $b) {
+            // push '9 Vocational' to the end
+            if ($a === '9 Vocational') return 1;
+            if ($b === '9 Vocational') return -1;
+            return $a <=> $b;
+        });
         ?>
 
-        <?php foreach ($groupedSubjects as $class => $classSubjects): ?>
+        <?php foreach ($subjectsByClass as $class => $classSubjects): ?>
             <h4 class="mb-3 mt-5 text-primary fw-bold">Class <?= esc($class) ?></h4>
             <div class="table-responsive mb-4">
                 <table class="table table-striped table-bordered align-middle text-center">
