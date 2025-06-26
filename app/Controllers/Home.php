@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controllers;
-
+use App\Models\SubjectModel;
 class Home extends BaseController
 {
 	public function index()
@@ -30,7 +30,7 @@ class Home extends BaseController
 
 	public function subjects()
 	{
-	
+		$model = SubjectModel();	
 		$builder = $db->table('subjects');
 		$builder->whereIn('class', [6, 7, 8, 9]); // includes 9
 		$builder->orderBy('class', 'ASC');
