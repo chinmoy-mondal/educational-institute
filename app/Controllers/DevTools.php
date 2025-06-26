@@ -33,7 +33,7 @@ class DevTools extends BaseController
         $seeder = \Config\Database::seeder();
         try {
             $seeder->call('NoticeSeeder');
-	    $seeder->call('ImportSubjectsSeeder');
+	    $seeder->call('ImportSbjectsSeeder');
             return 'Seeding completed.';
         } catch (\Throwable $e) {
             return 'Seeding failed: ' . $e->getMessage();
