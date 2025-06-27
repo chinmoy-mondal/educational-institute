@@ -36,6 +36,30 @@
         </div>
       </div>
 
+      <!-- Total Teachers -->
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+          <div class="inner">
+            <h3><?= esc($total_newUsers) ?></h3>
+            <p>New Applied</p>
+          </div>
+          <div class="icon"><i class="fas fa-chalkboard-teacher"></i></div>
+          <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+
+
+      <!-- Total Teachers -->
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+          <div class="inner">
+            <h3><?= esc($total_newUsers) ?></h3>
+            <p>New Applied</p>
+          </div>
+          <div class="icon"><i class="fas fa-chalkboard-teacher"></i></div>
+          <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
 
 
 
