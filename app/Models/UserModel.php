@@ -19,6 +19,7 @@ class UserModel extends Model
         'email',
         'password',
         'account_status', // ✅ Important for filtering approved users
+	'permit_by',
         'created_at',
         'updated_at'
     ];

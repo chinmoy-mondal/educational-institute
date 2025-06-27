@@ -193,6 +193,35 @@ class Dashboard extends Controller
 
 	}
 
+	public function user_permit($id)
+	{
+		$session = session();
+		if (!$session->get('isLoggedIn')) {
+			return redirect()->to(base_url('login'));
+		}
+
+		$permitBy = $session->get('user_id');
+
+		$updated = $this->userModel->update($id,[
+			'account_status' => i,
+			'permit_by'	=>$permitBy,
+		]);
+
+		if ($updated) {
+		    return redirect()->back()->with('success', 'User approved successfully.');
+		} else {
+		    return redirect()->back()->with('error', 'Failed to approve user.');
+		}
+	}
+
+	public function user_delete($id)
+	{
+		$session = session();
+		if (!$session->get('isLoggedIn')) {
+			return redirect()->to(base_url('login'));
+		}
+	}
+
 	public function result()
 	{
 		$studentModel = new StudentModel();
@@ -201,6 +230,9 @@ class Dashboard extends Controller
 		if (!$session->get('isLoggedIn')) {
 			return redirect()->to(base_url('login'));
 		}
+
+		$userModel = UserModel();
+		$update = $userModel->
 		$students = $studentModel	
 			->orderBy('roll', 'ASC')
 			->where('class',10)

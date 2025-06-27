@@ -60,6 +60,9 @@ $routes->get('/ad_teacher_list', 'Dashboard::teachers');
 $routes->get('/ad_new_user', 'Dashboard::newUser');
 $routes->get('/ad-result', 'Dashboard::result');
 
+$routes->get('/user_permit/(:num)', 'Dashboard::user_permit/$1');
+$routes->get('/user_delete/(:num)', 'Dashboard::user_delete/$1');
+
 
 $routes->get('public-calendar', 'PublicCalendar::index');
 $routes->get('public-calendar/events', 'PublicCalendar::events');
