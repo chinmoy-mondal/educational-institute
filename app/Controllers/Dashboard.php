@@ -147,16 +147,10 @@ class Dashboard extends Controller
 
 	public function teachers()
 	{
-
-
 		$session = session();
 		if (!$session->get('isLoggedIn')) {
 			return redirect()->to(base_url('login'));
 		}
-
-
-
-
 		$userModel = new UserModel();
 
 		$newUsers = $userModel
@@ -174,6 +168,27 @@ class Dashboard extends Controller
 				'total_newUsers' => $totalNewUsers,
 				'users'=>$users,
 				'total_users'=>$totalUsers
+		]);
+
+	}
+
+	public function newUser()
+	{
+		$session = session();
+		if (!$session->get('isLoggedIn')) {
+			return redirect()->to(base_url('login'));
+		}
+		$userModel = new UserModel();
+
+		$newUsers = $userModel
+			->where('account_status=',0)
+			->findAll();
+		$totalNewUsers = count($newUsers);
+
+		return view('dashboard/ad_new_user', [
+				'title' => 'Admin Dashboard',
+				'newUsers' => $newUsers,
+				'total_newUsers' => $totalNewUsers
 		]);
 
 	}
