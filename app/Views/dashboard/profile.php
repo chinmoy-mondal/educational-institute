@@ -7,7 +7,13 @@
             <div class="card shadow-lg border-0 rounded-4">
                 <div class="card-body p-5">
                     <div class="text-center mb-4">
-                        <img src="<?= base_url('public/images/profile-placeholder.png') ?>" class="rounded-circle" width="120" height="120" alt="Profile Picture">
+
+
+
+			<img src="<?=  base_url('public/assets/img/logo.jpg') ?>"  width="50" height="50" class="rounded-circle">
+
+
+
                         <h3 class="mt-3 mb-0"><?= esc(session('user_name')) ?></h3>
                         <span class="text-muted"><?= esc(session('user_role')) ?></span>
                     </div>
