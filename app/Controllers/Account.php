@@ -131,13 +131,7 @@ class Account extends BaseController
 				'updated_at'     => $user['updated_at'],
 				'isLoggedIn'     => true,
 		]);
-		//  🔐  Notice the password is no longer stored in the session.
-
-		// 5.  Direct the user to the right start page
-		return match ($user['account_status']) {
-			'2'        => redirect()->to('/admin/dashboard'), // super-admin
-				default    => redirect()->to('/dashboard'),       // normal user
-		};
+		return redirect()->to('/dashboard');
 	}
 	public function logout()
 	{
