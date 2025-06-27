@@ -27,8 +27,13 @@
               <?php if (!empty($newUsers)): ?>
                 <?php foreach ($newUsers as $user): ?>
                   <tr>
-                    <td class="text-center">
-                    <img src="<?= base_url('uploads/' . (!empty($user['photo']) ? $teacher['photo'] : 'default.png')) ?>" width="50" height="50" class="rounded-circle"></td>
+
+		    <td class="text-center">
+		       <img src="<?= !empty($user['photo']) 
+			      ? base_url('uploads/' . $user['photo']) 
+			      : base_url('public/assets/img/default.png') ?>" 
+			    width="50" height="50" class="rounded-circle">
+		    </td>
                     <td><?= esc($user['name']) ?></td>
                     <td><?= esc($user['designation']) ?></td>
                     <td><?= esc($user['subject']) ?></td>
