@@ -36,10 +36,10 @@
                     <td><?= esc($user['phone']) ?></td>
                     <td class="text-center"><?= esc(ucfirst($user['gender'])) ?></td>
                     <td class="text-center">
-                      <a href="<?= base_url('teacher/edit/' . $user['id']) ?>" class="btn btn-sm btn-info">
-                        <i class="fas fa-edit"></i>
-                      </a>
-                      <a href="<?= base_url('teacher/delete/' . $user['id']) ?>" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger">
+		      <a href="<?= base_url('user_permit/' . $user['id']) ?>" class="btn btn-sm btn-info">
+		        <i class="fas fa-edit"></i>
+		      </a>
+                      <a href="<?= base_url('user_delete/' . $user['id']) ?>" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger">
                         <i class="fas fa-trash-alt"></i>
                       </a>
                     </td>
