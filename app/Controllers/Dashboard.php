@@ -195,6 +195,8 @@ class Dashboard extends Controller
 
 	public function user_permit($id)
 	{
+		$userModel = new UserModel();
+
 		$session = session();
 		if (!$session->get('isLoggedIn')) {
 			return redirect()->to(base_url('login'));
@@ -202,7 +204,7 @@ class Dashboard extends Controller
 
 		$permitBy = $session->get('user_id');
 
-		$updated = $this->userModel->update($id,[
+		$updated = $this->$userModel->update($id,[
 			'account_status' => i,
 			'permit_by'	=>$permitBy,
 		]);
