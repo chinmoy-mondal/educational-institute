@@ -205,7 +205,7 @@ class Dashboard extends Controller
 		$permitBy = $session->get('user_id');
 
 		$updated = $this->$userModel->update($id,[
-			'account_status' => i,
+			'account_status' => 1,
 			'permit_by'	=>$permitBy,
 		]);
 
