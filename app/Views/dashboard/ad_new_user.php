@@ -3,18 +3,9 @@
 
 <section class="content">
   <div class="container-fluid">
-
-
-
-
-
-
-
-
-
     <div class="card card-primary card-outline shadow">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <h3 class="card-title mb-0"><i class="fas fa-chalkboard-teacher"></i> Teacher List</h3>
+        <h3 class="card-title mb-0"><i class="fas fa-chalkboard-teacher"></i>New Users List</h3>
       </div>
 
       <div class="card-body">
@@ -33,8 +24,8 @@
               </tr>
             </thead>
             <tbody>
-              <?php if (!empty($users)): ?>
-                <?php foreach ($users as $user): ?>
+              <?php if (!empty($newUsers)): ?>
+                <?php foreach ($newUsers as $user): ?>
                   <tr>
                     <td class="text-center">
                     <img src="<?= base_url('uploads/' . (!empty($user['photo']) ? $teacher['photo'] : 'default.png')) ?>" width="50" height="50" class="rounded-circle"></td>
