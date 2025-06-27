@@ -37,7 +37,7 @@
                     <td class="text-center"><?= esc(ucfirst($user['gender'])) ?></td>
                     <td class="text-center">
 		      <a href="<?= base_url('user_permit/' . $user['id']) ?>" class="btn btn-sm btn-info">
-		        <i class="fas fa-edit"></i>
+		        <i class="fas fa-plus text-white"></i>
 		      </a>
                       <a href="<?= base_url('user_delete/' . $user['id']) ?>" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger">
                         <i class="fas fa-trash-alt"></i>
