@@ -10,62 +10,6 @@
 
 
 
-    <!-- Summary Cards -->
-    <div class="row">
-      <!-- Total Students -->
-      <div class="col-lg-3 col-6">
-        <div class="small-box bg-primary">
-          <div class="inner">
-            <h3><?= esc($total_users)?></h3>
-            <p>Current User</p>
-          </div>
-          <div class="icon"><i class="fas fa-user-graduate"></i></div>
-          <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
-      </div>
-
-      <!-- Total Teachers -->
-      <div class="col-lg-3 col-6">
-        <div class="small-box bg-success">
-          <div class="inner">
-            <h3><?= esc($total_newUsers) ?></h3>
-            <p>New Applied</p>
-          </div>
-          <div class="icon"><i class="fas fa-chalkboard-teacher"></i></div>
-          <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
-      </div>
-
-      <!-- Total Teachers -->
-      <div class="col-lg-3 col-6">
-        <div class="small-box bg-success">
-          <div class="inner">
-            <h3><?= esc($total_newUsers) ?></h3>
-            <p>New Applied</p>
-          </div>
-          <div class="icon"><i class="fas fa-chalkboard-teacher"></i></div>
-          <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
-      </div>
-
-
-      <!-- Total Teachers -->
-      <div class="col-lg-3 col-6">
-        <div class="small-box bg-success">
-          <div class="inner">
-            <h3><?= esc($total_newUsers) ?></h3>
-            <p>New Applied</p>
-          </div>
-          <div class="icon"><i class="fas fa-chalkboard-teacher"></i></div>
-          <a href="" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
-      </div>
-
-
-
-
-
-
 
 
     <div class="card card-primary card-outline shadow">
