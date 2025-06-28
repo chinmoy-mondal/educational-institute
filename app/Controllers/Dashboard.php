@@ -234,7 +234,6 @@ class Dashboard extends Controller
 		}
 
 		$userModel = UserModel();
-		$update = $userModel->
 		$students = $studentModel	
 			->orderBy('roll', 'ASC')
 			->where('class',10)
