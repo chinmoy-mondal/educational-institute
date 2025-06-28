@@ -233,7 +233,6 @@ class Dashboard extends Controller
 			return redirect()->to(base_url('login'));
 		}
 
-		$userModel = UserModel();
 		$students = $studentModel	
 			->orderBy('roll', 'ASC')
 			->where('class',10)
