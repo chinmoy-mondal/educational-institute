@@ -240,4 +240,22 @@ class Dashboard extends Controller
 
 		return view('dashboard/ad_result', ['students' => $students]);
 	}
+	
+	public function teacherManagement()
+	{
+		
+		$studentModel = new StudentModel();
+
+		$session = session();
+		if (!$session->get('isLoggedIn')) {
+			return redirect()->to(base_url('login'));
+		}
+
+		$students = $studentModel	
+			->orderBy('roll', 'ASC')
+			->where('class',10)
+			->findAll();
+
+		return view('dashboard/teacher_management', ['students' => $students]);
+	}
 }
