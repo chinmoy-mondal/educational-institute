@@ -20,6 +20,7 @@ class UserModel extends Model
         'password',
         'account_status', // ✅ Important for filtering approved users
 	'permit_by',
+	'assign_sub',
         'created_at',
         'updated_at'
     ];
