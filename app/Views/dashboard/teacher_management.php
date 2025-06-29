@@ -19,7 +19,6 @@
                   <tr>
                     <th>Photo</th>
                     <th>Name</th>
-                    <th>Designation</th>
                     <th>Subject</th>
                     <th>Action</th>
                   </tr>
@@ -35,14 +34,10 @@
                             width="50" height="50" class="rounded-circle">
                         </td>
                         <td><?= esc($user['name']) ?></td>
-                        <td><?= esc($user['designation']) ?></td>
                         <td><?= esc($user['subject']) ?></td>
                         <td class="text-center">
                           <a href="<?= base_url('teacher/edit/' . $user['id']) ?>" class="btn btn-sm btn-info">
                             <i class="fas fa-edit"></i>
-                          </a>
-                          <a href="<?= base_url('teacher/delete/' . $user['id']) ?>" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger">
-                            <i class="fas fa-trash-alt"></i>
                           </a>
                         </td>
                       </tr>
