@@ -43,7 +43,7 @@
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Academics</a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="#">Curriculum</a></li>
-                                    <li><a class="dropdown-item" href="#">Subjects</a></li>
+                                    <li><a class="dropdown-item" href="<?= base_url('subjects'); ?>">Subjects</a></li>
                                     <li><a class="dropdown-item" href="#">Exams & Results</a></li>
                                 </ul>
                             </li>

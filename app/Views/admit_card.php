@@ -7,7 +7,7 @@
     @media print {
       @page {
         size: A4;
-        margin: 5mm 15mm;
+        margin: 1mm 15mm;
       }
       body {
         margin: 0;
@@ -21,7 +21,7 @@
 
     .page {
       width: 210mm;
-      height: 297mm;
+      height: 335mm;
       padding: 15mm;
       box-sizing: border-box;
       display: flex;
@@ -32,9 +32,9 @@
 
     .admit-card {
       border: 1px solid #000;
-      padding: 12px;
+      padding: 6px;
       height: 48%;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
       box-sizing: border-box;
     }
 
@@ -52,21 +52,21 @@
       line-height: 1.5;
     }
 
-.routine-table {
-  font-size: 12px;
-  margin-bottom: 10px;
-  border-collapse: collapse;
-  width: 100%;
-}
+	.routine-table {
+	  font-size: 12px;
+	  margin-bottom: 10px;
+	  border-collapse: collapse;
+	  width: 100%;
+	}
 
-.routine-table th,
-.routine-table td {
-  padding: 2px 6px;
-  font-size: 12px;
-  line-height: 1.2;
-  text-align: center;
-  border: 1px solid #000;
-}
+	.routine-table th,
+	.routine-table td {
+	  padding: 2px 6px;
+	  font-size: 12px;
+	  line-height: 1.2;
+	  text-align: center;
+	  border: 1px solid #000;
+	}
     .footer-note {
       font-size: 11px;
       margin-top: 8px;
@@ -79,11 +79,11 @@
       font-size: 12px;
     }
 
-.title-logo {
-  width: 70px;
-  height: 70px;
-  object-fit: contain;
-}
+    .title-logo {
+       width: 70px;
+       height: 70px;
+       object-fit: contain;
+    }
   </style>
 </head>
 <body>
@@ -93,24 +93,25 @@
     <?php for ($j = $i; $j < $i + 2 && $j < count($students); $j++): ?>
       <div class="admit-card">
 	<table style="width: 100%; text-align: center;">
-  <tr>
-    <td style="width: 80px;">
-      <img src="<?= base_url('public/assets/img/logo.jpg') ?>" style="width: 80px; height: 80px;" alt="Left Logo">
-    </td>
-    
-    <td>
-      <div style="font-size: 16px; font-weight: bold; line-height: 1.5;">
-        Mulgram Secondary School<br>
-        Keshabpur, Jashore<br>
-        <strong>ADMIT CARD</strong><br>
-       Half yearly exam - 2025
-      </div>
-    </td>
-    
-    <td style="width: 80px;">
-    <img src="<?= base_url( esc($students[$j]['student_pic'])) ?>" width="60" height="70" alt="Student Photo"></td>
-  </tr>
-</table><div class="info-two-line">
+	  <tr>
+	    <td style="width: 80px;">
+	      <img src="<?= base_url('public/assets/img/logo.jpg') ?>" style="width: 80px; height: 80px;" alt="Left Logo">
+	    </td>
+	    
+	    <td>
+	      <div style="font-size: 16px; font-weight: bold; line-height: 1.5;">
+		Mulgram Secondary School<br>
+		Keshabpur, Jashore<br>
+		<strong>ADMIT CARD</strong><br>
+	       Half yearly exam - 2025
+	      </div>
+	    </td>
+	    
+	    <td style="width: 80px;">
+	    <img src="<?= base_url( esc($students[$j]['student_pic'])) ?>" width="60" height="70" alt="Student Photo"></td>
+	  </tr>
+	</table>
+	<div class="info-two-line">
 	  <div>
 	    <strong>Name:</strong> <?= esc($students[$j]['student_name']) ?>  
 	    <strong>Roll:</strong> <?= esc($students[$j]['roll']) ?>  
@@ -127,31 +128,69 @@
           <tr>
             <th>ক্রমিক</th>
             <th>তারিখ</th>
+            <th>সময়</th>
             <th>দিন</th>
             <th>বিষয়</th>
           </tr>
-          <?php
-            $count = 1;
-            foreach ($events as $event):
-              if ($event['title'] == $students[$j]['class']): // Filter by class
-          ?>
-            <tr>
-              <td><?= $count++ ?></td>
-              <td><?= date('d/m/Y', strtotime($event['start_date'])) ?></td>
-              <td><?= bangla_day(date('l', strtotime($event['start_date']))) ?></td>
-              <td><?= esc($event['description']) ?></td>
-            </tr>
-          <?php endif; endforeach; ?>
+
+
+
+<?php
+  $count = 1;
+  foreach ($events as $event):
+    $eventTitle = strtolower(str_replace(['(', ')'], '', $event['title']));
+    $studentClass = strtolower($students[$j]['class']);
+    $studentSection = strtolower($students[$j]['section'] ?? '');
+
+    if (
+      $eventTitle === $studentClass &&
+      strpos($studentSection, 'voc') === false // Not vocational
+    ):
+?>
+      <tr>
+        <td><?= $count++ ?></td>
+        <td><?= date('d/m/Y', strtotime($event['start_date'])) ?></td>
+	<td>10.00 AM to 1.00 PM</td>
+        <td><?= bangla_day(date('l', strtotime($event['start_date']))) ?></td>
+        <td><?= esc($event['description']) ?></td>
+      </tr>
+<?php
+    elseif (
+      $studentClass === '9' &&
+      strpos($studentSection, 'voc') !== false &&
+      $eventTitle === '9voc'
+    ):
+?>
+      <tr>
+        <td><?= $count++ ?></td>
+        <td><?= date('d/m/Y', strtotime($event['start_date'])) ?></td>
+	<td>10.00 AM to 1.00 PM</td>
+        <td><?= bangla_day(date('l', strtotime($event['start_date']))) ?></td>
+        <td><?= esc($event['description']) ?> (Vocational)</td>
+      </tr>
+<?php
+    endif;
+  endforeach;
+?>
+
+
         </table>
 
         <div class="footer-note">
           পরীক্ষার দিন নির্ধারিত সময়ের ৩০ মিনিট পূর্বে কেন্দ্রে উপস্থিত থাকতে হবে।
         </div>
 
-        <div class="sign">
-          <span>Class Teacher</span>
-          <span>Head Teacher</span>
-        </div>
+
+
+	<div class="sign">
+	  <span><br><br><br>Class Teacher</span>
+	  <span style="text-align: center;">
+	    <img src="<?= base_url('public/assets/img/sign.png') ?>" alt="Signature" style="width: 100px; height: auto; display: block; margin: 0 auto;">
+	    Head Teacher
+	  </span>
+	</div>
+
+
       </div>
     <?php endfor; ?>
   </div>

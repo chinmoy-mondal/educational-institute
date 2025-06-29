@@ -5,17 +5,18 @@
       <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
     </li>
     <li class="nav-item d-none d-sm-inline-block">
-      <a href="#" class="nav-link">Home</a>
-    </li>
-    <li class="nav-item d-none d-sm-inline-block">
       <a href="<?= base_url('dashboard') ?>" class="nav-link">Dashboard</a>
     </li>
     <li class="nav-item d-none d-sm-inline-block">
       <a href="<?= base_url('calendar') ?>" class="nav-link">Calendar</a>
     </li>
+    <li class="nav-item d-none d-sm-inline-block">
+      <a href="<?= base_url('ad-result') ?>" class="nav-link">Result</a>
+    </li>
   </ul>
 
-  <!-- Right navbar links -->
+  
+ <!-- Right navbar links -->
   <ul class="navbar-nav ml-auto">
     <!-- Profile Button -->
     <li class="nav-item">

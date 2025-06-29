@@ -6,7 +6,7 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-
+# website page
 $routes->get('/', 'Home::index');
 $routes->get('/home', 'Home::index');
 $routes->get('/home/welcome', 'Home::welcome');
@@ -24,6 +24,7 @@ $routes->get('/result', 'Home::result');
 $routes->get('/courses', 'Home::courses');
 $routes->get('/contact', 'Home::contact');
 $routes->get('/apply', 'Home::apply');
+$routes->get('/subjects', 'Home::subjects');
 $routes->get('/course-details/(:num)', 'Home::courseDetails/$1');
 $routes->get('/activity-details/(:num)', 'Home::activityDetails/$1');
 
@@ -47,14 +48,24 @@ $routes->get('login', 'Account::showLoginForm');
 $routes->post('login', 'Account::processLogin');
 $routes->get('logout', 'Account::logout');
 
+#Dashboard
 $routes->get('/dashboard', 'Dashboard::index');
 $routes->get('/profile', 'Dashboard::profile');
+$routes->get('/calendar', 'Dashboard::calendar');
+$routes->get('/calendar/events', 'Dashboard::events');
+$routes->post('/calendar/add', 'Dashboard::addEvent');
+$routes->post('/calendar/update', 'Dashboard::updateEvent');
+$routes->post('/calendar/delete', 'Dashboard::deleteEvent');
+$routes->get('/ad_teacher_list', 'Dashboard::teachers');
+$routes->get('/ad_new_user', 'Dashboard::newUser');
+$routes->get('/teacher_management', 'Dashboard::teacher_management');
+$routes->post('/sub-update', 'Dashboard::teacherSubUpdate');
 
-$routes->get('calendar', 'Dashboard::calendar');
-$routes->get('calendar/events', 'Dashboard::events');
-$routes->post('calendar/add', 'Dashboard::addEvent');
-$routes->post('calendar/update', 'Dashboard::updateEvent');
-$routes->post('calendar/delete', 'Dashboard::deleteEvent');
+$routes->get('/ad-result', 'Dashboard::result');
+
+$routes->get('/user_permit/(:num)', 'Dashboard::user_permit/$1');
+$routes->get('/user_delete/(:num)', 'Dashboard::user_delete/$1');
+
 
 $routes->get('public-calendar', 'PublicCalendar::index');
 $routes->get('public-calendar/events', 'PublicCalendar::events');

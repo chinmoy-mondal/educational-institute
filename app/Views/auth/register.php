@@ -63,8 +63,8 @@
                                 $subjects = [
                                     'Bangla', 'English', 'Mathematics', 'Science', 'Physics', 'Chemistry', 'Biology',
                                     'ICT (Information and Communication Technology)', 'Bangladesh and Global Studies',
-                                    'Religion', 'Physical Education and Health', 'History', 'Civics', 'Sociology',
-                                    'Geography', 'Accounting', 'Finance', 'Agriculture', 'Food Processing & Preservation',
+                                    'Religion (Hinduism)','Religion (Islam)', 'Physical Education and Health', 'History', 'Civics', 'Sociology',
+                                   'Geography', 'Accounting', 'Finance', 'Agriculture', 'Food Processing & Preservation',
                                     'Library and Information Science', 'N/A'
                                 ];
                                 foreach ($subjects as $subj) :
