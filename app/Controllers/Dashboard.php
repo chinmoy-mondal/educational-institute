@@ -248,23 +248,16 @@ class Dashboard extends Controller
 		if (!$session->get('isLoggedIn')) {
 			return redirect()->to(base_url('login'));
 		}
+
+
+
 		$userModel = new UserModel();
-
-		$newUsers = $userModel
-			->where('account_status=',0)
-			->findAll();
-		$totalNewUsers = count($newUsers);
-
 		$users = $userModel
 			->where('account_status !=',0)
 			->findAll();
-		$totalUsers = count($users);
-		return view('dashboard/ad_teacher_list', [
-				'title' => 'Admin Dashboard',
-				'newUsers' => $newUsers,
-				'total_newUsers' => $totalNewUsers,
-				'users'=>$users,
-				'total_users'=>$totalUsers
+		return view('dashboard/teacher_management', [
+				'title' => 'Teacher Management',
+				'users'=>$users
 		]);
 	}
 }
