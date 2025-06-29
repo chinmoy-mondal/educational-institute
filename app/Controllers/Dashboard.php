@@ -271,8 +271,7 @@ class Dashboard extends Controller
 	    $userModel = new UserModel();
 
 	    $data = [
-		'name'       => $name,
-		'assign_sub' => $assign_sub,  // store CSV in DB
+		'assagin_sub' => $assign_sub,  // store CSV in DB
 	    ];
 
 	    $userModel->update($id, $data);
