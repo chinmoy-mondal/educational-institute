@@ -244,18 +244,27 @@ class Dashboard extends Controller
 	public function teacher_management()
 	{
 		
-		$studentModel = new StudentModel();
-
 		$session = session();
 		if (!$session->get('isLoggedIn')) {
 			return redirect()->to(base_url('login'));
 		}
+		$userModel = new UserModel();
 
-		$students = $studentModel	
-			->orderBy('roll', 'ASC')
-			->where('class',10)
+		$newUsers = $userModel
+			->where('account_status=',0)
 			->findAll();
+		$totalNewUsers = count($newUsers);
 
-		return view('dashboard/teacher_management', ['students' => $students]);
+		$users = $userModel
+			->where('account_status !=',0)
+			->findAll();
+		$totalUsers = count($users);
+		return view('dashboard/ad_teacher_list', [
+				'title' => 'Admin Dashboard',
+				'newUsers' => $newUsers,
+				'total_newUsers' => $totalNewUsers,
+				'users'=>$users,
+				'total_users'=>$totalUsers
+		]);
 	}
 }
