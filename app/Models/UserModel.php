@@ -17,10 +17,9 @@ class UserModel extends Model
         'gender',
         'phone',
         'email',
-        'password',
+        'password','assign_sub',
         'account_status', // ✅ Important for filtering approved users
 	'permit_by',
-	'assign_sub',
         'created_at',
         'updated_at'
     ];
