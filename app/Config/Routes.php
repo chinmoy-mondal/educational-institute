@@ -59,6 +59,8 @@ $routes->post('/calendar/delete', 'Dashboard::deleteEvent');
 $routes->get('/ad_teacher_list', 'Dashboard::teachers');
 $routes->get('/ad_new_user', 'Dashboard::newUser');
 $routes->get('/teacher_management', 'Dashboard::teacher_management');
+$routes->get('/sub-update', 'Dashboard::teacherSubUpdate');
+
 $routes->get('/ad-result', 'Dashboard::result');
 
 $routes->get('/user_permit/(:num)', 'Dashboard::user_permit/$1');

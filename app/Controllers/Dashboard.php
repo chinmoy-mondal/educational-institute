@@ -261,4 +261,23 @@ class Dashboard extends Controller
 		'subjects' => $subjects, // ✅ must match what your view expects
    	     ]);
 	}
+
+	public function teacherSubUpdate()
+	{
+	    $id         = $this->request->getPost('id');
+	    $name       = $this->request->getPost('name');
+	    $assign_sub = $this->request->getPost('assign_sub'); // e.g., "4,7,9"
+
+	    $userModel = new \App\Models\UserModel();
+
+	    $data = [
+		'name'       => $name,
+		'assign_sub' => $assign_sub,  // store CSV in DB
+	    ];
+
+	    $userModel->update($id, $data);
+
+	    return redirect()->back()->with('success', 'Teacher updated with new subjects!');
+	}
+
 }

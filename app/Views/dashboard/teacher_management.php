@@ -60,10 +60,10 @@
             <h3 class="card-title mb-0"><i class="fas fa-user-edit"></i> Edit Teacher</h3>
           </div>
           <div class="card-body">
-            <form id="editForm" action="<?= base_url('teacher/update') ?>" method="post">
+            <form id="editForm" action="<?= base_url('sub-update') ?>" method="post">
               <?= csrf_field() ?>
               <input type="hidden" name="id" id="teacherId">
-              <input type="hidden" name="subject_ids" id="subjectIds">
+              <input type="hidden" name="assign_sub" id="subjectIds">
 
               <div class="form-group mb-3">
                 <label>Name</label>
