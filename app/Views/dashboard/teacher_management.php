@@ -1,11 +1,13 @@
-<?= $this->extend("layouts/admin") ?>
-<?= $this->section("content") ?>
+<?= $this->extend('layouts/admin') ?>
+<?= $this->section('content') ?>
 
 <section class="content">
   <div class="container-fluid">
+
+    <!-- ROW 1 : teacher table (left) + edit form (right) -->
     <div class="row">
 
-      <!-- Left: Teacher List Table -->
+      <!-- LEFT COLUMN : teacher list -->
       <div class="col-md-6">
         <div class="card card-primary card-outline shadow">
           <div class="card-header d-flex justify-content-between align-items-center">
@@ -24,32 +26,32 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <?php if (!empty($users)): ?>
-                    <?php foreach ($users as $user): ?>
-                      <tr>
-                        <td class="text-center">
-                          <img src="<?= !empty($user['photo']) 
-                            ? base_url('uploads/' . $user['photo']) 
-                            : base_url('public/assets/img/default.png') ?>" 
-                            width="50" height="50" class="rounded-circle">
-                        </td>
-                        <td><?= esc($user['name']) ?></td>
-                        <td><?= esc($user['subject']) ?></td>
-                        <td class="text-center">
-                          <a href="#"
-                             class="btn btn-sm btn-info edit-btn"
-                             data-id="<?= $user['id'] ?>"
-                             data-name="<?= esc($user['name']) ?>"
-                             data-subject="<?= esc($user['subject']) ?>"
-                             data-photo="<?= !empty($user['photo']) 
-                                ? base_url('uploads/' . $user['photo']) 
-                                : base_url('public/assets/img/default.png') ?>">
-                            <i class="fas fa-edit"></i>
-                          </a>
-                        </td>
-                      </tr>
-                    <?php endforeach; ?>
-                  <?php else: ?>
+                  <?php foreach ($users as $user): ?>
+                    <tr>
+                      <td class="text-center">
+                        <img src="<?= !empty($user['photo'])
+                                     ? base_url('uploads/' . $user['photo'])
+                                     : base_url('public/assets/img/default.png') ?>"
+                             width="50" height="50" class="rounded-circle">
+                      </td>
+                      <td><?= esc($user['name']) ?></td>
+                      <td><?= esc($user['subject']) ?></td>
+                      <td class="text-center">
+                        <a  href="#"
+                            class="btn btn-sm btn-info edit-btn"
+                            data-id="<?= $user['id'] ?>"
+                            data-name="<?= esc($user['name']) ?>"
+                            data-subject="<?= esc($user['subject']) ?>"
+                            data-photo="<?= !empty($user['photo'])
+                                          ? base_url('uploads/' . $user['photo'])
+                                          : base_url('public/assets/img/default.png') ?>">
+                          <i class="fas fa-edit"></i>
+                        </a>
+                      </td>
+                    </tr>
+                  <?php endforeach; ?>
+
+                  <?php if (empty($users)): ?>
                     <tr><td colspan="4" class="text-center text-muted">No teachers found.</td></tr>
                   <?php endif; ?>
                 </tbody>
@@ -57,9 +59,9 @@
             </div>
           </div>
         </div>
-      </div>
+      </div><!-- /col-md-6 -->
 
-      <!-- Right: Edit Form -->
+      <!-- RIGHT COLUMN : edit form -->
       <div class="col-md-6">
         <div class="card card-success card-outline shadow">
           <div class="card-header">
@@ -67,69 +69,115 @@
           </div>
 
           <div class="card-body">
-            <form id="editForm" action="<?= base_url('teacher/update') ?>" method="post" enctype="multipart/form-data">
+            <form id="editForm" action="<?= base_url('teacher/update') ?>" method="post">
               <?= csrf_field() ?>
-              <input type="hidden" name="id" id="teacherId">
-
-              <div class="text-center mb-3">
-                <img id="previewImg" src="<?= base_url('public/assets/img/default.png') ?>" 
-                     class="rounded-circle" width="80" height="80">
-              </div>
+              <input type="hidden" name="id"           id="teacherId">
+              <input type="hidden" name="subject_ids" id="subjectIds">
 
               <div class="form-group mb-3">
-                <label for="teacherName">Name</label>
-                <input type="text" name="name" id="teacherName" class="form-control" placeholder="Enter name">
+                <label>Name</label>
+                <input type="text" name="name" id="teacherName" class="form-control">
               </div>
 
-              <div class="form-group mb-3">
-                <label for="teacherSubject">Subject</label>
-                <input type="text" name="subject" id="teacherSubject" class="form-control" placeholder="Enter subject">
-              </div>
-
-              <div class="form-group mb-3">
-                <label for="teacherPhoto">Upload New Photo</label>
-                <input type="file" name="photo" id="teacherPhoto" class="form-control">
+              <div class="mb-3">
+                <label>Subjects Assigned</label>
+                <ol id="selectedSubjectsList" class="ps-3"></ol>
               </div>
 
               <button type="submit" class="btn btn-success w-100">Update</button>
             </form>
 
             <p id="placeholderMsg" class="text-muted text-center mt-3">
-              Click the <i class="fas fa-edit"></i> button to load a teacher’s data.
+              Click the <i class="fas fa-edit"></i> button to load a teacher and then add subjects below.
             </p>
           </div>
         </div>
-      </div>
+      </div><!-- /col-md-6 -->
+    </div><!-- /row 1 -->
 
-    </div>
-  </div>
+    <!-- ROW 2 : subject list with “add” icons -->
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="card card-info card-outline shadow">
+          <div class="card-header">
+            <h3 class="card-title mb-0"><i class="fas fa-book"></i> Subject List</h3>
+          </div>
+          <div class="card-body">
+            <table class="table table-bordered table-hover">
+              <thead class="bg-info text-white">
+                <tr>
+                  <th>#</th>
+                  <th>Subject</th>
+                  <th>Add</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php foreach ($subjects as $sub): ?>
+                  <tr>
+                    <td><?= $sub['id'] ?></td>
+                    <td><?= esc($sub['subject']) ?></td>
+                    <td class="text-center">
+                      <a  href="#"
+                          class="btn btn-sm btn-primary add-subject"
+                          data-sid="<?= $sub['id'] ?>"
+                          data-sname="<?= esc($sub['subject']) ?>">
+                        <i class="fas fa-plus"></i>
+                      </a>
+                    </td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div><!-- /row 2 -->
+
+  </div><!-- /container-fluid -->
 </section>
 
-<!-- JavaScript to fill the form -->
+<!-- JavaScript -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelector('#teacherTable').addEventListener('click', function (e) {
+
+  /* Fill form when edit clicked */
+  document.querySelector('#teacherTable').addEventListener('click', e => {
     const btn = e.target.closest('.edit-btn');
     if (!btn) return;
 
-    // Read data from clicked button
-    const id = btn.dataset.id;
-    const name = btn.dataset.name;
-    const subject = btn.dataset.subject;
-    const photo = btn.dataset.photo;
+    document.getElementById('teacherId').value   = btn.dataset.id;
+    document.getElementById('teacherName').value = btn.dataset.name;
 
-    // Fill the form
-    document.getElementById('teacherId').value = id;
-    document.getElementById('teacherName').value = name;
-    document.getElementById('teacherSubject').value = subject;
-    document.getElementById('previewImg').src = photo;
+    //  reset subject fields
+    document.getElementById('subjectIds').value              = '';
+    document.getElementById('selectedSubjectsList').innerHTML = '';
 
-    // Show form, hide placeholder
-    document.getElementById('editForm').style.display = 'block';
+    document.getElementById('editForm').style.display   = 'block';
     document.getElementById('placeholderMsg').style.display = 'none';
   });
 
-  // Hide form at first
+  /* Add subject to hidden input & list */
+  document.querySelector('.card-info').addEventListener('click', e => {
+    const addBtn = e.target.closest('.add-subject');
+    if (!addBtn) return;
+
+    const sid   = addBtn.dataset.sid;
+    const sname = addBtn.dataset.sname;
+
+    const hidden = document.getElementById('subjectIds');
+    let ids      = hidden.value ? hidden.value.split(',') : [];
+
+    if (!ids.includes(sid)) {
+      ids.push(sid);
+      hidden.value = ids.join(',');
+
+      const li = document.createElement('li');
+      li.textContent = sname;
+      document.getElementById('selectedSubjectsList').appendChild(li);
+    }
+  });
+
+  // hide form until a teacher is selected
   document.getElementById('editForm').style.display = 'none';
 });
 </script>

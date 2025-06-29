@@ -249,15 +249,18 @@ class Dashboard extends Controller
 			return redirect()->to(base_url('login'));
 		}
 
-
-
+		$subjectModel = new SubjectModel();
 		$userModel = new UserModel();
+
+
+		$subjects = $subjectModel->orderBy('id')->findAll();
 		$users = $userModel
 			->where('account_status !=',0)
 			->findAll();
 		return view('dashboard/teacher_management', [
 				'title' => 'Teacher Management',
-				'users'=>$users
+				'users'=>$users,
+				'subject'=>$subjects
 		]);
 	}
 }
