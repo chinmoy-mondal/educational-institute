@@ -259,5 +259,6 @@ class Dashboard extends Controller
 		'title'    => 'Teacher Management',
 		'users'    => $users,
 		'subjects' => $subjects, // ✅ must match what your view expects
+   	     ]);
 	}
 }
