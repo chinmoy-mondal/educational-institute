@@ -244,24 +244,20 @@ class Dashboard extends Controller
 	
 	public function teacher_management()
 	{
-		
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
+	    $session = session();
+	    if (!$session->get('isLoggedIn')) {
+		return redirect()->to(base_url('login'));
+	    }
 
-		$subjectModel = new SubjectModel();
-		$userModel = new UserModel();
+	    $subjectModel = new SubjectModel();
+	    $userModel    = new UserModel();
 
+	    $subjects = $subjectModel->orderBy('id')->findAll(); // ✅ fixed line
+	    $users    = $userModel->where('account_status !=', 0)->findAll();
 
-		$subjects = $subjectModel->orderBy('id')->findAll();
-		$users = $userModel
-			->where('account_status !=',0)
-			->findAll();
-		return view('dashboard/teacher_management', [
-				'title' => 'Teacher Management',
-				'users'=>$users,
-				'subject'=>$subjects
-		]);
+	    return view('dashboard/teacher_management', [
+		'title'    => 'Teacher Management',
+		'users'    => $users,
+		'subjects' => $subjects, // ✅ must match what your view expects
 	}
 }
