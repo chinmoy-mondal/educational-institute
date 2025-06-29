@@ -241,7 +241,7 @@ class Dashboard extends Controller
 		return view('dashboard/ad_result', ['students' => $students]);
 	}
 	
-	public function teacherManagement()
+	public function teacher_management()
 	{
 		
 		$studentModel = new StudentModel();
