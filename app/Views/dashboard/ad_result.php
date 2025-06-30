@@ -37,12 +37,17 @@
                     <?php endif; ?>
 
                     <form method="post" action="<?= site_url('results/submit') ?>" onsubmit="return validateTotals();">
-                        <select name="exam" class="form-select mb-3" required>
-			    <option value="Midterm">Midterm</option>
-			    <option value="Final">Final</option>
-			    <option value="Class Test">Class Test</option>
-			</select>
-                        <input type="hidden" name="year"       value="<?= date('Y') ?>">
+                        <div class="row mb-3">
+                            <div class="col-md-4 offset-md-4">
+                                <select name="exam" class="form-select text-center" required>
+                                    <option selected disabled>Select Exam</option>
+                                    <option value="Midterm">Midterm</option>
+                                    <option value="Final">Final</option>
+                                    <option value="Class Test">Class Test</option>
+                                </select>
+                            </div>
+                        </div>
+			<input type="hidden" name="year"       value="<?= date('Y') ?>">
                         <input type="hidden" name="subject_id" value="<?= esc($subject['id']) ?>">
 
                         <div class="table-responsive">
