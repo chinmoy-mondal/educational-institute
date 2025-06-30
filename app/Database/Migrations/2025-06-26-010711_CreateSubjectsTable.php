@@ -9,14 +9,10 @@ class CreateSubjectsTable extends Migration
     public function up()
     {
         $this->forge->addField([
-            'id'         => [
-                'type'           => 'INT',
-                'auto_increment' => true,
-                'unsigned'       => true, // ✅ this is required for foreign key to work
-            ],
-            'class'      => ['type' => 'VARCHAR', 'constraint' => 50],
-            'subject'    => ['type' => 'VARCHAR', 'constraint' => 100],
-            'section'    => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => true], // ✅ fixed: it was cut off
+            'id'         => ['type' => 'INT', 'auto_increment' => true],
+            'class'      => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => false],
+            'subject'    => ['type' => 'VARCHAR', 'constraint' => 100, 'null' => false],
+            'section'    => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => true],
             'created_at' => ['type' => 'DATETIME', 'null' => true],
             'updated_at' => ['type' => 'DATETIME', 'null' => true],
         ]);
