@@ -17,10 +17,6 @@
             </small>
           </div>
 
-          <!-- back-link to your user list (adjust URL as needed) -->
-          <a href="<?= base_url('admin/users') ?>" class="btn btn-light btn-sm">
-            <i class="fas fa-arrow-left"></i> Back
-          </a>
         </div>
 
         <!-- ─── Card Body ──────────────────────────────────────────────────── -->
