@@ -20,8 +20,8 @@ class CreateResultsTable extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('student_id', 'students', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->addForeignKey('subject_id', 'subjects', 'id', 'CASCADE', 'CASCADE');
+//        $this->forge->addForeignKey('student_id', 'students', 'id', 'CASCADE', 'CASCADE');
+  //      $this->forge->addForeignKey('subject_id', 'subjects', 'id', 'CASCADE', 'CASCADE');
         $this->forge->createTable('results');
     }
 
