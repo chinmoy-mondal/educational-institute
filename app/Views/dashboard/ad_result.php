@@ -7,7 +7,22 @@
 
             <div class="card shadow border-0 rounded-4">
                 <div class="card-body p-5">
-                    <h4 class="mb-4 text-center">Enter Marks for Students</h4>
+
+                    <!-- Top Info Section -->
+                    <div class="mb-4 text-center">
+                        <h4 class="mb-1">Enter Marks for Students</h4>
+                        <p class="mb-0">
+                            <strong>Subject:</strong> <?= esc($subject['subject']) ?> &nbsp;|&nbsp;
+                            <strong>Class:</strong> <?= esc($subject['class']) ?> &nbsp;|&nbsp;
+                            <strong>Section:</strong> <?= esc($subject['section']) ?>
+                        </p>
+                        <p class="text-muted">
+                            <strong>Teacher:</strong> <?= esc($user['name']) ?>
+                            <?php if (!empty($user['designation'])): ?>
+                                (<?= esc($user['designation']) ?>)
+                            <?php endif ?>
+                        </p>
+                    </div>
 
                     <?php if (session()->getFlashdata('message')): ?>
                         <div class="alert alert-success">
@@ -92,6 +107,7 @@
                         </div>
                     </form>
 
+                    <!-- JS for calculating total and keyboard navigation -->
                     <script>
                         function updateTotal(index) {
                             const written = parseFloat(document.querySelector(`[name="students[${index}][written]"]`).value) || 0;

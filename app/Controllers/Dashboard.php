@@ -225,23 +225,38 @@ class Dashboard extends Controller
 		}
 	}
 
-	public function result()
+	public function result($userId, $subjectId)
 	{
-		$studentModel = new StudentModel();
+		$userModel     = new UserModel();
+		$subjectModel  = new SubjectModel();
+		$studentModel  = new StudentModel();   // ⬅ new
 
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
+		// ── Fetch teacher and subject ─────────────────────────────
+		$user    = $userModel->find($userId);
+		$subject = $subjectModel->find($subjectId);
+
+		// custom 404 if either is missing
+		if (!$user || !$subject) {
+			$routes   = \Config\Services::routes();
+			$override = $routes->get404Override();
+			return is_callable($override) ? $override() : null;
 		}
 
-		$students = $studentModel	
-			->orderBy('roll', 'ASC')
-			->where('class',10)
+		// ── Pull students in the same class & section ─────────────
+		$students = $studentModel
+			->where('class',   $subject['class'])
+			->where('section', $subject['section'])
+			->orderBy('roll', 'ASC')          // assumes a “roll” column
 			->findAll();
 
-		return view('dashboard/ad_result', ['students' => $students]);
+		// ── Send everything to the view ───────────────────────────
+		return view('dashboard/ad_result', [
+				'user'     => $user,
+				'subject'  => $subject,
+				'students' => $students,
+		]);
 	}
-	
+
 	public function teacher_management()
 	{
 	    $session = session();
