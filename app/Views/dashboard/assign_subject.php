@@ -30,6 +30,7 @@
                     <th>Class</th>
                     <th>Subject</th>
                     <th>Section</th>
+                    <th>Result</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -39,6 +40,11 @@
                       <td><?= esc($sub['class']) ?></td>
                       <td><?= esc($sub['subject']) ?></td>
                       <td><?= esc($sub['section']) ?></td>
+			<td>
+			  <a href="<?= base_url('result/view/' . $user['id'] . '/' . $sub['id']) ?>" class="btn btn-sm btn-info">
+			   <i class="fas fa-file-alt"></i>
+			  </a>
+			</td>
                     </tr>
                   <?php endforeach ?>
                 </tbody>
