@@ -37,7 +37,11 @@
                     <?php endif; ?>
 
                     <form method="post" action="<?= site_url('results/submit') ?>" onsubmit="return validateTotals();">
-                        <input type="hidden" name="exam"       value="Midterm">
+                        <select name="exam" class="form-select mb-3" required>
+			    <option value="Midterm">Midterm</option>
+			    <option value="Final">Final</option>
+			    <option value="Class Test">Class Test</option>
+			</select>
                         <input type="hidden" name="year"       value="<?= date('Y') ?>">
                         <input type="hidden" name="subject_id" value="<?= esc($subject['id']) ?>">
 
