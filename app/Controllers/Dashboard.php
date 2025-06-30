@@ -349,4 +349,46 @@ class Dashboard extends Controller
 
 	}
 
+public function submitResults()
+{
+    $resultModel = new \App\Models\ResultModel();
+
+    $students  = $this->request->getPost('students');
+    $exam      = $this->request->getPost('exam');
+    $year      = $this->request->getPost('year');
+    $subjectId = $this->request->getPost('subject_id');
+
+    if (!$students || !$exam || !$year || !$subjectId) {
+        return redirect()->back()->with('error', 'Missing data.');
+    }
+
+    foreach ($students as $student) {
+        $total = isset($student['total']) ? (int) $student['total'] : 0;
+
+        // Check if result already exists
+        $existing = $resultModel->where('student_id', $student['id'])
+                                ->where('subject_id', $subjectId)
+                                ->where('exam', $exam)
+                                ->where('year', $year)
+                                ->first();
+
+        $data = [
+            'student_id' => $student['id'],
+            'subject_id' => $subjectId,
+            'exam'       => $exam,
+            'year'       => $year,
+            'total'      => $total,
+            'updated_at' => date('Y-m-d H:i:s'),
+        ];
+
+        if ($existing) {
+            $resultModel->update($existing['id'], $data);
+        } else {
+            $data['created_at'] = date('Y-m-d H:i:s');
+            $resultModel->insert($data);
+        }
+    }
+
+    return redirect()->back()->with('message', 'Results submitted successfully.');
+}
 }

@@ -62,6 +62,7 @@ $routes->get('/teacher_management', 'Dashboard::teacher_management');
 $routes->post('/sub-update', 'Dashboard::teacherSubUpdate');
 $routes->get('/assignSubject/(:num)', 'Dashboard::assignSubject/$1');
 $routes->get('/ad-result/(:num)/(:num)', 'Dashboard::result/$1/$2');
+$routes->post('/results/submit', 'Dashboard::submitResults');
 
 $routes->get('/user_permit/(:num)', 'Dashboard::user_permit/$1');
 $routes->get('/user_delete/(:num)', 'Dashboard::user_delete/$1');

@@ -30,8 +30,8 @@
                         </div>
                     <?php endif; ?>
 
-                    <form method="post" action="<?= site_url('results/submit-demo') ?>">
-                        <div class="table-responsive">
+                        <form method="post" action="<?= site_url('results/submit') ?>">
+			  <div class="table-responsive">
                             <table class="table table-bordered align-middle text-center">
                                 <thead class="table-light">
                                     <tr>
@@ -49,7 +49,9 @@
                                     <?php foreach ($students as $index => $student): ?>
                                     <tr>
                                         <td><?= $index + 1 ?></td>
-
+<input type="hidden" name="exam" value="Midterm">
+<input type="hidden" name="year" value="<?= date('Y') ?>">
+<input type="hidden" name="subject_id" value="<?= esc($subject['id']) ?>">
                                         <td>
                                             <?= esc($student['student_name']) ?>
                                             <input type="hidden" name="students[<?= $index ?>][id]" value="<?= esc($student['id']) ?>">
