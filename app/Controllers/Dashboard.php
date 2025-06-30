@@ -245,7 +245,7 @@ class Dashboard extends Controller
 		// ── Pull students in the same class & section ─────────────
 		$students = $studentModel
 			->where('class',   $subject['class'])
-			->where('section', $subject['section'])
+//			->where('section', $subject['section'])
 			->orderBy('roll', 'ASC')          // assumes a “roll” column
 			->findAll();
 
@@ -332,7 +332,7 @@ class Dashboard extends Controller
 		if ($subjectIds) {
 		    $subjects = $subjectModel
 			->whereIn('id', $subjectIds)
-//			->orderBy('class ASC')
+			->orderBy('class ASC')
 			->findAll();
 		}
 
