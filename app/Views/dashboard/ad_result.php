@@ -7,38 +7,15 @@
 
             <div class="card shadow border-0 rounded-4">
                 <div class="card-body p-5">
+                    <h4 class="mb-4 text-center">Enter Marks for Students</h4>
 
-                    <!-- ─── Top Info ─────────────────────────────────────── -->
-                    <div class="mb-4 text-center">
-                        <h4 class="mb-1">Enter Marks for Students</h4>
-                        <p class="mb-0">
-                            <strong>Subject:</strong> <?= esc($subject['subject']) ?> |
-                            <strong>Class:</strong> <?= esc($subject['class']) ?> |
-                            <strong>Section:</strong> <?= esc($subject['section']) ?>
-                        </p>
-                        <p class="text-muted">
-                            <strong>Teacher:</strong> <?= esc($user['name']) ?>
-                            <?php if (!empty($user['designation'])): ?>
-                                (<?= esc($user['designation']) ?>)
-                            <?php endif ?>
-                        </p>
-                    </div>
-
-                    <!-- Flash message -->
                     <?php if (session()->getFlashdata('message')): ?>
                         <div class="alert alert-success">
                             <?= session()->getFlashdata('message') ?>
                         </div>
                     <?php endif; ?>
 
-                    <!-- ─── Form ────────────────────────────────────────── -->
-                    <form method="post" action="<?= site_url('results/submit') ?>">
-
-                        <!-- Hidden context -->
-                        <input type="hidden" name="exam" value="Midterm">
-                        <input type="hidden" name="year" value="<?= date('Y') ?>">
-                        <input type="hidden" name="subject_id" value="<?= esc($subject['id']) ?>">
-
+                    <form method="post" action="<?= site_url('results/submit-demo') ?>" onsubmit="return validateMarks();">
                         <div class="table-responsive">
                             <table class="table table-bordered align-middle text-center">
                                 <thead class="table-light">
@@ -60,56 +37,49 @@
 
                                         <td>
                                             <?= esc($student['student_name']) ?>
-                                            <input type="hidden"
-                                                   name="students[<?= $index ?>][id]"
-                                                   value="<?= esc($student['id']) ?>">
+                                            <input type="hidden" name="students[<?= $index ?>][id]" value="<?= esc($student['id']) ?>">
                                         </td>
 
                                         <td><?= esc($student['roll']) ?></td>
                                         <td><?= esc($student['class']) ?></td>
 
-                                        <!-- Written -->
                                         <td class="mark-cell">
                                             <input type="number"
-                                                   name="students[<?= $index ?>][written]"
-                                                   class="form-control mark-input text-center"
-                                                   style="width:50px"
-                                                   min="0" max="100"
-                                                   oninput="updateTotal(<?= $index ?>)"
-                                                   onkeydown="moveWithArrow(event)">
+                                                name="students[<?= $index ?>][written]" 
+                                                class="form-control mark-input text-end"
+                                                style="min-width: 60px; width: 100%; max-width: 80px;"
+                                                min="0" max="100"
+                                                oninput="updateTotal(<?= $index ?>)"
+                                                onkeydown="moveWithArrow(event)">
                                         </td>
 
-                                        <!-- MCQ -->
                                         <td class="mark-cell">
-                                            <input type="number"
-                                                   name="students[<?= $index ?>][mcq]"
-                                                   class="form-control mark-input text-center"
-                                                   style="width:50px"
-                                                   min="0" max="100"
-                                                   oninput="updateTotal(<?= $index ?>)"
-                                                   onkeydown="moveWithArrow(event)">
+                                            <input type="number" 
+                                                name="students[<?= $index ?>][mcq]" 
+                                                class="form-control mark-input text-end"
+                                                style="min-width: 60px; width: 100%; max-width: 80px;"
+                                                min="0" max="100"
+                                                oninput="updateTotal(<?= $index ?>)"
+                                                onkeydown="moveWithArrow(event)">
                                         </td>
 
-                                        <!-- Practical -->
                                         <td class="mark-cell">
-                                            <input type="number"
-                                                   name="students[<?= $index ?>][practical]"
-                                                   class="form-control mark-input text-center"
-                                                   style="width:50px"
-                                                   min="0" max="100"
-                                                   oninput="updateTotal(<?= $index ?>)"
-                                                   onkeydown="moveWithArrow(event)">
+                                            <input type="number" 
+                                                name="students[<?= $index ?>][practical]" 
+                                                class="form-control mark-input text-end"
+                                                style="min-width: 60px; width: 100%; max-width: 80px;"
+                                                min="0" max="100"
+                                                oninput="updateTotal(<?= $index ?>)"
+                                                onkeydown="moveWithArrow(event)">
                                         </td>
 
-                                        <!-- Total -->
                                         <td>
-                                            <input type="number"
-                                                   name="students[<?= $index ?>][total]"
-                                                   class="form-control bg-light text-center"
-                                                   id="total-<?= $index ?>"
-                                                   style="width:100px"
-                                                   max="100"
-                                                   readonly>
+                                            <input type="number" 
+                                                name="students[<?= $index ?>][total]" 
+                                                class="form-control bg-light text-center" 
+                                                id="total-<?= $index ?>" 
+                                                style="min-width: 80px; max-width: 100px;" 
+                                                readonly>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>
@@ -122,55 +92,71 @@
                         </div>
                     </form>
 
-                    <!-- ─── Scripts ─────────────────────────────────────── -->
+                    <!-- JavaScript -->
                     <script>
-                        /* live total */
-                        function updateTotal(i) {
-                            const w = parseFloat(document.querySelector(`[name="students[${i}][written]"]`).value) || 0;
-                            const m = parseFloat(document.querySelector(`[name="students[${i}][mcq]"]`).value) || 0;
-                            const p = parseFloat(document.querySelector(`[name="students[${i}][practical]"]`).value) || 0;
-                            document.getElementById(`total-${i}`).value = w + m + p;
+                        function updateTotal(index) {
+                            const written = parseFloat(document.querySelector(`[name="students[${index}][written]"]`).value) || 0;
+                            const mcq = parseFloat(document.querySelector(`[name="students[${index}][mcq]"]`).value) || 0;
+                            const practical = parseFloat(document.querySelector(`[name="students[${index}][practical]"]`).value) || 0;
+                            document.getElementById(`total-${index}`).value = written + mcq + practical;
                         }
 
-                        /* arrow-key navigation */
-                        function moveWithArrow(e) {
-                            const td = e.target.closest('td');
+                        function moveWithArrow(event) {
+                            const key = event.key;
+                            const td = event.target.closest('td');
                             if (!td || !td.classList.contains('mark-cell')) return;
 
-                            let target;
-                            switch (e.key) {
+                            let targetInput;
+
+                            switch (key) {
                                 case "ArrowRight":
                                     let next = td.nextElementSibling;
-                                    while (next && !next.classList.contains('mark-cell')) next = next.nextElementSibling;
-                                    target = next?.querySelector('input'); break;
+                                    while (next && !next.classList.contains('mark-cell')) {
+                                        next = next.nextElementSibling;
+                                    }
+                                    targetInput = next?.querySelector('input');
+                                    break;
+
                                 case "ArrowLeft":
                                     let prev = td.previousElementSibling;
-                                    while (prev && !prev.classList.contains('mark-cell')) prev = prev.previousElementSibling;
-                                    target = prev?.querySelector('input'); break;
+                                    while (prev && !prev.classList.contains('mark-cell')) {
+                                        prev = prev.previousElementSibling;
+                                    }
+                                    targetInput = prev?.querySelector('input');
+                                    break;
+
                                 case "ArrowUp":
                                 case "ArrowDown":
-                                    const idx = td.cellIndex;
+                                    const cellIndex = td.cellIndex;
                                     const row = td.closest('tr');
-                                    const sib = (e.key === "ArrowUp") ? row.previousElementSibling : row.nextElementSibling;
-                                    if (sib && sib.cells[idx]?.classList.contains('mark-cell'))
-                                        target = sib.cells[idx].querySelector('input');
+                                    const siblingRow = (key === "ArrowUp")
+                                        ? row.previousElementSibling
+                                        : row.nextElementSibling;
+
+                                    if (siblingRow && siblingRow.cells[cellIndex]?.classList.contains('mark-cell')) {
+                                        targetInput = siblingRow.cells[cellIndex].querySelector('input');
+                                    }
                                     break;
                             }
-                            if (target) { e.preventDefault(); target.focus(); }
+
+                            if (targetInput) {
+                                event.preventDefault();
+                                targetInput.focus();
+                            }
                         }
 
-                        /* block submit if any total > 100 */
-                        document.querySelector('form').addEventListener('submit', function (e) {
-                            const totals = document.querySelectorAll('[id^="total-"]');
-                            for (const input of totals) {
-                                if ((parseFloat(input.value) || 0) > 100) {
-                                    alert('Total marks cannot exceed 100.');
+                        function validateMarks() {
+                            const inputs = document.querySelectorAll('.mark-input');
+                            for (let input of inputs) {
+                                const val = parseInt(input.value);
+                                if (val > 100) {
+                                    alert("Marks must be less than or equal to 100.");
                                     input.focus();
-                                    e.preventDefault();
                                     return false;
                                 }
                             }
-                        });
+                            return true;
+                        }
                     </script>
 
                 </div>
