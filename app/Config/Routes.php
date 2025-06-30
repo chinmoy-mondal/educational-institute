@@ -60,7 +60,7 @@ $routes->get('/ad_teacher_list', 'Dashboard::teachers');
 $routes->get('/ad_new_user', 'Dashboard::newUser');
 $routes->get('/teacher_management', 'Dashboard::teacher_management');
 $routes->post('/sub-update', 'Dashboard::teacherSubUpdate');
-
+$routes->post('/assignSubject/(:num)', 'Dashboard::assignSubject/$1');
 $routes->get('/ad-result', 'Dashboard::result');
 
 $routes->get('/user_permit/(:num)', 'Dashboard::user_permit/$1');

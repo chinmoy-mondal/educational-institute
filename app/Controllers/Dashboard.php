@@ -279,4 +279,10 @@ class Dashboard extends Controller
 	    return redirect()->back()->with('success', 'Teacher updated with new subjects!');
 	}
 
+
+	public function assignSubject($id)
+	{
+		echo "number of user id=".$id;
+	}
+
 }

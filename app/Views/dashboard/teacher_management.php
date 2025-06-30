@@ -25,11 +25,14 @@
                   <?php foreach ($users as $user): ?>
                     <tr>
                       <td class="text-center">
-                        <img src="<?= !empty($user['photo']) 
-                          ? base_url('uploads/' . $user['photo']) 
-                          : base_url('public/assets/img/default.png') ?>"
-                          width="50" height="50" class="rounded-circle">
-                      </td>
+                        <a href="<?= base_url('assignSubject/' . $user['id']) ?>">
+			    <img src="<?= !empty($user['photo']) 
+				? base_url('uploads/' . $user['photo']) 
+				: base_url('public/assets/img/default.png') ?>" 
+				width="50" height="50" class="rounded-circle">
+			</a>
+
+		      </td>
                       <td><?= esc($user['name']) ?></td>
                       <td><?= esc($user['subject']) ?></td>
                       <td class="text-center">
