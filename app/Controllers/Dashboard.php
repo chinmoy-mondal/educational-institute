@@ -317,7 +317,7 @@ class Dashboard extends Controller
 		if ($subjectIds) {
 		    $subjects = $subjectModel
 			->whereIn('id', $subjectIds)
-			->orderBy('class ASC, subject ASC')
+			->orderBy('class ASC')
 			->findAll();
 		}
 
