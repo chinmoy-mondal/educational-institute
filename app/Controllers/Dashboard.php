@@ -264,6 +264,13 @@ class Dashboard extends Controller
 
 	public function teacherSubUpdate()
 	{
+	    $session = session();
+	    if (!$session->get('isLoggedIn')) {
+		return redirect()->to(base_url('login'));
+	    }
+
+
+
 	    $id         = $this->request->getPost('id');
 	    $name       = $this->request->getPost('name');
 	    $assign_sub = $this->request->getPost('assign_sub'); // e.g., "4,7,9"
@@ -282,7 +289,45 @@ class Dashboard extends Controller
 
 	public function assignSubject($id)
 	{
-		echo "number of user id=".$id;
+		// hello
+
+		$session = session();
+		if (!$session->get('isLoggedIn')) {
+			return redirect()->to(base_url('login'));
+		}
+
+
+		$userModel = new UserModel();
+		$subjectModel = new SubjectModel();
+		
+		$user = $userModel->find($id);
+		
+		if (!$user) {
+		    throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(
+			"User ID {$userId} not found"
+		    );
+		}
+
+		$subjectIds = array_filter(
+		    array_map('intval', explode(',', $user['assagin_sub'] ?? ''))
+		);
+
+
+		$subjects = [];
+		if ($subjectIds) {
+		    $subjects = $subjectModel
+			->whereIn('id', $subjectIds)
+			->orderBy('class ASC, subject ASC')
+			->findAll();
+		}
+
+		return view('dashboard/assign_subject', [
+		    'user'     => $user,
+		    'subjects' => $subjects,
+		]);
+
+
+
 	}
 
 }
