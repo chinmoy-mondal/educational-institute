@@ -15,7 +15,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <form method="post" action="<?= site_url('results/submit-demo') ?>" onsubmit="return validateMarks();">
+                    <form method="post" action="<?= site_url('results/submit') ?>" onsubmit="return validateMarks();">
                         <div class="table-responsive">
                             <table class="table table-bordered align-middle text-center">
                                 <thead class="table-light">
