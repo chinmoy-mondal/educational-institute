@@ -1,4 +1,4 @@
-<?= $this->include("layouts/base") ?>
+<?= $this->include("layouts/base.php") ?>
 
 <?= $this->section("content"); ?>
 
