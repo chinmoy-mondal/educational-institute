@@ -38,4 +38,4 @@ class CreateStudents extends Migration
     {
         $this->forge->dropTable('students');
     }
-}
+} 
