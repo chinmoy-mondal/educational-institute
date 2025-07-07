@@ -6,7 +6,7 @@ class Home extends BaseController
 {
 	public function index()
 	{
-		return view('home');
+		return view('public/home');
 	}
 
 	public function welcome()
@@ -15,23 +15,23 @@ class Home extends BaseController
 	}
 	public function history()
 	{
-		return view('history');
+		return view('public/history');
 	}
 
 	public function mission()
 	{
-		return view('mission');
+		return view('public/mission');
 	}
 
 	public function staff()
 	{
-		return view('staff');
+		return view('public/staff');
 	}
 	public function subjects()
 	{
 		$model = new SubjectModel();  // ✅ Correct instantiation
 
 		$subjects = $model->findAll();
-		return view('p_subject', ['subjects' => $subjects]);
+		return view('public/p_subject', ['subjects' => $subjects]);
 	}
 }
