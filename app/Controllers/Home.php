@@ -32,6 +32,6 @@ class Home extends BaseController
 		$model = new SubjectModel();  // ✅ Correct instantiation
 
 		$subjects = $model->findAll();
-		return view('public/p_subject', ['subjects' => $subjects]);
+		return view('public/subject', ['subjects' => $subjects]);
 	}
 }

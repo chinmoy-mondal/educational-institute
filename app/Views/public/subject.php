@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 
 <div class="fixed-header">
-    <?= $this->include('structure/header'); ?>
+    <?= $this->include('layouts/base-structure/header'); ?>
 </div>
 
 <div class="container content">
@@ -68,5 +68,5 @@ foreach ($grouped as $key => $rows) {
 </section>
 </div>
 
-<?= $this->include('structure/footer'); ?>
+<?= $this->include('layouts/base-structure/footer'); ?>
 <?= $this->endSection() ?>
