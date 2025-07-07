@@ -36,8 +36,8 @@ $routes->get('/student/edit/(:num)', 'Student::edit/$1');
 $routes->post('/student/update/(:num)', 'Student::update/$1');
 $routes->post('/student/delete/(:num)', 'Student::delete/$1');
 
-$routes->get('run-migration/(:any)', 'DevTools::migrate/$1');
-$routes->get('run-seed/(:any)', 'DevTools::seed/$1');
+#$routes->get('run-migration/(:any)', 'DevTools::migrate/$1');
+#$routes->get('run-seed/(:any)', 'DevTools::seed/$1');
 
 $routes->get('/page', 'Page::index');
 
