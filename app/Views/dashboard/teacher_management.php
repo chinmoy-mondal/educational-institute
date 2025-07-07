@@ -1,4 +1,4 @@
-<?= $this->extend("layouts/admin") ?>
+<?= $this->include("layouts/base-structure/admin") ?>
 <?= $this->section("content") ?>
 
 <section class="content">

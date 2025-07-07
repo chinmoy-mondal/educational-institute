@@ -1,9 +1,9 @@
-<?= $this->extend("../layouts/base-structure/base.php") ?>
+<?= $this->extend("layouts/base.php") ?>
 <?= $this->section("content"); ?>
 
 <!-- Fixed Wrapper for Navbar -->
 <div class="fixed-header">
-    <?= $this->include("../layouts/base-structure/header"); ?>
+    <?= $this->include("layouts/base-structure/header"); ?>
 </div>
 
 <!-- Login Form -->
@@ -49,6 +49,6 @@
 </div>
 
 <!-- Footer -->
-<?= $this->include("../layouts/base-structure/footer"); ?>
+<?= $this->include("layouts/base-structure/footer"); ?>
 
 <?= $this->endSection(); ?>

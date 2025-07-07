@@ -1,4 +1,4 @@
-<?= $this->extend("layouts/base-structure/base.php") ?>
+<?= $this->extend("layouts/base.php") ?>
 <?= $this->section("content"); ?>
 
 <div class="fixed-header">
