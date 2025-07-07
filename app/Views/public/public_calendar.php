@@ -1,12 +1,12 @@
 <!-- chinmoy is testing calendar page only -->
 
-<?= $this->extend("layouts/base.php") ?>
+<?= $this->include("../layouts/base-structure/base.php") ?>
 
 <?= $this->section("content"); ?>
 
 <!-- Fixed Wrapper for Navbar -->
 <div class="fixed-header">
-    <?= $this->include("structure/header"); ?>
+    <?= $this->include("../layouts/base-structure/header"); ?>
 </div>
 
 <div class="container content">
@@ -28,7 +28,7 @@
 
 </div>
 
-<?= $this->include("structure/footer"); ?>
+<?= $this->include("../layouts/base-structure/footer"); ?>
 
 <!-- FullCalendar CSS & JS -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
