@@ -1,13 +1,14 @@
+sdfsd
 <?= $this->include("layouts/base.php") ?>
 
 <?= $this->section("content"); ?>
 
      <!--  Fixed Wrapper for Navbar -->
         <div class="fixed-header">
-            <?= $this->include("../layouts/base-structure/header"); ?>
+            <?= $this->include("layouts/base-structure/header"); ?>
         </div>
         <div class="container content">
-            <?= $this->include("../layouts/base-structure/slider"); ?>
+            <?= $this->include("layouts/base-structure/slider"); ?>
         </div>
 
         <!--  Popular Courses Section -->
