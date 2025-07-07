@@ -9,7 +9,7 @@ class PublicCalendar extends Controller
 {
     public function index()
     {
-        return view('public_calendar');
+        return view('public/calendar');
     }
 
     public function events()
