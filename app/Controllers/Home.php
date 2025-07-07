@@ -11,7 +11,7 @@ class Home extends BaseController
 
 	public function welcome()
 	{
-		return view('welcome');
+		return view('public/welcome');
 	}
 	public function history()
 	{
