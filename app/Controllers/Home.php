@@ -29,41 +29,50 @@ class Home extends BaseController
 
 	public function student()
 	{
+		$studentModel = new StudentModel();
 
-        $studentModel = new StudentModel();
+		$q       = $this->request->getGet('q');
+		$class   = $this->request->getGet('class');
+		$section = $this->request->getGet('section');
 
-        // Get filters
-        $q     = $this->request->getGet('q');
-        $class = $this->request->getGet('class');
-        $group = $this->request->getGet('group');
+		$builder = $studentModel;
 
-        if ($q) {
-            $studentModel->groupStart()
-                ->like('student_name', $q)
-                ->orLike('roll', $q)
-                ->orLike('id', $q)
-                ->groupEnd();
-        }
+		if (!empty($q)) {
+			$builder = $builder->groupStart()
+				->like('student_name', $q)
+				->orLike('roll', $q)
+				->orLike('id', $q)
+				->groupEnd();
+		}
 
-        if ($class) {
-            $studentModel->where('class', $class);
-        }
+		if (!empty($class)) {
+			$builder = $builder->where('class', $class);
+		}
 
-        if ($group) {
-            $studentModel->where('group', $group);
-        }
+		if (!empty($section)) {
+			$builder = $builder->where('section', $section);
+		}
 
-        // Paginate correctly
-        $students = $studentModel->orderBy('class, roll')->paginate(30);
-        $pager    = $studentModel->pager;
+		$students = $builder->orderBy('class', 'ASC')->orderBy('roll', 'ASC')->paginate(10);
+		$pager    = $studentModel->pager;
 
-        return view('public/student_portal', [
-            'students' => $students,
-            'pager'    => $pager,
-            'q'        => $q,
-            'class'    => $class,
-            'group'    => $group,
-        ]);
+		// Get all unique section values for dropdown
+		$sections = $studentModel
+			->select('section')
+			->distinct()
+			->where('section IS NOT NULL')
+			->where('section !=', '')
+			->orderBy('section', 'ASC')
+			->findAll();
+
+		return view('public/student_portal', [
+				'students' => $students,
+				'pager'    => $pager,
+				'q'        => $q,
+				'class'    => $class,
+				'section'  => $section,
+				'sections' => array_column($sections, 'section'),
+		]);
 	}
 	public function staff()
 	{
