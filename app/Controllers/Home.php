@@ -29,50 +29,60 @@ class Home extends BaseController
 
 	public function student()
 	{
-		$studentModel = new \App\Models\StudentModel();
+		$studentModel = new StudentModel();
 
+		// Get filter inputs
 		$q       = $this->request->getGet('q');
 		$class   = $this->request->getGet('class');
 		$section = $this->request->getGet('section');
 
-		$builder = $studentModel->orderBy('class', 'ASC')->orderBy('roll', 'ASC');
+		// Base query
+		$builder = $studentModel;
 
+		// Apply search
 		if ($q) {
-			$builder->groupStart()
+			$builder = $builder->groupStart()
 				->like('student_name', $q)
 				->orLike('roll', $q)
 				->orLike('id', $q)
 				->groupEnd();
 		}
 
+		// Filter class
 		if ($class) {
-			$builder->where('class', $class);
+			$builder = $builder->where('class', $class);
 		}
 
+		// Filter section
 		if ($section) {
-			$builder->where('section', $section);
+			$builder = $builder->where('section', $section);
 		}
 
-		// ✅ Get distinct sections for the dropdown
+		// Sort by class ASC then roll ASC
+		$builder = $builder->orderBy('class ASC')->orderBy('roll ASC');
+
+		// Paginate 10 results per page
+		$students = $builder->paginate(10);
+		$pager    = $builder->pager;
+
+		// Get distinct section list
 		$sections = $studentModel
 			->select('section')
 			->distinct()
 			->where('section !=', '')
 			->orderBy('section', 'ASC')
-			->findAll();
+			->findColumn('section');
 
-		$data = [
-			'students' => $builder->paginate(10, 'default'),
-			'pager'    => $studentModel->pager,
-			'q'        => $q,
-			'class'    => $class,
-			'section'  => $section,
-			'sections' => $sections, // ✅ Pass to view
-		];
-
-		return view('public/student_portal', $data);
+		// Pass data to view
+		return view('public/student_portal', [
+				'students' => $students,
+				'pager'    => $pager,
+				'q'        => $q,
+				'class'    => $class,
+				'section'  => $section,
+				'sections' => $sections,
+		]);
 	}
-
 	public function staff()
 	{
 		return view('public/staff');

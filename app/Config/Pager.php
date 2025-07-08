@@ -22,11 +22,14 @@ class Pager extends BaseConfig
 	 */
 
 	public $templates = [
-		'default_full' => 'CodeIgniter\Pager\Views\default_full',
-		'bootstrap'    => 'App\Views\pagers\bootstrap', // custom template
+		'default_full'     => 'CodeIgniter\\Pager\\Views\\default_full',
+		'default_simple'   => 'CodeIgniter\\Pager\\Views\\default_simple',
+		'default_head'     => 'CodeIgniter\\Pager\\Views\\default_head',
+		'default_bootstrap'=> 'CodeIgniter\\Pager\\Views\\bootstrap', // optional
+		'smart'            => 'App\\Views\\pagers\\smart',
+		'bootstrap'        => 'App\\Views\\pagers\\bootstrap', // optional
 	];
 
-	
 	/**
 	 * --------------------------------------------------------------------------
 	 * Items Per Page
