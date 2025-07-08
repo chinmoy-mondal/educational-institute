@@ -29,7 +29,8 @@ class Home extends BaseController
 
 	public function student()
 	{
-		$studentModel = new StudentModel();
+		$studentModel = new \App\Models\StudentModel();
+
 		$q       = $this->request->getGet('q');
 		$class   = $this->request->getGet('class');
 		$section = $this->request->getGet('section');
@@ -52,16 +53,26 @@ class Home extends BaseController
 			$builder->where('section', $section);
 		}
 
+		// ✅ Get distinct sections for the dropdown
+		$sections = $studentModel
+			->select('section')
+			->distinct()
+			->where('section !=', '')
+			->orderBy('section', 'ASC')
+			->findAll();
+
 		$data = [
 			'students' => $builder->paginate(10, 'default'),
 			'pager'    => $studentModel->pager,
 			'q'        => $q,
 			'class'    => $class,
 			'section'  => $section,
+			'sections' => $sections, // ✅ Pass to view
 		];
 
 		return view('public/student_portal', $data);
 	}
+
 	public function staff()
 	{
 		return view('public/staff');
