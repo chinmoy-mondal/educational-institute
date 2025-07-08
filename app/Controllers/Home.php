@@ -30,7 +30,7 @@ class Home extends BaseController
 	public function student()
 	{
 
-		studentModel = new StudentModel();
+		$studentModel = new StudentModel();
 		$q     = $this->request->getGet('q');
 		$class = $this->request->getGet('class');
 		$group = $this->request->getGet('group');
