@@ -20,11 +20,13 @@ class Pager extends BaseConfig
 	 *
 	 * @var array<string, string>
 	 */
-	
+
 public $templates = [
     'default_full' => 'CodeIgniter\Pager\Views\default_full',
-    'bootstrap'    => 'App\Views\pagers\bootstrap', // ✅ custom
+    'bootstrap'    => 'App\Views\pagers\bootstrap', // custom template
 ];
+
+	
 	/**
 	 * --------------------------------------------------------------------------
 	 * Items Per Page

@@ -82,7 +82,6 @@
           <div class="mt-4">
 
 
-
 <?= $pager->only(['q', 'class', 'group'])->links('default', 'bootstrap') ?>
           </div>
         <?php endif; ?>

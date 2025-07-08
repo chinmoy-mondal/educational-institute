@@ -1,9 +1,9 @@
-<?php if ($pager->hasMore() || $pager->getCurrentPage() > 1): ?>
+<?php if ($pager->links()): ?>
 <nav>
-    <ul class="pagination">
-        <?php if ($pager->getPreviousPageURI()): ?>
+    <ul class="pagination justify-content-center">
+        <?php if ($pager->hasPrevious()): ?>
             <li class="page-item">
-                <a href="<?= $pager->getPreviousPageURI() ?>" class="page-link">&laquo;</a>
+                <a href="<?= $pager->getPreviousPage() ?>" class="page-link">&laquo;</a>
             </li>
         <?php endif ?>
 
@@ -13,9 +13,9 @@
             </li>
         <?php endforeach ?>
 
-        <?php if ($pager->getNextPageURI()): ?>
+        <?php if ($pager->hasNext()): ?>
             <li class="page-item">
-                <a href="<?= $pager->getNextPageURI() ?>" class="page-link">&raquo;</a>
+                <a href="<?= $pager->getNextPage() ?>" class="page-link">&raquo;</a>
             </li>
         <?php endif ?>
     </ul>
