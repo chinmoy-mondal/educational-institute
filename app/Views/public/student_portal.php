@@ -80,7 +80,12 @@
         <!-- Pagination -->
         <?php if (!empty($pager)): ?>
           <div class="mt-4">
-            <?= $pager->only(['q', 'class', 'group'])->links('default', 'bootstrap') ?>
+
+
+
+	  <?= $pager->only(['q', 'class', 'group'])->links('default', 'bootstrap') ?>
+
+
           </div>
         <?php endif; ?>
       </div>
