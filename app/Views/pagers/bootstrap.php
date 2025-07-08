@@ -1,4 +1,4 @@
-<?php if ($pager->hasPages()): ?>
+<?php if ($pager->links()): ?>
 <nav aria-label="Page navigation">
   <ul class="pagination justify-content-center">
 
@@ -14,14 +14,13 @@
     <?php
       $currentPage = $pager->getCurrentPage();
       $totalPages  = $pager->getPageCount();
-      $range = 2; // Show 2 pages before and after current (total visible = 5 max)
+      $range = 2; // Show 5 buttons total: 2 before and 2 after current
 
       $start = max(1, $currentPage - $range);
       $end   = min($totalPages, $currentPage + $range);
 
-      if ($start > 1):
-    ?>
-      <li class="page-item disabled"><span class="page-link">...</span></li>
+      if ($start > 1): ?>
+        <li class="page-item disabled"><span class="page-link">...</span></li>
     <?php endif; ?>
 
     <?php for ($i = $start; $i <= $end; $i++): ?>
