@@ -76,7 +76,7 @@
 
         <!-- Pagination -->
 	<?php if (!empty($pager)): ?>
-	<?= $pager->only(['q', 'class', 'section'])->links('default', 'smart') ?>
+	<?= $pager->only(['q', 'class', 'section'])->links('default', 'bootstrap') ?>
 	<?php endif; ?>
       </div>
     </div>
