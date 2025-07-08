@@ -54,7 +54,7 @@ class Home extends BaseController
         }
 
         // Paginate correctly
-        $students = $studentModel->orderBy('class, roll')->paginate(10);
+        $students = $studentModel->orderBy('class, roll')->paginate(30);
         $pager    = $studentModel->pager;
 
         return view('public/student_portal', [

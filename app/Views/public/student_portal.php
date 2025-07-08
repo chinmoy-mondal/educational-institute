@@ -5,9 +5,6 @@
 <div class="fixed-header">
   <?= $this->include("layouts/base-structure/header"); ?>
 </div>
-<div class="container content">
-  <?= $this->include("layouts/base-structure/slider"); ?>
-</div>
 
 <!--  Student Portal Section -->
 <div class="popular-courses py-5">
@@ -17,7 +14,7 @@
         <h4 class="mb-4">Student Portal</h4>
 
         <!-- Search & Filters -->
-        <form method="get" action="<?= site_url('students') ?>" class="row g-2 mb-4">
+        <form method="get" action="<?= site_url('student') ?>" class="row g-2 mb-4">
           <div class="col-md-4">
             <input type="text" name="q" class="form-control" placeholder="Search by name, roll, or ID" value="<?= esc($q ?? '') ?>">
           </div>
