@@ -57,7 +57,7 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Students</a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Student Portal</a></li>
+                                    <li><a class="dropdown-item" href="<?= base_url('home/student'); ?>">Student Portal</a></li>
                                     <li><a class="dropdown-item" href="#">Clubs & Activities</a></li>
                                     <li><a class="dropdown-item" href="#">Library</a></li>
                                 </ul>
