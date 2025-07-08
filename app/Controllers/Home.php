@@ -30,41 +30,40 @@ class Home extends BaseController
 	public function student()
 	{
 
-		$studentModel = new StudentModel();
-		$q     = $this->request->getGet('q');
-		$class = $this->request->getGet('class');
-		$group = $this->request->getGet('group');
-		$perPage = 10;
+        $studentModel = new StudentModel();
 
-		if ($q) {
-		    $studentModel->groupStart()
-			->like('student_name', $q)
-			->orLike('roll', $q)
-			->orLike('id', $q)
-			->groupEnd();
-		}
+        // Get filters
+        $q     = $this->request->getGet('q');
+        $class = $this->request->getGet('class');
+        $group = $this->request->getGet('group');
 
-		if ($class) {
-		    $studentModel->where('class', $class);
-		}
+        if ($q) {
+            $studentModel->groupStart()
+                ->like('student_name', $q)
+                ->orLike('roll', $q)
+                ->orLike('id', $q)
+                ->groupEnd();
+        }
 
-		if ($group) {
-		    $studentModel->where('group', $group);
-		}
+        if ($class) {
+            $studentModel->where('class', $class);
+        }
 
-		$students = $studentModel->orderBy('class, roll')
-		    ->paginate($perPage, 'default', null, ['query' => $_GET]);
+        if ($group) {
+            $studentModel->where('group', $group);
+        }
 
-		$pager = $studentModel->pager;
+        // Paginate correctly
+        $students = $studentModel->orderBy('class, roll')->paginate(10);
+        $pager    = $studentModel->pager;
 
-		return view('public/student_portal', [
-		    'students' => $students,
-		    'pager'    => $pager,
-		    'q'        => $q,
-		    'class'    => $class,
-		    'group'    => $group,
-		]);
-
+        return view('structure/student_portal', [
+            'students' => $students,
+            'pager'    => $pager,
+            'q'        => $q,
+            'class'    => $class,
+            'group'    => $group,
+        ]);
 	}
 	public function staff()
 	{
