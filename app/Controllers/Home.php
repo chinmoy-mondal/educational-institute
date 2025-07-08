@@ -57,7 +57,7 @@ class Home extends BaseController
         $students = $studentModel->orderBy('class, roll')->paginate(10);
         $pager    = $studentModel->pager;
 
-        return view('structure/student_portal', [
+        return view('public/student_portal', [
             'students' => $students,
             'pager'    => $pager,
             'q'        => $q,
