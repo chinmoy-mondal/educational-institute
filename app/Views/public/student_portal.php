@@ -3,10 +3,10 @@
 
 <!--  Header + Slider -->
 <div class="fixed-header">
-  <?= $this->include("structure/header"); ?>
+  <?= $this->include("layouts/base-structure/header"); ?>
 </div>
 <div class="container content">
-  <?= $this->include("structure/slider"); ?>
+  <?= $this->include("layouts/base-structure/slider"); ?>
 </div>
 
 <!--  Student Portal Section -->
@@ -89,6 +89,6 @@
 </div>
 
 <!-- Footer -->
-<?= $this->include("structure/footer"); ?>
+<?= $this->include("layouts/base-structure/footer"); ?>
 
 <?= $this->endSection(); ?>
