@@ -83,8 +83,7 @@
 
 
 
-	  <?= $pager->only(['q', 'class', 'group'])->links('default', 'bootstrap') ?>
-
+	  <?= $pager->only(['q', 'class', 'group'])->links('default', 'bootstrap5') ?>
 
           </div>
         <?php endif; ?>
