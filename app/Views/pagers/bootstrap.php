@@ -2,7 +2,6 @@
 <nav aria-label="Page navigation">
   <ul class="pagination justify-content-center">
 
-    <!-- First & Previous -->
     <?php if ($pager->hasPrevious()): ?>
       <li class="page-item"><a class="page-link" href="<?= $pager->getFirst() ?>">First</a></li>
       <li class="page-item"><a class="page-link" href="<?= $pager->getPrevious() ?>">&laquo;</a></li>
@@ -11,29 +10,12 @@
       <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
     <?php endif; ?>
 
-    <?php
-      $currentPage = $pager->getCurrentPage();
-      $totalPages  = $pager->getPageCount();
-      $range = 2; // Show 5 buttons total: 2 before and 2 after current
-
-      $start = max(1, $currentPage - $range);
-      $end   = min($totalPages, $currentPage + $range);
-
-      if ($start > 1): ?>
-        <li class="page-item disabled"><span class="page-link">...</span></li>
-    <?php endif; ?>
-
-    <?php for ($i = $start; $i <= $end; $i++): ?>
-      <li class="page-item <?= $i == $currentPage ? 'active' : '' ?>">
-        <a class="page-link" href="<?= $pager->getPageURI($i) ?>"><?= $i ?></a>
+    <?php foreach ($pager->links() as $link): ?>
+      <li class="page-item <?= $link['active'] ? 'active' : '' ?>">
+        <a class="page-link" href="<?= $link['uri'] ?>"><?= $link['title'] ?></a>
       </li>
-    <?php endfor; ?>
+    <?php endforeach; ?>
 
-    <?php if ($end < $totalPages): ?>
-      <li class="page-item disabled"><span class="page-link">...</span></li>
-    <?php endif; ?>
-
-    <!-- Next & Last -->
     <?php if ($pager->hasNext()): ?>
       <li class="page-item"><a class="page-link" href="<?= $pager->getNext() ?>">&raquo;</a></li>
       <li class="page-item"><a class="page-link" href="<?= $pager->getLast() ?>">Last</a></li>
