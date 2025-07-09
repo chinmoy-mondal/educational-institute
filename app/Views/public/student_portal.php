@@ -71,7 +71,7 @@
                     <!-- Pagination -->
                     <?php if (!empty($pager)): ?>
                         <div class="mt-4">
-                            <?= $pager->only(['q', 'class', 'section'])->links('default', 'bootstrap') ?>
+                            <?= $pager->only(['q', 'class', 'section'])->links( 'bootstrap') ?>
                         </div>
                     <?php endif; ?>
 
