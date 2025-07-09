@@ -1,45 +1,53 @@
 <?php if ($pager->links()): ?>
-    <?php
-        $details = $pager->getDetails();
-        $current = $details['current'];
-        $pageCount = $details['pageCount'];
-        $range = 5;
+  <nav>
+    <ul class="pagination justify-content-center">
 
-        $start = max(1, $current - $range);
-        $end = min($pageCount, $current + $range);
-    ?>
-    <nav>
-        <ul class="pagination justify-content-center">
-            <!-- First -->
-            <li class="page-item <?= $current == 1 ? 'disabled' : '' ?>">
-                <a class="page-link" href="<?= $pager->getFirst() ?>">First</a>
-            </li>
+      <!-- First & Prev -->
+      <?php if ($pager->hasPrevious()): ?>
+        <li class="page-item">
+          <a class="page-link" href="<?= $pager->getFirst() ?>">First</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="<?= $pager->getPreviousPage() ?>">&laquo;</a>
+        </li>
+      <?php endif ?>
 
-            <!-- Previous -->
-            <?php if ($pager->hasPrevious()): ?>
-                <li class="page-item">
-                    <a class="page-link" href="<?= $pager->getPreviousPage() ?>">&laquo;</a>
-                </li>
-            <?php endif ?>
+      <?php
+        $currentPage = $pager->getCurrentPage('default');
+        $pageCount = $pager->getPageCount('default');
+        $max = 10;
+        $half = floor($max / 2);
+        $start = max(1, $currentPage - $half);
+        $end = min($pageCount, $start + $max - 1);
+        if ($end - $start < $max - 1) {
+            $start = max(1, $end - $max + 1);
+        }
+      ?>
 
-            <!-- Page numbers -->
-            <?php for ($i = $start; $i <= $end; $i++): ?>
-                <li class="page-item <?= $i == $current ? 'active' : '' ?>">
-                    <a class="page-link" href="<?= $pager->getPageURI($i) ?>"><?= $i ?></a>
-                </li>
-            <?php endfor ?>
+      <?php if ($start > 1): ?>
+        <li class="page-item disabled"><span class="page-link">…</span></li>
+      <?php endif; ?>
 
-            <!-- Next -->
-            <?php if ($pager->hasNext()): ?>
-                <li class="page-item">
-                    <a class="page-link" href="<?= $pager->getNextPage() ?>">&raquo;</a>
-                </li>
-            <?php endif ?>
+      <?php foreach (range($start, $end) as $i): ?>
+        <li class="page-item <?= $i === $currentPage ? 'active' : '' ?>">
+          <a class="page-link" href="<?= $pager->getPageURI($i, 'default') ?>"><?= $i ?></a>
+        </li>
+      <?php endforeach ?>
 
-            <!-- Last -->
-            <li class="page-item <?= $current == $pageCount ? 'disabled' : '' ?>">
-                <a class="page-link" href="<?= $pager->getLast() ?>">Last</a>
-            </li>
-        </ul>
-    </nav>
+      <?php if ($end < $pageCount): ?>
+        <li class="page-item disabled"><span class="page-link">…</span></li>
+      <?php endif; ?>
+
+      <!-- Next & Last -->
+      <?php if ($pager->hasNext()): ?>
+        <li class="page-item">
+          <a class="page-link" href="<?= $pager->getNextPage() ?>">&raquo;</a>
+        </li>
+        <li class="page-item">
+          <a class="page-link" href="<?= $pager->getLast() ?>">Last</a>
+        </li>
+      <?php endif ?>
+
+    </ul>
+  </nav>
 <?php endif ?>
