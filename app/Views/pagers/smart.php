@@ -1,4 +1,4 @@
-<?php if ($pager->hasPages()): ?>
+<?php if ($pager->links()): ?>
     <?php
         $details = $pager->getDetails();
         $current = $details['current'];
