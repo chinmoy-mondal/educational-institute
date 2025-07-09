@@ -1,6 +1,7 @@
 <?php if ($pager->hasPrevious()): ?>
 <nav>
   <ul class="pagination justify-content-center">
+
     <li class="page-item">
       <a class="page-link" href="<?= $pager->getFirst() ?>">First</a>
     </li>
