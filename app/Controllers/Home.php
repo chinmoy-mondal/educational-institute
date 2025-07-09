@@ -41,46 +41,49 @@ class Home extends BaseController
 	{
 		$studentModel = new StudentModel();
 
-		$q        = $this->request->getGet('q');
-		$class    = $this->request->getGet('class');
-		$section  = $this->request->getGet('section');
+		// Get filter inputs
+		$q = $this->request->getGet('q');
+		$class = $this->request->getGet('class');
+		$section = $this->request->getGet('section');
 
+		// Build query with filters
 		$builder = $studentModel;
 
 		if ($q) {
-			$builder->like('student_name', $q)
+			$builder = $builder->groupStart()
+				->like('student_name', $q)
 				->orLike('roll', $q)
-				->orLike('id', $q);
+				->orLike('id', $q)
+				->groupEnd();
 		}
 
 		if ($class) {
-			$builder->where('class', $class);
+			$builder = $builder->where('class', $class);
 		}
 
 		if ($section) {
-			$builder->where('section', $section);
+			$builder = $builder->where('section', $section);
 		}
-
-		$perPage = 10;
-
-		$students = $studentModel
-			->where($filters) // your filters here if any
+$perPage = 10;
+		// Sort and paginate
+		$students = $builder
 			->orderBy('class ASC, roll ASC')
 			->paginate($perPage, 'bootstrap');
 
-		$data['pager'] = $studentModel->pager;
-		// Get unique sections from DB
-		$db = \Config\Database::connect();
-		$sections = $db->table('students')->select('section')->distinct()->get()->getResultArray();
+		// For section dropdown
+		$sections = $studentModel->select('section')
+			->distinct()
+			->orderBy('section')
+			->findAll();
 
+		// Load view
 		return view('public/student_portal', [
 				'students' => $students,
-				'pager'    => $pager,
-				'q'        => $q,
-				'class'    => $class,
-				'section'  => $section,
-				'sections' => array_column($sections, 'section'),
+				'pager' => $studentModel->pager,
+				'q' => $q,
+				'class' => $class,
+				'section' => $section,
+				'sections' => $sections,
 		]);
 	}
-
 }
