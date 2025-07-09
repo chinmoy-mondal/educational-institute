@@ -75,11 +75,11 @@
                 <?php endif; ?>
 
                 <!-- Pagination -->
-                <?php if (!empty($pager)): ?>
-                    <div class="mt-4">
-		    <?= $pager->only(['q', 'class', 'section'])->links('default', 'Pager/bootstrap') ?>
-                    </div>
-                <?php endif ?>
+		<?php if (!empty($pager)): ?>
+		    <div class="mt-4">
+			<?= $pager->only(['q', 'class', 'section'])->links('default', 'bootstrap') ?>
+		    </div>
+		<?php endif; ?>
             </div>
         </div>
     </div>
