@@ -37,54 +37,49 @@ class Home extends BaseController
 		$subjects = $model->findAll();
 		return view('public/subject', ['subjects' => $subjects]);
 	}
-public function student()
-    {
-        $studentModel = new StudentModel();
+	public function student()
+	{
+		$studentModel = new StudentModel();
 
-        // Get search/filter parameters
-        $q        = $this->request->getGet('q');
-        $class    = $this->request->getGet('class');
-        $section  = $this->request->getGet('section');
+		$q        = $this->request->getGet('q');
+		$class    = $this->request->getGet('class');
+		$section  = $this->request->getGet('section');
 
-        // Start query
-        $builder = $studentModel;
+		$builder = $studentModel;
 
-        if ($q) {
-            $builder = $builder->groupStart()
-                               ->like('student_name', $q)
-                               ->orLike('roll', $q)
-                               ->orLike('id', $q)
-                               ->groupEnd();
-        }
+		if ($q) {
+			$builder->like('student_name', $q)
+				->orLike('roll', $q)
+				->orLike('id', $q);
+		}
 
-        if ($class) {
-            $builder = $builder->where('class', $class);
-        }
+		if ($class) {
+			$builder->where('class', $class);
+		}
 
-        if ($section) {
-            $builder = $builder->where('section', $section);
-        }
+		if ($section) {
+			$builder->where('section', $section);
+		}
 
-        // Get students with pagination, sorted by class and roll
-        $students = $builder->orderBy('class', 'ASC')
-                            ->orderBy('roll', 'ASC')
-                            ->paginate(10, 'default');
+		$students = $builder
+			->orderBy('class', 'ASC')
+			->orderBy('roll', 'ASC')
+			->paginate(10, 'default');
 
-        // Get all unique sections (for section dropdown)
-        $sections = $studentModel->select('section')
-                                 ->distinct()
-                                 ->where('section IS NOT NULL')
-                                 ->where('section !=', '')
-                                 ->orderBy('section', 'ASC')
-                                 ->findAll();
+		$pager = $studentModel->pager;
 
-        return view('public/student_portal', [
-            'students' => $students,
-            'pager'    => $studentModel->pager,
-            'q'        => $q,
-            'class'    => $class,
-            'section'  => $section,
-            'sections' => $sections
-        ]);
-    }
+		// Get unique sections from DB
+		$db = \Config\Database::connect();
+		$sections = $db->table('students')->select('section')->distinct()->get()->getResultArray();
+
+		return view('public/student_portal', [
+				'students' => $students,
+				'pager'    => $pager,
+				'q'        => $q,
+				'class'    => $class,
+				'section'  => $section,
+				'sections' => array_column($sections, 'section'),
+		]);
+	}
+
 }
