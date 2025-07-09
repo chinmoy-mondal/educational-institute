@@ -61,13 +61,14 @@ class Home extends BaseController
 			$builder->where('section', $section);
 		}
 
-		$students = $builder
-			->orderBy('class', 'ASC')
-			->orderBy('roll', 'ASC')
-			->paginate(10, 'default');
+		$perPage = 10;
 
-		$pager = $studentModel->pager;
+		$students = $studentModel
+			->where($filters) // your filters here if any
+			->orderBy('class ASC, roll ASC')
+			->paginate($perPage, 'bootstrap');
 
+		$data['pager'] = $studentModel->pager;
 		// Get unique sections from DB
 		$db = \Config\Database::connect();
 		$sections = $db->table('students')->select('section')->distinct()->get()->getResultArray();
