@@ -1,19 +1,44 @@
-<?php if ($pager->hasPrevious() || $pager->hasNext()): ?>
-<nav>
-  <ul class="pagination justify-content-center">
-    <?php if ($pager->hasPrevious()): ?>
-      <li class="page-item"><a class="page-link" href="<?= $pager->getPreviousPage() ?>">&laquo;</a></li>
-    <?php endif ?>
+<?php if ($pager->hasPages()): ?>
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
 
-    <?php foreach ($pager->links() as $link): ?>
-      <li class="page-item <?= $link['active'] ? 'active' : '' ?>">
-        <a class="page-link" href="<?= $link['uri'] ?>"><?= $link['title'] ?></a>
-      </li>
-    <?php endforeach ?>
+        <!-- First -->
+        <?php if ($pager->hasPrevious()): ?>
+            <li class="page-item">
+                <a class="page-link" href="<?= $pager->getFirst() ?>">First</a>
+            </li>
+        <?php endif ?>
 
-    <?php if ($pager->hasNext()): ?>
-      <li class="page-item"><a class="page-link" href="<?= $pager->getNextPage() ?>">&raquo;</a></li>
-    <?php endif ?>
-  </ul>
+        <!-- Previous -->
+        <?php if ($pager->hasPrevious()): ?>
+            <li class="page-item">
+                <a class="page-link" href="<?= $pager->getPreviousPage() ?>">&laquo;</a>
+            </li>
+        <?php endif ?>
+
+        <!-- Page Numbers -->
+        <?php foreach ($pager->links() as $link): ?>
+            <li class="page-item <?= $link['active'] ? 'active' : '' ?>">
+                <a class="page-link" href="<?= $link['uri'] ?>">
+                    <?= $link['title'] ?>
+                </a>
+            </li>
+        <?php endforeach ?>
+
+        <!-- Next -->
+        <?php if ($pager->hasNext()): ?>
+            <li class="page-item">
+                <a class="page-link" href="<?= $pager->getNextPage() ?>">&raquo;</a>
+            </li>
+        <?php endif ?>
+
+        <!-- Last -->
+        <?php if ($pager->hasNext()): ?>
+            <li class="page-item">
+                <a class="page-link" href="<?= $pager->getLast() ?>">Last</a>
+            </li>
+        <?php endif ?>
+
+    </ul>
 </nav>
 <?php endif ?>
