@@ -25,59 +25,6 @@ class Home extends BaseController
 	{
 		return view('public/mission');
 	}
-	public function student()
-	{
-		helper('text');
-
-		$studentModel = new \App\Models\StudentModel();
-
-		// Get query parameters
-		$q       = $this->request->getGet('q');
-		$class   = $this->request->getGet('class');
-		$section = $this->request->getGet('section');
-
-		// Build query
-		$studentModel
-			->select('*')
-			->orderBy('class', 'ASC')
-			->orderBy('roll', 'ASC');
-
-		if (!empty($q)) {
-			$studentModel->groupStart()
-				->like('student_name', $q)
-				->orLike('roll', $q)
-				->orLike('id', $q)
-				->groupEnd();
-		}
-
-		if (!empty($class)) {
-			$studentModel->where('class', $class);
-		}
-
-		if (!empty($section)) {
-			$studentModel->where('section', $section);
-		}
-
-		// Pagination
-		$perPage = 10;
-		$students = $studentModel->paginate($perPage, 'default');
-
-		// Get distinct sections for the dropdown
-		$sections = $studentModel->select('section')
-			->distinct()
-			->where('section !=', '')
-			->orderBy('section', 'ASC')
-			->findAll();
-
-		return view('public/student_portal', [
-				'students' => $students,
-				'pager'    => $studentModel->pager,
-				'q'        => $q,
-				'class'    => $class,
-				'section'  => $section,
-				'sections' => $sections,
-		]);
-	}
 
 	public function staff()
 	{
@@ -90,4 +37,54 @@ class Home extends BaseController
 		$subjects = $model->findAll();
 		return view('public/subject', ['subjects' => $subjects]);
 	}
+public function student()
+    {
+        $studentModel = new StudentModel();
+
+        // Get search/filter parameters
+        $q        = $this->request->getGet('q');
+        $class    = $this->request->getGet('class');
+        $section  = $this->request->getGet('section');
+
+        // Start query
+        $builder = $studentModel;
+
+        if ($q) {
+            $builder = $builder->groupStart()
+                               ->like('student_name', $q)
+                               ->orLike('roll', $q)
+                               ->orLike('id', $q)
+                               ->groupEnd();
+        }
+
+        if ($class) {
+            $builder = $builder->where('class', $class);
+        }
+
+        if ($section) {
+            $builder = $builder->where('section', $section);
+        }
+
+        // Get students with pagination, sorted by class and roll
+        $students = $builder->orderBy('class', 'ASC')
+                            ->orderBy('roll', 'ASC')
+                            ->paginate(10, 'default');
+
+        // Get all unique sections (for section dropdown)
+        $sections = $studentModel->select('section')
+                                 ->distinct()
+                                 ->where('section IS NOT NULL')
+                                 ->where('section !=', '')
+                                 ->orderBy('section', 'ASC')
+                                 ->findAll();
+
+        return view('public/student_portal', [
+            'students' => $students,
+            'pager'    => $studentModel->pager,
+            'q'        => $q,
+            'class'    => $class,
+            'section'  => $section,
+            'sections' => $sections
+        ]);
+    }
 }
