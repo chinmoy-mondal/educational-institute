@@ -25,64 +25,60 @@ class Home extends BaseController
 	{
 		return view('public/mission');
 	}
-
-
 	public function student()
 	{
-		$studentModel = new StudentModel();
+		helper('text');
 
-		// Get filter inputs
+		$studentModel = new \App\Models\StudentModel();
+
+		// Get query parameters
 		$q       = $this->request->getGet('q');
 		$class   = $this->request->getGet('class');
 		$section = $this->request->getGet('section');
 
-		// Base query
-		$builder = $studentModel;
+		// Build query
+		$studentModel
+			->select('*')
+			->orderBy('class', 'ASC')
+			->orderBy('roll', 'ASC');
 
-		// Apply search
-		if ($q) {
-			$builder = $builder->groupStart()
+		if (!empty($q)) {
+			$studentModel->groupStart()
 				->like('student_name', $q)
 				->orLike('roll', $q)
 				->orLike('id', $q)
 				->groupEnd();
 		}
 
-		// Filter class
-		if ($class) {
-			$builder = $builder->where('class', $class);
+		if (!empty($class)) {
+			$studentModel->where('class', $class);
 		}
 
-		// Filter section
-		if ($section) {
-			$builder = $builder->where('section', $section);
+		if (!empty($section)) {
+			$studentModel->where('section', $section);
 		}
 
-		// Sort by class ASC then roll ASC
-		$builder = $builder->orderBy('class ASC')->orderBy('roll ASC');
+		// Pagination
+		$perPage = 10;
+		$students = $studentModel->paginate($perPage, 'default');
 
-		// Paginate 10 results per page
-		$students = $builder->paginate(10);
-		$pager    = $builder->pager;
-
-		// Get distinct section list
-		$sections = $studentModel
-			->select('section')
+		// Get distinct sections for the dropdown
+		$sections = $studentModel->select('section')
 			->distinct()
 			->where('section !=', '')
 			->orderBy('section', 'ASC')
-			->findColumn('section');
+			->findAll();
 
-		// Pass data to view
 		return view('public/student_portal', [
 				'students' => $students,
-				'pager'    => $pager,
+				'pager'    => $studentModel->pager,
 				'q'        => $q,
 				'class'    => $class,
 				'section'  => $section,
 				'sections' => $sections,
 		]);
 	}
+
 	public function staff()
 	{
 		return view('public/staff');
