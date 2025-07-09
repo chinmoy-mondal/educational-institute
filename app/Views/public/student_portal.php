@@ -18,12 +18,14 @@
                             <input type="text" name="q" class="form-control" placeholder="Search by name, roll or ID" value="<?= esc($q ?? '') ?>">
                         </div>
                         <div class="col-md-3">
-                            <select name="class" class="form-select">
-                                <option value="">All Classes</option>
-                                <?php foreach (range(1, 12) as $cls): ?>
-                                    <option value="<?= $cls ?>" <?= ($class ?? '') == $cls ? 'selected' : '' ?>>Class <?= $cls ?></option>
-                                <?php endforeach ?>
-                            </select>
+				<select name="section" class="form-select">
+				<option value="">All Sections</option>
+				<?php foreach ($sections as $sec): ?>
+				<option value="<?= esc($sec['section']) ?>" <?= ($section ?? '') == $sec['section'] ? 'selected' : '' ?>>
+				<?= esc($sec['section']) ?>
+				</option>
+				<?php endforeach ?>
+				</select>
                         </div>
                         <div class="col-md-3">
                             <select name="section" class="form-select">
