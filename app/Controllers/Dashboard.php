@@ -349,6 +349,65 @@ class Dashboard extends Controller
 
 	}
 
+
+	public function student()
+	{
+
+		$session = session();
+		if (!$session->get('isLoggedIn')) {
+			return redirect()->to(base_url('login'));
+		}
+		$studentModel = new StudentModel();
+
+		// Get filter inputs
+		$q = $this->request->getGet('q');
+		$class = $this->request->getGet('class');
+		$section = $this->request->getGet('section');
+
+		// Build query with filters
+		$builder = $studentModel;
+
+		if ($q) {
+			$builder = $builder->groupStart()
+				->like('student_name', $q)
+				->orLike('roll', $q)
+				->orLike('id', $q)
+				->groupEnd();
+		}
+
+		if ($class) {
+			$builder = $builder->where('class', $class);
+		}
+
+		if ($section) {
+			$builder = $builder->where('section', $section);
+		}
+		$perPage = 20;
+		// Sort and paginate
+		$students = $builder
+			->orderBy('class ASC, roll ASC')
+			->paginate($perPage, 'bootstrap');
+
+		// For section dropdown
+		$sections = $studentModel->select('section')
+			->distinct()
+			->orderBy('section')
+			->findAll();
+
+		// Load view
+		return view('dashboard/student', [
+				'students' => $students,
+				'pager' => $studentModel->pager,
+				'q' => $q,
+				'class' => $class,
+				'section' => $section,
+				'sections' => $sections,
+		]);
+	}
+
+
+
+
 public function submitResults()
 {
     $resultModel = new \App\Models\ResultModel();
