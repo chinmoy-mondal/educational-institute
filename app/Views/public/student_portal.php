@@ -28,13 +28,14 @@
 				</select>
                         </div>
                         <div class="col-md-3">
-                            <select name="section" class="form-select">
-                                <option value="">All Sections</option>
-                                <?php foreach ($sections as $s): ?>
-                                    <option value="<?= esc($s) ?>" <?= ($section ?? '') == $s ? 'selected' : '' ?>><?= esc($s) ?></option>
-                                <?php endforeach ?>
-                            </select>
-                        </div>
+<select name="section" class="form-select">
+  <option value="">All Sections</option>
+  <?php foreach ($sections as $sec): ?>
+    <option value="<?= esc($sec['section']) ?>" <?= ($section ?? '') == $sec['section'] ? 'selected' : '' ?>>
+      <?= esc($sec['section']) ?>
+    </option>
+  <?php endforeach; ?>
+</select>                        </div>
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-primary w-100">Search</button>
                         </div>
