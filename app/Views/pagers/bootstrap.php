@@ -9,7 +9,7 @@
                     </a>
                 </li>
                 <li class="page-item">
-                    <a class="page-link" href="<?= $pager->getPreviousPage() ?>" aria-label="Previous">
+                    <a class="page-link" href="<?= $pager->getPreviousPage() ?>" aria-label="Prev">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
