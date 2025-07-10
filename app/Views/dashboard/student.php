@@ -1,134 +1,81 @@
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
 
-<!-- Page Header -->
 <div class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
-      <div class="col-sm-6">
-        <h1 class="m-0">Dashboard</h1>
-      </div>
+      <div class="col-sm-6"><h1 class="m-0">Student List</h1></div>
     </div>
   </div>
 </div>
 
-<!-- Dashboard Content -->
 <div class="content">
   <div class="container-fluid">
 
-    <div class="row">
-      <!-- Total Students -->
-      <div class="col-lg-3 col-6">
-        <div class="small-box bg-primary">
-          <div class="inner">
-            <h3><?= esc($total_students) ?></h3>
-            <p>Total Students</p>
-          </div>
-          <div class="icon">
-            <i class="fas fa-user-graduate"></i>
-          </div>
-          <a href="<?= base_url('admin/students') ?>" class="small-box-footer">
-            More info <i class="fas fa-arrow-circle-right"></i>
-          </a>
-        </div>
+    <!-- Search & Filter -->
+    <form method="get" action="<?= site_url('admin/students') ?>" class="row g-2 mb-3">
+      <div class="col-md-4">
+        <input type="text" name="q" class="form-control" placeholder="Search by name, roll or ID" value="<?= esc($q ?? '') ?>">
       </div>
+      <div class="col-md-3">
+        <select name="class" class="form-select">
+          <option value="" <?= ($class ?? '') === '' ? 'selected' : '' ?>>All Classes</option>
+          <?php for ($i = 1; $i <= 12; $i++): ?>
+            <option value="<?= $i ?>" <?= ($class ?? '') == $i ? 'selected' : '' ?>>Class <?= $i ?></option>
+          <?php endfor; ?>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select name="section" class="form-select">
+          <option value="" <?= ($section ?? '') === '' ? 'selected' : '' ?>>All Sections</option>
+          <?php foreach ($sections as $sec): ?>
+            <option value="<?= esc($sec['section']) ?>" <?= ($section ?? '') === $sec['section'] ? 'selected' : '' ?>>
+              <?= esc($sec['section']) ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Search</button>
+      </div>
+    </form>
 
-      <!-- Total Exams -->
-      <div class="col-lg-3 col-6">
-        <div class="small-box bg-warning">
-          <div class="inner">
-            <h3><?= esc($total_exams) ?></h3>
-            <p>Exams</p>
-          </div>
-          <div class="icon">
-            <i class="fas fa-pencil-ruler"></i>
-          </div>
-          <a href="<?= base_url('admin/exams') ?>" class="small-box-footer">
-            More info <i class="fas fa-arrow-circle-right"></i>
-          </a>
-        </div>
+    <!-- Student Table -->
+    <?php if (!empty($students)): ?>
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Roll</th>
+              <th>Class</th>
+              <th>Section</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($students as $s): ?>
+              <tr>
+                <td><?= esc($s['id']) ?></td>
+                <td><?= esc($s['student_name']) ?></td>
+                <td><?= esc($s['roll']) ?></td>
+                <td><?= esc($s['class']) ?></td>
+                <td><?= esc($s['section']) ?></td>
+              </tr>
+            <?php endforeach ?>
+          </tbody>
+        </table>
       </div>
+    <?php else: ?>
+      <div class="alert alert-info">No students found.</div>
+    <?php endif ?>
 
-      <!-- Total Teachers/Users -->
-      <div class="col-lg-3 col-6">
-        <div class="small-box bg-success">
-          <div class="inner">
-            <h3><?= esc($total_users) ?></h3>
-            <p>Total Users</p>
-          </div>
-          <div class="icon">
-            <i class="fas fa-chalkboard-teacher"></i>
-          </div>
-          <a href="<?= base_url('ad_teacher_list') ?>" class="small-box-footer">
-            More info <i class="fas fa-arrow-circle-right"></i>
-          </a>
-        </div>
+    <!-- Pagination -->
+    <?php if (!empty($pager)): ?>
+      <div class="mt-3">
+        <?= $pager->only(['q', 'class', 'section'])->links('bootstrap') ?>
       </div>
-
-      <!-- New Users -->
-      <div class="col-lg-3 col-6">
-        <div class="small-box bg-info">
-          <div class="inner">
-            <h3><?= esc($total_new_users) ?></h3>
-            <p>New Users</p>
-          </div>
-          <div class="icon">
-            <i class="fas fa-user-plus"></i>
-          </div>
-          <a href="<?= base_url('ad_new_user') ?>" class="small-box-footer">
-            More info <i class="fas fa-arrow-circle-right"></i>
-          </a>
-        </div>
-      </div>
-
-      <!-- Applications -->
-      <div class="col-lg-3 col-6">
-        <div class="small-box bg-warning">
-          <div class="inner">
-            <h3><?= esc($total_applications) ?></h3>
-            <p>Applications</p>
-          </div>
-          <div class="icon">
-            <i class="fas fa-file-alt"></i>
-          </div>
-          <a href="<?= base_url('admin/applications') ?>" class="small-box-footer">
-            More info <i class="fas fa-arrow-circle-right"></i>
-          </a>
-        </div>
-      </div>
-
-      <!-- Total Income -->
-      <div class="col-lg-3 col-6">
-        <div class="small-box bg-success">
-          <div class="inner">
-            <h3>৳<?= esc(number_format($total_income, 2)) ?></h3>
-            <p>Total Income</p>
-          </div>
-          <div class="icon">
-            <i class="fas fa-coins"></i>
-          </div>
-          <a href="<?= base_url('admin/income') ?>" class="small-box-footer">
-            More info <i class="fas fa-arrow-circle-right"></i>
-          </a>
-        </div>
-      </div>
-
-      <!-- Total Cost -->
-      <div class="col-lg-3 col-6">
-        <div class="small-box bg-danger">
-          <div class="inner">
-            <h3>৳<?= esc(number_format($total_cost, 2)) ?></h3>
-            <p>Total Cost</p>
-          </div>
-          <div class="icon">
-            <i class="fas fa-money-bill-wave"></i>
-          </div>
-          <a href="<?= base_url('admin/cost') ?>" class="small-box-footer">
-            More info <i class="fas fa-arrow-circle-right"></i>
-          </a>
-        </div>
-      </div>
-    </div>
+    <?php endif ?>
 
   </div>
 </div>
