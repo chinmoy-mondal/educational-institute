@@ -1,83 +1,179 @@
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
 
-<div class="content-header">
-  <div class="container-fluid">
-    <div class="row mb-2">
-      <div class="col-sm-6"><h1 class="m-0">Student List</h1></div>
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <div class="card shadow border-0 rounded-3">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">Event Calendar</h5>
+          <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#addEventModal">
+            <i class="fas fa-plus"></i> Add Event
+          </button>
+        </div>
+        <div class="card-body">
+          <div id="calendar"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="content">
-  <div class="container-fluid">
-
-    <!-- Search & Filter -->
-    <form method="get" action="<?= site_url('admin/students') ?>" class="row g-2 mb-3">
-      <div class="col-md-4">
-        <input type="text" name="q" class="form-control" placeholder="Search by name, roll or ID" value="<?= esc($q ?? '') ?>">
-      </div>
-      <div class="col-md-3">
-        <select name="class" class="form-select">
-          <option value="" <?= ($class ?? '') === '' ? 'selected' : '' ?>>All Classes</option>
-          <?php for ($i = 1; $i <= 12; $i++): ?>
-            <option value="<?= $i ?>" <?= ($class ?? '') == $i ? 'selected' : '' ?>>Class <?= $i ?></option>
-          <?php endfor; ?>
-        </select>
-      </div>
-      <div class="col-md-3">
-        <select name="section" class="form-select">
-          <option value="" <?= ($section ?? '') === '' ? 'selected' : '' ?>>All Sections</option>
-          <?php foreach ($sections as $sec): ?>
-            <option value="<?= esc($sec['section']) ?>" <?= ($section ?? '') === $sec['section'] ? 'selected' : '' ?>>
-              <?= esc($sec['section']) ?>
-            </option>
-          <?php endforeach; ?>
-        </select>
-      </div>
-      <div class="col-md-2">
-        <button type="submit" class="btn btn-primary w-100">Search</button>
-      </div>
-    </form>
-
-    <!-- Student Table -->
-    <?php if (!empty($students)): ?>
-      <div class="table-responsive">
-        <table class="table table-bordered table-hover">
-          <thead class="table-light">
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Roll</th>
-              <th>Class</th>
-              <th>Section</th>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($students as $s): ?>
-              <tr>
-                <td><?= esc($s['id']) ?></td>
-                <td><?= esc($s['student_name']) ?></td>
-                <td><?= esc($s['roll']) ?></td>
-                <td><?= esc($s['class']) ?></td>
-                <td><?= esc($s['section']) ?></td>
-              </tr>
-            <?php endforeach ?>
-          </tbody>
-        </table>
-      </div>
-    <?php else: ?>
-      <div class="alert alert-info">No students found.</div>
-    <?php endif ?>
-
-    <!-- Pagination -->
-    <?php if (!empty($pager)): ?>
-      <div class="mt-3">
-        <?= $pager->only(['q', 'class', 'section'])->links('bootstrap') ?>
-      </div>
-    <?php endif ?>
-
+<!-- Add Event Modal -->
+<div class="modal fade" id="addEventModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form id="eventForm">
+        <div class="modal-header">
+          <h5 class="modal-title">Add New Event</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group"><label>Title</label>
+            <input type="text" name="title" class="form-control" required>
+          </div>
+          <div class="form-group"><label>Description</label>
+            <textarea name="description" class="form-control"></textarea>
+          </div>
+          <div class="form-group"><label>Start Date</label>
+            <input type="date" name="start" class="form-control" required>
+          </div>
+          <div class="form-group"><label>End Date</label>
+            <input type="date" name="end" class="form-control" required>
+          </div>
+          <div class="form-group"><label>Color</label>
+            <input type="color" name="color" class="form-control" value="#007bff">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
+
+<!-- Edit Event Modal -->
+<div class="modal fade" id="editEventModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form id="editEventForm">
+        <input type="hidden" name="id" id="edit-id">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Event</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group"><label>Title</label>
+            <input type="text" name="title" id="edit-title" class="form-control" required>
+          </div>
+          <div class="form-group"><label>Description</label>
+            <textarea name="description" id="edit-description" class="form-control"></textarea>
+          </div>
+          <div class="form-group"><label>Start Date</label>
+            <input type="date" name="start" id="edit-start" class="form-control" required>
+          </div>
+          <div class="form-group"><label>End Date</label>
+            <input type="date" name="end" id="edit-end" class="form-control" required>
+          </div>
+          <div class="form-group"><label>Color</label>
+            <input type="color" name="color" id="edit-color" class="form-control">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Update</button>
+          <button type="button" class="btn btn-danger" id="deleteEvent">Delete</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const calendarEl = document.getElementById('calendar');
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    height: 600,
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek'
+    },
+    events: '/calendar/events',
+
+    eventClick: function (info) {
+      const event = info.event;
+
+      // Fill modal
+      document.getElementById('edit-id').value = event.id;
+      document.getElementById('edit-title').value = event.title;
+      document.getElementById('edit-description').value = event.extendedProps.description || '';
+      document.getElementById('edit-start').value = event.startStr.split('T')[0];
+      document.getElementById('edit-end').value = event.endStr ? event.endStr.split('T')[0] : event.startStr.split('T')[0];
+      document.getElementById('edit-color').value = event.backgroundColor || '#007bff';
+
+      $('#editEventModal').modal('show');
+    }
+  });
+
+  calendar.render();
+
+  // Add
+  document.getElementById('eventForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    fetch('/calendar/add', {
+      method: 'POST',
+      body: formData
+    }).then(res => res.json())
+      .then(response => {
+        if (response.status === 'success') {
+          $('#addEventModal').modal('hide');
+          this.reset();
+          calendar.refetchEvents();
+        }
+      });
+  });
+
+  // Update
+  document.getElementById('editEventForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    fetch('/calendar/update', {
+      method: 'POST',
+      body: formData
+    }).then(res => res.json())
+      .then(response => {
+        if (response.status === 'success') {
+          $('#editEventModal').modal('hide');
+          calendar.refetchEvents();
+        }
+      });
+  });
+
+  // Delete
+  document.getElementById('deleteEvent').addEventListener('click', function () {
+    const id = document.getElementById('edit-id').value;
+
+    fetch('/calendar/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ id })
+    }).then(res => res.json())
+      .then(response => {
+        if (response.status === 'success') {
+          $('#editEventModal').modal('hide');
+          calendar.refetchEvents();
+        }
+      });
+  });
+});
+</script>
 
 <?= $this->endSection() ?>
