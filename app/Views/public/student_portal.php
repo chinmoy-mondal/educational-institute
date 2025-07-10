@@ -17,25 +17,29 @@
                         <div class="col-md-4">
                             <input type="text" name="q" class="form-control" placeholder="Search by name, roll or ID" value="<?= esc($q ?? '') ?>">
                         </div>
-                        <div class="col-md-3">
-				<select name="section" class="form-select">
-				  <option value="">All Sections</option>
-				  <?php foreach ($sections as $sec): ?>
-				    <option value="<?= esc($sec['section']) ?>" <?= ($section ?? '') == $sec['section'] ? 'selected' : '' ?>>
-				      <?= esc($sec['section']) ?>
+
+			<div class="col-md-3">
+			    <select name="class" class="form-select">
+				<option value="" <?= ($class ?? '') === '' ? 'selected' : '' ?>>All Classes</option>
+				<?php for ($i = 1; $i <= 12; $i++): ?>
+				    <option value="<?= $i ?>" <?= ($class ?? '') == $i ? 'selected' : '' ?>>
+					Class <?= $i ?>
 				    </option>
-				  <?php endforeach; ?>
-				</select>
-                        </div>
-                        <div class="col-md-3">
-<select name="section" class="form-select">
-  <option value="">All Sections</option>
-  <?php foreach ($sections as $sec): ?>
-    <option value="<?= esc($sec['section']) ?>" <?= ($section ?? '') == $sec['section'] ? 'selected' : '' ?>>
-      <?= esc($sec['section']) ?>
-    </option>
-  <?php endforeach; ?>
-</select>                        </div>
+				<?php endfor; ?>
+			    </select>
+			</div>
+
+			<div class="col-md-3">
+			    <select name="section" class="form-select">
+				<option value="" <?= ($section ?? '') === '' ? 'selected' : '' ?>>All Sections</option>
+				<?php foreach ($sections as $sec): ?>
+				    <option value="<?= esc($sec['section']) ?>" <?= ($section ?? '') === $sec['section'] ? 'selected' : '' ?>>
+					<?= esc($sec['section']) ?>
+				    </option>
+				<?php endforeach; ?>
+			    </select>
+			</div>
+
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-primary w-100">Search</button>
                         </div>
