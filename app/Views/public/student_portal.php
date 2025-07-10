@@ -19,12 +19,12 @@
                         </div>
                         <div class="col-md-3">
 				<select name="section" class="form-select">
-				<option value="">All Sections</option>
-				<?php foreach ($sections as $sec): ?>
-				<option value="<?= esc($sec['section']) ?>" <?= ($section ?? '') == $sec['section'] ? 'selected' : '' ?>>
-				<?= esc($sec['section']) ?>
-				</option>
-				<?php endforeach ?>
+				  <option value="">All Sections</option>
+				  <?php foreach ($sections as $sec): ?>
+				    <option value="<?= esc($sec['section']) ?>" <?= ($section ?? '') == $sec['section'] ? 'selected' : '' ?>>
+				      <?= esc($sec['section']) ?>
+				    </option>
+				  <?php endforeach; ?>
 				</select>
                         </div>
                         <div class="col-md-3">
