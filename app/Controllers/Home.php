@@ -64,7 +64,7 @@ class Home extends BaseController
 		if ($section) {
 			$builder = $builder->where('section', $section);
 		}
-		$perPage = 10;
+		$perPage = 20;
 		// Sort and paginate
 		$students = $builder
 			->orderBy('class ASC, roll ASC')
