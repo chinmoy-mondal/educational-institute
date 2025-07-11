@@ -17,8 +17,10 @@
         <!-- Profile Header -->
         <div class="row">
           <div class="col-md-3 text-center">
-            <?php if (!empty($student['student_pic'])): ?>
-              <img src="<?= esc($student['student_pic']) ?>" alt="Student Photo" class="img-thumbnail" style="max-width: 180px;">
+	    <?php if (!empty($student['student_pic'])): ?>
+		<img src="/<?= esc($student['student_pic']) ?>" class="img-thumbnail" width="80">
+
+              <img src="/<?= esc($student['student_pic']) ?>"  alt="Student Photo" class="img-thumbnail" style="max-width: 180px;">
             <?php else: ?>
               <img src="<?= base_url('assets/img/default-avatar.png') ?>" alt="No Photo" class="img-thumbnail" style="max-width: 180px;">
             <?php endif; ?>
