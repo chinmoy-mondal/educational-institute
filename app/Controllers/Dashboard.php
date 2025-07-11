@@ -36,14 +36,14 @@ class Dashboard extends Controller
 
 
 		return view('dashboard/index', [
-				'title' => 'Admin Dashboard',
-				'total_students' => $total_students,
-				'total_users' => $total_users,
-				'total_new_users' => $total_new_users,
-				'total_applications' => $total_applications,
-				'total_exams' => $total_exams,
-				'total_income' => $total_income,
-				'total_cost' => $total_cost
+			'title' => 'Admin Dashboard',
+			'total_students' => $total_students,
+			'total_users' => $total_users,
+			'total_new_users' => $total_new_users,
+			'total_applications' => $total_applications,
+			'total_exams' => $total_exams,
+			'total_income' => $total_income,
+			'total_cost' => $total_cost
 		]);
 	}
 
@@ -87,15 +87,15 @@ class Dashboard extends Controller
 		$events = $model->findAll();
 
 		$data = array_map(function ($event) {
-				// Determine if end_date has time part (T separator)
-				$hasTime = strpos($event['end_date'], 'T') !== false;
+			// Determine if end_date has time part (T separator)
+			$hasTime = strpos($event['end_date'], 'T') !== false;
 
-				// If end_date is date only, add +1 day to make FullCalendar inclusive
-				$endDate = $hasTime
+			// If end_date is date only, add +1 day to make FullCalendar inclusive
+			$endDate = $hasTime
 				? $event['end_date']
 				: date('Y-m-d', strtotime($event['end_date'] . ' +1 day'));
 
-				return [
+			return [
 				'id'          => $event['id'],
 				'title'       => $event['title'],
 				'start'       => $event['start_date'],
@@ -103,8 +103,8 @@ class Dashboard extends Controller
 				'color'       => $event['color'],
 				'description' => $event['description'],
 				'allDay'      => true // important for date-only events
-				];
-				}, $events);
+			];
+		}, $events);
 
 		return $this->response->setJSON($data);
 	}
@@ -113,11 +113,11 @@ class Dashboard extends Controller
 	{
 		$model = new CalendarModel();
 		$model->save([
-				'title' => $this->request->getPost('title'),
-				'description' => $this->request->getPost('description'),
-				'start_date' => $this->request->getPost('start'),
-				'end_date' => $this->request->getPost('end'),
-				'color' => $this->request->getPost('color') ?? '#007bff'
+			'title' => $this->request->getPost('title'),
+			'description' => $this->request->getPost('description'),
+			'start_date' => $this->request->getPost('start'),
+			'end_date' => $this->request->getPost('end'),
+			'color' => $this->request->getPost('color') ?? '#007bff'
 		]);
 
 		return $this->response->setJSON(['status' => 'success']);
@@ -128,11 +128,11 @@ class Dashboard extends Controller
 		$model = new CalendarModel();
 
 		$model->update($this->request->getPost('id'), [
-				'title'       => $this->request->getPost('title'),
-				'description' => $this->request->getPost('description'),
-				'start_date'  => $this->request->getPost('start'),
-				'end_date'    => $this->request->getPost('end'),
-				'color'       => $this->request->getPost('color')
+			'title'       => $this->request->getPost('title'),
+			'description' => $this->request->getPost('description'),
+			'start_date'  => $this->request->getPost('start'),
+			'end_date'    => $this->request->getPost('end'),
+			'color'       => $this->request->getPost('color')
 		]);
 
 		return $this->response->setJSON(['status' => 'success']);
@@ -164,11 +164,11 @@ class Dashboard extends Controller
 			->findAll();
 		$totalUsers = count($users);
 		return view('dashboard/ad_teacher_list', [
-				'title' => 'Admin Dashboard',
-				'newUsers' => $newUsers,
-				'total_newUsers' => $totalNewUsers,
-				'users'=>$users,
-				'total_users'=>$totalUsers
+			'title' => 'Admin Dashboard',
+			'newUsers' => $newUsers,
+			'total_newUsers' => $totalNewUsers,
+			'users'=>$users,
+			'total_users'=>$totalUsers
 		]);
 
 	}
@@ -187,9 +187,9 @@ class Dashboard extends Controller
 		$totalNewUsers = count($newUsers);
 
 		return view('dashboard/ad_new_user', [
-				'title' => 'Admin Dashboard',
-				'newUsers' => $newUsers,
-				'total_newUsers' => $totalNewUsers
+			'title' => 'Admin Dashboard',
+			'newUsers' => $newUsers,
+			'total_newUsers' => $totalNewUsers
 		]);
 
 	}
@@ -211,9 +211,9 @@ class Dashboard extends Controller
 		]);
 
 		if ($updated) {
-		    return redirect()->back()->with('success', 'User approved successfully.');
+			return redirect()->back()->with('success', 'User approved successfully.');
 		} else {
-		    return redirect()->back()->with('error', 'Failed to approve user.');
+			return redirect()->back()->with('error', 'Failed to approve user.');
 		}
 	}
 
@@ -255,54 +255,54 @@ class Dashboard extends Controller
 			->findAll();
 		// ── Send everything to the view ───────────────────────────
 		return view('dashboard/ad_result', [
-				'user'     => $user,
-				'subject'  => $subject,
-				'students' => $students,
+			'user'     => $user,
+			'subject'  => $subject,
+			'students' => $students,
 		]);
 	}
 
 	public function teacher_management()
 	{
-	    $session = session();
-	    if (!$session->get('isLoggedIn')) {
-		return redirect()->to(base_url('login'));
-	    }
+		$session = session();
+		if (!$session->get('isLoggedIn')) {
+			return redirect()->to(base_url('login'));
+		}
 
-	    $subjectModel = new SubjectModel();
-	    $userModel    = new UserModel();
+		$subjectModel = new SubjectModel();
+		$userModel    = new UserModel();
 
-	    $subjects = $subjectModel->orderBy('id')->findAll(); // ✅ fixed line
-	    $users    = $userModel->where('account_status !=', 0)->findAll();
+		$subjects = $subjectModel->orderBy('id')->findAll(); // ✅ fixed line
+		$users    = $userModel->where('account_status !=', 0)->findAll();
 
-	    return view('dashboard/teacher_management', [
-		'title'    => 'Teacher Management',
-		'users'    => $users,
-		'subjects' => $subjects, // ✅ must match what your view expects
-   	     ]);
+		return view('dashboard/teacher_management', [
+			'title'    => 'Teacher Management',
+			'users'    => $users,
+			'subjects' => $subjects, // ✅ must match what your view expects
+		]);
 	}
 
 	public function teacherSubUpdate()
 	{
-	    $session = session();
-	    if (!$session->get('isLoggedIn')) {
-		return redirect()->to(base_url('login'));
-	    }
+		$session = session();
+		if (!$session->get('isLoggedIn')) {
+			return redirect()->to(base_url('login'));
+		}
 
 
 
-	    $id         = $this->request->getPost('id');
-	    $name       = $this->request->getPost('name');
-	    $assign_sub = $this->request->getPost('assign_sub'); // e.g., "4,7,9"
+		$id         = $this->request->getPost('id');
+		$name       = $this->request->getPost('name');
+		$assign_sub = $this->request->getPost('assign_sub'); // e.g., "4,7,9"
 
-	    $userModel = new UserModel();
+		$userModel = new UserModel();
 
-	    $data = [
-		'assagin_sub' => $assign_sub,  // store CSV in DB
-	    ];
+		$data = [
+			'assagin_sub' => $assign_sub,  // store CSV in DB
+		];
 
-	    $userModel->update($id, $data);
+		$userModel->update($id, $data);
 
-	    return redirect()->back()->with('success', 'Teacher updated with new subjects!');
+		return redirect()->back()->with('success', 'Teacher updated with new subjects!');
 	}
 
 
@@ -318,31 +318,31 @@ class Dashboard extends Controller
 
 		$userModel = new UserModel();
 		$subjectModel = new SubjectModel();
-		
+
 		$user = $userModel->find($id);
-		
+
 		if (!$user) {
-		    throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(
-			"User ID {$userId} not found"
-		    );
+			throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(
+				"User ID {$userId} not found"
+			);
 		}
 
 		$subjectIds = array_filter(
-		    array_map('intval', explode(',', $user['assagin_sub'] ?? ''))
+			array_map('intval', explode(',', $user['assagin_sub'] ?? ''))
 		);
 
 
 		$subjects = [];
 		if ($subjectIds) {
-		    $subjects = $subjectModel
-			->whereIn('id', $subjectIds)
-			->orderBy('class ASC')
-			->findAll();
+			$subjects = $subjectModel
+				->whereIn('id', $subjectIds)
+				->orderBy('class ASC')
+				->findAll();
 		}
 
 		return view('dashboard/assign_subject', [
-		    'user'     => $user,
-		    'subjects' => $subjects,
+			'user'     => $user,
+			'subjects' => $subjects,
 		]);
 
 
@@ -369,10 +369,10 @@ class Dashboard extends Controller
 
 		if ($q) {
 			$builder = $builder->groupStart()
-				->like('student_name', $q)
-				->orLike('roll', $q)
-				->orLike('id', $q)
-				->groupEnd();
+		      ->like('student_name', $q)
+		      ->orLike('roll', $q)
+		      ->orLike('id', $q)
+		      ->groupEnd();
 		}
 
 		if ($class) {
@@ -390,64 +390,80 @@ class Dashboard extends Controller
 
 		// For section dropdown
 		$sections = $studentModel->select('section')
-			->distinct()
-			->orderBy('section')
-			->findAll();
+			   ->distinct()
+			   ->orderBy('section')
+			   ->findAll();
 
 		// Load view
 		return view('dashboard/student', [
-				'students' => $students,
-				'pager' => $studentModel->pager,
-				'q' => $q,
-				'class' => $class,
-				'section' => $section,
-				'sections' => $sections,
+			'students' => $students,
+			'pager' => $studentModel->pager,
+			'q' => $q,
+			'class' => $class,
+			'section' => $section,
+			'sections' => $sections,
 		]);
 	}
 
 
 
 
-public function submitResults()
-{
-    $resultModel = new \App\Models\ResultModel();
+	public function submitResults()
+	{
+		$resultModel = new ResultModel();
 
-    $students  = $this->request->getPost('students');
-    $exam      = $this->request->getPost('exam');
-    $year      = $this->request->getPost('year');
-    $subjectId = $this->request->getPost('subject_id');
+		$students  = $this->request->getPost('students');
+		$exam      = $this->request->getPost('exam');
+		$year      = $this->request->getPost('year');
+		$subjectId = $this->request->getPost('subject_id');
 
-    if (!$students || !$exam || !$year || !$subjectId) {
-        return redirect()->back()->with('error', 'Missing data.');
-    }
+		if (!$students || !$exam || !$year || !$subjectId) {
+			return redirect()->back()->with('error', 'Missing data.');
+		}
 
-    foreach ($students as $student) {
-        $total = isset($student['total']) ? (int) $student['total'] : 0;
+		foreach ($students as $student) {
+			$total = isset($student['total']) ? (int) $student['total'] : 0;
 
-        // Check if result already exists
-        $existing = $resultModel->where('student_id', $student['id'])
-                                ->where('subject_id', $subjectId)
-                                ->where('exam', $exam)
-                                ->where('year', $year)
-                                ->first();
+			// Check if result already exists
+			$existing = $resultModel->where('student_id', $student['id'])
+			   ->where('subject_id', $subjectId)
+			   ->where('exam', $exam)
+			   ->where('year', $year)
+			   ->first();
 
-        $data = [
-            'student_id' => $student['id'],
-            'subject_id' => $subjectId,
-            'exam'       => $exam,
-            'year'       => $year,
-            'total'      => $total,
-            'updated_at' => date('Y-m-d H:i:s'),
-        ];
+			$data = [
+				'student_id' => $student['id'],
+				'subject_id' => $subjectId,
+				'exam'       => $exam,
+				'year'       => $year,
+				'total'      => $total,
+				'updated_at' => date('Y-m-d H:i:s'),
+			];
 
-        if ($existing) {
-            $resultModel->update($existing['id'], $data);
-        } else {
-            $data['created_at'] = date('Y-m-d H:i:s');
-            $resultModel->insert($data);
-        }
-    }
+			if ($existing) {
+				$resultModel->update($existing['id'], $data);
+			} else {
+				$data['created_at'] = date('Y-m-d H:i:s');
+				$resultModel->insert($data);
+			}
+		}
 
-    return redirect()->back()->with('message', 'Results submitted successfully.');
-}
+		return redirect()->back()->with('message', 'Results submitted successfully.');
+	}
+	public function viewStudent($id)
+	{
+		$studentModel = new \App\Models\StudentModel();
+
+		$student = $studentModel->find($id);
+
+		if (!$student) {
+			return redirect()->back()->with('error', 'No data found');
+		}
+
+		return view('dashboard/student_view', [
+			'student' => $student
+		]);
+	}
+
+
 }
