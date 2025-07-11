@@ -64,27 +64,40 @@
     <?php if (!empty($students)): ?>
       <div class="card">
         <div class="card-body table-responsive p-0">
-          <table class="table table-bordered table-hover">
-            <thead class="table-light">
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Roll</th>
-                <th>Class</th>
-                <th>Section</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php foreach ($students as $s): ?>
-                <tr>
-                  <td><?= esc($s['id']) ?></td>
-                  <td><?= esc($s['student_name']) ?></td>
-                  <td><?= esc($s['roll']) ?></td>
-                  <td><?= esc($s['class']) ?></td>
-                  <td><?= esc($s['section']) ?></td>
-                </tr>
-              <?php endforeach ?>
-            </tbody>
+	  <table class="table table-bordered table-hover">
+
+		<!-- Table Header -->
+		<thead class="table-light">
+		  <tr>
+		    <th>ID</th>
+		    <th>Name</th>
+		    <th>Roll</th>
+		    <th>Class</th>
+		    <th>Section</th>
+		    <th>Action</th> <!-- New column -->
+		  </tr>
+		</thead>
+
+		<!-- Table Rows -->
+		<tbody>
+		  <?php foreach ($students as $s): ?>
+		    <tr>
+		      <td><?= esc($s['id']) ?></td>
+		      <td><?= esc($s['student_name']) ?></td>
+		      <td><?= esc($s['roll']) ?></td>
+		      <td><?= esc($s['class']) ?></td>
+		      <td><?= esc($s['section']) ?></td>
+		      <td>
+			<a href="<?= site_url('admin/students/view/' . $s['id']) ?>" class="btn btn-info btn-sm">
+			  <i class="fas fa-eye"></i> View
+			</a>
+		      </td>
+		    </tr>
+		  <?php endforeach ?>
+		</tbody>
+
+
+
           </table>
         </div>
       </div>
