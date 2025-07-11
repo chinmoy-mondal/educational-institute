@@ -1,4 +1,7 @@
-v class="content-header">
+<?= $this->extend('layouts/admin') ?>
+<?= $this->section('content') ?>
+
+<div class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
