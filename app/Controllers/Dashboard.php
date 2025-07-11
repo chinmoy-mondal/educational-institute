@@ -532,7 +532,18 @@ class Dashboard extends Controller
 			    if ($file && $file->isValid() && !$file->hasMoved()) {
 				            $newName = $file->getRandomName();
 					            $file->move('uploads/students', $newName);
-					            $model->update($id, ['student_pic' => 'uploads/students/' . $newName]);
+
+					    // Delete old file if exists and not default
+					     if (!empty($student['student_pic']) && file_exists($student['student_pic'])) {
+					         unlink($student['student_pic']);
+					         }
+					    
+					         $model->update($id, ['student_pic' => 'uploads/students/' . $newName]);
+					         
+
+
+
+
 
 						            return redirect()->to('admin/students/view/' . $id)->with('message', 'Photo updated.');
 						        }
