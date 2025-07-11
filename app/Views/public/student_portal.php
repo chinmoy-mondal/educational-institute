@@ -21,7 +21,7 @@
 			<div class="col-md-3">
 			    <select name="class" class="form-select">
 				<option value="" <?= ($class ?? '') === '' ? 'selected' : '' ?>>All Classes</option>
-				<?php for ($i = 1; $i <= 12; $i++): ?>
+				<?php for ($i = 6; $i <= 10; $i++): ?>
 				    <option value="<?= $i ?>" <?= ($class ?? '') == $i ? 'selected' : '' ?>>
 					Class <?= $i ?>
 				    </option>
