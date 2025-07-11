@@ -18,17 +18,17 @@
     <div class="card">
       <div class="card-body">
         <form method="get" action="<?= site_url('admin/students') ?>">
-          <div class="row">
+          <div class="row align-items-end">
             <div class="col-md-4">
               <div class="form-group">
-                <label>Search</label>
-                <input type="text" name="q" class="form-control" placeholder="Name, Roll, or ID" value="<?= esc($q ?? '') ?>">
+                <label for="search">Search</label>
+                <input type="text" name="q" id="search" class="form-control" placeholder="Name, Roll, or ID" value="<?= esc($q ?? '') ?>">
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label>Class</label>
-                <select name="class" class="form-control">
+                <label for="class">Class</label>
+                <select name="class" id="class" class="form-control">
                   <option value="" <?= ($class ?? '') === '' ? 'selected' : '' ?>>All Classes</option>
                   <?php for ($i = 1; $i <= 12; $i++): ?>
                     <option value="<?= $i ?>" <?= ($class ?? '') == $i ? 'selected' : '' ?>>Class <?= $i ?></option>
@@ -38,8 +38,8 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label>Section</label>
-                <select name="section" class="form-control">
+                <label for="section">Section</label>
+                <select name="section" id="section" class="form-control">
                   <option value="" <?= ($section ?? '') === '' ? 'selected' : '' ?>>All Sections</option>
                   <?php foreach ($sections as $sec): ?>
                     <option value="<?= esc($sec['section']) ?>" <?= ($section ?? '') === $sec['section'] ? 'selected' : '' ?>>
@@ -49,8 +49,11 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-2 d-flex align-items-end">
-              <button type="submit" class="btn btn-primary w-100">Search</button>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label class="invisible d-block">Search</label>
+                <button type="submit" class="btn btn-primary w-100">Search</button>
+              </div>
             </div>
           </div>
         </form>
