@@ -517,7 +517,9 @@ class Dashboard extends Controller
 
 			    return view('dashboard/edit_photo', ['student' => $student]);
 	}
-	c function updateStudentPhoto($id)
+	
+	
+	function updateStudentPhoto($id)
 	{
 		    $model = new \App\Models\StudentModel();
 		        $student = $model->find($id);
