@@ -24,7 +24,7 @@
     <?php if (!empty($student['student_pic'])): ?>
       <img src="/<?= esc($student['student_pic']) ?>" alt="Student Photo" class="img-thumbnail w-100">
     <?php else: ?>
-      <img src="<?= base_url('assets/img/default.png') ?>" alt="No Photo" class="img-thumbnail w-100">
+      <img src="<?= base_url('public/assets/img/default.png') ?>" alt="No Photo" class="img-thumbnail w-100">
     <?php endif; ?>
 
     <!-- Rounded Edit Icon on Top-Left -->
