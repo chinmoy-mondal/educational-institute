@@ -536,7 +536,7 @@ class Dashboard extends Controller
 
 					            // ✅ Delete old file (if not default and it exists)
 					    $oldPath = FCPATH . $student['student_pic'];
-					    echo $oldPath;
+					    
 					                    if (!empty($student['student_pic']) && file_exists($oldPath)) {
 					                                 unlink($oldPath);
 					                                         }
