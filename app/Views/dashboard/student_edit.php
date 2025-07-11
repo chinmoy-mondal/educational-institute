@@ -36,7 +36,7 @@
               <input type="text" name="section" class="form-control" value="<?= esc($student['section']) ?>">
             </div>
             <div class="col-md-4">
-              <label>ESIF</label>
+              <label>Board ID</label>
               <input type="text" name="esif" class="form-control" value="<?= esc($student['esif']) ?>">
             </div>
             <div class="col-md-4">

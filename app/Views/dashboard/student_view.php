@@ -28,7 +28,7 @@
           <div class="col-md-9">
             <h4><?= esc($student['student_name']) ?> (Roll: <?= esc($student['roll']) ?>)</h4>
             <p><strong>Class:</strong> <?= esc($student['class']) ?> | <strong>Section:</strong> <?= esc($student['section']) ?></p>
-            <p><strong>ESIF:</strong> <?= esc($student['esif']) ?></p>
+            <p><strong>Board ID:</strong> <?= esc($student['esif']) ?></p>
             <p><strong>Phone:</strong> <?= esc($student['phone']) ?></p>
             <p><strong>Gender:</strong> <?= esc($student['gender']) ?> | <strong>DOB:</strong> <?= esc($student['dob']) ?></p>
             <p><strong>Religion:</strong> <?= esc($student['religion']) ?> | <strong>Blood Group:</strong> <?= esc($student['blood_group']) ?></p>
