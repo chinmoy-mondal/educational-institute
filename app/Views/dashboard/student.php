@@ -17,7 +17,7 @@
     <!-- Search & Filter Form -->
     <div class="card">
       <div class="card-body">
-        <form method="get" action="<?= site_url('admin/students') ?>">
+        <form method="get" action="<?= site_url('ad-students') ?>">
           <div class="row align-items-end">
             <div class="col-md-4">
               <div class="form-group">
