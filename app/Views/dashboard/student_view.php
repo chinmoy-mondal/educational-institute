@@ -4,7 +4,7 @@
 <div class="content-header">
   <div class="container-fluid">
     <h1 class="mb-3">Student Profile</h1>
-    <a href="<?= site_url('admin/students') ?>" class="btn btn-secondary mb-3">← Back to List</a>
+    <a href="<?= site_url('ad-student') ?>" class="btn btn-secondary mb-3">← Back to List</a>
   </div>
 </div>
 
