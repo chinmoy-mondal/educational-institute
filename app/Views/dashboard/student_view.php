@@ -23,11 +23,6 @@
             <?php else: ?>
               <img src="<?= base_url('assets/img/default-avatar.png') ?>" alt="No Photo" class="img-thumbnail" style="max-width: 180px;">
             <?php endif; ?>
-            <form action="<?= site_url('admin/students/upload_pic/' . $student['id']) ?>" method="post" enctype="multipart/form-data" class="mt-2">
-              <?= csrf_field() ?>
-              <input type="file" name="student_pic" class="form-control form-control-sm mb-2" accept="image/*" required>
-              <button class="btn btn-sm btn-primary">Upload Photo</button>
-            </form>
           </div>
 
           <div class="col-md-9">

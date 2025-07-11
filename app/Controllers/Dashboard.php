@@ -409,7 +409,12 @@ class Dashboard extends Controller
 
 
 	public function submitResults()
-	{
+	{		
+		$session = session();
+		if (!$session->get('isLoggedIn')) {
+			return redirect()->to(base_url('login'));
+		}
+
 		$resultModel = new ResultModel();
 
 		$students  = $this->request->getPost('students');
@@ -450,8 +455,13 @@ class Dashboard extends Controller
 
 		return redirect()->back()->with('message', 'Results submitted successfully.');
 	}
+
 	public function viewStudent($id)
 	{
+		$session = session();
+		if (!$session->get('isLoggedIn')) {
+			return redirect()->to(base_url('login'));
+		}
 		$studentModel = new \App\Models\StudentModel();
 
 		$student = $studentModel->find($id);
