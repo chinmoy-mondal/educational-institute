@@ -517,8 +517,7 @@ class Dashboard extends Controller
 
 			    return view('dashboard/edit_photo', ['student' => $student]);
 	}
-
-	public function updateStudentPhoto($id)
+	c function updateStudentPhoto($id)
 	{
 		    $model = new \App\Models\StudentModel();
 		        $student = $model->find($id);
@@ -533,23 +532,25 @@ class Dashboard extends Controller
 				            $newName = $file->getRandomName();
 					            $file->move('uploads/students', $newName);
 
-					    // Delete old file if exists and not default
-					     if (!empty($student['student_pic']) && file_exists($student['student_pic'])) {
-					         unlink($student['student_pic']);
-					         }
+					            // ✅ Delete old file (if not default and it exists)
+					    $oldPath = FCPATH . $student['student_pic'];
+					    echo $oldPath;
+					                    if (!empty($student['student_pic']) && file_exists($oldPath)) {
+					                                 unlink($oldPath);
+					                                         }
 					    
-					         $model->update($id, ['student_pic' => 'uploads/students/' . $newName]);
-					         
+					                                                 // ✅ Save new file path to DB
+					                                                         $model->update($id, [
+					                                                                     'student_pic' => 'uploads/students/' . $newName,
+					                                                                             ]);
+					    
+					                                                                                     return redirect()->to('admin/students/view/' . $id)->with('message', 'Photo updated.');
+					                                                                                         }
+					    
+					                                                                                             return redirect()->back()->with('error', 'Photo upload failed.');
+					                                                                                             }
+					    
 
-
-
-
-
-						            return redirect()->to('admin/students/view/' . $id)->with('message', 'Photo updated.');
-						        }
-
-			        return redirect()->back()->with('error', 'Photo upload failed.');
-	}
 
 
 }
