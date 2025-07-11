@@ -474,6 +474,37 @@ class Dashboard extends Controller
 			'student' => $student
 		]);
 	}
+	public function editStudent($id)
+	{
+		    $model = new \App\Models\StudentModel();
+		        $student = $model->find($id);
+
+		        if (!$student) {
+				        return redirect()->to('ad-student')->with('error', 'Student not found.');
+					    }
+
+			    return view('dashboard/student_edit', ['student' => $student]);
+	}
+
+	public function updateStudent($id)
+	{
+		    $model = new \App\Models\StudentModel();
+		        $student = $model->find($id);
+
+		        if (!$student) {
+				        return redirect()->to('ad-student')->with('error', 'Student not found.');
+					    }
+
+			    $data = $this->request->getPost([
+				            'student_name', 'roll', 'class', 'section', 'esif', 'father_name',
+					            'mother_name', 'dob', 'gender', 'phone', 'birth_registration_number',
+						            'father_nid_number', 'mother_nid_number', 'religion', 'blood_group'
+							        ]);
+
+			    $model->update($id, $data);
+
+			    return redirect()->to('admin/students/view/' . $id)->with('message', 'Student updated successfully.');
+	}
 
 
 }

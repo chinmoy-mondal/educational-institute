@@ -66,6 +66,13 @@ $routes->get('/ad-result/(:num)/(:num)', 'Dashboard::result/$1/$2');
 $routes->post('/results/submit', 'Dashboard::submitResults');
 $routes->get('/ad-student', 'Dashboard::student');
 $routes->get('admin/students/view/(:num)', 'Dashboard::viewStudent/$1');
+$routes->get('admin/students/edit/(:num)', 'Dashboard::editStudent/$1');
+$routes->post('admin/students/update/(:num)', 'Dashboard::updateStudent/$1');
+
+
+
+
+
 
 $routes->get('/user_permit/(:num)', 'Dashboard::user_permit/$1');
 $routes->get('/user_delete/(:num)', 'Dashboard::user_delete/$1');

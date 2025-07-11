@@ -88,7 +88,7 @@
 		      <td><?= esc($s['class']) ?></td>
 		      <td><?= esc($s['section']) ?></td>
 		      <td>
-			<a href="<?= site_url('admin/students/view/' . $s['id']) ?>" class="btn btn-info btn-sm">
+			<a href="<?= site_url('admin/students/view/' . $s['id']) ?>" class="btn btn-info btn-sm" target="_blank" >
 			  <i class="fas fa-eye"></i> View
 			</a>
 		      </td>
