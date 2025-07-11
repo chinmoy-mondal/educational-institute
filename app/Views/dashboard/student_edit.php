@@ -87,12 +87,30 @@
 
           <div class="row mt-3">
             <div class="col-md-6">
-              <label>Religion</label>
-              <input type="text" name="religion" class="form-control" value="<?= esc($student['religion']) ?>">
+	      <label>Religion</label>
+<select name="religion" class="form-control">
+  <option value="">Select Religion</option>
+  <option value="Islam" <?= $student['religion'] === 'Islam' ? 'selected' : '' ?>>Islam</option>
+  <option value="Hinduism" <?= $student['religion'] === 'Hinduism' ? 'selected' : '' ?>>Hinduism</option>
+  <option value="Christianity" <?= $student['religion'] === 'Christianity' ? 'selected' : '' ?>>Christianity</option>
+  <option value="Buddhism" <?= $student['religion'] === 'Buddhism' ? 'selected' : '' ?>>Buddhism</option>
+  <option value="Other" <?= $student['religion'] === 'Other' ? 'selected' : '' ?>>Other</option>
+  </select>
+
             </div>
             <div class="col-md-6">
               <label>Blood Group</label>
-              <input type="text" name="blood_group" class="form-control" value="<?= esc($student['blood_group']) ?>">
+		<select name="blood_group" class="form-control">
+			  <option value="">Select Blood Group</option>
+		  <?php
+		    $bloods = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+		    foreach ($bloods as $bg):
+		  ?>
+		    <option value="<?= $bg ?>" <?= $student['blood_group'] === $bg ? 'selected' : '' ?>><?= $bg ?></option>
+		  <?php endforeach; ?>
+		</select>
+
+
             </div>
           </div>
 
