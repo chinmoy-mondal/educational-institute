@@ -506,5 +506,39 @@ class Dashboard extends Controller
 			    return redirect()->to('admin/students/view/' . $id)->with('message', 'Student updated successfully.');
 	}
 
+	public function editStudentPhoto($id)
+	{
+		    $model = new \App\Models\StudentModel();
+		        $student = $model->find($id);
+
+		        if (!$student) {
+				        return redirect()->to('admin/students')->with('error', 'Student not found.');
+					    }
+
+			    return view('dashboard/edit_photo', ['student' => $student]);
+	}
+
+	public function updateStudentPhoto($id)
+	{
+		    $model = new \App\Models\StudentModel();
+		        $student = $model->find($id);
+
+		        if (!$student) {
+				        return redirect()->to('admin/students')->with('error', 'Student not found.');
+					    }
+
+			    $file = $this->request->getFile('student_pic');
+
+			    if ($file && $file->isValid() && !$file->hasMoved()) {
+				            $newName = $file->getRandomName();
+					            $file->move('uploads/students', $newName);
+					            $model->update($id, ['student_pic' => 'uploads/students/' . $newName]);
+
+						            return redirect()->to('admin/students/view/' . $id)->with('message', 'Photo updated.');
+						        }
+
+			        return redirect()->back()->with('error', 'Photo upload failed.');
+	}
+
 
 }

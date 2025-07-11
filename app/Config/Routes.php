@@ -68,6 +68,8 @@ $routes->get('/ad-student', 'Dashboard::student');
 $routes->get('admin/students/view/(:num)', 'Dashboard::viewStudent/$1');
 $routes->get('admin/students/edit/(:num)', 'Dashboard::editStudent/$1');
 $routes->post('admin/students/update/(:num)', 'Dashboard::updateStudent/$1');
+$routes->get('admin/students/edit-photo/(:num)', 'Dashboard::editStudentPhoto/$1');
+$routes->post('admin/students/edit-photo/(:num)', 'Dashboard::updateStudentPhoto/$1');
 
 
 
