@@ -1,6 +1,9 @@
-v class="content-header">
+<?= $this->extend('layouts/admin') ?>
+<?= $this->section('content') ?>
+
+<div class="content-header">
   <div class="container-fluid">
-    <h1 class="mb-3">Edit Student Profile</h1>
+    <h1 class="mb-3">Edit Student</h1>
     <a href="<?= site_url('admin/students/view/' . $student['id']) ?>" class="btn btn-secondary mb-3">← Back to Profile</a>
   </div>
 </div>
@@ -14,7 +17,7 @@ v class="content-header">
 
           <div class="row">
             <div class="col-md-6">
-              <label>Student Name</label>
+              <label>Name</label>
               <input type="text" name="student_name" class="form-control" value="<?= esc($student['student_name']) ?>" required>
             </div>
             <div class="col-md-3">
@@ -77,5 +80,31 @@ v class="content-header">
               </select>
             </div>
             <div class="col-md-4">
-              <label>
+              <label>Birth Registration No.</label>
+              <input type="text" name="birth_registration_number" class="form-control" value="<?= esc($student['birth_registration_number']) ?>">
+            </div>
+          </div>
+
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <label>Religion</label>
+              <input type="text" name="religion" class="form-control" value="<?= esc($student['religion']) ?>">
+            </div>
+            <div class="col-md-6">
+              <label>Blood Group</label>
+              <input type="text" name="blood_group" class="form-control" value="<?= esc($student['blood_group']) ?>">
+            </div>
+          </div>
+
+          <div class="text-end mt-4">
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+          </div>
+
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<?= $this->endSection() ?>
 
