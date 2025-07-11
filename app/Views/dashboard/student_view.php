@@ -15,21 +15,33 @@
       <div class="card-body">
 
         <!-- Profile Header -->
-        <div class="row">
-		<div class="col-md-3 text-center">
-		  <div class="position-relative d-inline-block" style="max-width: 180px;">
-		    <?php if (!empty($student['student_pic'])): ?>
-		      <img src="/<?= esc($student['student_pic']) ?>" alt="Student Photo" class="img-thumbnail w-100">
-		    <?php else: ?>
-		      <img src="<?= base_url('assets/img/default-avatar.png') ?>" alt="No Photo" class="img-thumbnail w-100">
-		    <?php endif; ?>
+	<div class="row">
 
-		    <!-- Edit Photo Icon -->
-				<a href="<?= site_url('admin/students/edit-photo/' . $student['id']) ?>" class="position-absolute bottom-0 end-0 bg-dark text-white p-1 rounded-circle"  style="margin: 5px;" title="Change Photo"> <i class="fas fa-camera"></i>
-				</a>
-		  </div>
-		</div>
-          <div class="col-md-9">
+
+<div class="col-md-3 text-center">
+  <div class="position-relative d-inline-block" style="max-width: 180px;">
+    
+    <?php if (!empty($student['student_pic'])): ?>
+      <img src="/<?= esc($student['student_pic']) ?>" alt="Student Photo" class="img-thumbnail w-100">
+    <?php else: ?>
+      <img src="<?= base_url('assets/img/default-avatar.png') ?>" alt="No Photo" class="img-thumbnail w-100">
+    <?php endif; ?>
+
+    <!-- Edit Icon Over Top-Right -->
+	        <a href="<?= site_url('admin/students/edit-photo/' . $student['id']) ?>"
+		       class="position-absolute top-0 end-0 bg-primary text-white p-1 rounded-circle"
+			              style="margin: 6px;" title="Edit Photo">
+				            <i class="fas fa-edit"></i>
+					        </a>
+
+  </div>
+</div>
+
+
+
+
+
+	  <div class="col-md-9">
             <h4><?= esc($student['student_name']) ?> (Roll: <?= esc($student['roll']) ?>)</h4>
             <p><strong>Class:</strong> <?= esc($student['class']) ?> | <strong>Section:</strong> <?= esc($student['section']) ?></p>
             <p><strong>Board ID:</strong> <?= esc($student['esif']) ?></p>
