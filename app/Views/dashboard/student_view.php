@@ -20,19 +20,32 @@
 
 <div class="col-md-3 text-center">
   <div class="position-relative d-inline-block" style="max-width: 180px;">
-    
+
     <?php if (!empty($student['student_pic'])): ?>
       <img src="/<?= esc($student['student_pic']) ?>" alt="Student Photo" class="img-thumbnail w-100">
     <?php else: ?>
-      <img src="<?= base_url('assets/img/default-avatar.png') ?>" alt="No Photo" class="img-thumbnail w-100">
+      <img src="<?= base_url('public/assets/img/default.png') ?>" alt="No Photo" class="img-thumbnail w-100">
     <?php endif; ?>
 
-    <!-- Edit Icon Over Top-Right -->
+    <!-- Rounded Edit Icon on Top-Left -->
 	        <a href="<?= site_url('admin/students/edit-photo/' . $student['id']) ?>"
-		       class="position-absolute top-0 end-0 bg-primary text-white p-1 rounded-circle"
-			              style="margin: 6px;" title="Edit Photo">
-				            <i class="fas fa-edit"></i>
-					        </a>
+		       class="position-absolute top-0 start-0"
+			              style="
+         margin: 6px;
+         width: 36px;
+         height: 36px;
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         background-color: #007bff;
+         color: #fff;
+         border-radius: 50%;
+         box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+         text-decoration: none;
+       "
+       title="Edit Photo">
+      <i class="fas fa-edit"></i>
+    </a>
 
   </div>
 </div>
