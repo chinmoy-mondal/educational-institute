@@ -2,53 +2,36 @@
 <?= $this->section('content') ?>
 
 <div class="content-header">
-  <div class="container-fluid">
-    <h1 class="mb-3">Student Profile</h1>
-    <a href="<?= site_url('ad-student') ?>" class="btn btn-secondary mb-3">← Back to List</a>
-  </div>
+<div class="container-fluid">
+<h1 class="mb-3">Student Profile</h1>
+<a href="<?= site_url('ad-student') ?>" class="btn btn-secondary mb-3">← Back to List</a>
+</div>
 </div>
 
 <div class="content">
-  <div class="container-fluid">
+<div class="container-fluid">
 
-    <div class="card">
-      <div class="card-body">
+<div class="card">
+<div class="card-body">
 
-        <!-- Profile Header -->
-	<div class="row">
+<!-- Profile Header -->
+<div class="row">
 
 
-<div class="col-md-3 text-center">
-  <div class="position-relative d-inline-block" style="max-width: 180px;">
+	<div class="col-md-3 text-center">
+	  <div class="position-relative d-inline-block" style="max-width: 180px;">
+	        <a href="<?= site_url('admin/students/edit-photo/' . $student['id']) ?>"   class="position-absolute top-0 start-0"   title="Edit Photo">
+			<i class="fas fa-edit"></i>
+		</a>
+	    <?php if (!empty($student['student_pic'])): ?>
+	      <img src="/<?= esc($student['student_pic']) ?>" alt="Student Photo" class="img-thumbnail w-100">
+	    <?php else: ?>
+	      <img src="<?= base_url('public/assets/img/default.png') ?>" alt="No Photo" class="img-thumbnail w-100">
+	    <?php endif; ?>
 
-    <?php if (!empty($student['student_pic'])): ?>
-      <img src="/<?= esc($student['student_pic']) ?>" alt="Student Photo" class="img-thumbnail w-100">
-    <?php else: ?>
-      <img src="<?= base_url('public/assets/img/default.png') ?>" alt="No Photo" class="img-thumbnail w-100">
-    <?php endif; ?>
 
-    <!-- Rounded Edit Icon on Top-Left -->
-	    	        <a href="<?= site_url('admin/students/edit-photo/' . $student['id']) ?>"
-					       class="position-absolute top-0 start-0"
-						       			              style="
-         margin: 6px;
-         width: 36px;
-         height: 36px;
-         display: flex;
-         align-items: center;
-         justify-content: center;
-         background-color: #007bff;
-         color: #fff;
-         border-radius: 50%;
-         box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-         text-decoration: none;
-       "
-       title="Edit Photo">
-      <i class="fas fa-edit"></i>
-    </a>
-
-  </div>
-</div>
+	  </div>
+	</div>
 
 
 
