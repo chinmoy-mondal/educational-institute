@@ -308,8 +308,6 @@ class Dashboard extends Controller
 
 	public function assignSubject($id)
 	{
-		// hello
-
 		$session = session();
 		if (!$session->get('isLoggedIn')) {
 			return redirect()->to(base_url('login'));
@@ -321,17 +319,21 @@ class Dashboard extends Controller
 
 		$user = $userModel->find($id);
 
+        echo '<pre>';
+        print_r($user);
+        echo '</pre>';
+
 		if (!$user) {
-			throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(
-					"User ID {$userId} not found"
-					);
+			return redirect()->back()->with('error', 'no records founds');
 		}
 
 		$subjectIds = array_filter(
 				array_map('intval', explode(',', $user['assagin_sub'] ?? ''))
 				);
 
-
+        echo '<pre>';
+        print_r($subjectIds);
+        echo '</pre>';
 		$subjects = [];
 		if ($subjectIds) {
 			$subjects = $subjectModel
@@ -339,11 +341,13 @@ class Dashboard extends Controller
 				->orderBy('class ASC')
 				->findAll();
 		}
-
-		return view('dashboard/assign_subject', [
-				'user'     => $user,
-				'subjects' => $subjects,
-		]);
+        echo '<pre>';
+        print_r($subjects);
+        echo '</pre>';
+	//	return view('dashboard/assign_subject', [
+	//			'user'     => $user,
+	//			'subjects' => $subjects,
+	//	]);
 
 
 
