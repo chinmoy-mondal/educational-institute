@@ -247,7 +247,7 @@ class Dashboard extends Controller
 			->where('class', $subject['class'])
 			->groupStart()                       // ( ... )
 			->where('section', $subject['section'])   // exact match
-			->orWhere('section', '')                 // empty string ⇒ “all sections”
+			->orWhere('section', 'n/a')                 // empty string ⇒ “all sections”
 			->orWhere('section', null)               // NULL safety (if you use NULLs)
 			->orLike('section', $subject['section']) // partial / substring match
 			->groupEnd()                        // )
