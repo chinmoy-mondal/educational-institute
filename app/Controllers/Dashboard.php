@@ -319,9 +319,6 @@ class Dashboard extends Controller
 
 		$user = $userModel->find($id);
 
-        echo '<pre>';
-        print_r($user);
-        echo '</pre>';
 
 		if (!$user) {
 			return redirect()->back()->with('error', 'no records founds');
@@ -331,9 +328,6 @@ class Dashboard extends Controller
 				array_map('intval', explode(',', $user['assagin_sub'] ?? ''))
 				);
 
-        echo '<pre>';
-        print_r($subjectIds);
-        echo '</pre>';
 		$subjects = [];
 		if ($subjectIds) {
 			$subjects = $subjectModel
@@ -341,13 +335,10 @@ class Dashboard extends Controller
 				->orderBy('class ASC')
 				->findAll();
 		}
-        echo '<pre>';
-        print_r($subjects);
-        echo '</pre>';
-	//	return view('dashboard/assign_subject', [
-	//			'user'     => $user,
-	//			'subjects' => $subjects,
-	//	]);
+		return view('dashboard/assign_subject', [
+				'user'     => $user,
+				'subjects' => $subjects,
+		]);
 
 
 
