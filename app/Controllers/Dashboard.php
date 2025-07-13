@@ -36,14 +36,14 @@ class Dashboard extends Controller
 
 
 		return view('dashboard/index', [
-			'title' => 'Admin Dashboard',
-			'total_students' => $total_students,
-			'total_users' => $total_users,
-			'total_new_users' => $total_new_users,
-			'total_applications' => $total_applications,
-			'total_exams' => $total_exams,
-			'total_income' => $total_income,
-			'total_cost' => $total_cost
+				'title' => 'Admin Dashboard',
+				'total_students' => $total_students,
+				'total_users' => $total_users,
+				'total_new_users' => $total_new_users,
+				'total_applications' => $total_applications,
+				'total_exams' => $total_exams,
+				'total_income' => $total_income,
+				'total_cost' => $total_cost
 		]);
 	}
 
@@ -87,15 +87,15 @@ class Dashboard extends Controller
 		$events = $model->findAll();
 
 		$data = array_map(function ($event) {
-			// Determine if end_date has time part (T separator)
-			$hasTime = strpos($event['end_date'], 'T') !== false;
+				// Determine if end_date has time part (T separator)
+				$hasTime = strpos($event['end_date'], 'T') !== false;
 
-			// If end_date is date only, add +1 day to make FullCalendar inclusive
-			$endDate = $hasTime
+				// If end_date is date only, add +1 day to make FullCalendar inclusive
+				$endDate = $hasTime
 				? $event['end_date']
 				: date('Y-m-d', strtotime($event['end_date'] . ' +1 day'));
 
-			return [
+				return [
 				'id'          => $event['id'],
 				'title'       => $event['title'],
 				'start'       => $event['start_date'],
@@ -103,8 +103,8 @@ class Dashboard extends Controller
 				'color'       => $event['color'],
 				'description' => $event['description'],
 				'allDay'      => true // important for date-only events
-			];
-		}, $events);
+				];
+				}, $events);
 
 		return $this->response->setJSON($data);
 	}
@@ -113,11 +113,11 @@ class Dashboard extends Controller
 	{
 		$model = new CalendarModel();
 		$model->save([
-			'title' => $this->request->getPost('title'),
-			'description' => $this->request->getPost('description'),
-			'start_date' => $this->request->getPost('start'),
-			'end_date' => $this->request->getPost('end'),
-			'color' => $this->request->getPost('color') ?? '#007bff'
+				'title' => $this->request->getPost('title'),
+				'description' => $this->request->getPost('description'),
+				'start_date' => $this->request->getPost('start'),
+				'end_date' => $this->request->getPost('end'),
+				'color' => $this->request->getPost('color') ?? '#007bff'
 		]);
 
 		return $this->response->setJSON(['status' => 'success']);
@@ -128,11 +128,11 @@ class Dashboard extends Controller
 		$model = new CalendarModel();
 
 		$model->update($this->request->getPost('id'), [
-			'title'       => $this->request->getPost('title'),
-			'description' => $this->request->getPost('description'),
-			'start_date'  => $this->request->getPost('start'),
-			'end_date'    => $this->request->getPost('end'),
-			'color'       => $this->request->getPost('color')
+				'title'       => $this->request->getPost('title'),
+				'description' => $this->request->getPost('description'),
+				'start_date'  => $this->request->getPost('start'),
+				'end_date'    => $this->request->getPost('end'),
+				'color'       => $this->request->getPost('color')
 		]);
 
 		return $this->response->setJSON(['status' => 'success']);
@@ -164,11 +164,11 @@ class Dashboard extends Controller
 			->findAll();
 		$totalUsers = count($users);
 		return view('dashboard/ad_teacher_list', [
-			'title' => 'Admin Dashboard',
-			'newUsers' => $newUsers,
-			'total_newUsers' => $totalNewUsers,
-			'users'=>$users,
-			'total_users'=>$totalUsers
+				'title' => 'Admin Dashboard',
+				'newUsers' => $newUsers,
+				'total_newUsers' => $totalNewUsers,
+				'users'=>$users,
+				'total_users'=>$totalUsers
 		]);
 
 	}
@@ -187,9 +187,9 @@ class Dashboard extends Controller
 		$totalNewUsers = count($newUsers);
 
 		return view('dashboard/ad_new_user', [
-			'title' => 'Admin Dashboard',
-			'newUsers' => $newUsers,
-			'total_newUsers' => $totalNewUsers
+				'title' => 'Admin Dashboard',
+				'newUsers' => $newUsers,
+				'total_newUsers' => $totalNewUsers
 		]);
 
 	}
@@ -206,8 +206,8 @@ class Dashboard extends Controller
 		$permitBy = $session->get('user_id');
 
 		$updated = $userModel->update($id,[
-			'account_status' => 1,
-			'permit_by'	=>$permitBy,
+				'account_status' => 1,
+				'permit_by'	=>$permitBy,
 		]);
 
 		if ($updated) {
@@ -255,9 +255,9 @@ class Dashboard extends Controller
 			->findAll();
 		// ── Send everything to the view ───────────────────────────
 		return view('dashboard/ad_result', [
-			'user'     => $user,
-			'subject'  => $subject,
-			'students' => $students,
+				'user'     => $user,
+				'subject'  => $subject,
+				'students' => $students,
 		]);
 	}
 
@@ -275,9 +275,9 @@ class Dashboard extends Controller
 		$users    = $userModel->where('account_status !=', 0)->findAll();
 
 		return view('dashboard/teacher_management', [
-			'title'    => 'Teacher Management',
-			'users'    => $users,
-			'subjects' => $subjects, // ✅ must match what your view expects
+				'title'    => 'Teacher Management',
+				'users'    => $users,
+				'subjects' => $subjects, // ✅ must match what your view expects
 		]);
 	}
 
@@ -323,13 +323,13 @@ class Dashboard extends Controller
 
 		if (!$user) {
 			throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound(
-				"User ID {$userId} not found"
-			);
+					"User ID {$userId} not found"
+					);
 		}
 
 		$subjectIds = array_filter(
-			array_map('intval', explode(',', $user['assagin_sub'] ?? ''))
-		);
+				array_map('intval', explode(',', $user['assagin_sub'] ?? ''))
+				);
 
 
 		$subjects = [];
@@ -341,8 +341,8 @@ class Dashboard extends Controller
 		}
 
 		return view('dashboard/assign_subject', [
-			'user'     => $user,
-			'subjects' => $subjects,
+				'user'     => $user,
+				'subjects' => $subjects,
 		]);
 
 
@@ -369,10 +369,10 @@ class Dashboard extends Controller
 
 		if ($q) {
 			$builder = $builder->groupStart()
-		      ->like('student_name', $q)
-		      ->orLike('roll', $q)
-		      ->orLike('id', $q)
-		      ->groupEnd();
+				->like('student_name', $q)
+				->orLike('roll', $q)
+				->orLike('id', $q)
+				->groupEnd();
 		}
 
 		if ($class) {
@@ -390,18 +390,18 @@ class Dashboard extends Controller
 
 		// For section dropdown
 		$sections = $studentModel->select('section')
-			   ->distinct()
-			   ->orderBy('section')
-			   ->findAll();
+			->distinct()
+			->orderBy('section')
+			->findAll();
 
 		// Load view
 		return view('dashboard/student', [
-			'students' => $students,
-			'pager' => $studentModel->pager,
-			'q' => $q,
-			'class' => $class,
-			'section' => $section,
-			'sections' => $sections,
+				'students' => $students,
+				'pager' => $studentModel->pager,
+				'q' => $q,
+				'class' => $class,
+				'section' => $section,
+				'sections' => $sections,
 		]);
 	}
 
@@ -431,10 +431,10 @@ class Dashboard extends Controller
 
 			// Check if result already exists
 			$existing = $resultModel->where('student_id', $student['id'])
-			   ->where('subject_id', $subjectId)
-			   ->where('exam', $exam)
-			   ->where('year', $year)
-			   ->first();
+				->where('subject_id', $subjectId)
+				->where('exam', $exam)
+				->where('year', $year)
+				->first();
 
 			$data = [
 				'student_id' => $student['id'],
@@ -445,12 +445,12 @@ class Dashboard extends Controller
 				'updated_at' => date('Y-m-d H:i:s'),
 			];
 
-			if ($existing) {
-				$resultModel->update($existing['id'], $data);
-			} else {
-				$data['created_at'] = date('Y-m-d H:i:s');
-				$resultModel->insert($data);
-			}
+				if ($existing) {
+					$resultModel->update($existing['id'], $data);
+				} else {
+					$data['created_at'] = date('Y-m-d H:i:s');
+					$resultModel->insert($data);
+				}
 		}
 
 		return redirect()->back()->with('message', 'Results submitted successfully.');
@@ -471,87 +471,87 @@ class Dashboard extends Controller
 		}
 
 		return view('dashboard/student_view', [
-			'student' => $student
+				'student' => $student
 		]);
 	}
 	public function editStudent($id)
 	{
-		    $model = new \App\Models\StudentModel();
-		        $student = $model->find($id);
+		$model = new \App\Models\StudentModel();
+		$student = $model->find($id);
 
-		        if (!$student) {
-				        return redirect()->to('ad-student')->with('error', 'Student not found.');
-					    }
+		if (!$student) {
+			return redirect()->to('ad-student')->with('error', 'Student not found.');
+		}
 
-			    return view('dashboard/student_edit', ['student' => $student]);
+		return view('dashboard/student_edit', ['student' => $student]);
 	}
 
 	public function updateStudent($id)
 	{
-		    $model = new \App\Models\StudentModel();
-		        $student = $model->find($id);
+		$model = new \App\Models\StudentModel();
+		$student = $model->find($id);
 
-		        if (!$student) {
-				        return redirect()->to('ad-student')->with('error', 'Student not found.');
-					    }
+		if (!$student) {
+			return redirect()->to('ad-student')->with('error', 'Student not found.');
+		}
 
-			    $data = $this->request->getPost([
-				            'student_name', 'roll', 'class', 'section', 'esif', 'father_name',
-					            'mother_name', 'dob', 'gender', 'phone', 'birth_registration_number',
-						            'father_nid_number', 'mother_nid_number', 'religion', 'blood_group'
-							        ]);
+		$data = $this->request->getPost([
+				'student_name', 'roll', 'class', 'section', 'esif', 'father_name',
+				'mother_name', 'dob', 'gender', 'phone', 'birth_registration_number',
+				'father_nid_number', 'mother_nid_number', 'religion', 'blood_group'
+		]);
 
-			    $model->update($id, $data);
+		$model->update($id, $data);
 
-			    return redirect()->to('admin/students/view/' . $id)->with('message', 'Student updated successfully.');
+		return redirect()->to('admin/students/view/' . $id)->with('message', 'Student updated successfully.');
 	}
 
 	public function editStudentPhoto($id)
 	{
-		    $model = new \App\Models\StudentModel();
-		        $student = $model->find($id);
+		$model = new \App\Models\StudentModel();
+		$student = $model->find($id);
 
-		        if (!$student) {
-				        return redirect()->to('admin/students')->with('error', 'Student not found.');
-					    }
+		if (!$student) {
+			return redirect()->to('admin/students')->with('error', 'Student not found.');
+		}
 
-			    return view('dashboard/edit_photo', ['student' => $student]);
+		return view('dashboard/edit_photo', ['student' => $student]);
 	}
-	
-	
+
+
 	function updateStudentPhoto($id)
 	{
-		    $model = new \App\Models\StudentModel();
-		        $student = $model->find($id);
+		$model = new \App\Models\StudentModel();
+		$student = $model->find($id);
 
-		        if (!$student) {
-				        return redirect()->to('admin/students')->with('error', 'Student not found.');
-					    }
+		if (!$student) {
+			return redirect()->to('admin/students')->with('error', 'Student not found.');
+		}
 
-			    $file = $this->request->getFile('student_pic');
+		$file = $this->request->getFile('student_pic');
 
-			    if ($file && $file->isValid() && !$file->hasMoved()) {
-				            $newName = $file->getRandomName();
-					            $file->move('uploads/students', $newName);
+		if ($file && $file->isValid() && !$file->hasMoved()) {
+			$newName = $file->getRandomName();
+			$file->move('uploads/students', $newName);
 
-					            // ✅ Delete old file (if not default and it exists)
-					    $oldPath = FCPATH . $student['student_pic'];
-					    
-					                    if (!empty($student['student_pic']) && file_exists($oldPath)) {
-					                                 unlink($oldPath);
-					                                         }
-					    
-					                                                 // ✅ Save new file path to DB
-					                                                         $model->update($id, [
-					                                                                     'student_pic' => 'uploads/students/' . $newName,
-					                                                                             ]);
-					    
-					                                                                                     return redirect()->to('admin/students/view/' . $id)->with('message', 'Photo updated.');
-					                                                                                         }
-					    
-					                                                                                             return redirect()->back()->with('error', 'Photo upload failed.');
-					                                                                                             }
-					    
+			// ✅ Delete old file (if not default and it exists)
+			$oldPath = FCPATH . $student['student_pic'];
+
+			if (!empty($student['student_pic']) && file_exists($oldPath)) {
+				unlink($oldPath);
+			}
+
+			// ✅ Save new file path to DB
+			$model->update($id, [
+					'student_pic' => 'uploads/students/' . $newName,
+			]);
+
+			return redirect()->to('admin/students/view/' . $id)->with('message', 'Photo updated.');
+		}
+
+		return redirect()->back()->with('error', 'Photo upload failed.');
+	}
+
 
 
 
