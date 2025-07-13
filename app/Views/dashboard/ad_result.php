@@ -40,8 +40,7 @@
                         <div class="row mb-3">
                             <div class="col-md-4 offset-md-4">
                                 <select name="exam" class="form-select text-center" required>
-                                    <option selected disabled>Select Exam</option>
-                                    <option value="Midterm">Midterm</option>
+                                    <option value="half-yearly">Half yearly exam</option>
                                     <option value="Final">Final</option>
                                     <option value="Class Test">Class Test</option>
                                 </select>
