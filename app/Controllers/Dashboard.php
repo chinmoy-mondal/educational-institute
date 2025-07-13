@@ -7,6 +7,7 @@ use App\Models\UserModel;
 use CodeIgniter\Controller;
 use App\Models\CalendarModel;
 use App\Models\SubjectModel;
+use App\Models\ResultModel;
 
 class Dashboard extends Controller
 {
