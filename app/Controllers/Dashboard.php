@@ -457,15 +457,13 @@ class Dashboard extends Controller
 		    $resultModel   = new ResultModel();
 		    $studentModel  = new StudentModel();
 		    $subjectModel  = new SubjectModel();
+		    $userModel     = new UserModel();
 
-		    $results = $resultModel->orderBy('id', 'DESC')->findAll();
-
-		    // Join student & subject names
-		    foreach ($results as &$r) {
-			    $r['student'] = $studentModel->find($r['student_id'])['student_name'] ?? 'Unknown';
-			    $r['subject'] = $subjectModel->find($r['subject_id'])['subject'] ?? 'Unknown';
-		    }
-		    return view('dashboard/resultCheck', ['results' => $results]);
+		    $user = $userModel -> find(1);
+		    echo '<pre>';
+		    print_r($user);
+		    echo '</pre>';
+		   // return view('dashboard/resultCheck', ['results' => $results]);
 	}
 
 	public function viewStudent($id)
@@ -474,7 +472,7 @@ class Dashboard extends Controller
 		if (!$session->get('isLoggedIn')) {
 			return redirect()->to(base_url('login'));
 		}
-		$studentModel = new \App\Models\StudentModel();
+		$studentModel = new StudentModel();
 
 		$student = $studentModel->find($id);
 
@@ -488,7 +486,7 @@ class Dashboard extends Controller
 	}
 	public function editStudent($id)
 	{
-		$model = new \App\Models\StudentModel();
+		$model = new StudentModel();
 		$student = $model->find($id);
 
 		if (!$student) {
@@ -500,7 +498,7 @@ class Dashboard extends Controller
 
 	public function updateStudent($id)
 	{
-		$model = new \App\Models\StudentModel();
+		$model = new StudentModel();
 		$student = $model->find($id);
 
 		if (!$student) {
@@ -520,7 +518,7 @@ class Dashboard extends Controller
 
 	public function editStudentPhoto($id)
 	{
-		$model = new \App\Models\StudentModel();
+		$model = new StudentModel();
 		$student = $model->find($id);
 
 		if (!$student) {
@@ -533,7 +531,7 @@ class Dashboard extends Controller
 
 	function updateStudentPhoto($id)
 	{
-		$model = new \App\Models\StudentModel();
+		$model = new StudentModel();
 		$student = $model->find($id);
 
 		if (!$student) {
@@ -563,8 +561,4 @@ class Dashboard extends Controller
 
 		return redirect()->back()->with('error', 'Photo upload failed.');
 	}
-
-
-
-
 }
