@@ -149,6 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const addBtn = e.target.closest('.add-subject');
     if (!addBtn) return;
 
+    e.preventDefault();
+
     const sid   = addBtn.dataset.sid;
     const sname = addBtn.dataset.sname;
     const hidden = document.getElementById('subjectIds');
