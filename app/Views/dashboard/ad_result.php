@@ -46,16 +46,16 @@
 
                     <form method="post" action="<?= site_url('results/submit') ?>" onsubmit="return validateTotals();">
                         <?= csrf_field() ?>
-                        <div class="row mb-3">
-                            <div class="col-md-4 offset-md-4">
-                                <select name="exam" class="form-select text-center" required>
-                                    <option value="half-yearly">Half Yearly Exam</option>
-                                    <option value="Final">Final</option>
-                                    <option value="Class Test">Class Test</option>
-                                </select>
-                            </div>
-                        </div>
-
+<div class="mb-3 d-flex justify-content-between align-items-center flex-wrap">
+    <div>
+        <label for="exam" class="me-2 fw-bold">Select Exam:</label>
+        <select name="exam" id="exam" class="form-select d-inline-block w-auto" required>
+            <option value="half-yearly">Half Yearly</option>
+            <option value="Final">Final</option>
+            <option value="Class Test">Class Test</option>
+        </select>
+    </div>
+</div>
                         <input type="hidden" name="year" value="<?= date('Y') ?>">
                         <input type="hidden" name="subject_id" value="<?= esc($subject['id']) ?>">
 
