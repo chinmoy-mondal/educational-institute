@@ -93,6 +93,7 @@
             <h3 class="card-title mb-0"><i class="fas fa-book"></i> Subject List</h3>
           </div>
           <div class="card-body p-0">
+		<div class="table-responsive">
             <table class="table table-bordered table-hover m-0">
             	<thead class="bg-info text-white text-center">
 		  <tr>
@@ -121,6 +122,7 @@
 		  <?php endforeach; ?>
 		</tbody>
 	</table>
+		</div>
           </div>
         </div>
       </div> <!-- /col-md-6 -->
