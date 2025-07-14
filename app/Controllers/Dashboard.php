@@ -226,41 +226,6 @@ class Dashboard extends Controller
 		}
 	}
 
-	public function result($userId, $subjectId)
-	{
-		$userModel     = new UserModel();
-		$subjectModel  = new SubjectModel();
-		$studentModel  = new StudentModel();   // ⬅ new
-
-		// ── Fetch teacher and subject ─────────────────────────────
-		$user    = $userModel->find($userId);
-		$subject = $subjectModel->find($subjectId);
-
-		// custom 404 if either is missing
-		if (!$user || !$subject) {
-			$routes   = \Config\Services::routes();
-			$override = $routes->get404Override();
-			return is_callable($override) ? $override() : null;
-		}
-
-		// ── Pull students in the same class & section ─────────────
-		$students = $studentModel
-			->where('class', $subject['class'])
-			->groupStart()                       // ( ... )
-			->where('section', $subject['section'])   // exact match
-			->orWhere('section', 'n/a')                 // empty string ⇒ “all sections”
-			->orWhere('section', null)               // NULL safety (if you use NULLs)
-			->orLike('section', $subject['section']) // partial / substring match
-			->groupEnd()                        // )
-			->orderBy('roll', 'ASC')
-			->findAll();
-		// ── Send everything to the view ───────────────────────────
-		return view('dashboard/ad_result', [
-				'user'     => $user,
-				'subject'  => $subject,
-				'students' => $students,
-		]);
-	}
 
 	public function teacher_management()
 	{
@@ -402,6 +367,41 @@ class Dashboard extends Controller
 	}
 
 
+	public function result($userId, $subjectId)
+	{
+		$userModel     = new UserModel();
+		$subjectModel  = new SubjectModel();
+		$studentModel  = new StudentModel();   // ⬅ new
+
+		// ── Fetch teacher and subject ─────────────────────────────
+		$user    = $userModel->find($userId);
+		$subject = $subjectModel->find($subjectId);
+
+		// custom 404 if either is missing
+		if (!$user || !$subject) {
+			$routes   = \Config\Services::routes();
+			$override = $routes->get404Override();
+			return is_callable($override) ? $override() : null;
+		}
+
+		// ── Pull students in the same class & section ─────────────
+		$students = $studentModel
+			->where('class', $subject['class'])
+			->groupStart()                       // ( ... )
+			->where('section', $subject['section'])   // exact match
+			->orWhere('section', 'n/a')                 // empty string ⇒ “all sections”
+			->orWhere('section', null)               // NULL safety (if you use NULLs)
+			->orLike('section', $subject['section']) // partial / substring match
+			->groupEnd()                        // )
+			->orderBy('roll', 'ASC')
+			->findAll();
+		// ── Send everything to the view ───────────────────────────
+		return view('dashboard/ad_result', [
+				'user'     => $user,
+				'subject'  => $subject,
+				'students' => $students,
+		]);
+	}
 
 
 	public function submitResults()
@@ -450,6 +450,22 @@ class Dashboard extends Controller
 		}
 
 		return redirect()->back()->with('message', 'Results submitted successfully.');
+	}
+
+	public function ResultCheck()
+	{
+		    $resultModel   = new ResultModel();
+		    $studentModel  = new StudentModel();
+		    $subjectModel  = new SubjectModel();
+
+		    $results = $resultModel->orderBy('id', 'DESC')->findAll();
+
+		    // Join student & subject names
+		    foreach ($results as &$r) {
+			    $r['student'] = $studentModel->find($r['student_id'])['student_name'] ?? 'Unknown';
+			    $r['subject'] = $subjectModel->find($r['subject_id'])['subject'] ?? 'Unknown';
+		    }
+		    return view('dashboard/resultCheck', ['results' => $results]);
 	}
 
 	public function viewStudent($id)
