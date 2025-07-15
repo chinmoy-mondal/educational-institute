@@ -58,7 +58,7 @@
 
       <!-- Photo -->
       <div class="d-flex justify-content-center mb-3">
-        <img src="<?= esc($student['photo']) ?>" alt="Photo" class="photo" />
+        <img src="<?= esc($student['student_pic'] ?? base_url('public/assets/img/default.png')) ?>" alt="Photo" class="photo" />
       </div>
 
       <!-- Info -->
