@@ -90,13 +90,13 @@
     <!-- BACK -->
     <div id="card-back" class="id-card" style="background-image: url('<?= base_url("public/assets/img/bg-back.png") ?>');">
       <!-- QR Code -->
-      <div class="text-center mb-3">
-        <img
-          src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=ID:<?= urlencode($student['id']) ?>-BACK"
-          class="qr-img"
-          alt="QR Back"
-        />
-      </div>
+	<div class="text-center mb-3">
+	    <img
+		src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=<?= urlencode('https://mulss.edu.bd/student?q=' . $student['id'] . '&class=&section=') ?>"
+		class="qr-img"
+		alt="Student QR"
+	    />
+	</div>
 
       <!-- Emergency Contact -->
       <h5 class="text-center fw-bold text-white">Emergency Contact</h5>
@@ -116,7 +116,7 @@
       </div>
 
       <div class="text-center small text-white mt-2"><?= esc($student['school_name']) ?></div>      
-      <div class="text-center small text-white mt-1">Keshabpur, Jessor</div>
+      <div class="text-center small text-white mt-1">Keshabpur, Jessore</div>
     </div>
   </div>
 
