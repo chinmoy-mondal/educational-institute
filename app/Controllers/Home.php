@@ -67,7 +67,7 @@ class Home extends BaseController
 		$perPage = 20;
 		// Sort and paginate
 		$students = $builder
-			->orderBy('class ASC, roll ASC')
+			->orderBy('CAST(class as UNSIGNED) ASC')
 			->paginate($perPage, 'bootstrap');
 
 		// For section dropdown
@@ -85,5 +85,19 @@ class Home extends BaseController
 				'section' => $section,
 				'sections' => $sections,
 		]);
+	}
+	public function idCard($id)
+	{
+		$studentModel = new StudentModel();
+		$student = $studentModel->find($id);
+
+		if (!$student) {
+			throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Student not found");
+		}
+
+		$school_name = "MULGRAM SECONDARY SCHOOL";
+
+
+		return view('idcard/view', ['student' => $student]);
 	}
 }

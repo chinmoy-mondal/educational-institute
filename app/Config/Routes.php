@@ -17,6 +17,7 @@ $routes->get('/user', 'User::index');
 $routes->get('/print-admit/(:num)', 'AdmitCard::index/$1');
 $routes->get('/print-admit', 'AdmitCard::index');
 $routes->get('/student', 'Home::student');
+$routes->get('/idcard/(:num)', 'Home::idCard/$1');
 
 $routes->get('/contain', 'Contain::index');
 $routes->get('/about', 'About::index');
