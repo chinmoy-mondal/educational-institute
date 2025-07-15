@@ -99,9 +99,9 @@
 	</div>
 
       <!-- Emergency Contact -->
-	<div class="text-white small px-3">
-	  <h5 class="fw-bold text-white mb-3">
-	   </i>Emergency Contact
+      <div class="text-white small px-3 mx-auto" style="max-width: 300px;">
+	  <h5 class="fw-bold text-white text-center mb-3">
+	    <i class="fas fa-phone-alt me-2"></i>Emergency Contact
 	  </h5>
 	  <div class="mb-1">
 	    <i class="fas fa-phone me-2"></i> +880-1309-115832
@@ -112,8 +112,8 @@
 	  <div class="mb-1">
 	    <i class="fas fa-globe me-2"></i> www.mulss.edu.bd
 	  </div>
-	</div>
-      <br><br>
+      </div>
+	<br><br>
 
       <!-- Notes -->
       <div class="mt-3 text-white small px-3">
