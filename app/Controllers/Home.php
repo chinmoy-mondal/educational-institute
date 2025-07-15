@@ -96,6 +96,7 @@ class Home extends BaseController
 		}
 
 		$student['school_name'] = "MULGRAM SECONDARY SCHOOL";
+		$student['eiin'] = "EIIN-115832"; 
 		$student['school_name'] = "MULGRAM SECONDARY SCHOOL";
 		$student['logo'] = base_url('public/assets/img/logo.jpg');
 		$student['signature'] = base_url('public/assets/img/signature.png');
