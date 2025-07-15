@@ -100,7 +100,7 @@
 
       <!-- Emergency Contact -->
       <h5 class="text-center fw-bold text-white">Emergency Contact</h5>
-      <h6 class="text-center text-white"><?= esc($student['phone']) ?></h6>
+      <h6 class="text-center text-white">+880-1309-115832</h6>
       <h6 class="text-center text-white">s115832mul@gmail.com</h6>
       <br><br>
 
