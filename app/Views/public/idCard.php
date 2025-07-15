@@ -99,10 +99,20 @@
 	</div>
 
       <!-- Emergency Contact -->
-      <h5 class="text-center fw-bold text-white">Emergency Contact</h5>
-      <h6 class="text-center text-white">+880-1309-115832</h6>
-      <h6 class="text-center text-white">s115832mul@gmail.com</h6>
-      <h6 class="text-center text-white">www.mulss.edu.bd</h6>
+	<div class="text-white small px-3">
+	  <h5 class="fw-bold text-white mb-3">
+	   </i>Emergency Contact
+	  </h5>
+	  <div class="mb-1">
+	    <i class="fas fa-phone me-2"></i> +880-1309-115832
+	  </div>
+	  <div class="mb-1">
+	    <i class="fas fa-envelope me-2"></i> s115832mul@gmail.com
+	  </div>
+	  <div class="mb-1">
+	    <i class="fas fa-globe me-2"></i> www.mulss.edu.bd
+	  </div>
+	</div>
       <br><br>
 
       <!-- Notes -->
