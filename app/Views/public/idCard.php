@@ -58,11 +58,11 @@
 
       <!-- Photo -->
       <div class="d-flex justify-content-center mb-3">
-	<?php if (!empty($student['student_pic']) && file_exists(FCPATH . 'uploads/students/' . $student['student_pic'])): ?>
-	<img src="<?= base_url('uploads/students/' . $student['student_pic']) ?>" alt="Student Photo" class="img-thumbnail w-100">
-	<?php else: ?>
-	<img src="<?= base_url('public/assets/img/default.png') ?>" alt="No Photo" class="img-thumbnail w-100">
-	<?php endif; ?>
+	      <?php if (!empty($student['student_pic'])): ?>
+		<img src="/<?= esc($student['student_pic']) ?>" alt="Student Photo" class="img-thumbnail w-100">
+	      <?php else: ?>
+		<img src="<?= base_url('public/assets/img/default.png') ?>" alt="No Photo" class="img-thumbnail w-100">
+	      <?php endif; ?>
       </div>
 
       <!-- Info -->
@@ -71,7 +71,7 @@
         <p class="mb-0 fw-semibold">STUDENT</p>
         <p class="mb-0 fw-semibold">ID NO: <?= esc($student['roll']) ?></p>
         <p class="mb-0">Blood Group: <?= esc($student['blood_group']) ?></p>
-        <p class="mb-0">Phone: <?= esc($student['phone']) ?></p>
+       <!-- <p class="mb-0">Phone: <?=// esc($student['phone']) ?></p> -->
       </div>
 
       <!-- Signature -->
