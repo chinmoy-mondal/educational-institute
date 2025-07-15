@@ -58,7 +58,11 @@
 
       <!-- Photo -->
       <div class="d-flex justify-content-center mb-3">
-        <img src="<?= esc($student['student_pic'] ?? base_url('public/assets/img/default.png')) ?>" alt="Photo" class="photo" />
+	<?php if (!empty($student['student_pic']) && file_exists(FCPATH . 'uploads/students/' . $student['student_pic'])): ?>
+	<img src="<?= base_url('uploads/students/' . $student['student_pic']) ?>" alt="Student Photo" class="img-thumbnail w-100">
+	<?php else: ?>
+	<img src="<?= base_url('public/assets/img/default.png') ?>" alt="No Photo" class="img-thumbnail w-100">
+	<?php endif; ?>
       </div>
 
       <!-- Info -->
