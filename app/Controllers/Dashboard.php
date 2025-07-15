@@ -346,7 +346,7 @@ class Dashboard extends Controller
 		$perPage = 20;
 		// Sort and paginate
 		$students = $builder
-			->orderBy('class ASC')
+			->orderBy('CAST(class as UNSIGNED) ASC')
 			->paginate($perPage, 'bootstrap');
 
 		// For section dropdown
