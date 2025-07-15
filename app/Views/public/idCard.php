@@ -45,7 +45,7 @@
   <div class="d-flex flex-wrap justify-content-center gap-4">
 
     <!-- FRONT -->
-    <div id="card-front" class="id-card" style="background-image: url('<?= base_url("public/uploads/bg-front.png") ?>');">
+    <div id="card-front" class="id-card" style="background-image: url('<?= base_url("public/assets/img/bg-front.png") ?>');">
       <!-- Logo -->
       <div class="text-center mb-2">
         <img src="<?= esc($student['logo']) ?>" height="90" alt="Logo" />
@@ -88,7 +88,7 @@
     </div>
 
     <!-- BACK -->
-    <div id="card-back" class="id-card" style="background-image: url('<?= base_url("public/uploads/bg-back.png") ?>');">
+    <div id="card-back" class="id-card" style="background-image: url('<?= base_url("public/assets/img/bg-back.png") ?>');">
       <!-- QR Code -->
       <div class="text-center mb-3">
         <img
