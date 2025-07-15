@@ -88,14 +88,18 @@ class Home extends BaseController
 	}
 	public function idCard($id)
 	{
-		$studentModel = new \App\Models\StudentModel();
+		$studentModel = new StudentModel();
 		$student = $studentModel->find($id);
 
 		if (!$student) {
-			echo "error";
+			echo "no result found";
 		}
 
+		$student['school_name'] = "MULGRAM SECONDARY SCHOOL";
+		$student['school_name'] = "MULGRAM SECONDARY SCHOOL";
+		$student['logo'] = base_url('public/assets/img/logo.jpg');
+		$student['signature'] = base_url('public/assets/img/signature.png');
 
-	//	return view('idcard/view', ['student' => $student]);
+		return view('idcard/view', ['student' => $student]);
 	}
 }
