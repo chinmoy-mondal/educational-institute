@@ -56,6 +56,8 @@
                                         <th>Roll</th>
                                         <th>Class</th>
                                         <th>Section</th>
+					<th>ID card</th>
+https://mulss.edu.bd/idcard/204
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -66,6 +68,11 @@
                                             <td><?= esc($s['roll']) ?></td>
                                             <td><?= esc($s['class']) ?></td>
                                             <td><?= esc($s['section']) ?></td>
+					    <td>
+						<a href="<?= base_url('idcard/' . $s['id']) ?>" class="btn btn-sm btn-primary" target="_blank">
+						 <i class="fas fa-id-card-alt me-1"></i> ID Card
+						</a>
+					    </td>
                                         </tr>
                                     <?php endforeach ?>
                                 </tbody>
