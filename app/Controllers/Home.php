@@ -100,6 +100,6 @@ class Home extends BaseController
 		$student['logo'] = base_url('public/assets/img/logo.jpg');
 		$student['signature'] = base_url('public/assets/img/signature.png');
 
-		return view('idcard/view', ['student' => $student]);
+		return view('public/idCard', ['student' => $student]);
 	}
 }
