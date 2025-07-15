@@ -99,13 +99,8 @@
 	</div>
 
       <!-- Emergency Contact -->
-  <h5 class="fw-bold text-white mb-3">
-    <i class="fas fa-phone-alt me-2"></i>Emergency Contact
-  </h5>
-      <div class="text-white small px-3 mx-auto" style="max-width: 300px;">
-	  <h5 class="fw-bold text-white text-center mb-3">
-	    <i class="fas fa-phone-alt me-2"></i>Emergency Contact
-	  </h5>
+      <h5 class="text-center fw-bold text-white">Emergency Contact</h5>
+	<div class="text-white small px-3 mx-auto" style="max-width: 300px;">
 	  <div class="mb-1">
 	    <i class="fas fa-phone me-2"></i> +880-1309-115832
 	  </div>
