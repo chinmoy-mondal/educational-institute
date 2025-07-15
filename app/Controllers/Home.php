@@ -88,16 +88,14 @@ class Home extends BaseController
 	}
 	public function idCard($id)
 	{
-		$studentModel = new StudentModel();
+		$studentModel = new \App\Models\StudentModel();
 		$student = $studentModel->find($id);
 
 		if (!$student) {
-			throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Student not found");
+			echo "error";
 		}
 
-		$school_name = "MULGRAM SECONDARY SCHOOL";
 
-
-		return view('idcard/view', ['student' => $student]);
+	//	return view('idcard/view', ['student' => $student]);
 	}
 }
