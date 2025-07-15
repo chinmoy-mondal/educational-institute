@@ -69,7 +69,7 @@
       <div class="text-center text-black mb-1">
         <h4 class="mb-1 fw-bold"><?= esc($student['student_name']) ?></h4>
         <p class="mb-0 fw-semibold">STUDENT</p>
-        <p class="mb-0 fw-semibold">ID NO: <?= esc($student['roll']) ?></p>
+        <p class="mb-0 fw-semibold">ID NO: <?= esc($student['id']) ?></p>
         <p class="mb-0">Blood Group: <?= esc($student['blood_group']) ?></p>
       
       </div>
