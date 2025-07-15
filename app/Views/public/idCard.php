@@ -112,10 +112,10 @@
 	    <i class="fas fa-globe me-2"></i> www.mulss.edu.bd
 	  </div>
       </div>
-	<br><br>
+	<br>
 
       <!-- Notes -->
-      <div class="mt-3 text-white small px-3">
+      <div class="mt-3 text-white small px-3 mx-auto">
         <strong>Note:</strong>
         <ul class="mt-1 mb-2 ps-3" style="list-style-type: disc;">
           <li>This card is used for attendance</li>
@@ -124,7 +124,7 @@
           <li>Please return the card if found</li>
         </ul>
       </div>
-
+	<br>
       <div class="text-center small text-white mt-2"><?= esc($student['school_name']) ?></div>      
       <div class="text-center small text-white mt-1">Keshabpur, Jessore</div>
     </div>
