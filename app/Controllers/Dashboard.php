@@ -36,16 +36,24 @@ class Dashboard extends Controller
 		$total_cost = 42000.00;
 
 
-		return view('dashboard/index', [
-				'title' => 'Admin Dashboard',
-				'total_students' => $total_students,
-				'total_users' => $total_users,
-				'total_new_users' => $total_new_users,
-				'total_applications' => $total_applications,
-				'total_exams' => $total_exams,
-				'total_income' => $total_income,
-				'total_cost' => $total_cost
-		]);
+		$data = [
+			'title' => 'Dashboard',
+			'activeSection' => 'dashboard',
+			'navbarItems' => [
+			    ['label' => 'Dashboard', 'url' => base_url('dashboard')],
+			    ['label' => 'Calendar', 'url' => base_url('calendar')],
+			    ['label' => 'Result', 'url' => base_url('ad-result')],
+			],
+			'total_students' => $total_students,
+			'total_users' => $total_users,
+			'total_new_users' => $total_new_users,
+			'total_applications' => $total_applications,
+			'total_exams' => $total_exams,
+			'total_income' => $total_income,
+			'total_cost' => $total_cost
+		    ];
+
+		    return view('dashboard/index', $data);
 	}
 
 	public function profile()
