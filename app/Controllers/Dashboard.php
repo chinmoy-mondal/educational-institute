@@ -40,9 +40,9 @@ class Dashboard extends Controller
 			'title' => 'Dashboard',
 			'activeSection' => 'dashboard',
 			'navbarItems' => [
-			    ['label' => 'Dashboard', 'url' => base_url('dashboard')],
-			    ['label' => 'Calendar', 'url' => base_url('calendar')],
-			    ['label' => 'Result', 'url' => base_url('ad-result')],
+				['label' => 'Dashboard', 'url' => base_url('dashboard')],
+				['label' => 'Calendar', 'url' => base_url('calendar')],
+				['label' => 'Result', 'url' => base_url('ad-result')],
 			],
 			'total_students' => $total_students,
 			'total_users' => $total_users,
@@ -51,9 +51,9 @@ class Dashboard extends Controller
 			'total_exams' => $total_exams,
 			'total_income' => $total_income,
 			'total_cost' => $total_cost
-		    ];
+		];
 
-		    return view('dashboard/index', $data);
+			return view('dashboard/index', $data);
 	}
 
 	public function profile()
@@ -69,8 +69,18 @@ class Dashboard extends Controller
 			'phone' => $session->get('phone'),
 			'role' => $session->get('role')
 		];
+		$data = [
+			'title' => 'Dashboard',
+			'activeSection' => 'dashboard',
+			'navbarItems' => [
+				['label' => 'Dashboard', 'url' => base_url('dashboard')],
+				['label' => 'Calendar', 'url' => base_url('calendar')],
+				['label' => 'Result', 'url' => base_url('ad-result')],
+			],
+			'user' => $user
+		];
 
-		return view('dashboard/profile', ['user' => $user]);
+			return view('dashboard/profile', $data);
 	}
 	public function calendar()
 	{
@@ -86,7 +96,18 @@ class Dashboard extends Controller
 			'role' => $session->get('role')
 		];
 
-		return view('dashboard/calendar', ['user' => $user]);
+		$data = [
+			'title' => 'Dashboard',
+			'activeSection' => 'dashboard',
+			'navbarItems' => [
+				['label' => 'Dashboard', 'url' => base_url('dashboard')],
+				['label' => 'Calendar', 'url' => base_url('calendar')],
+				['label' => 'Result', 'url' => base_url('ad-result')],
+			],
+			'user' => $user
+		];
+
+			return view('dashboard/profile', $data);
 	}
 
 	public function events()
@@ -172,13 +193,20 @@ class Dashboard extends Controller
 			->where('account_status !=',0)
 			->findAll();
 		$totalUsers = count($users);
-		return view('dashboard/ad_teacher_list', [
-				'title' => 'Admin Dashboard',
-				'newUsers' => $newUsers,
-				'total_newUsers' => $totalNewUsers,
-				'users'=>$users,
-				'total_users'=>$totalUsers
-		]);
+		$data = [
+			'title' => 'Admin Dashboard',
+			'activeSection' => 'teacher',
+			'navbarItems' => [
+				['label' => 'Teacher List', 'url' => base_url('teacher_management')],
+				['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
+			],
+			'newUsers' => $newUsers,
+			'total_newUsers' => $totalNewUsers,
+			'users' => $users,
+			'total_users' => $totalUsers
+		];
+
+			return view('dashboard/ad_teacher_list', $data);
 
 	}
 
@@ -195,12 +223,18 @@ class Dashboard extends Controller
 			->findAll();
 		$totalNewUsers = count($newUsers);
 
-		return view('dashboard/ad_new_user', [
-				'title' => 'Admin Dashboard',
-				'newUsers' => $newUsers,
-				'total_newUsers' => $totalNewUsers
-		]);
+		$data = [
+			'title' => 'Admin Dashboard',
+			'activeSection' => 'teacher',
+			'navbarItems' => [
+				['label' => 'New Users', 'url' => base_url('ad_new_user')],
+				['label' => 'All Teachers', 'url' => base_url('teacher_management')],
+			],
+			'newUsers' => $newUsers,
+			'total_newUsers' => $totalNewUsers
+		];
 
+			return view('dashboard/ad_new_user', $data);
 	}
 
 	public function user_permit($id)
@@ -247,12 +281,19 @@ class Dashboard extends Controller
 
 		$subjects = $subjectModel->orderBy('id')->findAll(); // ✅ fixed line
 		$users    = $userModel->where('account_status !=', 0)->findAll();
+		$data = [
+			'title'    => 'Teacher Management',
+			'activeSection' => 'teacher',
+			'navbarItems' => [
+				['label' => 'Teacher List', 'url' => base_url('teacher_management')],
+				['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
+				['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
+			],
+			'users'    => $users,
+			'subjects' => $subjects
+		];
 
-		return view('dashboard/teacher_management', [
-				'title'    => 'Teacher Management',
-				'users'    => $users,
-				'subjects' => $subjects, // ✅ must match what your view expects
-		]);
+			return view('dashboard/teacher_management', $data);
 	}
 
 	public function teacherSubUpdate()
@@ -309,11 +350,18 @@ class Dashboard extends Controller
 				->orderBy('class ASC')
 				->findAll();
 		}
-		return view('dashboard/assign_subject', [
-				'user'     => $user,
-				'subjects' => $subjects,
-		]);
+		$data = [
+			'title'    => 'Assign Subject',
+			'activeSection' => 'teacher',
+			'navbarItems' => [
+				['label' => 'Teacher List', 'url' => base_url('teacher_management')],
+				['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
+			],
+			'user'     => $user,
+			'subjects' => $subjects
+		];
 
+			return view('dashboard/assign_subject', $data);
 
 
 	}
@@ -363,15 +411,23 @@ class Dashboard extends Controller
 			->orderBy('section')
 			->findAll();
 
-		// Load view
-		return view('dashboard/student', [
-				'students' => $students,
-				'pager' => $studentModel->pager,
-				'q' => $q,
-				'class' => $class,
-				'section' => $section,
-				'sections' => $sections,
-		]);
+		$data = [
+			'title' => 'Student Management',
+			'activeSection' => 'student',
+			'navbarItems' => [
+				['label' => 'Student List', 'url' => base_url('ad-student')],
+				['label' => 'Add Student', 'url' => base_url('student_create')],
+				['label' => 'Search Student', 'url' => base_url('student_search')],
+			],
+			'students' => $students,
+			'pager' => $studentModel->pager,
+			'q' => $q,
+			'class' => $class,
+			'section' => $section,
+			'sections' => $sections
+		];
+
+			return view('dashboard/student', $data);
 	}
 
 
@@ -404,11 +460,19 @@ class Dashboard extends Controller
 			->orderBy('roll', 'ASC')
 			->findAll();
 		// ── Send everything to the view ───────────────────────────
-		return view('dashboard/ad_result', [
-				'user'     => $user,
-				'subject'  => $subject,
-				'students' => $students,
-		]);
+		$data = [
+			'title'     => 'Result Entry',
+			'activeSection' => 'result',
+			'navbarItems' => [
+				['label' => 'Result Entry', 'url' => base_url('ad-result')],
+				['label' => 'Result Sheet', 'url' => base_url('result_sheet')],
+			],
+			'user'     => $user,
+			'subject'  => $subject,
+			'students' => $students
+		];
+
+			return view('dashboard/ad_result', $data);
 	}
 
 
@@ -462,16 +526,16 @@ class Dashboard extends Controller
 
 	public function ResultCheck()
 	{
-		    $resultModel   = new ResultModel();
-		    $studentModel  = new StudentModel();
-		    $subjectModel  = new SubjectModel();
-		    $userModel     = new UserModel();
+		$resultModel   = new ResultModel();
+		$studentModel  = new StudentModel();
+		$subjectModel  = new SubjectModel();
+		$userModel     = new UserModel();
 
-		    $user = $userModel -> find(1);
-		    echo '<pre>';
-		    print_r($user);
-		    echo '</pre>';
-		   // return view('dashboard/resultCheck', ['results' => $results]);
+		$user = $userModel -> find(1);
+		echo '<pre>';
+		print_r($user);
+		echo '</pre>';
+		// return view('dashboard/resultCheck', ['results' => $results]);
 	}
 
 	public function viewStudent($id)
@@ -487,10 +551,18 @@ class Dashboard extends Controller
 		if (!$student) {
 			return redirect()->back()->with('error', 'No data found');
 		}
+		$data = [
+			'title' => 'Student Details',
+			'activeSection' => 'student',
+			'navbarItems' => [
+				['label' => 'Student List', 'url' => base_url('ad-student')],
+				['label' => 'Add Student', 'url' => base_url('student_create')],
+				['label' => 'View Student', 'url' => current_url()],
+			],
+			'student' => $student
+		];
 
-		return view('dashboard/student_view', [
-				'student' => $student
-		]);
+			return view('dashboard/student_view', $data);
 	}
 	public function editStudent($id)
 	{
@@ -500,8 +572,18 @@ class Dashboard extends Controller
 		if (!$student) {
 			return redirect()->to('ad-student')->with('error', 'Student not found.');
 		}
+		$data = [
+			'title' => 'Edit Student',
+			'activeSection' => 'student',
+			'navbarItems' => [
+				['label' => 'Student List', 'url' => base_url('ad-student')],
+				['label' => 'Add Student', 'url' => base_url('student_create')],
+				['label' => 'Edit Student', 'url' => current_url()],
+			],
+			'student' => $student
+		];
 
-		return view('dashboard/student_edit', ['student' => $student]);
+			return view('dashboard/student_edit', $data);
 	}
 
 	public function updateStudent($id)
@@ -532,8 +614,17 @@ class Dashboard extends Controller
 		if (!$student) {
 			return redirect()->to('admin/students')->with('error', 'Student not found.');
 		}
+		$data = [
+			'title' => 'Edit Photo',
+			'activeSection' => 'student',
+			'navbarItems' => [
+				['label' => 'Student List', 'url' => base_url('ad-student')],
+				['label' => 'Edit Photo', 'url' => current_url()],
+			],
+			'student' => $student
+		];
 
-		return view('dashboard/edit_photo', ['student' => $student]);
+			return view('dashboard/edit_photo', $data);
 	}
 
 
