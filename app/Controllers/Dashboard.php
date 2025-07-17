@@ -108,7 +108,7 @@ class Dashboard extends Controller
 			'user' => $user
 		];
 
-			return view('dashboard/profile', $data);
+			return view('dashboard/calendar', $data);
 	}
 
 	public function events()
