@@ -43,6 +43,7 @@ class Dashboard extends Controller
 				['label' => 'Dashboard', 'url' => base_url('dashboard')],
 				['label' => 'Calendar', 'url' => base_url('calendar')],
 				['label' => 'Result', 'url' => base_url('ad-result')],
+				['label' => 'Accounts', 'url' => base_url('accounts')],
 			],
 			'total_students' => $total_students,
 			'total_users' => $total_users,
