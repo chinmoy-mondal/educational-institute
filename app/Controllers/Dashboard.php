@@ -35,26 +35,57 @@ class Dashboard extends Controller
 		$total_income = 150000.00;
 		$total_cost = 42000.00;
 
+$data = [
+    'title' => 'Dashboard',
+    'activeSection' => 'dashboard',
 
-		$data = [
-			'title' => 'Dashboard',
-			'activeSection' => 'dashboard',
-			'navbarItems' => [
-				['label' => 'Dashboard', 'url' => base_url('dashboard')],
-				['label' => 'Calendar', 'url' => base_url('calendar')],
-				['label' => 'Result', 'url' => base_url('ad-result')],
-				['label' => 'Accounts', 'url' => base_url('accounts')],
-			],
-			'total_students' => $total_students,
-			'total_users' => $total_users,
-			'total_new_users' => $total_new_users,
-			'total_applications' => $total_applications,
-			'total_exams' => $total_exams,
-			'total_income' => $total_income,
-			'total_cost' => $total_cost
-		];
+    // Navbar items
+    'navbarItems' => [
+        ['label' => 'Dashboard', 'url' => base_url('dashboard')],
+        ['label' => 'Calendar', 'url' => base_url('calendar')],
+        ['label' => 'Result', 'url' => base_url('ad-result')],
+        ['label' => 'Accounts', 'url' => base_url('accounts')],
+    ],
 
-			return view('dashboard/index', $data);
+    // Sidebar items
+    'sidebarItems' => [
+        [
+            'label' => 'Dashboard',
+            'url' => base_url('dashboard'),
+            'icon' => 'fas fa-tachometer-alt',
+            'section' => 'dashboard'
+        ],
+        [
+            'label' => 'Teacher Management',
+            'url' => base_url('teacher_management'),
+            'icon' => 'fas fa-chalkboard-teacher',
+            'section' => 'teacher'
+        ],
+        [
+            'label' => 'Student Management',
+            'url' => base_url('ad-student'),
+            'icon' => 'fas fa-user-graduate',
+            'section' => 'student'
+        ],
+        [
+            'label' => 'Calendar',
+            'url' => base_url('calendar'),
+            'icon' => 'fas fa-calendar-alt',
+            'section' => 'calendar'
+        ]
+    ],
+
+    // Dashboard stats
+    'total_students' => $total_students,
+    'total_users' => $total_users,
+    'total_new_users' => $total_new_users,
+    'total_applications' => $total_applications,
+    'total_exams' => $total_exams,
+    'total_income' => $total_income,
+    'total_cost' => $total_cost,
+];
+
+return view('dashboard/index', $data);
 	}
 
 	public function profile()
@@ -418,7 +449,7 @@ class Dashboard extends Controller
 			'navbarItems' => [
 				['label' => 'Student List', 'url' => base_url('ad-student')],
 				['label' => 'Add Student', 'url' => base_url('student_create')],
-				['label' => 'Search Student', 'url' => base_url('student_search')],
+				['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
 			],
 			'students' => $students,
 			'pager' => $studentModel->pager,

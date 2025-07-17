@@ -53,30 +53,31 @@ $routes->get('logout', 'Account::logout');
 #Dashboard
 $routes->get('/dashboard', 'Dashboard::index');
 $routes->get('/profile', 'Dashboard::profile');
+
 $routes->get('/calendar', 'Dashboard::calendar');
 $routes->get('/calendar/events', 'Dashboard::events');
 $routes->post('/calendar/add', 'Dashboard::addEvent');
 $routes->post('/calendar/update', 'Dashboard::updateEvent');
 $routes->post('/calendar/delete', 'Dashboard::deleteEvent');
+
 $routes->get('/ad_teacher_list', 'Dashboard::teachers');
 $routes->get('/ad_new_user', 'Dashboard::newUser');
 $routes->get('/teacher_management', 'Dashboard::teacher_management');
+
 $routes->post('/sub-update', 'Dashboard::teacherSubUpdate');
 $routes->get('/assignSubject/(:num)', 'Dashboard::assignSubject/$1');
+
 $routes->get('/ad-result/(:num)/(:num)', 'Dashboard::result/$1/$2');
 $routes->get('/admin/resultCheck', 'Dashboard::ResultCheck');
 $routes->post('/results/submit', 'Dashboard::submitResults');
 $routes->get('/ad-student', 'Dashboard::student');
+
 $routes->get('admin/students/view/(:num)', 'Dashboard::viewStudent/$1');
 $routes->get('admin/students/edit/(:num)', 'Dashboard::editStudent/$1');
 $routes->post('admin/students/update/(:num)', 'Dashboard::updateStudent/$1');
 $routes->get('admin/students/edit-photo/(:num)', 'Dashboard::editStudentPhoto/$1');
 $routes->post('admin/students/edit-photo/(:num)', 'Dashboard::updateStudentPhoto/$1');
-
-
-
-
-
+$routes->get('admin/stAssaginSubView', 'Dashboard::stAssaginSubView');
 
 $routes->get('/user_permit/(:num)', 'Dashboard::user_permit/$1');
 $routes->get('/user_delete/(:num)', 'Dashboard::user_delete/$1');
