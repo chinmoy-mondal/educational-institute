@@ -187,7 +187,7 @@ class Dashboard extends Controller
 	public function teachers()
 	{
 
-		$this->data['title'] = 'Calendar';
+		$this->data['title'] = 'Teacher Management';
 		$this->data['activeSection'] = 'teacher_management';
 
 		// Common navbar and sidebar for all views
