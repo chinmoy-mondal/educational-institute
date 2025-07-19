@@ -11,81 +11,49 @@ use App\Models\ResultModel;
 
 class Dashboard extends Controller
 {
-	public function index()
+	public function __construct()
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
+		$this->session = session();
+
+		// Redirect if not logged in
+		if (!$this->session->get('isLoggedIn')) {
+			redirect()->to(base_url('login'))->send(); // Redirect and stop execution
+			exit;
 		}
 
-		$studentModel = new StudentModel();
-		$userModel = new UserModel();
+		$this->studentModel = new StudentModel();
+		$this->userModel = new UserModel();
 
-		$total_students = $studentModel->countAll();
-		$total_users = $userModel
-			->where('account_status !=', 0)
-			->countAllResults();
+		// Common navbar and sidebar for all views
+		$this->data['navbarItems'] = [
+			['label' => 'Dashboard', 'url' => base_url('dashboard')],
+			['label' => 'Calendar', 'url' => base_url('calendar')],
+			['label' => 'Result', 'url' => base_url('ad-result')],
+			['label' => 'Accounts', 'url' => base_url('accounts')],
+		];
 
-		$total_new_users = $userModel
-			->where('account_status=', 0)
-			->countAllResults();
+		$this->data['sidebarItems'] = [
+			['label' => 'Dashboard', 'url' => base_url('dashboard'), 'icon' => 'fas fa-tachometer-alt', 'section' => 'dashboard'],
+			['label' => 'Teacher Management', 'url' => base_url('teacher_management'), 'icon' => 'fas fa-chalkboard-teacher', 'section' => 'teacher'],
+			['label' => 'Student Management', 'url' => base_url('ad-student'), 'icon' => 'fas fa-user-graduate', 'section' => 'student'],
+			['label' => 'Calendar', 'url' => base_url('calendar'), 'icon' => 'fas fa-calendar-alt', 'section' => 'calendar'],
+		];
+	}
+	public function index()
+	{
+						// Dashboard specific values
+		$this->data['title'] = 'Dashboard';
+		$this->data['activeSection'] = 'dashboard';
+		$this->data['total_students'] = $this->studentModel->countAll();
+		$this->data['total_users'] = $this->userModel->where('account_status !=', 0)->countAllResults();
+		$this->data['total_new_users'] = $this->userModel->where('account_status', 0)->countAllResults();
 
-		$total_applications = 10;
-		$total_exams = 5;
-		$total_income = 150000.00;
-		$total_cost = 42000.00;
+		$this->data['total_applications'] = 10;
+		$this->data['total_exams'] = 5;
+		$this->data['total_income'] = 150000.00;
+		$this->data['total_cost'] = 42000.00;
 
-$data = [
-    'title' => 'Dashboard',
-    'activeSection' => 'dashboard',
-
-    // Navbar items
-    'navbarItems' => [
-        ['label' => 'Dashboard', 'url' => base_url('dashboard')],
-        ['label' => 'Calendar', 'url' => base_url('calendar')],
-        ['label' => 'Result', 'url' => base_url('ad-result')],
-        ['label' => 'Accounts', 'url' => base_url('accounts')],
-    ],
-
-    // Sidebar items
-    'sidebarItems' => [
-        [
-            'label' => 'Dashboard',
-            'url' => base_url('dashboard'),
-            'icon' => 'fas fa-tachometer-alt',
-            'section' => 'dashboard'
-        ],
-        [
-            'label' => 'Teacher Management',
-            'url' => base_url('teacher_management'),
-            'icon' => 'fas fa-chalkboard-teacher',
-            'section' => 'teacher'
-        ],
-        [
-            'label' => 'Student Management',
-            'url' => base_url('ad-student'),
-            'icon' => 'fas fa-user-graduate',
-            'section' => 'student'
-        ],
-        [
-            'label' => 'Calendar',
-            'url' => base_url('calendar'),
-            'icon' => 'fas fa-calendar-alt',
-            'section' => 'calendar'
-        ]
-    ],
-
-    // Dashboard stats
-    'total_students' => $total_students,
-    'total_users' => $total_users,
-    'total_new_users' => $total_new_users,
-    'total_applications' => $total_applications,
-    'total_exams' => $total_exams,
-    'total_income' => $total_income,
-    'total_cost' => $total_cost,
-];
-
-return view('dashboard/index', $data);
+		return view('dashboard/index', $this->data);
 	}
 
 	public function profile()
