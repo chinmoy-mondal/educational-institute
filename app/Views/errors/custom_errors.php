@@ -3,7 +3,7 @@
 <?= $this->section("content"); ?>
     <!-- Fixed Wrapper for Navbar -->
     <div class="fixed-header">
-        <?= $this->include("structure/header"); ?>
+        <?= $this->include("layouts/base-structure/header"); ?>
     </div>
     
     <div class="container d-flex justify-content-center align-items-center text-center" style="height: 60vh;">

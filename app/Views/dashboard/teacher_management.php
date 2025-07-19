@@ -25,11 +25,14 @@
                   <?php foreach ($users as $user): ?>
                     <tr>
                       <td class="text-center">
-                        <img src="<?= !empty($user['photo']) 
-                          ? base_url('uploads/' . $user['photo']) 
-                          : base_url('public/assets/img/default.png') ?>"
-                          width="50" height="50" class="rounded-circle">
-                      </td>
+                        <a href="<?= base_url('assignSubject/' . $user['id']) ?>">
+			    <img src="<?= !empty($user['photo']) 
+				? base_url('uploads/' . $user['photo']) 
+				: base_url('public/assets/img/default.png') ?>" 
+				width="50" height="50" class="rounded-circle">
+			</a>
+
+		      </td>
                       <td><?= esc($user['name']) ?></td>
                       <td><?= esc($user['subject']) ?></td>
                       <td class="text-center">
@@ -90,6 +93,7 @@
             <h3 class="card-title mb-0"><i class="fas fa-book"></i> Subject List</h3>
           </div>
           <div class="card-body p-0">
+		<div class="table-responsive">
             <table class="table table-bordered table-hover m-0">
             	<thead class="bg-info text-white text-center">
 		  <tr>
@@ -118,6 +122,7 @@
 		  <?php endforeach; ?>
 		</tbody>
 	</table>
+		</div>
           </div>
         </div>
       </div> <!-- /col-md-6 -->
@@ -143,6 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelector('.card-info').addEventListener('click', e => {
     const addBtn = e.target.closest('.add-subject');
     if (!addBtn) return;
+
+    e.preventDefault();
 
     const sid   = addBtn.dataset.sid;
     const sname = addBtn.dataset.sname;

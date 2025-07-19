@@ -3,7 +3,7 @@
 
 <!-- Fixed Wrapper for Navbar -->
 <div class="fixed-header">
-    <?= $this->include("structure/header"); ?>
+    <?= $this->include("layouts/base-structure/header"); ?>
 </div>
 
 <!-- Registration Form -->
@@ -122,7 +122,7 @@
 </div>
 
 <!-- Footer -->
-<?= $this->include("structure/footer"); ?>
+<?= $this->include("layouts/base-structure/footer"); ?>
 
 <!-- JS to Show/Hide Designation and Subject -->
 <script>

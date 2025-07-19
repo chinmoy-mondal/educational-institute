@@ -2,7 +2,7 @@
 <?= $this->section("content"); ?>
 
 <div class="fixed-header">
-    <?= $this->include("structure/header"); ?>
+    <?= $this->include("layouts/base-structure/header"); ?>
 </div>
 
 <div class="container content mb-5 pb-5">
@@ -126,7 +126,7 @@
     </div>
 </div>
 
-<?= $this->include("structure/footer"); ?>
+<?= $this->include("layouts/base-structure/footer"); ?>
 
 <script>
     function toggleSectionField() {

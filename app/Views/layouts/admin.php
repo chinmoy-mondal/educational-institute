@@ -12,10 +12,10 @@
 <div class="wrapper">
 
   <!-- Navbar -->
-  <?= $this->include('layouts/partials/navbar') ?>
+  <?= $this->include('layouts/admin-structure/navbar') ?>
 
   <!-- Sidebar -->
-  <?= $this->include('layouts/partials/sidebar') ?>
+  <?= $this->include('layouts/admin-structure/sidebar') ?>
 
   <!-- Content Wrapper -->
   <div class="content-wrapper">

@@ -3,7 +3,7 @@
 
 <!-- Fixed Wrapper for Navbar -->
 <div class="fixed-header">
-    <?= $this->include("structure/header"); ?>
+    <?= $this->include("layouts/base-structure/header"); ?>
 </div>
 
 <!-- Student List Table -->
@@ -102,5 +102,5 @@
 </div>
 
 <!-- Footer Include -->
-<?= $this->include("structure/footer"); ?>
+<?= $this->include("layouts/base-structure/footer"); ?>
 <?= $this->endSection(); ?>
