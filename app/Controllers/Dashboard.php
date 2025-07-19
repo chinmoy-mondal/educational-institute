@@ -17,8 +17,8 @@ class Dashboard extends Controller
 		$this->session = session();
 
 		if (!$this->session->get('isLoggedIn')) {
-			redirect()->to(base_url('login'))->send(); // Use ->send() inside constructor
-			exit; // 🔴 Important: stop script after redirect in constructor
+			redirect()->to(base_url('login'))->send(); 
+			exit; 
 		}
 
 		$this->studentModel = new StudentModel();
@@ -95,30 +95,31 @@ class Dashboard extends Controller
 	}
 	public function calendar()
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
 
-		$user = [
-			'name' => $session->get('name'),
-			'email' => $session->get('email'),
-			'phone' => $session->get('phone'),
-			'role' => $session->get('role')
+		$this->data['title'] = 'Profile';
+		$this->data['activeSection'] = 'dashboard';
+
+		// Common navbar and sidebar for all views
+		$this->data['navbarItems'] = [
+			['label' => 'Dashboard', 'url' => base_url('dashboard')],
+			['label' => 'Calendar', 'url' => base_url('calendar')],
+			['label' => 'Result', 'url' => base_url('ad-result')],
+			['label' => 'Accounts', 'url' => base_url('accounts')],
 		];
 
-		$data = [
-			'title' => 'Dashboard',
-			'activeSection' => 'dashboard',
-			'navbarItems' => [
-				['label' => 'Dashboard', 'url' => base_url('dashboard')],
-				['label' => 'Calendar', 'url' => base_url('calendar')],
-				['label' => 'Result', 'url' => base_url('ad-result')],
-			],
-			'user' => $user
-		];
+			$user = [
+				'name' => $this->session->get('name'),
+				'email' => $this->session->get('email'),
+				'phone' => $this->session->get('phone'),
+				'role' => $this->session->get('role')
+			];
 
-			return view('dashboard/calendar', $data);
+			$this->data['title'] = 'Dashboard';
+			$this->data['activeSection'] = 'dashboard';
+			$this->data['user'] = $user;
+
+			return view('dashboard/calendar', $this->data);
+			
 	}
 
 	public function events()
