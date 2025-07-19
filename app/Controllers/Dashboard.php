@@ -106,16 +106,16 @@ class Dashboard extends Controller
 			['label' => 'Calendar', 'url' => base_url('calendar')],
 		];
 
-			$user = [
-				'name' => $this->session->get('name'),
-				'email' => $this->session->get('email'),
-				'phone' => $this->session->get('phone'),
-				'role' => $this->session->get('role')
-			];
+		$user = [
+			'name' => $this->session->get('name'),
+			'email' => $this->session->get('email'),
+			'phone' => $this->session->get('phone'),
+			'role' => $this->session->get('role')
+		];
 
-			$this->data['user'] = $user;
+		$this->data['user'] = $user;
 
-			return view('dashboard/calendar', $this->data);
+		return view('dashboard/calendar', $this->data);
 	}
 
 	public function events()
@@ -194,19 +194,15 @@ class Dashboard extends Controller
 		$users = $userModel->where('account_status !=', 0)->findAll();
 		$totalUsers = count($users);
 
-		$data = [
-			'title' => 'Admin Dashboard',
-			'activeSection' => 'teacher',
-			'newUsers' => $newUsers,
-			'total_newUsers' => $totalNewUsers,
-			'users' => $users,
-			'total_users' => $totalUsers,
-		];
+		// Assign to $this->data
+		$this->data['title'] = 'Admin Dashboard';
+		$this->data['activeSection'] = 'teacher';
+		$this->data['newUsers'] = $newUsers;
+		$this->data['total_newUsers'] = $totalNewUsers;
+		$this->data['users'] = $users;
+		$this->data['total_users'] = $totalUsers;
 
-		// Merge global $this->data values like navbarItems and sidebarItems
-		$data = array_merge($this->data, $data);
-
-		return view('dashboard/ad_teacher_list', $data);
+		return view('dashboard/ad_teacher_list', $this->data);
 	}
 
 	public function newUser()
