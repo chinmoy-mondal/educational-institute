@@ -11,6 +11,11 @@ use App\Models\ResultModel;
 
 class Dashboard extends Controller
 {
+	protected $session;
+	protected $studentModel;
+	protected $userModel;
+	protected $data = [];
+	
 	public function __construct()
 	{
 		$this->session = session();
@@ -44,6 +49,7 @@ class Dashboard extends Controller
 						// Dashboard specific values
 		$this->data['title'] = 'Dashboard';
 		$this->data['activeSection'] = 'dashboard';
+
 		$this->data['total_students'] = $this->studentModel->countAll();
 		$this->data['total_users'] = $this->userModel->where('account_status !=', 0)->countAllResults();
 		$this->data['total_new_users'] = $this->userModel->where('account_status', 0)->countAllResults();
@@ -58,11 +64,6 @@ class Dashboard extends Controller
 
 	public function profile()
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
-
 		$user = [
 			'name' => $session->get('name'),
 			'email' => $session->get('email'),
