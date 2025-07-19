@@ -15,28 +15,36 @@ class Dashboard extends Controller
 	protected $studentModel;
 	protected $userModel;
 	protected $data = [];
+
+public function __construct()
+{
+    $this->session = session();
+
+    if (!$this->session->get('isLoggedIn')) {
+        // Redirect and let CI handle it properly
+        redirect()->to(base_url('login'))->send(); // This sends the header
+        // DO NOT call exit here
+        return; // return instead of exit
+    }
+
+    $this->studentModel = new StudentModel();
+    $this->userModel = new UserModel();
+
+    $this->data['navbarItems'] = [
+        ['label' => 'Dashboard', 'url' => base_url('dashboard')],
+        ['label' => 'Calendar', 'url' => base_url('calendar')],
+        ['label' => 'Result', 'url' => base_url('ad-result')],
+        ['label' => 'Accounts', 'url' => base_url('accounts')],
+    ];
+
+    $this->data['sidebarItems'] = [
+        ['label' => 'Dashboard', 'url' => base_url('dashboard'), 'icon' => 'fas fa-tachometer-alt', 'section' => 'dashboard'],
+        ['label' => 'Teacher Management', 'url' => base_url('teacher_management'), 'icon' => 'fas fa-chalkboard-teacher', 'section' => 'teacher'],
+        ['label' => 'Student Management', 'url' => base_url('ad-student'), 'icon' => 'fas fa-user-graduate', 'section' => 'student'],
+        ['label' => 'Calendar', 'url' => base_url('calendar'), 'icon' => 'fas fa-calendar-alt', 'section' => 'calendar'],
+    ];
+}
 	
-	public function __construct()
-	{
-		$this->session = session();
-
-		// Redirect if not logged in
-		if (!$this->session->get('isLoggedIn')) {
-			redirect()->to(base_url('login'))->send(); // Redirect and stop execution
-		//	exit;
-		}
-
-		$this->studentModel = new StudentModel();
-		$this->userModel = new UserModel();
-
-
-		$this->data['sidebarItems'] = [
-			['label' => 'Dashboard', 'url' => base_url('dashboard'), 'icon' => 'fas fa-tachometer-alt', 'section' => 'dashboard'],
-			['label' => 'Teacher Management', 'url' => base_url('teacher_management'), 'icon' => 'fas fa-chalkboard-teacher', 'section' => 'teacher'],
-			['label' => 'Student Management', 'url' => base_url('ad-student'), 'icon' => 'fas fa-user-graduate', 'section' => 'student'],
-			['label' => 'Calendar', 'url' => base_url('calendar'), 'icon' => 'fas fa-calendar-alt', 'section' => 'calendar'],
-		];
-	}
 	public function index()
 	{
 						// Dashboard specific values
