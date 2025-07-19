@@ -196,7 +196,7 @@ class Dashboard extends Controller
 
 		// Assign to $this->data
 		$this->data['title'] = 'Admin Dashboard';
-		$this->data['activeSection'] = 'teacher';
+		$this->data['activeSection'] = 'teacher_management';
 		$this->data['newUsers'] = $newUsers;
 		$this->data['total_newUsers'] = $totalNewUsers;
 		$this->data['users'] = $users;
