@@ -16,42 +16,18 @@ class Dashboard extends Controller
 	protected $userModel;
 	protected $data = [];
 
-public function __construct()
-{
-    $this->session = session();
-
-    if (!$this->session->get('isLoggedIn')) {
-        // Redirect and let CI handle it properly
-        redirect()->to(base_url('login'))->send(); // This sends the header
-        // DO NOT call exit here
-        return; // return instead of exit
-    }
-
-    $this->studentModel = new StudentModel();
-    $this->userModel = new UserModel();
-
-    $this->data['navbarItems'] = [
-        ['label' => 'Dashboard', 'url' => base_url('dashboard')],
-        ['label' => 'Calendar', 'url' => base_url('calendar')],
-        ['label' => 'Result', 'url' => base_url('ad-result')],
-        ['label' => 'Accounts', 'url' => base_url('accounts')],
-    ];
-
-    $this->data['sidebarItems'] = [
-        ['label' => 'Dashboard', 'url' => base_url('dashboard'), 'icon' => 'fas fa-tachometer-alt', 'section' => 'dashboard'],
-        ['label' => 'Teacher Management', 'url' => base_url('teacher_management'), 'icon' => 'fas fa-chalkboard-teacher', 'section' => 'teacher'],
-        ['label' => 'Student Management', 'url' => base_url('ad-student'), 'icon' => 'fas fa-user-graduate', 'section' => 'student'],
-        ['label' => 'Calendar', 'url' => base_url('calendar'), 'icon' => 'fas fa-calendar-alt', 'section' => 'calendar'],
-    ];
-}
-	
-	public function index()
+	public function __construct()
 	{
-						// Dashboard specific values
-		$this->data['title'] = 'Dashboard';
-		$this->data['activeSection'] = 'dashboard';
+		$this->session = session();
 
-		// Common navbar and sidebar for all views
+		if (!$this->session->get('isLoggedIn')) {
+			redirect()->to(base_url('login'))->send(); // Use ->send() inside constructor
+			exit; // 🔴 Important: stop script after redirect in constructor
+		}
+
+		$this->studentModel = new StudentModel();
+		$this->userModel = new UserModel();
+
 		$this->data['navbarItems'] = [
 			['label' => 'Dashboard', 'url' => base_url('dashboard')],
 			['label' => 'Calendar', 'url' => base_url('calendar')],
@@ -59,16 +35,39 @@ public function __construct()
 			['label' => 'Accounts', 'url' => base_url('accounts')],
 		];
 
-		$this->data['total_students'] = $this->studentModel->countAll();
-		$this->data['total_users'] = $this->userModel->where('account_status !=', 0)->countAllResults();
-		$this->data['total_new_users'] = $this->userModel->where('account_status', 0)->countAllResults();
+			$this->data['sidebarItems'] = [
+				['label' => 'Dashboard', 'url' => base_url('dashboard'), 'icon' => 'fas fa-tachometer-alt', 'section' => 'dashboard'],
+				['label' => 'Teacher Management', 'url' => base_url('teacher_management'), 'icon' => 'fas fa-chalkboard-teacher', 'section' => 'teacher'],
+				['label' => 'Student Management', 'url' => base_url('ad-student'), 'icon' => 'fas fa-user-graduate', 'section' => 'student'],
+				['label' => 'Calendar', 'url' => base_url('calendar'), 'icon' => 'fas fa-calendar-alt', 'section' => 'calendar'],
+			];
+	}
 
-		$this->data['total_applications'] = 10;
-		$this->data['total_exams'] = 5;
-		$this->data['total_income'] = 150000.00;
-		$this->data['total_cost'] = 42000.00;
+	public function index()
+	{
+		// Dashboard specific values
+		$this->data['title'] = 'Dashboard';
+		$this->data['activeSection'] = 'dashboard';
 
-		return view('dashboard/index', $this->data);
+		// Common navbar and sidebar for all views
+		navbarItems
+			$this->data['navbarItems'] = [
+			['label' => 'Dashboard', 'url' => base_url('dashboard')],
+			['label' => 'Calendar', 'url' => base_url('calendar')],
+			['label' => 'Result', 'url' => base_url('ad-result')],
+			['label' => 'Accounts', 'url' => base_url('accounts')],
+			];
+
+			$this->data['total_students'] = $this->studentModel->countAll();
+			$this->data['total_users'] = $this->userModel->where('account_status !=', 0)->countAllResults();
+			$this->data['total_new_users'] = $this->userModel->where('account_status', 0)->countAllResults();
+
+			$this->data['total_applications'] = 10;
+			$this->data['total_exams'] = 5;
+			$this->data['total_income'] = 150000.00;
+			$this->data['total_cost'] = 42000.00;
+
+			return view('dashboard/index', $this->data);
 	}
 
 	public function profile()
@@ -86,16 +85,17 @@ public function __construct()
 		];
 
 			$user = [
-				'name' => $this->session->get('name'),   // ✅ Correct usage
+				'name' => $this->session->get('name'),
 				'email' => $this->session->get('email'),
 				'phone' => $this->session->get('phone'),
 				'role' => $this->session->get('role')
-			];	
-		$data = [
-			'user' => $user
-		];
+			];
 
-			return view('dashboard/profile', $data);
+			$this->data['title'] = 'Dashboard';
+			$this->data['activeSection'] = 'dashboard';
+			$this->data['user'] = $user;
+
+			return view('dashboard/profile', $this->data);
 	}
 	public function calendar()
 	{
