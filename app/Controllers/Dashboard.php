@@ -29,13 +29,6 @@ class Dashboard extends Controller
 		$this->studentModel = new StudentModel();
 		$this->userModel = new UserModel();
 
-		// Common navbar and sidebar for all views
-		$this->data['navbarItems'] = [
-			['label' => 'Dashboard', 'url' => base_url('dashboard')],
-			['label' => 'Calendar', 'url' => base_url('calendar')],
-			['label' => 'Result', 'url' => base_url('ad-result')],
-			['label' => 'Accounts', 'url' => base_url('accounts')],
-		];
 
 		$this->data['sidebarItems'] = [
 			['label' => 'Dashboard', 'url' => base_url('dashboard'), 'icon' => 'fas fa-tachometer-alt', 'section' => 'dashboard'],
@@ -49,6 +42,14 @@ class Dashboard extends Controller
 						// Dashboard specific values
 		$this->data['title'] = 'Dashboard';
 		$this->data['activeSection'] = 'dashboard';
+
+		// Common navbar and sidebar for all views
+		$this->data['navbarItems'] = [
+			['label' => 'Dashboard', 'url' => base_url('dashboard')],
+			['label' => 'Calendar', 'url' => base_url('calendar')],
+			['label' => 'Result', 'url' => base_url('ad-result')],
+			['label' => 'Accounts', 'url' => base_url('accounts')],
+		];
 
 		$this->data['total_students'] = $this->studentModel->countAll();
 		$this->data['total_users'] = $this->userModel->where('account_status !=', 0)->countAllResults();
@@ -64,6 +65,18 @@ class Dashboard extends Controller
 
 	public function profile()
 	{
+
+		$this->data['title'] = 'Profile';
+		$this->data['activeSection'] = 'dashboard';
+
+		// Common navbar and sidebar for all views
+		$this->data['navbarItems'] = [
+			['label' => 'Dashboard', 'url' => base_url('dashboard')],
+			['label' => 'Calendar', 'url' => base_url('calendar')],
+			['label' => 'Result', 'url' => base_url('ad-result')],
+			['label' => 'Accounts', 'url' => base_url('accounts')],
+		];
+
 		$user = [
 			'name' => $session->get('name'),
 			'email' => $session->get('email'),
@@ -71,13 +84,6 @@ class Dashboard extends Controller
 			'role' => $session->get('role')
 		];
 		$data = [
-			'title' => 'Dashboard',
-			'activeSection' => 'dashboard',
-			'navbarItems' => [
-				['label' => 'Dashboard', 'url' => base_url('dashboard')],
-				['label' => 'Calendar', 'url' => base_url('calendar')],
-				['label' => 'Result', 'url' => base_url('ad-result')],
-			],
 			'user' => $user
 		];
 
