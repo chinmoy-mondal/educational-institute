@@ -21,8 +21,6 @@ class Dashboard extends Controller
 			exit; 
 		}
 
-		$this->studentModel = new StudentModel();
-		$this->userModel = new UserModel();
 
 		$this->data['navbarItems'] = [
 			['label' => 'Dashboard', 'url' => base_url('dashboard')],
@@ -41,6 +39,9 @@ class Dashboard extends Controller
 
 	public function index()
 	{
+		$studentModel = new StudentModel();
+		$userModel = new UserModel();
+
 		// Dashboard specific values
 		$this->data['title'] = 'Dashboard';
 		$this->data['activeSection'] = 'dashboard';
@@ -54,9 +55,9 @@ class Dashboard extends Controller
 			['label' => 'Accounts', 'url' => base_url('accounts')],
 		];
 
-			$this->data['total_students'] = $this->studentModel->countAll();
-			$this->data['total_users'] = $this->userModel->where('account_status !=', 0)->countAllResults();
-			$this->data['total_new_users'] = $this->userModel->where('account_status', 0)->countAllResults();
+			$this->data['total_students'] = $studentModel->countAll();
+			$this->data['total_users'] = $userModel->where('account_status !=', 0)->countAllResults();
+			$this->data['total_new_users'] = $userModel->where('account_status', 0)->countAllResults();
 
 			$this->data['total_applications'] = 10;
 			$this->data['total_exams'] = 5;
@@ -97,7 +98,7 @@ class Dashboard extends Controller
 	{
 
 		$this->data['title'] = 'Profile';
-		$this->data['activeSection'] = 'dashboard';
+		$this->data['activeSection'] = 'calendar';
 
 		// Common navbar and sidebar for all views
 		$this->data['navbarItems'] = [
@@ -190,10 +191,6 @@ class Dashboard extends Controller
 
 	public function teachers()
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
 		$userModel = new UserModel();
 
 		$newUsers = $userModel
