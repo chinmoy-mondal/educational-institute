@@ -11,10 +11,6 @@ use App\Models\ResultModel;
 
 class Dashboard extends Controller
 {
-	protected $session;
-	protected $studentModel;
-	protected $userModel;
-	protected $data = [];
 
 	public function __construct()
 	{
@@ -50,13 +46,13 @@ class Dashboard extends Controller
 		$this->data['activeSection'] = 'dashboard';
 
 		// Common navbar and sidebar for all views
-		navbarItems
-			$this->data['navbarItems'] = [
+
+		$this->data['navbarItems'] = [
 			['label' => 'Dashboard', 'url' => base_url('dashboard')],
 			['label' => 'Calendar', 'url' => base_url('calendar')],
 			['label' => 'Result', 'url' => base_url('ad-result')],
 			['label' => 'Accounts', 'url' => base_url('accounts')],
-			];
+		];
 
 			$this->data['total_students'] = $this->studentModel->countAll();
 			$this->data['total_users'] = $this->userModel->where('account_status !=', 0)->countAllResults();
