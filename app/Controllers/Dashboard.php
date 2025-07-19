@@ -186,6 +186,16 @@ class Dashboard extends Controller
 
 	public function teachers()
 	{
+
+		$this->data['title'] = 'Calendar';
+		$this->data['activeSection'] = 'teacher_management';
+
+		// Common navbar and sidebar for all views
+		$this->data['navbarItems'] = [
+			['label' => 'Dashboard', 'url' => base_url('dashboard')],
+			['label' => 'Calendar', 'url' => base_url('calendar')],
+		];
+
 		$userModel = new UserModel();
 
 		$newUsers = $userModel->where('account_status', 0)->findAll();
@@ -195,8 +205,6 @@ class Dashboard extends Controller
 		$totalUsers = count($users);
 
 		// Assign to $this->data
-		$this->data['title'] = 'Admin Dashboard';
-		$this->data['activeSection'] = 'teacher_management';
 		$this->data['newUsers'] = $newUsers;
 		$this->data['total_newUsers'] = $totalNewUsers;
 		$this->data['users'] = $users;
