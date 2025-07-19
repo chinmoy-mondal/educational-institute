@@ -187,31 +187,7 @@ class Dashboard extends Controller
 	public function teachers()
 	{
 
-		$this->data['title'] = 'Teacher Management';
-		$this->data['activeSection'] = 'teacher_management';
-
-		// Common navbar and sidebar for all views
-		$this->data['navbarItems'] = [
-			['label' => 'Dashboard', 'url' => base_url('dashboard')],
-			['label' => 'Calendar', 'url' => base_url('calendar')],
-		];
-
-		$userModel = new UserModel();
-
-		$newUsers = $userModel->where('account_status', 0)->findAll();
-		$totalNewUsers = count($newUsers);
-
-		$users = $userModel->where('account_status !=', 0)->findAll();
-		$totalUsers = count($users);
-
-		// Assign to $this->data
-		$this->data['newUsers'] = $newUsers;
-		$this->data['total_newUsers'] = $totalNewUsers;
-		$this->data['users'] = $users;
-		$this->data['total_users'] = $totalUsers;
-
-		return view('dashboard/ad_teacher_list', $this->data);
-	}
+	Teacher Management}
 
 	public function newUser()
 	{
