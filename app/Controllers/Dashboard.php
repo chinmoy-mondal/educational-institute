@@ -104,8 +104,6 @@ class Dashboard extends Controller
 		$this->data['navbarItems'] = [
 			['label' => 'Dashboard', 'url' => base_url('dashboard')],
 			['label' => 'Calendar', 'url' => base_url('calendar')],
-			['label' => 'Result', 'url' => base_url('ad-result')],
-			['label' => 'Accounts', 'url' => base_url('accounts')],
 		];
 
 			$user = [
