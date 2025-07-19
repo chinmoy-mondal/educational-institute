@@ -85,13 +85,12 @@ public function __construct()
 			['label' => 'Accounts', 'url' => base_url('accounts')],
 		];
 
-		$user = [
-			'name' => $session->get('name'),
-			'email' => $session->get('email'),
-			'phone' => $session->get('phone'),
-			'role' => $session->get('role')
-		];
-		
+			$user = [
+				'name' => $this->session->get('name'),   // ✅ Correct usage
+				'email' => $this->session->get('email'),
+				'phone' => $this->session->get('phone'),
+				'role' => $this->session->get('role')
+			];	
 		$data = [
 			'user' => $user
 		];
