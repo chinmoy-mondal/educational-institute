@@ -188,30 +188,25 @@ class Dashboard extends Controller
 	{
 		$userModel = new UserModel();
 
-		$newUsers = $userModel
-			->where('account_status=',0)
-			->findAll();
+		$newUsers = $userModel->where('account_status', 0)->findAll();
 		$totalNewUsers = count($newUsers);
 
-		$users = $userModel
-			->where('account_status !=',0)
-			->findAll();
+		$users = $userModel->where('account_status !=', 0)->findAll();
 		$totalUsers = count($users);
+
 		$data = [
 			'title' => 'Admin Dashboard',
 			'activeSection' => 'teacher',
-			'navbarItems' => [
-				['label' => 'Teacher List', 'url' => base_url('teacher_management')],
-				['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
-			],
 			'newUsers' => $newUsers,
 			'total_newUsers' => $totalNewUsers,
 			'users' => $users,
-			'total_users' => $totalUsers
+			'total_users' => $totalUsers,
 		];
 
-			return view('dashboard/ad_teacher_list', $data);
+		// Merge global $this->data values like navbarItems and sidebarItems
+		$data = array_merge($this->data, $data);
 
+		return view('dashboard/ad_teacher_list', $data);
 	}
 
 	public function newUser()
