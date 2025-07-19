@@ -29,12 +29,12 @@ class Dashboard extends Controller
 			['label' => 'Accounts', 'url' => base_url('accounts')],
 		];
 
-			$this->data['sidebarItems'] = [
-				['label' => 'Dashboard', 'url' => base_url('dashboard'), 'icon' => 'fas fa-tachometer-alt', 'section' => 'dashboard'],
-				['label' => 'Teacher Management', 'url' => base_url('teacher_management'), 'icon' => 'fas fa-chalkboard-teacher', 'section' => 'teacher'],
-				['label' => 'Student Management', 'url' => base_url('ad-student'), 'icon' => 'fas fa-user-graduate', 'section' => 'student'],
-				['label' => 'Calendar', 'url' => base_url('calendar'), 'icon' => 'fas fa-calendar-alt', 'section' => 'calendar'],
-			];
+		$this->data['sidebarItems'] = [
+			['label' => 'Dashboard', 		'url' => base_url('dashboard'), 		'icon' => 'fas fa-tachometer-alt', 	'section' => 'dashboard'],
+			['label' => 'Teacher Management', 	'url' => base_url('teacher_management'), 	'icon' => 'fas fa-chalkboard-teacher', 	'section' => 'teacher'],
+			['label' => 'Student Management', 	'url' => base_url('ad-student'), 		'icon' => 'fas fa-user-graduate', 	'section' => 'student'],
+			['label' => 'Calendar', 		'url' => base_url('calendar'), 			'icon' => 'fas fa-calendar-alt', 	'section' => 'calendar'],
+		];
 	}
 
 	public function index()
@@ -94,10 +94,10 @@ class Dashboard extends Controller
 
 			return view('dashboard/profile', $this->data);
 	}
+
 	public function calendar()
 	{
-
-		$this->data['title'] = 'Profile';
+		$this->data['title'] = 'Calendar';
 		$this->data['activeSection'] = 'calendar';
 
 		// Common navbar and sidebar for all views
@@ -113,12 +113,9 @@ class Dashboard extends Controller
 				'role' => $this->session->get('role')
 			];
 
-			$this->data['title'] = 'Dashboard';
-			$this->data['activeSection'] = 'dashboard';
 			$this->data['user'] = $user;
 
 			return view('dashboard/calendar', $this->data);
-			
 	}
 
 	public function events()
