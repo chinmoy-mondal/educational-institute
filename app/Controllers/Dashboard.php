@@ -23,7 +23,7 @@ class Dashboard extends Controller
 		// Redirect if not logged in
 		if (!$this->session->get('isLoggedIn')) {
 			redirect()->to(base_url('login'))->send(); // Redirect and stop execution
-			exit;
+		//	exit;
 		}
 
 		$this->studentModel = new StudentModel();
@@ -83,6 +83,7 @@ class Dashboard extends Controller
 			'phone' => $session->get('phone'),
 			'role' => $session->get('role')
 		];
+		
 		$data = [
 			'user' => $user
 		];
