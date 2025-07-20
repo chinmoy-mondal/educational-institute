@@ -441,7 +441,7 @@ class Dashboard extends Controller
 
 		$sections = $studentModel->select('section')->distinct()->orderBy('section')->findAll();
 
-		$this->data['title']         = 'Student Subject';
+		$this->data['title']         = 'Student Subject Management';
 		$this->data['activeSection'] = 'student';
 		$this->data['navbarItems']   = [
 			['label' => 'Student List', 'url' => base_url('ad-student')],
