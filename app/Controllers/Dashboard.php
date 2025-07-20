@@ -435,6 +435,7 @@ class Dashboard extends Controller
 			$builder = $builder->where('section', $section);
 		}
 
+
 		$students = $builder
 		    ->orderBy('CAST(roll as UNSIGNED)', 'ASC')
 		    ->orderBy('CAST(class as UNSIGNED)', 'ASC')
