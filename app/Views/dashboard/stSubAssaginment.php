@@ -69,7 +69,7 @@
 			<option vaule="<?= esc($s['id']) ?>">
 			<pre>
 			<?= esc($s['class']) . str_repeat('&nbsp;', 8) . esc($s['roll']) ?>
-			<?= (strlen((string)$s['roll']) == 1) ? str_repeat('&nbsp;', 9) : str_repeat('&nbsp;', 8) ?>
+			<?= (strlen((string)$s['roll']) == 1) ? str_repeat('&nbsp;', 10) : str_repeat('&nbsp;', 8) ?>
 			<?= esc($s['student_name']) . str_repeat('&nbsp;', 8) . "(" . esc($s['section']) . ")" ?>
 			</pre>
 			</option>
