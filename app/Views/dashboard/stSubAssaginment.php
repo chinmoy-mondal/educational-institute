@@ -67,7 +67,7 @@
 	      <select multiple class="form-control select2" id="leftSelect" name="left_select[]" style="height: 400px; width: 100%;">
 		<?php foreach ($students as $s): ?>
 		  <option value="<?= esc($s['id']) ?>">
-		    <?= esc($s['class']) ?> - <?= esc($s['roll']) ?> - <?= esc($s['student_name']) ?> - <?= esc($s['group']) ?>
+		    <?= esc($s['class']) ?> - <?= esc($s['roll']) ?> - <?= esc($s['student_name']) ?> - <?= esc($s['section']) ?>
 		  </option>
 		<?php endforeach ?>
 	      </select>
