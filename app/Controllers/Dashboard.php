@@ -404,55 +404,41 @@ class Dashboard extends Controller
 
 	public function result($userId, $subjectId)
 	{
-		$userModel     = new UserModel();
-		$subjectModel  = new SubjectModel();
-		$studentModel  = new StudentModel();   // ⬅ new
+		$user    = $this->userModel->find($userId);
+		$subject = $this->subjectModel->find($subjectId);
 
-		// ── Fetch teacher and subject ─────────────────────────────
-		$user    = $userModel->find($userId);
-		$subject = $subjectModel->find($subjectId);
-
-		// custom 404 if either is missing
 		if (!$user || !$subject) {
 			$routes   = \Config\Services::routes();
 			$override = $routes->get404Override();
-			return is_callable($override) ? $override() : null;
+			return is_callable($override) ? $override() : show_404();
 		}
 
-		// ── Pull students in the same class & section ─────────────
-		$students = $studentModel
+		$students = $this->studentModel
 			->where('class', $subject['class'])
-			->groupStart()                       // ( ... )
+			->groupStart()
 			->where('section', $subject['section'])   // exact match
-			->orWhere('section', 'n/a')                 // empty string ⇒ “all sections”
-			->orWhere('section', null)               // NULL safety (if you use NULLs)
-			->orLike('section', $subject['section']) // partial / substring match
-			->groupEnd()                        // )
+			->orWhere('section', 'n/a')               // match all sections
+			->orWhere('section', null)                // NULL-safe
+			->orLike('section', $subject['section'])  // substring match
+			->groupEnd()
 			->orderBy('roll', 'ASC')
 			->findAll();
-		// ── Send everything to the view ───────────────────────────
-		$data = [
-			'title'     => 'Result Entry',
-			'activeSection' => 'result',
-			'navbarItems' => [
-				['label' => 'Result Entry', 'url' => base_url('ad-result')],
-				['label' => 'Result Sheet', 'url' => base_url('result_sheet')],
-			],
-			'user'     => $user,
-			'subject'  => $subject,
-			'students' => $students
+
+		$this->data['title']         = 'Result Entry';
+		$this->data['activeSection'] = 'result';
+		$this->data['navbarItems']   = [
+			['label' => 'Result Entry', 'url' => base_url('ad-result')],
+			['label' => 'Result Sheet', 'url' => base_url('result_sheet')],
 		];
+			$this->data['user']     = $user;
+			$this->data['subject']  = $subject;
+			$this->data['students'] = $students;
 
-			return view('dashboard/ad_result', $data);
+			return view('dashboard/ad_result', $this->data);
 	}
-
 
 	public function submitResults()
 	{		
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
 
 		$resultModel = new ResultModel();
 
@@ -511,56 +497,52 @@ class Dashboard extends Controller
 
 	public function viewStudent($id)
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
-		$studentModel = new StudentModel();
+		// Optional: session check if not using filter or constructor check
+		// $session = session();
+		// if (!$session->get('isLoggedIn')) {
+		//     return redirect()->to(base_url('login'));
+		// }
 
-		$student = $studentModel->find($id);
+		$student = $this->studentModel->find($id);
 
 		if (!$student) {
 			return redirect()->back()->with('error', 'No data found');
 		}
-		$data = [
-			'title' => 'Student Details',
-			'activeSection' => 'student',
-			'navbarItems' => [
-				['label' => 'Student List', 'url' => base_url('ad-student')],
-				['label' => 'Add Student', 'url' => base_url('student_create')],
-				['label' => 'View Student', 'url' => current_url()],
-			],
-			'student' => $student
-		];
 
-			return view('dashboard/student_view', $data);
+		$this->data['title'] = 'Student Details';
+		$this->data['activeSection'] = 'student';
+		$this->data['navbarItems'] = [
+			['label' => 'Student List', 'url' => base_url('ad-student')],
+			['label' => 'Add Student', 'url' => base_url('student_create')],
+			['label' => 'View Student', 'url' => current_url()],
+		];
+			$this->data['student'] = $student;
+
+			return view('dashboard/student_view', $this->data);
 	}
+
 	public function editStudent($id)
 	{
-		$model = new StudentModel();
-		$student = $model->find($id);
+		$student = $this->studentModel->find($id);
 
 		if (!$student) {
 			return redirect()->to('ad-student')->with('error', 'Student not found.');
 		}
-		$data = [
-			'title' => 'Edit Student',
-			'activeSection' => 'student',
-			'navbarItems' => [
-				['label' => 'Student List', 'url' => base_url('ad-student')],
-				['label' => 'Add Student', 'url' => base_url('student_create')],
-				['label' => 'Edit Student', 'url' => current_url()],
-			],
-			'student' => $student
+
+		$this->data['title'] = 'Edit Student';
+		$this->data['activeSection'] = 'student';
+		$this->data['navbarItems'] = [
+			['label' => 'Student List', 'url' => base_url('ad-student')],
+			['label' => 'Add Student', 'url' => base_url('student_create')],
+			['label' => 'Edit Student', 'url' => current_url()],
 		];
+			$this->data['student'] = $student;
 
-			return view('dashboard/student_edit', $data);
+			return view('dashboard/student_edit', $this->data);
 	}
-
 	public function updateStudent($id)
 	{
-		$model = new StudentModel();
-		$student = $model->find($id);
+		$student = $this->studentModel->find($id);
 
 		if (!$student) {
 			return redirect()->to('ad-student')->with('error', 'Student not found.');
@@ -572,20 +554,19 @@ class Dashboard extends Controller
 				'father_nid_number', 'mother_nid_number', 'religion', 'blood_group'
 		]);
 
-		$model->update($id, $data);
+		$this->studentModel->update($id, $data);
 
 		return redirect()->to('admin/students/view/' . $id)->with('message', 'Student updated successfully.');
 	}
-
 	public function editStudentPhoto($id)
 	{
-		$model = new StudentModel();
-		$student = $model->find($id);
+		$student = $this->studentModel->find($id);
 
 		if (!$student) {
 			return redirect()->to('admin/students')->with('error', 'Student not found.');
 		}
-		$data = [
+
+		$this->data = [
 			'title' => 'Edit Photo',
 			'activeSection' => 'student',
 			'navbarItems' => [
@@ -595,14 +576,12 @@ class Dashboard extends Controller
 			'student' => $student
 		];
 
-			return view('dashboard/edit_photo', $data);
+			return view('dashboard/edit_photo', $this->data);
 	}
 
-
-	function updateStudentPhoto($id)
+	public function updateStudentPhoto($id)
 	{
-		$model = new StudentModel();
-		$student = $model->find($id);
+		$student = $this->studentModel->find($id);
 
 		if (!$student) {
 			return redirect()->to('admin/students')->with('error', 'Student not found.');
@@ -612,21 +591,19 @@ class Dashboard extends Controller
 
 		if ($file && $file->isValid() && !$file->hasMoved()) {
 			$newName = $file->getRandomName();
-			$file->move('uploads/students', $newName);
+			$file->move(FCPATH . 'uploads/students', $newName);
 
-			// ✅ Delete old file (if not default and it exists)
-			$oldPath = FCPATH . $student['student_pic'];
-
-			if (!empty($student['student_pic']) && file_exists($oldPath)) {
-				unlink($oldPath);
+			// Delete old photo if it exists and is not default
+			if (!empty($student['student_pic']) && file_exists(FCPATH . $student['student_pic'])) {
+				unlink(FCPATH . $student['student_pic']);
 			}
 
-			// ✅ Save new file path to DB
-			$model->update($id, [
+			// Update DB
+			$this->studentModel->update($id, [
 					'student_pic' => 'uploads/students/' . $newName,
 			]);
 
-			return redirect()->to('admin/students/view/' . $id)->with('message', 'Photo updated.');
+			return redirect()->to('admin/students/view/' . $id)->with('message', 'Photo updated successfully.');
 		}
 
 		return redirect()->back()->with('error', 'Photo upload failed.');
