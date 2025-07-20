@@ -422,23 +422,23 @@ class Dashboard extends Controller
 		// Build query
 		$builder = $studentModel;
 		if ($q) {
-			$builder = $builder->groupStart()
-				->like('student_name', $q)
-				->orLike('roll', $q)
-				->orLike('id', $q)
-				->groupEnd();
+		    $builder = $builder->groupStart()
+			->like('student_name', $q)
+			->orLike('roll', $q)
+			->orLike('id', $q)
+			->groupEnd();
 		}
 		if ($class) {
-			$builder = $builder->where('class', $class);
+		    $builder = $builder->where('class', $class);
 		}
 		if ($section) {
-			$builder = $builder->where('section', $section);
+		    $builder = $builder->where('section', $section);
 		}
 
-
-		$students = $studentModel
-			->orderBy("CAST(CONCAT(class, LPAD(roll, 3, '0')) AS UNSIGNED)", 'ASC')
-			->findAll();
+		$students = $builder
+		    ->orderBy("CAST(CONCAT(class, LPAD(roll, 3, '0')) AS UNSIGNED)", 'ASC')
+		    ->get()
+		    ->getResultArray();
 
 		$sections = $studentModel->select('section')->distinct()->orderBy('section')->findAll();
 
