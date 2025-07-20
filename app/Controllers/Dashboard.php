@@ -412,7 +412,22 @@ class Dashboard extends Controller
 
 	public function stAssaginSubView()
 	{
-		echo "yes";
+		$student = $this->studentModel->find($id);
+
+		if (!$student) {
+			return redirect()->back()->with('error', 'No data found');
+		}
+
+		$this->data['title'] = 'Student Details';
+		$this->data['activeSection'] = 'student';
+		$this->data['navbarItems'] = [
+			['label' => 'Student List', 'url' => base_url('ad-student')],
+			['label' => 'Add Student', 'url' => base_url('student_create')],
+			['label' => 'View Student', 'url' => current_url()],
+		];
+			$this->data['student'] = $student;
+
+			return view('dashboard/student_view', $this->data);
 	}
 
 	public function result($userId, $subjectId)
