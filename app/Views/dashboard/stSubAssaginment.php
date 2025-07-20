@@ -67,9 +67,11 @@
 	      <select multiple class="form-control select2" id="leftSelect" name="left_select[]" style="height: 400px; width: 100%;">
 		<?php foreach ($students as $s): ?>
 			<option vaule="<?= esc($s['id']) ?>">
-				<pre>
-					<?= esc($s['class']) . str_repeat('&nbsp;', 8) . esc($s['roll']) . str_repeat('&nbsp;', 8) . esc($s['student_name']) . " (" . esc($s['section']) . ")" ?>
-				</pre>
+			<pre>
+			<?= esc($s['class']) . "\t\t" . esc($s['roll']) ?>
+			<?= (strlen((string)$s['roll']) == 1) ? str_repeat('&nbsp;', 8) : str_repeat('&nbsp;', 9) ?>
+			<?= esc($s['student_name']) . " (" . esc($s['section']) . ")" ?>
+			</pre>
 			</option>
 		<?php endforeach ?>
 	      </select>
