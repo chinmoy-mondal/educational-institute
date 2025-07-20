@@ -210,7 +210,7 @@ class Dashboard extends Controller
 	{
 
 		$this->data['title'] = 'Teacher Management';
-		$this->data['activeSection'] = 'teacher_management';
+		$this->data['activeSection'] = 'calendar';
 
 		// Common navbar and sidebar for all views
 		$this->data['navbarItems'] = [
