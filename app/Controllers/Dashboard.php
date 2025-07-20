@@ -11,16 +11,24 @@ use App\Models\ResultModel;
 
 class Dashboard extends Controller
 {
+	protected $userModel;
+	protected $subjectModel;
+	protected $studentModel;
+	protected $session;
+	protected $data;
 
 	public function __construct()
 	{
-		$this->session = session();
+		$this->userModel     = new UserModel();
+		$this->subjectModel  = new SubjectModel();
+		$this->studentModel  = new StudentModel();
+		$this->session       = session();
+		$this->data          = [];
 
 		if (!$this->session->get('isLoggedIn')) {
-			redirect()->to(base_url('login'))->send(); 
-			exit; 
+			redirect()->to(base_url('login'))->send();
+			exit;
 		}
-
 
 		$this->data['navbarItems'] = [
 			['label' => 'Dashboard', 'url' => base_url('dashboard')],
@@ -403,14 +411,12 @@ class Dashboard extends Controller
 	}
 
 	public function stAssaginSubView()
-{
-	echo "yes";
-}
+	{
+		echo "yes";
+	}
 
 	public function result($userId, $subjectId)
 	{
-		$this->userModel = new UserModel();
-		$this->subjectModel = new SubjectModel();
 
 		$user    = $this->userModel->find($userId);
 		$subject = $this->subjectModel->find($subjectId);
