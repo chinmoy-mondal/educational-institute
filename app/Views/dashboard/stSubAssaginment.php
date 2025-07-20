@@ -38,17 +38,13 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label for="section">Section</label><select multiple class="form-control select2" id="leftSelect" name="left_select[]" style="height: 400px; width: 100%;">
-		<?php foreach ($students as $s): ?>
-			<option vaule="<?= esc($s['id']) ?>">
-			<pre>
-			<?= esc($s['class']) . str_repeat('&nbsp;', 8) . esc($s['roll']) ?>
-			<?= (strlen((string)$s['roll']) == 1) ? str_repeat('&nbsp;', 10) : str_repeat('&nbsp;', 8) ?>
-			<?= esc($s['student_name']) . str_repeat('&nbsp;', 8) . "(" . esc($s['section']) . ")" ?>
-			</pre>
-			</option>
-		<?php endforeach ?>
-	      </select>
+                <label for="section">Section</label>
+                <select name="class" id="class" class="form-control">
+                  <option value="" <?= ($class ?? '') === '' ? 'selected' : '' ?>>All Classes</option>
+                  <?php for ($i = 6; $i <= 10; $i++): ?>
+                    <option value="<?= $i ?>" <?= ($class ?? '') == $i ? 'selected' : '' ?>>Class <?= $i ?></option>
+                  <?php endfor; ?>
+                </select>
               </div>
             </div>
             <div class="col-md-2">
