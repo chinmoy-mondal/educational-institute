@@ -11,135 +11,133 @@ use App\Models\ResultModel;
 
 class Dashboard extends Controller
 {
-	public function index()
+
+	public function __construct()
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
+		$this->session = session();
+
+		if (!$this->session->get('isLoggedIn')) {
+			redirect()->to(base_url('login'))->send(); 
+			exit; 
 		}
 
+
+		$this->data['navbarItems'] = [
+			['label' => 'Dashboard', 'url' => base_url('dashboard')],
+			['label' => 'Calendar', 'url' => base_url('calendar')],
+			['label' => 'Result', 'url' => base_url('ad-result')],
+			['label' => 'Accounts', 'url' => base_url('accounts')],
+		];
+			$this->data['sidebarItems'] = [
+				[
+					'label' => 'Dashboard', 
+				'url' => base_url('dashboard'), 
+				'icon' => 'fas fa-tachometer-alt', 
+				'section' => 'dashboard'
+				],
+				[
+					'label' => 'Teacher Management', 
+				'url' => base_url('teacher_management'), 
+				'icon' => 'fas fa-chalkboard-teacher', 
+				'section' => 'teacher'
+				],
+				[
+					'label' => 'Student Management', 
+				'url' => base_url('ad-student'), 
+				'icon' => 'fas fa-user-graduate', 
+				'section' => 'student'
+				],
+				[
+					'label' => 'Calendar', 
+				'url' => base_url('calendar'), 
+				'icon' => 'fas fa-calendar-alt', 
+				'section' => 'calendar'
+				],
+				];
+	}
+
+	public function index()
+	{
 		$studentModel = new StudentModel();
 		$userModel = new UserModel();
 
-		$total_students = $studentModel->countAll();
-		$total_users = $userModel
-			->where('account_status !=', 0)
-			->countAllResults();
+		// Dashboard specific values
+		$this->data['title'] = 'Dashboard';
+		$this->data['activeSection'] = 'dashboard';
 
-		$total_new_users = $userModel
-			->where('account_status=', 0)
-			->countAllResults();
+		// Common navbar and sidebar for all views
 
-		$total_applications = 10;
-		$total_exams = 5;
-		$total_income = 150000.00;
-		$total_cost = 42000.00;
+		$this->data['navbarItems'] = [
+			['label' => 'Dashboard', 'url' => base_url('dashboard')],
+			['label' => 'Calendar', 'url' => base_url('calendar')],
+			['label' => 'Result', 'url' => base_url('ad-result')],
+			['label' => 'Accounts', 'url' => base_url('accounts')],
+		];
 
-$data = [
-    'title' => 'Dashboard',
-    'activeSection' => 'dashboard',
+			$this->data['total_students'] = $studentModel->countAll();
+			$this->data['total_users'] = $userModel->where('account_status !=', 0)->countAllResults();
+			$this->data['total_new_users'] = $userModel->where('account_status', 0)->countAllResults();
 
-    // Navbar items
-    'navbarItems' => [
-        ['label' => 'Dashboard', 'url' => base_url('dashboard')],
-        ['label' => 'Calendar', 'url' => base_url('calendar')],
-        ['label' => 'Result', 'url' => base_url('ad-result')],
-        ['label' => 'Accounts', 'url' => base_url('accounts')],
-    ],
+			$this->data['total_applications'] = 10;
+			$this->data['total_exams'] = 5;
+			$this->data['total_income'] = 150000.00;
+			$this->data['total_cost'] = 42000.00;
 
-    // Sidebar items
-    'sidebarItems' => [
-        [
-            'label' => 'Dashboard',
-            'url' => base_url('dashboard'),
-            'icon' => 'fas fa-tachometer-alt',
-            'section' => 'dashboard'
-        ],
-        [
-            'label' => 'Teacher Management',
-            'url' => base_url('teacher_management'),
-            'icon' => 'fas fa-chalkboard-teacher',
-            'section' => 'teacher'
-        ],
-        [
-            'label' => 'Student Management',
-            'url' => base_url('ad-student'),
-            'icon' => 'fas fa-user-graduate',
-            'section' => 'student'
-        ],
-        [
-            'label' => 'Calendar',
-            'url' => base_url('calendar'),
-            'icon' => 'fas fa-calendar-alt',
-            'section' => 'calendar'
-        ]
-    ],
-
-    // Dashboard stats
-    'total_students' => $total_students,
-    'total_users' => $total_users,
-    'total_new_users' => $total_new_users,
-    'total_applications' => $total_applications,
-    'total_exams' => $total_exams,
-    'total_income' => $total_income,
-    'total_cost' => $total_cost,
-];
-
-return view('dashboard/index', $data);
+			return view('dashboard/index', $this->data);
 	}
 
 	public function profile()
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
 
-		$user = [
-			'name' => $session->get('name'),
-			'email' => $session->get('email'),
-			'phone' => $session->get('phone'),
-			'role' => $session->get('role')
-		];
-		$data = [
-			'title' => 'Dashboard',
-			'activeSection' => 'dashboard',
-			'navbarItems' => [
-				['label' => 'Dashboard', 'url' => base_url('dashboard')],
-				['label' => 'Calendar', 'url' => base_url('calendar')],
-				['label' => 'Result', 'url' => base_url('ad-result')],
-			],
-			'user' => $user
+		$this->data['title'] = 'Profile';
+		$this->data['activeSection'] = 'dashboard';
+
+		// Common navbar and sidebar for all views
+		$this->data['navbarItems'] = [
+			['label' => 'Dashboard', 'url' => base_url('dashboard')],
+			['label' => 'Calendar', 'url' => base_url('calendar')],
+			['label' => 'Result', 'url' => base_url('ad-result')],
+			['label' => 'Accounts', 'url' => base_url('accounts')],
 		];
 
-			return view('dashboard/profile', $data);
+			$user = [
+				'name' => $this->session->get('name'),
+				'email' => $this->session->get('email'),
+				'phone' => $this->session->get('phone'),
+				'role' => $this->session->get('role')
+			];
+
+			$this->data['title'] = 'Dashboard';
+			$this->data['activeSection'] = 'dashboard';
+			$this->data['user'] = $user;
+			//echo '<pre>';
+			//print_r($this->data);
+			//exit;
+			return view('dashboard/profile', $this->data);
 	}
+
 	public function calendar()
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
+		$this->data['title'] = 'Calendar';
+		$this->data['activeSection'] = 'calendar';
 
-		$user = [
-			'name' => $session->get('name'),
-			'email' => $session->get('email'),
-			'phone' => $session->get('phone'),
-			'role' => $session->get('role')
+		// Common navbar and sidebar for all views
+		$this->data['navbarItems'] = [
+			['label' => 'Dashboard', 'url' => base_url('dashboard')],
+			['label' => 'Calendar', 'url' => base_url('calendar')],
 		];
 
-		$data = [
-			'title' => 'Dashboard',
-			'activeSection' => 'dashboard',
-			'navbarItems' => [
-				['label' => 'Dashboard', 'url' => base_url('dashboard')],
-				['label' => 'Calendar', 'url' => base_url('calendar')],
-				['label' => 'Result', 'url' => base_url('ad-result')],
-			],
-			'user' => $user
-		];
+			$user = [
+				'name' => $this->session->get('name'),
+				'email' => $this->session->get('email'),
+				'phone' => $this->session->get('phone'),
+				'role' => $this->session->get('role')
+			];
 
-			return view('dashboard/calendar', $data);
+			$this->data['user'] = $user;
+			//echo '<pre>';
+			//print_r($this->data);
+			return view('dashboard/calendar', $this->data);
 	}
 
 	public function events()
@@ -210,73 +208,50 @@ return view('dashboard/index', $data);
 
 	public function teachers()
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
-		$userModel = new UserModel();
 
-		$newUsers = $userModel
-			->where('account_status=',0)
-			->findAll();
-		$totalNewUsers = count($newUsers);
+		$this->data['title'] = 'Teacher Management';
+		$this->data['activeSection'] = 'teacher';
 
-		$users = $userModel
-			->where('account_status !=',0)
-			->findAll();
-		$totalUsers = count($users);
-		$data = [
-			'title' => 'Admin Dashboard',
-			'activeSection' => 'teacher',
-			'navbarItems' => [
-				['label' => 'Teacher List', 'url' => base_url('teacher_management')],
-				['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
-			],
-			'newUsers' => $newUsers,
-			'total_newUsers' => $totalNewUsers,
-			'users' => $users,
-			'total_users' => $totalUsers
+		// Common navbar and sidebar for all views
+		$this->data['navbarItems'] = [
+			['label' => 'Dashboard', 'url' => base_url('dashboard')],
+			['label' => 'Calendar', 'url' => base_url('calendar')],
 		];
 
-			return view('dashboard/ad_teacher_list', $data);
+			$userModel = new UserModel();
 
+			$newUsers = $userModel->where('account_status', 0)->findAll();
+			$totalNewUsers = count($newUsers);
+
+			$users = $userModel->where('account_status !=', 0)->findAll();
+			$totalUsers = count($users);
+
+			// Assign to $this->data
+			$this->data['newUsers'] = $newUsers;
+			$this->data['total_newUsers'] = $totalNewUsers;
+			$this->data['users'] = $users;
+			$this->data['total_users'] = $totalUsers;
+
+			return view('dashboard/ad_teacher_list', $this->data);
 	}
 
 	public function newUser()
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
-		$userModel = new UserModel();
-
-		$newUsers = $userModel
-			->where('account_status=',0)
+		$newUsers = $this->userModel
+			->where('account_status', 0)
 			->findAll();
-		$totalNewUsers = count($newUsers);
 
-		$data = [
-			'title' => 'Admin Dashboard',
-			'activeSection' => 'teacher',
-			'navbarItems' => [
-				['label' => 'New Users', 'url' => base_url('ad_new_user')],
-				['label' => 'All Teachers', 'url' => base_url('teacher_management')],
-			],
-			'newUsers' => $newUsers,
-			'total_newUsers' => $totalNewUsers
-		];
+		$this->data['activeSection'] = 'teacher'; // for menu highlight
+		$this->data['newUsers'] = $newUsers;
+		$this->data['total_newUsers'] = count($newUsers);
 
-			return view('dashboard/ad_new_user', $data);
+		return view('dashboard/ad_new_user', $this->data);
 	}
 
 	public function user_permit($id)
 	{
 		$userModel = new UserModel();
 
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
 
 		$permitBy = $session->get('user_id');
 
@@ -303,37 +278,28 @@ return view('dashboard/index', $data);
 
 	public function teacher_management()
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
-
 		$subjectModel = new SubjectModel();
 		$userModel    = new UserModel();
 
-		$subjects = $subjectModel->orderBy('id')->findAll(); // ✅ fixed line
+		$subjects = $subjectModel->orderBy('id')->findAll();
 		$users    = $userModel->where('account_status !=', 0)->findAll();
-		$data = [
-			'title'    => 'Teacher Management',
-			'activeSection' => 'teacher',
-			'navbarItems' => [
-				['label' => 'Teacher List', 'url' => base_url('teacher_management')],
-				['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
-				['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
-			],
-			'users'    => $users,
-			'subjects' => $subjects
-		];
 
-			return view('dashboard/teacher_management', $data);
+		// Use $this->data which already has navbarItems, sidebarItems
+		$this->data['title'] = 'Teacher Management';
+		$this->data['activeSection'] = 'teacher';
+		$this->data['navbarItems'] = [
+			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
+			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
+			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
+		];
+			$this->data['users'] = $users;
+			$this->data['subjects'] = $subjects;
+
+			return view('dashboard/teacher_management', $this->data);
 	}
 
 	public function teacherSubUpdate()
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
 
 
 
@@ -355,20 +321,12 @@ return view('dashboard/index', $data);
 
 	public function assignSubject($id)
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
-
-
-		$userModel = new UserModel();
+		$userModel    = new UserModel();
 		$subjectModel = new SubjectModel();
 
 		$user = $userModel->find($id);
-
-
 		if (!$user) {
-			return redirect()->back()->with('error', 'no records founds');
+			return redirect()->back()->with('error', 'No records found.');
 		}
 
 		$subjectIds = array_filter(
@@ -376,46 +334,37 @@ return view('dashboard/index', $data);
 				);
 
 		$subjects = [];
-		if ($subjectIds) {
+		if (!empty($subjectIds)) {
 			$subjects = $subjectModel
 				->whereIn('id', $subjectIds)
-				->orderBy('class ASC')
+				->orderBy('class', 'ASC')
 				->findAll();
 		}
-		$data = [
-			'title'    => 'Assign Subject',
-			'activeSection' => 'teacher',
-			'navbarItems' => [
-				['label' => 'Teacher List', 'url' => base_url('teacher_management')],
-				['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
-			],
-			'user'     => $user,
-			'subjects' => $subjects
+
+		// Use $this->data to avoid repeating common layout data
+		$this->data['title']         = 'Assign Subject';
+		$this->data['activeSection'] = 'teacher';
+		$this->data['navbarItems']   = [
+			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
+			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
 		];
+			$this->data['user']          = $user;
+			$this->data['subjects']      = $subjects;
 
-			return view('dashboard/assign_subject', $data);
-
-
+			return view('dashboard/assign_subject', $this->data);
 	}
-
 
 	public function student()
 	{
-
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
 		$studentModel = new StudentModel();
 
 		// Get filter inputs
-		$q = $this->request->getGet('q');
-		$class = $this->request->getGet('class');
+		$q       = $this->request->getGet('q');
+		$class   = $this->request->getGet('class');
 		$section = $this->request->getGet('section');
 
-		// Build query with filters
+		// Build query
 		$builder = $studentModel;
-
 		if ($q) {
 			$builder = $builder->groupStart()
 				->like('student_name', $q)
@@ -423,97 +372,73 @@ return view('dashboard/index', $data);
 				->orLike('id', $q)
 				->groupEnd();
 		}
-
 		if ($class) {
 			$builder = $builder->where('class', $class);
 		}
-
 		if ($section) {
 			$builder = $builder->where('section', $section);
 		}
-		$perPage = 20;
-		// Sort and paginate
-		$students = $builder
-			->orderBy('CAST(class as UNSIGNED) ASC')
+
+		$perPage  = 20;
+		$students = $builder->orderBy('CAST(class as UNSIGNED) ASC')
 			->paginate($perPage, 'bootstrap');
 
-		// For section dropdown
-		$sections = $studentModel->select('section')
-			->distinct()
-			->orderBy('section')
-			->findAll();
+		$sections = $studentModel->select('section')->distinct()->orderBy('section')->findAll();
 
-		$data = [
-			'title' => 'Student Management',
-			'activeSection' => 'student',
-			'navbarItems' => [
-				['label' => 'Student List', 'url' => base_url('ad-student')],
-				['label' => 'Add Student', 'url' => base_url('student_create')],
-				['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
-			],
-			'students' => $students,
-			'pager' => $studentModel->pager,
-			'q' => $q,
-			'class' => $class,
-			'section' => $section,
-			'sections' => $sections
+		$this->data['title']         = 'Student Management';
+		$this->data['activeSection'] = 'student';
+		$this->data['navbarItems']   = [
+			['label' => 'Student List', 'url' => base_url('ad-student')],
+			['label' => 'Add Student', 'url' => base_url('student_create')],
+			['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
 		];
+			$this->data['students']      = $students;
+			$this->data['pager']         = $studentModel->pager;
+			$this->data['q']             = $q;
+			$this->data['class']         = $class;
+			$this->data['section']       = $section;
+			$this->data['sections']      = $sections;
 
-			return view('dashboard/student', $data);
+			return view('dashboard/student', $this->data);
 	}
-
 
 	public function result($userId, $subjectId)
 	{
-		$userModel     = new UserModel();
-		$subjectModel  = new SubjectModel();
-		$studentModel  = new StudentModel();   // ⬅ new
+		$user    = $this->userModel->find($userId);
+		$subject = $this->subjectModel->find($subjectId);
 
-		// ── Fetch teacher and subject ─────────────────────────────
-		$user    = $userModel->find($userId);
-		$subject = $subjectModel->find($subjectId);
-
-		// custom 404 if either is missing
 		if (!$user || !$subject) {
 			$routes   = \Config\Services::routes();
 			$override = $routes->get404Override();
-			return is_callable($override) ? $override() : null;
+			return is_callable($override) ? $override() : show_404();
 		}
 
-		// ── Pull students in the same class & section ─────────────
-		$students = $studentModel
+		$students = $this->studentModel
 			->where('class', $subject['class'])
-			->groupStart()                       // ( ... )
+			->groupStart()
 			->where('section', $subject['section'])   // exact match
-			->orWhere('section', 'n/a')                 // empty string ⇒ “all sections”
-			->orWhere('section', null)               // NULL safety (if you use NULLs)
-			->orLike('section', $subject['section']) // partial / substring match
-			->groupEnd()                        // )
+			->orWhere('section', 'n/a')               // match all sections
+			->orWhere('section', null)                // NULL-safe
+			->orLike('section', $subject['section'])  // substring match
+			->groupEnd()
 			->orderBy('roll', 'ASC')
 			->findAll();
-		// ── Send everything to the view ───────────────────────────
-		$data = [
-			'title'     => 'Result Entry',
-			'activeSection' => 'result',
-			'navbarItems' => [
-				['label' => 'Result Entry', 'url' => base_url('ad-result')],
-				['label' => 'Result Sheet', 'url' => base_url('result_sheet')],
-			],
-			'user'     => $user,
-			'subject'  => $subject,
-			'students' => $students
+
+		$this->data['title']         = 'Result Entry';
+		$this->data['activeSection'] = 'result';
+		$this->data['navbarItems']   = [
+			['label' => 'Result Entry', 'url' => base_url('ad-result')],
+			['label' => 'Result Sheet', 'url' => base_url('result_sheet')],
 		];
+			$this->data['user']     = $user;
+			$this->data['subject']  = $subject;
+			$this->data['students'] = $students;
 
-			return view('dashboard/ad_result', $data);
+			return view('dashboard/ad_result', $this->data);
 	}
-
 
 	public function submitResults()
 	{		
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
 
 		$resultModel = new ResultModel();
 
@@ -572,56 +497,50 @@ return view('dashboard/index', $data);
 
 	public function viewStudent($id)
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
-		$studentModel = new StudentModel();
-
-		$student = $studentModel->find($id);
+		$this->studentModel = new StudentModel();
+		$student = $this->studentModel->find($id);
 
 		if (!$student) {
 			return redirect()->back()->with('error', 'No data found');
 		}
-		$data = [
-			'title' => 'Student Details',
-			'activeSection' => 'student',
-			'navbarItems' => [
-				['label' => 'Student List', 'url' => base_url('ad-student')],
-				['label' => 'Add Student', 'url' => base_url('student_create')],
-				['label' => 'View Student', 'url' => current_url()],
-			],
-			'student' => $student
-		];
 
-			return view('dashboard/student_view', $data);
+		$this->data['title'] = 'Student Details';
+		$this->data['activeSection'] = 'student';
+		$this->data['navbarItems'] = [
+			['label' => 'Student List', 'url' => base_url('ad-student')],
+			['label' => 'Add Student', 'url' => base_url('student_create')],
+			['label' => 'View Student', 'url' => current_url()],
+		];
+			$this->data['student'] = $student;
+
+			return view('dashboard/student_view', $this->data);
 	}
+
 	public function editStudent($id)
 	{
-		$model = new StudentModel();
-		$student = $model->find($id);
+
+		$this->studentModel = new StudentModel();
+		$student = $this->studentModel->find($id);
 
 		if (!$student) {
 			return redirect()->to('ad-student')->with('error', 'Student not found.');
 		}
-		$data = [
-			'title' => 'Edit Student',
-			'activeSection' => 'student',
-			'navbarItems' => [
-				['label' => 'Student List', 'url' => base_url('ad-student')],
-				['label' => 'Add Student', 'url' => base_url('student_create')],
-				['label' => 'Edit Student', 'url' => current_url()],
-			],
-			'student' => $student
+
+		$this->data['title'] = 'Edit Student';
+		$this->data['activeSection'] = 'student';
+		$this->data['navbarItems'] = [
+			['label' => 'Student List', 'url' => base_url('ad-student')],
+			['label' => 'Add Student', 'url' => base_url('student_create')],
+			['label' => 'Edit Student', 'url' => current_url()],
 		];
+			$this->data['student'] = $student;
 
-			return view('dashboard/student_edit', $data);
+			return view('dashboard/student_edit', $this->data);
 	}
-
 	public function updateStudent($id)
 	{
-		$model = new StudentModel();
-		$student = $model->find($id);
+		$this->studentModel = new StudentModel();
+		$student = $this->studentModel->find($id);
 
 		if (!$student) {
 			return redirect()->to('ad-student')->with('error', 'Student not found.');
@@ -633,20 +552,20 @@ return view('dashboard/index', $data);
 				'father_nid_number', 'mother_nid_number', 'religion', 'blood_group'
 		]);
 
-		$model->update($id, $data);
+		$this->studentModel->update($id, $data);
 
 		return redirect()->to('admin/students/view/' . $id)->with('message', 'Student updated successfully.');
 	}
-
 	public function editStudentPhoto($id)
 	{
-		$model = new StudentModel();
-		$student = $model->find($id);
+		$this->studentModel = new StudentModel();
+		$student = $this->studentModel->find($id);
 
 		if (!$student) {
 			return redirect()->to('admin/students')->with('error', 'Student not found.');
 		}
-		$data = [
+
+		$this->data = [
 			'title' => 'Edit Photo',
 			'activeSection' => 'student',
 			'navbarItems' => [
@@ -656,14 +575,13 @@ return view('dashboard/index', $data);
 			'student' => $student
 		];
 
-			return view('dashboard/edit_photo', $data);
+			return view('dashboard/edit_photo', $this->data);
 	}
 
-
-	function updateStudentPhoto($id)
+	public function updateStudentPhoto($id)
 	{
-		$model = new StudentModel();
-		$student = $model->find($id);
+		$this->studentModel = new StudentModel();
+		$student = $this->studentModel->find($id);
 
 		if (!$student) {
 			return redirect()->to('admin/students')->with('error', 'Student not found.');
@@ -673,21 +591,19 @@ return view('dashboard/index', $data);
 
 		if ($file && $file->isValid() && !$file->hasMoved()) {
 			$newName = $file->getRandomName();
-			$file->move('uploads/students', $newName);
+			$file->move(FCPATH . 'uploads/students', $newName);
 
-			// ✅ Delete old file (if not default and it exists)
-			$oldPath = FCPATH . $student['student_pic'];
-
-			if (!empty($student['student_pic']) && file_exists($oldPath)) {
-				unlink($oldPath);
+			// Delete old photo if it exists and is not default
+			if (!empty($student['student_pic']) && file_exists(FCPATH . $student['student_pic'])) {
+				unlink(FCPATH . $student['student_pic']);
 			}
 
-			// ✅ Save new file path to DB
-			$model->update($id, [
+			// Update DB
+			$this->studentModel->update($id, [
 					'student_pic' => 'uploads/students/' . $newName,
 			]);
 
-			return redirect()->to('admin/students/view/' . $id)->with('message', 'Photo updated.');
+			return redirect()->to('admin/students/view/' . $id)->with('message', 'Photo updated successfully.');
 		}
 
 		return redirect()->back()->with('error', 'Photo upload failed.');
