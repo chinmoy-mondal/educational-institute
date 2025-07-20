@@ -68,7 +68,9 @@
 		<?php foreach ($students as $s): ?>
 			<option vaule="<?= esc($s['id']) ?>">
 			<pre>
-			<?= esc($s['class']) . str_repeat('&nbsp;', 8) . esc($s['roll']) ?>
+			<?= esc($s['class']) ?>
+			<?= (strlen((string)$s['class']) == 1) ? str_repeat('&nbsp;', 10) : str_repeat('&nbsp;', 8) ?>
+			<?= esc($s['roll']) ?>
 			<?= (strlen((string)$s['roll']) == 1) ? str_repeat('&nbsp;', 10) : str_repeat('&nbsp;', 8) ?>
 			<?= esc($s['student_name'])  ?>
 			</pre>
