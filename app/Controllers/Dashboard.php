@@ -412,22 +412,50 @@ class Dashboard extends Controller
 
 	public function stAssaginSubView()
 	{
-		$student = $this->studentModel->find($id);
+		$studentModel = new StudentModel();
 
-		if (!$student) {
-			return redirect()->back()->with('error', 'No data found');
+		// Get filter inputs
+		$q       = $this->request->getGet('q');
+		$class   = $this->request->getGet('class');
+		$section = $this->request->getGet('section');
+
+		// Build query
+		$builder = $studentModel;
+		if ($q) {
+			$builder = $builder->groupStart()
+				->like('student_name', $q)
+				->orLike('roll', $q)
+				->orLike('id', $q)
+				->groupEnd();
+		}
+		if ($class) {
+			$builder = $builder->where('class', $class);
+		}
+		if ($section) {
+			$builder = $builder->where('section', $section);
 		}
 
-		$this->data['title'] = 'Student Details';
+		$perPage  = 20;
+		$students = $builder->orderBy('CAST(class as UNSIGNED) ASC')
+			->paginate($perPage, 'bootstrap');
+
+		$sections = $studentModel->select('section')->distinct()->orderBy('section')->findAll();
+
+		$this->data['title']         = 'Student Management';
 		$this->data['activeSection'] = 'student';
-		$this->data['navbarItems'] = [
+		$this->data['navbarItems']   = [
 			['label' => 'Student List', 'url' => base_url('ad-student')],
 			['label' => 'Add Student', 'url' => base_url('student_create')],
-			['label' => 'View Student', 'url' => current_url()],
+			['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
 		];
-			$this->data['student'] = $student;
+			$this->data['students']      = $students;
+			$this->data['pager']         = $studentModel->pager;
+			$this->data['q']             = $q;
+			$this->data['class']         = $class;
+			$this->data['section']       = $section;
+			$this->data['sections']      = $sections;
 
-			return view('dashboard/student_view', $this->data);
+			return view('dashboard/stSubAssaginment', $this->data);
 	}
 
 	public function result($userId, $subjectId)
