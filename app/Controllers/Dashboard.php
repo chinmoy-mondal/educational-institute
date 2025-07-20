@@ -435,10 +435,9 @@ class Dashboard extends Controller
 			$builder = $builder->where('section', $section);
 		}
 
-		$perPage  = 20;
 		$students = $builder->orderBy('CAST(class as UNSIGNED) ASC')
-			->paginate($perPage, 'bootstrap');
-
+			->get()
+			->getResultArray();
 		$sections = $studentModel->select('section')->distinct()->orderBy('section')->findAll();
 
 		$this->data['title']         = 'Student Subject Management';
