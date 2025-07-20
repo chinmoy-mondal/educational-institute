@@ -40,9 +40,9 @@
               <div class="form-group">
                 <label for="section">Section</label>
                 <select name="class" id="class" class="form-control">
-                  <option value="" <?= ($class ?? '') === '' ? 'selected' : '' ?>>All Classes</option>
+                  <option value="" <?= ($section ?? '') === '' ? 'selected' : '' ?>>All Classes</option>
                   <?php for ($i = 6; $i <= 10; $i++): ?>
-                    <option value="<?= $i ?>" <?= ($class ?? '') == $i ? 'selected' : '' ?>>Class <?= $i ?></option>
+                    <option value="<?= $i ?>" <?= ($section ?? '') == $i ? 'selected' : '' ?>>Class <?= $i ?></option>
                   <?php endfor; ?>
                 </select>
               </div>
