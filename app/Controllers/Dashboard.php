@@ -237,39 +237,21 @@ class Dashboard extends Controller
 
 	public function newUser()
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
-		$userModel = new UserModel();
-
-		$newUsers = $userModel
-			->where('account_status=',0)
+		$newUsers = $this->userModel
+			->where('account_status', 0)
 			->findAll();
-		$totalNewUsers = count($newUsers);
 
-		$data = [
-			'title' => 'Admin Dashboard',
-			'activeSection' => 'teacher',
-			'navbarItems' => [
-				['label' => 'New Users', 'url' => base_url('ad_new_user')],
-				['label' => 'All Teachers', 'url' => base_url('teacher_management')],
-			],
-			'newUsers' => $newUsers,
-			'total_newUsers' => $totalNewUsers
-		];
+		$this->data['activeSection'] = 'teacher'; // for menu highlight
+		$this->data['newUsers'] = $newUsers;
+		$this->data['total_newUsers'] = count($newUsers);
 
-			return view('dashboard/ad_new_user', $data);
+		return view('dashboard/ad_new_user', $this->data);
 	}
 
 	public function user_permit($id)
 	{
 		$userModel = new UserModel();
 
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
 
 		$permitBy = $session->get('user_id');
 
@@ -296,26 +278,25 @@ class Dashboard extends Controller
 
 	public function teacher_management()
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
-
+		// Models
 		$subjectModel = new SubjectModel();
 		$userModel    = new UserModel();
 
-		$subjects = $subjectModel->orderBy('id')->findAll(); // ✅ fixed line
+		// Get data
+		$subjects = $subjectModel->orderBy('id')->findAll();
 		$users    = $userModel->where('account_status !=', 0)->findAll();
+
+		// Build data array (you can use $this->data if using constructor-based setup)
 		$data = [
-			'title'    => 'Teacher Management',
-			'activeSection' => 'teacher',
-			'navbarItems' => [
+			'title'          => 'Teacher Management',
+			'activeSection'  => 'teacher', // make sure this matches sidebar check
+			'navbarItems'    => [
 				['label' => 'Teacher List', 'url' => base_url('teacher_management')],
 				['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
 				['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
 			],
-			'users'    => $users,
-			'subjects' => $subjects
+			'users'          => $users,
+			'subjects'       => $subjects
 		];
 
 			return view('dashboard/teacher_management', $data);
