@@ -300,10 +300,6 @@ class Dashboard extends Controller
 
 	public function teacherSubUpdate()
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
 
 
 
@@ -325,20 +321,12 @@ class Dashboard extends Controller
 
 	public function assignSubject($id)
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
-
-
-		$userModel = new UserModel();
+		$userModel    = new UserModel();
 		$subjectModel = new SubjectModel();
 
 		$user = $userModel->find($id);
-
-
 		if (!$user) {
-			return redirect()->back()->with('error', 'no records founds');
+			return redirect()->back()->with('error', 'No records found.');
 		}
 
 		$subjectIds = array_filter(
@@ -346,46 +334,37 @@ class Dashboard extends Controller
 				);
 
 		$subjects = [];
-		if ($subjectIds) {
+		if (!empty($subjectIds)) {
 			$subjects = $subjectModel
 				->whereIn('id', $subjectIds)
-				->orderBy('class ASC')
+				->orderBy('class', 'ASC')
 				->findAll();
 		}
-		$data = [
-			'title'    => 'Assign Subject',
-			'activeSection' => 'teacher',
-			'navbarItems' => [
-				['label' => 'Teacher List', 'url' => base_url('teacher_management')],
-				['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
-			],
-			'user'     => $user,
-			'subjects' => $subjects
+
+		// Use $this->data to avoid repeating common layout data
+		$this->data['title']         = 'Assign Subject';
+		$this->data['activeSection'] = 'teacher';
+		$this->data['navbarItems']   = [
+			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
+			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
 		];
+			$this->data['user']          = $user;
+			$this->data['subjects']      = $subjects;
 
-			return view('dashboard/assign_subject', $data);
-
-
+			return view('dashboard/assign_subject', $this->data);
 	}
-
 
 	public function student()
 	{
-
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
-			return redirect()->to(base_url('login'));
-		}
 		$studentModel = new StudentModel();
 
 		// Get filter inputs
-		$q = $this->request->getGet('q');
-		$class = $this->request->getGet('class');
+		$q       = $this->request->getGet('q');
+		$class   = $this->request->getGet('class');
 		$section = $this->request->getGet('section');
 
-		// Build query with filters
+		// Build query
 		$builder = $studentModel;
-
 		if ($q) {
 			$builder = $builder->groupStart()
 				->like('student_name', $q)
@@ -393,45 +372,35 @@ class Dashboard extends Controller
 				->orLike('id', $q)
 				->groupEnd();
 		}
-
 		if ($class) {
 			$builder = $builder->where('class', $class);
 		}
-
 		if ($section) {
 			$builder = $builder->where('section', $section);
 		}
-		$perPage = 20;
-		// Sort and paginate
-		$students = $builder
-			->orderBy('CAST(class as UNSIGNED) ASC')
+
+		$perPage  = 20;
+		$students = $builder->orderBy('CAST(class as UNSIGNED) ASC')
 			->paginate($perPage, 'bootstrap');
 
-		// For section dropdown
-		$sections = $studentModel->select('section')
-			->distinct()
-			->orderBy('section')
-			->findAll();
+		$sections = $studentModel->select('section')->distinct()->orderBy('section')->findAll();
 
-		$data = [
-			'title' => 'Student Management',
-			'activeSection' => 'student',
-			'navbarItems' => [
-				['label' => 'Student List', 'url' => base_url('ad-student')],
-				['label' => 'Add Student', 'url' => base_url('student_create')],
-				['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
-			],
-			'students' => $students,
-			'pager' => $studentModel->pager,
-			'q' => $q,
-			'class' => $class,
-			'section' => $section,
-			'sections' => $sections
+		$this->data['title']         = 'Student Management';
+		$this->data['activeSection'] = 'student';
+		$this->data['navbarItems']   = [
+			['label' => 'Student List', 'url' => base_url('ad-student')],
+			['label' => 'Add Student', 'url' => base_url('student_create')],
+			['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
 		];
+			$this->data['students']      = $students;
+			$this->data['pager']         = $studentModel->pager;
+			$this->data['q']             = $q;
+			$this->data['class']         = $class;
+			$this->data['section']       = $section;
+			$this->data['sections']      = $sections;
 
-			return view('dashboard/student', $data);
+			return view('dashboard/student', $this->data);
 	}
-
 
 	public function result($userId, $subjectId)
 	{
