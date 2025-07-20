@@ -38,15 +38,17 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label for="section">Section</label>
-                <select name="subject" id="subject" class="form-control">
-        <option value="" <?= ($selectedSubject ?? '') === '' ? 'selected' : '' ?>>All Subjects</option>
-        <?php foreach ($subjects as $subject): ?>
-          <option value="<?= esc($subject['subject']) ?>" <?= ($selectedSubject ?? '') === $subject['subject'] ? 'selected' : '' ?>>
-            <?= esc($subject['subject']) ?> (Class <?= esc($subject['class']) ?> - Section <?= esc($subject['section']) ?>)
-          </option>
-        <?php endforeach; ?>
-      </select>
+                <label for="section">Section</label><select multiple class="form-control select2" id="leftSelect" name="left_select[]" style="height: 400px; width: 100%;">
+		<?php foreach ($students as $s): ?>
+			<option vaule="<?= esc($s['id']) ?>">
+			<pre>
+			<?= esc($s['class']) . str_repeat('&nbsp;', 8) . esc($s['roll']) ?>
+			<?= (strlen((string)$s['roll']) == 1) ? str_repeat('&nbsp;', 10) : str_repeat('&nbsp;', 8) ?>
+			<?= esc($s['student_name']) . str_repeat('&nbsp;', 8) . "(" . esc($s['section']) . ")" ?>
+			</pre>
+			</option>
+		<?php endforeach ?>
+	      </select>
               </div>
             </div>
             <div class="col-md-2">
@@ -85,9 +87,11 @@
 	    <div class="form-group">
 	      <label for="rightSelect">Select Students (Right)</label>
 	      <select multiple  class="form-control select2" id="rightSelect" name="right_select[]" style="height:400px; width: 100%;">
-		<?php foreach ($students as $s): ?>
+		<?php foreach ($subjects as $s): ?>
 		  <option value="<?= esc($s['id']) ?>">
-		    <?= esc($s['student_name']) ?> (<?= esc($s['roll']) ?>)
+		    <?= esc($s['class']) ?>
+		    <?= (strlen((string)$s['class']) == 1) ? str_repeat('&nbsp;', 10) : str_repeat('&nbsp;', 8) ?>
+		    <?= esc($s['subject']) ?>
 		  </option>
 		<?php endforeach ?>
 	      </select>
