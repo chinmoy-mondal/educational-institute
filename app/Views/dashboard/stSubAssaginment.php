@@ -38,7 +38,8 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label for="section">Section</label><select name="section" id="section" class="form-control">
+                <label for="section">Section</label>
+		 <select name="section" id="section" class="form-control">
                   <option value="" <?= ($section ?? '') === '' ? 'selected' : '' ?>>All Sections</option>
                   <?php foreach ($sections as $sec): ?>
                     <option value="<?= esc($sec['section']) ?>" <?= ($section ?? '') === $sec['section'] ? 'selected' : '' ?>>
