@@ -409,6 +409,9 @@ class Dashboard extends Controller
 
 	public function result($userId, $subjectId)
 	{
+		$this->userModel = new UserModel();
+		$this->subjectModel = new SubjectModel();
+
 		$user    = $this->userModel->find($userId);
 		$subject = $this->subjectModel->find($subjectId);
 
