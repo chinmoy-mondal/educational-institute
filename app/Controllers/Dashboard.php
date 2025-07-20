@@ -402,6 +402,11 @@ class Dashboard extends Controller
 			return view('dashboard/student', $this->data);
 	}
 
+	public function stAssaginSubView()
+{
+	echo "yes";
+}
+
 	public function result($userId, $subjectId)
 	{
 		$user    = $this->userModel->find($userId);
