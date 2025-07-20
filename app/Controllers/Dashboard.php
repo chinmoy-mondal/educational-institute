@@ -110,8 +110,10 @@ class Dashboard extends Controller
 			$this->data['title'] = 'Dashboard';
 			$this->data['activeSection'] = 'dashboard';
 			$this->data['user'] = $user;
-
-			return view('dashboard/profile', $this->data);
+echo '<pre>';
+print_r($this->data);
+exit;
+//			return view('dashboard/profile', $this->data);
 	}
 
 	public function calendar()
@@ -133,8 +135,9 @@ class Dashboard extends Controller
 		];
 
 		$this->data['user'] = $user;
-
-		return view('dashboard/calendar', $this->data);
+echo '<pre>';
+print_r($this->data);
+//		return view('dashboard/calendar', $this->data);
 	}
 
 	public function events()
@@ -223,8 +226,9 @@ class Dashboard extends Controller
 		];
 
 		$this->data['user'] = $user;
-
-		return view('dashboard/calendar', $this->data);
+echo '<pre>';
+print_r($this->data);
+//		return view('dashboard/calendar', $this->data);
 
 }
 
