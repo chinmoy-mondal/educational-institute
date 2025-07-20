@@ -436,11 +436,9 @@ class Dashboard extends Controller
 		}
 
 
-		$students = $builder
-		    ->orderBy('CAST(roll as UNSIGNED)', 'ASC')
-		    ->orderBy('CAST(class as UNSIGNED)', 'ASC')
-		    ->get()
-		    ->getResultArray();
+		$students = $studentModel
+			->orderBy("CAST(CONCAT(class, LPAD(roll, 3, '0')) AS UNSIGNED)", 'ASC')
+			->findAll();
 
 		$sections = $studentModel->select('section')->distinct()->orderBy('section')->findAll();
 
