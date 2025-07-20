@@ -411,59 +411,52 @@ class Dashboard extends Controller
 	}
 
 	public function stAssaginSubView()
-	{
-$studentModel = new \App\Models\StudentModel(); // adjust namespace if needed
-    $db = \Config\Database::connect();
+	{$studentModel = new StudentModel();
 
-    // Get filter inputs
-    $q       = $this->request->getGet('q');
-    $class   = $this->request->getGet('class');
-    $section = $this->request->getGet('section');
+		// Get filter inputs
+		$q       = $this->request->getGet('q');
+		$class   = $this->request->getGet('class');
+		$section = $this->request->getGet('section');
 
-    // Start query builder
-    $builder = $db->table('students');
+		// Build query
+		$builder = $studentModel;
+		if ($q) {
+			$builder = $builder->groupStart()
+				->like('student_name', $q)
+				->orLike('roll', $q)
+				->orLike('id', $q)
+				->groupEnd();
+		}
+		if ($class) {
+			$builder = $builder->where('class', $class);
+		}
+		if ($section) {
+			$builder = $builder->where('section', $section);
+		}
 
-    // Apply filters
-    if ($q) {
-        $builder->groupStart()
-            ->like('student_name', $q)
-            ->orLike('roll', $q)
-            ->orLike('id', $q)
-            ->groupEnd();
-    }
+		$students = $builder
+		    ->orderBy('CAST(class as UNSIGNED)', 'ASC')
+		    ->orderBy('CAST(roll as UNSIGNED)', 'ASC')
+		    ->get()
+		    ->getResultArray();
 
-    if ($class) {
-        $builder->where('class', $class);
-    }
+		$sections = $studentModel->select('section')->distinct()->orderBy('section')->findAll();
 
-    if ($section) {
-        $builder->where('section', $section);
-    }
+		$this->data['title']         = 'Student Subject Management';
+		$this->data['activeSection'] = 'student';
+		$this->data['navbarItems']   = [
+			['label' => 'Student List', 'url' => base_url('ad-student')],
+			['label' => 'Add Student', 'url' => base_url('student_create')],
+			['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
+		];
+			$this->data['students']      = $students;
+			$this->data['pager']         = $studentModel->pager;
+			$this->data['q']             = $q;
+			$this->data['class']         = $class;
+			$this->data['section']       = $section;
+			$this->data['sections']      = $sections;
 
-    // Correct sorting using CONCAT + LPAD + CAST
-    $builder->orderBy("CAST(CONCAT(class, LPAD(roll, 3, '0')) AS UNSIGNED)", "ASC");
-
-    // Fetch results
-    $students = $builder->get()->getResultArray();
-
-    // Distinct sections for filter dropdown
-    $sections = $studentModel->select('section')->distinct()->orderBy('section')->findAll();
-
-    // Set view data
-    $this->data['title']         = 'Student Subject Management';
-    $this->data['activeSection'] = 'student';
-    $this->data['navbarItems']   = [
-        ['label' => 'Student List', 'url' => base_url('ad-student')],
-        ['label' => 'Add Student', 'url' => base_url('student_create')],
-        ['label' => 'Assign Subject', 'url' => base_url('admin/stAssaginSubView')],
-    ];
-    $this->data['students'] = $students;
-    $this->data['sections'] = $sections;
-    $this->data['q']        = $q;
-    $this->data['class']    = $class;
-    $this->data['section']  = $section;
-
-    return view('dashboard/stSubAssaginment', $this->data);
+			return view('dashboard/stSubAssaginment', $this->data);
 	}
 
 	public function result($userId, $subjectId)
