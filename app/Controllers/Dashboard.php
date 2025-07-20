@@ -278,28 +278,24 @@ class Dashboard extends Controller
 
 	public function teacher_management()
 	{
-		// Models
 		$subjectModel = new SubjectModel();
 		$userModel    = new UserModel();
 
-		// Get data
 		$subjects = $subjectModel->orderBy('id')->findAll();
 		$users    = $userModel->where('account_status !=', 0)->findAll();
 
-		// Build data array (you can use $this->data if using constructor-based setup)
-		$data = [
-			'title'          => 'Teacher Management',
-			'activeSection'  => 'teacher', // make sure this matches sidebar check
-			'navbarItems'    => [
-				['label' => 'Teacher List', 'url' => base_url('teacher_management')],
-				['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
-				['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
-			],
-			'users'          => $users,
-			'subjects'       => $subjects
+		// Use $this->data which already has navbarItems, sidebarItems
+		$this->data['title'] = 'Teacher Management';
+		$this->data['activeSection'] = 'teacher';
+		$this->data['navbarItems'] = [
+			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
+			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
+			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
 		];
+			$this->data['users'] = $users;
+			$this->data['subjects'] = $subjects;
 
-			return view('dashboard/teacher_management', $data);
+			return view('dashboard/teacher_management', $this->data);
 	}
 
 	public function teacherSubUpdate()
