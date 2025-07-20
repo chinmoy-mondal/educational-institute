@@ -28,32 +28,32 @@ class Dashboard extends Controller
 			['label' => 'Result', 'url' => base_url('ad-result')],
 			['label' => 'Accounts', 'url' => base_url('accounts')],
 		];
-		$this->data['sidebarItems'] = [
-		    [
-			'label' => 'Dashboard', 
-			'url' => base_url('dashboard'), 
-			'icon' => 'fas fa-tachometer-alt', 
-			'section' => 'dashboard'
-		    ],
-		    [
-			'label' => 'Teacher Management', 
-			'url' => base_url('teacher_management'), 
-			'icon' => 'fas fa-chalkboard-teacher', 
-			'section' => 'teacher'
-		    ],
-		    [
-			'label' => 'Student Management', 
-			'url' => base_url('ad-student'), 
-			'icon' => 'fas fa-user-graduate', 
-			'section' => 'student'
-		    ],
-		    [
-			'label' => 'Calendar', 
-			'url' => base_url('calendar'), 
-			'icon' => 'fas fa-calendar-alt', 
-			'section' => 'calendar'
-		    ],
-		];
+			$this->data['sidebarItems'] = [
+				[
+					'label' => 'Dashboard', 
+				'url' => base_url('dashboard'), 
+				'icon' => 'fas fa-tachometer-alt', 
+				'section' => 'dashboard'
+				],
+				[
+					'label' => 'Teacher Management', 
+				'url' => base_url('teacher_management'), 
+				'icon' => 'fas fa-chalkboard-teacher', 
+				'section' => 'teacher'
+				],
+				[
+					'label' => 'Student Management', 
+				'url' => base_url('ad-student'), 
+				'icon' => 'fas fa-user-graduate', 
+				'section' => 'student'
+				],
+				[
+					'label' => 'Calendar', 
+				'url' => base_url('calendar'), 
+				'icon' => 'fas fa-calendar-alt', 
+				'section' => 'calendar'
+				],
+				];
 	}
 
 	public function index()
@@ -110,10 +110,10 @@ class Dashboard extends Controller
 			$this->data['title'] = 'Dashboard';
 			$this->data['activeSection'] = 'dashboard';
 			$this->data['user'] = $user;
-echo '<pre>';
-print_r($this->data);
-exit;
-//			return view('dashboard/profile', $this->data);
+			//echo '<pre>';
+			//print_r($this->data);
+			//exit;
+			return view('dashboard/profile', $this->data);
 	}
 
 	public function calendar()
@@ -127,17 +127,17 @@ exit;
 			['label' => 'Calendar', 'url' => base_url('calendar')],
 		];
 
-		$user = [
-			'name' => $this->session->get('name'),
-			'email' => $this->session->get('email'),
-			'phone' => $this->session->get('phone'),
-			'role' => $this->session->get('role')
-		];
+			$user = [
+				'name' => $this->session->get('name'),
+				'email' => $this->session->get('email'),
+				'phone' => $this->session->get('phone'),
+				'role' => $this->session->get('role')
+			];
 
-		$this->data['user'] = $user;
-echo '<pre>';
-print_r($this->data);
-//		return view('dashboard/calendar', $this->data);
+			$this->data['user'] = $user;
+			//echo '<pre>';
+			//print_r($this->data);
+			return view('dashboard/calendar', $this->data);
 	}
 
 	public function events()
@@ -218,19 +218,19 @@ print_r($this->data);
 			['label' => 'Calendar', 'url' => base_url('calendar')],
 		];
 
-		$user = [
-			'name' => $this->session->get('name'),
-			'email' => $this->session->get('email'),
-			'phone' => $this->session->get('phone'),
-			'role' => $this->session->get('role')
-		];
+			$user = [
+				'name' => $this->session->get('name'),
+				'email' => $this->session->get('email'),
+				'phone' => $this->session->get('phone'),
+				'role' => $this->session->get('role')
+			];
 
-		$this->data['user'] = $user;
-echo '<pre>';
-print_r($this->data);
-//		return view('dashboard/calendar', $this->data);
+			$this->data['user'] = $user;
+			//echo '<pre>';
+			//print_r($this->data);
+			return view('dashboard/calendar', $this->data);
 
-}
+	}
 
 	public function newUser()
 	{
