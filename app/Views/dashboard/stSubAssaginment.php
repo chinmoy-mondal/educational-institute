@@ -64,7 +64,7 @@
   <div class="col-md-6">
     <div class="form-group">
       <label for="leftSelect">Select Students (Left)</label>
-      <select multiple size = "20" class="form-control select2" id="leftSelect" name="left_select[]" style="width: 100%;">
+      <select multiple  class="form-control select2" id="leftSelect" name="left_select[]" style="height: 400px; width: 100%;">
         <?php foreach ($students as $s): ?>
           <option value="<?= esc($s['id']) ?>">
             <?= esc($s['student_name']) ?> (<?= esc($s['roll']) ?>)
