@@ -411,7 +411,9 @@ class Dashboard extends Controller
 	}
 
 	public function stAssaginSubView()
-	{$studentModel = new StudentModel();
+	{
+		$studentModel = new StudentModel();
+		$subjectModel = new SubjectModel();
 
 		// Get filter inputs
 		$q       = $this->request->getGet('q');
@@ -441,6 +443,19 @@ class Dashboard extends Controller
 		    ->getResultArray();
 
 		$sections = $studentModel->select('section')->distinct()->orderBy('section')->findAll();
+		
+
+		$subjectBuilder = $subjectModel;$builder = $subjectModel;
+
+		if ($class) {
+		    $subjectBuilder = $subjectBuilder->where('class', $class);
+		}
+
+		if ($section) {
+		    $subjectBuilder = $subjectBuilder->where('section', $section);
+		}
+
+		$subjects = $subjectBuilder->findAll();
 
 		$this->data['title']         = 'Student Subject Management';
 		$this->data['activeSection'] = 'student';
@@ -450,6 +465,7 @@ class Dashboard extends Controller
 			['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
 		];
 			$this->data['students']      = $students;
+			$this->data['subjects']      = $subjects;
 			$this->data['pager']         = $studentModel->pager;
 			$this->data['q']             = $q;
 			$this->data['class']         = $class;

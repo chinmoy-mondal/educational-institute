@@ -39,14 +39,14 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="section">Section</label>
-                <select name="section" id="section" class="form-control">
-                  <option value="" <?= ($section ?? '') === '' ? 'selected' : '' ?>>All Sections</option>
-                  <?php foreach ($sections as $sec): ?>
-                    <option value="<?= esc($sec['section']) ?>" <?= ($section ?? '') === $sec['section'] ? 'selected' : '' ?>>
-                      <?= esc($sec['section']) ?>
-                    </option>
-                  <?php endforeach; ?>
-                </select>
+                <select name="subject" id="subject" class="form-control">
+        <option value="" <?= ($selectedSubject ?? '') === '' ? 'selected' : '' ?>>All Subjects</option>
+        <?php foreach ($subjects as $subject): ?>
+          <option value="<?= esc($subject['subject']) ?>" <?= ($selectedSubject ?? '') === $subject['subject'] ? 'selected' : '' ?>>
+            <?= esc($subject['subject']) ?> (Class <?= esc($subject['class']) ?> - Section <?= esc($subject['section']) ?>)
+          </option>
+        <?php endforeach; ?>
+      </select>
               </div>
             </div>
             <div class="col-md-2">
