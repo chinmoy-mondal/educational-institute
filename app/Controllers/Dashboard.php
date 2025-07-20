@@ -445,14 +445,20 @@ class Dashboard extends Controller
 		$sections = $studentModel->select('section')->distinct()->orderBy('section')->findAll();
 		
 
-		$subjectBuilder = $subjectModel;$builder = $subjectModel;
+		$subjectBuilder = $subjectModel;
 
 		if ($class) {
 		    $subjectBuilder = $subjectBuilder->where('class', $class);
 		}
 
-		if ($section) {
-		    $subjectBuilder = $subjectBuilder->where('section', $section);
+		if (stripos($section, 'Vocational') !== false) {
+		    $filteredSection = 'Vocational';
+		} else {
+		    $filteredSection = 'General';
+		}
+
+		if ($filteredSection) {
+		    $subjectBuilder = $subjectBuilder->where('section', $filteredSection);
 		}
 
 		$subjects = $subjectBuilder->findAll();
