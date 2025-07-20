@@ -497,12 +497,7 @@ class Dashboard extends Controller
 
 	public function viewStudent($id)
 	{
-		// Optional: session check if not using filter or constructor check
-		// $session = session();
-		// if (!$session->get('isLoggedIn')) {
-		//     return redirect()->to(base_url('login'));
-		// }
-
+		$this->studentModel = new StudentModel();
 		$student = $this->studentModel->find($id);
 
 		if (!$student) {
@@ -523,6 +518,8 @@ class Dashboard extends Controller
 
 	public function editStudent($id)
 	{
+
+		$this->studentModel = new StudentModel();
 		$student = $this->studentModel->find($id);
 
 		if (!$student) {
@@ -542,6 +539,7 @@ class Dashboard extends Controller
 	}
 	public function updateStudent($id)
 	{
+		$this->studentModel = new StudentModel();
 		$student = $this->studentModel->find($id);
 
 		if (!$student) {
@@ -560,6 +558,7 @@ class Dashboard extends Controller
 	}
 	public function editStudentPhoto($id)
 	{
+		$this->studentModel = new StudentModel();
 		$student = $this->studentModel->find($id);
 
 		if (!$student) {
@@ -581,6 +580,7 @@ class Dashboard extends Controller
 
 	public function updateStudentPhoto($id)
 	{
+		$this->studentModel = new StudentModel();
 		$student = $this->studentModel->find($id);
 
 		if (!$student) {
