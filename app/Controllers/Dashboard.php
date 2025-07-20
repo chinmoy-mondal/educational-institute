@@ -209,8 +209,8 @@ class Dashboard extends Controller
 	public function teachers()
 	{
 
-		$this->data['title'] = 'Calendar';
-		$this->data['activeSection'] = 'calendar';
+		$this->data['title'] = 'Teacher Management';
+		$this->data['activeSection'] = 'teacher_management';
 
 		// Common navbar and sidebar for all views
 		$this->data['navbarItems'] = [
@@ -218,18 +218,21 @@ class Dashboard extends Controller
 			['label' => 'Calendar', 'url' => base_url('calendar')],
 		];
 
-			$user = [
-				'name' => $this->session->get('name'),
-				'email' => $this->session->get('email'),
-				'phone' => $this->session->get('phone'),
-				'role' => $this->session->get('role')
-			];
+			$userModel = new UserModel();
 
-			$this->data['user'] = $user;
-			//echo '<pre>';
-			//print_r($this->data);
-			return view('dashboard/calendar', $this->data);
+			$newUsers = $userModel->where('account_status', 0)->findAll();
+			$totalNewUsers = count($newUsers);
 
+			$users = $userModel->where('account_status !=', 0)->findAll();
+			$totalUsers = count($users);
+
+			// Assign to $this->data
+			$this->data['newUsers'] = $newUsers;
+			$this->data['total_newUsers'] = $totalNewUsers;
+			$this->data['users'] = $users;
+			$this->data['total_users'] = $totalUsers;
+
+			return view('dashboard/ad_teacher_list', $this->data);
 	}
 
 	public function newUser()
