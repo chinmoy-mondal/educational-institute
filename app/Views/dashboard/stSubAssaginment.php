@@ -17,7 +17,7 @@
     <!-- Search & Filter Form -->
     <div class="card">
       <div class="card-body">
-      <form method="get" action="<?= site_url('ad-student') ?>" >
+      <form method="get" action="<?= site_url('admin/stAssaginSubView') ?>" >
           <div class="row align-items-end">
             <div class="col-md-4">
               <div class="form-group">
@@ -64,7 +64,7 @@
   <div class="col-md-6">
     <div class="form-group">
       <label for="leftSelect">Select Students (Left)</label>
-      <select multiple class="form-control select2" id="leftSelect" name="left_select[]" style="width: 100%;">
+      <select multiple size = "20" class="form-control select2" id="leftSelect" name="left_select[]" style="width: 100%;">
         <?php foreach ($students as $s): ?>
           <option value="<?= esc($s['id']) ?>">
             <?= esc($s['student_name']) ?> (<?= esc($s['roll']) ?>)
@@ -78,7 +78,7 @@
   <div class="col-md-6">
     <div class="form-group">
       <label for="rightSelect">Select Students (Right)</label>
-      <select multiple class="form-control select2" id="rightSelect" name="right_select[]" style="width: 100%;">
+      <select multiple size = "20" class="form-control select2" id="rightSelect" name="right_select[]" style="width: 100%;">
         <?php foreach ($students as $s): ?>
           <option value="<?= esc($s['id']) ?>">
             <?= esc($s['student_name']) ?> (<?= esc($s['roll']) ?>)
