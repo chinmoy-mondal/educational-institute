@@ -66,16 +66,11 @@
 	      <label for="leftSelect">Select Students (Left)</label>
 	      <select multiple class="form-control select2" id="leftSelect" name="left_select[]" style="height: 400px; width: 100%;">
 		<?php foreach ($students as $s): ?>
-		  <option value="<?= esc($s['id']) ?>">
-		    <?php foreach ($students as $index => $s): ?>
-			  <option value="<?= esc($s['id']) ?>">
-			    <?= esc($s['class']) ?> - <?= esc($s['roll']) ?> - <?= esc($s['student_name']) ?> - <?= esc($s['section']) ?>
-			  </option>
-			  <?php if ($index !== array_key_last($students)): ?>
-			    <option disabled> </option> <!-- Spacer -->
-			  <?php endif ?>
-			<?php endforeach ?>
-		  </option>
+			<pre>
+				<?php foreach ($students as $s): ?>
+					<?= esc($s['class']) . "\t\t" . esc($s['roll']) . "\t\t" . esc($s['student_name']) . "\t\t" . esc($s['section']) . "\n" ?>
+				<?php endforeach ?>
+			</pre>
 		<?php endforeach ?>
 	      </select>
 	    </div>
