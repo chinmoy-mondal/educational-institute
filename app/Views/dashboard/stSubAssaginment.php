@@ -72,7 +72,7 @@
 			    <?= esc($s['class']) ?> - <?= esc($s['roll']) ?> - <?= esc($s['student_name']) ?> - <?= esc($s['section']) ?>
 			  </option>
 			  <?php if ($index !== array_key_last($students)): ?>
-			    <option disabled>────────────</option> <!-- Spacer -->
+			    <option disabled> </option> <!-- Spacer -->
 			  <?php endif ?>
 			<?php endforeach ?>
 		  </option>
@@ -95,52 +95,6 @@
 	    </div>
 	  </div>
 	</div>
-    <!-- Student Table -->
-    <?php if (!empty($students)): ?>
-      <div class="card">
-        <div class="card-body table-responsive p-0">
-	  <table class="table table-bordered table-hover">
-
-		<!-- Table Header -->
-		<thead class="table-light">
-		  <tr>
-		    <th>ID</th>
-		    <th>Name</th>
-		    <th>Roll</th>
-		    <th>Class</th>
-		    <th>Section</th>
-		    <th>Action</th> <!-- New column -->
-		  </tr>
-		</thead>
-
-		<!-- Table Rows -->
-		<tbody>
-		  <?php foreach ($students as $s): ?>
-		    <tr>
-		      <td><?= esc($s['id']) ?></td>
-		      <td><?= esc($s['student_name']) ?></td>
-		      <td><?= esc($s['roll']) ?></td>
-		      <td><?= esc($s['class']) ?></td>
-		      <td><?= esc($s['section']) ?></td>
-		      <td>
-			<a href="<?= site_url('admin/students/view/' . $s['id']) ?>" class="btn btn-info btn-sm" target="_blank" >
-			  <i class="fas fa-eye"></i> View
-			</a>
-		      </td>
-		    </tr>
-		  <?php endforeach ?>
-		</tbody>
-
-
-
-          </table>
-        </div>
-      </div>
-    <?php else: ?>
-      <div class="alert alert-info">No students found.</div>
-    <?php endif ?>
-
-
    </div>
 </div>
 
