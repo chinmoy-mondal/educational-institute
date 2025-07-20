@@ -59,35 +59,35 @@
         </form>
       </div>
     </div>
-<div class="row">
-  <!-- Left Select -->
-  <div class="col-md-6">
-    <div class="form-group">
-      <label for="leftSelect">Select Students (Left)</label>
-      <select multiple  class="form-control select2" id="leftSelect" name="left_select[]" style="height: 400px; width: 100%;">
-        <?php foreach ($students as $s): ?>
-          <option value="<?= esc($s['id']) ?>">
-            <?= esc($s['student_name']) ?> (<?= esc($s['roll']) ?>)
-          </option>
-        <?php endforeach ?>
-      </select>
-    </div>
-  </div>
+	<div class="row">
+	  <!-- Left Select -->
+	  <div class="col-md-6">
+	    <div class="form-group">
+	      <label for="leftSelect">Select Students (Left)</label>
+	      <select multiple class="form-control select2" id="leftSelect" name="left_select[]" style="height: 400px; width: 100%;">
+		<?php foreach ($students as $s): ?>
+		  <option value="<?= esc($s['id']) ?>">
+		    <?= esc($s['class']) ?> - <?= esc($s['roll']) ?> - <?= esc($s['student_name']) ?> - <?= esc($s['group']) ?>
+		  </option>
+		<?php endforeach ?>
+	      </select>
+	    </div>
+	  </div>
 
-  <!-- Right Select -->
-  <div class="col-md-6">
-    <div class="form-group">
-      <label for="rightSelect">Select Students (Right)</label>
-      <select multiple size = "20" class="form-control select2" id="rightSelect" name="right_select[]" style="width: 100%;">
-        <?php foreach ($students as $s): ?>
-          <option value="<?= esc($s['id']) ?>">
-            <?= esc($s['student_name']) ?> (<?= esc($s['roll']) ?>)
-          </option>
-        <?php endforeach ?>
-      </select>
-    </div>
-  </div>
-</div>
+	  <!-- Right Select -->
+	  <div class="col-md-6">
+	    <div class="form-group">
+	      <label for="rightSelect">Select Students (Right)</label>
+	      <select multiple  class="form-control select2" id="rightSelect" name="right_select[]" style="height:400px; width: 100%;">
+		<?php foreach ($students as $s): ?>
+		  <option value="<?= esc($s['id']) ?>">
+		    <?= esc($s['student_name']) ?> (<?= esc($s['roll']) ?>)
+		  </option>
+		<?php endforeach ?>
+	      </select>
+	    </div>
+	  </div>
+	</div>
     <!-- Student Table -->
     <?php if (!empty($students)): ?>
       <div class="card">
