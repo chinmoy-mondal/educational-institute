@@ -481,6 +481,11 @@ class Dashboard extends Controller
 			return view('dashboard/stSubAssaginment', $this->data);
 	}
 
+	public function assignStudentsSubjects()
+	{
+		echo "hello";
+	}
+
 
 
 	public function result($userId, $subjectId)
