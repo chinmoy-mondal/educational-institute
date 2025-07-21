@@ -489,7 +489,7 @@ class Dashboard extends Controller
 		$students = $this->request->getPost('left_select');
 		$subjects = $this->request->getPost('right_select');
 
-		if(!emplty($students) && !empty($subjects)) {
+		if(!empty($students) && !empty($subjects)) {
 			echo "hello";
 		}
 	}
