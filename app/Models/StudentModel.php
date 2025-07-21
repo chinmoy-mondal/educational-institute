@@ -29,7 +29,8 @@ class StudentModel extends Model
         'father_nid_number',
         'mother_nid_number',
         'religion',
-        'blood_group',
+	'blood_group',
+	'assign_sub',
         'group',
         'created_at',
         'updated_at'
