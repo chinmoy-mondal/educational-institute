@@ -510,11 +510,10 @@ class Dashboard extends Controller
 			$override = $routes->get404Override();
 			return is_callable($override) ? $override() : show_404();
 		}
-
 		$students = $this->studentModel
-			->like('assign_sub', $subjectId)
-			->orderBy('roll', 'ASC')
-			->findAll();
+			    ->like('assign_sub', $subjectId)
+			    ->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
+			    ->findAll();
 
 		$this->data['title']         = 'Result Entry';
 		$this->data['activeSection'] = 'result';
