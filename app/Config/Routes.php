@@ -78,7 +78,7 @@ $routes->post('admin/students/update/(:num)', 'Dashboard::updateStudent/$1');
 $routes->get('admin/students/edit-photo/(:num)', 'Dashboard::editStudentPhoto/$1');
 $routes->post('admin/students/edit-photo/(:num)', 'Dashboard::updateStudentPhoto/$1');
 $routes->get('admin/stAssaginSubView', 'Dashboard::stAssaginSubView');
-$routes ->post('admin/assignStudentsSubjects', 'Admin::assignStudentsSubjects');
+$routes ->post('admin/assignStudentsSubjects', 'Dashboard::assignStudentsSubjects');
 
 $routes->get('/user_permit/(:num)', 'Dashboard::user_permit/$1');
 $routes->get('/user_delete/(:num)', 'Dashboard::user_delete/$1');
