@@ -486,7 +486,12 @@ class Dashboard extends Controller
 
 
 	public function assignStudentsSubjects(){
-		echo "hello";
+		$students = $this->request->getPost('left_select');
+		$subjects = $this->request->getPost('right_select');
+
+		if(!emplty($students) && !empty($subjects)) {
+			echo "hello";
+		}
 	}
 
 
