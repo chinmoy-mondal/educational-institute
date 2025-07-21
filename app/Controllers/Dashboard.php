@@ -487,18 +487,18 @@ class Dashboard extends Controller
 		    $students = $this->request->getPost('left_select');
 		    $subjects = $this->request->getPost('right_select');
 
-		    if (!empty($students) && !empty($subjects)) {
-		        $subjectCodes = implode(',', $subjects);
-		        $studentModel = new StudentModel();
+		//    if (!empty($students) && !empty($subjects)) {
+		  //      $subjectCodes = implode(',', $subjects);
+		    //    $studentModel = new StudentModel();
 
-		        foreach ($students as $studentId) {
-		            $studentModel->update($studentId, ['assign_sub' => $subjectCodes]);
-		        }
+		      //  foreach ($students as $studentId) {
+		        //    $studentModel->update($studentId, ['assign_sub' => $subjectCodes]);
+		       // }
 
-			        return redirect()->back()->with('success', 'Subjects assigned successfully.');
-		    }
+			 //       return redirect()->back()->with('success', 'Subjects assigned successfully.');
+		   // }
 
-			    return redirect()->back()->with('error', 'Please select at least one student and one subject.');
+		//	    return redirect()->back()->with('error', 'Please select at least one student and one subject.');
 	}
 
 
