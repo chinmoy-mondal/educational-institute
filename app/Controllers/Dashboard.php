@@ -485,9 +485,15 @@ class Dashboard extends Controller
 	{
 		$students = $this->request->getPost('left_select');
 		$subjects = $this->request->getPost('right_select');
-		echo "<pre>";
-		print_r($students);
-		echo "</pre>";
+		if(!emplty($students) && !empty($subjects)){
+			
+			echo "<pre>";
+			print_r($students);
+			print_r($subjects);
+			echo "</pre>";
+			return; 
+		}
+		return redirect()->back()-with('error','Please select at least one student and one subject.')
 	}
 
 
