@@ -481,10 +481,6 @@ class Dashboard extends Controller
 			return view('dashboard/stSubAssaginment', $this->data);
 	}
 
-
-
-
-
 	public function assignStudentsSubjects(){
 		$students = $this->request->getPost('left_select');
 		$subjects = $this->request->getPost('right_select');
@@ -497,9 +493,9 @@ class Dashboard extends Controller
 				$studentModel->update($studentId,['assign_sub' => $subjectCodes]);
 
 			}
-			//return redirect()->back()-with('success','Subjects assigne successfully');
+			return redirect()->back()->with('success', 'User approved successfully.');
 		}
-		//return redirect()->back()->with('error','Please select at least one student and one subject.');
+		return redirect()->back()->with('error', 'Failed to approve user.');
 	}
 
 
