@@ -493,7 +493,7 @@ class Dashboard extends Controller
 			echo "</pre>";
 			return; 
 		}
-		return redirect()->back()-with('error','Please select at least one student and one subject.')
+		return redirect()->back()-with('error','Please select at least one student and one subject.');
 	}
 
 
