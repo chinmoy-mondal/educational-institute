@@ -493,9 +493,9 @@ class Dashboard extends Controller
 				$studentModel->update($studentId,['assign_sub' => $subjectCodes]);
 
 			}
-			return redirect()->back()->with('success', 'User approved successfully.');
+			return redirect()->back()->with('success', 'Subjects assigned successfully.');
 		}
-		return redirect()->back()->with('error', 'Failed to approve user.');
+		return redirect()->back()->with('error', 'Please select at least one student and one subject.');
 	}
 
 
