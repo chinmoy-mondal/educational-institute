@@ -493,10 +493,10 @@ class Dashboard extends Controller
 			$subjectCodes = implode(',', $subjects);
 			$studentModel = new StudentModel();
 
-			foreach($students as $studentId) {
-				$studentModel->update($studentId,['assign_sub' => $subjectCodes]);
-
-			}
+		//	foreach($students as $studentId) {
+		//		$studentModel->update($studentId,['assign_sub' => $subjectCodes]);
+//
+//			}
 			return redirect()->back()-with('success','Subjects assigne successfully');
 		}
 		return redirect()->back()->with('error','Please select at least one student and one subject.');
