@@ -483,10 +483,10 @@ class Dashboard extends Controller
 
 
 
-	public function assignStudentsSubjects()
-	{
-		echo "hello";
-		//$students = $this->request->getPost('left_select');
+//	public function assignStudentsSubjects()
+//	{
+//		echo "hello";
+//		//$students = $this->request->getPost('left_select');
 		//$subjects = $this->request->getPost('right_select');
 
 		//    if (!empty($students) && !empty($subjects)) {
@@ -501,11 +501,14 @@ class Dashboard extends Controller
 		   // }
 
 		//	    return redirect()->back()->with('error', 'Please select at least one student and one subject.');
+//	}
+
+
+
+
+	public function assignStudentsSubjects(){
+		echo "hello";
 	}
-
-
-
-
 
 
 	public function result($userId, $subjectId)
