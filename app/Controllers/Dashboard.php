@@ -512,13 +512,7 @@ class Dashboard extends Controller
 		}
 
 		$students = $this->studentModel
-			->where('class', $subject['class'])
-			->groupStart()
-			->where('section', $subject['section'])   // exact match
-			->orWhere('section', 'n/a')               // match all sections
-			->orWhere('section', null)                // NULL-safe
-			->orLike('section', $subject['section'])  // substring match
-			->groupEnd()
+			->like('assign_sub', $subjectId)
 			->orderBy('roll', 'ASC')
 			->findAll();
 
