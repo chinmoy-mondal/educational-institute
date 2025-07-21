@@ -481,6 +481,30 @@ class Dashboard extends Controller
 			return view('dashboard/stSubAssaginment', $this->data);
 	}
 
+	public function assignStudentsSubjects()
+	{
+		    $students = $this->request->getPost('left_select');
+		    $subjects = $this->request->getPost('right_select');
+
+		    if (!empty($students) && !empty($subjects)) {
+		        echo "<h3>Selected Students:</h3>";
+		        echo "<pre>";
+		        print_r($students);
+		        echo "</pre>";
+
+		        echo "<h3>Selected Subjects:</h3>";
+		        echo "<pre>";
+		        print_r($subjects);
+		        echo "</pre>";
+
+		        // Stop further execution (disable redirect for now)
+			        return;
+		    }
+
+			    return redirect()->back()->with('error', 'Please select at least one student and one subject.');
+	}
+
+
 	public function result($userId, $subjectId)
 	{
 
