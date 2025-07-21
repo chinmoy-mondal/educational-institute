@@ -481,26 +481,28 @@ class Dashboard extends Controller
 			return view('dashboard/stSubAssaginment', $this->data);
 	}
 
+
 	public function assignStudentsSubjects()
 	{
-		$students = $this->request->getPost('left_select');
-		$subjects = $this->request->getPost('right_select');
-		if(!empty($students) && !empty($subjects)){
-			
-			  
-			     $subjectCodes = implode(',', $subjects);
-			  
-			  
-			     $studentModel = new StudentModel();
-			  
-			     foreach ($students as $studentId) {
-			          $studentModel->update($studentId, ['assign_sub' => $subjectCodes]);
-			     }
-			  
-			     return redirect()->back()->with('success', 'Subjects assigned successfully.'); 
-		}
-		return redirect()->back()-with('error','Please select at least one student and one subject.');
+		    $students = $this->request->getPost('left_select');
+		    $subjects = $this->request->getPost('right_select');
+
+		    if (!empty($students) && !empty($subjects)) {
+		        $subjectCodes = implode(',', $subjects);
+		        $studentModel = new StudentModel();
+
+		        foreach ($students as $studentId) {
+		            $studentModel->update($studentId, ['assign_sub' => $subjectCodes]);
+		        }
+
+			        return redirect()->back()->with('success', 'Subjects assigned successfully.');
+		    }
+
+			    return redirect()->back()->with('error', 'Please select at least one student and one subject.');
 	}
+
+
+
 
 
 
