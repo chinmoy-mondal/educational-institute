@@ -308,9 +308,6 @@ class Dashboard extends Controller
 
 	public function teacherSubUpdate()
 	{
-
-
-
 		$id         = $this->request->getPost('id');
 		$name       = $this->request->getPost('name');
 		$assign_sub = $this->request->getPost('assign_sub'); // e.g., "4,7,9"

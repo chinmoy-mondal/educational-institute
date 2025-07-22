@@ -28,50 +28,50 @@
     <?php endif; ?>
 
     <!-- Search & Filter Form -->
-	        <div class="card">
-		      <div class="card-body">
-		              <form method="get" action="<?= site_url('admin/stAssaginSubView') ?>">
-			                <div class="row align-items-end">
-					            <div class="col-md-4">
-						                  <div class="form-group">
-								                  <label for="search">Search</label>
-										                  <input type="text" name="q" id="search" class="form-control" placeholder="Name, Roll, or ID" value="<?= esc($q ?? '') ?>">
-												                </div>
-														            </div>
-															                <div class="col-md-3">
-																	              <div class="form-group">
-																		                      <label for="class">Class</label>
-																				                      <select name="class" id="class" class="form-control">
-																						                        <option value="" <?= ($class ?? '') === '' ? 'selected' : '' ?>>All Classes</option>
-																									                  <?php for ($i = 6; $i <= 10; $i++): ?>
-																											                      <option value="<?= $i ?>" <?= ($class ?? '') == $i ? 'selected' : '' ?>>Class <?= $i ?></option>
-																													                        <?php endfor; ?>
-                </select>
-			              </div>
-				                  </div>
-						              <div class="col-md-3">
-							                    <div class="form-group">
-									                    <label for="section">Section</label>
-											                    <select name="section" id="section" class="form-control">
-													                      <option value="" <?= ($section ?? '') === '' ? 'selected' : '' ?>>All Sections</option>
-															                        <?php foreach ($sections as $sec): ?>
-																		                    <option value="<?= esc($sec['section']) ?>" <?= ($section ?? '') === $sec['section'] ? 'selected' : '' ?>>
-																				                          <?= esc($sec['section']) ?>
-																							                      </option>
-																									                        <?php endforeach; ?>
-                </select>
-			              </div>
-				                  </div>
-						              <div class="col-md-2">
-							                    <div class="form-group">
-									                    <label class="invisible d-block">Search</label>
-											                    <button type="submit" class="btn btn-primary w-100">Search</button>
-													                  </div>
-															              </div>
-																                </div>
-																		        </form>
-																			      </div>
-																			          </div>
+    <div class="card">
+	    <div class="card-body">
+		    <form method="get" action="<?= site_url('admin/stAssaginSubView') ?>">
+			    <div class="row align-items-end">
+				    <div class="col-md-4">
+					    <div class="form-group">
+						    <label for="search">Search</label>
+						    <input type="text" name="q" id="search" class="form-control" placeholder="Name, Roll, or ID" value="<?= esc($q ?? '') ?>">
+					    </div>
+				    </div>
+				    <div class="col-md-3">
+					    <div class="form-group">
+						    <label for="class">Class</label>
+						    <select name="class" id="class" class="form-control">
+							    <option value="" <?= ($class ?? '') === '' ? 'selected' : '' ?>>All Classes</option>
+							    <?php for ($i = 6; $i <= 10; $i++): ?>
+							    <option value="<?= $i ?>" <?= ($class ?? '') == $i ? 'selected' : '' ?>>Class <?= $i ?></option>
+							    <?php endfor; ?>
+						    </select>
+					    </div>
+				    </div>
+				    <div class="col-md-3">
+					    <div class="form-group">
+						    <label for="section">Section</label>
+						    <select name="section" id="section" class="form-control">
+							    <option value="" <?= ($section ?? '') === '' ? 'selected' : '' ?>>All Sections</option>
+							    <?php foreach ($sections as $sec): ?>
+							    <option value="<?= esc($sec['section']) ?>" <?= ($section ?? '') === $sec['section'] ? 'selected' : '' ?>>
+							    <?= esc($sec['section']) ?>
+							    </option>
+						    <?php endforeach; ?>
+						    </select>
+					    </div>
+				    </div>
+				    <div class="col-md-2">
+					    <div class="form-group">
+						    <label class="invisible d-block">Search</label>
+						    <button type="submit" class="btn btn-primary w-100">Search</button>
+					    </div>
+				    </div>
+			    </div>
+		    </form>
+	    </div>
+    </div>
 
     <!-- Assignment Form -->
     <form method="post" action="<?= site_url('admin/assignStudentsSubjects') ?>">
