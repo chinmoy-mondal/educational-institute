@@ -590,13 +590,24 @@ class Dashboard extends Controller
 			->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
 			->findAll();
 
-		echo '<pre>';
-		print_r($subject);
-		print_r($result);
-		print_r($users);
-		print_r($students);
-		echo '</pre>';
-		// return view('dashboard/resultCheck', ['results' => $results]);
+		$this->data['title'] = 'Student Details';
+		$this->data['activeSection'] = 'student';
+		$this->data['navbarItems'] = [
+			['label' => 'Student List', 'url' => base_url('ad-student')],
+			['label' => 'Add Student', 'url' => base_url('student_create')],
+			['label' => 'View Student', 'url' => current_url()],
+		];
+			$this->data['subject'] = $subject;
+			$this->data['result'] = $result;
+			$this->data['users'] = $users;
+			$this->data['students'] = $students;
+//		echo '<pre>';
+//		print_r($subject);
+//		print_r($result);
+//		print_r($users);
+//		print_r($students);
+//		echo '</pre>';
+		return view('dashboard/resultCheck', $this->data);
 	}
 
 	public function viewStudent($id)

@@ -1,54 +1,46 @@
 <?= $this->extend('layouts/admin') ?>
+
 <?= $this->section('content') ?>
 
-<div class="container py-4">
-    <h4 class="mb-4">Student Results</h4>
+<div class="container-fluid">
+    <h1 class="mb-4"><?= esc($title ?? 'Result Check') ?></h1>
 
-    <?php if (session()->getFlashdata('message')): ?>
-        <div class="alert alert-success"><?= session()->getFlashdata('message') ?></div>
-    <?php endif; ?>
+    <div class="card">
+        <div class="card-header">
+            <strong>Subject:</strong> <?= esc($subject['subject'] ?? 'N/A') ?>
+        </div>
+        <div class="card-body">
+            <h5>Assigned Teachers</h5>
+            <ul>
+                <?php foreach ($users as $user): ?>
+                    <li><?= esc($user['name']) ?> (<?= esc($user['email']) ?>)</li>
+                <?php endforeach ?>
+            </ul>
 
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped text-center">
-            <thead class="table-primary">
-                <tr>
-                    <th>#</th>
-                    <th>Student</th>
-                    <th>Subject</th>
-                    <th>Exam</th>
-                    <th>Year</th>
-                    <th>Total Marks</th>
-                    <th>Updated At</th>
-                    <!-- Optional Action -->
-                    <!-- <th>Action</th> -->
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (!empty($results)): ?>
-                    <?php foreach ($results as $i => $r): ?>
-                        <tr>
-                            <td><?= $i + 1 ?></td>
-                            <td><?= esc($r['student_name'] ?? 'Unknown') ?></td>
-                            <td><?= esc($r['subject_name'] ?? 'Unknown') ?></td>
-                            <td><?= esc($r['exam']) ?></td>
-                            <td><?= esc($r['year']) ?></td>
-                            <td><?= esc($r['total']) ?></td>
-                            <td><?= esc($r['updated_at']) ?: '-' ?></td>
-                            <!-- Optional Action -->
-                            <!--
-                            <td>
-                                <a href="<?= site_url('results/edit/' . $r['id']) ?>" class="btn btn-sm btn-warning">Edit</a>
-                            </td>
-                            -->
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
+            <hr>
+
+            <h5>Students Assigned to this Subject</h5>
+            <table class="table table-bordered table-striped">
+                <thead>
                     <tr>
-                        <td colspan="7" class="text-muted">No results found.</td>
+                        <th>Roll</th>
+                        <th>Name</th>
+                        <th>Class</th>
+                        <th>Section</th>
                     </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($students as $student): ?>
+                        <tr>
+                            <td><?= esc($student['roll']) ?></td>
+                            <td><?= esc($student['student_name']) ?></td>
+                            <td><?= esc($student['class']) ?></td>
+                            <td><?= esc($student['section']) ?></td>
+                        </tr>
+                    <?php endforeach ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
