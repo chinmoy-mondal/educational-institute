@@ -247,6 +247,14 @@ class Dashboard extends Controller
 
 	public function newUser()
 	{
+		$this->data['title'] = 'Teacher Management';
+		$this->data['activeSection'] = 'teacher';
+
+		// Common navbar and sidebar for all views
+		$this->data['navbarItems'] = [
+			['label' => 'Dashboard', 'url' => base_url('dashboard')],
+			['label' => 'Calendar', 'url' => base_url('calendar')],
+		];
 		$newUsers = $this->userModel
 			->where('account_status', 0)
 			->findAll();
