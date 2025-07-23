@@ -575,7 +575,7 @@ class Dashboard extends Controller
 	public function ResultCheck()
 	{
 		$userId = 3;
-		$subjectId = 52;
+		$subjectId = 23;
 		
 		$subject = $this->subjectModel->find($subjectId);
 		$result = $this->resultModel
@@ -593,7 +593,7 @@ class Dashboard extends Controller
 		echo '<pre>';
 		print_r($subject);
 		print_r($result);
-		print_r($user);
+		print_r($users);
 		print_r($students);
 		echo '</pre>';
 		// return view('dashboard/resultCheck', ['results' => $results]);
