@@ -254,6 +254,7 @@ class Dashboard extends Controller
 		$this->data['navbarItems'] = [
 			['label' => 'Dashboard', 'url' => base_url('dashboard')],
 			['label' => 'Calendar', 'url' => base_url('calendar')],
+			['label' => 'demo', 'url' => base_url('demo')],
 		];
 		$newUsers = $this->userModel
 			->where('account_status', 0)
