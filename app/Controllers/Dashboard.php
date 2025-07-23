@@ -2,12 +2,13 @@
 
 namespace App\Controllers;
 
-use App\Models\StudentModel;
-use App\Models\UserModel;
 use CodeIgniter\Controller;
-use App\Models\CalendarModel;
+
+use App\Models\UserModel;
+use App\Models\StudentModel;
 use App\Models\SubjectModel;
 use App\Models\ResultModel;
+use App\Models\CalendarModel;
 
 class Dashboard extends Controller
 {
@@ -22,6 +23,10 @@ class Dashboard extends Controller
 		$this->userModel     = new UserModel();
 		$this->subjectModel  = new SubjectModel();
 		$this->studentModel  = new StudentModel();
+		$this->resultModel   = new ResultModel();
+		$this->calendarModel   = new CalendarModel();
+		
+
 		$this->session       = session();
 		$this->data          = [];
 
@@ -118,9 +123,6 @@ class Dashboard extends Controller
 			$this->data['title'] = 'Dashboard';
 			$this->data['activeSection'] = 'dashboard';
 			$this->data['user'] = $user;
-			//echo '<pre>';
-			//print_r($this->data);
-			//exit;
 			return view('dashboard/profile', $this->data);
 	}
 
@@ -509,9 +511,9 @@ class Dashboard extends Controller
 		}
 
 		$students = $this->studentModel
-			    ->where("FIND_IN_SET(" . (int)$subjectId . ", assign_sub) >", 0, false)
-		        ->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
-		    ->findAll();
+			->where("FIND_IN_SET(" . (int)$subjectId . ", assign_sub) >", 0, false)
+			->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
+			->findAll();
 
 		$this->data['title']         = 'Result Entry';
 		$this->data['activeSection'] = 'result';
@@ -572,14 +574,27 @@ class Dashboard extends Controller
 
 	public function ResultCheck()
 	{
-		$resultModel   = new ResultModel();
-		$studentModel  = new StudentModel();
-		$subjectModel  = new SubjectModel();
-		$userModel     = new UserModel();
+		$userId = 3;
+		$subjectId = 52;
+		
+		$subject = $this->subjectModel->find($subjectId);
+		$result = $this->resultModel
+			->where('subject_id', $subjectId)
+			->first();
+		$users = $this->userModel
+			->where("FIND_IN_SET(" . (int)$subjectId . ", assagin_sub) >", 0, false)
+			->findAll();
 
-		$user = $userModel -> find(1);
+		$students = $this->studentModel
+			->where("FIND_IN_SET(" . (int)$subjectId . ", assign_sub) >", 0, false)
+			->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
+			->findAll();
+
 		echo '<pre>';
+		print_r($subject);
+		print_r($result);
 		print_r($user);
+		print_r($students);
 		echo '</pre>';
 		// return view('dashboard/resultCheck', ['results' => $results]);
 	}
