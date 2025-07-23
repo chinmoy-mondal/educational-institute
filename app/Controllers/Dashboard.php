@@ -259,9 +259,6 @@ class Dashboard extends Controller
 			->where('account_status', 0)
 			->findAll();
 
-		echo '<pre>';
-		print_r($newUsers);
-		echo '</pre>';
 		$this->data['newUsers'] = $newUsers;
 		$this->data['total_newUsers'] = count($newUsers);
 
