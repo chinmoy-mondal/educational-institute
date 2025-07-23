@@ -24,6 +24,9 @@
               </tr>
             </thead>
             <tbody>
+<pre>
+<?php print_r($newUsers) ?>
+</pre>
               <?php if (!empty($newUsers)): ?>
                 <?php foreach ($newUsers as $user): ?>
                   <tr>
