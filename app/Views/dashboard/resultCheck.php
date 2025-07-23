@@ -1,5 +1,4 @@
 <?= $this->extend('layouts/admin') ?>
-
 <?= $this->section('content') ?>
 
 <div class="container-fluid">
@@ -7,7 +6,7 @@
 
   <div class="card shadow-sm">
     <div class="card-header bg-primary text-white">
-      <h5 class="mb-0">Subject Overview</h5>
+      <h5 class="mb-0">Subject Result Overview</h5>
     </div>
     <div class="card-body">
       <div class="row mb-3">
@@ -16,7 +15,7 @@
           <div class="text-success"><?= esc($subject['subject'] ?? 'N/A') ?></div>
         </div>
         <div class="col-md-4">
-          <strong>Teachers Assigned:</strong>
+          <strong>Teacher(s):</strong>
           <ul class="mb-0">
             <?php foreach ($users as $user): ?>
               <li><?= esc($user['name']) ?> <small>(<?= esc($user['email']) ?>)</small></li>
@@ -31,7 +30,7 @@
 
       <hr>
 
-      <h5 class="mb-3">Student List (Assigned to Subject)</h5>
+      <h5 class="mb-3">Student Results</h5>
 
       <div class="table-responsive">
         <table class="table table-bordered table-hover table-striped">
@@ -40,31 +39,24 @@
               <th>Roll</th>
               <th>Name</th>
               <th>Class</th>
-              <th>Total Needed</th>
-              <th>Assign Subject</th>
+              <th>Total Marks</th>
             </tr>
           </thead>
           <tbody>
-            <?php foreach ($students as $student): ?>
+            <?php if (!empty($results)): ?>
+              <?php foreach ($results as $res): ?>
+                <tr>
+                  <td><strong><?= esc($res['roll']) ?></strong></td>
+                  <td><?= esc($res['student_name']) ?></td>
+                  <td>Class <?= esc($res['class']) ?> (<?= esc($res['section']) ?>)</td>
+                  <td class="text-center text-success"><strong><?= esc($res['total']) ?></strong></td>
+                </tr>
+              <?php endforeach ?>
+            <?php else: ?>
               <tr>
-                <td><strong><?= esc($student['roll']) ?></strong></td>
-                <td><?= esc($student['student_name']) ?></td>
-                <td>Class <?= esc($student['class']) ?> (<?= esc($student['section']) ?>)</td>
-                <td class="text-center text-danger"><strong><?= esc($student['total_needed'] ?? 'N/A') ?></strong></td>
-                <td>
-                  <?php
-                    $subList = explode(',', $student['assign_sub'] ?? '');
-                    $subNames = [];
-                    foreach ($subList as $sid) {
-                      if (!empty($subjects[$sid])) {
-                        $subNames[] = esc($subjects[$sid]);
-                      }
-                    }
-                    echo implode(', ', $subNames);
-                  ?>
-                </td>
+                <td colspan="4" class="text-center text-muted">No result found.</td>
               </tr>
-            <?php endforeach ?>
+            <?php endif ?>
           </tbody>
         </table>
       </div>
