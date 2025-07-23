@@ -9,7 +9,7 @@
       </div>
 
       <div class="card-body">
-        <div class="table-responsive">
+        <div class="table-responsive"><?= $total_newUsers ?>
           <table id="teacherTable" class="table table-bordered table-hover table-striped">
             <thead class="bg-navy text-center">
               <tr>
@@ -24,9 +24,6 @@
               </tr>
             </thead>
             <tbody>
-<pre>
-<?php print_r($newUsers) ?>
-</pre>
               <?php if (!empty($newUsers)): ?>
                 <?php foreach ($newUsers as $user): ?>
                   <tr>
