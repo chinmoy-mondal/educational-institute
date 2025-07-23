@@ -3,45 +3,74 @@
 <?= $this->section('content') ?>
 
 <div class="container-fluid">
-    <h1 class="mb-4"><?= esc($title ?? 'Result Check') ?></h1>
+  <h1 class="mb-4"><?= esc($title ?? 'Result Check') ?></h1>
 
-    <div class="card">
-        <div class="card-header">
-            <strong>Subject:</strong> <?= esc($subject['subject'] ?? 'N/A') ?>
-        </div>
-        <div class="card-body">
-            <h5>Assigned Teachers</h5>
-            <ul>
-                <?php foreach ($users as $user): ?>
-                    <li><?= esc($user['name']) ?> (<?= esc($user['email']) ?>)</li>
-                <?php endforeach ?>
-            </ul>
-
-            <hr>
-
-            <h5>Students Assigned to this Subject</h5>
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>Roll</th>
-                        <th>Name</th>
-                        <th>Class</th>
-                        <th>Section</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($students as $student): ?>
-                        <tr>
-                            <td><?= esc($student['roll']) ?></td>
-                            <td><?= esc($student['student_name']) ?></td>
-                            <td><?= esc($student['class']) ?></td>
-                            <td><?= esc($student['section']) ?></td>
-                        </tr>
-                    <?php endforeach ?>
-                </tbody>
-            </table>
-        </div>
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Subject Overview</h5>
     </div>
+    <div class="card-body">
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <strong>Subject Name:</strong>
+          <div class="text-success"><?= esc($subject['subject'] ?? 'N/A') ?></div>
+        </div>
+        <div class="col-md-4">
+          <strong>Teachers Assigned:</strong>
+          <ul class="mb-0">
+            <?php foreach ($users as $user): ?>
+              <li><?= esc($user['name']) ?> <small>(<?= esc($user['email']) ?>)</small></li>
+            <?php endforeach ?>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <strong>Subject Code:</strong>
+          <div><?= esc($subject['subject_code'] ?? '—') ?></div>
+        </div>
+      </div>
+
+      <hr>
+
+      <h5 class="mb-3">Student List (Assigned to Subject)</h5>
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped">
+          <thead class="table-secondary">
+            <tr>
+              <th>Roll</th>
+              <th>Name</th>
+              <th>Class</th>
+              <th>Total Needed</th>
+              <th>Assign Subject</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($students as $student): ?>
+              <tr>
+                <td><strong><?= esc($student['roll']) ?></strong></td>
+                <td><?= esc($student['student_name']) ?></td>
+                <td>Class <?= esc($student['class']) ?> (<?= esc($student['section']) ?>)</td>
+                <td class="text-center text-danger"><strong><?= esc($student['total_needed'] ?? 'N/A') ?></strong></td>
+                <td>
+                  <?php
+                    $subList = explode(',', $student['assign_sub'] ?? '');
+                    $subNames = [];
+                    foreach ($subList as $sid) {
+                      if (!empty($subjects[$sid])) {
+                        $subNames[] = esc($subjects[$sid]);
+                      }
+                    }
+                    echo implode(', ', $subNames);
+                  ?>
+                </td>
+              </tr>
+            <?php endforeach ?>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 <?= $this->endSection() ?>
