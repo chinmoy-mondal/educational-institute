@@ -47,9 +47,34 @@ if (!empty($newUsers)) {
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody>
-
-
+<tbody>
+    <?php if (!empty($newUsers)) : ?>
+        <?php foreach ($newUsers as $user) : ?>
+            <tr>
+                <td>
+                    <img src="<?= !empty($user['photo']) 
+                        ? base_url('uploads/' . $user['photo']) 
+                        : base_url('public/assets/img/default.png') ?>" 
+                        alt="User Photo" width="50">
+                </td>
+                <td><?= esc($user['name']) ?></td>
+                <td><?= esc($user['designation']) ?></td>
+                <td><?= esc($user['subject']) ?></td>
+                <td><?= esc($user['email']) ?></td>
+                <td><?= esc($user['phone']) ?></td>
+                <td><?= ucfirst(esc($user['gender'])) ?></td>
+                <td>
+                    <a href="<?= base_url('user_permit/' . $user['id']) ?>" class="btn btn-success btn-sm">Permit</a>
+                    <a href="<?= base_url('user_delete/' . $user['id']) ?>" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php else : ?>
+        <tr>
+            <td colspan="8" class="text-center">No new users found.</td>
+        </tr>
+    <?php endif; ?>
+</tbody>
 
 
 
