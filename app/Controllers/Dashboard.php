@@ -583,7 +583,7 @@ class Dashboard extends Controller
 		
 		$subject = $this->subjectModel->find($subjectId);
 
-		$user = $this->userModel->find($subjectId);
+		$users	= $this->userModel->find($subjectId);
 
 		$result = $this->resultModel
 			->select('results.*, students.student_name, students.roll, students.class')
