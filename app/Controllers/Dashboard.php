@@ -582,17 +582,16 @@ class Dashboard extends Controller
 	{
 		
 		$subject = $this->subjectModel->find($subjectId);
+
+		$user = $this->userModel->find($subjectId);
+
 		$result = $this->resultModel
-			->where('subject_id', $subjectId)
-			->findAll();
-		$users = $this->userModel
-			->where("FIND_IN_SET(" . (int)$subjectId . ", assagin_sub) >", 0, false)
+			->select('results.*, students.student_name, students.roll, students.class')
+			->join('students', 'students.id = results.student_id')
+			->where('results.subject_id', $subjectId)
+			->orderBy('CAST(students.roll AS UNSIGNED)', 'ASC', false)
 			->findAll();
 
-		$students = $this->studentModel
-			->where("FIND_IN_SET(" . (int)$subjectId . ", assign_sub) >", 0, false)
-			->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
-			->findAll();
 
 		$this->data['title'] = 'Student Details';
 		$this->data['activeSection'] = 'student';
@@ -604,14 +603,14 @@ class Dashboard extends Controller
 			$this->data['subject'] = $subject;
 			$this->data['result'] = $result;
 			$this->data['users'] = $users;
-			$this->data['students'] = $students;
-		echo '<pre>';
-	//	print_r($subject);
-		print_r($result);
-	//	print_r($users);
-	//	print_r($students);
-		echo '</pre>';
-		return view('dashboard/resultCheck', $this->data);
+			
+			echo '<pre>';
+			//	print_r($subject);
+				print_r($result);
+			//	print_r($users);
+			//	print_r($students);
+			echo '</pre>';
+			return view('dashboard/resultCheck', $this->data);
 	}
 
 	public function viewStudent($id)
