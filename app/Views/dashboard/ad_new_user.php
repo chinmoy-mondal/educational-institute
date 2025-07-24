@@ -1,9 +1,23 @@
 <?php 
 
-echo '<pre>';
-	print_r($newUsers);
-echo '<pre>';
-
+if (!empty($newUsers)) {
+    foreach ($newUsers as $user) {
+        echo "Name: " . $user['name'] . "\n";
+        echo "Designation: " . $user['designation'] . "\n";
+        echo "Subject: " . $user['subject'] . "\n";
+        echo "Email: " . $user['email'] . "\n";
+        echo "Phone: " . $user['phone'] . "\n";
+        echo "Gender: " . ucfirst($user['gender']) . "\n";
+        echo "Photo URL: " . (!empty($user['photo']) 
+            ? base_url('uploads/' . $user['photo']) 
+            : base_url('public/assets/img/default.png')) . "\n";
+        echo "Permit URL: " . base_url('user_permit/' . $user['id']) . "\n";
+        echo "Delete URL: " . base_url('user_delete/' . $user['id']) . "\n";
+        echo "-----------------------------\n";
+    }
+} else {
+    echo "No new users found.\n";
+}
 
  ?>
 <?= $this->include("layouts/admin") ?>
