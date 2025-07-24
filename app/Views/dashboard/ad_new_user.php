@@ -1,6 +1,6 @@
 
 
-<?= $this->include("layouts/admin") ?>
+<?= //$this->include("layouts/admin") ?>
 
 
 <?php 
