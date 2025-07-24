@@ -1,3 +1,11 @@
+<?= 
+
+echo '<pre>';
+	print_r($newUsers);
+echo '<pre>';
+
+
+ ?>
 <?= $this->include("layouts/admin") ?>
 <?= $this->section("content") ?>
 

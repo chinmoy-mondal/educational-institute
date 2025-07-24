@@ -262,9 +262,6 @@ class Dashboard extends Controller
 
 		$this->data['newUsers'] = $newUsers;
 		$this->data['total_newUsers'] = count($newUsers);
-echo '<pre>';
-	print_r($newUsers);
-echo '<pre>';
 		return view('dashboard/ad_new_user', $this->data);
 	}
 
