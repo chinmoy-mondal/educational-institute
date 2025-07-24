@@ -1,7 +1,5 @@
 
 
-<?= //$this->include("layouts/admin") ?>
-
 
 <?php 
 if (!empty($newUsers)) {
