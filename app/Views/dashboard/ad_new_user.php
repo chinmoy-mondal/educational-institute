@@ -26,38 +26,33 @@
               </tr>
             </thead>
             <tbody>
-              <?php if (!empty($newUsers)): ?>
-                <?php foreach ($newUsers as $user): ?>
-<?php
-        echo "Name: " . $user['name'] . "\n";
-        ?>          <tr>
 
-		    <td class="text-center">
-		       <img src="<?= !empty($user['photo']) 
-			      ? base_url('uploads/' . $user['photo']) 
-			      : base_url('public/assets/img/default.png') ?>" 
-			    width="50" height="50" class="rounded-circle">
-		    </td>
-                    <td><?= esc($user['name']) ?></td>
-                    <td><?= esc($user['designation']) ?></td>
-                    <td><?= esc($user['subject']) ?></td>
-                    <td><?= esc($user['email']) ?></td>
-                    <td><?= esc($user['phone']) ?></td>
-                    <td class="text-center"><?= esc(ucfirst($user['gender'])) ?></td>
-                    <td class="text-center">
-		      <a href="<?= base_url('user_permit/' . $user['id']) ?>" class="btn btn-sm btn-info">
-		        <i class="fas fa-plus text-white"></i>
-		      </a>
-                      <a href="<?= base_url('user_delete/' . $user['id']) ?>" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger">
-                        <i class="fas fa-trash-alt"></i>
-                      </a>
-                    </td>
-                  </tr>
-                <?php endforeach; ?>
-              <?php else: ?>
-                <tr><td colspan="8" class="text-center text-muted">No teachers found.</td></tr>
-              <?php endif; ?>
-            </tbody>
+
+
+<?php 
+if (!empty($newUsers)) {
+    foreach ($newUsers as $user) {
+        echo "Name: " . $user['name'] . "<br>";
+        echo "Designation: " . $user['designation'] . "<br>";
+        echo "Subject: " . $user['subject'] . "<br>";
+        echo "Email: " . $user['email'] . "<br>";
+        echo "Phone: " . $user['phone'] . "<br>";
+        echo "Gender: " . ucfirst($user['gender']) . "<br>";
+        echo "Photo URL: " . (!empty($user['photo']) 
+            ? base_url('uploads/' . $user['photo']) 
+            : base_url('public/assets/img/default.png')) . "<br>";
+        echo "Permit URL: " . base_url('user_permit/' . $user['id']) . "<br>";
+        echo "Delete URL: " . base_url('user_delete/' . $user['id']) . "<br>";
+        echo "-----------------------------<br><br>";
+    }
+} else {
+    echo "No new users found.<br>";
+}
+
+?>
+
+
+
           </table>
         </div>
       </div>
