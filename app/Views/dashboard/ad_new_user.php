@@ -1,4 +1,26 @@
 
+<?php 
+if (!empty($newUsers)) {
+    foreach ($newUsers as $user) {
+        echo "Name: " . $user['name'] . "<br>";
+        echo "Designation: " . $user['designation'] . "<br>";
+        echo "Subject: " . $user['subject'] . "<br>";
+        echo "Email: " . $user['email'] . "<br>";
+        echo "Phone: " . $user['phone'] . "<br>";
+        echo "Gender: " . ucfirst($user['gender']) . "<br>";
+        echo "Photo URL: " . (!empty($user['photo']) 
+            ? base_url('uploads/' . $user['photo']) 
+            : base_url('public/assets/img/default.png')) . "<br>";
+        echo "Permit URL: " . base_url('user_permit/' . $user['id']) . "<br>";
+        echo "Delete URL: " . base_url('user_delete/' . $user['id']) . "<br>";
+        echo "-----------------------------<br><br>";
+    }
+} else {
+    echo "No new users found.<br>";
+}
+
+?>
+
 
 <?= $this->include("layouts/admin") ?>
 <?= $this->section("content") ?>
@@ -28,28 +50,6 @@
             <tbody>
 
 
-
-<?php 
-if (!empty($newUsers)) {
-    foreach ($newUsers as $user) {
-        echo "Name: " . $user['name'] . "<br>";
-        echo "Designation: " . $user['designation'] . "<br>";
-        echo "Subject: " . $user['subject'] . "<br>";
-        echo "Email: " . $user['email'] . "<br>";
-        echo "Phone: " . $user['phone'] . "<br>";
-        echo "Gender: " . ucfirst($user['gender']) . "<br>";
-        echo "Photo URL: " . (!empty($user['photo']) 
-            ? base_url('uploads/' . $user['photo']) 
-            : base_url('public/assets/img/default.png')) . "<br>";
-        echo "Permit URL: " . base_url('user_permit/' . $user['id']) . "<br>";
-        echo "Delete URL: " . base_url('user_delete/' . $user['id']) . "<br>";
-        echo "-----------------------------<br><br>";
-    }
-} else {
-    echo "No new users found.<br>";
-}
-
-?>
 
 
 
