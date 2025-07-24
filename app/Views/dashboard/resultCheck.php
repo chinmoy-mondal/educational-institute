@@ -15,14 +15,11 @@
           <div class="text-success"><?= esc($subject['subject'] ?? 'N/A') ?></div>
         </div>
         <div class="col-md-4">
-          <strong>Teacher(s):</strong>
-            <?php foreach ($users as $user): ?>
-              <?= esc($user['name']) ?> <small>(<?= esc($user['email']) ?>)</small>
-            <?php endforeach ?>
-        </div>
+          <strong>Teacher:</strong>
+          <div class="text-success"><?= esc($useris['name']) ?> <small>(<?= esc($users['email']) ?>)</small></div>
         <div class="col-md-4">
           <strong>Subject Code:</strong>
-          <div><?= esc($subject['subject_code'] ?? '—') ?></div>
+          <div><?= esc($subject['id'] ?? '—') ?></div>
         </div>
       </div>
 
