@@ -16,11 +16,9 @@
         </div>
         <div class="col-md-4">
           <strong>Teacher(s):</strong>
-          <ul class="mb-0">
             <?php foreach ($users as $user): ?>
               <li><?= esc($user['name']) ?> <small>(<?= esc($user['email']) ?>)</small></li>
             <?php endforeach ?>
-          </ul>
         </div>
         <div class="col-md-4">
           <strong>Subject Code:</strong>
