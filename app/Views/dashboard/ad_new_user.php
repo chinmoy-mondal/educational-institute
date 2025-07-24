@@ -1,4 +1,4 @@
-<?php 
+
 
 <?= $this->include("layouts/admin") ?>
 <?= $this->section("content") ?>
