@@ -607,12 +607,12 @@ class Dashboard extends Controller
 			$this->data['result'] = $result;
 			$this->data['users'] = $users;
 			$this->data['students'] = $students;
-//		echo '<pre>';
-//		print_r($subject);
-//		print_r($result);
-//		print_r($users);
-//		print_r($students);
-//		echo '</pre>';
+		echo '<pre>';
+		print_r($subject);
+		print_r($result);
+		print_r($users);
+		print_r($students);
+		echo '</pre>';
 		return view('dashboard/resultCheck', $this->data);
 	}
 
