@@ -270,7 +270,7 @@ class Dashboard extends Controller
 		$userModel = new UserModel();
 
 
-		$permitBy = $session->get('user_id');
+		$permitBy = $this->session->get('user_id');
 
 		$updated = $userModel->update($id,[
 				'account_status' => 1,
@@ -286,8 +286,7 @@ class Dashboard extends Controller
 
 	public function user_delete($id)
 	{
-		$session = session();
-		if (!$session->get('isLoggedIn')) {
+		if (!$this->session->get('isLoggedIn')) {
 			return redirect()->to(base_url('login'));
 		}
 	}
