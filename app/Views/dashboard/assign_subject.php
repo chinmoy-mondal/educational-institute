@@ -40,11 +40,14 @@
                       <td><?= esc($sub['class']) ?></td>
                       <td><?= esc($sub['subject']) ?></td>
                       <td><?= esc($sub['section']) ?></td>
-			<td>
-			  <a href="<?= base_url('ad-result/' . $user['id'] . '/' . $sub['id']) ?>" class="btn btn-sm btn-info">
-			   <i class="fas fa-file-alt"></i>
-			  </a>
-			</td>
+		      <td>
+			      <a href="<?= base_url('ad-result/' . $user['id'] . '/' . $sub['id']) ?>" class="btn btn-sm btn-info">
+				      <i class="fas fa-file-alt"></i>
+			      </a>
+			      <a href="<?= base_url('admin/resultCheck/' . $user['id'] . '/' . $sub['id']) ?>" class="btn btn-sm btn-info">
+				      <i class="fas fa-chart-bar"></i>
+			      </a>
+		      </td>
                     </tr>
                   <?php endforeach ?>
                 </tbody>

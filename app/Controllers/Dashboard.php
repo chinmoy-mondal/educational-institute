@@ -578,10 +578,8 @@ class Dashboard extends Controller
 		return redirect()->back()->with('message', 'Results submitted successfully.');
 	}
 
-	public function ResultCheck()
+	public function ResultCheck($userId,$subjectId)
 	{
-		$userId = 3;
-		$subjectId = 23;
 		
 		$subject = $this->subjectModel->find($subjectId);
 		$result = $this->resultModel
