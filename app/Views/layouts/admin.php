@@ -7,8 +7,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
 
-  <!-- Select2 CSS --
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />-->
+  <!-- Select2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body class="hold-transition sidebar-mini">
 
@@ -34,7 +34,7 @@
 
 <!-- jQuery (required) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Select2 JS -
+<!-- Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
 <script>
   $(document).ready(function() {
@@ -44,6 +44,5 @@
     });
   });
 </script>
--->
 </body>
 </html>
