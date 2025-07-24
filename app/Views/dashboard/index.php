@@ -25,7 +25,7 @@
             <p>Total Students</p>
           </div>
           <div class="icon"><i class="fas fa-user-graduate"></i></div>
-          <a href="<?= base_url('admin/students') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          <a href="<?= base_url('ad-student') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
 
