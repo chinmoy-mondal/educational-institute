@@ -260,8 +260,8 @@ class Dashboard extends Controller
 			->where('account_status', 0)
 			->findAll();
 
-		$this->data['newUsers'] = $newUsers;
-		$this->data['total_newUsers'] = count($newUsers);
+		$this->data['newUse'] = $newUsers;
+		$this->data['total_newUse'] = count($newUsers);
 		return view('dashboard/ad_new_user', $this->data);
 	}
 
