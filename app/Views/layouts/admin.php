@@ -15,7 +15,7 @@
 <div class="wrapper">
 
   <!-- Navbar -->
-  <?= $this->include('layouts/admin-structure/navbar') ?>
+  <!--  $this->include('layouts/admin-structure/navbar') -->
 
   <!-- Sidebar -->
   <?= $this->include('layouts/admin-structure/sidebar') ?>
