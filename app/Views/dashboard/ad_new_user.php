@@ -1,25 +1,5 @@
 <?php 
 
-if (!empty($newUsers)) {
-    foreach ($newUsers as $user) {
-        echo "Name: " . $user['name'] . "\n";
-        echo "Designation: " . $user['designation'] . "\n";
-        echo "Subject: " . $user['subject'] . "\n";
-        echo "Email: " . $user['email'] . "\n";
-        echo "Phone: " . $user['phone'] . "\n";
-        echo "Gender: " . ucfirst($user['gender']) . "\n";
-        echo "Photo URL: " . (!empty($user['photo']) 
-            ? base_url('uploads/' . $user['photo']) 
-            : base_url('public/assets/img/default.png')) . "\n";
-        echo "Permit URL: " . base_url('user_permit/' . $user['id']) . "\n";
-        echo "Delete URL: " . base_url('user_delete/' . $user['id']) . "\n";
-        echo "-----------------------------\n";
-    }
-} else {
-    echo "No new users found.\n";
-}
-
- ?>
 <?= $this->include("layouts/admin") ?>
 <?= $this->section("content") ?>
 
@@ -48,7 +28,9 @@ if (!empty($newUsers)) {
             <tbody>
               <?php if (!empty($newUsers)): ?>
                 <?php foreach ($newUsers as $user): ?>
-                  <tr>
+<?php
+        echo "Name: " . $user['name'] . "\n";
+        ?>          <tr>
 
 		    <td class="text-center">
 		       <img src="<?= !empty($user['photo']) 
