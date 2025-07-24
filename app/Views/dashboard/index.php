@@ -60,7 +60,7 @@
             <h3><?= esc($total_new_users) ?></h3>
             <p>New Users</p>
           </div>
-          <div class="icon"><i class="fas fa-calendar-alt"></i></div>
+          <div class="icon"><i class="fas fa-chalkboard-teacher"></i></div>
           <a href="<?= base_url('ad_new_user') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
@@ -88,7 +88,7 @@
           <a href="<?= base_url('admin/income') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
-
+  
       <!-- Total Cost -->
       <div class="col-lg-3 col-6">
         <div class="small-box bg-danger">
