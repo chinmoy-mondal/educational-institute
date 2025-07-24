@@ -584,7 +584,7 @@ class Dashboard extends Controller
 		$subject = $this->subjectModel->find($subjectId);
 		$result = $this->resultModel
 			->where('subject_id', $subjectId)
-			->first();
+			->findAll();
 		$users = $this->userModel
 			->where("FIND_IN_SET(" . (int)$subjectId . ", assagin_sub) >", 0, false)
 			->findAll();
