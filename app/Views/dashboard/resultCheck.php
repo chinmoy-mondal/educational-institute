@@ -17,7 +17,7 @@
         <div class="col-md-4">
           <strong>Teacher(s):</strong>
             <?php foreach ($users as $user): ?>
-              <li><?= esc($user['name']) ?> <small>(<?= esc($user['email']) ?>)</small></li>
+              <?= esc($user['name']) ?> <small>(<?= esc($user['email']) ?>)</small>
             <?php endforeach ?>
         </div>
         <div class="col-md-4">
