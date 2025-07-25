@@ -38,8 +38,8 @@
             </tr>
           </thead>
           <tbody>
-            <?php if (!empty($results)): ?>
-              <?php foreach ($results as $res): ?>
+            <?php if (!empty($result)): ?>
+              <?php foreach ($result as $res): ?>
                 <tr>
                   <td><strong><?= esc($res['roll']) ?></strong></td>
                   <td><?= esc($res['student_name']) ?></td>
