@@ -606,7 +606,7 @@ class Dashboard extends Controller
 			
 			echo '<pre>';
 			//	print_r($subject);
-				print_r($result);
+			//	print_r($result);
 			//	print_r($users);
 			//	print_r($students);
 			echo '</pre>';

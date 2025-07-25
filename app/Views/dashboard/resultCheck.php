@@ -16,7 +16,7 @@
         </div>
         <div class="col-md-4">
           <strong>Teacher:</strong>
-          <div class="text-success"> <?= esc($users['subject'] ?? 'N/A') ?><small>()</small></div>
+          <div class="text-success"><?= esc($users['name'] ?? 'N/A') ?><small>(<?= esc($users['designation'] ?? 'N/A') ?>)</small></div>
         <div class="col-md-4">
           <strong>Subject Code:</strong>
           <div><?= esc($subject['id'] ?? '—') ?></div>
