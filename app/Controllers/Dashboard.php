@@ -583,7 +583,7 @@ class Dashboard extends Controller
 		
 		$subject = $this->subjectModel->find($subjectId);
 
-		$users	= $this->userModel->find($subjectId);
+		$users	= $this->userModel->find($userId);
 
 		$result = $this->resultModel
 			->select('results.*, students.student_name, students.roll, students.class')
@@ -604,12 +604,6 @@ class Dashboard extends Controller
 			$this->data['result'] = $result;
 			$this->data['users'] = $users;
 			
-			echo '<pre>';
-			//	print_r($subject);
-			//	print_r($result);
-			//	print_r($users);
-			//	print_r($students);
-			echo '</pre>';
 			return view('dashboard/resultCheck', $this->data);
 	}
 
