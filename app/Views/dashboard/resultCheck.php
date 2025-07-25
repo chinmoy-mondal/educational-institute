@@ -41,7 +41,6 @@
             <tr>
               <th>Roll</th>
               <th>Name</th>
-              <th>Class</th>
               <th>Total Marks</th>
             </tr>
           </thead>
@@ -51,7 +50,6 @@
                 <tr>
                   <td><strong><?= esc($res['roll']) ?></strong></td>
                   <td><?= esc($res['student_name']) ?></td>
-                  <td>Class <?= esc($res['class']) ?></td>
                   <td class="text-center text-success"><strong><?= esc($res['total']) ?></strong></td>
                 </tr>
               <?php endforeach ?>
