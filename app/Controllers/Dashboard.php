@@ -594,7 +594,7 @@ class Dashboard extends Controller
 
 
 		$this->data['title'] = 'Student Details';
-		$this->data['activeSection'] = 'student';
+		$this->data['activeSection'] = 'teacher';
 		$this->data['navbarItems'] = [
 			['label' => 'Student List', 'url' => base_url('ad-student')],
 			['label' => 'Add Student', 'url' => base_url('student_create')],
