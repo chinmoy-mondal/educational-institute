@@ -14,17 +14,18 @@
       <div class="row mb-3 text-center">
         <div class="col-md-4 text-start">
           <strong>Subject Name:</strong>
-          <div class="text-success"><?= esc($subject['subject'] ?? 'N/A') ?></div>
+          <div class="text-success"><?= esc($subject['subject'] ?? 'N/A') ?>(<?= esc($subject['id'] ?? '—') ?>)</div>
         </div>
         <div class="col-md-4">
           <strong>Teacher:</strong>
-          <div class="text-success"><?= esc($users['name'] ?? 'N/A') ?> 
-            <small>(<?= esc($users['designation'] ?? 'N/A') ?>)</small>
+          <div class="text-success">
+		<?= esc($users['name'] ?? 'N/A') ?><br> 
+		<small>(<?= esc($users['designation'] ?? 'N/A') ?>)</small>
           </div>
         </div>
         <div class="col-md-4 text-end">
           <strong>Subject Code:</strong>
-          <div class="text-success"><?= esc($subject['id'] ?? '—') ?></div>
+          <div class="text-success"><?= esc($subject['class'] ?? '—') ?></div>
         </div>
       </div>
 
