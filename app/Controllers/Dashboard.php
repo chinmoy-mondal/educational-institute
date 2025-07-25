@@ -601,8 +601,8 @@ class Dashboard extends Controller
 			['label' => 'View Student', 'url' => current_url()],
 		];
 			$this->data['subject'] = $subject;
-			$this->data['result'] = $result;
 			$this->data['users'] = $users;
+			$this->data['result'] = $result;
 			
 			return view('dashboard/resultCheck', $this->data);
 	}
