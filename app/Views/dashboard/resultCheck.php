@@ -10,16 +10,19 @@
     </div>
     <div class="card-body">
       
-      <div class="row mb-3">
-        <div class="col-md-4">
+      <!-- Top Subject Info Row -->
+      <div class="row mb-3 text-center">
+        <div class="col-md-4 text-start">
           <strong>Subject Name:</strong>
           <div class="text-success"><?= esc($subject['subject'] ?? 'N/A') ?></div>
         </div>
         <div class="col-md-4">
           <strong>Teacher:</strong>
-          <div class="text-success"><?= esc($users['name'] ?? 'N/A') ?> <small>(<?= esc($users['designation'] ?? 'N/A') ?>)</small></div>
+          <div class="text-success"><?= esc($users['name'] ?? 'N/A') ?> 
+            <small>(<?= esc($users['designation'] ?? 'N/A') ?>)</small>
+          </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 text-end">
           <strong>Subject Code:</strong>
           <div class="text-success"><?= esc($subject['id'] ?? '—') ?></div>
         </div>
@@ -27,11 +30,13 @@
 
       <hr>
 
-      <h5 class="mb-3">Student Results</h5>
-
+      <!-- Student Results Table -->
       <div class="table-responsive">
         <table class="table table-bordered table-hover table-striped">
           <thead class="table-secondary">
+            <tr>
+              <th colspan="4" class="text-center h5 text-primary">Student Results</th>
+            </tr>
             <tr>
               <th>Roll</th>
               <th>Name</th>
