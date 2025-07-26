@@ -47,6 +47,7 @@
 				</select>
 			    </div>
 			</div>
+			<input type="hidden" name="teacher_id" value="<?= esc($user['id']) ?>">
 			<input type="hidden" name="year"       value="<?= date('Y') ?>">
                         <input type="hidden" name="subject_id" value="<?= esc($subject['id']) ?>">
 
