@@ -613,6 +613,12 @@ class Dashboard extends Controller
 			return view('dashboard/resultCheck', $this->data);
 	}
 
+	public function Mark()
+	{
+		
+		echo "hello result";	
+		#	return view('dashboard/resultCheck', $this->data);
+	}
 	public function viewStudent($id)
 	{
 		$this->studentModel = new StudentModel();

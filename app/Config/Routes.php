@@ -69,6 +69,7 @@ $routes->get('/assignSubject/(:num)', 'Dashboard::assignSubject/$1');
 
 $routes->get('/ad-result/(:num)/(:num)', 'Dashboard::result/$1/$2');
 $routes->get('/admin/resultCheck/(:num)/(:num)', 'Dashboard::ResultCheck/$1/$2');
+$routes->get('/admin/mark', 'Dashboard::Mark');
 $routes->post('/results/submit', 'Dashboard::submitResults');
 $routes->get('/ad-student', 'Dashboard::student');
 
