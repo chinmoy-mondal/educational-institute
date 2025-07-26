@@ -33,7 +33,7 @@
         </div>
       </div>
 
-      <hr>
+
 	<div class="text-end mb-3">
 	  <a href="<?= site_url('ad-result/' . $users['id'] . '/' . $subject['id']) ?>" class="btn btn-sm btn-warning">
 	    <i class="fas fa-edit"></i> Edit Marks
