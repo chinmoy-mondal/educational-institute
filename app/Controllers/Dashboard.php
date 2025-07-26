@@ -614,6 +614,7 @@ class Dashboard extends Controller
 			->select('results.*, students.student_name, students.roll, students.class')
 			->join('students', 'students.id = results.student_id')
 			->where('results.subject_id', $subjectId)
+			->where('results.teacher_id', $userId)
 			->orderBy('CAST(students.roll AS UNSIGNED)', 'ASC', false)
 			->findAll();
 
