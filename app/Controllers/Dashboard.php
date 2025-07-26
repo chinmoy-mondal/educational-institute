@@ -541,24 +541,26 @@ class Dashboard extends Controller
 	}
 
 	public function submitResults()
-	{		
+	{
+		$students   = $this->request->getPost('students');
+		$exam       = $this->request->getPost('exam');
+		$year       = $this->request->getPost('year');
+		$subjectId  = $this->request->getPost('subject_id');
 
-		$resultModel = new ResultModel();
+		$teacherId  = session('user_id'); // Adjust if your session key differs
 
-		$students  = $this->request->getPost('students');
-		$exam      = $this->request->getPost('exam');
-		$year      = $this->request->getPost('year');
-		$subjectId = $this->request->getPost('subject_id');
-
-		if (!$students || !$exam || !$year || !$subjectId) {
+		if (!$students || !$exam || !$year || !$subjectId || !$teacherId) {
 			return redirect()->back()->with('error', 'Missing data.');
 		}
 
 		foreach ($students as $student) {
-			$total = isset($student['total']) ? (int) $student['total'] : 0;
+			$written   = isset($student['written']) ? (int)$student['written'] : 0;
+			$mcq       = isset($student['mcq'])     ? (int)$student['mcq']     : 0;
+			$practical = isset($student['practical']) ? (int)$student['practical'] : 0;
+			$total     = $written + $mcq + $practical;
 
-			// Check if result already exists
-			$existing = $resultModel->where('student_id', $student['id'])
+			$existing = $this->resultModel
+				->where('student_id', $student['id'])
 				->where('subject_id', $subjectId)
 				->where('exam', $exam)
 				->where('year', $year)
@@ -569,15 +571,19 @@ class Dashboard extends Controller
 				'subject_id' => $subjectId,
 				'exam'       => $exam,
 				'year'       => $year,
+				'written'    => $written,
+				'mcq'        => $mcq,
+				'practical'  => $practical,
 				'total'      => $total,
+				'teacher_id' => $teacherId,
 				'updated_at' => date('Y-m-d H:i:s'),
 			];
 
 				if ($existing) {
-					$resultModel->update($existing['id'], $data);
+					$this->resultModel->update($existing['id'], $data);
 				} else {
 					$data['created_at'] = date('Y-m-d H:i:s');
-					$resultModel->insert($data);
+					$this->resultModel->insert($data);
 				}
 		}
 
