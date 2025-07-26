@@ -68,7 +68,7 @@ class Dashboard extends Controller
 					],
 					[
 						'label' => 'Result', 
-						'url' => base_url('result'), 
+						'url' => base_url('admin/result'), 
 						'icon' => 'fas fa-chart-bar', 
 						'section' => 'calendar'
 					],
