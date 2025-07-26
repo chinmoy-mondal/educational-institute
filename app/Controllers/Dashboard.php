@@ -254,9 +254,6 @@ class Dashboard extends Controller
 	public function newUser()
 	{ 
 
-		$teacherId  = session('user_id'); // Adjust if your session key differs
-		
-	echo $teacherId;
 		$this->data['title'] = 'Teacher Management';
 		$this->data['activeSection'] = 'teacher';
 
@@ -272,7 +269,7 @@ class Dashboard extends Controller
 
 		$this->data['newUse'] = $newUsers;
 		$this->data['total_newUse'] = count($newUsers);
-	//	return view('dashboard/ad_new_user', $this->data);
+		return view('dashboard/ad_new_user', $this->data);
 	}
 
 	public function user_permit($id)
