@@ -612,6 +612,11 @@ class Dashboard extends Controller
 			
 			return view('dashboard/resultCheck', $this->data);
 	}
+	
+	public function result()
+	{
+		echo "hello result";
+	}
 
 	public function viewStudent($id)
 	{
