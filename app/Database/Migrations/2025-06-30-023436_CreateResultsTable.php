@@ -10,10 +10,14 @@ class CreateResultsTable extends Migration
     {
         $this->forge->addField([
             'id'         => ['type' => 'INT', 'auto_increment' => true],
+            'teacher_id' => ['type' => 'INT', 'null' => false],
             'student_id' => ['type' => 'INT', 'null' => false],
             'subject_id' => ['type' => 'INT', 'null' => false],
             'exam'       => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => false],
             'year'       => ['type' => 'INT', 'constraint' => 4, 'null' => false],
+            'written'    => ['type' => 'INT', 'default' => 0],
+            'mcq'        => ['type' => 'INT', 'default' => 0],
+            'practical'  => ['type' => 'INT', 'default' => 0],
             'total'      => ['type' => 'INT', 'default' => 0],
             'created_at' => ['type' => 'DATETIME', 'null' => true],
             'updated_at' => ['type' => 'DATETIME', 'null' => true],
