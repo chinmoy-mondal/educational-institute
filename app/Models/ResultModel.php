@@ -10,7 +10,7 @@ class ResultModel extends Model
     protected $primaryKey = 'id';
 
     protected $allowedFields = [
-	'teacher_id'
+	'teacher_id',
         'student_id',
         'subject_id',
         'exam',
