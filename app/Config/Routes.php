@@ -30,13 +30,13 @@ $routes->get('/subjects', 'Home::subjects');
 $routes->get('/course-details/(:num)', 'Home::courseDetails/$1');
 $routes->get('/activity-details/(:num)', 'Home::activityDetails/$1');
 # 
-$routes->get('/ad-student', 'Student::index');
-$routes->post('/ad-student/save', 'Student::save');
-$routes->get('/ad-student/list', 'Student::list');
+#$routes->get('/ad-student', 'Student::index');
+#$routes->post('/ad-student/save', 'Student::save');
+#$routes->get('/ad-student/list', 'Student::list');
 
-$routes->get('/ad-student/edit/(:num)', 'Student::edit/$1');
-$routes->post('/ad-student/update/(:num)', 'Student::update/$1');
-$routes->post('/ad-student/delete/(:num)', 'Student::delete/$1');
+#$routes->get('/ad-student/edit/(:num)', 'Student::edit/$1');
+#$routes->post('/ad-student/update/(:num)', 'Student::update/$1');
+#$routes->post('/ad-student/delete/(:num)', 'Student::delete/$1');
 #
 $routes->get('run-migration/(:any)', 'DevTools::migrate/$1');
 #$routes->get('run-seed/(:any)', 'DevTools::seed/$1');
