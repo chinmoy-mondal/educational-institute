@@ -69,10 +69,11 @@
                                 <tbody>
                                     <?php foreach ($students as $i => $s): ?>
                                         <?php
-                                        $written   = isset($result['written'])   && $result['written'] != 0   ? $result['written']   : '';
-					$mcq       = isset($result['mcq'])       && $result['mcq']     != 0   ? $result['mcq']       : '';
+					$result    = $existingResults[$s['id']] ?? null;
+					$written   = isset($result['written'])   && $result['written']   != 0 ? $result['written']   : '';
+					$mcq       = isset($result['mcq'])       && $result['mcq']       != 0 ? $result['mcq']       : '';
 					$practical = isset($result['practical']) && $result['practical'] != 0 ? $result['practical'] : '';
-					$total     = isset($result['total'])     && $result['total']   != 0   ? $result['total']     : '';
+					$total     = isset($result['total'])     && $result['total']     != 0 ? $result['total']     : '';
 					?>
                                         <tr>
                                             <td><?= $i+1 ?></td>
