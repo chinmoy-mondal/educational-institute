@@ -513,7 +513,6 @@ class Dashboard extends Controller
 
 	public function result($userId, $subjectId)
 	{
-
 		$user    = $this->userModel->find($userId);
 		$subject = $this->subjectModel->find($subjectId);
 
@@ -528,15 +527,29 @@ class Dashboard extends Controller
 			->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
 			->findAll();
 
-		$this->data['title']         = 'Result Entry';
-		$this->data['activeSection'] = 'result';
-		$this->data['navbarItems']   = [
+		// 🔄 Load existing results for this teacher and subject
+		$results = $this->resultModel
+			->where('teacher_id', $userId)
+			->where('subject_id', $subjectId)
+			->where('year', date('Y')) // optional filter
+			->findAll();
+
+		// 🔃 Index results by student_id for quick lookup
+		$indexedResults = [];
+		foreach ($results as $r) {
+			$indexedResults[$r['student_id']] = $r;
+		}
+
+		$this->data['title']           = 'Result Entry';
+		$this->data['activeSection']   = 'result';
+		$this->data['navbarItems']     = [
 			['label' => 'Result Entry', 'url' => base_url('ad-result')],
 			['label' => 'Result Sheet', 'url' => base_url('result_sheet')],
 		];
-			$this->data['user']     = $user;
-			$this->data['subject']  = $subject;
-			$this->data['students'] = $students;
+			$this->data['user']            = $user;
+			$this->data['subject']         = $subject;
+			$this->data['students']        = $students;
+			$this->data['existingResults'] = $indexedResults;
 
 			return view('dashboard/ad_result', $this->data);
 	}
