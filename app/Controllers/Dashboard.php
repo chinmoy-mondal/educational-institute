@@ -56,7 +56,7 @@ class Dashboard extends Controller
 					],
 					[
 						'label' => 'Student Management', 
-						'url' => base_url('ad-student'), 
+						'url' => base_url('admin/student'), 
 						'icon' => 'fas fa-user-graduate', 
 						'section' => 'student'
 					],
