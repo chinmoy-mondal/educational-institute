@@ -42,30 +42,36 @@ class Dashboard extends Controller
 			['label' => 'Accounts', 'url' => base_url('accounts')],
 		];
 			$this->data['sidebarItems'] = [
-				[
-					'label' => 'Dashboard', 
-				'url' => base_url('dashboard'), 
-				'icon' => 'fas fa-tachometer-alt', 
-				'section' => 'dashboard'
-				],
-				[
-					'label' => 'Teacher Management', 
-				'url' => base_url('teacher_management'), 
-				'icon' => 'fas fa-chalkboard-teacher', 
-				'section' => 'teacher'
-				],
-				[
-					'label' => 'Student Management', 
-				'url' => base_url('ad-student'), 
-				'icon' => 'fas fa-user-graduate', 
-				'section' => 'student'
-				],
-				[
-					'label' => 'Calendar', 
-				'url' => base_url('calendar'), 
-				'icon' => 'fas fa-calendar-alt', 
-				'section' => 'calendar'
-				],
+					[
+						'label' => 'Dashboard', 
+						'url' => base_url('dashboard'), 
+						'icon' => 'fas fa-tachometer-alt', 
+						'section' => 'dashboard'
+					],
+					[
+						'label' => 'Teacher Management', 
+						'url' => base_url('teacher_management'), 
+						'icon' => 'fas fa-chalkboard-teacher', 
+						'section' => 'teacher'
+					],
+					[
+						'label' => 'Student Management', 
+						'url' => base_url('ad-student'), 
+						'icon' => 'fas fa-user-graduate', 
+						'section' => 'student'
+					],
+					[
+						'label' => 'Calendar', 
+						'url' => base_url('calendar'), 
+						'icon' => 'fas fa-calendar-alt', 
+						'section' => 'calendar'
+					],
+					[
+						'label' => 'Result', 
+						'url' => base_url('result'), 
+						'icon' => 'fas fa-chart-bar', 
+						'section' => 'calendar'
+					],
 				];
 	}
 
