@@ -646,7 +646,7 @@ class Dashboard extends Controller
 			['label' => 'Tablation Sheet', 'url' => base_url('admin/mark')],
 		];
 
-
+/*
 			$class  = $this->request->getGet('class') ?? 'Nine';
 			$exam   = $this->request->getGet('exam') ?? 'Final';
 			$year   = $this->request->getGet('year') ?? date('Y');
@@ -704,7 +704,67 @@ class Dashboard extends Controller
                             'class'    => 'Nine',
                         ];
 
-		return view('dashboard/mark', $this->data);
+		return view('dashboard/mark', $this->data);*/ 
+			$class = 6;
+			$section = 'n/a';
+			$exam = 'Half-Yearly';
+			$year = 2025;
+
+			$studentModel = new StudentModel();
+			$resultModel  = new ResultModel();
+			$subjectModel = new SubjectModel();
+
+			// Step 1: Get all students from class 6, section 'n/a'
+			$students = $studentModel
+				->where('class', $class)
+				->where('section', $section)
+				->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
+				->findAll();
+
+			$finalData = [];
+
+			foreach ($students as $student) {
+				$studentId = $student['id'];
+
+				// Step 2: Get results for this student, exam, and year
+				$results = $resultModel
+					->where('student_id', $studentId)
+					->where('exam', $exam)
+					->where('year', $year)
+					->findAll();
+
+				// Step 3: Build subject-wise results array
+				$subjectResults = [];
+				foreach ($results as $res) {
+					$subjectName = $subjectModel
+						->select('subject')
+						->where('id', $res['subject_id'])
+						->first()['subject'] ?? 'Unknown';
+
+					$subjectResults[] = [
+						'subject'   => $subjectName,
+						'written'   => $res['written'] ?? 0,
+						'mcq'       => $res['mcq'] ?? 0,
+						'practical' => $res['practical'] ?? 0,
+						'total'     => $res['total'] ?? 0,
+					];
+				}
+
+				// Step 4: Append student data with their results
+				$finalData[] = [
+					'student_id' => $student['id'],
+					'name'       => $student['name'],
+					'roll'       => $student['roll'],
+					'exam'       => $exam,
+					'year'       => $year,
+					'results'    => $subjectResults,
+				];
+			}
+
+			// Output final array for debugging
+			echo '<pre>';
+			print_r($finalData);
+			echo '</pre>';
 	}
 
 	public function viewStudent($id)
