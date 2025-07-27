@@ -643,46 +643,36 @@ class Dashboard extends Controller
 			['label' => 'Marksheet', 'url' => base_url('student_create')],
 			['label' => 'Tablation Sheet', 'url' => current_url()],
 		];
-/*		$class = $this->request->getGet('class') ?? 'Nine';
-		$exam  = $this->request->getGet('exam') ?? 'Final';
-		$year  = $this->request->getGet('year') ?? date('Y');
 
-		// Load all students in the class
-		$students = $this->studentModel
-			->where('class', $class)
-			->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
-			->findAll();
 
-		// Load all subjects assigned to that class
-		$subjects = $this->subjectModel
-			->where('class', $class)
-			->findAll();
+            // Hardcoded student data
+            $students = [
+                ['id' => 1, 'roll' => '3', 'student_name' => 'Anika'],
+                ['id' => 2, 'roll' => '7', 'student_name' => 'Rafi'],
+            ];
 
-		// Load all results for these students and subjects
-		$studentIds = array_column($students, 'id');
-		$subjectIds = array_column($subjects, 'id');
+                // Hardcoded result data
+                $results = [
+                    1 => [ // Anika
+                        'math' => ['written' => 20, 'mcq' => 5, 'practical' => 5, 'total' => 30],
+                        'english' => ['written' => 25, 'mcq' => 10, 'practical' => 0, 'total' => 35],
+                    ],
+                    2 => [ // Rafi
+                        'math' => ['written' => 18, 'mcq' => 6, 'practical' => 6, 'total' => 30],
+                        'english' => ['written' => 22, 'mcq' => 8, 'practical' => 0, 'total' => 30],
+                    ]
+                ];
 
-		$resultsRaw = $this->resultModel
-			->whereIn('student_id', $studentIds)
-			->whereIn('subject_id', $subjectIds)
-			->where('exam', $exam)
-			->where('year', $year)
-			->findAll();
+                        // Pass data to view
+                        $data = [
+                            'title'    => 'Tabulation Demo',
+                            'students' => $students,
+                            'results'  => $results,
+                            'exam'     => 'Final',
+                            'year'     => '2025',
+                            'class'    => 'Nine',
+                        ];
 
-		// Structure results as [student_id][subject_id] => data
-		$results = [];
-		foreach ($resultsRaw as $r) {
-			$results[$r['student_id']][$r['subject_id']] = $r;
-		}
-
-		$this->data['class']     = $class;
-		$this->data['exam']      = $exam;
-		$this->data['year']      = $year;
-		$this->data['students']  = $students;
-		$this->data['subjects']  = $subjects;
-		$this->data['results']   = $results;
-		$this->data['activeSection'] = 'result';
-*/
 		return view('dashboard/mark', $this->data);
 	}
 
