@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 
 <?php
-// Step 1: Get unique subjects from all results
+// Step 1: Get unique subjects from all students
 $subjectList = [];
 
 foreach ($finalData as $student) {
@@ -14,14 +14,14 @@ foreach ($finalData as $student) {
     }
 }
 
-// Only highlight subject total if < 33
+// Helper to highlight failing total
 function redTotal($mark) {
-    return ($mark < 33) ? 'text-danger fw-bold' : '';
+    return ($mark !== '' && $mark < 33) ? 'text-danger fw-bold' : '';
 }
 ?>
 
 <div class="container-fluid">
-  <h1 class="mb-4">Demo Tabulation Sheet</h1>
+  <h1 class="mb-4">Tabulation Sheet</h1>
 
   <div class="card shadow-sm">
     <div class="card-header bg-dark text-white">
@@ -30,7 +30,7 @@ function redTotal($mark) {
     <div class="card-body">
 
       <?php if (empty($finalData)): ?>
-        <div class="alert alert-warning">No results found for this class, exam, and year.</div>
+        <div class="alert alert-warning">No result data found.</div>
       <?php else: ?>
 
       <div class="table-responsive">
@@ -39,13 +39,13 @@ function redTotal($mark) {
             <tr>
               <th rowspan="2">Roll</th>
               <th rowspan="2">Name</th>
-              <?php foreach ($subjectList as $sub): ?>
-                <th colspan="4"><?= esc($sub) ?></th>
+              <?php foreach ($subjectList as $subject): ?>
+                <th colspan="4"><?= esc($subject) ?></th>
               <?php endforeach; ?>
               <th rowspan="2">Total</th>
             </tr>
             <tr>
-              <?php foreach ($subjectList as $sub): ?>
+              <?php foreach ($subjectList as $subject): ?>
                 <th>W</th><th>MCQ</th><th>Prac</th><th>Total</th>
               <?php endforeach; ?>
             </tr>
@@ -53,7 +53,6 @@ function redTotal($mark) {
           <tbody>
             <?php foreach ($finalData as $student): ?>
               <?php
-                // Build subject => result map
                 $subjectMap = [];
                 foreach ($student['results'] as $res) {
                     $subjectMap[$res['subject']] = $res;
@@ -68,20 +67,26 @@ function redTotal($mark) {
 
                 <?php foreach ($subjectList as $subject): ?>
                   <?php
-                    $res = $subjectMap[$subject] ?? ['written' => 0, 'mcq' => 0, 'practical' => 0, 'total' => 0];
-                    $studentTotal += $res['total'];
-                    if ($res['total'] < 33) {
-                        $failCount++;
+                    if (isset($subjectMap[$subject])) {
+                        $res = $subjectMap[$subject];
+                        $written   = $res['written'] ?? 0;
+                        $mcq       = $res['mcq'] ?? 0;
+                        $practical = $res['practical'] ?? 0;
+                        $total     = $res['total'] ?? 0;
+                        $studentTotal += $total;
+                        if ($total < 33) $failCount++;
+                    } else {
+                        $written = $mcq = $practical = $total = '';
                     }
                   ?>
-                  <td><?= $res['written'] ?></td>
-                  <td><?= $res['mcq'] ?></td>
-                  <td><?= $res['practical'] ?></td>
-                  <td class="fw-bold <?= redTotal($res['total']) ?>"><?= $res['total'] ?></td>
+                  <td><?= $written ?></td>
+                  <td><?= $mcq ?></td>
+                  <td><?= $practical ?></td>
+                  <td class="fw-bold <?= redTotal($total) ?>"><?= $total ?></td>
                 <?php endforeach; ?>
 
                 <td class="fw-bold <?= $failCount > 0 ? 'text-danger' : 'text-success' ?>">
-                  <?= $studentTotal ?><?= $failCount > 0 ? '<br> F ' . $failCount . '' : '' ?>
+                  <?= $studentTotal ?><?= $failCount > 0 ? ' (F-' . $failCount . ')' : '' ?>
                 </td>
               </tr>
             <?php endforeach; ?>
