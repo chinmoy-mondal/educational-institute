@@ -753,7 +753,7 @@ class Dashboard extends Controller
 				// Step 4: Append student data with their results
 				$finalData[] = [
 					'student_id' => $student['id'],
-					'name'       => $student['name'],
+					'name'       => $student['student_name'] ?? 'Unknown',
 					'roll'       => $student['roll'],
 					'exam'       => $exam,
 					'year'       => $year,
