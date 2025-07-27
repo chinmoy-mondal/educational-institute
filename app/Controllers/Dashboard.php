@@ -404,9 +404,12 @@ class Dashboard extends Controller
 		if ($section) {
 			$builder = $builder->where('section', $section);
 		}
-
-		if ($religion) { 
-			$builder = $builder->where('religion', $religion);
+		if ($religion) {
+			if ($religion === '__NULL__') {
+				$builder = $builder->where('religion IS NULL'); // ✅ Matches "Not Set"
+			} else {
+				$builder = $builder->where('religion', $religion);
+			}
 		}
 		$perPage  = 20;
 		$students = $builder

@@ -52,14 +52,16 @@
 	    <div class="col-md-2">
 	      <div class="form-group">
 	        <label for="religion">Religion</label>
-	          <select name="religion" id="religion" class="form-control">
-	            <option value="" <?= ($religion ?? '') === '' ? 'selected' : '' ?>>All Religions</option>
-	            <?php foreach ($religions as $r): ?>
-	              <option value="<?= esc($r['religion']) ?>" <?= ($religion ?? '') === $r['religion'] ? 'selected' : '' ?>>
-	                <?= esc(ucfirst($r['religion'])) ?>
-	              </option>
-	            <?php endforeach; ?>
-	          </select>
+		<select name="religion" id="religion" class="form-control">
+		  <option value="" <?= ($religion ?? '') === '' ? 'selected' : '' ?>>All Religions</option>
+		  <option value="__NULL__" <?= ($religion ?? '') === '__NULL__' ? 'selected' : '' ?>>Not Set</option> <!-- ✅ New Option -->
+
+		  <?php foreach ($religions as $r): ?>
+		    <option value="<?= esc($r['religion']) ?>" <?= ($religion ?? '') === $r['religion'] ? 'selected' : '' ?>>
+		     <?= esc(ucfirst($r['religion'])) ?>
+		    </option>
+		  <?php endforeach; ?>
+		</select>
 	      </div>
 	    </div>
             <div class="col-md-2">
