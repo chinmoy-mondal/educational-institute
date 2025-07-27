@@ -639,30 +639,59 @@ class Dashboard extends Controller
 		$this->data['title']     = 'Tabulation Sheet';
 		$this->data['activeSection'] = 'result';
 		$this->data['navbarItems'] = [
-			['label' => 'Result', 'url' => base_url('admin/mark')],
+			['label' => 'Result', 'url' =>  current_url()],
 			['label' => 'Marksheet', 'url' => base_url('student_create')],
-			['label' => 'Tablation Sheet', 'url' => current_url()],
+			['label' => 'Tablation Sheet', 'url' => base_url('admin/mark')],
 		];
 
 
-            // Hardcoded student data
-            $students = [
-                ['id' => 1, 'roll' => '3', 'student_name' => 'Anika'],
-                ['id' => 2, 'roll' => '7', 'student_name' => 'Rafi'],
-            ];
+			$class  = $this->request->getGet('class') ?? 'Nine';
+			$exam   = $this->request->getGet('exam') ?? 'Final';
+			$year   = $this->request->getGet('year') ?? date('Y');
 
-                // Hardcoded result data
-                $results = [
-                    1 => [ // Anika
-                        'math' => ['written' => 20, 'mcq' => 5, 'practical' => 5, 'total' => 30],
-                        'english' => ['written' => 25, 'mcq' => 10, 'practical' => 0, 'total' => 35],
-                    ],
-                    2 => [ // Rafi
-                        'math' => ['written' => 18, 'mcq' => 6, 'practical' => 6, 'total' => 30],
-                        'english' => ['written' => 22, 'mcq' => 8, 'practical' => 0, 'total' => 30],
-                    ]
-                ];
+			// Load students by class
+			$students = $this->studentModel
+				->where('class', $class)
+				->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
+				->findAll();
 
+			// Get all subject IDs assigned to this class (optional: filter by section)
+			$subjectIds = $this->subjectModel
+				->where('class', $class)
+				->findColumn('id');
+
+			// Get results for those students and subjects
+			$resultQuery = $this->resultModel
+				->select('results.*, student_id, subject_id')
+				->whereIn('subject_id', $subjectIds)
+				->whereIn('student_id', array_column($students, 'id'))
+				->where('exam', $exam)
+				->where('year', $year)
+				->findAll();
+
+			// Organize results in array like: $results[student_id][subject_name] = marks
+			$results = [];
+
+			foreach ($resultQuery as $res) {
+				$subject = $this->subjectModel->find($res['subject_id']);
+				$subjectName = $subject['subject'] ?? 'Unknown';
+
+				$results[$res['student_id']][$subjectName] = [
+					'written'   => $res['written'] ?? 0,
+					'mcq'       => $res['mcq'] ?? 0,
+					'practical' => $res['practical'] ?? 0,
+					'total'     => $res['total'] ?? 0,
+				];
+			}
+
+			$data = [
+				'title'    => 'Tabulation Sheet',
+				'students' => $students,
+				'results'  => $results,
+				'exam'     => $exam,
+				'year'     => $year,
+				'class'    => $class,
+			];
                         // Pass data to view
                         $data = [
                             'title'    => 'Tabulation Demo',

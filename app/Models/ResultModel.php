@@ -10,18 +10,19 @@ class ResultModel extends Model
     protected $primaryKey = 'id';
 
     protected $allowedFields = [
-	'teacher_id',
-        'student_id',
-        'subject_id',
-        'exam',
-        'year',
-        'written',
-        'mcq',
-        'practical',
-        'total',
-        'created_at',
-        'updated_at',
+	    'teacher_id',
+	    'student_id',
+	    'subject_id',
+	    'exam',
+	    'year',
+	    'class',        // ✅ newly added
+	    'written',
+	    'mcq',
+	    'practical',
+	    'total',
+	    'created_at',
+	    'updated_at',
+	    'publish',      // ✅ newly added
     ];
-
     public $timestamps = false; // because we handle created_at/updated_at manually
 }
