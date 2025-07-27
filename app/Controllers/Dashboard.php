@@ -683,7 +683,7 @@ class Dashboard extends Controller
 		$this->data['results']   = $results;
 		$this->data['activeSection'] = 'result';
 */
-		return view('dashboard/tabulation', $this->data);
+		return view('dashboard/mark', $this->data);
 	}
 
 	public function viewStudent($id)
