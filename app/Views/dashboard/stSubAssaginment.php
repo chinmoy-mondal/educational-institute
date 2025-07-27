@@ -38,7 +38,7 @@
 						    <input type="text" name="q" id="search" class="form-control" placeholder="Name, Roll, or ID" value="<?= esc($q ?? '') ?>">
 					    </div>
 				    </div>
-				    <div class="col-md-3">
+				    <div class="col-md-2">
 					    <div class="form-group">
 						    <label for="class">Class</label>
 						    <select name="class" id="class" class="form-control">
@@ -49,7 +49,7 @@
 						    </select>
 					    </div>
 				    </div>
-				    <div class="col-md-3">
+				    <div class="col-md-2">
 					    <div class="form-group">
 						    <label for="section">Section</label>
 						    <select name="section" id="section" class="form-control">
@@ -62,7 +62,7 @@
 						    </select>
 					    </div>
 				    </div>
-				    <div class="col-md-3">
+				    <div class="col-md-2">
 					    <div class="form-group">
 						    <label for="religion">Religion</label>
 						    <select name="religion" id="religion" class="form-control">
