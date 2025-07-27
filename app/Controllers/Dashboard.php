@@ -541,7 +541,7 @@ class Dashboard extends Controller
 		}
 
 		$this->data['title']           = 'Result Entry';
-		$this->data['activeSection']   = 'result';
+		$this->data['activeSection']   = 'teacher';
 		$this->data['navbarItems']     = [
 			['label' => 'Result Entry', 'url' => base_url('ad-result')],
 			['label' => 'Result Sheet', 'url' => base_url('result_sheet')],
