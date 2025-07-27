@@ -646,65 +646,7 @@ class Dashboard extends Controller
 			['label' => 'Tablation Sheet', 'url' => base_url('admin/mark')],
 		];
 
-/*
-			$class  = $this->request->getGet('class') ?? 'Nine';
-			$exam   = $this->request->getGet('exam') ?? 'Final';
-			$year   = $this->request->getGet('year') ?? date('Y');
 
-			// Load students by class
-			$students = $this->studentModel
-				->where('class', $class)
-				->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
-				->findAll();
-
-			// Get all subject IDs assigned to this class (optional: filter by section)
-			$subjectIds = $this->subjectModel
-				->where('class', $class)
-				->findColumn('id');
-
-			// Get results for those students and subjects
-			$resultQuery = $this->resultModel
-				->select('results.*, student_id, subject_id')
-				->whereIn('subject_id', $subjectIds)
-				->whereIn('student_id', array_column($students, 'id'))
-				->where('exam', $exam)
-				->where('year', $year)
-				->findAll();
-
-			// Organize results in array like: $results[student_id][subject_name] = marks
-			$results = [];
-
-			foreach ($resultQuery as $res) {
-				$subject = $this->subjectModel->find($res['subject_id']);
-				$subjectName = $subject['subject'] ?? 'Unknown';
-
-				$results[$res['student_id']][$subjectName] = [
-					'written'   => $res['written'] ?? 0,
-					'mcq'       => $res['mcq'] ?? 0,
-					'practical' => $res['practical'] ?? 0,
-					'total'     => $res['total'] ?? 0,
-				];
-			}
-
-			$data = [
-				'title'    => 'Tabulation Sheet',
-				'students' => $students,
-				'results'  => $results,
-				'exam'     => $exam,
-				'year'     => $year,
-				'class'    => $class,
-			];
-                        // Pass data to view
-                        $data = [
-                            'title'    => 'Tabulation Demo',
-                            'students' => $students,
-                            'results'  => $results,
-                            'exam'     => 'Final',
-                            'year'     => '2025',
-                            'class'    => 'Nine',
-                        ];
-
-		return view('dashboard/mark', $this->data);*/ 
 			$class = 6;
 			$section = 'n/a';
 			$exam = 'Half-Yearly';
@@ -760,11 +702,12 @@ class Dashboard extends Controller
 					'results'    => $subjectResults,
 				];
 			}
+$this->data['finalData'] = $finalData;
+$this->data['class']     = $class;
+$this->data['exam']      = $exam;
+$this->data['year']      = $year;
 
-			// Output final array for debugging
-			echo '<pre>';
-			print_r($finalData);
-			echo '</pre>';
+return view('dashboard/mark', $this->data);
 	}
 
 	public function viewStudent($id)
