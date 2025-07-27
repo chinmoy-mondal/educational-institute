@@ -34,7 +34,9 @@ class Home extends BaseController
 	{
 		$model = new SubjectModel();  // ✅ Correct instantiation
 
-		$subjects = $model->findAll();
+		$subjects = $model
+			->orderBy('CAST(class AS UNSIGNED)', 'ASC')
+			->findAll();
 		return view('public/subject', ['subjects' => $subjects]);
 	}
 	public function student()
