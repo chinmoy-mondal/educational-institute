@@ -400,7 +400,9 @@ class Dashboard extends Controller
 		}
 
 		$perPage  = 20;
-		$students = $builder->orderBy('CAST(class as UNSIGNED) ASC')
+		$students = $builder
+			->orderBy('CAST(class as UNSIGNED) ASC')
+			->orderBy('CAST(roll as UNSIGNED) ASC')
 			->paginate($perPage, 'bootstrap');
 
 		$sections = $studentModel->select('section')->distinct()->orderBy('section')->findAll();
