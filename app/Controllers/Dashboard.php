@@ -383,7 +383,12 @@ class Dashboard extends Controller
 		$class   = $this->request->getGet('class');
 		$section = $this->request->getGet('section');
 		$religion = $this->request->getGet('religion');
-
+		$religions = $studentModel
+			->select('religion')
+			->distinct()
+			->where('religion IS NOT NULL')
+			->orderBy('religion')
+			->findAll();
 		// Build query
 		$builder = $studentModel;
 		if ($q) {
