@@ -635,7 +635,15 @@ class Dashboard extends Controller
 
 	public function mark()
 	{
-		$class = $this->request->getGet('class') ?? 'Nine';
+		// Pass data to the view
+		$this->data['title']     = 'Tabulation Sheet';
+		$this->data['activeSection'] = 'result';
+		$this->data['navbarItems'] = [
+			['label' => 'Result', 'url' => base_url('admin/mark')],
+			['label' => 'Marksheet', 'url' => base_url('student_create')],
+			['label' => 'Tablation Sheet', 'url' => current_url()],
+		];
+/*		$class = $this->request->getGet('class') ?? 'Nine';
 		$exam  = $this->request->getGet('exam') ?? 'Final';
 		$year  = $this->request->getGet('year') ?? date('Y');
 
@@ -667,14 +675,6 @@ class Dashboard extends Controller
 			$results[$r['student_id']][$r['subject_id']] = $r;
 		}
 
-		// Pass data to the view
-		$this->data['title']     = 'Tabulation Sheet';
-		$this->data['activeSection'] = 'result';
-		$this->data['navbarItems'] = [
-			['label' => 'Result', 'url' => base_url('admin/mark')],
-			['label' => 'Marksheet', 'url' => base_url('student_create')],
-			['label' => 'Tablation Sheet', 'url' => current_url()],
-		];
 		$this->data['class']     = $class;
 		$this->data['exam']      = $exam;
 		$this->data['year']      = $year;
@@ -682,7 +682,7 @@ class Dashboard extends Controller
 		$this->data['subjects']  = $subjects;
 		$this->data['results']   = $results;
 		$this->data['activeSection'] = 'result';
-
+*/
 		return view('dashboard/tabulation', $this->data);
 	}
 
