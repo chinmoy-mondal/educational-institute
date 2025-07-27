@@ -13,6 +13,11 @@ foreach ($finalData as $student) {
         }
     }
 }
+
+// Helper to apply red class if mark < 33
+function redFail($mark) {
+    return ($mark < 33) ? 'text-danger fw-bold' : '';
+}
 ?>
 
 <div class="container-fluid">
@@ -65,10 +70,10 @@ foreach ($finalData as $student) {
                     $res = $subjectMap[$subject] ?? ['written' => 0, 'mcq' => 0, 'practical' => 0, 'total' => 0];
                     $studentTotal += $res['total'];
                   ?>
-                  <td><?= $res['written'] ?></td>
-                  <td><?= $res['mcq'] ?></td>
-                  <td><?= $res['practical'] ?></td>
-                  <td class="fw-bold"><?= $res['total'] ?></td>
+                  <td class="<?= redFail($res['written']) ?>"><?= $res['written'] ?></td>
+                  <td class="<?= redFail($res['mcq']) ?>"><?= $res['mcq'] ?></td>
+                  <td class="<?= redFail($res['practical']) ?>"><?= $res['practical'] ?></td>
+                  <td class="fw-bold <?= redFail($res['total']) ?>"><?= $res['total'] ?></td>
                 <?php endforeach; ?>
 
                 <td class="fw-bold text-success"><?= $studentTotal ?></td>
