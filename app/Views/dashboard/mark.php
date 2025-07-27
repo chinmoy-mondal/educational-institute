@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 
 <?php
-// Step 1: Collect unique subject names from all student results
+// Step 1: Get unique subjects from all results
 $subjectList = [];
 
 foreach ($finalData as $student) {
@@ -14,8 +14,8 @@ foreach ($finalData as $student) {
     }
 }
 
-// Helper to apply red class if mark < 33
-function redFail($mark) {
+// Only highlight subject total if < 33
+function redTotal($mark) {
     return ($mark < 33) ? 'text-danger fw-bold' : '';
 }
 ?>
@@ -53,13 +53,14 @@ function redFail($mark) {
           <tbody>
             <?php foreach ($finalData as $student): ?>
               <?php
-                // Step 2: Build map of subject => result
+                // Build subject => result map
                 $subjectMap = [];
                 foreach ($student['results'] as $res) {
                     $subjectMap[$res['subject']] = $res;
                 }
 
                 $studentTotal = 0;
+                $failCount = 0;
               ?>
               <tr class="text-center">
                 <td><strong><?= esc($student['roll']) ?></strong></td>
@@ -69,14 +70,19 @@ function redFail($mark) {
                   <?php
                     $res = $subjectMap[$subject] ?? ['written' => 0, 'mcq' => 0, 'practical' => 0, 'total' => 0];
                     $studentTotal += $res['total'];
+                    if ($res['total'] < 33) {
+                        $failCount++;
+                    }
                   ?>
-                  <td class="<?= redFail($res['written']) ?>"><?= $res['written'] ?></td>
-                  <td class="<?= redFail($res['mcq']) ?>"><?= $res['mcq'] ?></td>
-                  <td class="<?= redFail($res['practical']) ?>"><?= $res['practical'] ?></td>
-                  <td class="fw-bold <?= redFail($res['total']) ?>"><?= $res['total'] ?></td>
+                  <td><?= $res['written'] ?></td>
+                  <td><?= $res['mcq'] ?></td>
+                  <td><?= $res['practical'] ?></td>
+                  <td class="fw-bold <?= redTotal($res['total']) ?>"><?= $res['total'] ?></td>
                 <?php endforeach; ?>
 
-                <td class="fw-bold text-success"><?= $studentTotal ?></td>
+                <td class="fw-bold <?= $failCount > 0 ? 'text-danger' : 'text-success' ?>">
+                  <?= $studentTotal ?><?= $failCount > 0 ? ' (F-' . $failCount . ')' : '' ?>
+                </td>
               </tr>
             <?php endforeach; ?>
           </tbody>
