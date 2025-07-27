@@ -561,8 +561,9 @@ class Dashboard extends Controller
 		$year       = $this->request->getPost('year');
 		$subjectId  = $this->request->getPost('subject_id');
 		$teacherId  = $this->request->getPost('teacher_id');
+		$class     = $this->request->getPost('class');
 
-		if (!$students || !$exam || !$year || !$subjectId || !$teacherId) {
+		if (!$students || !$exam || !$year || !$subjectId  || !$teacherId || !$class) {
 			return redirect()->back()->with('error', 'Missing data.');
 		}
 
@@ -584,6 +585,7 @@ class Dashboard extends Controller
 				'subject_id' => $subjectId,
 				'exam'       => $exam,
 				'year'       => $year,
+				'class'      => $class,
 				'written'    => $written,
 				'mcq'        => $mcq,
 				'practical'  => $practical,
