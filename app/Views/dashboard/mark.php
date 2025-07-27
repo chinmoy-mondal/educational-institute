@@ -81,7 +81,7 @@ function redTotal($mark) {
                 <?php endforeach; ?>
 
                 <td class="fw-bold <?= $failCount > 0 ? 'text-danger' : 'text-success' ?>">
-                  <?= $studentTotal ?><?= $failCount > 0 ? ' (F-' . $failCount . ')' : '' ?>
+                  <?= $studentTotal ?><?= $failCount > 0 ? '<br> (F-' . $failCount . ')' : '' ?>
                 </td>
               </tr>
             <?php endforeach; ?>
