@@ -68,6 +68,7 @@ class Home extends BaseController
 		// Sort and paginate
 		$students = $builder
 			->orderBy('CAST(class as UNSIGNED) ASC')
+			->orderBy('CAST(roll as UNSIGNED)', 'ASC')
 			->paginate($perPage, 'bootstrap');
 
 		// For section dropdown
