@@ -6,7 +6,7 @@
 
   <div class="card shadow-sm">
     <div class="card-header bg-dark text-white">
-      <h5 class="mb-0">Class: Nine | Exam: Final | Year: 2025</h5>
+      <h5 class="mb-0">Class: <?= esc($class) ?> | Exam: <?= esc($exam) ?> | Year: <?= esc($year) ?></h5>
     </div>
     <div class="card-body">
 
@@ -26,31 +26,22 @@
             </tr>
           </thead>
           <tbody>
-            <?php
-              $students = [
-                ['id' => 1, 'roll' => '3', 'student_name' => 'Anika'],
-                ['id' => 2, 'roll' => '7', 'student_name' => 'Rafi'],
-              ];
+            <?php foreach ($finalData as $student): 
+              // Build subject lookup by name for easier access
+              $subjectMap = [];
+              foreach ($student['results'] as $res) {
+                $subjectMap[strtolower($res['subject'])] = $res;
+              }
 
-              $results = [
-                1 => [ // Anika
-                  'math' => ['written' => 20, 'mcq' => 5, 'practical' => 5, 'total' => 30],
-                  'english' => ['written' => 25, 'mcq' => 10, 'practical' => 0, 'total' => 35],
-                ],
-                2 => [ // Rafi
-                  'math' => ['written' => 18, 'mcq' => 6, 'practical' => 6, 'total' => 30],
-                  'english' => ['written' => 22, 'mcq' => 8, 'practical' => 0, 'total' => 30],
-                ]
-              ];
+              // Try to get math and english results
+              $math    = $subjectMap['math'] ?? ['written' => 0, 'mcq' => 0, 'practical' => 0, 'total' => 0];
+              $english = $subjectMap['english'] ?? ['written' => 0, 'mcq' => 0, 'practical' => 0, 'total' => 0];
 
-              foreach ($students as $s):
-                $math    = $results[$s['id']]['math'];
-                $english = $results[$s['id']]['english'];
-                $total = $math['total'] + $english['total'];
+              $total = $math['total'] + $english['total'];
             ?>
             <tr class="text-center">
-              <td><strong><?= $s['roll'] ?></strong></td>
-              <td class="text-start"><?= $s['student_name'] ?></td>
+              <td><strong><?= esc($student['roll']) ?></strong></td>
+              <td class="text-start"><?= esc($student['name']) ?></td>
 
               <!-- Math -->
               <td><?= $math['written'] ?></td>
@@ -64,7 +55,7 @@
               <td><?= $english['practical'] ?></td>
               <td class="fw-bold"><?= $english['total'] ?></td>
 
-              <!-- Final total -->
+              <!-- Total -->
               <td class="fw-bold text-success"><?= $total ?></td>
             </tr>
             <?php endforeach; ?>
