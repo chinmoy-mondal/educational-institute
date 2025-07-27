@@ -382,6 +382,7 @@ class Dashboard extends Controller
 		$q       = $this->request->getGet('q');
 		$class   = $this->request->getGet('class');
 		$section = $this->request->getGet('section');
+		$religion = $this->request->getGet('religion');
 
 		// Build query
 		$builder = $studentModel;
@@ -399,6 +400,9 @@ class Dashboard extends Controller
 			$builder = $builder->where('section', $section);
 		}
 
+		if ($religion) { 
+			$builder = $builder->where('religion', $religion);
+		}
 		$perPage  = 20;
 		$students = $builder
 			->orderBy('CAST(class as UNSIGNED) ASC')
@@ -420,6 +424,8 @@ class Dashboard extends Controller
 			$this->data['class']         = $class;
 			$this->data['section']       = $section;
 			$this->data['sections']      = $sections;
+			$this->data['religion']   = $religion;   
+			$this->data['religions']  = $religions;  
 
 			return view('dashboard/student', $this->data);
 	}
