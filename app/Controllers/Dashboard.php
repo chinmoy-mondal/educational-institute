@@ -683,7 +683,7 @@ class Dashboard extends Controller
 		$this->data['exams']    = $exams;
 		$this->data['years']    = $years;
 
-		return view('admin/select_exam_info', $this->data);
+		return view('dashboard/select_exam_info', $this->data);
 	}
 
 	public function mark()
