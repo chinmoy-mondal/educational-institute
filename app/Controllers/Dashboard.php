@@ -661,15 +661,15 @@ class Dashboard extends Controller
 		$studentModel = new StudentModel();
 		$resultModel  = new ResultModel();
 
-// ✅ Distinct class list from students
-$classes = $studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
+		// ✅ Distinct class list from students
+		$classes = $studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
 
-// ✅ Distinct sections
-$sections = $studentModel->distinct()->select('section')->orderBy('section', 'ASC')->findAll();
+		// ✅ Distinct sections
+		$sections = $studentModel->distinct()->select('section')->orderBy('section', 'ASC')->findAll();
 
-// ✅ Distinct exam names and years from results
-$exams = $resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
-$years = $resultModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
+		// ✅ Distinct exam names and years from results
+		$exams = $resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
+		$years = $resultModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
 		// Send to view
 		$this->data['title']    = 'Select Tabulation Info';
 		$this->data['activeSection'] = 'result';
@@ -683,7 +683,7 @@ $years = $resultModel->distinct()->select('year')->orderBy('year', 'DESC')->find
 		$this->data['exams']    = $exams;
 		$this->data['years']    = $years;
 
-//		return view('admin/select_exam_info', $this->data);
+		return view('admin/select_exam_info', $this->data);
 	}
 
 	public function mark()
