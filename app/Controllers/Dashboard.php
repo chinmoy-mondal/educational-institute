@@ -656,6 +656,31 @@ class Dashboard extends Controller
 			return view('dashboard/resultCheck', $this->data);
 	}
 
+	public function selectTabulationForm()
+	{
+		$studentModel = new StudentModel();
+		$resultModel  = new ResultModel();
+
+		// ✅ Distinct class list from students
+		$classes = $studentModel->select('DISTINCT class')->orderBy('class', 'ASC')->findAll();
+
+		// ✅ Distinct sections
+		$sections = $studentModel->select('DISTINCT section')->orderBy('section', 'ASC')->findAll();
+
+		// ✅ Distinct exam names and years from results
+		$exams = $resultModel->select('DISTINCT exam')->orderBy('exam', 'ASC')->findAll();
+		$years = $resultModel->select('DISTINCT year')->orderBy('year', 'DESC')->findAll();
+
+		// Send to view
+		$this->data['title']    = 'Select Tabulation Info';
+		$this->data['classes']  = $classes;
+		$this->data['sections'] = $sections;
+		$this->data['exams']    = $exams;
+		$this->data['years']    = $years;
+
+		return view('admin/select_exam_info', $this->data);
+	}
+
 	public function mark()
 	{
 		// Pass data to the view
@@ -668,10 +693,10 @@ class Dashboard extends Controller
 		];
 
 
-			$class = 6;
-			$section = 'n/a';
-			$exam = 'Half-Yearly';
-			$year = 2025;
+			$class   = $this->request->getPost('class');
+			$section = $this->request->getPost('section');
+			$exam    = $this->request->getPost('exam');
+			$year    = $this->request->getPost('year');
 
 			$studentModel = new StudentModel();
 			$resultModel  = new ResultModel();
@@ -723,12 +748,12 @@ class Dashboard extends Controller
 					'results'    => $subjectResults,
 				];
 			}
-$this->data['finalData'] = $finalData;
-$this->data['class']     = $class;
-$this->data['exam']      = $exam;
-$this->data['year']      = $year;
+			$this->data['finalData'] = $finalData;
+			$this->data['class']     = $class;
+			$this->data['exam']      = $exam;
+			$this->data['year']      = $year;
 
-return view('dashboard/mark', $this->data);
+			return view('dashboard/mark', $this->data);
 	}
 
 	public function viewStudent($id)
