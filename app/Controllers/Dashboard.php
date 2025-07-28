@@ -673,12 +673,18 @@ class Dashboard extends Controller
 
 		// Send to view
 		$this->data['title']    = 'Select Tabulation Info';
+		$this->data['activeSection'] = 'result';
+		$this->data['navbarItems'] = [
+			['label' => 'Student List', 'url' => base_url('ad-student')],
+			['label' => 'Add Student', 'url' => base_url('student_create')],
+			['label' => 'View Student', 'url' => current_url()],
+		];
 		$this->data['classes']  = $classes;
 		$this->data['sections'] = $sections;
 		$this->data['exams']    = $exams;
 		$this->data['years']    = $years;
 
-		return view('admin/select_exam_info', $this->data);
+//		return view('admin/select_exam_info', $this->data);
 	}
 
 	public function mark()
