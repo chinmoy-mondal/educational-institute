@@ -17,7 +17,7 @@
     <!-- Search & Filter Form -->
     <div class="card">
       <div class="card-body">
-      <form method="get" action="<?= site_url('ad-student') ?>" >
+      <form method="get" action="<?= site_url('admin/student') ?>" >
           <div class="row align-items-end">
             <div class="col-md-4">
               <div class="form-group">
@@ -25,7 +25,7 @@
                 <input type="text" name="q" id="search" class="form-control" placeholder="Name, Roll, or ID" value="<?= esc($q ?? '') ?>">
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
               <div class="form-group">
                 <label for="class">Class</label>
                 <select name="class" id="class" class="form-control">
@@ -36,7 +36,7 @@
                 </select>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
               <div class="form-group">
                 <label for="section">Section</label>
                 <select name="section" id="section" class="form-control">
@@ -49,6 +49,21 @@
                 </select>
               </div>
             </div>
+	    <div class="col-md-2">
+	      <div class="form-group">
+	        <label for="religion">Religion</label>
+		<select name="religion" id="religion" class="form-control">
+		  <option value="" <?= ($religion ?? '') === '' ? 'selected' : '' ?>>All Religions</option>
+		  <option value="__NULL__" <?= ($religion ?? '') === '__NULL__' ? 'selected' : '' ?>>Not Set</option> <!-- ✅ New Option -->
+
+		  <?php foreach ($religions as $r): ?>
+		    <option value="<?= esc($r['religion']) ?>" <?= ($religion ?? '') === $r['religion'] ? 'selected' : '' ?>>
+		     <?= esc(ucfirst($r['religion'])) ?>
+		    </option>
+		  <?php endforeach; ?>
+		</select>
+	      </div>
+	    </div>
             <div class="col-md-2">
               <div class="form-group">
                 <label class="invisible d-block">Search</label>

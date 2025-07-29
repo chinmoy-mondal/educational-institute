@@ -26,6 +26,7 @@ class CreateStudents extends Migration
             'mother_nid_number'          => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => true],
             'religion'                   => ['type' => 'VARCHAR', 'constraint' => 30,  'null' => true],   // NEW
             'blood_group'                => ['type' => 'VARCHAR', 'constraint' => 5,   'null' => true],   // NEW
+            'assign_sub'                 => ['type' => 'VARCHAR', 'constraint' => 50,  'null' => true],   // NEW
             'created_at'                 => ['type' => 'DATETIME', 'null' => true],
             'updated_at'                 => ['type' => 'DATETIME', 'null' => true],
         ]);

@@ -1,55 +1,84 @@
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
 
-<div class="container py-4">
-    <h4 class="mb-4">Student Results</h4>
+<div class="container-fluid">
+  <h1 class="mb-4"><?= esc($title ?? 'Result Check') ?></h1>
 
-    <?php if (session()->getFlashdata('message')): ?>
-        <div class="alert alert-success"><?= session()->getFlashdata('message') ?></div>
-    <?php endif; ?>
-
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped text-center">
-            <thead class="table-primary">
-                <tr>
-                    <th>#</th>
-                    <th>Student</th>
-                    <th>Subject</th>
-                    <th>Exam</th>
-                    <th>Year</th>
-                    <th>Total Marks</th>
-                    <th>Updated At</th>
-                    <!-- Optional Action -->
-                    <!-- <th>Action</th> -->
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (!empty($results)): ?>
-                    <?php foreach ($results as $i => $r): ?>
-                        <tr>
-                            <td><?= $i + 1 ?></td>
-                            <td><?= esc($r['student_name'] ?? 'Unknown') ?></td>
-                            <td><?= esc($r['subject_name'] ?? 'Unknown') ?></td>
-                            <td><?= esc($r['exam']) ?></td>
-                            <td><?= esc($r['year']) ?></td>
-                            <td><?= esc($r['total']) ?></td>
-                            <td><?= esc($r['updated_at']) ?: '-' ?></td>
-                            <!-- Optional Action -->
-                            <!--
-                            <td>
-                                <a href="<?= site_url('results/edit/' . $r['id']) ?>" class="btn btn-sm btn-warning">Edit</a>
-                            </td>
-                            -->
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="7" class="text-muted">No results found.</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Subject Result Overview</h5>
     </div>
+    <div class="card-body">
+
+      <!-- Subject & Teacher Info -->
+      <div class="row mb-3 text-center">
+        <div class="col-md-4 text-start">
+          <strong>Subject Name:</strong>
+          <div class="text-success">
+            <?= esc($subject['subject'] ?? 'N/A') ?> (ID: <?= esc($subject['id'] ?? '—') ?>)
+          </div>
+        </div>
+        <div class="col-md-4">
+          <strong>Teacher:</strong>
+          <div class="text-success">
+            <?= esc($users['name'] ?? 'N/A') ?><br>
+            <small>(<?= esc($users['designation'] ?? 'N/A') ?>)</small>
+          </div>
+        </div>
+        <div class="col-md-4 text-end">
+          <strong>Class:</strong>
+          <div class="text-success">
+            <?= esc($subject['class'] ?? '—') ?>
+          </div>
+        </div>
+      </div>
+
+
+	<div class="text-end mb-3">
+	  <a href="<?= site_url('ad-result/' . $users['id'] . '/' . $subject['id']) ?>" class="btn btn-sm btn-warning">
+	    <i class="fas fa-edit"></i> Edit Marks
+	  </a>
+	</div>
+      <hr>
+      <!-- Results Table -->
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped">
+          <thead class="table-secondary text-center">
+            <tr>
+              <th colspan="6" class="h5 text-primary">Student Results</th>
+            </tr>
+            <tr>
+              <th>Roll</th>
+              <th>Name</th>
+              <th>Written</th>
+              <th>MCQ</th>
+              <th>Practical</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php if (!empty($result)): ?>
+              <?php foreach ($result as $res): ?>
+                <tr class="text-center">
+                  <td><strong><?= esc($res['roll']) ?></strong></td>
+                  <td class="text-start"><?= esc($res['student_name']) ?></td>
+                  <td><?= esc($res['written']) ?></td>
+                  <td><?= esc($res['mcq']) ?></td>
+                  <td><?= esc($res['practical']) ?></td>
+                  <td class="text-success fw-bold"><?= esc($res['total']) ?></td>
+                </tr>
+              <?php endforeach ?>
+            <?php else: ?>
+              <tr>
+                <td colspan="6" class="text-center text-muted">No results found.</td>
+              </tr>
+            <?php endif ?>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 <?= $this->endSection() ?>

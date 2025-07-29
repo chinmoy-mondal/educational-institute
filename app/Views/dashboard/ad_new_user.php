@@ -1,4 +1,4 @@
-<?= $this->include("layouts/base-structure/admin") ?>
+<?= $this->extend('layouts/admin') ?>
 <?= $this->section("content") ?>
 
 <section class="content">
@@ -24,8 +24,8 @@
               </tr>
             </thead>
             <tbody>
-              <?php if (!empty($newUsers)): ?>
-                <?php foreach ($newUsers as $user): ?>
+              <?php if (!empty($newUse)): ?>
+                <?php foreach ($newUse as $user): ?>
                   <tr>
 
 		    <td class="text-center">

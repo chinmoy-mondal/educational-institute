@@ -34,7 +34,9 @@ class Home extends BaseController
 	{
 		$model = new SubjectModel();  // ✅ Correct instantiation
 
-		$subjects = $model->findAll();
+		$subjects = $model
+			->orderBy('CAST(class AS UNSIGNED)', 'ASC')
+			->findAll();
 		return view('public/subject', ['subjects' => $subjects]);
 	}
 	public function student()
@@ -68,6 +70,7 @@ class Home extends BaseController
 		// Sort and paginate
 		$students = $builder
 			->orderBy('CAST(class as UNSIGNED) ASC')
+			->orderBy('CAST(roll as UNSIGNED)', 'ASC')
 			->paginate($perPage, 'bootstrap');
 
 		// For section dropdown
