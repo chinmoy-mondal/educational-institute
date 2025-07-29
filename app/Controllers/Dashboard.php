@@ -663,8 +663,8 @@ class Dashboard extends Controller
 
 		// ✅ Distinct class list from students
 		$classes = $studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
-
-		$rawSections = $studentModel
+		
+		$hasVocational = $studentModel
 			->distinct()
 			->select('section')
 			->orderBy('section', 'ASC')
@@ -672,12 +672,13 @@ class Dashboard extends Controller
 
 		$sections = [['section' => 'General']];
 
-		foreach ($rawSections as $row) {
+		foreach ($hasVocational as $row) {
 			if (stripos($row['section'], 'vocational') !== false) {
 				$sections = [['section' => 'Vocational']];
 				break;
 			}
 		}
+
 
 		// ✅ Distinct exam names and years from results
 		$exams = $resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
