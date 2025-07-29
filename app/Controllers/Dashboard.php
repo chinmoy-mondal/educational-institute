@@ -683,7 +683,7 @@ class Dashboard extends Controller
 
 		// Output for debug
 		echo '<pre>';
-		print_r($sections);
+		print_r($rawSections);
 		echo '</pre>';
 
 	                         
