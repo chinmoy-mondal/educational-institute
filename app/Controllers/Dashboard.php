@@ -665,7 +665,16 @@ class Dashboard extends Controller
 		$classes = $studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
 
 		// ✅ Distinct sections
-		$sections = $studentModel->distinct()->select('section')->orderBy('section', 'ASC')->findAll();
+//		$sections = $studentModel->distinct()->select('section')->orderBy('section', 'ASC')->findAll();
+		$rawSections = $studentModel
+			->distinct()
+			->select('section')
+			->orderBy('section', 'ASC')
+			->findAll();
+
+		$sections = array_filter($rawSections, fn($s) => stripos($s['section'], 'vocational') !== false)
+			? [['section' => 'Vocational']]
+			: [['section' => 'General']];
 
 		// ✅ Distinct exam names and years from results
 		$exams = $resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
