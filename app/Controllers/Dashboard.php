@@ -762,10 +762,8 @@ class Dashboard extends Controller
 			$this->data['class']     = $class;
 			$this->data['exam']      = $exam;
 			$this->data['year']      = $year;
-echo '<pre>';
-print_r($finalData);
-echo '</pre>';
-//			return view('dashboard/mark', $this->data);
+
+			return view('dashboard/mark', $this->data);
 	}
 
 	public function viewStudent($id)
