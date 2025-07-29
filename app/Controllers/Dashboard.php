@@ -724,7 +724,6 @@ class Dashboard extends Controller
 					->where('student_id', $studentId)
 					->where('exam', $exam)
 					->where('year', $year) 
-					->orderBy('subject_id', 'ASC')
 					->findAll();
 
 				// Step 3: Build subject-wise results array
@@ -736,6 +735,7 @@ class Dashboard extends Controller
 						->first()['subject'] ?? 'Unknown';
 
 					$subjectResults[] = [
+						'subject_id' => $res['subject_id'],
 						'subject'   => $subjectName,
 						'written'   => $res['written'] ?? 0,
 						'mcq'       => $res['mcq'] ?? 0,
@@ -743,6 +743,10 @@ class Dashboard extends Controller
 						'total'     => $res['total'] ?? 0,
 					];
 				}
+
+				usort($subjectResults, function ($a, $b) {
+						return $a['subject_id'] <=> $b['subject_id'];
+						});
 
 				// Step 4: Append student data with their results
 				$finalData[] = [
