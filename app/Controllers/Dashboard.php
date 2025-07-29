@@ -664,22 +664,29 @@ class Dashboard extends Controller
 		// ✅ Distinct class list from students
 		$classes = $studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
 		
-		$hasVocational = $studentModel
+		$rawSections = $studentModel
 			->distinct()
 			->select('section')
 			->orderBy('section', 'ASC')
 			->findAll();
 
+		// Default to General
 		$sections = [['section' => 'General']];
 
-		foreach ($hasVocational as $row) {
+		// Check if any section contains 'vocational'
+		foreach ($rawSections as $row) {
 			if (stripos($row['section'], 'vocational') !== false) {
 				$sections = [['section' => 'Vocational']];
 				break;
 			}
 		}
 
+		// Output for debug
+		echo '<pre>';
+		print_r($sections);
+		echo '</pre>';
 
+	                         
 		// ✅ Distinct exam names and years from results
 		$exams = $resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
 		$years = $resultModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
