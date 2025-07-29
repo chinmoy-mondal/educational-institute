@@ -710,7 +710,7 @@ class Dashboard extends Controller
 			// Step 1: Get all students from class 6, section 'n/a'
 			$students = $studentModel
 				->where('class', $class)
-				->where('section', $section)
+				->like('section', $section)
 				->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
 				->findAll();
 
@@ -723,7 +723,8 @@ class Dashboard extends Controller
 				$results = $resultModel
 					->where('student_id', $studentId)
 					->where('exam', $exam)
-					->where('year', $year)
+					->where('year', $year) 
+					->orderBy('subject_id', 'ASC')
 					->findAll();
 
 				// Step 3: Build subject-wise results array
