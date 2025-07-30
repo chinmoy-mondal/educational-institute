@@ -32,7 +32,7 @@ $routes->get('/activity-details/(:num)', 'Home::activityDetails/$1');
 
 $routes->group('admin', function($routes) {
     $routes->get('student/create', 'Dashboard::createStudentForm');
-    $routes->post('student/save', 'Dashboard::saveStudent');
+    $routes->post('admin/students/save', 'Dashboard::saveStudent');
 });
 
 
