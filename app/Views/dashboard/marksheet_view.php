@@ -10,8 +10,8 @@
 
 .marksheet-wrapper {
   background: white;
-  padding: 2px;
-  border: 4px double goldenrod;
+  padding: 24px;
+  border: 6px double goldenrod;
   margin: auto;
   max-width: 850px;
   font-family: 'Arial', sans-serif;
