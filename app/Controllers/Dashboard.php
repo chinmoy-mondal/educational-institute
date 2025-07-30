@@ -670,21 +670,10 @@ class Dashboard extends Controller
 			->orderBy('section', 'ASC')
 			->findAll();
 
-		// Default to General
-		$sections = [['section' => 'General']];
-
-		// Check if any section contains 'vocational'
-		foreach ($rawSections as $row) {
-			if (stripos($row['section'], 'vocational') !== false) {
-				$sections = [['section' => 'Vocational']];
-				break;
-			}
-		}
-
-		// Output for debug
-		echo '<pre>';
-		print_r($rawSections);
-		echo '</pre>';
+		$sections = [
+			['section' => 'general'],
+			['section' => 'vocational'],
+		];
 
 	                         
 		// ✅ Distinct exam names and years from results
