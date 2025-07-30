@@ -378,15 +378,16 @@ class Dashboard extends Controller
 
 
 
-public function createStudentForm()
-{
-    $this->data['title'] = 'Register Student';
-    $this->data['activeSection'] = 'student';
-    return view('dashboard/student_form', $this->data);
-}
+	public function createStudentForm()
+	{
+		$this->data['title'] = 'Register Student';
+		$this->data['activeSection'] = 'student';
+		return view('dashboard/student_form', $this->data);
+	}
 public function saveStudent()
 {
-    $validation = \Config\Services::validation();
+    helper(['form']);
+
     $rules = [
         'student_name' => 'required',
         'roll'         => 'required|numeric',
@@ -405,14 +406,21 @@ public function saveStudent()
     ];
 
     if (!$this->validate($rules)) {
-        return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+        return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
     }
 
+    // Handle student picture
     $file = $this->request->getFile('student_pic');
-    $fileName = $file->getRandomName();
-    $file->move('uploads/students', $fileName);
 
-    $this->studentModel->insert([
+    if ($file && $file->isValid() && !$file->hasMoved()) {
+        $fileName = $file->getRandomName();
+        $file->move('uploads/students', $fileName);
+    } else {
+        return redirect()->back()->withInput()->with('errors', ['student_pic' => 'File upload failed.']);
+    }
+
+    // Prepare student data
+    $data = [
         'student_name' => $this->request->getPost('student_name'),
         'roll'         => $this->request->getPost('roll'),
         'class'        => $this->request->getPost('class'),
@@ -427,9 +435,12 @@ public function saveStudent()
         'birth_registration_number' => $this->request->getPost('birth_registration_number'),
         'father_nid_number'         => $this->request->getPost('father_nid_number'),
         'mother_nid_number'         => $this->request->getPost('mother_nid_number'),
-    ]);
+    ];
 
-    return redirect()->to(base_url('admin/student/create'))->with('success', 'Student registered successfully!');
+    // Save to DB
+    $this->studentModel->insert($data);
+
+    return redirect()->to(site_url('admin/students'))->with('success', 'Student registered successfully!');
 }
 	public function student()
 	{
