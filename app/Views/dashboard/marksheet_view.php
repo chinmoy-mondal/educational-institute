@@ -6,125 +6,198 @@
   .no-print {
     display: none !important;
   }
-  .card {
-    box-shadow: none !important;
-    border: none !important;
-  }
 }
-.marksheet {
-  max-width: 800px;
-  margin: auto;
+
+.marksheet-wrapper {
   background: white;
-  padding: 30px;
-  font-size: 16px;
+  padding: 25px;
+  border: 6px double goldenrod;
+  margin: auto;
+  max-width: 850px;
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
 }
-.marksheet h4 {
-  margin-bottom: 5px;
+
+.school-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.school-header h2 {
+  margin: 0;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.school-header h5 {
+  margin: 5px 0;
+}
+
+.student-info,
+.exam-info {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.student-info td,
+.exam-info td {
+  padding: 4px;
+}
+
+.table-bordered td,
+.table-bordered th {
+  border: 1px solid #000 !important;
+  padding: 4px !important;
+}
+
+.qr-signature {
+  margin-top: 30px;
+}
+
+.qr-code {
+  text-align: center;
+}
+
+.qr-code img {
+  width: 100px;
+  height: 100px;
+}
+
+.signature {
+  text-align: right;
+  margin-top: 30px;
+  font-weight: bold;
 }
 </style>
 
-<div class="card marksheet">
-  <div class="card-body">
+<div class="marksheet-wrapper">
+  <!-- School Info -->
+  <div class="school-header">
+    <img src="<?= base_url('public/logo.png') ?>" alt="School Logo" width="60">
+    <h2>Tatibari Islamia High School</h2>
+    <h5>Khoshalpur, Modhupur, Tangail</h5>
+    <h4 style="margin-top: 10px;">Academic Transcript</h4>
+  </div>
 
-    <!-- School Info -->
-    <div class="text-center mb-4">
-      <h2 class="font-weight-bold">Green Valley School</h2>
-      <h5>123 Main Street, City, Country</h5>
-      <h4 class="mt-3">Marksheet</h4>
-      <hr>
-    </div>
+  <!-- Student + Exam Info -->
+  <table class="student-info">
+    <tr>
+      <td><strong>Student's Name:</strong> Kazi Mahmudul Islam</td>
+      <td><strong>Father's Name:</strong> Shahabuddin Hossain</td>
+    </tr>
+    <tr>
+      <td><strong>Mother's Name:</strong> Rashida Akter</td>
+      <td><strong>Student ID:</strong> 202312</td>
+    </tr>
+    <tr>
+      <td><strong>Class:</strong> 9</td>
+      <td><strong>Group:</strong> Science</td>
+    </tr>
+    <tr>
+      <td><strong>Roll No:</strong> 5</td>
+      <td><strong>Exam:</strong> Half Yearly - 2025</td>
+    </tr>
+  </table>
 
-    <!-- Student Info -->
-    <div class="row mb-3">
-      <div class="col-sm-6">
-        <strong>Name:</strong> Chinmoy Mondal<br>
-        <strong>Class:</strong> 9<br>
-        <strong>Section:</strong> General
-      </div>
-      <div class="col-sm-6 text-right">
-        <strong>Roll:</strong> 12<br>
-        <strong>Student ID:</strong> STU2025001<br>
-        <strong>Exam:</strong> Half Yearly - 2025
-      </div>
-    </div>
+  <!-- Mark Table -->
+  <table class="table table-bordered text-center">
+    <thead>
+      <tr>
+        <th>Subject</th>
+        <th>Full Marks</th>
+        <th>Obtained Marks</th>
+        <th>Grade Point</th>
+        <th>Letter Grade</th>
+        <th>GPA</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php
+      $subjects = [
+        ['name' => 'Bangla 1st', 'full' => 100, 'mark' => 80],
+        ['name' => 'Bangla 2nd', 'full' => 100, 'mark' => 75],
+        ['name' => 'English 1st', 'full' => 100, 'mark' => 78],
+        ['name' => 'English 2nd', 'full' => 100, 'mark' => 82],
+        ['name' => 'Math', 'full' => 100, 'mark' => 90],
+        ['name' => 'ICT', 'full' => 100, 'mark' => 70],
+        ['name' => 'Religion', 'full' => 100, 'mark' => 88],
+      ];
 
-    <!-- Marksheet Table -->
-    <table class="table table-bordered text-center">
-      <thead class="thead-light">
-        <tr>
-          <th>Subject</th>
-          <th>Full Marks</th>
-          <th>Obtained Marks</th>
-          <th>Grade</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
-        $subjects = [
-          ['name' => 'Bangla', 'full' => 100, 'mark' => 78],
-          ['name' => 'English', 'full' => 100, 'mark' => 70],
-          ['name' => 'Math', 'full' => 100, 'mark' => 92],
-          ['name' => 'Science', 'full' => 100, 'mark' => 81],
-          ['name' => 'Religion', 'full' => 100, 'mark' => 88],
-        ];
+      $totalMarks = 0;
+      $totalGPA = 0;
 
-        $total = 0;
-        foreach ($subjects as $sub):
-          $grade = ($sub['mark'] >= 80) ? 'A+' :
-                   (($sub['mark'] >= 70) ? 'A' :
-                   (($sub['mark'] >= 60) ? 'A-' :
-                   (($sub['mark'] >= 50) ? 'B' :
-                   (($sub['mark'] >= 40) ? 'C' : 'F'))));
-          $total += $sub['mark'];
+      foreach ($subjects as $s) {
+        $mark = $s['mark'];
+        $totalMarks += $mark;
+
+        $gpa = ($mark >= 80) ? 5.0 :
+               (($mark >= 70) ? 4.0 :
+               (($mark >= 60) ? 3.5 :
+               (($mark >= 50) ? 3.0 :
+               (($mark >= 40) ? 2.0 : 0)));
+
+        $grade = ($mark >= 80) ? 'A+' :
+                 (($mark >= 70) ? 'A' :
+                 (($mark >= 60) ? 'A-' :
+                 (($mark >= 50) ? 'B' :
+                 (($mark >= 40) ? 'C' : 'F'))));
+
+        $totalGPA += $gpa;
         ?>
         <tr>
-          <td><?= $sub['name'] ?></td>
-          <td><?= $sub['full'] ?></td>
-          <td><?= $sub['mark'] ?></td>
+          <td><?= $s['name'] ?></td>
+          <td><?= $s['full'] ?></td>
+          <td><?= $mark ?></td>
+          <td><?= number_format($gpa, 2) ?></td>
           <td><?= $grade ?></td>
+          <td><?= number_format($gpa, 2) ?></td>
         </tr>
-        <?php endforeach; ?>
-      </tbody>
-      <tfoot>
-        <tr>
-          <th colspan="2">Total</th>
-          <th><?= $total ?></th>
-          <th>
-            <?php
-              $avg = $total / count($subjects);
-              $gpa = ($avg >= 80) ? '5.00' :
-                     (($avg >= 70) ? '4.00' :
-                     (($avg >= 60) ? '3.50' :
-                     (($avg >= 50) ? '3.00' :
-                     (($avg >= 40) ? '2.00' : '0.00'))));
-              echo "GPA: $gpa";
-            ?>
-          </th>
-        </tr>
-      </tfoot>
-    </table>
+      <?php } ?>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th colspan="2">Total Marks</th>
+        <th><?= $totalMarks ?></th>
+        <th colspan="3">GPA: <?= number_format($totalGPA / count($subjects), 2) ?></th>
+      </tr>
+    </tfoot>
+  </table>
 
-    <!-- Remarks -->
-    <div class="mt-3">
-      <strong>Result:</strong>
-      <?= ($gpa === '0.00') ? '<span class="text-danger">Failed</span>' : '<span class="text-success">Passed</span>' ?>
+  <!-- Grade Chart + QR + Signature -->
+  <div class="row qr-signature">
+    <div class="col-md-6">
+      <table class="table table-bordered text-center">
+        <thead>
+          <tr>
+            <th>Mark Range</th>
+            <th>Letter</th>
+            <th>Point</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>80–100</td><td>A+</td><td>5.00</td></tr>
+          <tr><td>70–79</td><td>A</td><td>4.00</td></tr>
+          <tr><td>60–69</td><td>A-</td><td>3.50</td></tr>
+          <tr><td>50–59</td><td>B</td><td>3.00</td></tr>
+          <tr><td>40–49</td><td>C</td><td>2.00</td></tr>
+          <tr><td>0–39</td><td>F</td><td>0.00</td></tr>
+        </tbody>
+      </table>
     </div>
 
-    <!-- Signature -->
-    <div class="row mt-5">
-      <div class="col-6 text-left">
-        <strong>__________________</strong><br>
-        <span>Guardian's Signature</span>
-      </div>
-      <div class="col-6 text-right">
-        <strong>__________________</strong><br>
-        <span>Headmaster's Signature</span>
-      </div>
+    <div class="col-md-3 qr-code text-center">
+      <img src="<?= base_url('public/qr-code.png') ?>" alt="QR Code">
+      <p style="font-size: 12px;">Scan to Verify</p>
+    </div>
+
+    <div class="col-md-3 signature text-right">
+      <br><br>
+      ____________________<br>
+      Headmaster
     </div>
   </div>
 
-  <!-- Print Button -->
-  <div class="card-footer text-center no-print">
+  <div class="text-center mt-3 no-print">
     <button onclick="window.print()" class="btn btn-primary">
       <i class="fas fa-print"></i> Print Marksheet
     </button>
