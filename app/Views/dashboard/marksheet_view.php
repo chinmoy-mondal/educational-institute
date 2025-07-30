@@ -99,14 +99,14 @@
 <div class="marksheet-wrapper">
   <!-- School Info -->
   <div class="school-header">
-    <h2>Tatibari Islamia High School</h2>
-    <h5>Khoshalpur, Modhupur, Tangail</h5>
+    <h2>Mulgram Secondary School</h2>
+    <h5>Keshoppur, Jessor</h5>
   </div>
 
   <div class="row align-items-center">
   <!-- Left: Student Photo -->
   <div class="col-md-3 text-left">
-    <img src="<?= base_url('public/assets/img/default.png'); ?>" alt="Student Photo" width="60">
+    <img src="<?= base_url('public/assets/img/headsir.jpg'); ?>" alt="Student Photo" width="60">
   </div>
 
   <!-- Center: School Logo & Transcript Title -->
