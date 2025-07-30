@@ -79,13 +79,27 @@
   </div>
 
   <!-- Student + Exam Info -->
-  <table class="student-info" border = '1'>
+  <table class="student-info">
     <tr>
 <td>
     <img src="<?= base_url('public/assets/img/default.png'); ?>" alt="School Logo" width="60">
 </td>
 <td>
     <img src="<?= base_url('public/assets/img/logo.jpg'); ?>" alt="School Logo" width="60">
+</td>
+<td>
+	<table>
+		<tr>
+			<th>Range</th>
+			<th>Grade</th>
+			<th>GPA</th>
+		</tr>
+		<tr>
+			<td>80 - 100</td>
+			<td>A+</td>
+			<td>5.0</td>
+		</tr>
+	</table>
 </td>
     </tr>
     <tr>
