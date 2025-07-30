@@ -83,6 +83,11 @@
   <table class="student-info" border = '1'>
     <tr>
       <td><strong>Student's Name:</strong> Kazi Mahmudul Islam</td>
+      <td><strong>Student's Name:</strong> Kazi Mahmudul Islam</td>
+      <td><strong>Student's Name:</strong> Kazi Mahmudul Islam</td>
+      <td><strong>Student's Name:</strong> Kazi Mahmudul Islam</td>
+      <td><strong>Student's Name:</strong> Kazi Mahmudul Islam</td>
+      <td><strong>Student's Name:</strong> Kazi Mahmudul Islam</td>
       <td><strong>Father's Name:</strong> Shahabuddin Hossain</td>
     </tr>
     <tr>
