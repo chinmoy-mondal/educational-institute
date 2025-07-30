@@ -7,24 +7,30 @@
 	</div>
 
 	<form action="<?= base_url('admin/show-marksheet') ?>" method="get">
-		<div class="card-body row">
-			<div class="form-group col-md-3">
-				<label>Search By</label>
-				<select id="searchType" name="search_type" class="form-control" required>
-					<option value="details">Search by Class/Section</option>
-					<option value="id">Search by Student ID Only</option>
-				</select>
+		<div class="card-body">
+
+			<!-- 🔘 Radio buttons for search type -->
+			<div class="form-group">
+				<label>Search Method</label><br>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" name="search_type" id="searchById" value="id" checked>
+					<label class="form-check-label" for="searchById">By Student ID</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="radio" name="search_type" id="searchByRoll" value="roll">
+					<label class="form-check-label" for="searchByRoll">By Class/Roll</label>
+				</div>
 			</div>
 
-			<!-- ID-only field -->
-			<div class="form-group col-md-3 search-by-id" style="display: none;">
+			<!-- 👤 Student ID field -->
+			<div class="form-group search-id">
 				<label>Student ID</label>
 				<input type="text" name="id" class="form-control" placeholder="Enter Student ID">
 			</div>
 
-			<!-- All other fields -->
-			<div class="search-by-details row w-100">
-				<div class="form-group col-md-3">
+			<!-- 📋 Class/Roll-based fields -->
+			<div class="search-roll" style="display: none;">
+				<div class="form-group">
 					<label>Class</label>
 					<select name="class" class="form-control">
 						<option value="">Select Class</option>
@@ -34,7 +40,7 @@
 					</select>
 				</div>
 
-				<div class="form-group col-md-3">
+				<div class="form-group">
 					<label>Section</label>
 					<select name="section" class="form-control">
 						<option value="">Select Section</option>
@@ -44,12 +50,12 @@
 					</select>
 				</div>
 
-				<div class="form-group col-md-3">
-					<label>Roll No</label>
-					<input type="text" name="roll" class="form-control" placeholder="Enter Roll">
+				<div class="form-group">
+					<label>Roll</label>
+					<input type="text" name="roll" class="form-control" placeholder="Enter Roll Number">
 				</div>
 
-				<div class="form-group col-md-3">
+				<div class="form-group">
 					<label>Exam</label>
 					<select name="exam" class="form-control">
 						<option value="">Select Exam</option>
@@ -59,7 +65,7 @@
 					</select>
 				</div>
 
-				<div class="form-group col-md-3">
+				<div class="form-group">
 					<label>Year</label>
 					<select name="year" class="form-control">
 						<option value="">Select Year</option>
@@ -77,24 +83,29 @@
 	</form>
 </div>
 
+<!-- ✅ JS: Toggle fields -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-	const searchType = document.getElementById("searchType");
-	const byId = document.querySelector(".search-by-id");
-	const byDetails = document.querySelector(".search-by-details");
+	const searchById = document.getElementById("searchById");
+	const searchByRoll = document.getElementById("searchByRoll");
 
-	function toggleFields() {
-		if (searchType.value === "id") {
-			byId.style.display = "block";
-			byDetails.style.display = "none";
+	const idFields = document.querySelector(".search-id");
+	const rollFields = document.querySelector(".search-roll");
+
+	function toggleSearch() {
+		if (searchById.checked) {
+			idFields.style.display = "block";
+			rollFields.style.display = "none";
 		} else {
-			byId.style.display = "none";
-			byDetails.style.display = "flex";
+			idFields.style.display = "none";
+			rollFields.style.display = "block";
 		}
 	}
 
-	searchType.addEventListener("change", toggleFields);
-	toggleFields(); // initialize
+	searchById.addEventListener("change", toggleSearch);
+	searchByRoll.addEventListener("change", toggleSearch);
+
+	toggleSearch(); // initialize
 });
 </script>
 
