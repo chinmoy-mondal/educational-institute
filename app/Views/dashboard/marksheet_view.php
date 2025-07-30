@@ -75,6 +75,25 @@
   margin-top: 30px;
   font-weight: bold;
 }
+
+.grade-table td, .grade-table th {
+  font-size: 12px;
+  padding: 3px 6px !important;
+  line-height: 1.2;
+}
+
+.transcript-title {
+  text-align: center;
+}
+
+.transcript-title img {
+  display: block;
+  margin: 0 auto;
+}
+
+.grade-box {
+  float: right;
+}
 </style>
 
 <div class="marksheet-wrapper">
@@ -84,64 +103,39 @@
     <h5>Khoshalpur, Modhupur, Tangail</h5>
   </div>
 
-  <table class="student-info">
-    <tr>
-	<td>
-	    <img src="<?= base_url('public/assets/img/default.png'); ?>" alt="School Logo" width="60">
-	</td>
-	<td>
-	    <img src="<?= base_url('public/assets/img/logo.jpg'); ?>" alt="School Logo" width="60">
-	    <br>
-	    <h4 style="margin-top: 10px;">Academic Transcript</h4>
-	</td>
-	<td>
-		<table class="table table-bordered text-center grade-table">
+  <div class="row align-items-center">
+  <!-- Left: Student Photo -->
+  <div class="col-md-3 text-left">
+    <img src="<?= base_url('public/assets/img/default.png'); ?>" alt="Student Photo" width="60">
+  </div>
 
-			<tr>
-				<th>Range</th>
-				<th>Grade</th>
-				<th>GPA</th>
-			</tr>
-			<tr>
-				<td>80 - 100</td>
-				<td>A+</td>
-				<td>5.0</td>
-			</tr>
-			<tr>
-				<td>70 - 79</td>
-				<td>A</td>
-				<td>4.0</td>
-			</tr>
-			<tr>
-				<td>60 - 69</td>
-				<td>A-</td>
-				<td>3.5</td>
-			</tr>
-			<tr>
-				<td>50 - 59</td>
-				<td>B</td>
-				<td>3.0</td>
-			</tr>
-			<tr>
-				<td>40 - 49</td>
-				<td>C</td>
-				<td>2.0</td>
-			</tr>
-			<tr>
-				<td>33 - 39</td>
-				<td>D</td>
-				<td>1.0</td>
-			</tr>
-			<tr>
-				<td>0 - 32</td>
-				<td>F</td>
-				<td>0.0</td>
-			</tr>
-		</table>
-	</td>
-    </tr>
-</table>
-  <!-- Student + Exam Info -->
+  <!-- Center: School Logo & Transcript Title -->
+  <div class="col-md-6 transcript-title">
+    <img src="<?= base_url('public/assets/img/logo.jpg'); ?>" alt="School Logo" width="60">
+    <h4 style="margin-top: 10px;">Academic Transcript</h4>
+  </div>
+
+  <!-- Right: Grade Chart -->
+  <div class="col-md-3">
+    <div class="grade-box">
+      <table class="table table-bordered text-center grade-table">
+        <tr>
+          <th>Range</th>
+          <th>Grade</th>
+          <th>GPA</th>
+        </tr>
+        <tr><td>80 - 100</td><td>A+</td><td>5.0</td></tr>
+        <tr><td>70 - 79</td><td>A</td><td>4.0</td></tr>
+        <tr><td>60 - 69</td><td>A-</td><td>3.5</td></tr>
+        <tr><td>50 - 59</td><td>B</td><td>3.0</td></tr>
+        <tr><td>40 - 49</td><td>C</td><td>2.0</td></tr>
+        <tr><td>33 - 39</td><td>D</td><td>1.0</td></tr>
+        <tr><td>0 - 32</td><td>F</td><td>0.0</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- Student + Exam Info -->
   <table class="student-info">
     <tr>
       <td><strong>Student's Name:</strong> Kazi Mahmudul Islam</td>
