@@ -73,7 +73,7 @@
 <div class="marksheet-wrapper">
   <!-- School Info -->
   <div class="school-header">
-    <img src="<?= base_url('public/logo.png') ?>" alt="School Logo" width="60">
+    <img src="<?= base_url('public/assets/img/logo.jpg'); ?>" alt="School Logo" width="60">
     <h2>Tatibari Islamia High School</h2>
     <h5>Khoshalpur, Modhupur, Tangail</h5>
     <h4 style="margin-top: 10px;">Academic Transcript</h4>
