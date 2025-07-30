@@ -94,6 +94,9 @@
 .grade-box {
   float: right;
 }
+.align-items-center {
+    align-items: initial !important;
+}
 </style>
 
 <div class="marksheet-wrapper">
