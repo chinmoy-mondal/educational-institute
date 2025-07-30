@@ -683,7 +683,7 @@ class Dashboard extends Controller
 		$this->data['title']    = 'Select Tabulation Info';
 		$this->data['activeSection'] = 'result';
 		$this->data['navbarItems'] = [
-			['label' => 'Tabulation Sheet', 'url' => ],
+			['label' => 'Tabulation Sheet', 'url' => current_url()],
 			['label' => 'Marksheet', 'url' => base_url('admin/marksheet_form')],
 			
 		];
