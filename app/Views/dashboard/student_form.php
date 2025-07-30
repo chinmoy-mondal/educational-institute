@@ -48,27 +48,25 @@
             </div>
           </div>
 
-<!-- SECTION (Only visible for Class 9 & 10) -->
-<div class="row mt-3" id="section-row" style="display:none;">
-  <div class="col-md-12">
-    <label>Section (for Class 9 & 10)</label>
-    <select name="section" class="form-control">
-      <option value="">Select Section</option>
-      <option value="General - Science" <?= old('section') == 'General - Science' ? 'selected' : '' ?>>General → Science</option>
-      <option value="General - Arts" <?= old('section') == 'General - Arts' ? 'selected' : '' ?>>General → Arts</option>
-      <option value="Vocational - Food Processing and Preservation" <?= old('section') == 'Vocational - Food Processing and Preservation' ? 'selected' : '' ?>>Vocational → Food Processing and Preservation</option>
-      <option value="Vocational - IT Support and IoT Basics" <?= old('section') == 'Vocational - IT Support and IoT Basics' ? 'selected' : '' ?>>Vocational → IT Support and IoT Basics</option>
-    </select>
-  </div>
-</div>
-
-<!-- BOARD ID (Always visible) -->
 <div class="row mt-3">
+  <div class="col-md-6">
+    <label>Section (optional, only for Class 9 & 10)</label>
+	<select name="section" class="form-control">
+	  <option value="">Select Section</option>
+	  <option value="n/a" <?= old('section') == 'n/a' ? 'selected' : '' ?>>N/A</option>
+	  <option value="General - Science" <?= old('section') == 'General - Science' ? 'selected' : '' ?>>General → Science</option>
+	  <option value="General - Arts" <?= old('section') == 'General - Arts' ? 'selected' : '' ?>>General → Arts</option>
+	  <option value="Vocational - Food Processing and Preservation" <?= old('section') == 'Vocational - Food Processing and Preservation' ? 'selected' : '' ?>>Vocational → Food Processing and Preservation</option>
+	  <option value="Vocational - IT Support and IoT Basics" <?= old('section') == 'Vocational - IT Support and IoT Basics' ? 'selected' : '' ?>>Vocational → IT Support and IoT Basics</option>
+	</select>
+  </div>
+
   <div class="col-md-6">
     <label>Board ID</label>
     <input type="text" name="esif" class="form-control" value="<?= old('esif') ?>" required>
   </div>
 </div>
+
           <div class="row mt-3">
             <div class="col-md-6">
               <label>Father's Name</label>
