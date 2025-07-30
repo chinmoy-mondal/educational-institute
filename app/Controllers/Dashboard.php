@@ -514,11 +514,8 @@ class Dashboard extends Controller
 			$this->data['total']  = $total;  
 
 
-echo "<pre>";
-print_r($class);
-echo "</pre>";
 
-		//	return view('dashboard/student', $this->data);
+			return view('dashboard/student', $this->data);
 	}
 
 	public function stAssaginSubView()
@@ -769,7 +766,7 @@ echo "</pre>";
 			['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
 			['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
 		];
-		$this->data['classes']  = $classes;
+		$this->data['class']  = $classes;
 		$this->data['sections'] = $sections;
 		$this->data['exams']    = $exams;
 		$this->data['years']    = $years;
