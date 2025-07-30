@@ -29,9 +29,8 @@
                 <label for="class">Class</label>
                 <select name="class" id="class" class="form-control">
                   <option value="" <?= ($class ?? '') === '' ? 'selected' : '' ?>>All Classes</option>
-                  <?php for ($i = 6; $i <= 10; $i++): ?>
-                  <?php endfor; ?>
-                </select>
+                  <option value="<?= $i ?>" <?= ($class ?? '') == $i ? 'selected' : '' ?>>Class <?= $i ?></option>
+		</select>
               </div>
             </div>
             <div class="col-md-2">
