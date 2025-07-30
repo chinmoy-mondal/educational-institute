@@ -804,6 +804,26 @@ class Dashboard extends Controller
 			return view('dashboard/select_marksheet_info', $this->data);
 	}
 
+	public function showMarksheet()
+	{
+		// You can fetch from DB here using GET parameters
+		// For now, using demo static data
+
+		$this->data['title'] = 'Marksheet';
+
+		$this->data['activeSection'] = 'result';
+		$this->data['navbarItems'] = [
+			['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
+			['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
+		];
+		// Optional: future dynamic data from request
+		// $class = $this->request->getGet('class');
+		// $roll  = $this->request->getGet('roll');
+		// $exam  = $this->request->getGet('exam');
+
+		return view('dashboard/marksheet_view', $this->data);
+	}
+
 	public function viewStudent($id)
 	{
 		$this->studentModel = new StudentModel();
