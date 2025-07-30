@@ -112,48 +112,47 @@
       </tr>
     </thead>
     <tbody>
-      <?php
-      $subjects = [
-        ['name' => 'Bangla 1st', 'full' => 100, 'mark' => 80],
-        ['name' => 'Bangla 2nd', 'full' => 100, 'mark' => 75],
-        ['name' => 'English 1st', 'full' => 100, 'mark' => 78],
-        ['name' => 'English 2nd', 'full' => 100, 'mark' => 82],
-        ['name' => 'Math', 'full' => 100, 'mark' => 90],
-        ['name' => 'ICT', 'full' => 100, 'mark' => 70],
-        ['name' => 'Religion', 'full' => 100, 'mark' => 88],
-      ];
+    <?php
+$subjects = [
+  ['name' => 'Bangla 1st', 'full' => 100, 'mark' => 80],
+  ['name' => 'Bangla 2nd', 'full' => 100, 'mark' => 75],
+  ['name' => 'English 1st', 'full' => 100, 'mark' => 78],
+  ['name' => 'English 2nd', 'full' => 100, 'mark' => 82],
+  ['name' => 'Math', 'full' => 100, 'mark' => 90],
+  ['name' => 'ICT', 'full' => 100, 'mark' => 70],
+  ['name' => 'Religion', 'full' => 100, 'mark' => 88],
+];
 
-      $totalMarks = 0;
-      $totalGPA = 0;
+$totalMarks = 0;
+$totalGPA = 0;
 
-      foreach ($subjects as $s) {
-        $mark = $s['mark'];
-        $totalMarks += $mark;
+foreach ($subjects as $s):
+  $mark = $s['mark'];
+  $totalMarks += $mark;
 
-        $gpa = ($mark >= 80) ? 5.0 :
-               (($mark >= 70) ? 4.0 :
-               (($mark >= 60) ? 3.5 :
-               (($mark >= 50) ? 3.0 :
-               (($mark >= 40) ? 2.0 : 0)));
+  $gpa = ($mark >= 80) ? 5.0 :
+         (($mark >= 70) ? 4.0 :
+         (($mark >= 60) ? 3.5 :
+         (($mark >= 50) ? 3.0 :
+         (($mark >= 40) ? 2.0 : 0.0))));
 
-        $grade = ($mark >= 80) ? 'A+' :
-                 (($mark >= 70) ? 'A' :
-                 (($mark >= 60) ? 'A-' :
-                 (($mark >= 50) ? 'B' :
-                 (($mark >= 40) ? 'C' : 'F'))));
+  $grade = ($mark >= 80) ? 'A+' :
+           (($mark >= 70) ? 'A' :
+           (($mark >= 60) ? 'A-' :
+           (($mark >= 50) ? 'B' :
+           (($mark >= 40) ? 'C' : 'F'))));
 
-        $totalGPA += $gpa;
-        ?>
-        <tr>
-          <td><?= $s['name'] ?></td>
-          <td><?= $s['full'] ?></td>
-          <td><?= $mark ?></td>
-          <td><?= number_format($gpa, 2) ?></td>
-          <td><?= $grade ?></td>
-          <td><?= number_format($gpa, 2) ?></td>
-        </tr>
-      <?php } ?>
-    </tbody>
+  $totalGPA += $gpa;
+?>
+<tr>
+  <td><?= esc($s['name']) ?></td>
+  <td><?= $s['full'] ?></td>
+  <td><?= $mark ?></td>
+  <td><?= number_format($gpa, 2) ?></td>
+  <td><?= $grade ?></td>
+  <td><?= number_format($gpa, 2) ?></td>
+</tr>
+<?php endforeach; ?></tbody>
     <tfoot>
       <tr>
         <th colspan="2">Total Marks</th>
