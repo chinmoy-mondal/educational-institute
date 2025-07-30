@@ -84,63 +84,65 @@
     <h5>Khoshalpur, Modhupur, Tangail</h5>
   </div>
 
-  <!-- Student + Exam Info -->
   <table class="student-info">
     <tr>
-<td>
-    <img src="<?= base_url('public/assets/img/default.png'); ?>" alt="School Logo" width="60">
-</td>
-<td>
-    <img src="<?= base_url('public/assets/img/logo.jpg'); ?>" alt="School Logo" width="60">
-    <br>
-    <h4 style="margin-top: 10px;">Academic Transcript</h4>
-</td>
-<td>
-	<table class="table table-bordered text-center grade-table">
+	<td>
+	    <img src="<?= base_url('public/assets/img/default.png'); ?>" alt="School Logo" width="60">
+	</td>
+	<td>
+	    <img src="<?= base_url('public/assets/img/logo.jpg'); ?>" alt="School Logo" width="60">
+	    <br>
+	    <h4 style="margin-top: 10px;">Academic Transcript</h4>
+	</td>
+	<td>
+		<table class="table table-bordered text-center grade-table">
 
-		<tr>
-			<th>Range</th>
-			<th>Grade</th>
-			<th>GPA</th>
-		</tr>
-		<tr>
-			<td>80 - 100</td>
-			<td>A+</td>
-			<td>5.0</td>
-		</tr>
-		<tr>
-			<td>70 - 79</td>
-			<td>A</td>
-			<td>4.0</td>
-		</tr>
-		<tr>
-			<td>60 - 69</td>
-			<td>A-</td>
-			<td>3.5</td>
-		</tr>
-		<tr>
-			<td>50 - 59</td>
-			<td>B</td>
-			<td>3.0</td>
-		</tr>
-		<tr>
-			<td>40 - 49</td>
-			<td>C</td>
-			<td>2.0</td>
-		</tr>
-		<tr>
-			<td>33 - 39</td>
-			<td>D</td>
-			<td>1.0</td>
-		</tr>
-		<tr>
-			<td>0 - 32</td>
-			<td>F</td>
-			<td>0.0</td>
-		</tr>
-	</table>
-</td>
+			<tr>
+				<th>Range</th>
+				<th>Grade</th>
+				<th>GPA</th>
+			</tr>
+			<tr>
+				<td>80 - 100</td>
+				<td>A+</td>
+				<td>5.0</td>
+			</tr>
+			<tr>
+				<td>70 - 79</td>
+				<td>A</td>
+				<td>4.0</td>
+			</tr>
+			<tr>
+				<td>60 - 69</td>
+				<td>A-</td>
+				<td>3.5</td>
+			</tr>
+			<tr>
+				<td>50 - 59</td>
+				<td>B</td>
+				<td>3.0</td>
+			</tr>
+			<tr>
+				<td>40 - 49</td>
+				<td>C</td>
+				<td>2.0</td>
+			</tr>
+			<tr>
+				<td>33 - 39</td>
+				<td>D</td>
+				<td>1.0</td>
+			</tr>
+			<tr>
+				<td>0 - 32</td>
+				<td>F</td>
+				<td>0.0</td>
+			</tr>
+		</table>
+	</td>
     </tr>
+</table>
+  <!-- Student + Exam Info -->
+  <table class="student-info">
     <tr>
       <td><strong>Student's Name:</strong> Kazi Mahmudul Islam</td>
     </tr>
