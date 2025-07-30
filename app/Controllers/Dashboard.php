@@ -671,8 +671,8 @@ class Dashboard extends Controller
 			->findAll();
 
 		$sections = [
-			['section' => 'general'],
-			['section' => 'vocational'],
+			['section' => 'General'],
+			['section' => 'Vocational'],
 		];
 
 	                         
@@ -683,9 +683,9 @@ class Dashboard extends Controller
 		$this->data['title']    = 'Select Tabulation Info';
 		$this->data['activeSection'] = 'result';
 		$this->data['navbarItems'] = [
-			['label' => 'Student List', 'url' => base_url('ad-student')],
-			['label' => 'Add Student', 'url' => base_url('student_create')],
-			['label' => 'View Student', 'url' => current_url()],
+			['label' => 'Tabulation Sheet', 'url' => ],
+			['label' => 'Marksheet', 'url' => base_url('admin/marksheet_form')],
+			
 		];
 		$this->data['classes']  = $classes;
 		$this->data['sections'] = $sections;
@@ -716,10 +716,14 @@ class Dashboard extends Controller
 			$resultModel  = new ResultModel();
 			$subjectModel = new SubjectModel();
 
-			// Step 1: Get all students from class 6, section 'n/a'
-			$students = $studentModel
-				->where('class', $class)
-				->like('section', $section)
+			$builder = $studentModel->where('class', $class);
+
+			// If class is NOT 6 to 8, add section filter
+			if (!in_array($class, ['6', '7', '8'])) {
+				$builder->like('section', $section);
+			}
+
+			$students = $builder
 				->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
 				->findAll();
 
@@ -773,6 +777,29 @@ class Dashboard extends Controller
 			$this->data['year']      = $year;
 
 			return view('dashboard/mark', $this->data);
+	}
+
+	public function selectMarksheetForm()
+	{
+		$studentModel = new StudentModel();
+		$resultModel  = new ResultModel();
+
+		$classes = $studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
+		$sections = [
+			['section' => 'general'],
+			['section' => 'vocational'],
+		];
+			$exams = $resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
+			$years = $resultModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
+
+			$this->data['title']         = 'Select Marksheet Info';
+			$this->data['activeSection'] = 'result';
+			$this->data['classes']       = $classes;
+			$this->data['sections']      = $sections;
+			$this->data['exams']         = $exams;
+			$this->data['years']         = $years;
+
+			return view('dashboard/select_marksheet_info', $this->data);
 	}
 
 	public function viewStudent($id)

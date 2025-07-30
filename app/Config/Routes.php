@@ -69,9 +69,12 @@ $routes->get('/assignSubject/(:num)', 'Dashboard::assignSubject/$1');
 
 $routes->get('/ad-result/(:num)/(:num)', 'Dashboard::result/$1/$2');
 $routes->get('/admin/resultCheck/(:num)/(:num)', 'Dashboard::ResultCheck/$1/$2');
+$routes->post('/results/submit', 'Dashboard::submitResults');
+
 $routes->get('/admin/tabulation_form', 'Dashboard::selectTabulationForm');
 $routes->post('/admin/mark/', 'Dashboard::Mark');
-$routes->post('/results/submit', 'Dashboard::submitResults');
+$routes->get('admin/select-marksheet', 'Dashboard::selectMarksheetForm');
+$routes->get('admin/show-marksheet', 'Dashboard::showMarksheet');
 
 $routes->get('admin/student', 'Dashboard::student');
 $routes->get('admin/students/view/(:num)', 'Dashboard::viewStudent/$1');
