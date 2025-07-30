@@ -518,7 +518,7 @@ echo "<pre>";
 print_r($class);
 echo "</pre>";
 
-			return view('dashboard/student', $this->data);
+		//	return view('dashboard/student', $this->data);
 	}
 
 	public function stAssaginSubView()
