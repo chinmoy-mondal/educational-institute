@@ -50,11 +50,11 @@
   padding: 4px !important;
 }
 
-.grade-table td,
+.grade-table td, 
 .grade-table th {
-  font-size: 12px;
-  padding: 2px 4px !important;
-  line-height: 1.2;
+    font-size: 12px;
+    padding: 1px 1px !important;
+    line-height: 1.0;
 }
 
 .qr-signature {
@@ -82,7 +82,6 @@
   <div class="school-header">
     <h2>Tatibari Islamia High School</h2>
     <h5>Khoshalpur, Modhupur, Tangail</h5>
-    <h4 style="margin-top: 10px;">Academic Transcript</h4>
   </div>
 
   <!-- Student + Exam Info -->
@@ -90,6 +89,8 @@
     <tr>
 <td>
     <img src="<?= base_url('public/assets/img/default.png'); ?>" alt="School Logo" width="60">
+    <br>
+    <h4 style="margin-top: 10px;">Academic Transcript</h4>
 </td>
 <td>
     <img src="<?= base_url('public/assets/img/logo.jpg'); ?>" alt="School Logo" width="60">
