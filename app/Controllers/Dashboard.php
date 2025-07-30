@@ -683,7 +683,7 @@ class Dashboard extends Controller
 		$this->data['title']    = 'Select Tabulation Info';
 		$this->data['activeSection'] = 'result';
 		$this->data['navbarItems'] = [
-			['label' => 'Tabulation Sheet', 'url' => current_url()],
+			['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
 			['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
 		];
 		$this->data['classes']  = $classes;
@@ -700,7 +700,7 @@ class Dashboard extends Controller
 		$this->data['title']     = 'Tabulation Sheet';
 		$this->data['activeSection'] = 'result';
 		$this->data['navbarItems'] = [
-			['label' => 'Tabulation Sheet', 'url' => current_url()],
+			['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
 			['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
 		];
 
@@ -793,7 +793,7 @@ class Dashboard extends Controller
 			$this->data['title']         = 'Select Marksheet Info';
 			$this->data['activeSection'] = 'result';
 			$this->data['navbarItems'] = [
-				['label' => 'Tabulation Sheet', 'url' => current_url()],
+				['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
 				['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
 			];
 			$this->data['classes']       = $classes;
