@@ -382,6 +382,11 @@ class Dashboard extends Controller
 	{
 		$this->data['title'] = 'Register Student';
 		$this->data['activeSection'] = 'student';
+		$this->data['navbarItems']   = [
+			['label' => 'Student List', 'url' => base_url('admin/student')],
+			['label' => 'Add Student', 'url' => base_url('admin/student/create')],
+			['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
+		];
 		return view('dashboard/student_form', $this->data);
 	}
 public function saveStudent()
