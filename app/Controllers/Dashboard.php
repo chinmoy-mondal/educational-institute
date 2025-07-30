@@ -513,6 +513,11 @@ class Dashboard extends Controller
 			$this->data['religions']  = $religions;  
 			$this->data['total']  = $total;  
 
+
+echo "<pre>";
+print_r($class);
+echo "</pre>";
+
 			return view('dashboard/student', $this->data);
 	}
 
