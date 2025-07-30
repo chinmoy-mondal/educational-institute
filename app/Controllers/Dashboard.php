@@ -495,8 +495,8 @@ public function saveStudent()
 		$this->data['title']         = 'Student Management';
 		$this->data['activeSection'] = 'student';
 		$this->data['navbarItems']   = [
-			['label' => 'Student List', 'url' => base_url('ad-student')],
-			['label' => 'Add Student', 'url' => base_url('student_create')],
+			['label' => 'Student List', 'url' => base_url('admin/student')],
+			['label' => 'Add Student', 'url' => base_url('admin/student/create')],
 			['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
 		];
 			$this->data['students']      = $students;
@@ -570,8 +570,8 @@ public function saveStudent()
 		$this->data['title']         = 'Student Subject Management';
 		$this->data['activeSection'] = 'student';
 		$this->data['navbarItems']   = [
-			['label' => 'Student List', 'url' => base_url('ad-student')],
-			['label' => 'Add Student', 'url' => base_url('student_create')],
+			['label' => 'Student List', 'url' => base_url('admin/student')],
+			['label' => 'Add Student', 'url' => base_url('admin/student/create')],
 			['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
 		];
 			$this->data['students']      = $students;
