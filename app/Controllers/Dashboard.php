@@ -374,6 +374,63 @@ class Dashboard extends Controller
 			return view('dashboard/assign_subject', $this->data);
 	}
 
+
+
+
+
+public function createStudentForm()
+{
+    $this->data['title'] = 'Register Student';
+    $this->data['activeSection'] = 'student';
+    return view('dashboard/student_form', $this->data);
+}
+public function saveStudent()
+{
+    $validation = \Config\Services::validation();
+    $rules = [
+        'student_name' => 'required',
+        'roll'         => 'required|numeric',
+        'class'        => 'required',
+        'section'      => 'permit_empty',
+        'esif'         => 'required',
+        'father_name'  => 'required',
+        'mother_name'  => 'required',
+        'dob'          => 'required|valid_date',
+        'gender'       => 'required',
+        'phone'        => 'required',
+        'student_pic'  => 'uploaded[student_pic]|is_image[student_pic]',
+        'birth_registration_number' => 'required',
+        'father_nid_number'         => 'required',
+        'mother_nid_number'         => 'required',
+    ];
+
+    if (!$this->validate($rules)) {
+        return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+    }
+
+    $file = $this->request->getFile('student_pic');
+    $fileName = $file->getRandomName();
+    $file->move('uploads/students', $fileName);
+
+    $this->studentModel->insert([
+        'student_name' => $this->request->getPost('student_name'),
+        'roll'         => $this->request->getPost('roll'),
+        'class'        => $this->request->getPost('class'),
+        'section'      => $this->request->getPost('section'),
+        'esif'         => $this->request->getPost('esif'),
+        'father_name'  => $this->request->getPost('father_name'),
+        'mother_name'  => $this->request->getPost('mother_name'),
+        'dob'          => $this->request->getPost('dob'),
+        'gender'       => $this->request->getPost('gender'),
+        'phone'        => $this->request->getPost('phone'),
+        'student_pic'  => $fileName,
+        'birth_registration_number' => $this->request->getPost('birth_registration_number'),
+        'father_nid_number'         => $this->request->getPost('father_nid_number'),
+        'mother_nid_number'         => $this->request->getPost('mother_nid_number'),
+    ]);
+
+    return redirect()->to(base_url('admin/student/create'))->with('success', 'Student registered successfully!');
+}
 	public function student()
 	{
 		$studentModel = new StudentModel();
