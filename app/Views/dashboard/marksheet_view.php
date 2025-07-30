@@ -88,7 +88,8 @@
     <img src="<?= base_url('public/assets/img/logo.jpg'); ?>" alt="School Logo" width="60">
 </td>
 <td>
-	<table>
+	<table class="table table-bordered text-center">
+
 		<tr>
 			<th>Range</th>
 			<th>Grade</th>
@@ -98,6 +99,36 @@
 			<td>80 - 100</td>
 			<td>A+</td>
 			<td>5.0</td>
+		</tr>
+		<tr>
+			<td>70 - 79</td>
+			<td>A</td>
+			<td>4.0</td>
+		</tr>
+		<tr>
+			<td>60 - 69</td>
+			<td>A-</td>
+			<td>3.5</td>
+		</tr>
+		<tr>
+			<td>50 - 59</td>
+			<td>B</td>
+			<td>3.0</td>
+		</tr>
+		<tr>
+			<td>40 - 49</td>
+			<td>C</td>
+			<td>2.0</td>
+		</tr>
+		<tr>
+			<td>33 - 39</td>
+			<td>D</td>
+			<td>1.0</td>
+		</tr>
+		<tr>
+			<td>0 - 32</td>
+			<td>F</td>
+			<td>0.0</td>
 		</tr>
 	</table>
 </td>
