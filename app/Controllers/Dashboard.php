@@ -766,7 +766,7 @@ class Dashboard extends Controller
 			['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
 			['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
 		];
-		$this->data['class']  = $classes;
+		$this->data['classes']  = $classes;
 		$this->data['sections'] = $sections;
 		$this->data['exams']    = $exams;
 		$this->data['years']    = $years;
