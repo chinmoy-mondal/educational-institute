@@ -112,7 +112,7 @@
   <!-- Center: School Logo & Transcript Title -->
   <div class="col-md-6 transcript-title">
     <img src="<?= base_url('public/assets/img/logo.jpg'); ?>" alt="School Logo" width="60">
-    <h4 style="margin-top: 10px;">Academic Transcript</h4>
+    <h4 style="margin-top: 10px; border-bottom: 4px solid green; display: inline-block; font-weight: bold;">Academic Transcript</h4>
   </div>
 
   <!-- Right: Grade Chart -->
