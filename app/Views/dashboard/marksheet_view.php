@@ -106,7 +106,7 @@
   <div class="row align-items-center">
   <!-- Left: Student Photo -->
   <div class="col-md-3 text-left">
-    <img src="<?= base_url('public/assets/img/headsir.jpg'); ?>" alt="Student Photo" width="60">
+    <img src="<?= base_url('public/assets/img/headsir.jpg'); ?>" alt="Student Photo" width="200">
   </div>
 
   <!-- Center: School Logo & Transcript Title -->
