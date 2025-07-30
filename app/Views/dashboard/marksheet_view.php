@@ -50,6 +50,13 @@
   padding: 4px !important;
 }
 
+.grade-table td,
+.grade-table th {
+  font-size: 12px;
+  padding: 2px 4px !important;
+  line-height: 1.2;
+}
+
 .qr-signature {
   margin-top: 30px;
 }
@@ -88,7 +95,7 @@
     <img src="<?= base_url('public/assets/img/logo.jpg'); ?>" alt="School Logo" width="60">
 </td>
 <td>
-	<table class="table table-bordered text-center">
+	<table class="table table-bordered text-center grade-table">
 
 		<tr>
 			<th>Range</th>
