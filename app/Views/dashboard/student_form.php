@@ -4,7 +4,6 @@
 <div class="content-header">
   <div class="container-fluid">
     <h1 class="mb-3">Register New Student</h1>
-    <a href="<?= site_url('admin/students') ?>" class="btn btn-secondary mb-3">← Back to Student List</a>
   </div>
 </div>
 
