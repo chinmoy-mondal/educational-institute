@@ -89,11 +89,11 @@
     <tr>
 <td>
     <img src="<?= base_url('public/assets/img/default.png'); ?>" alt="School Logo" width="60">
-    <br>
-    <h4 style="margin-top: 10px;">Academic Transcript</h4>
 </td>
 <td>
     <img src="<?= base_url('public/assets/img/logo.jpg'); ?>" alt="School Logo" width="60">
+    <br>
+    <h4 style="margin-top: 10px;">Academic Transcript</h4>
 </td>
 <td>
 	<table class="table table-bordered text-center grade-table">
