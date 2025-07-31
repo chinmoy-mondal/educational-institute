@@ -867,6 +867,7 @@ class Dashboard extends Controller
 		$resultModel = new \App\Models\ResultModel();
 
 		$students = $studentModel
+			->select('id, roll, student_name') // include 'name' here
 			->where('class', $class)
 			->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
 			->findAll();
