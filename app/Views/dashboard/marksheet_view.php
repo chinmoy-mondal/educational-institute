@@ -190,8 +190,8 @@ td strong {
         <th>%</th>
       </tr>
     </thead>
-    <tbody>
-    <?php
+  <tbody>
+<?php
 $subjects = [
   ['name' => 'Bangla 1st', 'full' => 100, 'mark' => 80],
   ['name' => 'Bangla 2nd', 'full' => 100, 'mark' => 75],
@@ -208,6 +208,11 @@ $totalGPA = 0;
 foreach ($subjects as $s):
   $mark = $s['mark'];
   $totalMarks += $mark;
+
+  $written = round($mark * 0.5);     // example: 50% written
+  $mcq     = round($mark * 0.3);     // example: 30% MCQ
+  $practical = round($mark * 0.2);   // example: 20% Practical
+  $percent = round(($mark / $s['full']) * 100);
 
   $gpa = ($mark >= 80) ? 5.0 :
          (($mark >= 70) ? 4.0 :
@@ -227,19 +232,25 @@ foreach ($subjects as $s):
   <td><?= esc($s['name']) ?></td>
   <td><?= $s['full'] ?></td>
   <td><?= $mark ?></td>
-  <td><?= number_format($gpa, 2) ?></td>
+  <td><?= $written ?></td>
+  <td><?= $mcq ?></td>
+  <td><?= $practical ?></td>
+  <td><?= $percent ?>%</td>
+  <td><?= $mark ?></td>
   <td><?= $grade ?></td>
   <td><?= number_format($gpa, 2) ?></td>
 </tr>
-<?php endforeach; ?></tbody>
-    <tfoot>
-      <tr>
-        <th colspan="2">Total Marks</th>
-        <th><?= $totalMarks ?></th>
-        <th colspan="3">GPA: <?= number_format($totalGPA / count($subjects), 2) ?></th>
-      </tr>
-    </tfoot>
-  </table>
+<?php endforeach; ?>
+</tbody>
+<tfoot>
+  <tr>
+    <th colspan="2">Total Marks</th>
+    <th><?= $totalMarks ?></th>
+    <th colspan="4"></th>
+    <th></th>
+    <th colspan="2">GPA: <?= number_format($totalGPA / count($subjects), 2) ?></th>
+  </tr>
+</tfoot></table>
 
   <!-- Grade Chart + QR + Signature -->
   <div class="row qr-signature">
