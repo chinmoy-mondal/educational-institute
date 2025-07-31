@@ -402,38 +402,25 @@ td strong {
         <table class="table table-bordered text-center mb-0">
           <thead>
             <tr>
-              <th colspan="5">Moral & Behaviour Evaluation</th>
+              <th colspan="2">Moral & Behaviour Evaluation</th>
             </tr>
             <tr>
-              <th>Item</th>
+              <th></th>
               <th>Best</th>
+            </tr>
+            <tr>
+              <th></th>
               <th>Better</th>
+            </tr>
+            <tr>
+              <th></th>
               <th>Good</th>
-              <th>Needs Improvement</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th>Need Imporovement</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>Co-Curricular Activities</td>
-              <td>✔</td><td></td><td></td><td></td>
-            </tr>
-            <tr>
-              <td>Sports</td>
-              <td></td><td>✔</td><td></td><td></td>
-            </tr>
-            <tr>
-              <td>Cultural Function</td>
-              <td></td><td></td><td>✔</td><td></td>
-            </tr>
-            <tr>
-              <td>Scout / BNCC</td>
-              <td></td><td></td><td></td><td>✔</td>
-            </tr>
-            <tr>
-              <td>Math Olympiad</td>
-              <td></td><td></td><td>✔</td><td></td>
-            </tr>
-          </tbody>
         </table>
       </td>
 
