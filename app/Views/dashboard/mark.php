@@ -87,8 +87,8 @@ foreach ($finalData as $student) {
 
                     // Determine red class
                     $markClass = '';
-echo "<pre>Subject: $subject (ICT Fail)</pre>";
 		    if ($subject === 'ICT' && $ictFail) {
+echo "<pre>Subject: $subject (ICT Fail)</pre>";
 			    $markClass = 'text-danger fw-bold';
 		    }
                     elseif (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
