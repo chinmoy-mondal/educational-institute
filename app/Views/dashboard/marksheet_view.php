@@ -98,7 +98,10 @@
 .align-items-center {
     align-items: initial !important;
 }
-
+  th {
+    text-align: center;
+    vertical-align: middle !important;
+  }
 
 td strong {
 	display: inline-block;
