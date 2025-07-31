@@ -14,58 +14,66 @@ foreach ($finalData as $student) {
 ?>
 
 <style>
-.table-wrapper {
+.table-container {
   overflow: auto;
   max-height: 600px;
-  border: 1px solid #ccc;
-}
-
-.table-sticky th,
-.table-sticky td {
-  white-space: nowrap;
   border: 1px solid #dee2e6;
 }
 
-/* Freeze Top Rows */
-.table-sticky thead tr:nth-child(1) th {
+.sticky-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.sticky-table th,
+.sticky-table td {
+  white-space: nowrap;
+  border: 1px solid #dee2e6;
+  padding: 8px;
+  background: white;
+  z-index: 1;
+}
+
+/* Sticky Header Rows */
+.sticky-table thead tr:nth-child(1) th {
   position: sticky;
   top: 0;
+  z-index: 5;
   background: #343a40;
   color: white;
-  z-index: 5;
 }
-.table-sticky thead tr:nth-child(2) th {
+.sticky-table thead tr:nth-child(2) th {
   position: sticky;
-  top: 38px; /* Approximate height of first row */
+  top: 40px; /* Approx height of the first header row */
   background: #e9ecef;
-  z-index: 5;
+  z-index: 4;
 }
 
-/* Freeze First Column (Roll) */
-.table-sticky th:first-child,
-.table-sticky td:first-child {
+/* Sticky First Column (Roll) */
+.sticky-table th:first-child,
+.sticky-table td:first-child {
   position: sticky;
   left: 0;
-  background: white;
-  z-index: 6;
+  background: #f8f9fa;
+  z-index: 4;
 }
 
-/* Freeze Second Column (Name) */
-.table-sticky th:nth-child(2),
-.table-sticky td:nth-child(2) {
+/* Sticky Second Column (Name) */
+.sticky-table th:nth-child(2),
+.sticky-table td:nth-child(2) {
   position: sticky;
-  left: 80px; /* Adjust based on Roll width */
-  background: white;
-  z-index: 6;
+  left: 80px; /* Width of the first column (Roll) */
+  background: #f8f9fa;
+  z-index: 4;
   min-width: 160px;
   text-align: left;
 }
 
-/* Prevent overlap of sticky cells */
-.table-sticky thead tr:nth-child(1) th:first-child,
-.table-sticky thead tr:nth-child(2) th:first-child,
-.table-sticky thead tr:nth-child(1) th:nth-child(2),
-.table-sticky thead tr:nth-child(2) th:nth-child(2) {
+/* Higher z-index for corner cells */
+.sticky-table thead tr:nth-child(1) th:first-child,
+.sticky-table thead tr:nth-child(2) th:first-child,
+.sticky-table thead tr:nth-child(1) th:nth-child(2),
+.sticky-table thead tr:nth-child(2) th:nth-child(2) {
   z-index: 10;
 }
 </style>
@@ -83,8 +91,8 @@ foreach ($finalData as $student) {
         <div class="alert alert-warning">No result data found.</div>
       <?php else: ?>
 
-      <div class="table-wrapper">
-        <table class="table table-bordered table-hover table-sticky">
+      <div class="table-container">
+        <table class="table sticky-table">
           <thead class="text-center align-middle">
             <tr>
               <th rowspan="2">Roll</th>
@@ -127,7 +135,7 @@ foreach ($finalData as $student) {
               ?>
               <tr class="text-center">
                 <td><strong><?= esc($student['roll']) ?></strong></td>
-                <td class="text-start"><?= esc($student['name']) ?></td>
+                <td><?= esc($student['name']) ?></td>
 
                 <?php foreach ($subjectList as $subject): ?>
                   <?php
