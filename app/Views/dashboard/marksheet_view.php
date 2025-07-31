@@ -94,8 +94,16 @@
 .grade-box {
   float: right;
 }
+
 .align-items-center {
     align-items: initial !important;
+}
+
+
+td strong {
+	display: inline-block;
+	width: 140px; /* Adjust as needed */
+	font-weight: bold;
 }
 </style>
 
