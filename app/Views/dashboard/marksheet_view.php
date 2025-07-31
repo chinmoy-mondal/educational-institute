@@ -426,9 +426,31 @@ td strong {
 
       <!-- Right Block -->
       <td style="vertical-align: middle;">
-        <strong>GPA</strong><br>
-        <span style="font-size: 24px;">5.00</span>
-      </td>
+      <table class="table table-bordered text-center mb-0">
+  <thead>
+    <tr>
+      <th colspan="2">Co-Curricular Activities</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td></td>
+      <th>Sports</th>
+    </tr>
+    <tr>
+      <td></td>
+      <th>Cultural Function</th>
+    </tr>
+    <tr>
+      <td></td>
+      <th>Scout / BNCC</th>
+    </tr>
+    <tr>
+      <td></td>
+      <th>Math Olympiad</th>
+    </tr>
+  </tbody>
+</table></td>
     </tr>
   </tbody>
 </table>
