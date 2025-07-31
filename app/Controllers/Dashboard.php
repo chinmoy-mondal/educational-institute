@@ -883,7 +883,7 @@ class Dashboard extends Controller
 
 			$finalData[] = [
 				'roll' => $student['roll'],
-				'name' => $student['name'],
+				'name' => $student['student_name'],
 				'results' => $results
 			];
 		}
