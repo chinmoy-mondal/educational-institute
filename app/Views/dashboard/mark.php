@@ -70,7 +70,6 @@ foreach ($finalData as $student) {
                 if ($englishFail) $failCount++;
                 if ($ictFail) $failCount++;
               ?>
-<td><?= $ictFail ? 'ICT Fail' : 'ICT Pass' ?></td>
               <tr class="text-center">
                 <td><strong><?= esc($student['roll']) ?></strong></td>
                 <td class="text-start"><?= esc($student['name']) ?></td>
@@ -88,7 +87,7 @@ foreach ($finalData as $student) {
 
                     // Determine red class
                     $markClass = '';
-
+echo "<pre>Subject: $subject (ICT Fail)</pre>";
 		    if ($subject === 'ICT' && $ictFail) {
 			    $markClass = 'text-danger fw-bold';
 		    }
