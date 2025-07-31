@@ -366,7 +366,7 @@ td strong {
 </table><!-- Grade Chart + QR + Signature -->
   <div class="row qr-signature">
     <div class="col-md-9">
-<table class="table text-center">
+<table class="table table-bordered text-center">
   <tbody>
     <tr>
       <!-- Left Block -->
