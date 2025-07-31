@@ -2,14 +2,13 @@
 <?= $this->section('content') ?>
 
 <?php
-// Step 1: Get unique subjects from all students
+// Get unique subjects
 $subjectList = [];
 
 foreach ($finalData as $student) {
     foreach ($student['results'] as $res) {
-        $subject = $res['subject'];
-        if (!in_array($subject, $subjectList)) {
-            $subjectList[] = $subject;
+        if (!in_array($res['subject'], $subjectList)) {
+            $subjectList[] = $res['subject'];
         }
     }
 }
@@ -56,34 +55,20 @@ foreach ($finalData as $student) {
                 $studentTotal = 0;
                 $failCount = 0;
 
-                // Fail logic prep
-                $banglaCombinedFail = false;
-                $englishCombinedFail = false;
-                $ictFail = false;
+                // Calculate combined fail flags before looping subjects
+                $bangla1 = $subjectMap['Bangla 1st Paper']['total'] ?? null;
+                $bangla2 = $subjectMap['Bangla 2nd Paper']['total'] ?? null;
+                $english1 = $subjectMap['English 1st Paper']['total'] ?? null;
+                $english2 = $subjectMap['English 2nd Paper']['total'] ?? null;
+                $ictTotal = $subjectMap['ICT']['total'] ?? null;
 
-                if (
-                    isset($subjectMap['Bangla 1st Paper']['total'], $subjectMap['Bangla 2nd Paper']['total']) &&
-                    ($subjectMap['Bangla 1st Paper']['total'] + $subjectMap['Bangla 2nd Paper']['total']) < 49
-                ) {
-                    $failCount++;
-                    $banglaCombinedFail = true;
-                }
+                $banglaFail = ($bangla1 !== null && $bangla2 !== null && ($bangla1 + $bangla2) < 49);
+                $englishFail = ($english1 !== null && $english2 !== null && ($english1 + $english2) < 49);
+                $ictFail = ($ictTotal !== null && $ictTotal < 17);
 
-                if (
-                    isset($subjectMap['English 1st Paper']['total'], $subjectMap['English 2nd Paper']['total']) &&
-                    ($subjectMap['English 1st Paper']['total'] + $subjectMap['English 2nd Paper']['total']) < 49
-                ) {
-                    $failCount++;
-                    $englishCombinedFail = true;
-                }
-
-                if (
-                    isset($subjectMap['ICT']['total']) &&
-                    $subjectMap['ICT']['total'] < 17
-                ) {
-                    $failCount++;
-                    $ictFail = true;
-                }
+                if ($banglaFail) $failCount++;
+                if ($englishFail) $failCount++;
+                if ($ictFail) $failCount++;
               ?>
               <tr class="text-center">
                 <td><strong><?= esc($student['roll']) ?></strong></td>
@@ -91,37 +76,36 @@ foreach ($finalData as $student) {
 
                 <?php foreach ($subjectList as $subject): ?>
                   <?php
-                    if (isset($subjectMap[$subject])) {
-                        $res = $subjectMap[$subject];
-                        $written   = $res['written'] ?? 0;
-                        $mcq       = $res['mcq'] ?? 0;
-                        $practical = $res['practical'] ?? 0;
-                        $total     = $res['total'] ?? 0;
-                        $studentTotal += $total;
-                    } else {
-                        $written = $mcq = $practical = $total = '';
-                    }
+                    $res = $subjectMap[$subject] ?? null;
 
-                    // Determine red mark class
+                    $written = $res['written'] ?? '';
+                    $mcq = $res['mcq'] ?? '';
+                    $practical = $res['practical'] ?? '';
+                    $total = $res['total'] ?? '';
+
+                    if ($total !== '') $studentTotal += $total;
+
+                    // Determine red class
                     $markClass = '';
 
                     if ($subject === 'ICT' && $total !== '' && $total < 17) {
                         $markClass = 'text-danger fw-bold';
-                    } elseif (
-                        ($subject === 'Bangla 1st Paper' || $subject === 'Bangla 2nd Paper') &&
-                        $banglaCombinedFail
-                    ) {
+                    }
+                    elseif (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
+                        if ($banglaFail) {
+                            $markClass = 'text-danger fw-bold';
+                        }
+                    }
+                    elseif (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
+                        if ($englishFail) {
+                            $markClass = 'text-danger fw-bold';
+                        }
+                    }
+                    elseif ($total !== '' && $total < 33) {
                         $markClass = 'text-danger fw-bold';
-                    } elseif (
-                        ($subject === 'English 1st Paper' || $subject === 'English 2nd Paper') &&
-                        $englishCombinedFail
-                    ) {
-                        $markClass = 'text-danger fw-bold';
-                    } elseif ($total !== '' && $total < 33) {
-                        $markClass = 'text-danger fw-bold';
+                        $failCount++;  // Count fail for other subjects here
                     }
                   ?>
-
                   <td><?= $written ?></td>
                   <td><?= $mcq ?></td>
                   <td><?= $practical ?></td>
