@@ -60,6 +60,11 @@ function redTotal($mark) {
 
                 $studentTotal = 0;
                 $failCount = 0;
+
+                // Track combined papers
+                $bangla1Total = $bangla2Total = null;
+                $english1Total = $english2Total = null;
+                $ictTotal = null;
               ?>
               <tr class="text-center">
                 <td><strong><?= esc($student['roll']) ?></strong></td>
@@ -74,7 +79,29 @@ function redTotal($mark) {
                         $practical = $res['practical'] ?? 0;
                         $total     = $res['total'] ?? 0;
                         $studentTotal += $total;
-                        if ($total < 33) $failCount++;
+
+                        // Apply custom fail logic
+                        switch ($subject) {
+                            case 'Bangla 1st Paper':
+                                $bangla1Total = $total;
+                                break;
+                            case 'Bangla 2nd Paper':
+                                $bangla2Total = $total;
+                                break;
+                            case 'English 1st Paper':
+                                $english1Total = $total;
+                                break;
+                            case 'English 2nd Paper':
+                                $english2Total = $total;
+                                break;
+                            case 'ICT':
+                                $ictTotal = $total;
+                                if ($total < 17) $failCount++;
+                                break;
+                            default:
+                                if ($total < 33) $failCount++;
+                                break;
+                        }
                     } else {
                         $written = $mcq = $practical = $total = '';
                     }
@@ -85,8 +112,24 @@ function redTotal($mark) {
                   <td class="fw-bold <?= redTotal($total) ?>"><?= $total ?></td>
                 <?php endforeach; ?>
 
+                <?php
+                  // Check combined pass/fail for Bangla
+                  if ($bangla1Total !== null && $bangla2Total !== null) {
+                      if (($bangla1Total + $bangla2Total) < 49) {
+                          $failCount++;
+                      }
+                  }
+
+                  // Check combined pass/fail for English
+                  if ($english1Total !== null && $english2Total !== null) {
+                      if (($english1Total + $english2Total) < 49) {
+                          $failCount++;
+                      }
+                  }
+                ?>
+
                 <td class="fw-bold <?= $failCount > 0 ? 'text-danger' : 'text-success' ?>">
-                  <?= $studentTotal ?><?= $failCount > 0 ? ' <br>F-' . $failCount . '' : '' ?>
+                  <?= $studentTotal ?><?= $failCount > 0 ? ' <br>F-' . $failCount : '' ?>
                 </td>
               </tr>
             <?php endforeach; ?>
@@ -101,3 +144,4 @@ function redTotal($mark) {
 </div>
 
 <?= $this->endSection() ?>
+
