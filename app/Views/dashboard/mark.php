@@ -14,6 +14,48 @@ foreach ($finalData as $student) {
 }
 ?>
 
+<style>
+/* Sticky table header */
+.table-fixed thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #f8f9fa;
+}
+
+/* Sticky first column (Roll) */
+.table-fixed tbody td:first-child,
+.table-fixed thead th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  background: white;
+}
+
+/* Sticky second column (Name) */
+.table-fixed tbody td:nth-child(2),
+.table-fixed thead th:nth-child(2) {
+  position: sticky;
+  left: 70px; /* Width of Roll column */
+  z-index: 5;
+  background: white;
+}
+
+/* Widths for sticky columns */
+.table-fixed th:first-child,
+.table-fixed td:first-child {
+  min-width: 70px;
+  max-width: 70px;
+}
+
+.table-fixed th:nth-child(2),
+.table-fixed td:nth-child(2) {
+  min-width: 200px;
+  max-width: 200px;
+  text-align: left;
+}
+</style>
+
 <div class="container-fluid">
   <h1 class="mb-4">Tabulation Sheet</h1>
 
@@ -27,8 +69,8 @@ foreach ($finalData as $student) {
         <div class="alert alert-warning">No result data found.</div>
       <?php else: ?>
 
-      <div class="table-responsive">
-        <table class="table table-bordered table-striped table-hover">
+      <div class="table-responsive" style="overflow: auto; max-height: 600px;">
+        <table class="table table-bordered table-striped table-hover table-fixed">
           <thead class="table-primary text-center align-middle">
             <tr>
               <th rowspan="2">Roll</th>
@@ -55,7 +97,7 @@ foreach ($finalData as $student) {
                 $studentTotal = 0;
                 $failCount = 0;
 
-                // Calculate combined fail flags before looping subjects
+                // Combined subject checks
                 $bangla1 = $subjectMap['Bangla 1st Paper']['total'] ?? null;
                 $bangla2 = $subjectMap['Bangla 2nd Paper']['total'] ?? null;
                 $english1 = $subjectMap['English 1st Paper']['total'] ?? null;
@@ -85,29 +127,28 @@ foreach ($finalData as $student) {
 
                     if ($total !== '') $studentTotal += $total;
 
-                    // Determine red class
-$markClass = '';
+                    $markClass = '';
 
-if ($subject === 'ICT' && $ictFail) {
-    $markClass = 'text-danger fw-bold';
-}
-elseif (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
-    if ($banglaFail) {
-        $markClass = 'text-danger fw-bold';
-    }
-}
-elseif (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
-    if ($englishFail) {
-        $markClass = 'text-danger fw-bold';
-    }
-}
-elseif (
-    !in_array($subject, ['ICT', 'Bangla 1st Paper', 'Bangla 2nd Paper', 'English 1st Paper', 'English 2nd Paper']) &&
-    is_numeric($total) && $total < 33
-) {
-    $markClass = 'text-danger fw-bold';
-    $failCount++;  // Count fail for standard subjects only
-}
+                    if ($subject === 'ICT' && $ictFail) {
+                        $markClass = 'text-danger fw-bold';
+                    }
+                    elseif (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
+                        if ($banglaFail) {
+                            $markClass = 'text-danger fw-bold';
+                        }
+                    }
+                    elseif (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
+                        if ($englishFail) {
+                            $markClass = 'text-danger fw-bold';
+                        }
+                    }
+                    elseif (
+                        !in_array($subject, ['ICT', 'Bangla 1st Paper', 'Bangla 2nd Paper', 'English 1st Paper', 'English 2nd Paper']) &&
+                        is_numeric($total) && $total < 33
+                    ) {
+                        $markClass = 'text-danger fw-bold';
+                        $failCount++;
+                    }
                   ?>
                   <td><?= $written ?></td>
                   <td><?= $mcq ?></td>
