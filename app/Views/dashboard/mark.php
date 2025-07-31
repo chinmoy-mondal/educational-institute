@@ -13,11 +13,6 @@ foreach ($finalData as $student) {
         }
     }
 }
-
-// Helper to highlight failing total
-function redTotal($mark) {
-    return ($mark !== '' && $mark < 33) ? 'text-danger fw-bold' : '';
-}
 ?>
 
 <div class="container-fluid">
@@ -61,7 +56,6 @@ function redTotal($mark) {
                 $studentTotal = 0;
                 $failCount = 0;
 
-                // Track combined papers
                 $bangla1Total = $bangla2Total = null;
                 $english1Total = $english2Total = null;
                 $ictTotal = null;
@@ -80,7 +74,7 @@ function redTotal($mark) {
                         $total     = $res['total'] ?? 0;
                         $studentTotal += $total;
 
-                        // Apply custom fail logic
+                        // Save totals for combined subject logic
                         switch ($subject) {
                             case 'Bangla 1st Paper':
                                 $bangla1Total = $total;
@@ -105,26 +99,39 @@ function redTotal($mark) {
                     } else {
                         $written = $mcq = $practical = $total = '';
                     }
+
+                    // Determine red mark class
+                    $markClass = '';
+                    if ($subject === 'Bangla 1st Paper' && $bangla1Total !== null && $bangla2Total !== null && ($bangla1Total + $bangla2Total) < 49) {
+                        $markClass = 'text-danger fw-bold';
+                    } elseif ($subject === 'Bangla 2nd Paper' && $bangla1Total !== null && $bangla2Total !== null && ($bangla1Total + $bangla2Total) < 49) {
+                        $markClass = 'text-danger fw-bold';
+                    } elseif ($subject === 'English 1st Paper' && $english1Total !== null && $english2Total !== null && ($english1Total + $english2Total) < 49) {
+                        $markClass = 'text-danger fw-bold';
+                    } elseif ($subject === 'English 2nd Paper' && $english1Total !== null && $english2Total !== null && ($english1Total + $english2Total) < 49) {
+                        $markClass = 'text-danger fw-bold';
+                    } elseif ($subject === 'ICT' && $ictTotal !== null && $ictTotal < 17) {
+                        $markClass = 'text-danger fw-bold';
+                    } elseif ($total !== '' && $total < 33) {
+                        $markClass = 'text-danger fw-bold';
+                    }
                   ?>
+
                   <td><?= $written ?></td>
                   <td><?= $mcq ?></td>
                   <td><?= $practical ?></td>
-                  <td class="fw-bold <?= redTotal($total) ?>"><?= $total ?></td>
+                  <td class="<?= $markClass ?>"><?= $total ?></td>
                 <?php endforeach; ?>
 
                 <?php
-                  // Check combined pass/fail for Bangla
-                  if ($bangla1Total !== null && $bangla2Total !== null) {
-                      if (($bangla1Total + $bangla2Total) < 49) {
-                          $failCount++;
-                      }
+                  // Check Bangla combined fail
+                  if ($bangla1Total !== null && $bangla2Total !== null && ($bangla1Total + $bangla2Total) < 49) {
+                      $failCount++;
                   }
 
-                  // Check combined pass/fail for English
-                  if ($english1Total !== null && $english2Total !== null) {
-                      if (($english1Total + $english2Total) < 49) {
-                          $failCount++;
-                      }
+                  // Check English combined fail
+                  if ($english1Total !== null && $english2Total !== null && ($english1Total + $english2Total) < 49) {
+                      $failCount++;
                   }
                 ?>
 
@@ -144,4 +151,3 @@ function redTotal($mark) {
 </div>
 
 <?= $this->endSection() ?>
-
