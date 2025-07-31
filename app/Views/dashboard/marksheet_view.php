@@ -461,7 +461,7 @@ $studentId = 207; // Example: dynamically from DB
 $url = 'https://mulss.edu.bd/student?q=' . $studentId;
 ?>
 <div class="col-md-3 qr-code text-center">
-  <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=<?= urlencode($url) ?>" class="qr-img" alt="Student QR">
+  <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= urlencode($url) ?>" class="qr-img" alt="Student QR">
   <p style="font-size: 12px;">Scan to Verify</p>
 </div>
     <div class="col-md-3 signature text-right">
