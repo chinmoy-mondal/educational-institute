@@ -88,7 +88,7 @@ foreach ($finalData as $student) {
                     // Determine red class
                     $markClass = '';
 
-		    if ($subject === 'ICT' && is_numeric($total) && $total < 17){
+		    if ($subject === 'ICT' && $ictFail) {
 			    $markClass = 'text-danger fw-bold';
 		    }
                     elseif (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
