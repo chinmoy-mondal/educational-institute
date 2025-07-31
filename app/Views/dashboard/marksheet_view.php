@@ -365,24 +365,86 @@ td strong {
 </tfoot>
 </table><!-- Grade Chart + QR + Signature -->
   <div class="row qr-signature">
-    <div class="col-md-6">
-      <table class="table table-bordered text-center">
-        <thead>
-          <tr>
-            <th>Mark Range</th>
-            <th>Letter</th>
-            <th>Point</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>80–100</td><td>A+</td><td>5.00</td></tr>
-          <tr><td>70–79</td><td>A</td><td>4.00</td></tr>
-          <tr><td>60–69</td><td>A-</td><td>3.50</td></tr>
-          <tr><td>50–59</td><td>B</td><td>3.00</td></tr>
-          <tr><td>40–49</td><td>C</td><td>2.00</td></tr>
-          <tr><td>0–39</td><td>F</td><td>0.00</td></tr>
-        </tbody>
-      </table>
+    <div class="col-md-9">
+<table class="table table-bordered text-center">
+  <tbody>
+    <tr>
+      <!-- Left Block -->
+      <td>
+        <table class="table table-bordered text-center mb-0">
+          <tbody>
+            <tr>
+              <td><strong>Position</strong></td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td><strong>GPA (Without 4th)</strong></td>
+              <td>4.25</td>
+            </tr>
+            <tr>
+              <td><strong>Failed Subject</strong></td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td><strong>Working Days</strong></td>
+              <td>---</td>
+            </tr>
+            <tr>
+              <td><strong>Total Present</strong></td>
+              <td>---</td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+
+      <!-- Middle Block -->
+      <td>
+        <table class="table table-bordered text-center mb-0">
+          <thead>
+            <tr>
+              <th colspan="5">Moral & Behaviour Evaluation</th>
+            </tr>
+            <tr>
+              <th>Item</th>
+              <th>Best</th>
+              <th>Better</th>
+              <th>Good</th>
+              <th>Needs Improvement</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Co-Curricular Activities</td>
+              <td>✔</td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>Sports</td>
+              <td></td><td>✔</td><td></td><td></td>
+            </tr>
+            <tr>
+              <td>Cultural Function</td>
+              <td></td><td></td><td>✔</td><td></td>
+            </tr>
+            <tr>
+              <td>Scout / BNCC</td>
+              <td></td><td></td><td></td><td>✔</td>
+            </tr>
+            <tr>
+              <td>Math Olympiad</td>
+              <td></td><td></td><td>✔</td><td></td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+
+      <!-- Right Block -->
+      <td style="vertical-align: middle;">
+        <strong>GPA</strong><br>
+        <span style="font-size: 24px;">5.00</span>
+      </td>
+    </tr>
+  </tbody>
+</table>
     </div>
 
 <?php
