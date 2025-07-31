@@ -149,25 +149,25 @@ td strong {
 <!-- Student + Exam Info -->
   <table class="student-info">
     <tr>
-      <td><strong>Student's Name:</strong> Kazi Mahmudul Islam</td>
+      <td><strong>Student's Name</strong>: Kazi Mahmudul Islam</td>
     </tr>
     <tr>
-      <td><strong>Father's Name:</strong> Kazi Mahmudul Islam</td>
+      <td><strong>Father's Name</strong>: Kazi Mahmudul Islam</td>
     </tr>
     <tr>
-      <td><strong>Mother's Name:</strong> Kazi Mahmudul Islam</td>
+      <td><strong>Mother's Name</strong>: Kazi Mahmudul Islam</td>
     </tr>
     <tr>
-      <td><strong>Student's ID:</strong> Rashida Akter</td>
-      <td><strong>Exam:</strong> 202312</td>
+      <td><strong>Student's ID</strong>: Rashida Akter</td>
+      <td><strong>Exam</strong>: 202312</td>
     </tr>
     <tr>
-      <td><strong>Class:</strong> 202312</td>
-      <td><strong>Year/Session:</strong> 9</td>
+      <td><strong>Class</strong>: 202312</td>
+      <td><strong>Year/Session</strong>: 9</td>
     </tr>
     <tr>
-      <td><strong>Roll No:</strong> 9</td>
-      <td><strong>Group:</strong> Half Yearly - 2025</td>
+      <td><strong>Roll No</strong>: 9</td>
+      <td><strong>Group</strong>: Half Yearly - 2025</td>
     </tr>
   </table>
 
@@ -175,12 +175,19 @@ td strong {
   <table class="table table-bordered text-center">
     <thead>
       <tr>
-        <th>Subject</th>
-        <th>Full Marks</th>
-        <th>Obtained Marks</th>
-        <th>Grade Point</th>
-        <th>Letter Grade</th>
-        <th>GPA</th>
+        <th rowspan="2">Subject</th>
+        <th rowspan="2">Full Marks</th>
+        <th rowspan="2">Obtained Marks</th>
+        <th colspan="4">Marks Distribution</th>
+        <th rowspan="2">Total Marks</th>
+        <th rowspan="2">Letter Grade</th>
+        <th rowspan="2">GP</th>
+      </tr>
+      <tr>
+        <th>Wri</th>
+        <th>MCQ</th>
+        <th>Pra</th>
+        <th>%</th>
       </tr>
     </thead>
     <tbody>
