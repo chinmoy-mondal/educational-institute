@@ -3,7 +3,6 @@
 
 <?php
 $subjectList = [];
-
 foreach ($finalData as $student) {
     foreach ($student['results'] as $res) {
         if (!in_array($res['subject'], $subjectList)) {
@@ -13,68 +12,53 @@ foreach ($finalData as $student) {
 }
 ?>
 
+<!-- Sticky table styling -->
 <style>
-.table-container {
+.table-wrapper {
   overflow: auto;
   max-height: 600px;
-  border: 1px solid #dee2e6;
+  position: relative;
 }
 
-.sticky-table {
-  border-collapse: separate;
-  border-spacing: 0;
-}
-
-.sticky-table th,
-.sticky-table td {
+.table-sticky th,
+.table-sticky td {
   white-space: nowrap;
-  border: 1px solid #dee2e6;
-  padding: 8px;
-  background: white;
-  z-index: 1;
 }
 
-/* Sticky Header Rows */
-.sticky-table thead tr:nth-child(1) th {
+.table-sticky thead th {
   position: sticky;
   top: 0;
-  z-index: 5;
-  background: #343a40;
-  color: white;
-}
-.sticky-table thead tr:nth-child(2) th {
-  position: sticky;
-  top: 40px; /* Approx height of the first header row */
-  background: #e9ecef;
-  z-index: 4;
+  z-index: 10;
+  background: #f8f9fa;
 }
 
-/* Sticky First Column (Roll) */
-.sticky-table th:first-child,
-.sticky-table td:first-child {
+/* Sticky Roll column */
+.table-sticky th:first-child,
+.table-sticky td:first-child {
   position: sticky;
   left: 0;
-  background: #f8f9fa;
-  z-index: 4;
+  background: white;
+  z-index: 20;
+  min-width: 70px;
+  max-width: 70px;
 }
 
-/* Sticky Second Column (Name) */
-.sticky-table th:nth-child(2),
-.sticky-table td:nth-child(2) {
+/* Sticky Name column */
+.table-sticky th:nth-child(2),
+.table-sticky td:nth-child(2) {
   position: sticky;
-  left: 80px; /* Width of the first column (Roll) */
-  background: #f8f9fa;
-  z-index: 4;
-  min-width: 160px;
+  left: 70px;
+  background: white;
+  z-index: 20;
+  min-width: 200px;
+  max-width: 200px;
   text-align: left;
 }
 
-/* Higher z-index for corner cells */
-.sticky-table thead tr:nth-child(1) th:first-child,
-.sticky-table thead tr:nth-child(2) th:first-child,
-.sticky-table thead tr:nth-child(1) th:nth-child(2),
-.sticky-table thead tr:nth-child(2) th:nth-child(2) {
-  z-index: 10;
+/* Keep Name and Roll sticky even under header */
+.table-sticky thead th:first-child,
+.table-sticky thead th:nth-child(2) {
+  z-index: 25;
 }
 </style>
 
@@ -91,9 +75,9 @@ foreach ($finalData as $student) {
         <div class="alert alert-warning">No result data found.</div>
       <?php else: ?>
 
-      <div class="table-container">
-        <table class="table sticky-table">
-          <thead class="text-center align-middle">
+      <div class="table-wrapper">
+        <table class="table table-bordered table-striped table-hover table-sticky">
+          <thead class="table-primary text-center align-middle">
             <tr>
               <th rowspan="2">Roll</th>
               <th rowspan="2">Name</th>
@@ -111,56 +95,62 @@ foreach ($finalData as $student) {
           <tbody>
             <?php foreach ($finalData as $student): ?>
               <?php
-                $subjectMap = [];
-                foreach ($student['results'] as $res) {
-                    $subjectMap[$res['subject']] = $res;
-                }
+              $subjectMap = [];
+              foreach ($student['results'] as $res) {
+                  $subjectMap[$res['subject']] = $res;
+              }
 
-                $studentTotal = 0;
-                $failCount = 0;
+              $studentTotal = 0;
+              $failCount = 0;
 
-                $bangla1 = $subjectMap['Bangla 1st Paper']['total'] ?? null;
-                $bangla2 = $subjectMap['Bangla 2nd Paper']['total'] ?? null;
-                $english1 = $subjectMap['English 1st Paper']['total'] ?? null;
-                $english2 = $subjectMap['English 2nd Paper']['total'] ?? null;
-                $ictTotal = $subjectMap['ICT']['total'] ?? null;
+              // Combined subjects
+              $bangla1 = $subjectMap['Bangla 1st Paper']['total'] ?? null;
+              $bangla2 = $subjectMap['Bangla 2nd Paper']['total'] ?? null;
+              $english1 = $subjectMap['English 1st Paper']['total'] ?? null;
+              $english2 = $subjectMap['English 2nd Paper']['total'] ?? null;
+              $ictTotal = $subjectMap['ICT']['total'] ?? null;
 
-                $banglaFail = ($bangla1 !== null && $bangla2 !== null && ($bangla1 + $bangla2) < 49);
-                $englishFail = ($english1 !== null && $english2 !== null && ($english1 + $english2) < 49);
-                $ictFail = ($ictTotal !== null && $ictTotal < 17);
+              $banglaFail = ($bangla1 !== null && $bangla2 !== null && ($bangla1 + $bangla2) < 49);
+              $englishFail = ($english1 !== null && $english2 !== null && ($english1 + $english2) < 49);
+              $ictFail = ($ictTotal !== null && $ictTotal < 17);
 
-                if ($banglaFail) $failCount++;
-                if ($englishFail) $failCount++;
-                if ($ictFail) $failCount++;
+              if ($banglaFail) $failCount++;
+              if ($englishFail) $failCount++;
+              if ($ictFail) $failCount++;
               ?>
               <tr class="text-center">
                 <td><strong><?= esc($student['roll']) ?></strong></td>
-                <td><?= esc($student['name']) ?></td>
+                <td class="text-start"><?= esc($student['name']) ?></td>
 
                 <?php foreach ($subjectList as $subject): ?>
                   <?php
-                    $res = $subjectMap[$subject] ?? null;
-                    $written = $res['written'] ?? '';
-                    $mcq = $res['mcq'] ?? '';
-                    $practical = $res['practical'] ?? '';
-                    $total = $res['total'] ?? '';
+                  $res = $subjectMap[$subject] ?? null;
 
-                    if (is_numeric($total)) $studentTotal += $total;
+                  $written = $res['written'] ?? '';
+                  $mcq = $res['mcq'] ?? '';
+                  $practical = $res['practical'] ?? '';
+                  $total = $res['total'] ?? '';
 
-                    $markClass = '';
-                    if ($subject === 'ICT' && $ictFail) {
-                        $markClass = 'text-danger fw-bold';
-                    } elseif (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper']) && $banglaFail) {
-                        $markClass = 'text-danger fw-bold';
-                    } elseif (in_array($subject, ['English 1st Paper', 'English 2nd Paper']) && $englishFail) {
-                        $markClass = 'text-danger fw-bold';
-                    } elseif (
-                        !in_array($subject, ['ICT', 'Bangla 1st Paper', 'Bangla 2nd Paper', 'English 1st Paper', 'English 2nd Paper']) &&
-                        is_numeric($total) && $total < 33
-                    ) {
-                        $markClass = 'text-danger fw-bold';
-                        $failCount++;
-                    }
+                  if ($total !== '') $studentTotal += $total;
+
+                  $markClass = '';
+
+                  if ($subject === 'ICT' && $ictFail) {
+                      $markClass = 'text-danger fw-bold';
+                  }
+                  elseif (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper']) && $banglaFail) {
+                      $markClass = 'text-danger fw-bold';
+                  }
+                  elseif (in_array($subject, ['English 1st Paper', 'English 2nd Paper']) && $englishFail) {
+                      $markClass = 'text-danger fw-bold';
+                  }
+                  elseif (
+                      !in_array($subject, ['ICT', 'Bangla 1st Paper', 'Bangla 2nd Paper', 'English 1st Paper', 'English 2nd Paper']) &&
+                      is_numeric($total) && $total < 33
+                  ) {
+                      $markClass = 'text-danger fw-bold';
+                      $failCount++;
+                  }
                   ?>
                   <td><?= $written ?></td>
                   <td><?= $mcq ?></td>
