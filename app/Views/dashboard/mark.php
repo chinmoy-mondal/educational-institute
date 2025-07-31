@@ -56,9 +56,34 @@ foreach ($finalData as $student) {
                 $studentTotal = 0;
                 $failCount = 0;
 
-                $bangla1Total = $bangla2Total = null;
-                $english1Total = $english2Total = null;
-                $ictTotal = null;
+                // Fail logic prep
+                $banglaCombinedFail = false;
+                $englishCombinedFail = false;
+                $ictFail = false;
+
+                if (
+                    isset($subjectMap['Bangla 1st Paper']['total'], $subjectMap['Bangla 2nd Paper']['total']) &&
+                    ($subjectMap['Bangla 1st Paper']['total'] + $subjectMap['Bangla 2nd Paper']['total']) < 49
+                ) {
+                    $failCount++;
+                    $banglaCombinedFail = true;
+                }
+
+                if (
+                    isset($subjectMap['English 1st Paper']['total'], $subjectMap['English 2nd Paper']['total']) &&
+                    ($subjectMap['English 1st Paper']['total'] + $subjectMap['English 2nd Paper']['total']) < 49
+                ) {
+                    $failCount++;
+                    $englishCombinedFail = true;
+                }
+
+                if (
+                    isset($subjectMap['ICT']['total']) &&
+                    $subjectMap['ICT']['total'] < 17
+                ) {
+                    $failCount++;
+                    $ictFail = true;
+                }
               ?>
               <tr class="text-center">
                 <td><strong><?= esc($student['roll']) ?></strong></td>
@@ -73,44 +98,24 @@ foreach ($finalData as $student) {
                         $practical = $res['practical'] ?? 0;
                         $total     = $res['total'] ?? 0;
                         $studentTotal += $total;
-
-                        // Save totals for combined subject logic
-                        switch ($subject) {
-                            case 'Bangla 1st Paper':
-                                $bangla1Total = $total;
-                                break;
-                            case 'Bangla 2nd Paper':
-                                $bangla2Total = $total;
-                                break;
-                            case 'English 1st Paper':
-                                $english1Total = $total;
-                                break;
-                            case 'English 2nd Paper':
-                                $english2Total = $total;
-                                break;
-                            case 'ICT':
-                                $ictTotal = $total;
-                                if ($total < 17) $failCount++;
-                                break;
-                            default:
-                                if ($total < 33) $failCount++;
-                                break;
-                        }
                     } else {
                         $written = $mcq = $practical = $total = '';
                     }
 
                     // Determine red mark class
                     $markClass = '';
-                    if ($subject === 'Bangla 1st Paper' && $bangla1Total !== null && $bangla2Total !== null && ($bangla1Total + $bangla2Total) < 49) {
+
+                    if ($subject === 'ICT' && $total !== '' && $total < 17) {
                         $markClass = 'text-danger fw-bold';
-                    } elseif ($subject === 'Bangla 2nd Paper' && $bangla1Total !== null && $bangla2Total !== null && ($bangla1Total + $bangla2Total) < 49) {
+                    } elseif (
+                        ($subject === 'Bangla 1st Paper' || $subject === 'Bangla 2nd Paper') &&
+                        $banglaCombinedFail
+                    ) {
                         $markClass = 'text-danger fw-bold';
-                    } elseif ($subject === 'English 1st Paper' && $english1Total !== null && $english2Total !== null && ($english1Total + $english2Total) < 49) {
-                        $markClass = 'text-danger fw-bold';
-                    } elseif ($subject === 'English 2nd Paper' && $english1Total !== null && $english2Total !== null && ($english1Total + $english2Total) < 49) {
-                        $markClass = 'text-danger fw-bold';
-                    } elseif ($subject === 'ICT' && $ictTotal !== null && $ictTotal < 17) {
+                    } elseif (
+                        ($subject === 'English 1st Paper' || $subject === 'English 2nd Paper') &&
+                        $englishCombinedFail
+                    ) {
                         $markClass = 'text-danger fw-bold';
                     } elseif ($total !== '' && $total < 33) {
                         $markClass = 'text-danger fw-bold';
@@ -122,18 +127,6 @@ foreach ($finalData as $student) {
                   <td><?= $practical ?></td>
                   <td class="<?= $markClass ?>"><?= $total ?></td>
                 <?php endforeach; ?>
-
-                <?php
-                  // Check Bangla combined fail
-                  if ($bangla1Total !== null && $bangla2Total !== null && ($bangla1Total + $bangla2Total) < 49) {
-                      $failCount++;
-                  }
-
-                  // Check English combined fail
-                  if ($english1Total !== null && $english2Total !== null && ($english1Total + $english2Total) < 49) {
-                      $failCount++;
-                  }
-                ?>
 
                 <td class="fw-bold <?= $failCount > 0 ? 'text-danger' : 'text-success' ?>">
                   <?= $studentTotal ?><?= $failCount > 0 ? ' <br>F-' . $failCount : '' ?>
