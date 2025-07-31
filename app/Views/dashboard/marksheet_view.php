@@ -172,86 +172,90 @@ td strong {
   </table>
 
   <!-- Mark Table -->
-  <table class="table table-bordered text-center">
-    <thead>
-      <tr>
-        <th rowspan="2">Subject</th>
-        <th rowspan="2">Full Marks</th>
-        <th rowspan="2">Obtained Marks</th>
-        <th colspan="4">Marks Distribution</th>
-        <th rowspan="2">Total Marks</th>
-        <th rowspan="2">Letter Grade</th>
-        <th rowspan="2">GP</th>
-      </tr>
-      <tr>
-        <th>Wri</th>
-        <th>MCQ</th>
-        <th>Pra</th>
-        <th>%</th>
-      </tr>
-    </thead>
+<table class="table table-bordered text-center">
+  <thead>
+    <tr>
+      <th rowspan="2">Subject</th>
+      <th rowspan="2">Full Marks</th>
+      <th rowspan="2">Obtained Marks</th>
+      <th colspan="4">Marks Distribution</th>
+      <th rowspan="2">Total Marks</th>
+      <th rowspan="2">Letter Grade</th>
+      <th rowspan="2">GP</th>
+    </tr>
+    <tr>
+      <th>Wri</th>
+      <th>MCQ</th>
+      <th>Pra</th>
+      <th>%</th>
+    </tr>
+  </thead>
   <tbody>
-<?php
-$subjects = [
-  ['name' => 'Bangla 1st', 'full' => 100, 'mark' => 80],
-  ['name' => 'Bangla 2nd', 'full' => 100, 'mark' => 75],
-  ['name' => 'English 1st', 'full' => 100, 'mark' => 78],
-  ['name' => 'English 2nd', 'full' => 100, 'mark' => 82],
-  ['name' => 'Math', 'full' => 100, 'mark' => 90],
-  ['name' => 'ICT', 'full' => 100, 'mark' => 70],
-  ['name' => 'Religion', 'full' => 100, 'mark' => 88],
-];
+    <?php
+    $subjects = [
+      ['name' => 'Bangla 1st', 'full' => 100, 'mark' => 80],
+      ['name' => 'Bangla 2nd', 'full' => 100, 'mark' => 75],
+      ['name' => 'English 1st', 'full' => 100, 'mark' => 78],
+      ['name' => 'English 2nd', 'full' => 100, 'mark' => 82],
+      ['name' => 'Math', 'full' => 100, 'mark' => 90],
+      ['name' => 'ICT', 'full' => 100, 'mark' => 70],
+      ['name' => 'Religion', 'full' => 100, 'mark' => 88],
+    ];
 
-$totalMarks = 0;
-$totalGPA = 0;
+    $totalMarks = 0;
+    $totalGPA = 0;
 
-foreach ($subjects as $s):
-  $mark = $s['mark'];
-  $totalMarks += $mark;
+    foreach ($subjects as $s):
+      $mark = $s['mark'];
+      $totalMarks += $mark;
 
-  $written = round($mark * 0.5);     // example: 50% written
-  $mcq     = round($mark * 0.3);     // example: 30% MCQ
-  $practical = round($mark * 0.2);   // example: 20% Practical
-  $percent = round(($mark / $s['full']) * 100);
+      $written = round($mark * 0.5);
+      $mcq = round($mark * 0.3);
+      $practical = round($mark * 0.2);
+      $percent = round(($mark / $s['full']) * 100);
 
-  $gpa = ($mark >= 80) ? 5.0 :
-         (($mark >= 70) ? 4.0 :
-         (($mark >= 60) ? 3.5 :
-         (($mark >= 50) ? 3.0 :
-         (($mark >= 40) ? 2.0 : 0.0))));
+      $gpa = ($mark >= 80) ? 5.0 :
+            (($mark >= 70) ? 4.0 :
+            (($mark >= 60) ? 3.5 :
+            (($mark >= 50) ? 3.0 :
+            (($mark >= 40) ? 2.0 : 0.0))));
 
-  $grade = ($mark >= 80) ? 'A+' :
-           (($mark >= 70) ? 'A' :
-           (($mark >= 60) ? 'A-' :
-           (($mark >= 50) ? 'B' :
-           (($mark >= 40) ? 'C' : 'F'))));
+      $grade = ($mark >= 80) ? 'A+' :
+              (($mark >= 70) ? 'A' :
+              (($mark >= 60) ? 'A-' :
+              (($mark >= 50) ? 'B' :
+              (($mark >= 40) ? 'C' : 'F'))));
 
-  $totalGPA += $gpa;
-?>
-<tr>
-  <td><?= esc($s['name']) ?></td>
-  <td><?= $s['full'] ?></td>
-  <td><?= $mark ?></td>
-  <td><?= $written ?></td>
-  <td><?= $mcq ?></td>
-  <td><?= $practical ?></td>
-  <td><?= $percent ?>%</td>
-  <td><?= $mark ?></td>
-  <td><?= $grade ?></td>
-  <td><?= number_format($gpa, 2) ?></td>
-</tr>
-<?php endforeach; ?>
-</tbody>
-<tfoot>
-  <tr>
-    <th colspan="2">Total Marks</th>
-    <th><?= $totalMarks ?></th>
-    <th colspan="4"></th>
-    <th></th>
-    <th colspan="2">GPA: <?= number_format($totalGPA / count($subjects), 2) ?></th>
-  </tr>
-</tfoot></table>
-
+      $totalGPA += $gpa;
+    ?>
+    <tr>
+      <td><?= esc($s['name']) ?></td>
+      <td><?= $s['full'] ?></td>
+      <td><?= $mark ?></td>
+      <td><?= $written ?></td>
+      <td><?= $mcq ?></td>
+      <td><?= $practical ?></td>
+      <td><?= $percent ?>%</td>
+      <td><?= $mark ?></td>
+      <td><?= $grade ?></td>
+      <td><?= number_format($gpa, 2) ?></td>
+    </tr>
+    <?php endforeach; ?>
+  </tbody>
+  <tfoot>
+    <tr>
+      <th colspan="2">Total Marks</th>
+      <th><?= $totalMarks ?></th>
+      <th colspan="4"></th>
+      <th></th>
+      <th colspan="2"></th>
+    </tr>
+    <tr>
+      <th colspan="8" class="text-end">GPA:</th>
+      <th colspan="2"><?= number_format($totalGPA / count($subjects), 2) ?></th>
+    </tr>
+  </tfoot>
+</table>
   <!-- Grade Chart + QR + Signature -->
   <div class="row qr-signature">
     <div class="col-md-6">
