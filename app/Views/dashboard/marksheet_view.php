@@ -172,7 +172,7 @@ td strong {
   </table>
 
   <!-- Mark Table -->
-<table class="table table-bordered text-center">
+  <table class="table table-bordered text-center">
   <thead>
     <tr>
       <th rowspan="2">Subject</th>
@@ -191,72 +191,163 @@ td strong {
     </tr>
   </thead>
   <tbody>
-    <?php
-    $subjects = [
-      ['name' => 'Bangla 1st', 'full' => 100, 'mark' => 80],
-      ['name' => 'Bangla 2nd', 'full' => 100, 'mark' => 75],
-      ['name' => 'English 1st', 'full' => 100, 'mark' => 78],
-      ['name' => 'English 2nd', 'full' => 100, 'mark' => 82],
-      ['name' => 'Math', 'full' => 100, 'mark' => 90],
-      ['name' => 'ICT', 'full' => 100, 'mark' => 70],
-      ['name' => 'Religion', 'full' => 100, 'mark' => 88],
-    ];
-
-    $totalMarks = 0;
-    $totalGPA = 0;
-
-    foreach ($subjects as $s):
-      $mark = $s['mark'];
-      $totalMarks += $mark;
-
-      $written = round($mark * 0.5);
-      $mcq = round($mark * 0.3);
-      $practical = round($mark * 0.2);
-      $percent = round(($mark / $s['full']) * 100);
-
-      $gpa = ($mark >= 80) ? 5.0 :
-            (($mark >= 70) ? 4.0 :
-            (($mark >= 60) ? 3.5 :
-            (($mark >= 50) ? 3.0 :
-            (($mark >= 40) ? 2.0 : 0.0))));
-
-      $grade = ($mark >= 80) ? 'A+' :
-              (($mark >= 70) ? 'A' :
-              (($mark >= 60) ? 'A-' :
-              (($mark >= 50) ? 'B' :
-              (($mark >= 40) ? 'C' : 'F'))));
-
-      $totalGPA += $gpa;
-    ?>
+    <!-- Bangla Pair -->
     <tr>
-      <td><?= esc($s['name']) ?></td>
-      <td><?= $s['full'] ?></td>
-      <td><?= $mark ?></td>
-      <td><?= $written ?></td>
-      <td><?= $mcq ?></td>
-      <td><?= $practical ?></td>
-      <td><?= $percent ?>%</td>
-      <td><?= $mark ?></td>
-      <td><?= $grade ?></td>
-      <td><?= number_format($gpa, 2) ?></td>
+      <td>Bangla 1st</td>
+      <td>100</td>
+      <td>80</td>
+      <td>40</td>
+      <td>24</td>
+      <td>16</td>
+      <td>80%</td>
+      <td rowspan="2">80</td>
+      <td rowspan="2">A+</td>
+      <td rowspan="2">5.00</td>
     </tr>
-    <?php endforeach; ?>
+    <tr>
+      <td>Bangla 2nd</td>
+      <td>100</td>
+      <td>75</td>
+      <td>38</td>
+      <td>23</td>
+      <td>14</td>
+      <td>75%</td>
+    </tr>
+
+    <!-- English Pair -->
+    <tr>
+      <td>English 1st</td>
+      <td>100</td>
+      <td>78</td>
+      <td>40</td>
+      <td>22</td>
+      <td>16</td>
+      <td>78%</td>
+      <td rowspan="2">80</td>
+      <td rowspan="2">A+</td>
+      <td rowspan="2">5.00</td>
+    </tr>
+    <tr>
+      <td>English 2nd</td>
+      <td>100</td>
+      <td>82</td>
+      <td>42</td>
+      <td>24</td>
+      <td>16</td>
+      <td>82%</td>
+    </tr>
+
+    <!-- 10 Single Subjects -->
+    <tr>
+      <td>Math</td>
+      <td>100</td>
+      <td>90</td>
+      <td>50</td>
+      <td>30</td>
+      <td>10</td>
+      <td>90%</td>
+      <td>90</td>
+      <td>A+</td>
+      <td>5.00</td>
+    </tr>
+    <tr>
+      <td>ICT</td>
+      <td>100</td>
+      <td>70</td>
+      <td>30</td>
+      <td>30</td>
+      <td>10</td>
+      <td>70%</td>
+      <td>70</td>
+      <td>A</td>
+      <td>4.00</td>
+    </tr>
+    <tr>
+      <td>Religion</td>
+      <td>100</td>
+      <td>88</td>
+      <td>40</td>
+      <td>30</td>
+      <td>18</td>
+      <td>88%</td>
+      <td>88</td>
+      <td>A+</td>
+      <td>5.00</td>
+    </tr>
+    <tr>
+      <td>Science</td>
+      <td>100</td>
+      <td>85</td>
+      <td>42</td>
+      <td>25</td>
+      <td>18</td>
+      <td>85%</td>
+      <td>85</td>
+      <td>A+</td>
+      <td>5.00</td>
+    </tr>
+    <tr>
+      <td>Social Science</td>
+      <td>100</td>
+      <td>72</td>
+      <td>35</td>
+      <td>25</td>
+      <td>12</td>
+      <td>72%</td>
+      <td>72</td>
+      <td>A</td>
+      <td>4.00</td>
+    </tr>
+    <tr>
+      <td>Bangladesh & Global Studies</td>
+      <td>100</td>
+      <td>65</td>
+      <td>30</td>
+      <td>20</td>
+      <td>15</td>
+      <td>65%</td>
+      <td>65</td>
+      <td>A-</td>
+      <td>3.50</td>
+    </tr>
+    <tr>
+      <td>Agriculture</td>
+      <td>100</td>
+      <td>60</td>
+      <td>30</td>
+      <td>20</td>
+      <td>10</td>
+      <td>60%</td>
+      <td>60</td>
+      <td>A-</td>
+      <td>3.50</td>
+    </tr>
+    <tr>
+      <td>Physical Education</td>
+      <td>100</td>
+      <td>75</td>
+      <td>35</td>
+      <td>20</td>
+      <td>20</td>
+      <td>75%</td>
+      <td>75</td>
+      <td>A</td>
+      <td>4.00</td>
+    </tr>
+    <tr>
+      <td>Arts & Crafts</td>
+      <td>100</td>
+      <td>85</td>
+      <td>40</td>
+      <td>30</td>
+      <td>15</td>
+      <td>85%</td>
+      <td>85</td>
+      <td>A+</td>
+      <td>5.00</td>
+    </tr>
   </tbody>
-  <tfoot>
-    <tr>
-      <th colspan="2">Total Marks</th>
-      <th><?= $totalMarks ?></th>
-      <th colspan="4"></th>
-      <th></th>
-      <th colspan="2"></th>
-    </tr>
-    <tr>
-      <th colspan="8" class="text-end">GPA:</th>
-      <th colspan="2"><?= number_format($totalGPA / count($subjects), 2) ?></th>
-    </tr>
-  </tfoot>
-</table>
-  <!-- Grade Chart + QR + Signature -->
+</table><!-- Grade Chart + QR + Signature -->
   <div class="row qr-signature">
     <div class="col-md-6">
       <table class="table table-bordered text-center">
