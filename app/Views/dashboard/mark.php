@@ -2,9 +2,9 @@
 <?= $this->section('content') ?>
 <style>
   th, td {
-  vertical-align: middle !important;
-  text-align: center !important;
-}
+    vertical-align: middle !important;
+    text-align: center !important;
+  }
 </style>
 <?php
 // Get unique subjects
@@ -63,7 +63,7 @@ foreach ($finalData as $student) {
                 $studentTotal = 0;
                 $failCount = 0;
 
-                // Calculate combined fail flags before looping subjects
+                // Pre-check combined subjects
                 $bangla1 = $subjectMap['Bangla 1st Paper']['total'] ?? null;
                 $bangla2 = $subjectMap['Bangla 2nd Paper']['total'] ?? null;
                 $english1 = $subjectMap['English 1st Paper']['total'] ?? null;
@@ -93,25 +93,44 @@ foreach ($finalData as $student) {
 
                     if ($total !== '') $studentTotal += $total;
 
-                    // Determine red class
                     $markClass = '';
+
+                    $groupA = ['Physics', 'Chemistry', 'Higher Math', 'Biology'];
 
                     if ($subject === 'ICT' && $ictFail) {
                       $markClass = 'text-danger fw-bold';
-                    } elseif (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
-                      if ($banglaFail) {
-                        $markClass = 'text-danger fw-bold';
-                      }
-                    } elseif (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
-                      if ($englishFail) {
-                        $markClass = 'text-danger fw-bold';
-                      }
-                    } elseif (
-                      !in_array($subject, ['ICT', 'Bangla 1st Paper', 'Bangla 2nd Paper', 'English 1st Paper', 'English 2nd Paper']) &&
-                      is_numeric($total) && $total < 33
-                    ) {
+                    } elseif (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper']) && $banglaFail) {
                       $markClass = 'text-danger fw-bold';
-                      $failCount++;  // Count fail for standard subjects only
+                    } elseif (in_array($subject, ['English 1st Paper', 'English 2nd Paper']) && $englishFail) {
+                      $markClass = 'text-danger fw-bold';
+                    } else {
+                      // Class 9-10 rules
+                      $writtenPass = 33;
+                      $mcqPass = 0;
+                      $pracPass = 0;
+
+                      if (in_array($class, ['9', '10'])) {
+                        if (in_array($subject, $groupA)) {
+                          $writtenPass = 17;
+                          $mcqPass = 8;
+                          $pracPass = 8;
+                        } else {
+                          $writtenPass = 23;
+                          $mcqPass = 10;
+                        }
+                      }
+
+                      $writtenFail = is_numeric($written) && $written < $writtenPass;
+                      $mcqFail = is_numeric($mcq) && $mcq < $mcqPass;
+                      $pracFail = is_numeric($practical) && $pracPass > 0 && $practical < $pracPass;
+
+                      if ($writtenFail || $mcqFail || $pracFail) {
+                        $markClass = 'text-danger fw-bold';
+                        $failCount++;
+                      } elseif (is_numeric($total) && $total < 33) {
+                        $markClass = 'text-danger fw-bold';
+                        $failCount++;
+                      }
                     }
                     ?>
                     <td><?= $written ?></td>
