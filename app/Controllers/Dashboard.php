@@ -25,7 +25,7 @@ class Dashboard extends Controller
 		$this->studentModel  = new StudentModel();
 		$this->resultModel   = new ResultModel();
 		$this->calendarModel   = new CalendarModel();
-		
+
 
 		$this->session       = session();
 		$this->data          = [];
@@ -41,38 +41,38 @@ class Dashboard extends Controller
 			['label' => 'Result', 'url' => base_url('ad-result')],
 			['label' => 'Accounts', 'url' => base_url('accounts')],
 		];
-			$this->data['sidebarItems'] = [
-					[
-						'label' => 'Dashboard', 
-						'url' => base_url('dashboard'), 
-						'icon' => 'fas fa-tachometer-alt', 
-						'section' => 'dashboard'
-					],
-					[
-						'label' => 'Teacher Management', 
-						'url' => base_url('teacher_management'), 
-						'icon' => 'fas fa-chalkboard-teacher', 
-						'section' => 'teacher'
-					],
-					[
-						'label' => 'Student Management', 
-						'url' => base_url('admin/student'), 
-						'icon' => 'fas fa-user-graduate', 
-						'section' => 'student'
-					],
-					[
-						'label' => 'Calendar', 
-						'url' => base_url('calendar'), 
-						'icon' => 'fas fa-calendar-alt', 
-						'section' => 'calendar'
-					],
-					[
-						'label' => 'Result', 
-						'url' => base_url('admin/tabulation_form'), 
-						'icon' => 'fas fa-chart-bar', 
-						'section' => 'result'
-					],
-				];
+		$this->data['sidebarItems'] = [
+			[
+				'label' => 'Dashboard',
+				'url' => base_url('dashboard'),
+				'icon' => 'fas fa-tachometer-alt',
+				'section' => 'dashboard'
+			],
+			[
+				'label' => 'Teacher Management',
+				'url' => base_url('teacher_management'),
+				'icon' => 'fas fa-chalkboard-teacher',
+				'section' => 'teacher'
+			],
+			[
+				'label' => 'Student Management',
+				'url' => base_url('admin/student'),
+				'icon' => 'fas fa-user-graduate',
+				'section' => 'student'
+			],
+			[
+				'label' => 'Calendar',
+				'url' => base_url('calendar'),
+				'icon' => 'fas fa-calendar-alt',
+				'section' => 'calendar'
+			],
+			[
+				'label' => 'Result',
+				'url' => base_url('admin/tabulation_form'),
+				'icon' => 'fas fa-chart-bar',
+				'section' => 'result'
+			],
+		];
 	}
 
 	public function index()
@@ -93,16 +93,16 @@ class Dashboard extends Controller
 			['label' => 'Accounts', 'url' => base_url('accounts')],
 		];
 
-			$this->data['total_students'] = $studentModel->countAll();
-			$this->data['total_users'] = $userModel->where('account_status !=', 0)->countAllResults();
-			$this->data['total_new_users'] = $userModel->where('account_status', 0)->countAllResults();
+		$this->data['total_students'] = $studentModel->countAll();
+		$this->data['total_users'] = $userModel->where('account_status !=', 0)->countAllResults();
+		$this->data['total_new_users'] = $userModel->where('account_status', 0)->countAllResults();
 
-			$this->data['total_applications'] = 10;
-			$this->data['total_exams'] = 5;
-			$this->data['total_income'] = 150000.00;
-			$this->data['total_cost'] = 42000.00;
+		$this->data['total_applications'] = 10;
+		$this->data['total_exams'] = 5;
+		$this->data['total_income'] = 150000.00;
+		$this->data['total_cost'] = 42000.00;
 
-			return view('dashboard/index', $this->data);
+		return view('dashboard/index', $this->data);
 	}
 
 	public function profile()
@@ -119,17 +119,17 @@ class Dashboard extends Controller
 			['label' => 'Accounts', 'url' => base_url('accounts')],
 		];
 
-			$user = [
-				'name' => $this->session->get('name'),
-				'email' => $this->session->get('email'),
-				'phone' => $this->session->get('phone'),
-				'role' => $this->session->get('role')
-			];
+		$user = [
+			'name' => $this->session->get('name'),
+			'email' => $this->session->get('email'),
+			'phone' => $this->session->get('phone'),
+			'role' => $this->session->get('role')
+		];
 
-			$this->data['title'] = 'Dashboard';
-			$this->data['activeSection'] = 'dashboard';
-			$this->data['user'] = $user;
-			return view('dashboard/profile', $this->data);
+		$this->data['title'] = 'Dashboard';
+		$this->data['activeSection'] = 'dashboard';
+		$this->data['user'] = $user;
+		return view('dashboard/profile', $this->data);
 	}
 
 	public function calendar()
@@ -143,17 +143,17 @@ class Dashboard extends Controller
 			['label' => 'Calendar', 'url' => base_url('calendar')],
 		];
 
-			$user = [
-				'name' => $this->session->get('name'),
-				'email' => $this->session->get('email'),
-				'phone' => $this->session->get('phone'),
-				'role' => $this->session->get('role')
-			];
+		$user = [
+			'name' => $this->session->get('name'),
+			'email' => $this->session->get('email'),
+			'phone' => $this->session->get('phone'),
+			'role' => $this->session->get('role')
+		];
 
-			$this->data['user'] = $user;
-			//echo '<pre>';
-			//print_r($this->data);
-			return view('dashboard/calendar', $this->data);
+		$this->data['user'] = $user;
+		//echo '<pre>';
+		//print_r($this->data);
+		return view('dashboard/calendar', $this->data);
 	}
 
 	public function events()
@@ -163,15 +163,15 @@ class Dashboard extends Controller
 		$events = $model->findAll();
 
 		$data = array_map(function ($event) {
-				// Determine if end_date has time part (T separator)
-				$hasTime = strpos($event['end_date'], 'T') !== false;
+			// Determine if end_date has time part (T separator)
+			$hasTime = strpos($event['end_date'], 'T') !== false;
 
-				// If end_date is date only, add +1 day to make FullCalendar inclusive
-				$endDate = $hasTime
+			// If end_date is date only, add +1 day to make FullCalendar inclusive
+			$endDate = $hasTime
 				? $event['end_date']
 				: date('Y-m-d', strtotime($event['end_date'] . ' +1 day'));
 
-				return [
+			return [
 				'id'          => $event['id'],
 				'title'       => $event['title'],
 				'start'       => $event['start_date'],
@@ -179,8 +179,8 @@ class Dashboard extends Controller
 				'color'       => $event['color'],
 				'description' => $event['description'],
 				'allDay'      => true // important for date-only events
-				];
-				}, $events);
+			];
+		}, $events);
 
 		return $this->response->setJSON($data);
 	}
@@ -189,11 +189,11 @@ class Dashboard extends Controller
 	{
 		$model = new CalendarModel();
 		$model->save([
-				'title' => $this->request->getPost('title'),
-				'description' => $this->request->getPost('description'),
-				'start_date' => $this->request->getPost('start'),
-				'end_date' => $this->request->getPost('end'),
-				'color' => $this->request->getPost('color') ?? '#007bff'
+			'title' => $this->request->getPost('title'),
+			'description' => $this->request->getPost('description'),
+			'start_date' => $this->request->getPost('start'),
+			'end_date' => $this->request->getPost('end'),
+			'color' => $this->request->getPost('color') ?? '#007bff'
 		]);
 
 		return $this->response->setJSON(['status' => 'success']);
@@ -204,11 +204,11 @@ class Dashboard extends Controller
 		$model = new CalendarModel();
 
 		$model->update($this->request->getPost('id'), [
-				'title'       => $this->request->getPost('title'),
-				'description' => $this->request->getPost('description'),
-				'start_date'  => $this->request->getPost('start'),
-				'end_date'    => $this->request->getPost('end'),
-				'color'       => $this->request->getPost('color')
+			'title'       => $this->request->getPost('title'),
+			'description' => $this->request->getPost('description'),
+			'start_date'  => $this->request->getPost('start'),
+			'end_date'    => $this->request->getPost('end'),
+			'color'       => $this->request->getPost('color')
 		]);
 
 		return $this->response->setJSON(['status' => 'success']);
@@ -234,25 +234,25 @@ class Dashboard extends Controller
 			['label' => 'Calendar', 'url' => base_url('calendar')],
 		];
 
-			$userModel = new UserModel();
+		$userModel = new UserModel();
 
-			$newUsers = $userModel->where('account_status', 0)->findAll();
-			$totalNewUsers = count($newUsers);
+		$newUsers = $userModel->where('account_status', 0)->findAll();
+		$totalNewUsers = count($newUsers);
 
-			$users = $userModel->where('account_status !=', 0)->findAll();
-			$totalUsers = count($users);
+		$users = $userModel->where('account_status !=', 0)->findAll();
+		$totalUsers = count($users);
 
-			// Assign to $this->data
-			$this->data['newUsers'] = $newUsers;
-			$this->data['total_newUsers'] = $totalNewUsers;
-			$this->data['users'] = $users;
-			$this->data['total_users'] = $totalUsers;
+		// Assign to $this->data
+		$this->data['newUsers'] = $newUsers;
+		$this->data['total_newUsers'] = $totalNewUsers;
+		$this->data['users'] = $users;
+		$this->data['total_users'] = $totalUsers;
 
-			return view('dashboard/ad_teacher_list', $this->data);
+		return view('dashboard/ad_teacher_list', $this->data);
 	}
 
 	public function newUser()
-	{ 
+	{
 
 		$this->data['title'] = 'Teacher Management';
 		$this->data['activeSection'] = 'teacher';
@@ -279,9 +279,9 @@ class Dashboard extends Controller
 
 		$permitBy = $this->session->get('user_id');
 
-		$updated = $userModel->update($id,[
-				'account_status' => 1,
-				'permit_by'	=>$permitBy,
+		$updated = $userModel->update($id, [
+			'account_status' => 1,
+			'permit_by'	=> $permitBy,
 		]);
 
 		if ($updated) {
@@ -315,10 +315,10 @@ class Dashboard extends Controller
 			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
 			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
 		];
-			$this->data['users'] = $users;
-			$this->data['subjects'] = $subjects;
+		$this->data['users'] = $users;
+		$this->data['subjects'] = $subjects;
 
-			return view('dashboard/teacher_management', $this->data);
+		return view('dashboard/teacher_management', $this->data);
 	}
 
 	public function teacherSubUpdate()
@@ -350,8 +350,8 @@ class Dashboard extends Controller
 		}
 
 		$subjectIds = array_filter(
-				array_map('intval', explode(',', $user['assagin_sub'] ?? ''))
-				);
+			array_map('intval', explode(',', $user['assagin_sub'] ?? ''))
+		);
 
 		$subjects = [];
 		if (!empty($subjectIds)) {
@@ -368,10 +368,10 @@ class Dashboard extends Controller
 			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
 			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
 		];
-			$this->data['user']          = $user;
-			$this->data['subjects']      = $subjects;
+		$this->data['user']          = $user;
+		$this->data['subjects']      = $subjects;
 
-			return view('dashboard/assign_subject', $this->data);
+		return view('dashboard/assign_subject', $this->data);
 	}
 
 
@@ -485,7 +485,6 @@ class Dashboard extends Controller
 			} else {
 				$builder = $builder->where('religion', $religion);
 			}
-
 		}
 		$total = $builder->countAllResults(false);
 		$perPage  = 20;
@@ -503,19 +502,19 @@ class Dashboard extends Controller
 			['label' => 'Add Student', 'url' => base_url('admin/student/create')],
 			['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
 		];
-			$this->data['students']      = $students;
-			$this->data['pager']         = $studentModel->pager;
-			$this->data['q']             = $q;
-			$this->data['class']         = $class;
-			$this->data['section']       = $section;
-			$this->data['sections']      = $sections;
-			$this->data['religion']   = $religion;   
-			$this->data['religions']  = $religions;  
-			$this->data['total']  = $total;  
+		$this->data['students']      = $students;
+		$this->data['pager']         = $studentModel->pager;
+		$this->data['q']             = $q;
+		$this->data['class']         = $class;
+		$this->data['section']       = $section;
+		$this->data['sections']      = $sections;
+		$this->data['religion']   = $religion;
+		$this->data['religions']  = $religions;
+		$this->data['total']  = $total;
 
 
 
-			return view('dashboard/student', $this->data);
+		return view('dashboard/student', $this->data);
 	}
 
 	public function stAssaginSubView()
@@ -527,7 +526,7 @@ class Dashboard extends Controller
 		$q       = $this->request->getGet('q');
 		$class   = $this->request->getGet('class');
 		$section = $this->request->getGet('section');
-		$religion = $this->request->getGet('religion'); 
+		$religion = $this->request->getGet('religion');
 
 		// Build query
 		$builder = $studentModel;
@@ -549,27 +548,27 @@ class Dashboard extends Controller
 		}
 
 		$students = $builder
-		    ->orderBy('CAST(class as UNSIGNED)', 'ASC')
-		    ->orderBy('CAST(roll as UNSIGNED)', 'ASC')
-		    ->get()
-		    ->getResultArray();
+			->orderBy('CAST(class as UNSIGNED)', 'ASC')
+			->orderBy('CAST(roll as UNSIGNED)', 'ASC')
+			->get()
+			->getResultArray();
 
 		$sections = $studentModel->select('section')->distinct()->orderBy('section')->findAll();
 		$religions = $studentModel->select('religion')->distinct()->where('religion IS NOT NULL')->orderBy('religion')->findAll();
 		$subjectBuilder = $subjectModel;
 
 		if ($class) {
-		    $subjectBuilder = $subjectBuilder->where('class', $class);
+			$subjectBuilder = $subjectBuilder->where('class', $class);
 		}
 
 		if (stripos($section, 'Vocational') !== false) {
-		    $filteredSection = 'Vocational';
+			$filteredSection = 'Vocational';
 		} else {
-		    $filteredSection = 'General';
+			$filteredSection = 'General';
 		}
 
 		if ($filteredSection) {
-		    $subjectBuilder = $subjectBuilder->where('section', $filteredSection);
+			$subjectBuilder = $subjectBuilder->where('section', $filteredSection);
 		}
 
 		$subjects = $subjectBuilder->findAll();
@@ -581,30 +580,30 @@ class Dashboard extends Controller
 			['label' => 'Add Student', 'url' => base_url('admin/student/create')],
 			['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
 		];
-			$this->data['students']      = $students;
-			$this->data['subjects']      = $subjects;
-			$this->data['pager']         = $studentModel->pager;
-			$this->data['q']             = $q;
-			$this->data['class']         = $class;
-			$this->data['section']       = $section;
-			$this->data['sections']      = $sections;
-			$this->data['religion']      = $religion;
-			$this->data['religions']     = $religions;
+		$this->data['students']      = $students;
+		$this->data['subjects']      = $subjects;
+		$this->data['pager']         = $studentModel->pager;
+		$this->data['q']             = $q;
+		$this->data['class']         = $class;
+		$this->data['section']       = $section;
+		$this->data['sections']      = $sections;
+		$this->data['religion']      = $religion;
+		$this->data['religions']     = $religions;
 
-			return view('dashboard/stSubAssaginment', $this->data);
+		return view('dashboard/stSubAssaginment', $this->data);
 	}
 
-	public function assignStudentsSubjects(){
+	public function assignStudentsSubjects()
+	{
 		$students = $this->request->getPost('left_select');
 		$subjects = $this->request->getPost('right_select');
 
-		if(!empty($students) && !empty($subjects)) {
+		if (!empty($students) && !empty($subjects)) {
 			$subjectCodes = implode(',', $subjects);
 			$studentModel = new StudentModel();
 
-			foreach($students as $studentId) {
-				$studentModel->update($studentId,['assign_sub' => $subjectCodes]);
-
+			foreach ($students as $studentId) {
+				$studentModel->update($studentId, ['assign_sub' => $subjectCodes]);
 			}
 			return redirect()->back()->with('success', 'Subjects assigned successfully.');
 		}
@@ -647,12 +646,12 @@ class Dashboard extends Controller
 			['label' => 'Result Entry', 'url' => base_url('ad-result')],
 			['label' => 'Result Sheet', 'url' => base_url('result_sheet')],
 		];
-			$this->data['user']            = $user;
-			$this->data['subject']         = $subject;
-			$this->data['students']        = $students;
-			$this->data['existingResults'] = $indexedResults;
+		$this->data['user']            = $user;
+		$this->data['subject']         = $subject;
+		$this->data['students']        = $students;
+		$this->data['existingResults'] = $indexedResults;
 
-			return view('dashboard/ad_result', $this->data);
+		return view('dashboard/ad_result', $this->data);
 	}
 
 	public function submitResults()
@@ -695,20 +694,20 @@ class Dashboard extends Controller
 				'updated_at' => date('Y-m-d H:i:s'),
 			];
 
-				if ($existing) {
-					$this->resultModel->update($existing['id'], $data);
-				} else {
-					$data['created_at'] = date('Y-m-d H:i:s');
-					$this->resultModel->insert($data);
-				}
+			if ($existing) {
+				$this->resultModel->update($existing['id'], $data);
+			} else {
+				$data['created_at'] = date('Y-m-d H:i:s');
+				$this->resultModel->insert($data);
+			}
 		}
 
 		return redirect()->back()->with('message', 'Results submitted successfully.');
 	}
 
-	public function ResultCheck($userId,$subjectId)
+	public function ResultCheck($userId, $subjectId)
 	{
-		
+
 		$subject = $this->subjectModel->find($subjectId);
 
 		$users	= $this->userModel->find($userId);
@@ -729,11 +728,11 @@ class Dashboard extends Controller
 			['label' => 'Add Student', 'url' => base_url('student_create')],
 			['label' => 'View Student', 'url' => current_url()],
 		];
-			$this->data['subject'] = $subject;
-			$this->data['users'] = $users;
-			$this->data['result'] = $result;
-			
-			return view('dashboard/resultCheck', $this->data);
+		$this->data['subject'] = $subject;
+		$this->data['users'] = $users;
+		$this->data['result'] = $result;
+
+		return view('dashboard/resultCheck', $this->data);
 	}
 
 	public function selectTabulationForm()
@@ -743,7 +742,7 @@ class Dashboard extends Controller
 
 		// ✅ Distinct class list from students
 		$classes = $studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
-		
+
 		$rawSections = $studentModel
 			->distinct()
 			->select('section')
@@ -755,7 +754,7 @@ class Dashboard extends Controller
 			['section' => 'Vocational'],
 		];
 
-	                         
+
 		// ✅ Distinct exam names and years from results
 		$exams = $resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
 		$years = $resultModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
@@ -785,78 +784,76 @@ class Dashboard extends Controller
 		];
 
 
-			$class   = $this->request->getPost('class');
-			$section = $this->request->getPost('section');
-			$exam    = $this->request->getPost('exam');
-			$year    = $this->request->getPost('year');
+		$class   = $this->request->getPost('class');
+		$section = $this->request->getPost('section');
+		$exam    = $this->request->getPost('exam');
+		$year    = $this->request->getPost('year');
 
-			$studentModel = new StudentModel();
-			$resultModel  = new ResultModel();
-			$subjectModel = new SubjectModel();
+		$studentModel = new StudentModel();
+		$resultModel  = new ResultModel();
+		$subjectModel = new SubjectModel();
 
-			$builder = $studentModel->where('class', $class);
+		$builder = $studentModel->where('class', $class);
 
-			// If class is NOT 6 to 8, add section filter
-			if (!in_array($class, ['6', '7', '8'])) {
-				$builder->like('section', $section);
-			}
+		// If class is NOT 6 to 8, add section filter
+		if (!in_array($class, ['6', '7', '8'])) {
+			$builder->like('section', $section);
+		}
 
-			$students = $builder
-				->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
+		$students = $builder
+			->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
+			->findAll();
+
+		$finalData = [];
+
+		foreach ($students as $student) {
+			$studentId = $student['id'];
+
+			// Step 2: Get results for this student, exam, and year
+			$results = $resultModel
+				->where('student_id', $studentId)
+				->where('exam', $exam)
+				->where('year', $year)
 				->findAll();
 
-			$finalData = [];
+			// Step 3: Build subject-wise results array
+			$subjectResults = [];
+			foreach ($results as $res) {
+				$subjectName = $subjectModel
+					->select('subject')
+					->where('id', $res['subject_id'])
+					->first()['subject'] ?? 'Unknown';
 
-			foreach ($students as $student) {
-				$studentId = $student['id'];
-
-				// Step 2: Get results for this student, exam, and year
-				$results = $resultModel
-					->where('student_id', $studentId)
-					->where('exam', $exam)
-					->where('year', $year) 
-					->findAll();
-
-				// Step 3: Build subject-wise results array
-				$subjectResults = [];
-				foreach ($results as $res) {
-					$subjectName = $subjectModel
-						->select('subject')
-						->where('id', $res['subject_id'])
-						->first()['subject'] ?? 'Unknown';
-
-					$subjectResults[] = [
-						'subject_id' => $res['subject_id'],
-						'subject'   => $subjectName,
-						'written'   => $res['written'] ?? 0,
-						'mcq'       => $res['mcq'] ?? 0,
-						'practical' => $res['practical'] ?? 0,
-						'total'     => $res['total'] ?? 0,
-					];
-				}
-
-				usort($subjectResults, function ($a, $b) {
-						return $a['subject_id'] <=> $b['subject_id'];
-						});
-
-				// Step 4: Append student data with their results
-				$finalData[] = [
-					'student_id' => $student['id'],
-					'name'       => $student['student_name'] ?? 'Unknown',
-					'roll'       => $student['roll'],
-					'exam'       => $exam,
-					'year'       => $year,
-					'results'    => $subjectResults,
+				$subjectResults[] = [
+					'subject_id' => $res['subject_id'],
+					'subject'   => $subjectName,
+					'written'   => $res['written'] ?? 0,
+					'mcq'       => $res['mcq'] ?? 0,
+					'practical' => $res['practical'] ?? 0,
+					'total'     => $res['total'] ?? 0,
 				];
 			}
-			$this->data['finalData'] = $finalData;
-			$this->data['class']     = $class;
-			$this->data['exam']      = $exam;
-			$this->data['year']      = $year;
-//echo '<pre>';
-//print_r($finalData);
-//echo '</pre>';
-			return view('dashboard/mark', $this->data);
+
+			usort($subjectResults, function ($a, $b) {
+				return $a['subject_id'] <=> $b['subject_id'];
+			});
+
+			// Step 4: Append student data with their results
+			$finalData[] = [
+				'student_id' => $student['id'],
+				'name'       => $student['student_name'] ?? 'Unknown',
+				'roll'       => $student['roll'],
+				'exam'       => $exam,
+				'year'       => $year,
+				'results'    => $subjectResults,
+			];
+		}
+		$this->data['finalData'] = $finalData;
+		$this->data['class']     = $class;
+		$this->data['exam']      = $exam;
+		$this->data['year']      = $year;
+
+		return view('dashboard/mark', $this->data);
 	}
 
 	public function selectMarksheetForm()
@@ -869,21 +866,21 @@ class Dashboard extends Controller
 			['section' => 'general'],
 			['section' => 'vocational'],
 		];
-			$exams = $resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
-			$years = $resultModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
+		$exams = $resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
+		$years = $resultModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
 
-			$this->data['title']         = 'Select Marksheet Info';
-			$this->data['activeSection'] = 'result';
-			$this->data['navbarItems'] = [
-				['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
-				['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
-			];
-			$this->data['classes']       = $classes;
-			$this->data['sections']      = $sections;
-			$this->data['exams']         = $exams;
-			$this->data['years']         = $years;
+		$this->data['title']         = 'Select Marksheet Info';
+		$this->data['activeSection'] = 'result';
+		$this->data['navbarItems'] = [
+			['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
+			['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
+		];
+		$this->data['classes']       = $classes;
+		$this->data['sections']      = $sections;
+		$this->data['exams']         = $exams;
+		$this->data['years']         = $years;
 
-			return view('dashboard/select_marksheet_info', $this->data);
+		return view('dashboard/select_marksheet_info', $this->data);
 	}
 
 	public function showMarksheet()
@@ -922,9 +919,9 @@ class Dashboard extends Controller
 			['label' => 'Add Student', 'url' => base_url('student_create')],
 			['label' => 'View Student', 'url' => current_url()],
 		];
-			$this->data['student'] = $student;
+		$this->data['student'] = $student;
 
-			return view('dashboard/student_view', $this->data);
+		return view('dashboard/student_view', $this->data);
 	}
 
 	public function editStudent($id)
@@ -944,9 +941,9 @@ class Dashboard extends Controller
 			['label' => 'Add Student', 'url' => base_url('student_create')],
 			['label' => 'Edit Student', 'url' => current_url()],
 		];
-			$this->data['student'] = $student;
+		$this->data['student'] = $student;
 
-			return view('dashboard/student_edit', $this->data);
+		return view('dashboard/student_edit', $this->data);
 	}
 	public function updateStudent($id)
 	{
@@ -958,9 +955,21 @@ class Dashboard extends Controller
 		}
 
 		$data = $this->request->getPost([
-				'student_name', 'roll', 'class', 'section', 'esif', 'father_name',
-				'mother_name', 'dob', 'gender', 'phone', 'birth_registration_number',
-				'father_nid_number', 'mother_nid_number', 'religion', 'blood_group'
+			'student_name',
+			'roll',
+			'class',
+			'section',
+			'esif',
+			'father_name',
+			'mother_name',
+			'dob',
+			'gender',
+			'phone',
+			'birth_registration_number',
+			'father_nid_number',
+			'mother_nid_number',
+			'religion',
+			'blood_group'
 		]);
 
 		$this->studentModel->update($id, $data);
@@ -986,7 +995,7 @@ class Dashboard extends Controller
 			'student' => $student
 		];
 
-			return view('dashboard/edit_photo', $this->data);
+		return view('dashboard/edit_photo', $this->data);
 	}
 
 	public function updateStudentPhoto($id)
@@ -1011,7 +1020,7 @@ class Dashboard extends Controller
 
 			// Update DB
 			$this->studentModel->update($id, [
-					'student_pic' => 'uploads/students/' . $newName,
+				'student_pic' => 'uploads/students/' . $newName,
 			]);
 
 			return redirect()->to('admin/students/view/' . $id)->with('message', 'Photo updated successfully.');

@@ -1,16 +1,21 @@
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
-
+<style>
+  th, td {
+  vertical-align: middle !important;
+  text-align: center !important;
+}
+</style>
 <?php
 // Get unique subjects
 $subjectList = [];
 
 foreach ($finalData as $student) {
-    foreach ($student['results'] as $res) {
-        if (!in_array($res['subject'], $subjectList)) {
-            $subjectList[] = $res['subject'];
-        }
+  foreach ($student['results'] as $res) {
+    if (!in_array($res['subject'], $subjectList)) {
+      $subjectList[] = $res['subject'];
     }
+  }
 }
 ?>
 
@@ -27,29 +32,32 @@ foreach ($finalData as $student) {
         <div class="alert alert-warning">No result data found.</div>
       <?php else: ?>
 
-      <div class="table-responsive">
-        <table class="table table-bordered table-striped table-hover">
-          <thead class="table-primary text-center align-middle">
-            <tr>
-              <th rowspan="2">Roll</th>
-              <th rowspan="2">Name</th>
-              <?php foreach ($subjectList as $subject): ?>
-                <th colspan="4"><?= esc($subject) ?></th>
-              <?php endforeach; ?>
-              <th rowspan="2">Total</th>
-            </tr>
-            <tr>
-              <?php foreach ($subjectList as $subject): ?>
-                <th>W</th><th>MCQ</th><th>Prac</th><th>Total</th>
-              <?php endforeach; ?>
-            </tr>
-          </thead>
-          <tbody>
-            <?php foreach ($finalData as $student): ?>
-              <?php
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped table-hover">
+            <thead class="table-primary text-center align-middle">
+              <tr>
+                <th rowspan="2">Roll</th>
+                <th rowspan="2">Name</th>
+                <?php foreach ($subjectList as $subject): ?>
+                  <th colspan="4"><?= esc($subject) ?></th>
+                <?php endforeach; ?>
+                <th rowspan="2">Total</th>
+              </tr>
+              <tr>
+                <?php foreach ($subjectList as $subject): ?>
+                  <th>W</th>
+                  <th>MCQ</th>
+                  <th>Prac</th>
+                  <th>Total</th>
+                <?php endforeach; ?>
+              </tr>
+            </thead>
+            <tbody>
+              <?php foreach ($finalData as $student): ?>
+                <?php
                 $subjectMap = [];
                 foreach ($student['results'] as $res) {
-                    $subjectMap[$res['subject']] = $res;
+                  $subjectMap[$res['subject']] = $res;
                 }
 
                 $studentTotal = 0;
@@ -69,13 +77,13 @@ foreach ($finalData as $student) {
                 if ($banglaFail) $failCount++;
                 if ($englishFail) $failCount++;
                 if ($ictFail) $failCount++;
-              ?>
-              <tr class="text-center">
-                <td><strong><?= esc($student['roll']) ?></strong></td>
-                <td class="text-start"><?= esc($student['name']) ?></td>
+                ?>
+                <tr class="text-center">
+                  <td><strong><?= esc($student['roll']) ?></strong></td>
+                  <td class="text-start"><?= esc($student['name']) ?></td>
 
-                <?php foreach ($subjectList as $subject): ?>
-                  <?php
+                  <?php foreach ($subjectList as $subject): ?>
+                    <?php
                     $res = $subjectMap[$subject] ?? null;
 
                     $written = $res['written'] ?? '';
@@ -86,43 +94,40 @@ foreach ($finalData as $student) {
                     if ($total !== '') $studentTotal += $total;
 
                     // Determine red class
-$markClass = '';
+                    $markClass = '';
 
-if ($subject === 'ICT' && $ictFail) {
-    $markClass = 'text-danger fw-bold';
-}
-elseif (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
-    if ($banglaFail) {
-        $markClass = 'text-danger fw-bold';
-    }
-}
-elseif (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
-    if ($englishFail) {
-        $markClass = 'text-danger fw-bold';
-    }
-}
-elseif (
-    !in_array($subject, ['ICT', 'Bangla 1st Paper', 'Bangla 2nd Paper', 'English 1st Paper', 'English 2nd Paper']) &&
-    is_numeric($total) && $total < 33
-) {
-    $markClass = 'text-danger fw-bold';
-    $failCount++;  // Count fail for standard subjects only
-}
-                  ?>
-                  <td><?= $written ?></td>
-                  <td><?= $mcq ?></td>
-                  <td><?= $practical ?></td>
-                  <td class="<?= $markClass ?>"><?= $total ?></td>
-                <?php endforeach; ?>
+                    if ($subject === 'ICT' && $ictFail) {
+                      $markClass = 'text-danger fw-bold';
+                    } elseif (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
+                      if ($banglaFail) {
+                        $markClass = 'text-danger fw-bold';
+                      }
+                    } elseif (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
+                      if ($englishFail) {
+                        $markClass = 'text-danger fw-bold';
+                      }
+                    } elseif (
+                      !in_array($subject, ['ICT', 'Bangla 1st Paper', 'Bangla 2nd Paper', 'English 1st Paper', 'English 2nd Paper']) &&
+                      is_numeric($total) && $total < 33
+                    ) {
+                      $markClass = 'text-danger fw-bold';
+                      $failCount++;  // Count fail for standard subjects only
+                    }
+                    ?>
+                    <td><?= $written ?></td>
+                    <td><?= $mcq ?></td>
+                    <td><?= $practical ?></td>
+                    <td class="<?= $markClass ?>"><?= $total ?></td>
+                  <?php endforeach; ?>
 
-                <td class="fw-bold <?= $failCount > 0 ? 'text-danger' : 'text-success' ?>">
-                  <?= $studentTotal ?><?= $failCount > 0 ? ' <br>F-' . $failCount : '' ?>
-                </td>
-              </tr>
-            <?php endforeach; ?>
-          </tbody>
-        </table>
-      </div>
+                  <td class="fw-bold <?= $failCount > 0 ? 'text-danger' : 'text-success' ?>">
+                    <?= $studentTotal ?><?= $failCount > 0 ? ' <br>F-' . $failCount : '' ?>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            </tbody>
+          </table>
+        </div>
 
       <?php endif; ?>
 

@@ -30,7 +30,7 @@ $routes->get('/subjects', 'Home::subjects');
 $routes->get('/course-details/(:num)', 'Home::courseDetails/$1');
 $routes->get('/activity-details/(:num)', 'Home::activityDetails/$1');
 
-$routes->group('admin', function($routes) {
+$routes->group('admin', function ($routes) {
     $routes->get('student/create', 'Dashboard::createStudentForm');
     $routes->post('students/save', 'Dashboard::saveStudent');
 });
