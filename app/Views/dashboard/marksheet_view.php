@@ -359,18 +359,6 @@ td strong {
     <th></th>
     <th></th>
     <th></th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-  <tr>
-    <th></th>
-    <th></th>
-    <th></th>
-    <th></th>
-    <th></th>
-    <th></th>
-    <th></th>
     <th class="text-end">GPA:</th>
     <th colspan="2">4.50</th>
   </tr>
