@@ -86,25 +86,28 @@ foreach ($finalData as $student) {
                     if ($total !== '') $studentTotal += $total;
 
                     // Determine red class
-                    $markClass = '';
-		    if ($subject === 'ICT' && $ictFail) {
-echo "<pre>**$subject**</pre>";
-			    $markClass = 'text-danger fw-bold';
-		    }
-                    elseif (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
-                        if ($banglaFail) {
-                            $markClass = 'text-danger fw-bold';
-                        }
-                    }
-                    elseif (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
-                        if ($englishFail) {
-                            $markClass = 'text-danger fw-bold';
-                        }
-                    }
-                    elseif ($total !== '' && $total < 33) {
-                        $markClass = 'text-danger fw-bold';
-                        $failCount++;  // Count fail for other subjects here
-                    }
+$markClass = '';
+
+if ($subject === 'ICT' && $ictFail) {
+    $markClass = 'text-danger fw-bold';
+}
+elseif (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
+    if ($banglaFail) {
+        $markClass = 'text-danger fw-bold';
+    }
+}
+elseif (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
+    if ($englishFail) {
+        $markClass = 'text-danger fw-bold';
+    }
+}
+elseif (
+    !in_array($subject, ['ICT', 'Bangla 1st Paper', 'Bangla 2nd Paper', 'English 1st Paper', 'English 2nd Paper']) &&
+    is_numeric($total) && $total < 33
+) {
+    $markClass = 'text-danger fw-bold';
+    $failCount++;  // Count fail for standard subjects only
+}
                   ?>
                   <td><?= $written ?></td>
                   <td><?= $mcq ?></td>
