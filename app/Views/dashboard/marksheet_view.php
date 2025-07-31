@@ -350,6 +350,31 @@ td strong {
       <td>5.00</td>
     </tr>
   </tbody>
+<tfoot>
+  <tr>
+    <th>Total Marks</th>
+    <th></th>
+    <th>155</th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th class="text-end">GPA:</th>
+    <th colspan="2">4.50</th>
+  </tr>
+</tfoot>
 </table><!-- Grade Chart + QR + Signature -->
   <div class="row qr-signature">
     <div class="col-md-6">
