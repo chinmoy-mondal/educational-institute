@@ -369,11 +369,10 @@ td strong {
       </table>
     </div>
 
-    <div class="col-md-3 qr-code text-center">
-      <img src="<?= base_url('public/qr-code.png') ?>" alt="QR Code">
-      <p style="font-size: 12px;">Scan to Verify</p>
-    </div>
-
+<div class="col-md-3 qr-code text-center">
+  <img src="https://chart.googleapis.com/chart?cht=qr&chs=120x120&chl=<?= urlencode('id-120') ?>" alt="QR Code">
+  <p style="font-size: 12px;">Scan to Verify</p>
+</div>
     <div class="col-md-3 signature text-right">
       <br><br>
       ____________________<br>
