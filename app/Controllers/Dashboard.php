@@ -855,7 +855,7 @@ class Dashboard extends Controller
 		$this->data['year']      = $year;
 echo '<pre>';
 print_r($finalData);
-echo '</pre>'
+echo '</pre>';
 		//return view('dashboard/mark', $this->data);
 	}
 	private function getTabulationData(): array
