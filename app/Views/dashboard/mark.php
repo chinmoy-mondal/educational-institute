@@ -6,12 +6,15 @@
     vertical-align: middle !important;
     text-align: center !important;
   }
+  .text-danger {
+    color: red;
+    font-weight: bold;
+  }
 </style>
 
 <?php
 function isSubjectFailed(string $class, string $subject, array $allSubjects, string $group = 'general'): bool
 {
-    // Skip fail-check if the subject doesn't exist (i.e., not taken)
     if (!isset($allSubjects[$subject])) {
         return false;
     }
@@ -73,7 +76,7 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
     return false;
 }
 
-// Create a full list of all subjects across students
+// Create subject list
 $subjectList = [];
 foreach ($finalData as $student) {
     foreach ($student['results'] as $res) {
@@ -122,25 +125,10 @@ foreach ($finalData as $student) {
                     $subjectMap[$res['subject']] = $res;
                   }
 
-                  // Bangla combined
-                  $b1 = $subjectMap['Bangla 1st Paper'] ?? ['written'=>0, 'mcq'=>0];
-                  $b2 = $subjectMap['Bangla 2nd Paper'] ?? ['written'=>0, 'mcq'=>0];
-                  $combinedBanglaWritten = $b1['written'] + $b2['written'];
-                  $combinedBanglaMcq = $b1['mcq'] + $b2['mcq'];
-                  $banglaWrittenFail = $combinedBanglaWritten < 46;
-                  $banglaMcqFail = $combinedBanglaMcq < 20;
-                  $banglaFail = $banglaWrittenFail || $banglaMcqFail;
-
-                  // Physics combined fail check
-                  $physics = $subjectMap['Physics'] ?? ['written'=>0, 'mcq'=>0, 'practical'=>0];
-                  $physicsFail = false;
-                  if (in_array($class, ['9', '10'])) {
-                    $physicsFail = ($physics['written'] < 17) || ($physics['mcq'] < 8) || ($physics['practical'] < 8);
-                  }
-
                   $studentTotal = 0;
                   $failCount = 0;
-                  $countedSubjects = []; // track grouped fail counted
+                  $banglaFailCounted = false;
+                  $englishFailCounted = false;
                 ?>
                 <tr class="text-center">
                   <td><strong><?= esc($student['roll']) ?></strong></td>
@@ -159,41 +147,57 @@ foreach ($finalData as $student) {
 
                         $studentTotal += is_numeric($total) ? $total : 0;
 
-                        // Get fail status per subject from function
+                        // Fail check
                         $isFail = isSubjectFailed($class, $subject, $subjectMap, $student['group'] ?? 'general');
 
-                        // Count fail once per group
+                        // Custom fail count logic for Bangla 1st & 2nd Paper combined
                         if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
-                          if ($banglaFail && !in_array('Bangla', $countedSubjects)) {
-                            $failCount++;
-                            $countedSubjects[] = 'Bangla';
-                          }
-                          $isFail = $banglaFail;
+                            if (!$banglaFailCounted && $isFail) {
+                                $failCount++;
+                                $banglaFailCounted = true;
+                            }
                         }
-                        else if ($subject === 'Physics') {
-                          if ($physicsFail && !in_array('Physics', $countedSubjects)) {
-                            $failCount++;
-                            $countedSubjects[] = 'Physics';
-                          }
-                          $isFail = $physicsFail;
+                        // Custom fail count logic for English 1st & 2nd Paper combined
+                        else if (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
+                            if (!$englishFailCounted && $isFail) {
+                                $failCount++;
+                                $englishFailCounted = true;
+                            }
                         }
+                        // Other subjects: count fail once per subject
                         else {
-                          if ($isFail) {
-                            $failCount++;
-                          }
+                            if ($isFail) {
+                                $failCount++;
+                            }
                         }
 
-                        // Coloring marks individually
-                        $physicsWrittenClass = ($subject === 'Physics' && in_array($class, ['9','10']) && $written < 17) ? 'text-danger fw-bold' : '';
-                        $physicsMcqClass = ($subject === 'Physics' && in_array($class, ['9','10']) && $mcq < 8) ? 'text-danger fw-bold' : '';
-                        $physicsPracClass = ($subject === 'Physics' && in_array($class, ['9','10']) && $practical < 8) ? 'text-danger fw-bold' : '';
+                        // Highlight classes for parts:
+                        $writtenClass = '';
+                        $mcqClass = '';
+                        $practicalClass = '';
 
-                        $banglaWrittenClass = (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper']) && $banglaWrittenFail) ? 'text-danger fw-bold' : '';
-                        $banglaMcqClass = (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper']) && $banglaMcqFail) ? 'text-danger fw-bold' : '';
-
-                        $writtenClass = $physicsWrittenClass ?: $banglaWrittenClass;
-                        $mcqClass = $physicsMcqClass ?: $banglaMcqClass;
-                        $practicalClass = $physicsPracClass;
+                        // Mark individual parts red if fail on that part
+                        if ($subject === 'ICT') {
+                          if (($written + $mcq + $practical) < 17 && in_array($class, ['6','7','8'])) {
+                            $writtenClass = $mcqClass = $practicalClass = 'text-danger fw-bold';
+                          }
+                          if (($written + $mcq) < 8 && $practical < 9 && in_array($class, ['9','10']) && ($student['group'] ?? 'general') !== 'vocational') {
+                            $writtenClass = $mcqClass = $practicalClass = 'text-danger fw-bold';
+                          }
+                        } elseif (in_array($subject, ['Physics', 'Chemistry', 'Higher Math', 'Biology'])) {
+                          if ($written < 17) $writtenClass = 'text-danger fw-bold';
+                          if ($mcq < 8) $mcqClass = 'text-danger fw-bold';
+                          if ($practical < 8) $practicalClass = 'text-danger fw-bold';
+                        } elseif (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
+                          // No individual mark highlights for combined subjects
+                          $writtenClass = $mcqClass = $practicalClass = '';
+                        } elseif (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
+                          // No individual mark highlights for combined English subjects
+                          $writtenClass = $mcqClass = $practicalClass = '';
+                        } else {
+                          if ($written < 23) $writtenClass = 'text-danger fw-bold';
+                          if ($mcq < 10) $mcqClass = 'text-danger fw-bold';
+                        }
                       ?>
                       <td class="<?= $writtenClass ?>"><?= $written ?></td>
                       <td class="<?= $mcqClass ?>"><?= $mcq ?></td>
