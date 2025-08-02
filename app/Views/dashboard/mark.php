@@ -5,26 +5,27 @@
   th, td {
     vertical-align: middle !important;
     text-align: center !important;
+    font-size: 10px;
   }
+
   .text-danger {
     color: red;
     font-weight: bold;
   }
 
-  /* PRINT STYLES */
   @media print {
     @page {
-      size: legal landscape;
+      size: Legal landscape;
       margin: 1cm;
     }
 
     body {
-      font-size: 10px;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
+      font-size: 10px;
     }
 
-    .btn, .no-print, nav, script {
+    .no-print, .btn, script {
       display: none !important;
     }
 
@@ -37,15 +38,6 @@
     .card-header {
       background: #333 !important;
       color: white !important;
-    }
-
-    .text-danger {
-      color: red !important;
-      font-weight: bold;
-    }
-
-    .text-success {
-      color: green !important;
     }
 
     table {
@@ -114,7 +106,7 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
     return false;
 }
 
-// ✅ Generate subject list from $finalData
+// Build subject list
 $subjectList = [];
 if (isset($finalData) && is_array($finalData)) {
     foreach ($finalData as $student) {
@@ -249,33 +241,27 @@ function downloadCSV() {
 
   for (let i = 2; i < firstHeaderRow.cells.length - 1; i++) {
     const subject = firstHeaderRow.cells[i].innerText.trim();
-    headers.push(subject + " W");
-    headers.push(subject + " MCQ");
-    headers.push(subject + " Prac");
-    headers.push(subject + " Total");
+    headers.push(subject + " W", subject + " MCQ", subject + " Prac", subject + " Total");
   }
-  headers.push("Total");
 
+  headers.push("Total");
   let csv = headers.map(h => `"${h.replace(/"/g, '""')}"`).join(",") + "\n";
 
-  const tbodyRows = table.querySelectorAll("tbody tr");
-  tbodyRows.forEach(row => {
+  const rows = table.querySelectorAll("tbody tr");
+  rows.forEach(row => {
     const cells = row.querySelectorAll("td");
-    const rowData = [];
-    rowData.push(cells[0].innerText.trim());
-    rowData.push(cells[1].innerText.trim());
+    const data = [cells[0].innerText.trim(), cells[1].innerText.trim()];
 
     const subjectCount = (cells.length - 3) / 4;
     for (let i = 0; i < subjectCount; i++) {
-      const baseIndex = 2 + i * 4;
+      const base = 2 + i * 4;
       for (let j = 0; j < 4; j++) {
-        rowData.push(cells[baseIndex + j].innerText.trim());
+        data.push(cells[base + j].innerText.trim());
       }
     }
 
-    rowData.push(cells[cells.length - 1].innerText.trim());
-
-    csv += rowData.map(d => `"${d.replace(/"/g, '""')}"`).join(",") + "\n";
+    data.push(cells[cells.length - 1].innerText.trim());
+    csv += data.map(d => `"${d.replace(/"/g, '""')}"`).join(",") + "\n";
   });
 
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
