@@ -56,6 +56,7 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
     $mcq = is_numeric($subjectData['mcq']) ? $subjectData['mcq'] : 0;
     $practical = is_numeric($subjectData['practical']) ? $subjectData['practical'] : 0;
 
+    // Classes 6-8 logic
     if (in_array($class, ['6', '7', '8'])) {
         if ($subject === 'ICT') return ($written + $mcq + $practical) < 17;
 
@@ -74,14 +75,17 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
         return ($written + $mcq + $practical) < 33;
     }
 
+    // Classes 9-10
     if (in_array($class, ['9', '10'])) {
         if ($group === 'vocational') {
-            if (in_array($subject, ['Physics-1', 'Chemistry-1','Physics-2', 'Chemistry-2'])) {
+            // Vocational group thresholds
+            if (in_array($subject, ['Physics-1', 'Chemistry-1', 'Physics-2', 'Chemistry-2'])) {
                 return $written < 10;
             }
             return $written < 20;
         }
 
+        // General group thresholds
         if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
             $b1 = $allSubjects['Bangla 1st Paper'] ?? ['written'=>0, 'mcq'=>0];
             $b2 = $allSubjects['Bangla 2nd Paper'] ?? ['written'=>0, 'mcq'=>0];
@@ -106,7 +110,7 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
     return false;
 }
 
-// Build subject list
+// Build subject list from data
 $subjectList = [];
 if (isset($finalData) && is_array($finalData)) {
     foreach ($finalData as $student) {
@@ -165,6 +169,7 @@ if (isset($finalData) && is_array($finalData)) {
                   $failCount = 0;
                   $banglaFailCounted = false;
                   $englishFailCounted = false;
+                  $group = $student['group'] ?? 'general';
                 ?>
                 <tr class="text-center">
                   <td><strong><?= esc($student['roll']) ?></strong></td>
@@ -183,35 +188,47 @@ if (isset($finalData) && is_array($finalData)) {
 
                         $studentTotal += is_numeric($total) ? $total : 0;
 
-                        $isFail = isSubjectFailed($class, $subject, $subjectMap, $student['group'] ?? 'general');
+                        $isFail = isSubjectFailed($class, $subject, $subjectMap, $group);
 
-                        if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper']) && !$banglaFailCounted && $isFail) {
-                          $failCount++;
-                          $banglaFailCounted = true;
-                        } elseif (in_array($subject, ['English 1st Paper', 'English 2nd Paper']) && !$englishFailCounted && $isFail) {
-                          $failCount++;
-                          $englishFailCounted = true;
-                        } elseif (!in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper', 'English 1st Paper', 'English 2nd Paper']) && $isFail) {
-                          $failCount++;
+                        if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
+                          if (!$banglaFailCounted && $isFail) {
+                              $failCount++;
+                              $banglaFailCounted = true;
+                          }
+                        } elseif (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
+                          if (!$englishFailCounted && $isFail) {
+                              $failCount++;
+                              $englishFailCounted = true;
+                          }
+                        } else {
+                          if ($isFail) $failCount++;
                         }
 
                         $writtenClass = $mcqClass = $practicalClass = '';
 
-                        if ($subject === 'ICT' && in_array($class, ['6','7','8']) && ($written + $mcq + $practical) < 17) {
-                          $writtenClass = $mcqClass = $practicalClass = 'text-danger fw-bold';
-                        } elseif ($subject === 'ICT' && in_array($class, ['9','10']) && ($written + $mcq) < 8 && $practical < 9) {
-                          $writtenClass = $mcqClass = $practicalClass = 'text-danger fw-bold';
-                        } elseif (in_array($subject, ['Physics', 'Chemistry', 'Higher Math', 'Biology'])) {
-                          if ($written < 17) $writtenClass = 'text-danger fw-bold';
-                          if ($mcq < 8) $mcqClass = 'text-danger fw-bold';
-                          if ($practical < 8) $practicalClass = 'text-danger fw-bold';
-                        } elseif (!in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper', 'English 1st Paper', 'English 2nd Paper'])) {
-                          if ($written < 23) $writtenClass = 'text-danger fw-bold';
-                          if ($mcq < 10) $mcqClass = 'text-danger fw-bold';
-                        }elseif (!in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper', 'English 1st Paper', 'English 2nd Paper'])) {
-    if ($written < 23) $writtenClass = 'text-danger fw-bold';
-    if ($mcq < 10) $mcqClass = 'text-danger fw-bold';
-}
+                        if ($group === 'vocational') {
+                            // Vocational fail styling
+                            if (in_array($subject, ['Physics-1', 'Chemistry-1', 'Physics-2', 'Chemistry-2'])) {
+                                if ($written < 10) $writtenClass = 'text-danger fw-bold';
+                            } else {
+                                if ($written < 20) $writtenClass = 'text-danger fw-bold';
+                            }
+                            // MCQ and Practical classes can be added if needed
+                        } else {
+                            // General or classes 6-8 styling
+                            if ($subject === 'ICT' && in_array($class, ['6','7','8']) && ($written + $mcq + $practical) < 17) {
+                              $writtenClass = $mcqClass = $practicalClass = 'text-danger fw-bold';
+                            } elseif ($subject === 'ICT' && in_array($class, ['9','10']) && ($written + $mcq) < 8 && $practical < 9) {
+                              $writtenClass = $mcqClass = $practicalClass = 'text-danger fw-bold';
+                            } elseif (in_array($subject, ['Physics', 'Chemistry', 'Higher Math', 'Biology'])) {
+                              if ($written < 17) $writtenClass = 'text-danger fw-bold';
+                              if ($mcq < 8) $mcqClass = 'text-danger fw-bold';
+                              if ($practical < 8) $practicalClass = 'text-danger fw-bold';
+                            } elseif (!in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper', 'English 1st Paper', 'English 2nd Paper'])) {
+                              if ($written < 23) $writtenClass = 'text-danger fw-bold';
+                              if ($mcq < 10) $mcqClass = 'text-danger fw-bold';
+                            }
+                        }
                       ?>
                       <td class="<?= $writtenClass ?>"><?= $written ?></td>
                       <td class="<?= $mcqClass ?>"><?= $mcq ?></td>
