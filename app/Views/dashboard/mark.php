@@ -11,7 +11,6 @@
 <?php
 function isSubjectFailed(string $class, string $subject, array $allSubjects, string $group = 'general'): bool
 {
-    // Skip fail-check if the subject doesn't exist (i.e., not taken)
     if (!isset($allSubjects[$subject])) {
         return false;
     }
@@ -122,6 +121,14 @@ foreach ($finalData as $student) {
                     $subjectMap[$res['subject']] = $res;
                   }
 
+                  // For combined Bangla written and MCQ totals
+                  $b1 = $subjectMap['Bangla 1st Paper'] ?? ['written'=>0, 'mcq'=>0];
+                  $b2 = $subjectMap['Bangla 2nd Paper'] ?? ['written'=>0, 'mcq'=>0];
+                  $combinedBanglaWritten = $b1['written'] + $b2['written'];
+                  $combinedBanglaMcq = $b1['mcq'] + $b2['mcq'];
+                  $banglaWrittenFail = $combinedBanglaWritten < 46;
+                  $banglaMcqFail = $combinedBanglaMcq < 20;
+
                   $studentTotal = 0;
                   $failCount = 0;
                 ?>
@@ -143,21 +150,26 @@ foreach ($finalData as $student) {
                         $studentTotal += is_numeric($total) ? $total : 0;
                         $isFail = isSubjectFailed($class, $subject, $subjectMap, $student['group'] ?? 'general');
                         if ($isFail) $failCount++;
-?>
 
-<td class="<?= ($subject === 'Physics' && $class >= 9 && $written < 17) ? 'text-danger fw-bold' : '' ?>">
-  <?= $written ?>
-</td>
-<td class="<?= ($subject === 'Physics' && $class >= 9 && $mcq < 8) ? 'text-danger fw-bold' : '' ?>">
-  <?= $mcq ?>
-</td>
-<td class="<?= ($subject === 'Physics' && $class >= 9 && $practical < 8) ? 'text-danger fw-bold' : '' ?>">
-  <?= $practical ?>
-</td>
-<td class="<?= $isFail ? 'text-danger fw-bold' : '' ?>">
-  <?= $total ?>
-</td>
-        
+                        // Determine red classes for Physics subject
+                        $physicsWrittenClass = ($subject === 'Physics' && $class >= 9 && $written < 17) ? 'text-danger fw-bold' : '';
+                        $physicsMcqClass = ($subject === 'Physics' && $class >= 9 && $mcq < 8) ? 'text-danger fw-bold' : '';
+                        $physicsPracClass = ($subject === 'Physics' && $class >= 9 && $practical < 8) ? 'text-danger fw-bold' : '';
+
+                        // Determine red classes for Bangla 1st and 2nd Paper combined
+                        $banglaWrittenClass = (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper']) && $banglaWrittenFail) ? 'text-danger fw-bold' : '';
+                        $banglaMcqClass = (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper']) && $banglaMcqFail) ? 'text-danger fw-bold' : '';
+
+                        // For others, fallback to fail-based coloring
+                        $writtenClass = $physicsWrittenClass ?: $banglaWrittenClass;
+                        $mcqClass = $physicsMcqClass ?: $banglaMcqClass;
+                        $practicalClass = $physicsPracClass; // No combined logic here, just physics specific
+
+                      ?>
+                      <td class="<?= $writtenClass ?>"><?= $written ?></td>
+                      <td class="<?= $mcqClass ?>"><?= $mcq ?></td>
+                      <td class="<?= $practicalClass ?>"><?= $practical ?></td>
+                      <td class="<?= $isFail ? 'text-danger fw-bold' : '' ?>"><?= $total ?></td>
                     <?php endif; ?>
                   <?php endforeach; ?>
 
