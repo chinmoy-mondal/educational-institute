@@ -36,7 +36,7 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
             return ($e1['written'] + $e2['written']) < 49;
         }
 
-        return $written < 23 || $mcq < 10;
+        return ($written + $mcq + $practical) < 33;
     }
 
     if (in_array($class, ['9', '10'])) {
