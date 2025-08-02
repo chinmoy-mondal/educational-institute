@@ -15,9 +15,7 @@
 <?php
 function isSubjectFailed(string $class, string $subject, array $allSubjects, string $group = 'general'): bool
 {
-    if (!isset($allSubjects[$subject])) {
-        return false;
-    }
+    if (!isset($allSubjects[$subject])) return false;
 
     $subjectData = $allSubjects[$subject];
     $written = is_numeric($subjectData['written']) ? $subjectData['written'] : 0;
@@ -62,9 +60,7 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
             return ($e1['written'] + $e2['written']) < 66;
         }
 
-        if ($subject === 'ICT') {
-            return ($written + $mcq) < 8 || $practical < 9;
-        }
+        if ($subject === 'ICT') return ($written + $mcq) < 8 || $practical < 9;
 
         if (in_array($subject, ['Physics', 'Chemistry', 'Higher Math', 'Biology'])) {
             return $written < 17 || $mcq < 8 || $practical < 8;
@@ -97,8 +93,9 @@ foreach ($finalData as $student) {
       <?php if (empty($finalData)): ?>
         <div class="alert alert-warning">No result data found.</div>
       <?php else: ?>
+        <button class="btn btn-success mb-3" onclick="downloadCSV()">Download CSV</button>
         <div class="table-responsive">
-          <table class="table table-bordered table-striped table-hover">
+          <table class="table table-bordered table-striped table-hover" id="tabulationTable">
             <thead class="table-primary text-center align-middle">
               <tr>
                 <th rowspan="2">Roll</th>
@@ -110,10 +107,7 @@ foreach ($finalData as $student) {
               </tr>
               <tr>
                 <?php foreach ($subjectList as $subject): ?>
-                  <th>W</th>
-                  <th>MCQ</th>
-                  <th>Prac</th>
-                  <th>Total</th>
+                  <th>W</th><th>MCQ</th><th>Prac</th><th>Total</th>
                 <?php endforeach; ?>
               </tr>
             </thead>
@@ -147,54 +141,33 @@ foreach ($finalData as $student) {
 
                         $studentTotal += is_numeric($total) ? $total : 0;
 
-                        // Fail check
                         $isFail = isSubjectFailed($class, $subject, $subjectMap, $student['group'] ?? 'general');
 
-                        // Custom fail count logic for Bangla 1st & 2nd Paper combined
                         if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
-                            if (!$banglaFailCounted && $isFail) {
-                                $failCount++;
-                                $banglaFailCounted = true;
-                            }
-                        }
-                        // Custom fail count logic for English 1st & 2nd Paper combined
-                        else if (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
-                            if (!$englishFailCounted && $isFail) {
-                                $failCount++;
-                                $englishFailCounted = true;
-                            }
-                        }
-                        // Other subjects: count fail once per subject
-                        else {
-                            if ($isFail) {
-                                $failCount++;
-                            }
+                          if (!$banglaFailCounted && $isFail) {
+                              $failCount++;
+                              $banglaFailCounted = true;
+                          }
+                        } elseif (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
+                          if (!$englishFailCounted && $isFail) {
+                              $failCount++;
+                              $englishFailCounted = true;
+                          }
+                        } else {
+                          if ($isFail) $failCount++;
                         }
 
-                        // Highlight classes for parts:
-                        $writtenClass = '';
-                        $mcqClass = '';
-                        $practicalClass = '';
+                        $writtenClass = $mcqClass = $practicalClass = '';
 
-                        // Mark individual parts red if fail on that part
-                        if ($subject === 'ICT') {
-                          if (($written + $mcq + $practical) < 17 && in_array($class, ['6','7','8'])) {
-                            $writtenClass = $mcqClass = $practicalClass = 'text-danger fw-bold';
-                          }
-                          if (($written + $mcq) < 8 && $practical < 9 && in_array($class, ['9','10']) && ($student['group'] ?? 'general') !== 'vocational') {
-                            $writtenClass = $mcqClass = $practicalClass = 'text-danger fw-bold';
-                          }
+                        if ($subject === 'ICT' && in_array($class, ['6','7','8']) && ($written + $mcq + $practical) < 17) {
+                          $writtenClass = $mcqClass = $practicalClass = 'text-danger fw-bold';
+                        } elseif ($subject === 'ICT' && in_array($class, ['9','10']) && ($written + $mcq) < 8 && $practical < 9) {
+                          $writtenClass = $mcqClass = $practicalClass = 'text-danger fw-bold';
                         } elseif (in_array($subject, ['Physics', 'Chemistry', 'Higher Math', 'Biology'])) {
                           if ($written < 17) $writtenClass = 'text-danger fw-bold';
                           if ($mcq < 8) $mcqClass = 'text-danger fw-bold';
                           if ($practical < 8) $practicalClass = 'text-danger fw-bold';
-                        } elseif (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
-                          // No individual mark highlights for combined subjects
-                          $writtenClass = $mcqClass = $practicalClass = '';
-                        } elseif (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
-                          // No individual mark highlights for combined English subjects
-                          $writtenClass = $mcqClass = $practicalClass = '';
-                        } else {
+                        } elseif (!in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper', 'English 1st Paper', 'English 2nd Paper'])) {
                           if ($written < 23) $writtenClass = 'text-danger fw-bold';
                           if ($mcq < 10) $mcqClass = 'text-danger fw-bold';
                         }
@@ -218,6 +191,31 @@ foreach ($finalData as $student) {
     </div>
   </div>
 </div>
+
+<script>
+function downloadCSV() {
+  const table = document.querySelector("table");
+  if (!table) return;
+
+  let csv = "";
+  for (const row of table.rows) {
+    const cols = [];
+    for (const cell of row.cells) {
+      let text = cell.innerText.trim().replace(/"/g, '""');
+      cols.push(`"${text}"`);
+    }
+    csv += cols.join(",") + "\n";
+  }
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "tabulation_sheet.csv";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+</script>
 
 <?= $this->endSection() ?>
 
