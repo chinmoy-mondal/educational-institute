@@ -22,7 +22,7 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
     $practical = is_numeric($subjectData['practical']) ? $subjectData['practical'] : 0;
 
     if (in_array($class, ['6', '7', '8'])) {
-        if ($subject === 'ICT') return ($written + $mcq) < 17;
+        if ($subject === 'ICT') return ($written + $mcq + $practical) < 17;
 
         if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
             $b1 = $allSubjects['Bangla 1st Paper'] ?? ['written'=>0, 'mcq'=>0];
