@@ -200,7 +200,8 @@ function downloadCSV() {
   let csv = "";
   for (const row of table.rows) {
     const cols = [];
-    for (const cell of row.cells) {
+    for (let i = 0; i < row.cells.length; i++) {
+      let cell = row.cells[i];
       let text = cell.innerText.trim().replace(/"/g, '""');
       cols.push(`"${text}"`);
     }
