@@ -197,16 +197,58 @@ function downloadCSV() {
   const table = document.querySelector("table");
   if (!table) return;
 
-  let csv = "";
-  for (const row of table.rows) {
-    const cols = [];
-    for (let i = 0; i < row.cells.length; i++) {
-      let cell = row.cells[i];
-      let text = cell.innerText.trim().replace(/"/g, '""');
-      cols.push(`"${text}"`);
-    }
-    csv += cols.join(",") + "\n";
+  // Prepare flattened headers
+  const subjectList = [];
+  // Extract subjects from your PHP rendered HTML for CSV header
+  // We'll get subjects from the second header row (with W, MCQ, Prac, Total)
+  // But easier: build from first header row which has subject names in colspan
+  
+  // Assuming you have subjectList in JS, but since not, reconstruct from first header row:
+  const firstHeaderRow = table.querySelector("thead tr:first-child");
+  const headers = [];
+  // First two headers are Roll, Name
+  headers.push("Roll", "Name");
+
+  // Then, for each subject TH with colspan=4 (except last Total)
+  for (let i = 2; i < firstHeaderRow.cells.length - 1; i++) {
+    const subject = firstHeaderRow.cells[i].innerText.trim();
+    headers.push(subject + " W");
+    headers.push(subject + " MCQ");
+    headers.push(subject + " Prac");
+    headers.push(subject + " Total");
   }
+  // Finally add Total column header
+  headers.push("Total");
+
+  // Start CSV content with header row
+  let csv = headers.map(h => `"${h.replace(/"/g, '""')}"`).join(",") + "\n";
+
+  // Loop through body rows
+  const tbodyRows = table.querySelectorAll("tbody tr");
+  tbodyRows.forEach(row => {
+    const cells = row.querySelectorAll("td");
+    const rowData = [];
+    // Roll and Name (2 cols)
+    rowData.push(cells[0].innerText.trim());
+    rowData.push(cells[1].innerText.trim());
+
+    // After that, for each subject 4 columns (W, MCQ, Prac, Total)
+    // Number of subjects = (cells.length - 3) / 4
+    // last cell is total, so subjects columns = (cells.length - 3) / 4
+    const subjectCount = (cells.length - 3) / 4;
+
+    for (let i = 0; i < subjectCount; i++) {
+      const baseIndex = 2 + i * 4; // starting index of subject block
+      for (let j = 0; j < 4; j++) {
+        rowData.push(cells[baseIndex + j].innerText.trim());
+      }
+    }
+
+    // Finally total column (last cell)
+    rowData.push(cells[cells.length - 1].innerText.trim());
+
+    csv += rowData.map(d => `"${d.replace(/"/g, '""')}"`).join(",") + "\n";
+  });
 
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const link = document.createElement("a");
