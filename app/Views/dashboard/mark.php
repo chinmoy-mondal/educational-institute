@@ -208,7 +208,10 @@ if (isset($finalData) && is_array($finalData)) {
                         } elseif (!in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper', 'English 1st Paper', 'English 2nd Paper'])) {
                           if ($written < 23) $writtenClass = 'text-danger fw-bold';
                           if ($mcq < 10) $mcqClass = 'text-danger fw-bold';
-                        }
+                        }elseif (!in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper', 'English 1st Paper', 'English 2nd Paper'])) {
+    if ($written < 23) $writtenClass = 'text-danger fw-bold';
+    if ($mcq < 10) $mcqClass = 'text-danger fw-bold';
+}
                       ?>
                       <td class="<?= $writtenClass ?>"><?= $written ?></td>
                       <td class="<?= $mcqClass ?>"><?= $mcq ?></td>
