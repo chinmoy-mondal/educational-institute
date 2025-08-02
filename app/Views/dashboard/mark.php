@@ -143,11 +143,21 @@ foreach ($finalData as $student) {
                         $studentTotal += is_numeric($total) ? $total : 0;
                         $isFail = isSubjectFailed($class, $subject, $subjectMap, $student['group'] ?? 'general');
                         if ($isFail) $failCount++;
-                      ?>
-                      <td><?= $written ?></td>
-                      <td><?= $mcq ?></td>
-                      <td><?= $practical ?></td>
-                      <td class="<?= $isFail ? 'text-danger fw-bold' : '' ?>"><?= $total ?></td>
+?>
+
+<td class="<?= ($subject === 'Physics' && $class >= 9 && $written < 17) ? 'text-danger fw-bold' : '' ?>">
+  <?= $written ?>
+</td>
+<td class="<?= ($subject === 'Physics' && $class >= 9 && $mcq < 8) ? 'text-danger fw-bold' : '' ?>">
+  <?= $mcq ?>
+</td>
+<td class="<?= ($subject === 'Physics' && $class >= 9 && $practical < 8) ? 'text-danger fw-bold' : '' ?>">
+  <?= $practical ?>
+</td>
+<td class="<?= $isFail ? 'text-danger fw-bold' : '' ?>">
+  <?= $total ?>
+</td>
+        
                     <?php endif; ?>
                   <?php endforeach; ?>
 
