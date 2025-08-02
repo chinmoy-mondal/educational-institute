@@ -122,18 +122,25 @@ foreach ($finalData as $student) {
                     $subjectMap[$res['subject']] = $res;
                   }
 
-                  // Combined Bangla totals for fail counting
+                  // Bangla combined
                   $b1 = $subjectMap['Bangla 1st Paper'] ?? ['written'=>0, 'mcq'=>0];
                   $b2 = $subjectMap['Bangla 2nd Paper'] ?? ['written'=>0, 'mcq'=>0];
                   $combinedBanglaWritten = $b1['written'] + $b2['written'];
                   $combinedBanglaMcq = $b1['mcq'] + $b2['mcq'];
                   $banglaWrittenFail = $combinedBanglaWritten < 46;
                   $banglaMcqFail = $combinedBanglaMcq < 20;
-                  $banglaFail = $banglaWrittenFail || $banglaMcqFail;  // overall fail flag for Bangla
+                  $banglaFail = $banglaWrittenFail || $banglaMcqFail;
+
+                  // Physics combined fail check
+                  $physics = $subjectMap['Physics'] ?? ['written'=>0, 'mcq'=>0, 'practical'=>0];
+                  $physicsFail = false;
+                  if (in_array($class, ['9', '10'])) {
+                    $physicsFail = ($physics['written'] < 17) || ($physics['mcq'] < 8) || ($physics['practical'] < 8);
+                  }
 
                   $studentTotal = 0;
                   $failCount = 0;
-                  $countedBanglaFail = false;  // To count Bangla fail only once
+                  $countedSubjects = []; // track grouped fail counted
                 ?>
                 <tr class="text-center">
                   <td><strong><?= esc($student['roll']) ?></strong></td>
@@ -151,30 +158,39 @@ foreach ($finalData as $student) {
                         $total = $res['total'] ?? 0;
 
                         $studentTotal += is_numeric($total) ? $total : 0;
+
+                        // Get fail status per subject from function
                         $isFail = isSubjectFailed($class, $subject, $subjectMap, $student['group'] ?? 'general');
 
-                        // Count fail but count Bangla 1st & 2nd only once
+                        // Count fail once per group
                         if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
-                            if ($banglaFail && !$countedBanglaFail) {
-                                $failCount++;
-                                $countedBanglaFail = true;
-                            }
-                            // For coloring, use combined Bangla fail
-                            $isFail = $banglaFail;
-                        } else {
-                            if ($isFail) $failCount++;
+                          if ($banglaFail && !in_array('Bangla', $countedSubjects)) {
+                            $failCount++;
+                            $countedSubjects[] = 'Bangla';
+                          }
+                          $isFail = $banglaFail;
+                        }
+                        else if ($subject === 'Physics') {
+                          if ($physicsFail && !in_array('Physics', $countedSubjects)) {
+                            $failCount++;
+                            $countedSubjects[] = 'Physics';
+                          }
+                          $isFail = $physicsFail;
+                        }
+                        else {
+                          if ($isFail) {
+                            $failCount++;
+                          }
                         }
 
-                        // Physics mark coloring conditions
+                        // Coloring marks individually
                         $physicsWrittenClass = ($subject === 'Physics' && in_array($class, ['9','10']) && $written < 17) ? 'text-danger fw-bold' : '';
                         $physicsMcqClass = ($subject === 'Physics' && in_array($class, ['9','10']) && $mcq < 8) ? 'text-danger fw-bold' : '';
                         $physicsPracClass = ($subject === 'Physics' && in_array($class, ['9','10']) && $practical < 8) ? 'text-danger fw-bold' : '';
 
-                        // Bangla mark coloring for written and mcq based on combined fail
                         $banglaWrittenClass = (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper']) && $banglaWrittenFail) ? 'text-danger fw-bold' : '';
                         $banglaMcqClass = (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper']) && $banglaMcqFail) ? 'text-danger fw-bold' : '';
 
-                        // Final classes to apply
                         $writtenClass = $physicsWrittenClass ?: $banglaWrittenClass;
                         $mcqClass = $physicsMcqClass ?: $banglaMcqClass;
                         $practicalClass = $physicsPracClass;
