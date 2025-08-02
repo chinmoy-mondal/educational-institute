@@ -50,7 +50,7 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
         if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
             $b1 = $allSubjects['Bangla 1st Paper'] ?? ['written'=>0, 'mcq'=>0];
             $b2 = $allSubjects['Bangla 2nd Paper'] ?? ['written'=>0, 'mcq'=>0];
-            return ($b1['written'] + $b2['written'] < 40) || ($b1['mcq'] + $b2['mcq'] < 20);
+            return ($b1['written'] + $b2['written'] < 46) || ($b1['mcq'] + $b2['mcq'] < 20);
         }
 
         if (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
@@ -60,7 +60,7 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
         }
 
         if ($subject === 'ICT') {
-            return ($written + $mcq) < 7 || $practical < 8;
+            return ($written + $mcq) < 8 || $practical < 9;
         }
 
         if (in_array($subject, ['Physics', 'Chemistry', 'Higher Math', 'Biology'])) {
