@@ -1,19 +1,22 @@
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
+
 <style>
   th, td {
     vertical-align: middle !important;
     text-align: center !important;
   }
-  .text-danger { color: red !important; font-weight: bold; }
-  .text-success { color: green !important; font-weight: bold; }
-  td.text-start { text-align: left !important; }
 </style>
 
 <?php
 function isSubjectFailed(string $class, string $subject, array $allSubjects, string $group = 'general'): bool
 {
-    $subjectData = $allSubjects[$subject] ?? ['written' => 0, 'mcq' => 0, 'practical' => 0];
+    // Skip fail-check if the subject doesn't exist (i.e., not taken)
+    if (!isset($allSubjects[$subject])) {
+        return false;
+    }
+
+    $subjectData = $allSubjects[$subject];
     $written = is_numeric($subjectData['written']) ? $subjectData['written'] : 0;
     $mcq = is_numeric($subjectData['mcq']) ? $subjectData['mcq'] : 0;
     $practical = is_numeric($subjectData['practical']) ? $subjectData['practical'] : 0;
@@ -70,13 +73,14 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
     return false;
 }
 
+// Create a full list of all subjects across students
 $subjectList = [];
 foreach ($finalData as $student) {
-  foreach ($student['results'] as $res) {
-    if (!in_array($res['subject'], $subjectList)) {
-      $subjectList[] = $res['subject'];
+    foreach ($student['results'] as $res) {
+        if (!in_array($res['subject'], $subjectList)) {
+            $subjectList[] = $res['subject'];
+        }
     }
-  }
 }
 ?>
 
@@ -113,36 +117,42 @@ foreach ($finalData as $student) {
             <tbody>
               <?php foreach ($finalData as $student): ?>
                 <?php
-                $subjectMap = [];
-                foreach ($student['results'] as $res) {
-                  $subjectMap[$res['subject']] = $res;
-                }
+                  $subjectMap = [];
+                  foreach ($student['results'] as $res) {
+                    $subjectMap[$res['subject']] = $res;
+                  }
 
-                $studentTotal = 0;
-                $failCount = 0;
+                  $studentTotal = 0;
+                  $failCount = 0;
                 ?>
                 <tr class="text-center">
                   <td><strong><?= esc($student['roll']) ?></strong></td>
                   <td class="text-start"><?= esc($student['name']) ?></td>
+
                   <?php foreach ($subjectList as $subject): ?>
-                    <?php
-                    $res = $subjectMap[$subject] ?? ['written'=>0, 'mcq'=>0, 'practical'=>0];
-                    $written = $res['written'] ?? 0;
-                    $mcq = $res['mcq'] ?? 0;
-                    $practical = $res['practical'] ?? 0;
-                    $total = $written + $mcq + $practical;  // Calculate total here
-                    $studentTotal += $total;
-                    $isFail = isSubjectFailed($class, $subject, $subjectMap, $student['group'] ?? 'general');
-                    if ($isFail) $failCount++;
-                    ?>
-                    <td class="<?= $isFail && $written < 10 ? 'text-danger' : '' ?>"><?= $written ?></td>
-                    <td class="<?= $isFail && $mcq < 10 ? 'text-danger' : '' ?>"><?= $mcq ?></td>
-                    <td class="<?= $isFail && $practical < 8 ? 'text-danger' : '' ?>"><?= $practical ?></td>
-                    <td class="<?= $isFail ? 'text-danger fw-bold' : '' ?>"><?= $total ?></td>
+                    <?php if (!isset($subjectMap[$subject])): ?>
+                      <td></td><td></td><td></td><td></td>
+                    <?php else: ?>
+                      <?php
+                        $res = $subjectMap[$subject];
+                        $written = $res['written'] ?? 0;
+                        $mcq = $res['mcq'] ?? 0;
+                        $practical = $res['practical'] ?? 0;
+                        $total = $res['total'] ?? 0;
+
+                        $studentTotal += is_numeric($total) ? $total : 0;
+                        $isFail = isSubjectFailed($class, $subject, $subjectMap, $student['group'] ?? 'general');
+                        if ($isFail) $failCount++;
+                      ?>
+                      <td><?= $written ?></td>
+                      <td><?= $mcq ?></td>
+                      <td><?= $practical ?></td>
+                      <td class="<?= $isFail ? 'text-danger fw-bold' : '' ?>"><?= $total ?></td>
+                    <?php endif; ?>
                   <?php endforeach; ?>
+
                   <td class="fw-bold <?= $failCount > 0 ? 'text-danger' : 'text-success' ?>">
-                    <?= $studentTotal ?>
-                    <?= $failCount > 0 ? '<br>F-' . $failCount : '' ?>
+                    <?= $studentTotal ?><?= $failCount > 0 ? ' <br>F-' . $failCount : '' ?>
                   </td>
                 </tr>
               <?php endforeach; ?>
