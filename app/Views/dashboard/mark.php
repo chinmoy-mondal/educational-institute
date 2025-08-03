@@ -147,7 +147,7 @@ if (isset($finalData) && is_array($finalData)) {
                 <th rowspan="2">Roll</th>
                 <th rowspan="2">Name</th>
                 <?php foreach ($subjectList as $subject): ?>
-                  <th colspan="4"><?= esc($subject) ?></th>
+                  <th colspan="4"><div class="rotate"><?= esc($subject) ?></div></th>
                 <?php endforeach; ?>
                 <th rowspan="2">Total</th>
               </tr>
