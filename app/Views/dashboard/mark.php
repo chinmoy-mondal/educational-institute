@@ -21,6 +21,8 @@
     line-height: 1;
     max-width: 20px;
     margin: auto;
+    size: legal landscape;
+    margin: 1cm;
   }
 }
 
