@@ -13,6 +13,17 @@
     font-weight: bold;
   }
 @media print {
+  @page {
+    size: legal landscape;
+    margin: 1cm;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    font-size: 10px;
+  }
+
   .rotate {
     writing-mode: vertical-rl;
     transform: rotate(180deg);
@@ -21,11 +32,27 @@
     line-height: 1;
     max-width: 20px;
     margin: auto;
-    size: legal landscape;
-    margin: 1cm;
+  }
+
+  .no-print, .btn, script {
+    display: none !important;
+  }
+
+  .card, .container-fluid {
+    box-shadow: none !important;
+    margin: 0;
+    padding: 0;
+  }
+
+  .card-header {
+    background: #333 !important;
+    color: white !important;
+  }
+
+  table {
+    page-break-inside: avoid;
   }
 }
-
 
     body {
       -webkit-print-color-adjust: exact !important;
