@@ -12,12 +12,18 @@
     color: red;
     font-weight: bold;
   }
+@media print {
+  .rotate {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    white-space: nowrap;
+    font-size: 9px;
+    line-height: 1;
+    max-width: 20px;
+    margin: auto;
+  }
+}
 
-  @media print {
-    @page {
-      size: Legal landscape;
-      margin: 1cm;
-    }
 
     body {
       -webkit-print-color-adjust: exact !important;
@@ -39,7 +45,15 @@
       background: #333 !important;
       color: white !important;
     }
-
+.rotate {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  font-size: 9px;
+  line-height: 1;
+  max-width: 20px;
+  margin: auto;
+}
     table {
       page-break-inside: avoid;
     }
