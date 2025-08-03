@@ -15,33 +15,25 @@
 @media print {
   @page {
     size: legal landscape;
-    margin: 1cm;
+    margin: 0.5cm;
   }
 
   body {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-    font-size: 10px;
-  }
-
-  .rotate {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    white-space: nowrap;
     font-size: 9px;
-    line-height: 1;
-    max-width: 20px;
-    margin: auto;
+    margin: 0;
+    padding: 0;
   }
 
   .no-print, .btn, script {
     display: none !important;
   }
 
-  .card, .container-fluid {
+  .container-fluid, .card {
+    margin: 0 !important;
+    padding: 0 !important;
     box-shadow: none !important;
-    margin: 0;
-    padding: 0;
   }
 
   .card-header {
@@ -50,7 +42,30 @@
   }
 
   table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 9px;
     page-break-inside: avoid;
+  }
+
+  table th, table td {
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 1px solid #000 !important;
+    vertical-align: middle !important;
+    text-align: center !important;
+    line-height: 1 !important;
+  }
+
+  .rotate {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    white-space: nowrap;
+    font-size: 8px;
+    line-height: 1;
+    margin: 0 auto;
   }
 }
 
@@ -87,6 +102,14 @@
       page-break-inside: avoid;
     }
   }
+
+  th, td {
+  vertical-align: middle !important;
+  text-align: center !important;
+  font-size: 9px;
+  padding: 2px !important;
+  line-height: 1.1;
+}
 </style>
 
 <?php
