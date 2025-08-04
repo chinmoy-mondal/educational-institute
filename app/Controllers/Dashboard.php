@@ -753,7 +753,7 @@ class Dashboard extends Controller
 			['section' => 'General'],
 			['section' => 'Vocational'],
 			['section' => 'Science'],
-			['section' => 'arts'], 
+			['section' => 'arts'],
 		];
 
 
@@ -855,9 +855,9 @@ class Dashboard extends Controller
 		$this->data['class']     = $class;
 		$this->data['exam']      = $exam;
 		$this->data['year']      = $year;
-// echo '<pre>';
-// print_r($finalData);
-// echo '</pre>';
+		// echo '<pre>';
+		// print_r($finalData);
+		// echo '</pre>';
 		return view('dashboard/mark', $this->data);
 	}
 	private function getTabulationData(): array
@@ -1023,13 +1023,22 @@ class Dashboard extends Controller
 	{
 		$this->studentModel = new StudentModel();
 		$this->subjectModel = new SubjectModel();
-		
+
 		$student = $this->studentModel->find($id);
 
 		if (!$student) {
 			return redirect()->back()->with('error', 'No data found');
 		}
 
+		// ✅ Convert comma-separated IDs to array
+		$subjectIds = explode(',', $student['assign_sub']); // e.g., ['12', '13', '14', ...]
+
+		// ✅ Fetch subjects using whereIn
+		$subjects = $this->subjectModel
+			->whereIn('id', $subjectIds)
+			->findAll();
+
+		// Prepare view data
 		$this->data['title'] = 'Student Details';
 		$this->data['activeSection'] = 'student';
 		$this->data['navbarItems'] = [
@@ -1038,6 +1047,7 @@ class Dashboard extends Controller
 			['label' => 'View Student', 'url' => current_url()],
 		];
 		$this->data['student'] = $student;
+		$this->data['subjects'] = $subjects; // ✅ pass actual subject rows
 
 		return view('dashboard/student_view', $this->data);
 	}
