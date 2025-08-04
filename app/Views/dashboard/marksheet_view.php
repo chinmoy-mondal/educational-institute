@@ -197,11 +197,11 @@
     </tr>
     <tr>
       <td><strong>Student's ID</strong>: <?= esc($student['id']) ?></td>
-      <td><strong>Exam</strong>: rteter</td>
+      <td><strong>Exam</strong>: <?= esc($student['examName']) ?></td>
     </tr>
     <tr>
       <td><strong>Class</strong>: <?= esc($student['class']) ?></td>
-      <td><strong>Year/Session</strong>: 9gdfg</td>
+      <td><strong>Year/Session</strong>: <?= esc($student['examYear']) ?></td>
     </tr>
     <tr>
       <td><strong>Roll No</strong>: <?= esc($student['roll']) ?></td>

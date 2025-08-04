@@ -1017,9 +1017,9 @@ class Dashboard extends Controller
 			}
 			$marksheet = $this->resultModel
 				->where([
-					'student_id' => $studentId,
-					'exam'       => $examName,
-					'year'       => $examYear,
+					'student_id' => 207,
+					'exam'       => "half-yearly",
+					'year'       => 2025,
 				])
 				->findAll();
 			echo "<pre>";
