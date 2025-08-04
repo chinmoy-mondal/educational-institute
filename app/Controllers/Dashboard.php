@@ -184,7 +184,7 @@ class Dashboard extends Controller
 
 	public function addEvent()
 	{
-		
+
 		$this->calendarModel->save([
 			'title' => $this->request->getPost('title'),
 			'description' => $this->request->getPost('description'),
@@ -198,7 +198,7 @@ class Dashboard extends Controller
 
 	public function updateEvent()
 	{
-		
+
 
 		$this->calendarModel->update($this->request->getPost('id'), [
 			'title'       => $this->request->getPost('title'),
@@ -213,7 +213,7 @@ class Dashboard extends Controller
 
 	public function deleteEvent()
 	{
-		
+
 		$this->calendarModel->delete($this->request->getPost('id'));
 
 		return $this->response->setJSON(['status' => 'success']);
@@ -231,7 +231,7 @@ class Dashboard extends Controller
 			['label' => 'Calendar', 'url' => base_url('calendar')],
 		];
 
-		
+
 
 		$newUsers = $this->userModel->where('account_status', 0)->findAll();
 		$totalNewUsers = count($newUsers);
@@ -298,7 +298,7 @@ class Dashboard extends Controller
 
 	public function teacher_management()
 	{
-		
+
 
 		$subjects = $this->subjectModel->orderBy('id')->findAll();
 		$users    = $this->userModel->where('account_status !=', 0)->findAll();
@@ -323,7 +323,7 @@ class Dashboard extends Controller
 		$name       = $this->request->getPost('name');
 		$assign_sub = $this->request->getPost('assign_sub'); // e.g., "4,7,9"
 
-		
+
 
 		$data = [
 			'assagin_sub' => $assign_sub,  // store CSV in DB
@@ -337,7 +337,7 @@ class Dashboard extends Controller
 
 	public function assignSubject($id)
 	{
-		
+
 
 		$user = $this->userModel->find($id);
 		if (!$user) {
@@ -446,7 +446,7 @@ class Dashboard extends Controller
 
 	public function student()
 	{
-		
+
 
 		// Get filter inputs
 		$q       = $this->request->getGet('q');
@@ -514,7 +514,7 @@ class Dashboard extends Controller
 
 	public function stAssaginSubView()
 	{
-		
+
 
 		// Get filter inputs
 		$q       = $this->request->getGet('q');
@@ -731,7 +731,7 @@ class Dashboard extends Controller
 
 	public function selectTabulationForm()
 	{
-		
+
 
 		// ✅ Distinct class list from students
 		$classes = $this->studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
@@ -992,9 +992,6 @@ class Dashboard extends Controller
 
 	public function showMarksheet()
 	{
-		// You can fetch from DB here using GET parameters
-		// For now, using demo static data
-
 		$this->data['title'] = 'Marksheet';
 
 		$this->data['activeSection'] = 'result';
@@ -1002,10 +999,59 @@ class Dashboard extends Controller
 			['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
 			['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
 		];
-		// Optional: future dynamic data from request
-		// $class = $this->request->getGet('class');
-		// $roll  = $this->request->getGet('roll');
-		// $exam  = $this->request->getGet('exam');
+
+		$request = service('request');
+		$searchType = $request->getGet('search_type');
+
+		if ($searchType === 'id') {
+			// Search by Student ID
+			$studentId = $request->getGet('id');
+
+			if (!$studentId) {
+				return redirect()->back()->with('error', 'Please enter a Student ID.');
+			}
+
+			// Fetch result using Student ID
+			$data['student'] = $this->studentModel->find($studentId);
+			// Optional: fetch marksheet here too
+			$data['marksheet'] = $this->resultModel->where('student_id', $studentId)->findAll();
+		} elseif ($searchType === 'roll') {
+			// Search by Class/Roll
+			$class = $request->getGet('class');
+			$section = $request->getGet('section');
+			$roll = $request->getGet('roll');
+			$exam = $request->getGet('exam');
+			$year = $request->getGet('year');
+
+			if (!$class || !$section || !$roll || !$exam || !$year) {
+				return redirect()->back()->with('error', 'Please fill all fields for Class/Roll search.');
+			}
+
+			// Find student by class, section, roll
+			$student = $this->studentModel
+				->where([
+					'class'   => $class,
+					'section' => $section,
+					'roll'    => $roll,
+				])
+				->first();
+
+			if (!$student) {
+				return redirect()->back()->with('error', 'Student not found with the given Class/Roll.');
+			}
+
+			// Fetch marksheet by student and exam details
+			$data['student'] = $student;
+			$data['marksheet'] = $this->resultModel
+				->where([
+					'student_id' => $student['id'],
+					'exam'       => $exam,
+					'year'       => $year,
+				])
+				->findAll();
+		} else {
+			return redirect()->back()->with('error', 'Invalid search type.');
+		}
 
 		return view('dashboard/marksheet_view', $this->data);
 	}
