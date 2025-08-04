@@ -1043,6 +1043,9 @@ class Dashboard extends Controller
 			if (!$student) {
 				return redirect()->back()->with('error', 'Student not found for given Class/Roll.');
 			}
+			echo "<pre>";
+			print_r($student);
+			echo "</pre>";
 
 			$this->data['student'] = $student;
 			$this->data['marksheet'] = $this->resultModel
