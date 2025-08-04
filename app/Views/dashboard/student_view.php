@@ -3,20 +3,20 @@
 
 <div class="content-header">
   <div class="container-fluid">
-        <!-- ✅ Flash Messages -->
-        <?php if (session()->getFlashdata('success')): ?>
-          <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <?= esc(session()->getFlashdata('success')) ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        <?php endif; ?>
+    <!-- ✅ Flash Messages -->
+    <?php if (session()->getFlashdata('success')): ?>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <?= esc(session()->getFlashdata('success')) ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <?php endif; ?>
 
-        <?php if (session()->getFlashdata('error')): ?>
-          <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <?= esc(session()->getFlashdata('error')) ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        <?php endif; ?>
+    <?php if (session()->getFlashdata('error')): ?>
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <?= esc(session()->getFlashdata('error')) ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    <?php endif; ?>
     <h1 class="mb-3">Student Profile</h1>
     <a href="<?= site_url('admin/student') ?>" class="btn btn-secondary mb-3">← Back to List</a>
   </div>
@@ -61,10 +61,10 @@
               <div class="col-md-4">
                 <h5>Select Subject</h5>
 
-<form action="<?= site_url('admin/students/forth/' . $student['id']) ?>" method="post">
+                <form action="<?= site_url('admin/students/forth/' . $student['id']) ?>" method="post">
                   <?= csrf_field() ?>
 
-                  <select class="form-select" id="subjectSelect" name="selectid" size="10">
+                  <select class="form-select w-100" id="subjectSelect" name="selectid" size="10">
                     <option disabled selected>Click a subject to select</option>
                     <?php foreach ($subjects as $subject): ?>
                       <option value="<?= esc($subject['id']) ?>"><?= esc($subject['subject']) ?></option>
