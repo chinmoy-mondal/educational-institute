@@ -1,6 +1,6 @@
 <?php
 
-echo "<pre>";
+echo "dfsdfsdfsdf<pre>";
   print_r($student);
 echo "</pre>";
 
