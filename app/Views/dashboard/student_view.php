@@ -50,15 +50,17 @@
               <!-- 📚 Column 2: Assigned Subjects -->
               <div class="col-md-4">
                 <h5>Assigned Subjects</h5>
+
                 <?php if (in_array($student['class'], ['9', '10'])): ?>
-                  <ul class="list-group" id="subjectList">
-                    <?php foreach ($subjects as $subject): ?>
-                      <li class="list-group-item py-1 px-2 subject-item" data-id="<?= esc($subject['id']) ?>" style="cursor: pointer;">
-                        <?= esc($subject['subject']) ?>
-                      </li>
-                    <?php endforeach; ?>
-                  </ul>
-                  <small class="text-muted mt-2 d-block">Click a subject to attach note</small>
+                  <div class="form-group">
+                    <label for="subjectSelect">Select a Subject</label>
+                    <select id="subjectSelect" class="form-control">
+                      <option value="">-- Choose Subject --</option>
+                      <?php foreach ($subjects as $subject): ?>
+                        <option value="<?= esc($subject['id']) ?>"><?= esc($subject['subject']) ?></option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
                 <?php else: ?>
                   <ul class="list-group">
                     <?php foreach ($subjects as $subject): ?>
@@ -71,13 +73,22 @@
               <!-- 📝 Column 3: Submit Form -->
               <div class="col-md-4">
                 <h5>Actions</h5>
+
+                <?php if (in_array($student['class'], ['9', '10'])): ?>
+                  <p id="selectedSubject" class="text-info mb-2" style="display: none;">
+                    <strong>Selected Subject:</strong> <span id="selectedSubjectName"></span>
+                  </p>
+                <?php endif; ?>
+
                 <form action="<?= site_url('admin/submit-action') ?>" method="post">
                   <div class="form-group">
                     <label for="note">Note</label>
                     <textarea name="note" class="form-control" rows="3" placeholder="Write a note..." required></textarea>
                   </div>
+
                   <input type="hidden" name="student_id" value="<?= esc($student['id']) ?>">
                   <input type="hidden" name="subject_id" id="subject_id_input">
+
                   <button type="submit" class="btn btn-primary btn-sm mt-2" id="submitBtn" <?= in_array($student['class'], ['9', '10']) ? 'disabled' : '' ?>>
                     Submit
                   </button>
@@ -118,20 +129,28 @@
 
 <?php if (in_array($student['class'], ['9', '10'])): ?>
 <script>
-  document.querySelectorAll('.subject-item').forEach(function(item) {
-    item.addEventListener('click', function() {
-      document.querySelectorAll('.subject-item').forEach(el => el.classList.remove('active'));
-      this.classList.add('active');
-      document.getElementById('subject_id_input').value = this.dataset.id;
-      document.getElementById('submitBtn').disabled = false;
+  document.addEventListener('DOMContentLoaded', function () {
+    const select = document.getElementById('subjectSelect');
+    const subjectInput = document.getElementById('subject_id_input');
+    const submitBtn = document.getElementById('submitBtn');
+    const subjectNameDisplay = document.getElementById('selectedSubject');
+    const subjectNameSpan = document.getElementById('selectedSubjectName');
+
+    select.addEventListener('change', function () {
+      const selectedId = this.value;
+      const selectedText = this.options[this.selectedIndex].text;
+
+      if (selectedId) {
+        subjectInput.value = selectedId;
+        submitBtn.disabled = false;
+        subjectNameSpan.textContent = selectedText;
+        subjectNameDisplay.style.display = 'block';
+      } else {
+        subjectInput.value = '';
+        submitBtn.disabled = true;
+        subjectNameDisplay.style.display = 'none';
+      }
     });
   });
 </script>
-
-<style>
-  .subject-item.active {
-    background-color: #007bff;
-    color: white;
-  }
-</style>
 <?php endif; ?>
