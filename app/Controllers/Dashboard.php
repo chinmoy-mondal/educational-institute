@@ -1004,19 +1004,25 @@ class Dashboard extends Controller
 		$searchType = $request->getGet('search_type');
 
 		if ($searchType === 'id') {
-			// Search by Student ID
 			$studentId = $request->getGet('id');
 
 			if (!$studentId) {
 				return redirect()->back()->with('error', 'Please enter a Student ID.');
 			}
 
-			// Fetch result using Student ID
-			$data['student'] = $this->studentModel->find($studentId);
-			// Optional: fetch marksheet here too
-			$data['marksheet'] = $this->resultModel->where('student_id', $studentId)->findAll();
+			$student = $this->studentModel->find($studentId);
+
+			if (!$student) {
+				return redirect()->back()->with('error', 'Student not found.');
+			}
+
+			$data['student'] = $student;
+			$data['marksheet'] = $this->resultModel
+				->where('student_id', $studentId)
+				->findAll();
+
+			return view('dashboard/marksheet_view', $data);
 		} elseif ($searchType === 'roll') {
-			// Search by Class/Roll
 			$class = $request->getGet('class');
 			$section = $request->getGet('section');
 			$roll = $request->getGet('roll');
@@ -1024,36 +1030,34 @@ class Dashboard extends Controller
 			$year = $request->getGet('year');
 
 			if (!$class || !$section || !$roll || !$exam || !$year) {
-				return redirect()->back()->with('error', 'Please fill all fields for Class/Roll search.');
+				return redirect()->back()->with('error', 'Please fill in all fields.');
 			}
 
-			// Find student by class, section, roll
 			$student = $this->studentModel
 				->where([
-					'class'   => $class,
+					'class' => $class,
 					'section' => $section,
-					'roll'    => $roll,
+					'roll' => $roll
 				])
 				->first();
 
 			if (!$student) {
-				return redirect()->back()->with('error', 'Student not found with the given Class/Roll.');
+				return redirect()->back()->with('error', 'Student not found for given Class/Roll.');
 			}
 
-			// Fetch marksheet by student and exam details
 			$data['student'] = $student;
 			$data['marksheet'] = $this->resultModel
 				->where([
 					'student_id' => $student['id'],
-					'exam'       => $exam,
-					'year'       => $year,
+					'exam' => $exam,
+					'year' => $year,
 				])
 				->findAll();
-		} else {
-			return redirect()->back()->with('error', 'Invalid search type.');
+
+			return view('dashboard/marksheet_view', $data);
 		}
 
-		return view('dashboard/marksheet_view', $this->data);
+		return redirect()->back()->with('error', 'Invalid search method.');
 	}
 
 	public function viewStudent($id)
