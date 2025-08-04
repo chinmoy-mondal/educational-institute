@@ -124,9 +124,9 @@
     <!-- Left: Student Photo -->
     <div class="col-md-3 text-left">
       <?php if (!empty($student['student_pic'])): ?>
-        <img src="<?= base_url($student['student_pic']) ?>" alt="Student Photo" class=" w-80" >
+        <img src="<?= base_url($student['student_pic']) ?>" alt="Student Photo" width="100" >
       <?php else: ?>
-        <img src="<?= base_url('public/assets/img/default.png') ?>" alt="No Photo" class=" w-80">
+        <img src="<?= base_url('public/assets/img/default.png') ?>" alt="No Photo" width="100">
       <?php endif; ?>
     </div>
 
