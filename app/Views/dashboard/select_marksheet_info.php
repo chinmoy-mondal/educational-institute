@@ -5,6 +5,19 @@
 	<div class="card card-primary w-100" style="max-width: 600px;">
 		<div class="card-header">
 			<h3 class="card-title">Search Marksheet</h3>
+			<?php if (session()->getFlashdata('success')): ?>
+				<div class="alert alert-success alert-dismissible fade show" role="alert">
+					<?= session()->getFlashdata('success') ?>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			<?php endif; ?>
+
+			<?php if (session()->getFlashdata('error')): ?>
+				<div class="alert alert-danger alert-dismissible fade show" role="alert">
+					<?= session()->getFlashdata('error') ?>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			<?php endif; ?>
 		</div>
 
 		<form action="<?= base_url('admin/show-marksheet') ?>" method="get">
@@ -87,27 +100,27 @@
 
 <!-- ✅ JavaScript: Toggle fields -->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-	const searchById = document.getElementById("searchById");
-	const searchByRoll = document.getElementById("searchByRoll");
+	document.addEventListener("DOMContentLoaded", function() {
+		const searchById = document.getElementById("searchById");
+		const searchByRoll = document.getElementById("searchByRoll");
 
-	const idFields = document.querySelector(".search-id");
-	const rollFields = document.querySelector(".search-roll");
+		const idFields = document.querySelector(".search-id");
+		const rollFields = document.querySelector(".search-roll");
 
-	function toggleSearch() {
-		if (searchById.checked) {
-			idFields.style.display = "block";
-			rollFields.style.display = "none";
-		} else {
-			idFields.style.display = "none";
-			rollFields.style.display = "block";
+		function toggleSearch() {
+			if (searchById.checked) {
+				idFields.style.display = "block";
+				rollFields.style.display = "none";
+			} else {
+				idFields.style.display = "none";
+				rollFields.style.display = "block";
+			}
 		}
-	}
 
-	searchById.addEventListener("change", toggleSearch);
-	searchByRoll.addEventListener("change", toggleSearch);
-	toggleSearch(); // initial call
-});
+		searchById.addEventListener("change", toggleSearch);
+		searchByRoll.addEventListener("change", toggleSearch);
+		toggleSearch(); // initial call
+	});
 </script>
 
 <?= $this->endSection() ?>
