@@ -9,12 +9,15 @@ use App\Models\StudentModel;
 use App\Models\SubjectModel;
 use App\Models\ResultModel;
 use App\Models\CalendarModel;
+use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Dashboard extends Controller
 {
 	protected $userModel;
 	protected $subjectModel;
 	protected $studentModel;
+	protected $resultModel;
+	protected $calendarModel;
 	protected $session;
 	protected $data;
 
@@ -77,8 +80,6 @@ class Dashboard extends Controller
 
 	public function index()
 	{
-		$studentModel = new StudentModel();
-		$userModel = new UserModel();
 
 		// Dashboard specific values
 		$this->data['title'] = 'Dashboard';
@@ -92,10 +93,9 @@ class Dashboard extends Controller
 			['label' => 'Result', 'url' => base_url('ad-result')],
 			['label' => 'Accounts', 'url' => base_url('accounts')],
 		];
-
-		$this->data['total_students'] = $studentModel->countAll();
-		$this->data['total_users'] = $userModel->where('account_status !=', 0)->countAllResults();
-		$this->data['total_new_users'] = $userModel->where('account_status', 0)->countAllResults();
+		$this->data['total_students'] = $this->studentModel->countAll();
+		$this->data['total_users'] = $this->userModel->where('account_status !=', 0)->countAllResults();
+		$this->data['total_new_users'] = $this->userModel->where('account_status', 0)->countAllResults();
 
 		$this->data['total_applications'] = 10;
 		$this->data['total_exams'] = 5;
@@ -159,14 +159,11 @@ class Dashboard extends Controller
 	public function events()
 	{
 
-		$model = new CalendarModel();
-		$events = $model->findAll();
+		$events = $this->calendarModel->findAll();
 
 		$data = array_map(function ($event) {
-			// Determine if end_date has time part (T separator)
 			$hasTime = strpos($event['end_date'], 'T') !== false;
 
-			// If end_date is date only, add +1 day to make FullCalendar inclusive
 			$endDate = $hasTime
 				? $event['end_date']
 				: date('Y-m-d', strtotime($event['end_date'] . ' +1 day'));
@@ -187,8 +184,8 @@ class Dashboard extends Controller
 
 	public function addEvent()
 	{
-		$model = new CalendarModel();
-		$model->save([
+		
+		$this->calendarModel->save([
 			'title' => $this->request->getPost('title'),
 			'description' => $this->request->getPost('description'),
 			'start_date' => $this->request->getPost('start'),
@@ -201,9 +198,9 @@ class Dashboard extends Controller
 
 	public function updateEvent()
 	{
-		$model = new CalendarModel();
+		
 
-		$model->update($this->request->getPost('id'), [
+		$this->calendarModel->update($this->request->getPost('id'), [
 			'title'       => $this->request->getPost('title'),
 			'description' => $this->request->getPost('description'),
 			'start_date'  => $this->request->getPost('start'),
@@ -216,8 +213,8 @@ class Dashboard extends Controller
 
 	public function deleteEvent()
 	{
-		$model = new CalendarModel();
-		$model->delete($this->request->getPost('id'));
+		
+		$this->calendarModel->delete($this->request->getPost('id'));
 
 		return $this->response->setJSON(['status' => 'success']);
 	}
@@ -234,12 +231,12 @@ class Dashboard extends Controller
 			['label' => 'Calendar', 'url' => base_url('calendar')],
 		];
 
-		$userModel = new UserModel();
+		
 
-		$newUsers = $userModel->where('account_status', 0)->findAll();
+		$newUsers = $this->userModel->where('account_status', 0)->findAll();
 		$totalNewUsers = count($newUsers);
 
-		$users = $userModel->where('account_status !=', 0)->findAll();
+		$users = $this->userModel->where('account_status !=', 0)->findAll();
 		$totalUsers = count($users);
 
 		// Assign to $this->data
@@ -279,7 +276,7 @@ class Dashboard extends Controller
 
 		$permitBy = $this->session->get('user_id');
 
-		$updated = $userModel->update($id, [
+		$updated = $this->userModel->update($id, [
 			'account_status' => 1,
 			'permit_by'	=> $permitBy,
 		]);
@@ -301,11 +298,10 @@ class Dashboard extends Controller
 
 	public function teacher_management()
 	{
-		$subjectModel = new SubjectModel();
-		$userModel    = new UserModel();
+		
 
-		$subjects = $subjectModel->orderBy('id')->findAll();
-		$users    = $userModel->where('account_status !=', 0)->findAll();
+		$subjects = $this->subjectModel->orderBy('id')->findAll();
+		$users    = $this->userModel->where('account_status !=', 0)->findAll();
 
 		// Use $this->data which already has navbarItems, sidebarItems
 		$this->data['title'] = 'Teacher Management';
@@ -327,13 +323,13 @@ class Dashboard extends Controller
 		$name       = $this->request->getPost('name');
 		$assign_sub = $this->request->getPost('assign_sub'); // e.g., "4,7,9"
 
-		$userModel = new UserModel();
+		
 
 		$data = [
 			'assagin_sub' => $assign_sub,  // store CSV in DB
 		];
 
-		$userModel->update($id, $data);
+		$this->userModel->update($id, $data);
 
 		return redirect()->back()->with('success', 'Teacher updated with new subjects!');
 	}
@@ -341,10 +337,9 @@ class Dashboard extends Controller
 
 	public function assignSubject($id)
 	{
-		$userModel    = new UserModel();
-		$subjectModel = new SubjectModel();
+		
 
-		$user = $userModel->find($id);
+		$user = $this->userModel->find($id);
 		if (!$user) {
 			return redirect()->back()->with('error', 'No records found.');
 		}
@@ -355,7 +350,7 @@ class Dashboard extends Controller
 
 		$subjects = [];
 		if (!empty($subjectIds)) {
-			$subjects = $subjectModel
+			$subjects = $this->subjectModel
 				->whereIn('id', $subjectIds)
 				->orderBy('class', 'ASC')
 				->findAll();
@@ -451,21 +446,21 @@ class Dashboard extends Controller
 
 	public function student()
 	{
-		$studentModel = new StudentModel();
+		
 
 		// Get filter inputs
 		$q       = $this->request->getGet('q');
 		$class   = $this->request->getGet('class');
 		$section = $this->request->getGet('section');
 		$religion = $this->request->getGet('religion');
-		$religions = $studentModel
+		$religions = $this->studentModel
 			->select('religion')
 			->distinct()
 			->where('religion IS NOT NULL')
 			->orderBy('religion')
 			->findAll();
 		// Build query
-		$builder = $studentModel;
+		$builder = $this->studentModel;
 		if ($q) {
 			$builder = $builder->groupStart()
 				->like('student_name', $q)
@@ -493,7 +488,7 @@ class Dashboard extends Controller
 			->orderBy('CAST(roll as UNSIGNED) ASC')
 			->paginate($perPage, 'bootstrap');
 
-		$sections = $studentModel->select('section')->distinct()->orderBy('section')->findAll();
+		$sections = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
 
 		$this->data['title']         = 'Student Management';
 		$this->data['activeSection'] = 'student';
@@ -503,7 +498,7 @@ class Dashboard extends Controller
 			['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
 		];
 		$this->data['students']      = $students;
-		$this->data['pager']         = $studentModel->pager;
+		$this->data['pager']         = $this->studentModel->pager;
 		$this->data['q']             = $q;
 		$this->data['class']         = $class;
 		$this->data['section']       = $section;
@@ -519,8 +514,7 @@ class Dashboard extends Controller
 
 	public function stAssaginSubView()
 	{
-		$studentModel = new StudentModel();
-		$subjectModel = new SubjectModel();
+		
 
 		// Get filter inputs
 		$q       = $this->request->getGet('q');
@@ -529,7 +523,7 @@ class Dashboard extends Controller
 		$religion = $this->request->getGet('religion');
 
 		// Build query
-		$builder = $studentModel;
+		$builder = $this->studentModel;
 		if ($q) {
 			$builder = $builder->groupStart()
 				->like('student_name', $q)
@@ -553,9 +547,9 @@ class Dashboard extends Controller
 			->get()
 			->getResultArray();
 
-		$sections = $studentModel->select('section')->distinct()->orderBy('section')->findAll();
-		$religions = $studentModel->select('religion')->distinct()->where('religion IS NOT NULL')->orderBy('religion')->findAll();
-		$subjectBuilder = $subjectModel;
+		$sections = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
+		$religions = $this->studentModel->select('religion')->distinct()->where('religion IS NOT NULL')->orderBy('religion')->findAll();
+		$subjectBuilder = $this->subjectModel;
 
 		if ($class) {
 			$subjectBuilder = $subjectBuilder->where('class', $class);
@@ -582,7 +576,7 @@ class Dashboard extends Controller
 		];
 		$this->data['students']      = $students;
 		$this->data['subjects']      = $subjects;
-		$this->data['pager']         = $studentModel->pager;
+		$this->data['pager']         = $this->studentModel->pager;
 		$this->data['q']             = $q;
 		$this->data['class']         = $class;
 		$this->data['section']       = $section;
@@ -619,7 +613,7 @@ class Dashboard extends Controller
 		if (!$user || !$subject) {
 			$routes   = \Config\Services::routes();
 			$override = $routes->get404Override();
-			return is_callable($override) ? $override() : show_404();
+			return is_callable($override) ? $override() : throw PageNotFoundException::forPageNotFound();
 		}
 
 		$students = $this->studentModel
@@ -737,11 +731,10 @@ class Dashboard extends Controller
 
 	public function selectTabulationForm()
 	{
-		$studentModel = new StudentModel();
-		$resultModel  = new ResultModel();
+		
 
 		// ✅ Distinct class list from students
-		$classes = $studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
+		$classes = $this->$studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
 
 		$rawSections = $studentModel
 			->distinct()
@@ -758,8 +751,8 @@ class Dashboard extends Controller
 
 
 		// ✅ Distinct exam names and years from results
-		$exams = $resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
-		$years = $resultModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
+		$exams = $this->resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
+		$years = $this->resultModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
 		// Send to view
 		$this->data['title']    = 'Select Tabulation Info';
 		$this->data['activeSection'] = 'result';
@@ -796,7 +789,7 @@ class Dashboard extends Controller
 		$resultModel  = new ResultModel();
 		$subjectModel = new SubjectModel();
 
-		$builder = $studentModel->where('class', $class);
+		$builder = $this->studentModel->where('class', $class);
 
 		// If class is NOT 6 to 8, add section filter
 		if (!in_array($class, ['6', '7', '8'])) {
@@ -974,16 +967,14 @@ class Dashboard extends Controller
 
 	public function selectMarksheetForm()
 	{
-		$studentModel = new StudentModel();
-		$resultModel  = new ResultModel();
 
-		$classes = $studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
+		$classes = $this->studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
 		$sections = [
 			['section' => 'general'],
 			['section' => 'vocational'],
 		];
-		$exams = $resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
-		$years = $resultModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
+		$exams = $this->resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
+		$years = $this->resultModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
 
 		$this->data['title']         = 'Select Marksheet Info';
 		$this->data['activeSection'] = 'result';
