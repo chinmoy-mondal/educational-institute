@@ -1030,16 +1030,35 @@ class Dashboard extends Controller
 			return redirect()->back()->with('error', 'No data found');
 		}
 
-		// ✅ Convert comma-separated IDs to array
+		// ✅ Step 1: Parse subject IDs and extract 4th subject
 		$subject_str_id = $student['assign_sub'];
-		$subjectIds = explode(',', $subject_str_id); // e.g., ['12', '13', '14', ...]
+		$rawIds = explode(',', $subject_str_id); // e.g. ['12', '13', '14*', '15']
 
-		// ✅ Fetch subjects using whereIn
+		$subjectIds = [];
+		$fourthSubjectId = null;
+
+		foreach ($rawIds as $idEntry) {
+			if (str_contains($idEntry, '*')) {
+				$fourthSubjectId = str_replace('*', '', $idEntry);
+				$subjectIds[] = $fourthSubjectId;
+			} else {
+				$subjectIds[] = $idEntry;
+			}
+		}
+
 		$subjects = $this->subjectModel
 			->whereIn('id', $subjectIds)
 			->findAll();
 
-		// Prepare view data
+		$fourthSubjectName = null;
+		if ($fourthSubjectId) {
+			$fourth = $this->subjectModel->find($fourthSubjectId);
+			if ($fourth) {
+				$fourthSubjectName = $fourth['subject'];
+			}
+		}
+
+		// ✅ Step 4: Pass to view
 		$this->data['title'] = 'Student Details';
 		$this->data['activeSection'] = 'student';
 		$this->data['navbarItems'] = [
@@ -1049,7 +1068,9 @@ class Dashboard extends Controller
 		];
 		$this->data['student'] = $student;
 		$this->data['subjectsStr'] = $subject_str_id;
-		$this->data['subjects'] = $subjects; // ✅ pass actual subject rows
+		$this->data['subjects'] = $subjects;
+		$this->data['forthSubject'] = $fourthSubjectName;
+
 		return view('dashboard/student_view', $this->data);
 	}
 
@@ -1057,7 +1078,7 @@ class Dashboard extends Controller
 	{
 		$subjectId = $this->request->getPost('subject_id');
 
-		$subjectId = str_replace('*','',$subjectId);
+		$subjectId = str_replace('*', '', $subjectId);
 
 		$selectId  = $this->request->getPost('selectid');
 		$className = $this->request->getPost('subject_class');
