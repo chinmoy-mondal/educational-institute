@@ -1068,7 +1068,9 @@ class Dashboard extends Controller
 		if (!$selectId) {
 			return redirect()->back()->with('error', 'Sir, No subject is selected.');
 		}
-		return redirect()->back()->with('success', $subjectNames . '4th subject updated successfully.');
+
+		$subjectText = implode(', ', $subjectNames);
+		return redirect()->back()->with('success', $subjectText . ' 4th subject updated successfully.');
 	}
 
 	public function editStudent($id)
