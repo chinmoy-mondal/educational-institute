@@ -3,15 +3,6 @@
 
 <div class="content-header">
   <div class="container-fluid">
-    <h1 class="mb-3">Student Profile</h1>
-    <a href="<?= site_url('admin/student') ?>" class="btn btn-secondary mb-3">← Back to List</a>
-  </div>
-</div>
-
-<div class="content">
-  <div class="container-fluid">
-    <div class="card">
-      <div class="card-body">
         <!-- ✅ Flash Messages -->
         <?php if (session()->getFlashdata('success')): ?>
           <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -26,6 +17,15 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
         <?php endif; ?>
+    <h1 class="mb-3">Student Profile</h1>
+    <a href="<?= site_url('admin/student') ?>" class="btn btn-secondary mb-3">← Back to List</a>
+  </div>
+</div>
+
+<div class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
         <div class="row">
           <!-- 🖼️ Student Photo -->
           <div class="col-md-3 text-center">
