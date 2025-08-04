@@ -5,6 +5,10 @@
 	<div class="card card-primary w-100" style="max-width: 600px;">
 		<div class="card-header">
 			<h3 class="card-title">Search Marksheet</h3>
+			
+		</div>
+
+		<form action="<?= base_url('admin/show-marksheet') ?>" method="get">
 			<?php if (session()->getFlashdata('success')): ?>
 				<div class="alert alert-success alert-dismissible fade show" role="alert">
 					<?= session()->getFlashdata('success') ?>
@@ -18,9 +22,6 @@
 					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 				</div>
 			<?php endif; ?>
-		</div>
-
-		<form action="<?= base_url('admin/show-marksheet') ?>" method="get">
 			<div class="card-body">
 
 				<!-- 🔘 Radio buttons -->
