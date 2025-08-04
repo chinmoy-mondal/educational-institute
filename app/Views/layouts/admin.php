@@ -11,9 +11,7 @@
   <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
 
-  <!-- Optional: Select2 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
-</head>
+  </head>
 <body class="hold-transition sidebar-mini">
 
 <div class="wrapper">
@@ -40,18 +38,7 @@
 <!-- AdminLTE -->
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
-<!-- Optional: Select2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
 
-<!-- ✅ Init Select2 (optional) -->
-<script>
-  $(document).ready(function() {
-    $('.select2').select2({
-      placeholder: "Select Subjects",
-      closeOnSelect: false
-    });
-  });
-</script>
 
 </body>
 </html>
