@@ -1070,7 +1070,7 @@ class Dashboard extends Controller
 			return redirect()->back()->with('error', 'Sir, No subject is selected.');
 		}
 		
-		if (in_array($subjectText, ['Higher Mathematics', 'Biology', 'Agriculture Studies','Agriculture Studies-1','Agriculture Studies-2'])) {
+		if (!in_array($subjectText, ['Higher Mathematics', 'Biology', 'Agriculture Studies','Agriculture Studies-1','Agriculture Studies-2'])) {
 			return redirect()->back()->with('error', 'Sorry sir, '.$subjectText . ' is not a 4th subject.');
 		}
 		return redirect()->back()->with('success', $subjectText . ' 4th subject updated successfully.');
