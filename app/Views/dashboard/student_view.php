@@ -59,9 +59,7 @@
     <i class="fas fa-sync-alt"></i> Update Subject
   </button>
 </div>
-<input type="hidden" id="subject_id_input" name="subject_id">
-<p id="selectedSubjectText" style="display: none;" class="mt-2 text-success fw-bold"></p>
-<button type="submit" id="submitBtn" class="btn btn-success btn-sm mt-2 w-100" disabled>Submit</button>
+<input type="text" id="subject_id_input" name="subject_id">
               
             </div>
           </div>
@@ -93,55 +91,4 @@
   </div>
 </div>
 
-<?= $this->endSection() ?>
-
-<!-- ✅ JavaScript -->
-<?= $this->section('scripts') ?>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const studentClass = "<?= esc($student['class']) ?>";
-    const subjectSelect = document.getElementById('subjectSelect');
-    const updateBtn = document.getElementById('updateSubjectBtn');
-
-    // Trigger popup on update button click
-    updateBtn.addEventListener('click', function () {
-      let subjectList = [];
-      let selectedId = subjectSelect.value;
-
-      for (let i = 0; i < subjectSelect.options.length; i++) {
-        const option = subjectSelect.options[i];
-        if (option.disabled) continue;
-
-        let code = option.value;
-        if (code === selectedId) {
-          code = '*' + code;
-        }
-        subjectList.push(code);
-      }
-
-      const popupMessage = "Subject Codes:\n" + subjectList.join(', ');
-      alert(popupMessage);
-    });
-
-    // Existing subject change logic
-    subjectSelect.addEventListener('change', function () {
-      const selectedOption = this.options[this.selectedIndex];
-      const subjectId = selectedOption.value;
-      const subjectName = selectedOption.text;
-
-      if (studentClass === '9' || studentClass === '10') {
-        document.getElementById('subject_id_input').value = subjectId;
-        document.getElementById('selectedSubjectText').textContent = "Selected Subject: " + subjectName;
-        document.getElementById('selectedSubjectText').style.display = 'block';
-        document.getElementById('submitBtn').disabled = false;
-      } else {
-        alert("This action is only applicable for class 9 or 10.");
-        this.selectedIndex = 0;
-        document.getElementById('subject_id_input').value = '';
-        document.getElementById('selectedSubjectText').style.display = 'none';
-        document.getElementById('submitBtn').disabled = true;
-      }
-    });
-  });
-</script>
 <?= $this->endSection() ?>
