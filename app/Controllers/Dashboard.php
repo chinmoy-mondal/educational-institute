@@ -1004,6 +1004,7 @@ class Dashboard extends Controller
 		if ($searchType === 'id') {
 			$studentId = $request->getGet('id');
 			$examName = $request->getGet('exam');
+			echo "test exam name ".$examName;
 			$examYear = $request->getGet('year');
 
 			if (!$studentId) {
