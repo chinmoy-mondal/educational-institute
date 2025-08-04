@@ -105,7 +105,7 @@
 
 <?= $this->endSection() ?>
 
-<!-- ✅ Script for clickable subjects with class restriction -->
+<!-- ✅ JavaScript for subject click -->
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const studentClass = "<?= esc($student['class']) ?>";
@@ -117,7 +117,7 @@
     subjectItems.forEach(item => {
       item.addEventListener('click', function () {
         if (studentClass === '9' || studentClass === '10') {
-          // Clear other active
+          // Remove previous active
           subjectItems.forEach(i => i.classList.remove('active'));
           this.classList.add('active');
 
@@ -133,6 +133,7 @@
   });
 </script>
 
+<!-- ✅ CSS for active subject highlight -->
 <style>
   .subject-item.active {
     background-color: #007bff;
