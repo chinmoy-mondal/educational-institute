@@ -5,7 +5,7 @@
 	<div class="card card-primary w-100" style="max-width: 600px;">
 		<div class="card-header">
 			<h3 class="card-title">Search Marksheet</h3>
-			
+
 		</div>
 
 		<form action="<?= base_url('admin/show-marksheet') ?>" method="get"><br>
@@ -41,6 +41,26 @@
 				<div class="form-group search-id">
 					<label>Student ID</label>
 					<input type="text" name="id" class="form-control" placeholder="Enter Student ID">
+				</div>
+
+				<div class="form-group search-id">
+					<label>Exam</label>
+					<select name="exam" class="form-control">
+						<option value="">Select Exam</option>
+						<?php foreach ($exams as $exam): ?>
+							<option value="<?= esc($exam['exam']) ?>"><?= esc($exam['exam']) ?></option>
+						<?php endforeach; ?>
+					</select>
+				</div>
+
+				<div class="form-group search-id">
+					<label>Year</label>
+					<select name="year" class="form-control">
+						<option value="">Select Year</option>
+						<?php foreach ($years as $year): ?>
+							<option value="<?= esc($year['year']) ?>"><?= esc($year['year']) ?></option>
+						<?php endforeach; ?>
+					</select>
 				</div>
 
 				<!-- 📋 Class/Roll-based fields -->
