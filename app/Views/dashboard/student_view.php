@@ -32,7 +32,7 @@
           <div class="col-md-9">
             <div class="row">
               <!-- 🧑 Column 1: Student Info -->
-              <div class="col-md-4">
+              <div class="col-md-8">
                 <h4><?= esc($student['student_name']) ?> (Roll: <?= esc($student['roll']) ?>)</h4>
                 <p><strong>Class:</strong> <?= esc($student['class']) ?> | <strong>Section:</strong> <?= esc($student['section']) ?></p>
                 <p><strong>Board ID:</strong> <?= esc($student['esif']) ?></p>
@@ -55,23 +55,7 @@
                 </select>
               </div>
 
-              <!-- 📝 Column 3: Submit Form -->
-              <div class="col-md-4">
-                <h5>Actions</h5>
-                <p id="selectedSubjectText" style="display:none; font-weight:bold; color:#007bff;"></p>
-
-                <form action="<?= site_url('admin/submit-action') ?>" method="post">
-                  <div class="form-group">
-                    <label for="note">Note</label>
-                    <textarea name="note" id="note" class="form-control" rows="3" placeholder="Write a note..." required></textarea>
-                  </div>
-
-                  <input type="hidden" name="student_id" value="<?= esc($student['id']) ?>">
-                  <input type="hidden" name="subject_id" id="subject_id_input">
-
-                  <button type="submit" class="btn btn-primary btn-sm mt-2" id="submitBtn" disabled>Submit</button>
-                </form>
-              </div>
+              
             </div>
           </div>
         </div>
