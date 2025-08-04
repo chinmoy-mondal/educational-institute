@@ -155,22 +155,22 @@ td strong {
       <td><strong>Student's Name</strong>: <?= esc($student['student_name']) ?></td>
     </tr>
     <tr>
-      <td><strong>Father's Name</strong>: Kazi Mahmudul Islam</td>
+      <td><strong>Father's Name</strong>: <?= esc($student['father_name']) ?></td>
     </tr>
     <tr>
-      <td><strong>Mother's Name</strong>: Kazi Mahmudul Islam</td>
+      <td><strong>Mother's Name</strong>: <?= esc($student['mother_name']) ?></td>
     </tr>
     <tr>
-      <td><strong>Student's ID</strong>: Rashida Akter</td>
+      <td><strong>Student's ID</strong>: <?= esc($student['id']) ?></td>
       <td><strong>Exam</strong>: 202312</td>
     </tr>
     <tr>
-      <td><strong>Class</strong>: 202312</td>
+      <td><strong>Class</strong>: <?= esc($student['class']) ?></td>
       <td><strong>Year/Session</strong>: 9</td>
     </tr>
     <tr>
-      <td><strong>Roll No</strong>: 9</td>
-      <td><strong>Group</strong>: Half Yearly - 2025</td>
+      <td><strong>Roll No</strong>: <?= esc($student['roll']) ?></td>
+      <td><strong>Group</strong>: <?= esc($student['section']) ?></td>
     </tr>
   </table>
 
