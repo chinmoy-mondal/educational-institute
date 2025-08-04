@@ -1059,14 +1059,15 @@ class Dashboard extends Controller
 		$selectId  = $this->request->getPost('selectid');
 		$className = $this->request->getPost('subject_class');
 
+		$subject = $this->subjectModel->find($selectId);
+
 		if (in_array($className, [6, 7, 8])) {
 			return redirect()->back()->with('error', 'Sorry Class 6, 7, 8 does not have 4th subject.');
 		}
-
 		if (!$selectId) {
-			return redirect()->back()->with('error', 'Sir now subject is selected.');
+			return redirect()->back()->with('error', 'Sir, No subject is selected.');
 		}
-		return redirect()->back()->with('success', $subjectId . ' - ' . $selectId . '4th subject updated successfully.');
+		return redirect()->back()->with('success', $subject->subject . '4th subject updated successfully.');
 	}
 
 	public function editStudent($id)
