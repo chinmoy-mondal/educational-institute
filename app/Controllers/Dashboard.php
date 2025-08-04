@@ -1062,7 +1062,7 @@ class Dashboard extends Controller
 
 			$subjectId = $this->request->getPost('subject_id');
 
-			return redirect()->back()->with('success', '4th subject updated successfully.');
+			return redirect()->back()->with('success', $subjectId.' - '.$selectId.'4th subject updated successfully.');
 		}
 
 		return redirect()->back()->with('error', 'Please select a subject.');
