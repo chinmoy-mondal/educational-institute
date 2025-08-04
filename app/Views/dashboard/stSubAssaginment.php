@@ -132,3 +132,15 @@
 
 <?= $this->endSection() ?>
 
+<!-- Optional: Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/js/select2.min.js"></script>
+
+<!-- ✅ Init Select2 (optional) -->
+<script>
+  $(document).ready(function() {
+    $('.select2').select2({
+      placeholder: "Select Subjects",
+      closeOnSelect: false
+    });
+  });
+</script>

@@ -29,15 +29,13 @@ $routes->get('/apply', 'Home::apply');
 $routes->get('/subjects', 'Home::subjects');
 $routes->get('/course-details/(:num)', 'Home::courseDetails/$1');
 $routes->get('/activity-details/(:num)', 'Home::activityDetails/$1');
-# 
-#$routes->get('/ad-student', 'Student::index');
-#$routes->post('/ad-student/save', 'Student::save');
-#$routes->get('/ad-student/list', 'Student::list');
 
-#$routes->get('/ad-student/edit/(:num)', 'Student::edit/$1');
-#$routes->post('/ad-student/update/(:num)', 'Student::update/$1');
-#$routes->post('/ad-student/delete/(:num)', 'Student::delete/$1');
-#
+$routes->group('admin', function ($routes) {
+    $routes->get('student/create', 'Dashboard::createStudentForm');
+    $routes->post('students/save', 'Dashboard::saveStudent');
+});
+
+
 $routes->get('run-migration/(:any)', 'DevTools::migrate/$1');
 #$routes->get('run-seed/(:any)', 'DevTools::seed/$1');
 
@@ -69,9 +67,13 @@ $routes->get('/assignSubject/(:num)', 'Dashboard::assignSubject/$1');
 
 $routes->get('/ad-result/(:num)/(:num)', 'Dashboard::result/$1/$2');
 $routes->get('/admin/resultCheck/(:num)/(:num)', 'Dashboard::ResultCheck/$1/$2');
+$routes->post('/results/submit', 'Dashboard::submitResults');
+
 $routes->get('/admin/tabulation_form', 'Dashboard::selectTabulationForm');
 $routes->post('/admin/mark/', 'Dashboard::Mark');
-$routes->post('/results/submit', 'Dashboard::submitResults');
+$routes->get('admin/tabulation/download', 'Dashboard::downloadCSV');
+$routes->get('admin/select-marksheet', 'Dashboard::selectMarksheetForm');
+$routes->get('admin/show-marksheet', 'Dashboard::showMarksheet');
 
 $routes->get('admin/student', 'Dashboard::student');
 $routes->get('admin/students/view/(:num)', 'Dashboard::viewStudent/$1');
@@ -79,6 +81,7 @@ $routes->get('admin/students/edit/(:num)', 'Dashboard::editStudent/$1');
 $routes->post('admin/students/update/(:num)', 'Dashboard::updateStudent/$1');
 $routes->get('admin/students/edit-photo/(:num)', 'Dashboard::editStudentPhoto/$1');
 $routes->post('admin/students/edit-photo/(:num)', 'Dashboard::updateStudentPhoto/$1');
+$routes->post('admin/students/forth/(:num)', 'Dashboard::forthsub/$1');
 $routes->get('admin/stAssaginSubView', 'Dashboard::stAssaginSubView');
 $routes->post('admin/assignStudentsSubjects', 'Dashboard::assignStudentsSubjects');
 

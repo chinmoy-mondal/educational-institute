@@ -1,0 +1,481 @@
+<?= $this->extend('layouts/admin') ?>
+<?= $this->section('content') ?>
+
+<style>
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+.marksheet-wrapper {
+  background: white;
+  padding: 24px;
+  border: 6px double goldenrod;
+  margin: auto;
+  max-width: 850px;
+  font-family: 'Arial', sans-serif;
+  font-size: 14px;
+}
+
+.school-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.school-header h2 {
+  margin: 0;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.school-header h5 {
+  margin: 5px 0;
+}
+
+.student-info,
+.exam-info {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.student-info td,
+.exam-info td {
+  padding: 4px;
+}
+
+.table-bordered td,
+.table-bordered th {
+  border: 1px solid #000 !important;
+  padding: 4px !important;
+}
+
+.grade-table td, 
+.grade-table th {
+    font-size: 12px;
+    padding: 1px 1px !important;
+    line-height: 1.0;
+}
+
+.qr-signature {
+  margin-top: 30px;
+}
+
+.qr-code {
+  text-align: center;
+}
+
+.qr-code img {
+  width: 100px;
+  height: 100px;
+}
+
+.signature {
+  text-align: right;
+  margin-top: 30px;
+  font-weight: bold;
+}
+
+.grade-table td, .grade-table th {
+  font-size: 12px;
+  padding: 3px 6px !important;
+  line-height: 1.2;
+}
+
+.transcript-title {
+  text-align: center;
+}
+
+.transcript-title img {
+  display: block;
+  margin: 0 auto;
+}
+
+.grade-box {
+  float: right;
+}
+
+.align-items-center {
+    align-items: initial !important;
+}
+  th {
+    text-align: center;
+    vertical-align: middle !important;
+  }
+
+td strong {
+	display: inline-block;
+	width: 140px; /* Adjust as needed */
+	font-weight: bold;
+}
+</style>
+
+<div class="marksheet-wrapper">
+  <!-- School Info -->
+  <div class="school-header">
+    <h2>Mulgram Secondary School</h2>
+    <h5>Keshoppur, Jessore</h5>
+  </div>
+
+  <div class="row align-items-center">
+  <!-- Left: Student Photo -->
+  <div class="col-md-3 text-left">
+    <img src="<?= base_url('public/assets/img/headsir.jpg'); ?>" alt="Student Photo" width="200">
+  </div>
+
+  <!-- Center: School Logo & Transcript Title -->
+  <div class="col-md-6 transcript-title">
+    <img src="<?= base_url('public/assets/img/logo.jpg'); ?>" alt="School Logo" width="60">
+    <h4 style="margin-top: 10px; border-bottom: 4px solid green; display: inline-block; font-weight: bold;">Academic Transcript</h4>
+  </div>
+
+  <!-- Right: Grade Chart -->
+  <div class="col-md-3">
+    <div class="grade-box">
+      <table class="table table-bordered text-center grade-table">
+        <tr>
+          <th>Range</th>
+          <th>Grade</th>
+          <th>GPA</th>
+        </tr>
+        <tr><td>80 - 100</td><td>A+</td><td>5.0</td></tr>
+        <tr><td>70 - 79</td><td>A</td><td>4.0</td></tr>
+        <tr><td>60 - 69</td><td>A-</td><td>3.5</td></tr>
+        <tr><td>50 - 59</td><td>B</td><td>3.0</td></tr>
+        <tr><td>40 - 49</td><td>C</td><td>2.0</td></tr>
+        <tr><td>33 - 39</td><td>D</td><td>1.0</td></tr>
+        <tr><td>0 - 32</td><td>F</td><td>0.0</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- Student + Exam Info -->
+  <table class="student-info">
+    <tr>
+      <td><strong>Student's Name</strong>: Kazi Mahmudul Islam</td>
+    </tr>
+    <tr>
+      <td><strong>Father's Name</strong>: Kazi Mahmudul Islam</td>
+    </tr>
+    <tr>
+      <td><strong>Mother's Name</strong>: Kazi Mahmudul Islam</td>
+    </tr>
+    <tr>
+      <td><strong>Student's ID</strong>: Rashida Akter</td>
+      <td><strong>Exam</strong>: 202312</td>
+    </tr>
+    <tr>
+      <td><strong>Class</strong>: 202312</td>
+      <td><strong>Year/Session</strong>: 9</td>
+    </tr>
+    <tr>
+      <td><strong>Roll No</strong>: 9</td>
+      <td><strong>Group</strong>: Half Yearly - 2025</td>
+    </tr>
+  </table>
+
+  <!-- Mark Table -->
+  <table class="table table-bordered text-center">
+  <thead>
+    <tr>
+      <th rowspan="2">Subject</th>
+      <th rowspan="2">Full Marks</th>
+      <th rowspan="2">Obtained Marks</th>
+      <th colspan="4">Marks Distribution</th>
+      <th rowspan="2">Total Marks</th>
+      <th rowspan="2">Letter Grade</th>
+      <th rowspan="2">GP</th>
+    </tr>
+    <tr>
+      <th>Wri</th>
+      <th>MCQ</th>
+      <th>Pra</th>
+      <th>%</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Bangla Pair -->
+    <tr>
+      <td>Bangla 1st</td>
+      <td>100</td>
+      <td>80</td>
+      <td>40</td>
+      <td>24</td>
+      <td>16</td>
+      <td>80%</td>
+      <td rowspan="2">80</td>
+      <td rowspan="2">A+</td>
+      <td rowspan="2">5.00</td>
+    </tr>
+    <tr>
+      <td>Bangla 2nd</td>
+      <td>100</td>
+      <td>75</td>
+      <td>38</td>
+      <td>23</td>
+      <td>14</td>
+      <td>75%</td>
+    </tr>
+
+    <!-- English Pair -->
+    <tr>
+      <td>English 1st</td>
+      <td>100</td>
+      <td>78</td>
+      <td>40</td>
+      <td>22</td>
+      <td>16</td>
+      <td>78%</td>
+      <td rowspan="2">80</td>
+      <td rowspan="2">A+</td>
+      <td rowspan="2">5.00</td>
+    </tr>
+    <tr>
+      <td>English 2nd</td>
+      <td>100</td>
+      <td>82</td>
+      <td>42</td>
+      <td>24</td>
+      <td>16</td>
+      <td>82%</td>
+    </tr>
+
+    <!-- 10 Single Subjects -->
+    <tr>
+      <td>Math</td>
+      <td>100</td>
+      <td>90</td>
+      <td>50</td>
+      <td>30</td>
+      <td>10</td>
+      <td>90%</td>
+      <td>90</td>
+      <td>A+</td>
+      <td>5.00</td>
+    </tr>
+    <tr>
+      <td>ICT</td>
+      <td>100</td>
+      <td>70</td>
+      <td>30</td>
+      <td>30</td>
+      <td>10</td>
+      <td>70%</td>
+      <td>70</td>
+      <td>A</td>
+      <td>4.00</td>
+    </tr>
+    <tr>
+      <td>Religion</td>
+      <td>100</td>
+      <td>88</td>
+      <td>40</td>
+      <td>30</td>
+      <td>18</td>
+      <td>88%</td>
+      <td>88</td>
+      <td>A+</td>
+      <td>5.00</td>
+    </tr>
+    <tr>
+      <td>Science</td>
+      <td>100</td>
+      <td>85</td>
+      <td>42</td>
+      <td>25</td>
+      <td>18</td>
+      <td>85%</td>
+      <td>85</td>
+      <td>A+</td>
+      <td>5.00</td>
+    </tr>
+    <tr>
+      <td>Social Science</td>
+      <td>100</td>
+      <td>72</td>
+      <td>35</td>
+      <td>25</td>
+      <td>12</td>
+      <td>72%</td>
+      <td>72</td>
+      <td>A</td>
+      <td>4.00</td>
+    </tr>
+    <tr>
+      <td>Bangladesh & Global Studies</td>
+      <td>100</td>
+      <td>65</td>
+      <td>30</td>
+      <td>20</td>
+      <td>15</td>
+      <td>65%</td>
+      <td>65</td>
+      <td>A-</td>
+      <td>3.50</td>
+    </tr>
+    <tr>
+      <td>Agriculture</td>
+      <td>100</td>
+      <td>60</td>
+      <td>30</td>
+      <td>20</td>
+      <td>10</td>
+      <td>60%</td>
+      <td>60</td>
+      <td>A-</td>
+      <td>3.50</td>
+    </tr>
+    <tr>
+      <td>Physical Education</td>
+      <td>100</td>
+      <td>75</td>
+      <td>35</td>
+      <td>20</td>
+      <td>20</td>
+      <td>75%</td>
+      <td>75</td>
+      <td>A</td>
+      <td>4.00</td>
+    </tr>
+    <tr>
+      <td>Arts & Crafts</td>
+      <td>100</td>
+      <td>85</td>
+      <td>40</td>
+      <td>30</td>
+      <td>15</td>
+      <td>85%</td>
+      <td>85</td>
+      <td>A+</td>
+      <td>5.00</td>
+    </tr>
+  </tbody>
+<tfoot>
+  <tr>
+    <th>Total Marks</th>
+    <th></th>
+    <th>155</th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th class="text-end">GPA:</th>
+    <th colspan="2">4.50</th>
+  </tr>
+</tfoot>
+</table><!-- Grade Chart + QR + Signature -->
+  <div class="row qr-signature">
+    <div class="col-md-9">
+<table class="table table-bordered text-center">
+  <tbody>
+    <tr>
+      <!-- Left Block -->
+      <td>
+        <table class="table table-bordered text-center mb-0">
+          <tbody>
+            <tr>
+              <td><strong>Position</strong></td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td><strong>GPA (Without 4th)</strong></td>
+              <td>4.25</td>
+            </tr>
+            <tr>
+              <td><strong>Failed Subject</strong></td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td><strong>Working Days</strong></td>
+              <td>---</td>
+            </tr>
+            <tr>
+              <td><strong>Total Present</strong></td>
+              <td>---</td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+
+      <!-- Middle Block -->
+      <td>
+        <table class="table table-bordered text-center mb-0">
+          <thead>
+            <tr>
+              <th colspan="2">Moral & Behaviour Evaluation</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th>Best</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th>Better</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th>Good</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th>Need Imporovement</th>
+            </tr>
+          </thead>
+        </table>
+      </td>
+
+      <!-- Right Block -->
+      <td style="vertical-align: middle;">
+      <table class="table table-bordered text-center mb-0">
+  <thead>
+    <tr>
+      <th colspan="2">Co-Curricular Activities</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td></td>
+      <th>Sports</th>
+    </tr>
+    <tr>
+      <td></td>
+      <th>Cultural Function</th>
+    </tr>
+    <tr>
+      <td></td>
+      <th>Scout / BNCC</th>
+    </tr>
+    <tr>
+      <td></td>
+      <th>Math Olympiad</th>
+    </tr>
+  </tbody>
+</table></td>
+    </tr>
+  </tbody>
+</table>
+    </div>
+
+<?php
+$studentId = 207; // Example: dynamically from DB
+$url = 'https://mulss.edu.bd/student?q=' . $studentId;
+?>
+<div class="col-md-3 qr-code text-center">
+  <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= urlencode($url) ?>" class="qr-img" alt="Student QR">
+  <p style="font-size: 12px;">Scan to Verify</p>
+</div>
+    <div class="col-md-3 signature text-right">
+      <br><br>
+      ____________________<br>
+      Headmaster
+    </div>
+  </div>
+
+  <div class="text-center mt-3 no-print">
+    <button onclick="window.print()" class="btn btn-primary">
+      <i class="fas fa-print"></i> Print Marksheet
+    </button>
+  </div>
+</div>
+
+<?= $this->endSection() ?>

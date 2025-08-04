@@ -5,8 +5,7 @@
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0">Student List</h1>
-      </div>
+      <h1 class="m-0">Student List (<?= esc($total) ?>)</h1></div>
     </div>
   </div>
 </div>
@@ -25,17 +24,17 @@
                 <input type="text" name="q" id="search" class="form-control" placeholder="Name, Roll, or ID" value="<?= esc($q ?? '') ?>">
               </div>
             </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="class">Class</label>
-                <select name="class" id="class" class="form-control">
-                  <option value="" <?= ($class ?? '') === '' ? 'selected' : '' ?>>All Classes</option>
-                  <?php for ($i = 6; $i <= 10; $i++): ?>
-                    <option value="<?= $i ?>" <?= ($class ?? '') == $i ? 'selected' : '' ?>>Class <?= $i ?></option>
-                  <?php endfor; ?>
-                </select>
-              </div>
-            </div>
+		<div class="col-md-2">
+		  <div class="form-group">
+		    <label for="class">Class</label>
+		    <select name="class" id="class" class="form-control">
+		      <option value="" <?= ($class ?? '') === '' ? 'selected' : '' ?>>All Classes</option>
+		      <?php for ($i = 6; $i <= 10; $i++): ?>
+			<option value="<?= $i ?>" <?= ($class ?? '') == $i ? 'selected' : '' ?>>Class <?= $i ?></option>
+		      <?php endfor; ?>
+		    </select>
+		  </div>
+		</div>
             <div class="col-md-2">
               <div class="form-group">
                 <label for="section">Section</label>
