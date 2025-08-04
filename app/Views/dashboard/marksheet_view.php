@@ -120,7 +120,7 @@ td strong {
   <div class="row align-items-center">
   <!-- Left: Student Photo -->
   <div class="col-md-3 text-left">
-    <img src="<?= base_url('public/assets/img/headsir.jpg'); ?>" alt="Student Photo" width="200">
+    <img src="/<?= esc($student['student_pic']) ?>" alt="Student Photo" width="200">
   </div>
 
   <!-- Center: School Logo & Transcript Title -->
@@ -162,11 +162,11 @@ td strong {
     </tr>
     <tr>
       <td><strong>Student's ID</strong>: <?= esc($student['id']) ?></td>
-      <td><strong>Exam</strong>: 202312</td>
+      <td><strong>Exam</strong>: rteter</td>
     </tr>
     <tr>
       <td><strong>Class</strong>: <?= esc($student['class']) ?></td>
-      <td><strong>Year/Session</strong>: 9</td>
+      <td><strong>Year/Session</strong>: 9gdfg</td>
     </tr>
     <tr>
       <td><strong>Roll No</strong>: <?= esc($student['roll']) ?></td>
