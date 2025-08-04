@@ -46,14 +46,19 @@
 
               <!-- 📚 Column 2: Assigned Subjects as <select> -->
               <div class="col-md-4">
-                <h5>Select Subject</h5>
-                <select class="form-select" id="subjectSelect" size="12">
-                  <option disabled selected>Click a subject to select</option>
-                  <?php foreach ($subjects as $subject): ?>
-                    <option value="<?= esc($subject['id']) ?>"><?= esc($subject['subject']) ?></option>
-                  <?php endforeach; ?>
-                </select>
-              </div>
+  <h5>Select Subject</h5>
+  <select class="form-select" id="subjectSelect" size="10">
+    <option disabled selected>Click a subject to select</option>
+    <?php foreach ($subjects as $subject): ?>
+      <option value="<?= esc($subject['id']) ?>"><?= esc($subject['subject']) ?></option>
+    <?php endforeach; ?>
+  </select>
+
+  <!-- ✅ Update Subject Button -->
+  <button type="button" class="btn btn-primary btn-sm mt-3 w-100" id="updateSubjectBtn">
+    <i class="fas fa-sync-alt"></i> Update Subject
+  </button>
+</div>
 
               
             </div>
