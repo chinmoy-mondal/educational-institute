@@ -1031,7 +1031,8 @@ class Dashboard extends Controller
 		}
 
 		// ✅ Convert comma-separated IDs to array
-		$subjectIds = explode(',', $student['assign_sub']); // e.g., ['12', '13', '14', ...]
+		$subject_str_id = $student['assign_sub'];
+		$subjectIds = explode(',', $subject_str_id); // e.g., ['12', '13', '14', ...]
 
 		// ✅ Fetch subjects using whereIn
 		$subjects = $this->subjectModel
@@ -1047,6 +1048,7 @@ class Dashboard extends Controller
 			['label' => 'View Student', 'url' => current_url()],
 		];
 		$this->data['student'] = $student;
+		$this->data['subjectsStr'] = $subject_str_id;
 		$this->data['subjects'] = $subjects; // ✅ pass actual subject rows
 		return view('dashboard/student_view', $this->data);
 	}
