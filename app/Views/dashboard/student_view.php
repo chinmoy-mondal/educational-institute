@@ -61,7 +61,7 @@
               <div class="col-md-4">
                 <h5>Select Subject</h5>
 
-                <form action="<?= site_url('admin/students/forth/' . $student['id']) ?>" method="post">
+<form action="<?= site_url('admin/students/forth/' . $student['id']) ?>" method="post">
                   <?= csrf_field() ?>
 
                   <select class="form-select" id="subjectSelect" name="selectid" size="10">
