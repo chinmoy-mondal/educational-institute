@@ -1001,9 +1001,9 @@ class Dashboard extends Controller
 
 		$request = service('request');
 		$searchType = $request->getGet('search_type');
-echo $searchType."<br>";
 		if ($searchType === 'id') {
 			$studentId = $request->getGet('id');
+echo $studentId."<br>";
 
 			if (!$studentId) {
 				return redirect()->back()->with('error', 'Please enter a Student ID.');
