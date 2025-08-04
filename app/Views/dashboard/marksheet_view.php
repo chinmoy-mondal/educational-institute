@@ -114,7 +114,7 @@ td strong {
   <!-- School Info -->
   <div class="school-header">
     <h2>Mulgram Secondary School</h2>
-    <h5>Keshoppur, Jessor</h5>
+    <h5>Keshoppur, Jessore</h5>
   </div>
 
   <div class="row align-items-center">

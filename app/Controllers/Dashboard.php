@@ -855,10 +855,10 @@ class Dashboard extends Controller
 		$this->data['class']     = $class;
 		$this->data['exam']      = $exam;
 		$this->data['year']      = $year;
-echo '<pre>';
-print_r($finalData);
-echo '</pre>';
-	//	return view('dashboard/mark', $this->data);
+// echo '<pre>';
+// print_r($finalData);
+// echo '</pre>';
+		return view('dashboard/mark', $this->data);
 	}
 	private function getTabulationData(): array
 	{
@@ -1022,6 +1022,8 @@ echo '</pre>';
 	public function viewStudent($id)
 	{
 		$this->studentModel = new StudentModel();
+		$this->subjectModel = new SubjectModel();
+		
 		$student = $this->studentModel->find($id);
 
 		if (!$student) {
