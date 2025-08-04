@@ -1009,9 +1009,9 @@ class Dashboard extends Controller
 			}
 
 			$student = $this->studentModel->find($studentId);
-			echo "<pre>";
-			print_r($student);
-			echo "</pre>";
+			// echo "<pre>";
+			// print_r($student);
+			// echo "</pre>";
 			if (!$student) {
 				return redirect()->back()->with('error', 'Student not found.');
 			}

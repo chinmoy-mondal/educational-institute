@@ -1,15 +1,3 @@
-<?php
-
-echo "dfsdfsdfsdf<pre>";
-  print_r($student);
-echo "</pre>";
-
-
-echo "<pre>";
-  print_r($marksheet);
-echo "</pre>";
-?>
-
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
 
@@ -164,7 +152,7 @@ td strong {
 <!-- Student + Exam Info -->
   <table class="student-info">
     <tr>
-      <td><strong>Student's Name</strong>: Kazi Mahmudul Islam</td>
+      <td><strong>Student's Name</strong>: <?= esc($student['name']) ?></td>
     </tr>
     <tr>
       <td><strong>Father's Name</strong>: Kazi Mahmudul Islam</td>
