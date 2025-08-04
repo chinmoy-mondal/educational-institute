@@ -1056,6 +1056,9 @@ class Dashboard extends Controller
 	public function forthsub($id)
 	{
 		$subjectId = $this->request->getPost('subject_id');
+
+		$subjectId = str_replace('*','',$subjectId);
+
 		$selectId  = $this->request->getPost('selectid');
 		$className = $this->request->getPost('subject_class');
 
