@@ -993,7 +993,6 @@ class Dashboard extends Controller
 	public function showMarksheet()
 	{
 		$this->data['title'] = 'Marksheet';
-
 		$this->data['activeSection'] = 'result';
 		$this->data['navbarItems'] = [
 			['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
@@ -1016,18 +1015,18 @@ class Dashboard extends Controller
 				return redirect()->back()->with('error', 'Student not found.');
 			}
 
-			$data['student'] = $student;
-			$data['marksheet'] = $this->resultModel
+			$this->data['student'] = $student;
+			$this->data['marksheet'] = $this->resultModel
 				->where('student_id', $studentId)
 				->findAll();
 
-			return view('dashboard/marksheet_view', $data);
+			return view('dashboard/marksheet_view', $this->data);
 		} elseif ($searchType === 'roll') {
-			$class = $request->getGet('class');
+			$class   = $request->getGet('class');
 			$section = $request->getGet('section');
-			$roll = $request->getGet('roll');
-			$exam = $request->getGet('exam');
-			$year = $request->getGet('year');
+			$roll    = $request->getGet('roll');
+			$exam    = $request->getGet('exam');
+			$year    = $request->getGet('year');
 
 			if (!$class || !$section || !$roll || !$exam || !$year) {
 				return redirect()->back()->with('error', 'Please fill in all fields.');
@@ -1045,16 +1044,16 @@ class Dashboard extends Controller
 				return redirect()->back()->with('error', 'Student not found for given Class/Roll.');
 			}
 
-			$data['student'] = $student;
-			$data['marksheet'] = $this->resultModel
+			$this->data['student'] = $student;
+			$this->data['marksheet'] = $this->resultModel
 				->where([
 					'student_id' => $student['id'],
-					'exam' => $exam,
-					'year' => $year,
+					'exam'       => $exam,
+					'year'       => $year,
 				])
 				->findAll();
 
-			return view('dashboard/marksheet_view', $data);
+			return view('dashboard/marksheet_view', $this->data);
 		}
 
 		return redirect()->back()->with('error', 'Invalid search method.');
