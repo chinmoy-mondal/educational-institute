@@ -55,7 +55,7 @@
   </select>
 
   <!-- ✅ Update Subject Button -->
-<input type="text" id="subject_id_input" name="subject_id" value="<?= esc($subject['subjectsStr']) ?>">
+<input type="text" id="subject_id_input" name="subject_id" value="<?= esc($subjectsStr) ?>">
   <button type="button" class="btn btn-primary btn-sm mt-3 w-100" id="updateSubjectBtn">
     <i class="fas fa-sync-alt"></i> Update Subject
   </button>
