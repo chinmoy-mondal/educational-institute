@@ -734,9 +734,9 @@ class Dashboard extends Controller
 		
 
 		// ✅ Distinct class list from students
-		$classes = $this->$studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
+		$classes = $this->studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
 
-		$rawSections = $studentModel
+		$rawSections = $this->studentModel
 			->distinct()
 			->select('section')
 			->orderBy('section', 'ASC')
