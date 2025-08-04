@@ -1060,7 +1060,7 @@ class Dashboard extends Controller
 		if ($subjectId) {
 			$selectId = $this->request->getPost('selectid');
 
-    $subjectId = $this->request->getPost('subject_id');
+			$subjectId = $this->request->getPost('subject_id');
 
 			return redirect()->back()->with('success', '4th subject updated successfully.');
 		}

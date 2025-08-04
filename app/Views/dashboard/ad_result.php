@@ -3,10 +3,14 @@
 
 <!-- Responsive widths for mark inputs -->
 <style>
-    .mark-input { width:50px; }
+    .mark-input {
+        width: 50px;
+    }
 
     @media (min-width:576px) {
-        .mark-input { width:80px; }
+        .mark-input {
+            width: 80px;
+        }
     }
 </style>
 
@@ -47,7 +51,7 @@
                                 </select>
                             </div>
                         </div>
-			<input type="hidden" name="class" value="<?= esc($subject['class']) ?>">
+                        <input type="hidden" name="class" value="<?= esc($subject['class']) ?>">
                         <input type="hidden" name="teacher_id" value="<?= esc($user['id']) ?>">
                         <input type="hidden" name="year" value="<?= date('Y') ?>">
                         <input type="hidden" name="subject_id" value="<?= esc($subject['id']) ?>">
@@ -69,14 +73,14 @@
                                 <tbody>
                                     <?php foreach ($students as $i => $s): ?>
                                         <?php
-					$result    = $existingResults[$s['id']] ?? null;
-					$written   = isset($result['written'])   && $result['written']   != 0 ? $result['written']   : '';
-					$mcq       = isset($result['mcq'])       && $result['mcq']       != 0 ? $result['mcq']       : '';
-					$practical = isset($result['practical']) && $result['practical'] != 0 ? $result['practical'] : '';
-					$total     = isset($result['total'])     && $result['total']     != 0 ? $result['total']     : '';
-					?>
+                                        $result    = $existingResults[$s['id']] ?? null;
+                                        $written   = isset($result['written'])   && $result['written']   != 0 ? $result['written']   : '';
+                                        $mcq       = isset($result['mcq'])       && $result['mcq']       != 0 ? $result['mcq']       : '';
+                                        $practical = isset($result['practical']) && $result['practical'] != 0 ? $result['practical'] : '';
+                                        $total     = isset($result['total'])     && $result['total']     != 0 ? $result['total']     : '';
+                                        ?>
                                         <tr>
-                                            <td><?= $i+1 ?></td>
+                                            <td><?= $i + 1 ?></td>
                                             <td>
                                                 <?= esc($s['student_name']) ?>
                                                 <input type="hidden" name="students[<?= $i ?>][id]" value="<?= esc($s['id']) ?>">
@@ -84,25 +88,25 @@
                                             <td><?= esc($s['roll']) ?></td>
                                             <td><?= esc($s['class']) ?></td>
 
-                                            <?php foreach (['written','mcq','practical'] as $field): ?>
+                                            <?php foreach (['written', 'mcq', 'practical'] as $field): ?>
                                                 <td class="mark-cell">
                                                     <input type="number"
-                                                           name="students[<?= $i ?>][<?= $field ?>]"
-                                                           class="form-control mark-input text-center"
-                                                           min="0" max="100"
-                                                           oninput="updateTotal(<?= $i ?>)"
-                                                           onkeydown="moveWithArrow(event)"
-                                                           value="<?= esc($$field) ?>">
+                                                        name="students[<?= $i ?>][<?= $field ?>]"
+                                                        class="form-control mark-input text-center"
+                                                        min="0" max="100"
+                                                        oninput="updateTotal(<?= $i ?>)"
+                                                        onkeydown="moveWithArrow(event)"
+                                                        value="<?= esc($$field) ?>">
                                                 </td>
                                             <?php endforeach; ?>
 
                                             <td>
                                                 <input type="number"
-                                                       name="students[<?= $i ?>][total]"
-                                                       id="total-<?= $i ?>"
-                                                       class="form-control bg-light text-center"
-                                                       readonly
-                                                       value="<?= esc($total) ?>">
+                                                    name="students[<?= $i ?>][total]"
+                                                    id="total-<?= $i ?>"
+                                                    class="form-control bg-light text-center"
+                                                    readonly
+                                                    value="<?= esc($total) ?>">
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -126,7 +130,10 @@
                             const td = e.target.closest('td');
                             if (!td || !td.classList.contains('mark-cell')) return;
 
-                            const dir = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+                            const dir = {
+                                ArrowRight: 1,
+                                ArrowLeft: -1
+                            } [e.key];
                             if (dir) {
                                 let n = td;
                                 do {
