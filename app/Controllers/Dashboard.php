@@ -1075,7 +1075,7 @@ class Dashboard extends Controller
 		} else {
 			$replace = $selectId . "*";
 			$updated = str_replace($selectId, $replace, $subjectId);
-			return redirect()->back()->with('success', $updated . ' 4th subject updated successfully.');
+			return redirect()->back()->with('success', $updated . ' 4th subject updated successfully. to '.$id);
 		}
 	}
 
