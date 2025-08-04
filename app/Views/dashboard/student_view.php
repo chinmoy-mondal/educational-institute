@@ -55,11 +55,11 @@
   </select>
 
   <!-- ✅ Update Subject Button -->
+<input type="text" id="subject_id_input" name="subject_id">
   <button type="button" class="btn btn-primary btn-sm mt-3 w-100" id="updateSubjectBtn">
     <i class="fas fa-sync-alt"></i> Update Subject
   </button>
 </div>
-<input type="text" id="subject_id_input" name="subject_id">
               
             </div>
           </div>
@@ -92,3 +92,14 @@
 </div>
 
 <?= $this->endSection() ?>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const subjectSelect = document.getElementById('subjectSelect');
+    const subjectIdInput = document.getElementById('subject_id_input');
+
+    subjectSelect.addEventListener('change', function () {
+      const selectedValue = this.value;
+      subjectIdInput.value = selectedValue;
+    });
+  });
+</script>
