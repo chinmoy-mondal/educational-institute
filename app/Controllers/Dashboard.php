@@ -1003,22 +1003,30 @@ class Dashboard extends Controller
 		$searchType = $request->getGet('search_type');
 		if ($searchType === 'id') {
 			$studentId = $request->getGet('id');
+			$examName = $request->getGet('exam');
+			$examYear = $request->getGet('year');
 
 			if (!$studentId) {
 				return redirect()->back()->with('error', 'Please enter a Student ID.');
 			}
 
 			$student = $this->studentModel->find($studentId);
-			
+
 			if (!$student) {
 				return redirect()->back()->with('error', 'Student not found.');
 			}
 			$marksheet = $this->resultModel
-				->where('student_id', $studentId)
+				->where([
+					'student_id' => $studentId,
+					'exam'       => $examName,
+					'year'       => $examYear,
+				])
 				->findAll();
 			echo "<pre>";
 			print_r($marksheet);
 			echo "</pre>";
+			$this->data['examName'] = $examName;
+			$this->data['examYear'] = $examYear;
 			$this->data['student'] = $student;
 			$this->data['marksheet'] = $this->resultModel
 				->where('student_id', $studentId)
@@ -1051,6 +1059,8 @@ class Dashboard extends Controller
 			print_r($student);
 			echo "</pre>";
 
+			$this->data['examName'] = $exam;
+			$this->data['examYear'] = $year;
 			$this->data['student'] = $student;
 			$this->data['marksheet'] = $this->resultModel
 				->where([
