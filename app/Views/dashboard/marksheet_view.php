@@ -1,3 +1,15 @@
+<?php
+
+echo "<pre>";
+  print_r($student);
+echo "</pre>";
+
+
+echo "<pre>";
+  print_r($marksheet);
+echo "</pre>";
+?>
+
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
 

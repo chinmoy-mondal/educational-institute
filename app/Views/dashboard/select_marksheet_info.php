@@ -8,7 +8,7 @@
 			
 		</div>
 
-		<form action="<?= base_url('admin/show-marksheet') ?>" method="get">
+		<form action="<?= base_url('admin/show-marksheet') ?>" method="get"><br>
 			<?php if (session()->getFlashdata('success')): ?>
 				<div class="alert alert-success alert-dismissible fade show" role="alert">
 					<?= session()->getFlashdata('success') ?>
