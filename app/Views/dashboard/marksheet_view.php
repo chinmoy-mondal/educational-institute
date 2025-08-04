@@ -152,7 +152,7 @@ td strong {
 <!-- Student + Exam Info -->
   <table class="student-info">
     <tr>
-      <td><strong>Student's Name</strong>: <?= esc($student['name']) ?></td>
+      <td><strong>Student's Name</strong>: ?= esc($student['student_name']) ?></td>
     </tr>
     <tr>
       <td><strong>Father's Name</strong>: Kazi Mahmudul Islam</td>
