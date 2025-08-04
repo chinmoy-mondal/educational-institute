@@ -1009,13 +1009,16 @@ class Dashboard extends Controller
 			}
 
 			$student = $this->studentModel->find($studentId);
-			// echo "<pre>";
-			// print_r($student);
-			// echo "</pre>";
+			
 			if (!$student) {
 				return redirect()->back()->with('error', 'Student not found.');
 			}
-
+			$marksheet = $this->resultModel
+				->where('student_id', $studentId)
+				->findAll();
+			echo "<pre>";
+			print_r($marksheet);
+			echo "</pre>";
 			$this->data['student'] = $student;
 			$this->data['marksheet'] = $this->resultModel
 				->where('student_id', $studentId)
