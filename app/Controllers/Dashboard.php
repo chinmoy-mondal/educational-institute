@@ -1061,6 +1061,7 @@ class Dashboard extends Controller
 
 		$subject = $this->subjectModel->find($selectId);
 		$subjectNames = array_map('trim', explode(',', $subject['subject']));
+		$subjectText = implode(', ', $subjectNames);
 
 		if (in_array($className, [6, 7, 8])) {
 			return redirect()->back()->with('error', 'Sorry Class 6, 7, 8 does not have 4th subject.');
@@ -1068,8 +1069,10 @@ class Dashboard extends Controller
 		if (!$selectId) {
 			return redirect()->back()->with('error', 'Sir, No subject is selected.');
 		}
-
-		$subjectText = implode(', ', $subjectNames);
+		
+		if (in_array($subjectText, ['Higher Mathematics', 'Biology', 'Agriculture Studies','Agriculture Studies-1','Agriculture Studies-2'])) {
+			return redirect()->back()->with('error', 'Sorry sir, '.$subjectText . ' is not a 4th subject.');
+		}
 		return redirect()->back()->with('success', $subjectText . ' 4th subject updated successfully.');
 	}
 
