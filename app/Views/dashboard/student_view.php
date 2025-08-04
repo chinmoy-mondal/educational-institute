@@ -44,16 +44,15 @@
                 </a>
               </div>
 
-              <!-- 📚 Column 2: Assigned Subjects -->
+              <!-- 📚 Column 2: Assigned Subjects as <select> -->
               <div class="col-md-4">
-                <h5>Assigned Subjects</h5>
-                <ul class="list-group" id="subjectList">
+                <h5>Select Subject</h5>
+                <select class="form-select" id="subjectSelect" size="12">
+                  <option disabled selected>Click a subject to select</option>
                   <?php foreach ($subjects as $subject): ?>
-                    <li class="list-group-item subject-item" data-id="<?= esc($subject['id']) ?>" style="cursor:pointer;">
-                      <?= esc($subject['subject']) ?>
-                    </li>
+                    <option value="<?= esc($subject['id']) ?>"><?= esc($subject['subject']) ?></option>
                   <?php endforeach; ?>
-                </ul>
+                </select>
               </div>
 
               <!-- 📝 Column 3: Submit Form -->
@@ -105,39 +104,34 @@
 
 <?= $this->endSection() ?>
 
-<!-- ✅ JavaScript for subject click -->
+<!-- ✅ JavaScript -->
+<?= $this->section('scripts') ?>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const studentClass = "<?= esc($student['class']) ?>";
-    const subjectItems = document.querySelectorAll('.subject-item');
+    const subjectSelect = document.getElementById('subjectSelect');
     const subjectInput = document.getElementById('subject_id_input');
     const selectedSubjectText = document.getElementById('selectedSubjectText');
     const submitBtn = document.getElementById('submitBtn');
 
-    subjectItems.forEach(item => {
-      item.addEventListener('click', function () {
-        if (studentClass === '9' || studentClass === '10') {
-          // Remove previous active
-          subjectItems.forEach(i => i.classList.remove('active'));
-          this.classList.add('active');
+    subjectSelect.addEventListener('change', function () {
+      const selectedOption = this.options[this.selectedIndex];
+      const subjectId = selectedOption.value;
+      const subjectName = selectedOption.text;
 
-          subjectInput.value = this.dataset.id;
-          selectedSubjectText.textContent = "Selected Subject: " + this.textContent.trim();
-          selectedSubjectText.style.display = 'block';
-          submitBtn.disabled = false;
-        } else {
-          alert("This action is only applicable for class 9 or 10.");
-        }
-      });
+      if (studentClass === '9' || studentClass === '10') {
+        subjectInput.value = subjectId;
+        selectedSubjectText.textContent = "Selected Subject: " + subjectName;
+        selectedSubjectText.style.display = 'block';
+        submitBtn.disabled = false;
+      } else {
+        alert("This action is only applicable for class 9 or 10.");
+        this.selectedIndex = 0; // Reset to default
+        subjectInput.value = '';
+        selectedSubjectText.style.display = 'none';
+        submitBtn.disabled = true;
+      }
     });
   });
 </script>
-
-<!-- ✅ CSS for active subject highlight -->
-<style>
-  .subject-item.active {
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-  }
-</style>
+<?= $this->endSection() ?>
