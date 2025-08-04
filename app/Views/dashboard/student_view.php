@@ -46,21 +46,27 @@
 
               <!-- 📚 Column 2: Assigned Subjects as <select> -->
               <div class="col-md-4">
-  <h5>Select Subject</h5>
-  <select class="form-select" id="subjectSelect" size="10">
-    <option disabled selected>Click a subject to select</option>
-    <?php foreach ($subjects as $subject): ?>
-      <option value="<?= esc($subject['id']) ?>"><?= esc($subject['subject']) ?></option>
-    <?php endforeach; ?>
-  </select>
+                <h5>Select Subject</h5>
 
-  <!-- ✅ Update Subject Button -->
-<input type="text" id="subject_id_input" name="subject_id" value="<?= esc($subjectsStr) ?>">
-  <button type="button" class="btn btn-primary btn-sm mt-3 w-100" id="updateSubjectBtn">
-    <i class="fas fa-sync-alt"></i> Update Subject
-  </button>
-</div>
-              
+                <form action="<?= site_url('admin/students/forth/' . $student['id']) ?>" method="post">
+                  <?= csrf_field() ?>
+
+                  <select class="form-select" id="subjectSelect" name="selectid" size="10">
+                    <option disabled selected>Click a subject to select</option>
+                    <?php foreach ($subjects as $subject): ?>
+                      <option value="<?= esc($subject['id']) ?>"><?= esc($subject['subject']) ?></option>
+                    <?php endforeach; ?>
+                  </select>
+
+                  <!-- Hidden input to store selected subject ID -->
+                  <input type="hidden" id="subject_id_input" name="subject_id" value="<?= esc($subjectsStr) ?>">
+
+                  <button type="submit" class="btn btn-primary btn-sm mt-3 w-100" id="updateSubjectBtn">
+                    <i class="fas fa-edit"></i> 4th subject
+                  </button>
+                </form>
+              </div>
+
             </div>
           </div>
         </div>

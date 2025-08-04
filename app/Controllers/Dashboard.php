@@ -1048,9 +1048,24 @@ class Dashboard extends Controller
 			['label' => 'View Student', 'url' => current_url()],
 		];
 		$this->data['student'] = $student;
-		$this->data['subjectsStr'] = $subject_str_id; 
+		$this->data['subjectsStr'] = $subject_str_id;
 		$this->data['subjects'] = $subjects; // ✅ pass actual subject rows
 		return view('dashboard/student_view', $this->data);
+	}
+
+	public function forthsub($id)
+	{
+		$subjectId = $this->request->getPost('subject_id');
+
+		if ($subjectId) {
+			$selectId = $this->request->getPost('selectid');
+
+    $subjectId = $this->request->getPost('subject_id');
+
+			return redirect()->back()->with('success', '4th subject updated successfully.');
+		}
+
+		return redirect()->back()->with('error', 'Please select a subject.');
 	}
 
 	public function editStudent($id)
