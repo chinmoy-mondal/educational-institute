@@ -73,6 +73,7 @@
 
                   <!-- Hidden input to store selected subject ID -->
                   <input type="hidden" id="subject_id_input" name="subject_id" value="<?= esc($subjectsStr) ?>">
+                  <input type="hidden" id="subject_id_input" name="subject_class" value="<?= esc($student['class']) ?>">
 
                   <button type="submit" class="btn btn-primary btn-sm mt-3 w-100" id="updateSubjectBtn">
                     <i class="fas fa-edit"></i> 4th subject

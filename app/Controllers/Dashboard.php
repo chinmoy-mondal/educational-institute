@@ -1056,16 +1056,14 @@ class Dashboard extends Controller
 	public function forthsub($id)
 	{
 		$subjectId = $this->request->getPost('subject_id');
+		$selectId  = $this->request->getPost('selectid');
+		$className = $this->request->getPost('subject_class');
 
-		if ($subjectId) {
-			$selectId = $this->request->getPost('selectid');
-
-			$subjectId = $this->request->getPost('subject_id');
-
-			return redirect()->back()->with('success', $subjectId.' - '.$selectId.'4th subject updated successfully.');
+		if (in_array($className,[6,7,8])) {
+		return redirect()->back()->with('error', 'Sorry Class 6, 7, 8 does not have 4th subject.');
 		}
+		return redirect()->back()->with('success', $subjectId . ' - ' . $selectId . '4th subject updated successfully.');
 
-		return redirect()->back()->with('error', 'Please select a subject.');
 	}
 
 	public function editStudent($id)
