@@ -1075,7 +1075,19 @@ class Dashboard extends Controller
 		} else {
 			$replace = $selectId . "*";
 			$updated = str_replace($selectId, $replace, $subjectId);
-			return redirect()->back()->with('success', $updated . ' 4th subject updated successfully. to '.$id);
+			
+			$updatedResult = $this->studentModel->update($id, [
+				'assign_sub' => $updated,
+			]);
+
+			if ($updatedResult) {
+				return redirect()->back()->with('success', $updated . ' is selected as 4th subject updated successfully to ID ' . $id);
+			} else {
+				$dbError = $this->studentModel->db->error();
+				$errorMsg = $dbError['message'] ?? 'Unknown error occurred.';
+
+				return redirect()->back()->with('error', 'Update failed: ' . $errorMsg);
+			}
 		}
 	}
 
