@@ -1069,11 +1069,14 @@ class Dashboard extends Controller
 		if (!$selectId) {
 			return redirect()->back()->with('error', 'Sir, No subject is selected.');
 		}
-		
-		if (!in_array($subjectText, ['Higher Mathematics', 'Biology', 'Agriculture Studies','Agriculture Studies-1','Agriculture Studies-2'])) {
-			return redirect()->back()->with('error', 'Sorry sir, '.$subjectText . ' is not a 4th subject.');
+
+		if (!in_array($subjectText, ['Higher Mathematics', 'Biology', 'Agriculture Studies', 'Agriculture Studies-1', 'Agriculture Studies-2'])) {
+			return redirect()->back()->with('error', 'Sorry sir, (' . $subjectText . ') is not a 4th subject.');
+		} else {
+			$replace = $selectId . "*";
+			$updated = str_replace($selectId, $replace, $subjectId);
+			return redirect()->back()->with('success', $updated . ' 4th subject updated successfully.');
 		}
-		return redirect()->back()->with('success', $subjectText . ' 4th subject updated successfully.');
 	}
 
 	public function editStudent($id)
