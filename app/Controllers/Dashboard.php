@@ -1004,8 +1004,8 @@ class Dashboard extends Controller
 		if ($searchType === 'id') {
 			$studentId = $request->getGet('id');
 			$examName = $request->getGet('exam');
-			echo "test exam name ".$examName;
 			$examYear = $request->getGet('year');
+			dd($request->getGet()); // or var_dump($_GET);
 
 			if (!$studentId) {
 				return redirect()->back()->with('error', 'Please enter a Student ID.');
