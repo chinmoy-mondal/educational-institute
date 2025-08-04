@@ -47,10 +47,9 @@
                 </a>
               </div>
 
-              <!-- 📚 Column 2: Assigned Subjects -->
+              <!-- 📚 Column 2: Subject Select -->
               <div class="col-md-4">
                 <h5>Assigned Subjects</h5>
-
                 <?php if (in_array($student['class'], ['9', '10'])): ?>
                   <div class="form-group">
                     <label for="subjectSelect">Select a Subject</label>
@@ -70,7 +69,7 @@
                 <?php endif; ?>
               </div>
 
-              <!-- 📝 Column 3: Submit Form -->
+              <!-- 📝 Column 3: Note Form -->
               <div class="col-md-4">
                 <h5>Actions</h5>
 
@@ -85,11 +84,10 @@
                     <label for="note">Note</label>
                     <textarea name="note" class="form-control" rows="3" placeholder="Write a note..." required></textarea>
                   </div>
-
                   <input type="hidden" name="student_id" value="<?= esc($student['id']) ?>">
                   <input type="hidden" name="subject_id" id="subject_id_input">
-
-                  <button type="submit" class="btn btn-primary btn-sm mt-2" id="submitBtn" <?= in_array($student['class'], ['9', '10']) ? 'disabled' : '' ?>>
+                  <button type="submit" class="btn btn-primary btn-sm mt-2" id="submitBtn"
+                    <?= in_array($student['class'], ['9', '10']) ? 'disabled' : '' ?>>
                     Submit
                   </button>
                 </form>
@@ -131,22 +129,22 @@
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const select = document.getElementById('subjectSelect');
-    const subjectInput = document.getElementById('subject_id_input');
-    const submitBtn = document.getElementById('submitBtn');
+    const subjectIdInput = document.getElementById('subject_id_input');
     const subjectNameDisplay = document.getElementById('selectedSubject');
     const subjectNameSpan = document.getElementById('selectedSubjectName');
+    const submitBtn = document.getElementById('submitBtn');
 
     select.addEventListener('change', function () {
       const selectedId = this.value;
       const selectedText = this.options[this.selectedIndex].text;
 
       if (selectedId) {
-        subjectInput.value = selectedId;
+        subjectIdInput.value = selectedId;
         submitBtn.disabled = false;
         subjectNameSpan.textContent = selectedText;
         subjectNameDisplay.style.display = 'block';
       } else {
-        subjectInput.value = '';
+        subjectIdInput.value = '';
         submitBtn.disabled = true;
         subjectNameDisplay.style.display = 'none';
       }
