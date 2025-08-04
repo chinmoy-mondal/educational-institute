@@ -62,7 +62,7 @@
                 <h5>Assigned Subjects</h5>
                 <ul class="list-group">
                   <?php foreach ($subjects as $subject): ?>
-                    <li class="list-group-item py-1 px-2"><?= esc($subject['name']) ?></li>
+                    <li class="list-group-item py-1 px-2"><?= esc($subject['subject']) ?></li>
                   <?php endforeach; ?>
                 </ul>
               </div>

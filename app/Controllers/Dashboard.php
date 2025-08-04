@@ -1048,7 +1048,6 @@ class Dashboard extends Controller
 		];
 		$this->data['student'] = $student;
 		$this->data['subjects'] = $subjects; // ✅ pass actual subject rows
-
 		return view('dashboard/student_view', $this->data);
 	}
 
