@@ -274,7 +274,7 @@
             <td rowspan="2">A+</td>
             <td rowspan="2">5.00</td>
           <?php
-          } elseif (in_array($mark['subject'], ['Bangla 2nd Paper', ''])) {
+          } elseif (in_array($mark['subject'], ['Bangla 2nd Paper', 'English 2nd Paper'])) {
           } else {
           ?>
 
