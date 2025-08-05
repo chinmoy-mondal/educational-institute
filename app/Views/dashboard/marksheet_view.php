@@ -243,6 +243,14 @@
         <th rowspan="2">Letter Grade</th>
         <th rowspan="2">GP</th>
       </tr>
+      <tr>
+        <th>Wri</th>
+        <th>MCQ</th>
+        <th>Pra</th>
+        <th>%</th>
+      </tr>
+    </thead>
+    <tbody>
   <?php
   $totalMarks = 0;
   $totalGPA = 0;
