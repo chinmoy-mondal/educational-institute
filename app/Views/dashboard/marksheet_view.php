@@ -255,7 +255,6 @@
       $totalMarks = 0;
       $totalGPA = 0;
       $subjectCount = 0;
-      $subjectTest = 0;
       ?>
       
       <?php foreach ($marksheet as $i => $mark): ?>
