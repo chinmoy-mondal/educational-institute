@@ -40,20 +40,16 @@
 				<!-- 👤 Student ID -->
 				<div class="form-group search-id">
 					<label>Student ID</label>
-					<input type="text" name="id" class="form-control" placeholder="Enter Student ID">
-				</div>
+					<input type="text" name="student_id" class="form-control mb-2" placeholder="Enter Student ID">
 
-				<div class="form-group search-id">
 					<label>Exam</label>
-					<select name="exam" class="form-control">
+					<select name="exam" class="form-control mb-2">
 						<option value="">Select Exam</option>
 						<?php foreach ($exams as $exam): ?>
 							<option value="<?= esc($exam['exam']) ?>"><?= esc($exam['exam']) ?></option>
 						<?php endforeach; ?>
 					</select>
-				</div>
 
-				<div class="form-group search-id">
 					<label>Year</label>
 					<select name="year" class="form-control">
 						<option value="">Select Year</option>
