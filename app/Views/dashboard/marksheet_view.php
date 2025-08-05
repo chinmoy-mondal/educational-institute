@@ -265,7 +265,7 @@
             <?= esc($mark['subject']) ?>
             <?php 
             
-            if (in_array((int)$student['class'], [9, 10])){
+            if (in_array($student['class'], ['9', '10'])){
               echo "*==";
             }
             
