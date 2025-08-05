@@ -1051,12 +1051,6 @@ class Dashboard extends Controller
 			$exam    = $request->getGet('exam');
 			$year    = $request->getGet('year');
 
-			echo "class = ".$class."<br>";
-			echo "Group = ".$section."<br>";
-			echo "Roll = ".$roll."<br>";
-			echo "Exam = ".$exam."<br>";
-			echo "Year = ".$year."<br>";
-
 			if (!$class || !$section || !$roll || !$exam || !$year) {
 				return redirect()->back()->with('error', 'Please fill in all fields.');
 			}
@@ -1065,17 +1059,19 @@ class Dashboard extends Controller
 				->where('class', $class)
 				->where('roll', $roll);
 
-			if ($section === 'vocational') {
-				$builder->like('section', 'vocational');
-			} else {
-				$builder->groupStart()
-					->where('section', 'n/a')
-					->orWhere('section', 'general')
-					->groupEnd();
-			}
+			// if ($section === 'vocational') {
+			// 	$builder->like('section', 'vocational');
+			// } else {
+			// 	$builder->groupStart()
+			// 		->where('section', 'n/a')
+			// 		->orWhere('section', 'general')
+			// 		->groupEnd();
+			// }
 
 			$student = $builder->first();
-
+echo "<pre>";
+print_r($student);
+echo "</pre>";
 			if (!$student) {
 				// return redirect()->back()->with('error', 'Student not found for given Class/Roll.');
 				exit;
