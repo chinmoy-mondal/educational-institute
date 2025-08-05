@@ -275,12 +275,13 @@
           <td><?= esc($mark['total'] / $mark['full_mark'] * 100) ?>%</td>
           <?php
           if (in_array($mark['subject'], ['Bangla 1st Paper', 'English 1st Paper'])) {
+        
+          } elseif (in_array($mark['subject'], ['Bangla 2nd Paper', 'English 2nd Paper'])) {
           ?>
             <td rowspan="2">80</td>
             <td rowspan="2">A+</td>
             <td rowspan="2">5.00</td>
           <?php
-          } elseif (in_array($mark['subject'], ['Bangla 2nd Paper', 'English 2nd Paper'])) {
           } else {
           ?>
 
