@@ -2,7 +2,6 @@
 <?= $this->section('content') ?>
 
 <style>
-
   .marksheet-wrapper {
     background: white;
     padding: 24px;
@@ -122,7 +121,8 @@
       display: none !important;
     }
 
-    html, body {
+    html,
+    body {
       width: 210mm;
       height: 297mm;
     }
@@ -140,7 +140,7 @@
     <!-- Left: Student Photo -->
     <div class="col-md-3 text-left">
       <?php if (!empty($student['student_pic'])): ?>
-        <img src="<?= base_url($student['student_pic']) ?>" alt="Student Photo" width="150" >
+        <img src="<?= base_url($student['student_pic']) ?>" alt="Student Photo" width="150">
       <?php else: ?>
         <img src="<?= base_url('public/assets/img/default.png') ?>" alt="No Photo" width="150">
       <?php endif; ?>
@@ -251,54 +251,58 @@
       </tr>
     </thead>
     <tbody>
-  <?php
-  $totalMarks = 0;
-  $totalGPA = 0;
-  $subjectCount = 0;
-  ?>
-
-  <?php foreach ($marksheet as $mark): ?>
-    <tr>
-      <td><?= esc($mark['subject']) ?></td>
-      <td><?= esc($mark['full_mark'] ?? 100) ?></td>
-      <td><?= esc($mark['obtained'] ?? $mark['total']) ?></td>
-      <td><?= esc($mark['written']) ?></td>
-      <td><?= esc($mark['mcq']) ?></td>
-      <td><?= esc($mark['practical']) ?></td>
       <?php
-        $written = (int)$mark['written'];
-        $mcq = (int)$mark['mcq'];
-        $practical = (int)$mark['practical'];
-        $total = $written + $mcq + $practical;
-        $percentage = $total > 0 ? round(($total / ($mark['full_mark'] ?? 100)) * 100) . '%' : '0%';
-        $letter = $mark['grade'] ?? 'N/A';
-        $gpa = $mark['gpa'] ?? 0;
-        $totalMarks += $total;
-        $totalGPA += $gpa;
-        $subjectCount++;
+      $totalMarks = 0;
+      $totalGPA = 0;
+      $subjectCount = 0;
+      $subjectTest = 0;
       ?>
-      <td><?= $percentage ?></td>
-      <td><?= $total ?></td>
-      <td><?= esc($letter) ?></td>
-      <td><?= esc($gpa) ?></td>
-    </tr>
-  <?php endforeach; ?>
-</tbody>
-<tfoot>
-  <tr>
-    <th>Total Marks</th>
-    <th></th>
-    <th><?= $totalMarks ?></th>
-    <th></th>
-    <th></th>
-    <th></th>
-    <th></th>
-    <th class="text-end">GPA:</th>
-    <th colspan="2">
-      <?= $subjectCount > 0 ? number_format($totalGPA / $subjectCount, 2) : '0.00' ?>
-    </th>
-  </tr>
-</tfoot>
+
+      <?php foreach ($marksheet as $mark): ?>
+        <tr>
+          <td><?= esc($mark['subject']) ?></td>
+          <td><?= esc($mark['full_mark'] ?? 100) ?></td>
+          <td><?= esc($mark['obtained'] ?? $mark['total']) ?></td>
+          <td><?= esc($mark['written']) ?></td>
+          <td><?= esc($mark['mcq']) ?></td>
+          <td><?= esc($mark['practical']) ?></td>
+          <td><?php echo "%"; ?></td>
+          <?php
+          if (in_array($mark['subject'], ['Bangla 1st Paper', 'English 1st Paper'])) {
+          ?>
+            <td rowspan="2">80</td>
+            <td rowspan="2">A+</td>
+            <td rowspan="2">5.00</td>
+          <?php
+          } elseif (in_array($mark['subject'], ['Bangla 2nd Paper', ''])) {
+          } else {
+          ?>
+
+            <td>85%</td>
+            <td>85%</td>
+            <td>85%</td>
+
+          <?php
+          }
+          ?>
+        </tr>
+      <?php endforeach; ?>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th>Total Marks</th>
+        <th></th>
+        <th><?= $totalMarks ?></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th class="text-end">GPA:</th>
+        <th colspan="2">
+          <?= $subjectCount > 0 ? number_format($totalGPA / $subjectCount, 2) : '0.00' ?>
+        </th>
+      </tr>
+    </tfoot>
   </table>
   <div class="row qr-signature">
     <div class="col-md-9">
