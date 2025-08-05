@@ -1020,7 +1020,11 @@ class Dashboard extends Controller
 			$this->data['examYear'] = $year;
 			$this->data['student'] = $student;
 			$this->data['marksheet'] = $this->resultModel
-				->where('student_id', $studentId)
+				->where([
+					'student_id' => $studentId,
+					'exam'       => $exam,
+					'year'       => $year,
+				])
 				->findAll();
 
 			return view('dashboard/marksheet_view', $this->data);

@@ -208,197 +208,57 @@
       <td><strong>Group</strong>: <?= esc($student['section']) ?></td>
     </tr>
   </table>
-
-  <!-- Mark Table -->
-  <table class="table table-bordered text-center">
-    <thead>
-      <tr>
-        <th rowspan="2">Subject</th>
-        <th rowspan="2">Full Marks</th>
-        <th rowspan="2">Obtained Marks</th>
-        <th colspan="4">Marks Distribution</th>
-        <th rowspan="2">Total Marks</th>
-        <th rowspan="2">Letter Grade</th>
-        <th rowspan="2">GP</th>
-      </tr>
-      <tr>
-        <th>Wri</th>
-        <th>MCQ</th>
-        <th>Pra</th>
-        <th>%</th>
-      </tr>
-    </thead>
+  <table>
     <tbody>
-      <!-- Bangla Pair -->
-      <tr>
-        <td>Bangla 1st</td>
-        <td>100</td>
-        <td>80</td>
-        <td>40</td>
-        <td>24</td>
-        <td>16</td>
-        <td>80%</td>
-        <td rowspan="2">80</td>
-        <td rowspan="2">A+</td>
-        <td rowspan="2">5.00</td>
-      </tr>
-      <tr>
-        <td>Bangla 2nd</td>
-        <td>100</td>
-        <td>75</td>
-        <td>38</td>
-        <td>23</td>
-        <td>14</td>
-        <td>75%</td>
-      </tr>
+  <?php
+  $totalMarks = 0;
+  $totalGPA = 0;
+  $subjectCount = 0;
+  ?>
 
-      <!-- English Pair -->
-      <tr>
-        <td>English 1st</td>
-        <td>100</td>
-        <td>78</td>
-        <td>40</td>
-        <td>22</td>
-        <td>16</td>
-        <td>78%</td>
-        <td rowspan="2">80</td>
-        <td rowspan="2">A+</td>
-        <td rowspan="2">5.00</td>
-      </tr>
-      <tr>
-        <td>English 2nd</td>
-        <td>100</td>
-        <td>82</td>
-        <td>42</td>
-        <td>24</td>
-        <td>16</td>
-        <td>82%</td>
-      </tr>
-
-      <!-- 10 Single Subjects -->
-      <tr>
-        <td>Math</td>
-        <td>100</td>
-        <td>90</td>
-        <td>50</td>
-        <td>30</td>
-        <td>10</td>
-        <td>90%</td>
-        <td>90</td>
-        <td>A+</td>
-        <td>5.00</td>
-      </tr>
-      <tr>
-        <td>ICT</td>
-        <td>100</td>
-        <td>70</td>
-        <td>30</td>
-        <td>30</td>
-        <td>10</td>
-        <td>70%</td>
-        <td>70</td>
-        <td>A</td>
-        <td>4.00</td>
-      </tr>
-      <tr>
-        <td>Religion</td>
-        <td>100</td>
-        <td>88</td>
-        <td>40</td>
-        <td>30</td>
-        <td>18</td>
-        <td>88%</td>
-        <td>88</td>
-        <td>A+</td>
-        <td>5.00</td>
-      </tr>
-      <tr>
-        <td>Science</td>
-        <td>100</td>
-        <td>85</td>
-        <td>42</td>
-        <td>25</td>
-        <td>18</td>
-        <td>85%</td>
-        <td>85</td>
-        <td>A+</td>
-        <td>5.00</td>
-      </tr>
-      <tr>
-        <td>Social Science</td>
-        <td>100</td>
-        <td>72</td>
-        <td>35</td>
-        <td>25</td>
-        <td>12</td>
-        <td>72%</td>
-        <td>72</td>
-        <td>A</td>
-        <td>4.00</td>
-      </tr>
-      <tr>
-        <td>Bangladesh & Global Studies</td>
-        <td>100</td>
-        <td>65</td>
-        <td>30</td>
-        <td>20</td>
-        <td>15</td>
-        <td>65%</td>
-        <td>65</td>
-        <td>A-</td>
-        <td>3.50</td>
-      </tr>
-      <tr>
-        <td>Agriculture</td>
-        <td>100</td>
-        <td>60</td>
-        <td>30</td>
-        <td>20</td>
-        <td>10</td>
-        <td>60%</td>
-        <td>60</td>
-        <td>A-</td>
-        <td>3.50</td>
-      </tr>
-      <tr>
-        <td>Physical Education</td>
-        <td>100</td>
-        <td>75</td>
-        <td>35</td>
-        <td>20</td>
-        <td>20</td>
-        <td>75%</td>
-        <td>75</td>
-        <td>A</td>
-        <td>4.00</td>
-      </tr>
-      <tr>
-        <td>Arts & Crafts</td>
-        <td>100</td>
-        <td>85</td>
-        <td>40</td>
-        <td>30</td>
-        <td>15</td>
-        <td>85%</td>
-        <td>85</td>
-        <td>A+</td>
-        <td>5.00</td>
-      </tr>
-    </tbody>
-    <tfoot>
-      <tr>
-        <th>Total Marks</th>
-        <th></th>
-        <th>155</th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th class="text-end">GPA:</th>
-        <th colspan="2">4.50</th>
-      </tr>
-    </tfoot>
-  </table><!-- Grade Chart + QR + Signature -->
+  <?php foreach ($marksheet as $mark): ?>
+    <tr>
+      <td><?= esc($mark['subject']) ?></td>
+      <td><?= esc($mark['full_mark'] ?? 100) ?></td>
+      <td><?= esc($mark['obtained'] ?? $mark['total']) ?></td>
+      <td><?= esc($mark['written']) ?></td>
+      <td><?= esc($mark['mcq']) ?></td>
+      <td><?= esc($mark['practical']) ?></td>
+      <?php
+        $written = (int)$mark['written'];
+        $mcq = (int)$mark['mcq'];
+        $practical = (int)$mark['practical'];
+        $total = $written + $mcq + $practical;
+        $percentage = $total > 0 ? round(($total / ($mark['full_mark'] ?? 100)) * 100) . '%' : '0%';
+        $letter = $mark['grade'] ?? 'N/A';
+        $gpa = $mark['gpa'] ?? 0;
+        $totalMarks += $total;
+        $totalGPA += $gpa;
+        $subjectCount++;
+      ?>
+      <td><?= $percentage ?></td>
+      <td><?= $total ?></td>
+      <td><?= esc($letter) ?></td>
+      <td><?= esc($gpa) ?></td>
+    </tr>
+  <?php endforeach; ?>
+</tbody>
+<tfoot>
+  <tr>
+    <th>Total Marks</th>
+    <th></th>
+    <th><?= $totalMarks ?></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th></th>
+    <th class="text-end">GPA:</th>
+    <th colspan="2">
+      <?= $subjectCount > 0 ? number_format($totalGPA / $subjectCount, 2) : '0.00' ?>
+    </th>
+  </tr>
+</tfoot>
+  </table>
   <div class="row qr-signature">
     <div class="col-md-9">
       <table class="table table-bordered text-center">
