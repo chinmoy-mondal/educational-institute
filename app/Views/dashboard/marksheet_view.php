@@ -265,12 +265,10 @@
             <?= esc($mark['subject']) ?>
             <?php 
             
-            if (in_array($student['class'], ['9', '10'])){
-              echo "*==";
-            }
             
             if (count($marksheet)-1 == $i){
               echo "*--";
+              echo $student['class'];
             }
             ?>
           </td>
