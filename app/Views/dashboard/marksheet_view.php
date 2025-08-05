@@ -263,10 +263,8 @@
           <td>
             <?= esc($mark['subject']) ?>
             <?php 
-            if (count($marksheet)-1 == $i){
-              echo "*--";
-              echo $student['class'];
-              if ((int)$student['class'] == 9) { echo "yes"; } else {echo 'No';}
+            if(count($marksheet)-1 == $i && (int)$student['class'] == 9){
+              echo " (4th)";
             }
             ?>
           </td>
