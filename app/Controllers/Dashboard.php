@@ -997,8 +997,6 @@ class Dashboard extends Controller
 		$this->data['navbarItems'] = [
 			['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
 			['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
-			['label' => 'Previous', 'url' => current_url()],
-			['label' => 'Next', 'url' => current_url()],
 		];
 
 		$request = service('request');

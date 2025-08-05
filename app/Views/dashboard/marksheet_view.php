@@ -267,12 +267,12 @@
             }
             ?>
           </td>
-          <td><?= esc($mark['full_mark'] ?? 100) ?></td>
-          <td><?= esc($mark['obtained'] ?? $mark['total']) ?></td>
+          <td><?= esc($mark['full_mark']) ?></td>
+          <td><?= esc($mark['obtained']) ?></td>
           <td><?= esc($mark['written']) ?></td>
           <td><?= esc($mark['mcq']) ?></td>
           <td><?= esc($mark['practical']) ?></td>
-          <td><?php echo "%"; ?></td>
+          <td><?= esc($mark['obtained'] / $mark['full_mark'] * 100) ?>%</td>
           <?php
           if (in_array($mark['subject'], ['Bangla 1st Paper', 'English 1st Paper'])) {
           ?>
