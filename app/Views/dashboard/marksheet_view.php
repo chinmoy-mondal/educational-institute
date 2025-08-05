@@ -264,7 +264,7 @@
             <?= esc($mark['subject']) ?>
             <?php 
             if(count($marksheet)-1 == $i && in_array((int)$student['class'],[9,10])){
-              echo " (4th)";
+              echo " <b>(4th)</b>";
             }
             ?>
           </td>
