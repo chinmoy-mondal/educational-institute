@@ -1002,7 +1002,7 @@ class Dashboard extends Controller
 		$request = service('request');
 		$searchType = $request->getGet('search_type');
 		if ($searchType === 'id') {
-			$studentId = $request->getGet('id');
+			$studentId = $request->getGet('student_id');
 			$exam    = $request->getGet('exam');
 			$year    = $request->getGet('year');
 			echo "chinmoy =" . $exam;
