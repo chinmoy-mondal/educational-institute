@@ -1005,7 +1005,7 @@ class Dashboard extends Controller
 			$studentId = $request->getGet('id');
 			$examName = $request->getGet('exam');
 			$examYear = $request->getGet('year');
-			
+			echo "chinmoy =".$examName;
 
 			if (!$studentId) {
 				return redirect()->back()->with('error', 'Please enter a Student ID.');
@@ -1023,9 +1023,9 @@ class Dashboard extends Controller
 					'year'       => 2025,
 				])
 				->findAll();
-			echo "<pre>";
-			print_r($marksheet);
-			echo "</pre>";
+			// echo "<pre>";
+			// print_r($marksheet);
+			// echo "</pre>";
 			$this->data['examName'] = $examName;
 			$this->data['examYear'] = $examYear;
 			$this->data['student'] = $student;
