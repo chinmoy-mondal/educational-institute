@@ -1051,6 +1051,12 @@ class Dashboard extends Controller
 			$exam    = $request->getGet('exam');
 			$year    = $request->getGet('year');
 
+			echo "class = ".$class."<br>";
+			echo "Group = ".$section."<br>";
+			echo "Roll = ".$roll."<br>";
+			echo "Exam = ".$exam."<br>";
+			echo "Year = ".$year."<br>";
+
 			if (!$class || !$section || !$roll || !$exam || !$year) {
 				return redirect()->back()->with('error', 'Please fill in all fields.');
 			}
@@ -1071,7 +1077,7 @@ class Dashboard extends Controller
 			$student = $builder->first();
 
 			if (!$student) {
-				return redirect()->back()->with('error', 'Student not found for given Class/Roll.');
+				//return redirect()->back()->with('error', 'Student not found for given Class/Roll.');
 			}
 
 			// Fetch marksheet with subject join
