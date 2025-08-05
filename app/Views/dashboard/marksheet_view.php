@@ -257,13 +257,17 @@
       $subjectCount = 0;
       $subjectTest = 0;
       ?>
-
+      
       <?php foreach ($marksheet as $i => $mark): ?>
         <tr>
           <td>
             <?php echo $i." = ".count($marksheet); ?>
             <?= esc($mark['subject']) ?>
             <?php 
+            
+            if (in_array((int)$student['class'], [9, 10])){
+              echo "*";
+            }
             
             if (count($marksheet)-1 == $i){
               echo "*";
