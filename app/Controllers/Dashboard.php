@@ -1059,14 +1059,14 @@ class Dashboard extends Controller
 				->where('class', $class)
 				->where('roll', $roll);
 
-			// if ($section === 'vocational') {
-			// 	$builder->like('section', 'vocational');
-			// } else {
-			// 	$builder->groupStart()
-			// 		->where('section', 'n/a')
-			// 		->orWhere('section', 'general')
-			// 		->groupEnd();
-			// }
+			if ($section === 'vocational') {
+				$builder->like('section', 'vocational');
+			} else {
+				$builder->groupStart()
+					->where('section', 'n/a')
+					->orWhere('section', 'general')
+					->groupEnd();
+			}
 
 			$student = $builder->first();
 echo "<pre>";
