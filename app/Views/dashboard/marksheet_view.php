@@ -258,9 +258,12 @@
       $subjectTest = 0;
       ?>
 
-      <?php foreach ($marksheet as $mark): ?>
+      <?php foreach ($marksheet as $i => $mark): ?>
         <tr>
-          <td><?= esc($mark['subject']) ?></td>
+          <td>
+            <?= esc($mark['subject']) ?>
+            <?php if (count($marksheet) === ($i + 1) && in_array((int)$student['class'], [9, 10])): ?>*<?php endif; ?>
+          </td>
           <td><?= esc($mark['full_mark'] ?? 100) ?></td>
           <td><?= esc($mark['obtained'] ?? $mark['total']) ?></td>
           <td><?= esc($mark['written']) ?></td>
@@ -291,7 +294,7 @@
     <tfoot>
       <tr>
         <th colspan="7">Total Marks</th>
-        
+
         <th class="text-end"><?= $totalMarks ?></th>
         <th colspan="2">
           <?= $subjectCount > 0 ? number_format($totalGPA / $subjectCount, 2) : '0.00' ?>
