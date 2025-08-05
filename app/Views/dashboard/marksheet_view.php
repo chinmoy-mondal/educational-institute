@@ -261,11 +261,9 @@
       <?php foreach ($marksheet as $i => $mark): ?>
         <tr>
           <td>
-            <?php echo $i." = ".count($marksheet); ?>
             <?= esc($mark['subject']) ?>
+            <?php if ($student['class'] == 9) { echo "yes"; } ?>
             <?php 
-            
-            
             if (count($marksheet)-1 == $i){
               echo "*--";
               echo $student['class'];
