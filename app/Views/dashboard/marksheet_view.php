@@ -2,11 +2,6 @@
 <?= $this->section('content') ?>
 
 <style>
-  @media print {
-    .no-print {
-      display: none !important;
-    }
-  }
 
   .marksheet-wrapper {
     background: white;
@@ -110,6 +105,27 @@
     width: 140px;
     /* Adjust as needed */
     font-weight: bold;
+  }
+
+  @page {
+    size: A4;
+    margin: 20mm;
+  }
+
+  @media print {
+    body {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .no-print {
+      display: none !important;
+    }
+
+    html, body {
+      width: 210mm;
+      height: 297mm;
+    }
   }
 </style>
 
