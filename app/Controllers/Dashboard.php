@@ -1040,13 +1040,17 @@ class Dashboard extends Controller
 
 			$builder = $this->studentModel
 				->where('class', $class)
-				->where('roll', $roll)
-				->where('exam', $exam)
-				->where('year', $year);
+				->where('roll', $roll);
 
 			if ($section === 'vocational') {
-				$builder->like('section', $section); // section LIKE '%vocational%'
+				$builder->like('section', 'vocational'); // section LIKE '%vocational%'
+			} else {
+				$builder->groupStart()
+					->where('section', 'n/a')
+					->orWhere('section', 'general')
+					->groupEnd();
 			}
+
 			$student = $builder->first();
 
 			if (!$student) {
