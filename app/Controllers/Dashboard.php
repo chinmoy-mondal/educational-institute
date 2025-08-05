@@ -1019,7 +1019,7 @@ class Dashboard extends Controller
 
 			// Fetch results with subject name
 			$marksheet = $this->resultModel
-				->select('results.*, subjects.subject')
+				->select('results.*, subjects.subject, subjects.full_mark')
 				->join('subjects', 'subjects.id = results.subject_id')
 				->where([
 					'results.student_id' => $studentId,
@@ -1076,7 +1076,7 @@ class Dashboard extends Controller
 
 			// Fetch marksheet with subject join
 			$marksheet = $this->resultModel
-				->select('results.*, subjects.subject')
+				->select('results.*, subjects.subject, subjects.full_mark')
 				->join('subjects', 'subjects.id = results.subject_id')
 				->where([
 					'results.student_id' => $student['id'],
