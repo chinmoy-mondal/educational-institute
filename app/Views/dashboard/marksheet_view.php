@@ -266,11 +266,11 @@
             <?php 
             
             if (in_array((int)$student['class'], [9, 10])){
-              echo "*";
+              echo "*==";
             }
             
             if (count($marksheet)-1 == $i){
-              echo "*";
+              echo "*--";
             }
             ?>
           </td>
