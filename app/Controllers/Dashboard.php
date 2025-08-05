@@ -1015,11 +1015,7 @@ class Dashboard extends Controller
 			if (!$student) {
 				return redirect()->back()->with('error', 'Student not found.');
 			}
-
-			$this->data['examName'] = $exam;
-			$this->data['examYear'] = $year;
-			$this->data['student'] = $student;
-			$this->data['marksheet'] =$test= $this->resultModel
+			$test = $this->resultModel
 				->withSubject()
 				->where([
 					'results.student_id' => $studentId,
@@ -1027,9 +1023,13 @@ class Dashboard extends Controller
 					'results.year'       => $year,
 				])
 				->findAll();
-echo "<pre>";
-print_r($test);
-echo "</pre>";
+			$this->data['examName'] = $exam;
+			$this->data['examYear'] = $year;
+			$this->data['student'] = $student;
+			$this->data['marksheet'] = $test;
+			echo "<pre>";
+			print_r($test);
+			echo "</pre>";
 			//return view('dashboard/marksheet_view', $this->data);
 		} elseif ($searchType === 'roll') {
 			$class   = $request->getGet('class');
