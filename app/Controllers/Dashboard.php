@@ -1020,10 +1020,12 @@ class Dashboard extends Controller
 			$this->data['examYear'] = $year;
 			$this->data['student'] = $student;
 			$this->data['marksheet'] = $this->resultModel
+				->select('results.*, subjects.subject') // get all result fields + subject name
+				->join('subjects', 'subjects.id = results.subject_id')
 				->where([
-					'student_id' => $studentId,
-					'exam'       => $exam,
-					'year'       => $year,
+					'results.student_id' => $studentId,
+					'results.exam'       => $exam,
+					'results.year'       => $year,
 				])
 				->findAll();
 
@@ -1062,11 +1064,13 @@ class Dashboard extends Controller
 			$this->data['examName'] = $exam;
 			$this->data['examYear'] = $year;
 			$this->data['student'] = $student;
-			$this->data['marksheet'] = $this->resultModel
+			$this->data['marksheet'] = $this->data['marksheet'] = $this->resultModel
+				->select('results.*, subjects.subject') // get all result fields + subject name
+				->join('subjects', 'subjects.id = results.subject_id')
 				->where([
-					'student_id' => $student['id'],
-					'exam'       => $exam,
-					'year'       => $year,
+					'results.student_id' => $student['id'],
+					'results.exam'       => $exam,
+					'results.year'       => $year,
 				])
 				->findAll();
 
