@@ -1005,7 +1005,7 @@ class Dashboard extends Controller
 			$studentId = $request->getGet('id');
 			$examName = $request->getGet('exam');
 			$examYear = $request->getGet('year');
-			echo "chinmoy =".$examName;
+			echo "chinmoy =" . $examName;
 
 			if (!$studentId) {
 				return redirect()->back()->with('error', 'Please enter a Student ID.');
@@ -1041,18 +1041,16 @@ class Dashboard extends Controller
 			$exam    = $request->getGet('exam');
 			$year    = $request->getGet('year');
 
-			echo "Chinmoy roll ".$exam;
+			echo "Chinmoy roll " . $exam;
 
 			if (!$class || !$section || !$roll || !$exam || !$year) {
 				return redirect()->back()->with('error', 'Please fill in all fields.');
 			}
 
 			$student = $this->studentModel
-				->where([
-					'class' => $class,
-					'section' => $section,
-					'roll' => $roll
-				])
+				->where('class', $class)
+				->like('section', $section)
+				->where('roll', $roll)
 				->first();
 
 			if (!$student) {
