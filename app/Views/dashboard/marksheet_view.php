@@ -290,7 +290,7 @@
     </tbody>
     <tfoot>
       <tr>
-        <th colspan="6">Total Marks</th>
+        <th colspan="7">Total Marks</th>
         
         <th class="text-end"><?= $totalMarks ?></th>
         <th colspan="2">
