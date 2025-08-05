@@ -261,6 +261,7 @@
       <?php foreach ($marksheet as $i => $mark): ?>
         <tr>
           <td>
+            <?php echo $i." = ".count($marksheet); ?>
             <?= esc($mark['subject']) ?>
             <?php if (count($marksheet) === ($i + 1) && in_array((int)$student['class'], [9, 10])): ?>*<?php endif; ?>
           </td>
