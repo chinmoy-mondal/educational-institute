@@ -224,8 +224,25 @@
       <td><strong>Group</strong>: <?= esc($student['section']) ?></td>
     </tr>
   </table>
-  <table>
-    <tbody>
+
+
+
+
+
+
+
+
+  <table class="table table-bordered text-center">
+    <thead>
+      <tr>
+        <th rowspan="2">Subject</th>
+        <th rowspan="2">Full Marks</th>
+        <th rowspan="2">Obtained Marks</th>
+        <th colspan="4">Marks Distribution</th>
+        <th rowspan="2">Total Marks</th>
+        <th rowspan="2">Letter Grade</th>
+        <th rowspan="2">GP</th>
+      </tr>
   <?php
   $totalMarks = 0;
   $totalGPA = 0;
