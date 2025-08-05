@@ -1041,6 +1041,8 @@ class Dashboard extends Controller
 			$exam    = $request->getGet('exam');
 			$year    = $request->getGet('year');
 
+			echo "Chinmoy roll ".$exam;
+
 			if (!$class || !$section || !$roll || !$exam || !$year) {
 				return redirect()->back()->with('error', 'Please fill in all fields.');
 			}
