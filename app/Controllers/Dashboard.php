@@ -1063,15 +1063,15 @@ class Dashboard extends Controller
 				$builder->like('section', 'vocational');
 			} else {
 				$builder->groupStart()
-					->where('section', 'n/a')
-					->orWhere('section', 'general')
+					->like('section', 'n/a')
+					->orLike('section', 'general')
 					->groupEnd();
 			}
 
 			$student = $builder->first();
-echo "<pre>";
-print_r($student);
-echo "</pre>";
+			echo "<pre>";
+			print_r($student);
+			echo "</pre>";
 			if (!$student) {
 				// return redirect()->back()->with('error', 'Student not found for given Class/Roll.');
 				exit;
