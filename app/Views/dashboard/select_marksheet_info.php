@@ -43,7 +43,7 @@
 					<input type="text" name="student_id" class="form-control mb-2" placeholder="Enter Student ID">
 
 					<label>Exam</label>
-					<select name="exam" class="form-control mb-2">
+					<select name="exam" class="form-control">
 						<option value="">Select Exam</option>
 						<?php foreach ($exams as $exam): ?>
 							<option value="<?= esc($exam['exam']) ?>"><?= esc($exam['exam']) ?></option>

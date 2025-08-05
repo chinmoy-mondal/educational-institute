@@ -1003,9 +1003,9 @@ class Dashboard extends Controller
 		$searchType = $request->getGet('search_type');
 		if ($searchType === 'id') {
 			$studentId = $request->getGet('id');
-			$examName = $request->getGet('exam');
-			$examYear = $request->getGet('year');
-			echo "chinmoy =" . $examName;
+			$exam    = $request->getGet('exam');
+			$year    = $request->getGet('year');
+			echo "chinmoy =" . $exam;
 
 			if (!$studentId) {
 				return redirect()->back()->with('error', 'Please enter a Student ID.');
@@ -1016,18 +1016,9 @@ class Dashboard extends Controller
 			if (!$student) {
 				return redirect()->back()->with('error', 'Student not found.');
 			}
-			$marksheet = $this->resultModel
-				->where([
-					'student_id' => 207,
-					'exam'       => "half-yearly",
-					'year'       => 2025,
-				])
-				->findAll();
-			// echo "<pre>";
-			// print_r($marksheet);
-			// echo "</pre>";
-			$this->data['examName'] = $examName;
-			$this->data['examYear'] = $examYear;
+
+			$this->data['examName'] = $exam;
+			$this->data['examYear'] = $year;
 			$this->data['student'] = $student;
 			$this->data['marksheet'] = $this->resultModel
 				->where('student_id', $studentId)
@@ -1047,11 +1038,16 @@ class Dashboard extends Controller
 				return redirect()->back()->with('error', 'Please fill in all fields.');
 			}
 
-			$student = $this->studentModel
+			$builder = $this->studentModel
 				->where('class', $class)
-				->like('section', $section)
 				->where('roll', $roll)
-				->first();
+				->where('exam', $exam)
+				->where('year', $year);
+
+			if ($section === 'vocational') {
+				$builder->like('section', $section); // section LIKE '%vocational%'
+			}
+			$student = $builder->first();
 
 			if (!$student) {
 				return redirect()->back()->with('error', 'Student not found for given Class/Roll.');
