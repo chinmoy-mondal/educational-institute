@@ -290,14 +290,9 @@
     </tbody>
     <tfoot>
       <tr>
-        <th>Total Marks</th>
-        <th></th>
-        <th><?= $totalMarks ?></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th class="text-end">GPA:</th>
+        <th colspan="6">Total Marks</th>
+        
+        <th class="text-end"><?= $totalMarks ?></th>
         <th colspan="2">
           <?= $subjectCount > 0 ? number_format($totalGPA / $subjectCount, 2) : '0.00' ?>
         </th>
