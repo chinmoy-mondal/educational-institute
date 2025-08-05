@@ -1005,9 +1005,6 @@ class Dashboard extends Controller
 			$studentId = $request->getGet('student_id');
 			$exam    = $request->getGet('exam');
 			$year    = $request->getGet('year');
-			echo "chinmoy =" . $studentId;
-			echo "chinmoy =" . $exam;
-			echo "chinmoy =" . $year;
 
 			if (!$studentId) {
 				return redirect()->back()->with('error', 'Please enter a Student ID.');
@@ -1034,7 +1031,6 @@ class Dashboard extends Controller
 			$exam    = $request->getGet('exam');
 			$year    = $request->getGet('year');
 
-			echo "Chinmoy roll " . $exam;
 
 			if (!$class || !$section || !$roll || !$exam || !$year) {
 				return redirect()->back()->with('error', 'Please fill in all fields.');
@@ -1058,9 +1054,6 @@ class Dashboard extends Controller
 			if (!$student) {
 				return redirect()->back()->with('error', 'Student not found for given Class/Roll.');
 			}
-			echo "<pre>";
-			print_r($student);
-			echo "</pre>";
 
 			$this->data['examName'] = $exam;
 			$this->data['examYear'] = $year;
