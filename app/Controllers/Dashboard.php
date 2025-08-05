@@ -1019,7 +1019,7 @@ class Dashboard extends Controller
 			$this->data['examName'] = $exam;
 			$this->data['examYear'] = $year;
 			$this->data['student'] = $student;
-			$this->data['marksheet'] = $this->resultModel
+			$this->data['marksheet'] =$test= $this->resultModel
 				->withSubject()
 				->where([
 					'results.student_id' => $studentId,
@@ -1027,8 +1027,10 @@ class Dashboard extends Controller
 					'results.year'       => $year,
 				])
 				->findAll();
-
-			return view('dashboard/marksheet_view', $this->data);
+echo "<pre>";
+print_r($test);
+echo "</pre>";
+			//return view('dashboard/marksheet_view', $this->data);
 		} elseif ($searchType === 'roll') {
 			$class   = $request->getGet('class');
 			$section = $request->getGet('section');
@@ -1072,7 +1074,7 @@ class Dashboard extends Controller
 				])
 				->findAll();
 
-			return view('dashboard/marksheet_view', $this->data);
+			//return view('dashboard/marksheet_view', $this->data);
 		}
 
 		return redirect()->back()->with('error', 'Invalid search method.');
