@@ -1077,7 +1077,8 @@ class Dashboard extends Controller
 			$student = $builder->first();
 
 			if (!$student) {
-				//return redirect()->back()->with('error', 'Student not found for given Class/Roll.');
+				// return redirect()->back()->with('error', 'Student not found for given Class/Roll.');
+				exit;
 			}
 
 			// Fetch marksheet with subject join
