@@ -263,7 +263,12 @@
           <td>
             <?php echo $i." = ".count($marksheet); ?>
             <?= esc($mark['subject']) ?>
-            <?php if (count($marksheet)-1 == $i && in_array((int)$student['class'], [9, 10])): ?>*<?php endif; ?>
+            <?php 
+            
+            if (count($marksheet)-1 == $i){
+              echo "*";
+            }
+            ?>
           </td>
           <td><?= esc($mark['full_mark'] ?? 100) ?></td>
           <td><?= esc($mark['obtained'] ?? $mark['total']) ?></td>
