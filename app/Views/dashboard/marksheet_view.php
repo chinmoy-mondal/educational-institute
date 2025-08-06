@@ -371,7 +371,7 @@ if (!is_null($roll)) {
               $subject == 'Bangla 2nd Paper'
             ) {
 
-              if (($mark['written'] + ($marksheet[$i - 1]['written'] ?? 0)) < 40 || ($mark['mcq'] + ($marksheet[$i - 1]['mcq'] ?? 0)) < 40) {
+              if (($mark['written'] + $marksheet[$i - 1]['written']) < 40 || ($mark['mcq'] + $marksheet[$i - 1]['mcq']) < 40) {
                 $grade = 'F';
                 $gpa = '0.00';
 
