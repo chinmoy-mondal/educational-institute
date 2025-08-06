@@ -259,6 +259,7 @@
       $totalFailed = 0;
       $totalFailed = 0;
       $forthGPA = 0;
+      $grade = 0;
       ?>
       <?php foreach ($marksheet as $i => $mark): ?>
         <?php $totalMarks = $totalMarks +  $mark['total']; ?>
