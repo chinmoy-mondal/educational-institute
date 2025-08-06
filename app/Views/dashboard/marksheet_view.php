@@ -518,8 +518,8 @@
             }
             ?>
             <td><?= esc($mark['total']) ?></td>
-            <td><?= esc($mark['grade'] ?? 'A') ?></td>
-            <td><?= esc($mark['gpa'] ?? '5.00') ?></td>
+            <td><?php echo $gpa; ?></td>
+            <td><?php echo $grade; ?></td>
           <?php endif; ?>
         </tr>
       <?php endforeach; ?>
