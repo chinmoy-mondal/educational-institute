@@ -574,7 +574,7 @@
 			<?= esc($gpa) ?>
 			<?php 
             if (count($marksheet) - 1 == $i && in_array((int)$student['class'], [9, 10])) {
-                    $totalGPA = $totalGPA + max(0, $gpa - 2);
+                    $forthGPA =  max(0, $gpa - 2);
             }else{
 		    $totalGPA =$totalGPA + $gpa;
 		    $subjectCount++;
@@ -592,7 +592,7 @@
 
         <th class="text-end"><?= $totalMarks ?></th>
         <th colspan="2">
-          <?= $subjectCount > 0 ? number_format($totalGPA / $subjectCount, 2) : '0.00' ?>
+          <?= $subjectCount > 0 ? number_format(($totalGPA + $forthGPA) / $subjectCount, 2) : '0.00' ?>
         </th>
       </tr>
     </tfoot>
@@ -612,7 +612,9 @@
                   </tr>
                   <tr>
                     <td><strong>GPA (Without 4th)</strong></td>
-                    <td>---</td>
+		    <td>
+			<?= $subjectCount > 0 ? number_format($totalGPA / $subjectCount, 2) : '0.00' ?>
+		    </td>
                   </tr>
                   <tr>
                     <td>---<strong>Failed Subject</strong></td>
