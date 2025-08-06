@@ -408,13 +408,13 @@ if (!is_null($roll)) {
               $subject == 'English 2nd Paper'
             ) {
 
-              if (($mark['written'] + ($marksheet[$i - 1]['written'] ?? 0)) < 66) {
+              if (($mark['written'] + $marksheet[$i - 1]['written']) < 66) {
                 $grade = 'F';
                 $gpa = '0.00';
 
                 $totalFailed++;
               } else {
-                $fullMark = $mark['full_mark'] + ($marksheet[$i - 1]['full_mark'] ?? 0);
+                $fullMark = $mark['full_mark'] + $marksheet[$i - 1]['full_mark'];
                 $percentage = $total / $fullMark * 100;
 
                 if ($percentage >= 80) {
@@ -446,7 +446,7 @@ if (!is_null($roll)) {
           ?>
             <script>
               document.addEventListener("DOMContentLoaded", function() {
-                document.getElementById("combined_mark_<?= $subjectKey ?>").textContent = "<?= $total ?>rrr";
+                document.getElementById("combined_mark_<?= $subjectKey ?>").textContent = "<?= $total ?>=<?= ($mark['written'] + $marksheet[$i - 1]['written']) < 66 ?>";
                 document.getElementById("combined_grade_<?= $subjectKey ?>").textContent = "<?= $grade ?>";
                 document.getElementById("combined_gpa_<?= $subjectKey ?>").textContent = "<?= $gpa ?>";
               });
