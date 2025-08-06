@@ -399,7 +399,7 @@ if (!is_null($roll)) {
                   $grade = 'D';
                   $gpa = '1.00';
                 } else {
-                  $grade = 'F';
+                  $grade = 'F43';
                   $gpa = '0.00';
                 }
               }
