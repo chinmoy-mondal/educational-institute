@@ -256,13 +256,12 @@
       $totalGPA = 0;
       $subjectCount = 0;
       ?>
-      
       <?php foreach ($marksheet as $i => $mark): ?>
         <tr>
           <td>
             <?= esc($mark['subject']) ?>
-            <?php 
-            if(count($marksheet)-1 == $i && in_array((int)$student['class'],[9,10])){
+            <?php
+            if (count($marksheet) - 1 == $i && in_array((int)$student['class'], [9, 10])) {
               echo " <b>(4th)</b>";
             }
             ?>
@@ -272,27 +271,59 @@
           <td><?= esc($mark['written']) ?></td>
           <td><?= esc($mark['mcq']) ?></td>
           <td><?= esc($mark['practical']) ?></td>
-          <td><?= esc($mark['total'] / $mark['full_mark'] * 100) ?>%</td>
-          <?php
-          if (in_array($mark['subject'], ['Bangla 1st Paper', 'English 1st Paper'])) {
-          ?>
-            <td rowspan="2">80</td>
-            <td rowspan="2">A+</td>
-            <td rowspan="2">5.00</td>
-          <?php
-          } elseif (in_array($mark['subject'], ['Bangla 2nd Paper', 'English 2nd Paper'])) {
-          } else {
-          ?>
-
-            <td>85%</td>
-            <td>85%</td>
-            <td>85%</td>
+          <td><?= esc(round($mark['total'] / $mark['full_mark'] * 100, 2)) ?>%</td>
 
           <?php
-          }
+          // Handle 1st Paper (rowspan with empty cells to fill later)
+          if (in_array($mark['subject'], ['Bangla 1st Paper', 'English 1st Paper'])):
+            $subjectKey = strtolower(str_replace(' ', '_', explode(' ', $mark['subject'])[0]));
           ?>
+            <td id="combined_mark_<?= $subjectKey ?>" rowspan="2"></td>
+            <td id="combined_grade_<?= $subjectKey ?>" rowspan="2"></td>
+            <td id="combined_gpa_<?= $subjectKey ?>" rowspan="2"></td>
+
+          <?php
+          // Handle 2nd Paper (inject values into previous IDs)
+          elseif (in_array($mark['subject'], ['Bangla 2nd Paper', 'English 2nd Paper'])):
+            $subjectKey = strtolower(str_replace(' ', '_', explode(' ', $mark['subject'])[0]));
+            $total = $mark['total'] + ($marksheet[$i - 1]['total'] ?? 0); // Combine 1st + 2nd paper total
+            $fullMark = $mark['full_mark'] + ($marksheet[$i - 1]['full_mark'] ?? 0);
+            $percentage = $total / $fullMark * 100;
+
+            // Simple grading logic (replace with your own logic if needed)
+            if ($percentage >= 80) {
+              $grade = 'A+';
+              $gpa = '5.00';
+            } elseif ($percentage >= 70) {
+              $grade = 'A';
+              $gpa = '4.00';
+            } elseif ($percentage >= 60) {
+              $grade = 'A-';
+              $gpa = '3.50';
+            } else {
+              $grade = 'B';
+              $gpa = '3.00';
+            }
+          ?>
+            <script>
+              document.addEventListener("DOMContentLoaded", function() {
+                document.getElementById("combined_mark_<?= $subjectKey ?>").textContent = "<?= $total ?>";
+                document.getElementById("combined_grade_<?= $subjectKey ?>").textContent = "<?= $grade ?>";
+                document.getElementById("combined_gpa_<?= $subjectKey ?>").textContent = "<?= $gpa ?>";
+              });
+            </script>
+
+          <?php
+          // All other subjects: print normally
+          else:
+          ?>
+            <td><?= esc($mark['total']) ?></td>
+            <td><?= esc($mark['grade'] ?? 'A') ?></td>
+            <td><?= esc($mark['gpa'] ?? '5.00') ?></td>
+          <?php endif; ?>
         </tr>
       <?php endforeach; ?>
+
     </tbody>
     <tfoot>
       <tr>
