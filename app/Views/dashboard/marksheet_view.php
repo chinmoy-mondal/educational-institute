@@ -256,6 +256,8 @@
       $totalMarks = 0;
       $totalGPA = 0;
       $subjectCount = 0;
+      $totalFailed = 0;
+      $totalFailed=0;
       ?>
       <?php foreach ($marksheet as $i => $mark): ?>
       <?php $totalMarks = $totalMarks +  $mark['total']; ?>
@@ -295,7 +297,8 @@
             if (in_array((int)$student['class'], [6, 7, 8])) {
               if (($mark['total'] + ($marksheet[$i - 1]['total'] ?? 0)) < 49) {
                 $grade = 'F';
-                $gpa = '0.00';
+		$gpa = '0.00';
+		$totalFailed++;
               } else {
                 $fullMark = $mark['full_mark'] + ($marksheet[$i - 1]['full_mark'] ?? 0);
                 $percentage = $total / $fullMark * 100;
@@ -330,7 +333,9 @@
 
               if (($mark['written'] + ($marksheet[$i - 1]['written'] ?? 0)) < 40 || ($mark['mcq'] + ($marksheet[$i - 1]['mcq'] ?? 0)) < 40) {
                 $grade = 'F';
-                $gpa = '0.00';
+		$gpa = '0.00';
+
+		$totalFailed++;
               } else {
                 $fullMark = $mark['full_mark'] + ($marksheet[$i - 1]['full_mark'] ?? 0);
                 $percentage = $total / $fullMark * 100;
@@ -365,7 +370,9 @@
 
               if (($mark['written'] + ($marksheet[$i - 1]['written'] ?? 0)) < 66) {
                 $grade = 'F';
-                $gpa = '0.00';
+		$gpa = '0.00';
+
+		$totalFailed++;
               } else {
                 $fullMark = $mark['full_mark'] + ($marksheet[$i - 1]['full_mark'] ?? 0);
                 $percentage = $total / $fullMark * 100;
@@ -419,10 +426,14 @@
             if (in_array($class, [6, 7, 8])) {
               if ($subject === 'ICT' && $total < 17) {
                 $grade = 'F';
-                $gpa = '0.00';
+		$gpa = '0.00';
+
+		$totalFailed++;
               } elseif ($subject !== 'ICT' && $total < 33) {
                 $grade = 'F';
-                $gpa = '0.00';
+		$gpa = '0.00';
+
+		$totalFailed++;
               } else {
 
                 if ($percentage >= 80) {
@@ -463,7 +474,9 @@
                 if (in_array($subject, ['Physics', 'Chemistry'])) {
                   if ($written < 10) {
                     $grade = 'F';
-                    $gpa = '0.00';
+		    $gpa = '0.00';
+
+		$totalFailed++;
                   }
                 } else {
                   if ($written < 20) {
@@ -478,7 +491,9 @@
                 if ($subject === 'ICT') {
                   if (($written + $mcq) < 7 || $practical < 8) {
                     $grade = 'F';
-                    $gpa = '0.00';
+		    $gpa = '0.00';
+
+		$totalFailed++;
                   }else{
                     
                 if ($percentage >= 80) {
@@ -507,7 +522,9 @@
                 } elseif (in_array($subject, ['Physics', 'Chemistry', 'Higher Math', 'Biology'])) {
                   if ($written < 17 || $mcq < 8 || $practical < 8) {
                     $grade = 'F';
-                    $gpa = '0.00';
+		    $gpa = '0.00';
+
+		$totalFailed++;
                   } else{
                             if ($percentage >= 80) {
                   $grade = 'A+';
@@ -535,7 +552,9 @@
                 } else {
                   if ($written < 23 || $mcq < 10) {
                     $grade = 'F';
-                    $gpa = '0.00';
+		    $gpa = '0.00';
+
+		$totalFailed++;
                   } else{
                             if ($percentage >= 80) {
                   $grade = 'A+';
@@ -618,7 +637,7 @@
                   </tr>
                   <tr>
                     <td><strong>Failed Subject</strong></td>
-                    <td>---</td>
+		    <td><?= $totalFailed ?></td>
                   </tr>
                   <tr>
                     <td><strong>Working Days</strong></td>
