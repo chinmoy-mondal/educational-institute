@@ -768,7 +768,7 @@ if (!is_null($roll)) {
   </div>
   <div class="row">
 
-    <div class="col-md-6 signature text-right">
+    <div class="col-md-6 signature text-left">
       <br><br>
       ____________________<br>
       Headsir
