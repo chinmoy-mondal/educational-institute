@@ -258,6 +258,7 @@
       $subjectCount = 0;
       ?>
       <?php foreach ($marksheet as $i => $mark): ?>
+      <?php $totalMarks = $totalMarks +  $mark['total']; ?>
         <tr>
           <td>
             <?= esc($mark['subject']) ?>
