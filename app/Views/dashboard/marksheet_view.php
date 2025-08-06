@@ -129,7 +129,44 @@
     }
   }
 </style>
+<?php
+$class    = (int)$student['class'];
+$section  = strtolower($student['section']);
+$roll     = isset($student['roll']) ? (int)$student['roll'] : null;
+$exam     = esc($examName);
+$year     = esc($examYear);
 
+if (!is_null($roll)) {
+  $prevRoll = $roll - 1;
+  $nextRoll = $roll + 1;
+
+  function makeUrl($class, $section, $roll, $exam, $year) {
+    $params = http_build_query([
+      'search_type' => 'roll',
+      'student_id'  => '',
+      'class'       => $class,
+      'section'     => $section,
+      'roll'        => $roll,
+      'exam'        => $exam,
+      'year'        => $year,
+    ]);
+    return site_url('admin/show-marksheet?' . $params);
+  }
+  ?>
+
+  <div class="no-print mb-3 text-center">
+    <a href="<?= makeUrl($class, $section, $prevRoll, $exam, $year) ?>" class="btn btn-outline-primary">
+      ← Previous
+    </a>
+    <a href="<?= makeUrl($class, $section, $roll, $exam, $year) ?>" class="btn btn-outline-secondary">
+      Current
+    </a>
+    <a href="<?= makeUrl($class, $section, $nextRoll, $exam, $year) ?>" class="btn btn-outline-primary">
+      Next →
+    </a>
+  </div>
+
+<?php } ?>
 <div class="marksheet-wrapper">
   <!-- School Info -->
   <div class="school-header">
