@@ -371,7 +371,7 @@ if (!is_null($roll)) {
               $subject == 'Bangla 2nd Paper'
             ) {
 
-              if (($mark['written'] + $marksheet[$i - 1]['written']) < 40 || ($mark['mcq'] + $marksheet[$i - 1]['mcq']) < 40) {
+              if (($mark['written'] + $marksheet[$i - 1]['written']) < 40 || ($mark['mcq'] + $marksheet[$i - 1]['mcq']) < 20) {
                 $grade = 'F';
                 $gpa = '0.00';
 
@@ -446,7 +446,7 @@ if (!is_null($roll)) {
           ?>
             <script>
               document.addEventListener("DOMContentLoaded", function() {
-                document.getElementById("combined_mark_<?= $subjectKey ?>").textContent = "<?= $total ?>=<?= ($mark['mcq'] + $marksheet[$i - 1]['mcq'])<40 ?>";
+                document.getElementById("combined_mark_<?= $subjectKey ?>").textContent = "<?= $total ?>";
                 document.getElementById("combined_grade_<?= $subjectKey ?>").textContent = "<?= $grade ?>";
                 document.getElementById("combined_gpa_<?= $subjectKey ?>").textContent = "<?= $gpa ?>";
               });
