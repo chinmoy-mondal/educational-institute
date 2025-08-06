@@ -600,6 +600,9 @@
               }
               ?>
             </td>
+            <?= $subjectCount ?> = <?= $totalGPA ?> = <?= $forthGPA ?>
+            <td>
+            </td>
           <?php endif; ?>
         </tr>
       <?php endforeach; ?>
