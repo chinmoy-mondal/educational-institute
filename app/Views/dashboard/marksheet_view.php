@@ -452,6 +452,7 @@
               $written = $mark['written'];
               $mcq = $mark['mcq'];
               $practical = $mark['practical'];
+              $total = $written + $mcq + $practical;
               $fullMark = $mark['full_mark'];
               $percentage = $total / $fullMark * 100;
 
