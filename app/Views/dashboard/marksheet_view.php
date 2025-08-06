@@ -288,6 +288,8 @@
             $subjectKey = strtolower(str_replace(' ', '_', explode(' ', $mark['subject'])[0]));
             $total = $mark['total'] + ($marksheet[$i - 1]['total'] ?? 0); // Combine 1st + 2nd paper total
 
+            $subject = $mark['subject'];
+            
             if (in_array((int)$student['class'], [6, 7, 8])) {
               if (($mark['total'] + ($marksheet[$i - 1]['total'] ?? 0)) < 49) {
                 $grade = 'F';
@@ -321,7 +323,7 @@
               }
             } elseif (
               in_array((int)$student['class'], [9, 10]) &&
-              $mark['subject'] == 'Bangla 2nd Paper'
+              $subject == 'Bangla 2nd Paper'
             ) {
 
               if (($mark['written'] + ($marksheet[$i - 1]['written'] ?? 0)) < 40 || ($mark['mcq'] + ($marksheet[$i - 1]['mcq'] ?? 0)) < 40) {
