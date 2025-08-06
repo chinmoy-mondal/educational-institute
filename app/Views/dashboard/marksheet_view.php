@@ -364,7 +364,6 @@
                   $gpa = '0.00';
                 }
               }
-
             } elseif (
               in_array((int)$student['class'], [9, 10]) &&
               $subject == 'English 2nd Paper'
@@ -402,7 +401,7 @@
                   $gpa = '0.00';
                 }
               }
-            } 
+            }
 
 
           ?>
@@ -412,11 +411,10 @@
                 document.getElementById("combined_grade_<?= $subjectKey ?>").textContent = "<?= $grade ?>";
                 document.getElementById("combined_gpa_<?= $subjectKey ?>").textContent = "<?= $gpa ?>";
               });
-            <?php
-
-                $totalGPA = $totalGPA + $gpa;
-                $subjectCount++;
-            ?>
+              <?php
+              $totalGPA = $totalGPA + $gpa;
+              $subjectCount++;
+              ?>
             </script>
 
           <?php
@@ -606,9 +604,6 @@
               }
               ?>
             </td>
-            <td>
-            <?= esc($subjectCount) ?> = <?= esc($totalGPA) ?> = <?= esc($forthGPA) ?>
-            </td>
           <?php endif; ?>
         </tr>
       <?php endforeach; ?>
@@ -620,7 +615,7 @@
 
         <th class="text-end"><?= $totalMarks ?></th>
         <th colspan="2">
-          <?= $subjectCount > 0 ? number_format(($totalGPA + $forthGPA) / $subjectCount, 2) : '0.00' ?>
+          <?= $subjectCount > 0 ? (($golden_gpa = ($totalGPA + $forthGPA) / $subjectCount) > 5 ? '5.00*' : number_format($golden_gpa, 2)) : '0.00' ?>
         </th>
       </tr>
     </tfoot>
@@ -650,11 +645,11 @@
                   </tr>
                   <tr>
                     <td><strong>Working Days</strong></td>
-                    <td><?= $totalGPA ?></td>
+                    <td></td>
                   </tr>
                   <tr>
                     <td><strong>Total Present</strong></td>
-                    <td><?= $subjectCount ?></td>
+                    <td></td>
                   </tr>
                 </tbody>
               </table>
@@ -668,7 +663,7 @@
                     <th colspan="2">Moral & Behaviour Evaluation</th>
                   </tr>
                   <tr>
-                    <th><?= $forthGPA ?></th>
+                    <th></th>
                     <th>Best</th>
                   </tr>
                   <tr>
