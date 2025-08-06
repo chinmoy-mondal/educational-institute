@@ -408,9 +408,11 @@
           else:
           ?>
             <?php
-            $total = $mark['total'];
             $subject = $mark['subject'];
             $class = (int)$student['class'];
+            $total = $mark['total'];
+            $fullMark = $mark['full_mark'];
+            $percentage = $total / $fullMark * 100;
 
             if (in_array($class, [6, 7, 8])) {
               if ($subject === 'ICT' && $total < 17) {
@@ -420,8 +422,6 @@
                 $grade = 'F';
                 $gpa = '0.00';
               } else {
-                $fullMark = $mark['full_mark'];
-                $percentage = $total / $fullMark * 100;
 
                 if ($percentage >= 80) {
                   $grade = 'A+';
@@ -452,7 +452,7 @@
               $written = $mark['written'];
               $mcq = $mark['mcq'];
               $practical = $mark['practical'];
-              $total = $written + $mcq + $practical;
+              $total = $mark['total'];
               $fullMark = $mark['full_mark'];
               $percentage = $total / $fullMark * 100;
 
