@@ -115,6 +115,7 @@
     body {
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
+      margin-top:30mm;
     }
 
     .no-print {
