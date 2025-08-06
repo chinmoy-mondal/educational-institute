@@ -600,8 +600,8 @@
               }
               ?>
             </td>
-            <?= esc($subjectCount) ?> = <?= esc($totalGPA) ?> = <?= esc($forthGPA) ?>
             <td>
+            <?= esc($subjectCount) ?> = <?= esc($totalGPA) ?> = <?= esc($forthGPA) ?>
             </td>
           <?php endif; ?>
         </tr>
