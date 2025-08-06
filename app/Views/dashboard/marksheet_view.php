@@ -289,7 +289,7 @@
             $total = $mark['total'] + ($marksheet[$i - 1]['total'] ?? 0); // Combine 1st + 2nd paper total
 
             $subject = $mark['subject'];
-            
+
             if (in_array((int)$student['class'], [6, 7, 8])) {
               if (($mark['total'] + ($marksheet[$i - 1]['total'] ?? 0)) < 49) {
                 $grade = 'F';
@@ -515,7 +515,7 @@
                   $gpa = '0.00';
                 }
               }
-            }ß
+            }
             ?>
             <td><?= esc($mark['total']) ?></td>
             <td><?= esc($mark['grade'] ?? 'A') ?></td>
