@@ -617,7 +617,7 @@
 		    </td>
                   </tr>
                   <tr>
-                    <td>---<strong>Failed Subject</strong></td>
+                    <td><strong>Failed Subject</strong></td>
                     <td>---</td>
                   </tr>
                   <tr>
