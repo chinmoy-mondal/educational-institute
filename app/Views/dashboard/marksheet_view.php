@@ -643,6 +643,9 @@ if (!is_null($roll)) {
               }
               ?>
             </td>
+            <td>
+            <?= $subjectCount ?> = <?= $totalGPA ?> 
+            </td>
           <?php endif; ?>
         </tr>
       <?php endforeach; ?>
