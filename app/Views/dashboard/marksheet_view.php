@@ -364,6 +364,7 @@
                   $gpa = '0.00';
                 }
               }
+
             } elseif (
               in_array((int)$student['class'], [9, 10]) &&
               $subject == 'English 2nd Paper'
@@ -403,6 +404,8 @@
               }
             }
 
+                $totalGPA = $totalGPA + $gpa;
+                $subjectCount++;
 
           ?>
             <script>
