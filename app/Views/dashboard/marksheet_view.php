@@ -561,13 +561,14 @@
                 }
               }
 
-              
+            }
               
             
             ?>
+            
             <td><?= esc($mark['total']) ?></td>
-            <td><?php echo $gpa; ?></td>
-            <td><?php echo $grade; ?></td>
+            <td><?= esc($grade) ?></td>
+            <td><?= esc($gpa) ?></td>
           <?php endif; ?>
         </tr>
       <?php endforeach; ?>
