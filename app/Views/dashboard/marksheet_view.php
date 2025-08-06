@@ -597,15 +597,15 @@
                 <tbody>
                   <tr>
                     <td><strong>Position</strong></td>
-                    <td>1</td>
+                    <td>---</td>
                   </tr>
                   <tr>
                     <td><strong>GPA (Without 4th)</strong></td>
-                    <td>4.25</td>
+                    <td>---</td>
                   </tr>
                   <tr>
-                    <td><strong>Failed Subject</strong></td>
-                    <td>0</td>
+                    <td>---<strong>Failed Subject</strong></td>
+                    <td>---</td>
                   </tr>
                   <tr>
                     <td><strong>Working Days</strong></td>
