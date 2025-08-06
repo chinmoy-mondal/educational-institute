@@ -446,7 +446,7 @@ if (!is_null($roll)) {
           ?>
             <script>
               document.addEventListener("DOMContentLoaded", function() {
-                document.getElementById("combined_mark_<?= $subjectKey ?>").textContent = "<?= $total ?>=<?= ($mark['mcq'] + $marksheet[$i - 1]['mcq'])<20 ?>";
+                document.getElementById("combined_mark_<?= $subjectKey ?>").textContent = "<?= $total ?>=<?= ($mark['mcq'] + $marksheet[$i - 1]['mcq'])<40 ?>";
                 document.getElementById("combined_grade_<?= $subjectKey ?>").textContent = "<?= $grade ?>";
                 document.getElementById("combined_gpa_<?= $subjectKey ?>").textContent = "<?= $gpa ?>";
               });
