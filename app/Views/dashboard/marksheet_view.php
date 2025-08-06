@@ -251,7 +251,7 @@ if (!is_null($roll)) {
     </tr>
     <tr>
       <td><strong>Student's ID</strong>: <?= esc($student['id']) ?></td>
-      <td><strong>Exam</strong>: <?= esc($examName) ?></td>
+      <td><strong>Exam</strong>: <?= ucwords(str_replace(['-', '_'], ' ', esc($examName))) ?></td>
     </tr>
     <tr>
       <td><strong>Class</strong>: <?= esc($student['class']) ?></td>
