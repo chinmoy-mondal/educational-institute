@@ -765,10 +765,18 @@ if (!is_null($roll)) {
       <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= urlencode($url) ?>" class="qr-img" alt="Student QR">
       <p style="font-size: 12px;">Scan to Verify</p>
     </div>
-    <div class="col-md-3 signature text-right">
+  </div>
+  <div class="row">
+
+    <div class="col-md-6 signature text-right">
       <br><br>
       ____________________<br>
-      Headmaster
+      Headsir
+    </div>
+    <div class="col-md-6 signature text-right">
+      <br><br>
+      ____________________<br>
+      Class Teacher
     </div>
   </div>
 
