@@ -402,10 +402,8 @@
                   $gpa = '0.00';
                 }
               }
-            }
+            } 
 
-                $totalGPA = $totalGPA + $gpa;
-                $subjectCount++;
 
           ?>
             <script>
@@ -414,6 +412,11 @@
                 document.getElementById("combined_grade_<?= $subjectKey ?>").textContent = "<?= $grade ?>";
                 document.getElementById("combined_gpa_<?= $subjectKey ?>").textContent = "<?= $gpa ?>";
               });
+            <?php
+
+                $totalGPA = $totalGPA + $gpa;
+                $subjectCount++;
+            ?>
             </script>
 
           <?php
