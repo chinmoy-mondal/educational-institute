@@ -570,7 +570,17 @@
             
             <td><?= esc($mark['total']) ?></td>
             <td><?= esc($grade) ?></td>
-            <td><?= esc($gpa) ?></td>
+	    <td>
+			<?= esc($gpa) ?>
+			<?php 
+            if (count($marksheet) - 1 == $i && in_array((int)$student['class'], [9, 10])) {
+                    $totalGPA = $totalGPA + max(0, $gpa - 2);
+            }else{
+		    $totalGPA =$totalGPA + $gpa;
+		    $subjectCount++;
+	    }
+			?>
+	    </td>
           <?php endif; ?>
         </tr>
       <?php endforeach; ?>
