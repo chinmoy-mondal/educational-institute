@@ -141,7 +141,8 @@ if (!is_null($roll)) {
   $prevRoll = $roll - 1;
   $nextRoll = $roll + 1;
 
-  function makeUrl($class, $section, $roll, $exam, $year) {
+  function makeUrl($class, $section, $roll, $exam, $year)
+  {
     $params = http_build_query([
       'search_type' => 'roll',
       'student_id'  => '',
@@ -153,7 +154,7 @@ if (!is_null($roll)) {
     ]);
     return site_url('admin/show-marksheet?' . $params);
   }
-  ?>
+?>
 
   <div class="no-print mb-3 text-center">
     <a href="<?= makeUrl($class, $group, $prevRoll, $exam, $year) ?>" class="btn btn-outline-primary">
@@ -516,17 +517,113 @@ if (!is_null($roll)) {
 
               // ✳ Vocational section
               if (strpos($section, 'vocational') !== false) {
-                if (in_array($subject, ['Physics', 'Chemistry'])) {
+                if (
+                  strpos($subject, 'Bangla') !== false ||
+                  strpos($subject, 'English') !== false ||
+                  strpos($subject, 'Islamic Studies') !== false ||
+                  strpos($subject, 'Hindu Religion Studies') !== false ||
+                  strpos($subject, 'Mathematics') !== false ||
+                  strpos($subject, 'IT Support') !== false ||
+                  strpos($subject, 'Food Processing and Preservation') !== false
+                ) {
                   if ($written < 10) {
                     $grade = 'F';
                     $gpa = '0.00';
-
                     $totalFailed++;
+                  } else {
+
+                    if ($percentage >= 80) {
+                      $grade = 'A+';
+                      $gpa = '5.00';
+                    } elseif ($percentage >= 70) {
+                      $grade = 'A';
+                      $gpa = '4.00';
+                    } elseif ($percentage >= 60) {
+                      $grade = 'A-';
+                      $gpa = '3.50';
+                    } elseif ($percentage >= 50) {
+                      $grade = 'B';
+                      $gpa = '3.00';
+                    } elseif ($percentage >= 40) {
+                      $grade = 'C';
+                      $gpa = '2.00';
+                    } elseif ($percentage >= 33) {
+                      $grade = 'D';
+                      $gpa = '1.00';
+                    } else {
+                      $grade = 'F';
+                      $gpa = '0.00';
+                    }
                   }
-                } else {
+                } elseif (str_contains($subject, 'Agriculture Studies')){
+                  if ($written < 15) {
+                    $grade = 'F';
+                    $gpa = '0.00';
+                    $totalFailed++;
+                  } else {
+
+                    if ($percentage >= 80) {
+                      $grade = 'A+';
+                      $gpa = '5.00';
+                    } elseif ($percentage >= 70) {
+                      $grade = 'A';
+                      $gpa = '4.00';
+                    } elseif ($percentage >= 60) {
+                      $grade = 'A-';
+                      $gpa = '3.50';
+                    } elseif ($percentage >= 50) {
+                      $grade = 'B';
+                      $gpa = '3.00';
+                    } elseif ($percentage >= 40) {
+                      $grade = 'C';
+                      $gpa = '2.00';
+                    } elseif ($percentage >= 33) {
+                      $grade = 'D';
+                      $gpa = '1.00';
+                    } else {
+                      $grade = 'F';
+                      $gpa = '0.00';
+                    }
+                  }
+                }
+                if (
+                  str_contains($subject, 'Bangla') ||
+                  str_contains($subject, 'English') ||
+                  str_contains($subject, 'Islamic Studies') ||
+                  str_contains($subject, 'Hindu Religion Studies') ||
+                  str_contains($subject, 'Mathematics') ||
+                  str_contains($subject, 'IT Support') ||
+                  str_contains($subject, 'Food Processing and Preservation')
+                ) {
                   if ($written < 20) {
                     $grade = 'F';
                     $gpa = '0.00';
+                    $totalFailed++;
+                  }
+                } else {
+
+                    if ($percentage >= 80) {
+                      $grade = 'A+';
+                      $gpa = '5.00';
+                    } elseif ($percentage >= 70) {
+                      $grade = 'A';
+                      $gpa = '4.00';
+                    } elseif ($percentage >= 60) {
+                      $grade = 'A-';
+                      $gpa = '3.50';
+                    } elseif ($percentage >= 50) {
+                      $grade = 'B';
+                      $gpa = '3.00';
+                    } elseif ($percentage >= 40) {
+                      $grade = 'C';
+                      $gpa = '2.00';
+                    } elseif ($percentage >= 33) {
+                      $grade = 'D';
+                      $gpa = '1.00';
+                    } else {
+                      $grade = 'F';
+                      $gpa = '0.00';
+                    }
                   }
                 }
               }
@@ -645,7 +742,7 @@ if (!is_null($roll)) {
               ?>
             </td>
             <!-- <td>
-            <?= $subjectCount ?> = <?= $totalGPA+$forthGPA ?> 
+            <?= $subjectCount ?> = <?= $totalGPA + $forthGPA ?> 
             </td> -->
           <?php endif; ?>
         </tr>
@@ -776,7 +873,7 @@ if (!is_null($roll)) {
     </div>
     <div class="col-md-6 signature text-right">
       <br><br>
-      ____________________<br> 
+      ____________________<br>
       Class Teacher
     </div>
   </div>
