@@ -401,7 +401,7 @@ if (!is_null($roll)) {
                   $grade = 'D';
                   $gpa = '1.00';
                 } else {
-                  $grade = 'F43';
+                  $grade = 'F';
                   $gpa = '0.00';
                 }
               }
@@ -551,7 +551,7 @@ if (!is_null($roll)) {
                       $grade = 'D';
                       $gpa = '1.00';
                     } else {
-                      $grade = 'F';
+                      $grade = 'N/A';
                       $gpa = '0.00';
                     }
                   }
@@ -581,7 +581,7 @@ if (!is_null($roll)) {
                       $grade = 'D';
                       $gpa = '1.00';
                     } else {
-                      $grade = 'F';
+                      $grade = 'N/A';
                       $gpa = '0.00';
                     }
                   }
@@ -621,7 +621,7 @@ if (!is_null($roll)) {
                     $grade = 'D';
                     $gpa = '1.00';
                   } else {
-                    $grade = 'F';
+                    $grade = 'N/A';
                     $gpa = '0.00';
                   }
                 }
