@@ -132,7 +132,7 @@
 <?php
 $class    = (int)$student['class'];
 $section  = strtolower($student['section']);
-$group_roll = (strpos(strtolower($section), 'vocational') !== false) ? 'vocational' : 'general';
+$group = (strpos(strtolower($section), 'vocational') !== false) ? 'vocational' : 'general';
 $roll     = isset($student['roll']) ? (int)$student['roll'] : null;
 $exam     = esc($examName);
 $year     = esc($examYear);
@@ -146,7 +146,7 @@ if (!is_null($roll)) {
       'search_type' => 'roll',
       'student_id'  => '',
       'class'       => $class,
-      'section'     => $group_roll,
+      'section'     => $section,
       'roll'        => $roll,
       'exam'        => $exam,
       'year'        => $year,
@@ -156,7 +156,7 @@ if (!is_null($roll)) {
   ?>
 
   <div class="no-print mb-3 text-center">
-    <a href="<?= makeUrl($class, $section, $prevRoll, $exam, $year) ?>" class="btn btn-outline-primary">
+    <a href="<?= makeUrl($class, $group, $prevRoll, $exam, $year) ?>" class="btn btn-outline-primary">
       ← Previous
     </a>
     <a href="<?= makeUrl($class, $section, $roll, $exam, $year) ?>" class="btn btn-outline-secondary">
