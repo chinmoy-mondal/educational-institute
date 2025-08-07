@@ -159,10 +159,10 @@ if (!is_null($roll)) {
     <a href="<?= makeUrl($class, $group, $prevRoll, $exam, $year) ?>" class="btn btn-outline-primary">
       ← Previous
     </a>
-    <a href="<?= makeUrl($class, $section, $roll, $exam, $year) ?>" class="btn btn-outline-secondary">
+    <a href="<?= makeUrl($class, $group, $roll, $exam, $year) ?>" class="btn btn-outline-secondary">
       Current
     </a>
-    <a href="<?= makeUrl($class, $section, $nextRoll, $exam, $year) ?>" class="btn btn-outline-primary">
+    <a href="<?= makeUrl($class, $group, $nextRoll, $exam, $year) ?>" class="btn btn-outline-primary">
       Next →
     </a>
   </div>
