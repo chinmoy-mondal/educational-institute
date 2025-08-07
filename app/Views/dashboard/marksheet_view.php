@@ -132,6 +132,7 @@
 <?php
 $class    = (int)$student['class'];
 $section  = strtolower($student['section']);
+$group_roll = (strpos(strtolower($section), 'vocational') !== false) ? 'vocational' : 'general';
 $roll     = isset($student['roll']) ? (int)$student['roll'] : null;
 $exam     = esc($examName);
 $year     = esc($examYear);
@@ -145,7 +146,7 @@ if (!is_null($roll)) {
       'search_type' => 'roll',
       'student_id'  => '',
       'class'       => $class,
-      'section'     => $section,
+      'section'     => $group_roll,
       'roll'        => $roll,
       'exam'        => $exam,
       'year'        => $year,
