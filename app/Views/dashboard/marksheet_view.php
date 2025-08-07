@@ -772,11 +772,11 @@ if (!is_null($roll)) {
     <div class="col-md-6 signature text-left">
       <br><br>
       ____________________<br>
-      Head Sir
+      Head Teacher
     </div>
     <div class="col-md-6 signature text-right">
       <br><br>
-      ____________________<br>
+      ____________________<br> 
       Class Teacher
     </div>
   </div>
