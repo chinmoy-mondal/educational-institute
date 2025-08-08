@@ -6,84 +6,44 @@
         <div class="col-lg-8">
 
             <?php
-            // Determine profile picture path
             $profilePicture = session('picture');
             $profilePictureUrl = (!empty($profilePicture) && file_exists(FCPATH . $profilePicture))
                 ? base_url($profilePicture)
                 : base_url('public/assets/img/default-user.png');
             ?>
 
-            <!-- Profile Card -->
-            <div class="card shadow-sm">
-                <div class="card-body">
-
-                    <!-- Profile Header -->
-                    <div class="d-flex align-items-center mb-4">
-                        <img src="<?= $profilePictureUrl ?>"
-                             alt="Profile Picture"
-                             class="rounded-circle border"
-                             width="100" height="100">
-                        <div class="ms-3">
-                            <h4 class="mb-0"><?= esc(session('name') ?? 'Unknown') ?></h4>
-                            <span class="badge bg-primary"><?= esc(session('role') ?? 'N/A') ?></span>
-                            <div class="text-muted small">
-                                Account Status:
-                                <span class="<?= session('account_status') == 'active' ? 'text-success' : 'text-danger' ?>">
-                                    <?= ucfirst(session('account_status') ?? 'Unknown') ?>
-                                </span>
-                            </div>
-                        </div>
+            <div class="card shadow-sm border-0">
+                <div class="row g-0">
+                    
+                    <!-- Left Column -->
+                    <div class="col-md-4 text-center bg-light p-4">
+                        <img src="<?= $profilePictureUrl ?>" alt="Profile Picture" 
+                             class="img-fluid rounded-circle mb-3 border" 
+                             style="width: 120px; height: 120px; object-fit: cover;">
+                        <h4 class="mb-0"><?= esc(session('name') ?? 'Unknown') ?></h4>
+                        <span class="badge bg-primary"><?= esc(session('role') ?? 'N/A') ?></span>
+                        <p class="text-muted mt-2 mb-1"><?= esc(session('designation') ?? '') ?></p>
+                        <small class="<?= session('account_status') == 'active' ? 'text-success' : 'text-danger' ?>">
+                            <?= ucfirst(session('account_status') ?? 'Unknown') ?>
+                        </small>
                     </div>
 
-                    <!-- Profile Information Table -->
-                    <table class="table table-bordered table-striped">
-                        <tbody>
-                            <tr>
-                                <th width="30%">Designation</th>
-                                <td><?= esc(session('designation') ?? 'N/A') ?></td>
-                            </tr>
-                            <tr>
-                                <th>Subject</th>
-                                <td><?= esc(session('subject') ?? 'N/A') ?></td>
-                            </tr>
-                            <tr>
-                                <th>Assigned Subject</th>
-                                <td><?= esc(session('assagin_sub') ?? 'N/A') ?></td>
-                            </tr>
-                            <tr>
-                                <th>Gender</th>
-                                <td><?= esc(session('gender') ?? 'N/A') ?></td>
-                            </tr>
-                            <tr>
-                                <th>Religion</th>
-                                <td><?= esc(session('religion') ?? 'N/A') ?></td>
-                            </tr>
-                            <tr>
-                                <th>Blood Group</th>
-                                <td><?= esc(session('blood_group') ?? 'N/A') ?></td>
-                            </tr>
-                            <tr>
-                                <th>Phone</th>
-                                <td><?= esc(session('phone') ?? 'N/A') ?></td>
-                            </tr>
-                            <tr>
-                                <th>Email</th>
-                                <td><?= esc(session('email') ?? 'N/A') ?></td>
-                            </tr>
-                            <tr>
-                                <th>Permit By</th>
-                                <td><?= esc(session('permit_by') ?? 'N/A') ?></td>
-                            </tr>
-                            <tr>
-                                <th>Created At</th>
-                                <td><?= esc(session('created_at') ?? 'N/A') ?></td>
-                            </tr>
-                            <tr>
-                                <th>Last Updated</th>
-                                <td><?= esc(session('updated_at') ?? 'N/A') ?></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <!-- Right Column -->
+                    <div class="col-md-8 p-4">
+                        <h5 class="mb-3">Profile Information</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Subject:</strong> <?= esc(session('subject') ?? 'N/A') ?></li>
+                            <li class="list-group-item"><strong>Assigned Subject:</strong> <?= esc(session('assagin_sub') ?? 'N/A') ?></li>
+                            <li class="list-group-item"><strong>Gender:</strong> <?= esc(session('gender') ?? 'N/A') ?></li>
+                            <li class="list-group-item"><strong>Religion:</strong> <?= esc(session('religion') ?? 'N/A') ?></li>
+                            <li class="list-group-item"><strong>Blood Group:</strong> <?= esc(session('blood_group') ?? 'N/A') ?></li>
+                            <li class="list-group-item"><strong>Phone:</strong> <?= esc(session('phone') ?? 'N/A') ?></li>
+                            <li class="list-group-item"><strong>Email:</strong> <?= esc(session('email') ?? 'N/A') ?></li>
+                            <li class="list-group-item"><strong>Permit By:</strong> <?= esc(session('permit_by') ?? 'N/A') ?></li>
+                            <li class="list-group-item"><strong>Created At:</strong> <?= esc(session('created_at') ?? 'N/A') ?></li>
+                            <li class="list-group-item"><strong>Last Updated:</strong> <?= esc(session('updated_at') ?? 'N/A') ?></li>
+                        </ul>
+                    </div>
 
                 </div>
             </div>
