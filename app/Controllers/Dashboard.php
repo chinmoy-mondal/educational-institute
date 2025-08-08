@@ -121,6 +121,8 @@ public function profile()
 
     // Fetch teacher/user data from model
     //$teacher = $this->userModel->find($userId);
+	$teacher = '';
+
 
     // If no user found, you can fallback to dummy data or handle error
     if (!$teacher) {
