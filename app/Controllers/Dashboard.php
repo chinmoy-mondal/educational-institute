@@ -118,7 +118,56 @@ public function profile()
     ];
 
     $userId = $this->session->get('id');
-    $this->data['user'] = $this->userModel->find($userId);
+
+    // Fetch teacher/user data from model
+    $teacher = $this->userModel->find($userId);
+
+    // If no user found, you can fallback to dummy data or handle error
+    if (!$teacher) {
+        $teacher = [
+            'id'            => 1,
+            'name'          => 'John Doe',
+            'role'          => 'Teacher',
+            'designation'   => 'Senior Lecturer',
+            'subject'       => 'Mathematics',
+            'gender'        => 'Male',
+            'phone'         => '+880123456789',
+            'email'         => 'john.doe@example.com',
+            'password'      => '',
+            'picture'       => '', // Empty triggers default image
+            'assagin_sub'   => 'Class 8 - Section A',
+            'account_status'=> 'Active',
+            'permit_by'     => 'Admin',
+            'religion'      => 'Islam',
+            'blood_group'   => 'O+',
+            'created_at'    => '2022-05-01',
+            'updated_at'    => '2025-08-01'
+        ];
+    }
+
+    // Assign teacher/user data
+    $this->data['teacher'] = $teacher;
+
+    // Optionally add other related data (dummy or fetched from models)
+    $this->data['schedule'] = [
+        ['day' => 'Monday', 'time' => '10:00 - 11:00 AM', 'class_name' => 'Class 8 - Math'],
+        ['day' => 'Wednesday', 'time' => '12:00 - 01:00 PM', 'class_name' => 'Class 9 - Math'],
+    ];
+
+    $this->data['attendance'] = [
+        ['date' => '2025-08-01', 'status' => 'Present'],
+        ['date' => '2025-08-02', 'status' => 'Absent'],
+    ];
+
+    $this->data['students'] = [
+        ['name' => 'Alice', 'class_name' => 'Class 8', 'phone' => '0171111111'],
+        ['name' => 'Bob', 'class_name' => 'Class 9', 'phone' => '0172222222'],
+    ];
+
+    $this->data['payments'] = [
+        ['date' => '2025-07-01', 'amount' => 25000, 'status' => 'Paid'],
+        ['date' => '2025-08-01', 'amount' => 25000, 'status' => 'Pending'],
+    ];
 
     return view('dashboard/profile', $this->data);
 }
