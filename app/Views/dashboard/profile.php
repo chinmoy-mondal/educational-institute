@@ -4,21 +4,30 @@
 <div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            
+
+            <?php
+            // Determine profile picture path
+            $profilePicture = session('picture');
+            $profilePictureUrl = (!empty($profilePicture) && file_exists(FCPATH . $profilePicture))
+                ? base_url($profilePicture)
+                : base_url('public/assets/img/default-user.png');
+            ?>
+
             <!-- Profile Card -->
             <div class="card shadow-sm">
                 <div class="card-body">
-                    
+
                     <!-- Profile Header -->
                     <div class="d-flex align-items-center mb-4">
-                        <img src="<?= base_url(session('picture') ?: 'public/assets/img/default-user.png') ?>" 
-                             alt="Profile Picture" 
-                             class="rounded-circle border" 
+                        <img src="<?= $profilePictureUrl ?>"
+                             alt="Profile Picture"
+                             class="rounded-circle border"
                              width="100" height="100">
                         <div class="ms-3">
                             <h4 class="mb-0"><?= esc(session('name') ?? 'Unknown') ?></h4>
                             <span class="badge bg-primary"><?= esc(session('role') ?? 'N/A') ?></span>
-                            <div class="text-muted small">Account Status: 
+                            <div class="text-muted small">
+                                Account Status:
                                 <span class="<?= session('account_status') == 'active' ? 'text-success' : 'text-danger' ?>">
                                     <?= ucfirst(session('account_status') ?? 'Unknown') ?>
                                 </span>
