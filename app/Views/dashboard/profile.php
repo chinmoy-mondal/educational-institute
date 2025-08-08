@@ -1,81 +1,86 @@
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
 
-<style>
-    .profile-header {
-        position: relative;
-        height: 180px;
-        background: linear-gradient(135deg, #0062E6, #33AEFF);
-        border-top-left-radius: 1rem;
-        border-top-right-radius: 1rem;
-    }
-    .profile-img {
-        position: absolute;
-        bottom: -50px;
-        left: 50%;
-        transform: translateX(-50%);
-        border: 4px solid #fff;
-        border-radius: 50%;
-    }
-    .profile-name {
-        margin-top: 60px;
-    }
-    .profile-card {
-        border-radius: 1rem;
-        overflow: hidden;
-    }
-</style>
-
-<div class="container py-5">
+<div class="container py-4">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="card shadow-lg border-0 profile-card">
-                
-                <!-- Profile Header -->
-                <div class="profile-header"></div>
-
-                <!-- Profile Body -->
-                <div class="card-body text-center">
-                    <img src="<?= base_url('public/assets/img/logo.jpg') ?>" width="100" height="100" class="profile-img shadow">
-                    <h3 class="profile-name"><?= esc(session('user_name') ?? 'Unknown User') ?></h3>
-                    <span class="badge bg-primary"><?= esc(session('user_role') ?? 'User') ?></span>
-                    <p class="text-muted mb-4">
-                        <?= esc(session('designation') ?? 'No designation set') ?>
-                    </p>
-
-                    <hr>
-
-                    <!-- User Info -->
-                    <div class="row text-start px-4">
-                        <div class="col-md-6 mb-3">
-                            <strong><i class="bi bi-book"></i> Subject:</strong> 
-                            <span class="text-muted"><?= esc(session('subject') ?? 'N/A') ?></span>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <strong><i class="bi bi-gender-ambiguous"></i> Gender:</strong> 
-                            <span class="text-muted"><?= esc(session('gender') ?? 'N/A') ?></span>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <strong><i class="bi bi-telephone"></i> Phone:</strong> 
-                            <span class="text-muted"><?= esc(session('phone') ?? 'N/A') ?></span>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <strong><i class="bi bi-envelope"></i> Email:</strong> 
-                            <span class="text-muted"><?= esc(session('user_email') ?? 'N/A') ?></span>
+            
+            <!-- Profile Card -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    
+                    <!-- Profile Header -->
+                    <div class="d-flex align-items-center mb-4">
+                        <img src="<?= base_url(session('picture') ?: 'public/assets/img/default-user.png') ?>" 
+                             alt="Profile Picture" 
+                             class="rounded-circle border" 
+                             width="100" height="100">
+                        <div class="ms-3">
+                            <h4 class="mb-0"><?= esc(session('name') ?? 'Unknown') ?></h4>
+                            <span class="badge bg-primary"><?= esc(session('role') ?? 'N/A') ?></span>
+                            <div class="text-muted small">Account Status: 
+                                <span class="<?= session('account_status') == 'active' ? 'text-success' : 'text-danger' ?>">
+                                    <?= ucfirst(session('account_status') ?? 'Unknown') ?>
+                                </span>
+                            </div>
                         </div>
                     </div>
 
-                    <hr>
-                    <div class="text-muted small">
-                        <i class="bi bi-clock-history"></i> Last updated: <?= esc(session('updated_at') ?? 'Unknown') ?>
-                    </div>
+                    <!-- Profile Information Table -->
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                            <tr>
+                                <th width="30%">Designation</th>
+                                <td><?= esc(session('designation') ?? 'N/A') ?></td>
+                            </tr>
+                            <tr>
+                                <th>Subject</th>
+                                <td><?= esc(session('subject') ?? 'N/A') ?></td>
+                            </tr>
+                            <tr>
+                                <th>Assigned Subject</th>
+                                <td><?= esc(session('assagin_sub') ?? 'N/A') ?></td>
+                            </tr>
+                            <tr>
+                                <th>Gender</th>
+                                <td><?= esc(session('gender') ?? 'N/A') ?></td>
+                            </tr>
+                            <tr>
+                                <th>Religion</th>
+                                <td><?= esc(session('religion') ?? 'N/A') ?></td>
+                            </tr>
+                            <tr>
+                                <th>Blood Group</th>
+                                <td><?= esc(session('blood_group') ?? 'N/A') ?></td>
+                            </tr>
+                            <tr>
+                                <th>Phone</th>
+                                <td><?= esc(session('phone') ?? 'N/A') ?></td>
+                            </tr>
+                            <tr>
+                                <th>Email</th>
+                                <td><?= esc(session('email') ?? 'N/A') ?></td>
+                            </tr>
+                            <tr>
+                                <th>Permit By</th>
+                                <td><?= esc(session('permit_by') ?? 'N/A') ?></td>
+                            </tr>
+                            <tr>
+                                <th>Created At</th>
+                                <td><?= esc(session('created_at') ?? 'N/A') ?></td>
+                            </tr>
+                            <tr>
+                                <th>Last Updated</th>
+                                <td><?= esc(session('updated_at') ?? 'N/A') ?></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
+
         </div>
     </div>
 </div>
-
-<!-- Bootstrap Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
 <?= $this->endSection() ?>
