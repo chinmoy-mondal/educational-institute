@@ -120,7 +120,7 @@ public function profile()
     $userId = $this->session->get('id');
 
     // Fetch teacher/user data from model
-    $teacher = $this->userModel->find($userId);
+    //$teacher = $this->userModel->find($userId);
 
     // If no user found, you can fallback to dummy data or handle error
     if (!$teacher) {
