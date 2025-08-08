@@ -105,32 +105,23 @@ class Dashboard extends Controller
 		return view('dashboard/index', $this->data);
 	}
 
-	public function profile()
-	{
+public function profile()
+{
+    $this->data['title'] = 'Profile';
+    $this->data['activeSection'] = 'dashboard';
 
-		$this->data['title'] = 'Profile';
-		$this->data['activeSection'] = 'dashboard';
+    $this->data['navbarItems'] = [
+        ['label' => 'Dashboard', 'url' => base_url('dashboard')],
+        ['label' => 'Calendar', 'url' => base_url('calendar')],
+        ['label' => 'Result', 'url' => base_url('ad-result')],
+        ['label' => 'Accounts', 'url' => base_url('accounts')],
+    ];
 
-		// Common navbar and sidebar for all views
-		$this->data['navbarItems'] = [
-			['label' => 'Dashboard', 'url' => base_url('dashboard')],
-			['label' => 'Calendar', 'url' => base_url('calendar')],
-			['label' => 'Result', 'url' => base_url('ad-result')],
-			['label' => 'Accounts', 'url' => base_url('accounts')],
-		];
+    $userId = $this->session->get('id');
+    $this->data['user'] = $this->userModel->find($userId);
 
-		$user = [
-			'name' => $this->session->get('name'),
-			'email' => $this->session->get('email'),
-			'phone' => $this->session->get('phone'),
-			'role' => $this->session->get('role')
-		];
-
-		$this->data['title'] = 'Dashboard';
-		$this->data['activeSection'] = 'dashboard';
-		$this->data['user'] = $user;
-		return view('dashboard/profile', $this->data);
-	}
+    return view('dashboard/profile', $this->data);
+}
 
 	public function calendar()
 	{
