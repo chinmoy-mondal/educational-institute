@@ -1,80 +1,147 @@
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
 
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
+<!-- Profile Header -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="card card-primary card-outline">
+            <div class="card-body box-profile">
+                <div class="text-center">
+                    <img class="profile-user-img img-fluid img-circle"
+                         src="<?= !empty(session('picture')) ? base_url(session('picture')) : base_url('public/assets/img/default-user.png') ?>"
+                         alt="User profile picture"
+                         style="width: 100px; height: 100px; object-fit: cover;">
+                </div>
 
-            <?php
-            $profilePicture = session('picture');
-            $profilePictureUrl = (!empty($profilePicture) && file_exists(FCPATH . $profilePicture))
-                ? base_url($profilePicture)
-                : base_url('public/assets/img/default-user.png');
-            ?>
+                <h3 class="profile-username text-center"><?= esc(session('name')) ?></h3>
+                <p class="text-muted text-center"><?= esc(session('designation') ?? 'N/A') ?></p>
 
-            <div class="card shadow-sm border-0">
-                <div class="row g-0">
+                <div class="text-center mb-3">
+                    <span class="badge bg-primary"><?= esc(session('role')) ?></span>
+                    <span class="badge bg-success"><?= ucfirst(session('account_status')) ?></span>
+                </div>
 
-                    <!-- Left Column (Profile Overview) -->
-                    <div class="col-md-4 text-center bg-light p-4">
-                        <img src="<?= $profilePictureUrl ?>" 
-                             alt="Profile Picture" 
-                             class="img-fluid rounded-circle mb-3 border" 
-                             style="width: 120px; height: 120px; object-fit: cover;">
-                        <h4 class="mb-0"><?= esc(session('name') ?? 'Unknown') ?></h4>
-                        <span class="badge bg-primary"><?= esc(session('role') ?? 'N/A') ?></span>
-                        <p class="text-muted mt-2 mb-1"><?= esc(session('designation') ?? '') ?></p>
-                        <small class="<?= session('account_status') == 'active' ? 'text-success' : 'text-danger' ?>">
-                            <?= ucfirst(session('account_status') ?? 'Unknown') ?>
-                        </small>
+                <!-- Stats Row -->
+                <div class="row text-center">
+                    <div class="col">
+                        <h5>8+</h5>
+                        <small>Years Experience</small>
+                    </div>
+                    <div class="col">
+                        <h5>232</h5>
+                        <small>Lessons Conducted</small>
+                    </div>
+                    <div class="col">
+                        <h5>250+</h5>
+                        <small>Students</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="card">
+            <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                    <li class="nav-item"><a class="nav-link active" href="#schedule" data-toggle="tab">Schedule</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#courses" data-toggle="tab">Courses</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#resume" data-toggle="tab">Resume</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#lessons" data-toggle="tab">Lessons</a></li>
+                </ul>
+            </div>
+            <div class="card-body">
+                <div class="tab-content">
+
+                    <!-- Schedule Tab -->
+                    <div class="tab-pane active" id="schedule">
+                        <table class="table table-bordered text-center">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Mon</th>
+                                    <th>Tue</th>
+                                    <th>Wed</th>
+                                    <th>Thu</th>
+                                    <th>Fri</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>08:00</td>
+                                    <td>English Grammar</td>
+                                    <td></td>
+                                    <td>English Grammar</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>11:00</td>
+                                    <td>Spoken English</td>
+                                    <td></td>
+                                    <td>Spoken English</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
 
-                    <!-- Right Column (Profile Details) -->
-                    <div class="col-md-8 p-4">
+                    <!-- Courses Tab -->
+                    <div class="tab-pane" id="courses">
+                        <p>List of courses will go here...</p>
+                    </div>
 
-                        <!-- Personal Info -->
-                        <h5 class="mb-3 border-bottom pb-2">👤 Personal Information</h5>
-                        <ul class="list-group list-group-flush mb-4">
-                            <li class="list-group-item"><strong>Gender:</strong> <?= esc(session('gender') ?? 'N/A') ?></li>
-                            <li class="list-group-item"><strong>Religion:</strong> <?= esc(session('religion') ?? 'N/A') ?></li>
-                            <li class="list-group-item"><strong>Blood Group:</strong> <?= esc(session('blood_group') ?? 'N/A') ?></li>
-                            <li class="list-group-item"><strong>Phone:</strong> <?= esc(session('phone') ?? 'N/A') ?></li>
-                            <li class="list-group-item"><strong>Email:</strong> <?= esc(session('email') ?? 'N/A') ?></li>
-                        </ul>
+                    <!-- Resume Tab -->
+                    <div class="tab-pane" id="resume">
+                        <p>Resume / career info goes here...</p>
+                    </div>
 
-                        <!-- Institute Info -->
-                        <h5 class="mb-3 border-bottom pb-2">🏫 Institute Information</h5>
-                        <ul class="list-group list-group-flush mb-4">
-                            <li class="list-group-item"><strong>Designation:</strong> <?= esc(session('designation') ?? 'N/A') ?></li>
-                            <li class="list-group-item"><strong>Main Subject:</strong> <?= esc(session('subject') ?? 'N/A') ?></li>
-                            <li class="list-group-item"><strong>Assigned Subject:</strong> <?= esc(session('assagin_sub') ?? 'N/A') ?></li>
-                            <li class="list-group-item"><strong>Permit By:</strong> <?= esc(session('permit_by') ?? 'N/A') ?></li>
-                        </ul>
-
-                        <!-- Assigned Classes -->
-                        <h5 class="mb-3 border-bottom pb-2">📚 Assigned Classes</h5>
-                        <ul class="list-group list-group-flush mb-4">
-                            <?php if (!empty(session('assigned_classes')) && is_array(session('assigned_classes'))): ?>
-                                <?php foreach (session('assigned_classes') as $class): ?>
-                                    <li class="list-group-item"><?= esc($class) ?></li>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <li class="list-group-item text-muted">No classes assigned</li>
-                            <?php endif; ?>
-                        </ul>
-
-                        <!-- Account Activity -->
-                        <h5 class="mb-3 border-bottom pb-2">🕒 Account Activity</h5>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item"><strong>Created At:</strong> <?= esc(session('created_at') ?? 'N/A') ?></li>
-                            <li class="list-group-item"><strong>Last Updated:</strong> <?= esc(session('updated_at') ?? 'N/A') ?></li>
-                        </ul>
-
+                    <!-- Lessons Tab -->
+                    <div class="tab-pane" id="lessons">
+                        <p>Lesson details go here...</p>
                     </div>
 
                 </div>
             </div>
+        </div>
 
+    </div>
+
+    <!-- Right Column (Reviews & Info) -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header"><h3 class="card-title">Reviews</h3></div>
+            <div class="card-body">
+                <div class="mb-2">
+                    <h4>4.9 <small>/ 5</small></h4>
+                    <div class="text-warning">
+                        ★★★★☆
+                    </div>
+                    <small>236 reviews</small>
+                </div>
+                <div class="progress-group">Qualifications
+                    <span class="float-right"><b>4.9</b></span>
+                    <div class="progress progress-sm">
+                        <div class="progress-bar bg-success" style="width: 98%"></div>
+                    </div>
+                </div>
+                <div class="progress-group">Expertise
+                    <span class="float-right"><b>4.2</b></span>
+                    <div class="progress progress-sm">
+                        <div class="progress-bar bg-info" style="width: 84%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lesson Price -->
+        <div class="card">
+            <div class="card-body">
+                <h5>Price Per Lesson</h5>
+                <p><strong>$32/hr</strong></p>
+                <small>7 lessons booked in last 48 hours</small><br>
+                <small>4-hour response time</small>
+            </div>
         </div>
     </div>
 </div>
