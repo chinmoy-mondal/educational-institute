@@ -118,7 +118,7 @@ public function profile()
     ];
 
     $userId = $this->session->get('id');
-
+echo $userId."=chinmoy";
     // Load model and get teacher data
     $userModel = new \App\Models\UserModel();
     $teacher = $userModel->find($userId);
@@ -151,7 +151,7 @@ public function profile()
         ['date' => '2025-08-01', 'amount' => 25000, 'status' => 'Pending'],
     ];
 
-    return view('dashboard/profile', $this->data);
+//    return view('dashboard/profile', $this->data);
 }
 
 	public function calendar()
