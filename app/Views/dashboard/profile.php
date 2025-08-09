@@ -17,18 +17,27 @@
 
     <!-- Summary Cards -->
     <div class="row">
-      <!-- Total Students -->
-      <div class="col-lg-3 col-6">
-        <div class="small-box bg-primary">
-          <div class="inner">
-            <h3>hhhhh</h3>
-            <p>Total Students</p>
-          </div>
-          <div class="icon"><i class="fas fa-user-graduate"></i></div>
-          <a href="hello" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-        </div>
-      </div>
-
+      <div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Default Card Example</h3>
+    <div class="card-tools">
+      <!-- Buttons, labels, and many other things can be placed here! -->
+      <!-- Here is a label for example -->
+      <span class="badge badge-primary">Label</span>
+    </div>
+    <!-- /.card-tools -->
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body">
+    The body of the card
+  </div>
+  <!-- /.card-body -->
+  <div class="card-footer">
+    The footer of the card
+  </div>
+  <!-- /.card-footer -->
+</div>
+<!-- /.card -->
 
   </div>
 </div>
