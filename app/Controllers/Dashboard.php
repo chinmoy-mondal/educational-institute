@@ -117,7 +117,7 @@ public function profile()
         ['label' => 'Accounts', 'url' => base_url('accounts')],
     ];
 
-    $userId = $this->session->get('id');
+    $userId = $this->session->get('user_id');
 echo $userId."=chinmoy";
     // Load model and get teacher data
     $userModel = new \App\Models\UserModel();
