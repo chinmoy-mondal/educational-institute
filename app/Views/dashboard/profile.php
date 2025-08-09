@@ -1,23 +1,36 @@
 <?= $this->extend('layouts/admin') ?>
+
 <?= $this->section('content') ?>
 
-<div class="container mt-4">
-    <div class="card p-4 shadow-sm">
-        <div class="d-flex align-items-center">
-            <img src="<?= base_url('uploads/' . $user['picture']) ?>" 
-                 alt="Profile Picture" 
-                 class="rounded-circle" 
-                 width="120" height="120">
-            <div class="ms-3">
-                <h4><?= esc($user['name']) ?></h4>
-                <p class="mb-1"><strong>Email:</strong> <?= esc($user['email']) ?></p>
-                <p class="mb-1"><strong>Phone:</strong> <?= esc($user['phone']) ?></p>
-                <p class="mb-1"><strong>Designation:</strong> <?= esc($user['designation']) ?></p>
-                <p class="mb-1"><strong>Role:</strong> <?= esc($user['role']) ?></p>
-            </div>
-        </div>
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Dashboard</h1>
+      </div>
     </div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="container-fluid">
+
+    <!-- Summary Cards -->
+    <div class="row">
+      <!-- Total Students -->
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-primary">
+          <div class="inner">
+            <h3>hhhhh</h3>
+            <p>Total Students</p>
+          </div>
+          <div class="icon"><i class="fas fa-user-graduate"></i></div>
+          <a href="hello" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+      </div>
+
+
+  </div>
 </div>
 
 <?= $this->endSection() ?>
-
