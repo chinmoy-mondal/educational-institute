@@ -119,38 +119,18 @@ public function profile()
 
     $userId = $this->session->get('id');
 
-    // Fetch teacher/user data from model
-    //$teacher = $this->userModel->find($userId);
-	$teacher = '';
+    // Load model and get teacher data
+    $userModel = new \App\Models\UserModel();
+    $teacher = $userModel->find($userId);
 
-
-    // If no user found, you can fallback to dummy data or handle error
     if (!$teacher) {
-        $teacher = [
-            'id'            => 1,
-            'name'          => 'John Doe',
-            'role'          => 'Teacher',
-            'designation'   => 'Senior Lecturer',
-            'subject'       => 'Mathematics',
-            'gender'        => 'Male',
-            'phone'         => '+880123456789',
-            'email'         => 'john.doe@example.com',
-            'password'      => '',
-            'picture'       => '', // Empty triggers default image
-            'assagin_sub'   => 'Class 8 - Section A',
-            'account_status'=> 'Active',
-            'permit_by'     => 'Admin',
-            'religion'      => 'Islam',
-            'blood_group'   => 'O+',
-            'created_at'    => '2022-05-01',
-            'updated_at'    => '2025-08-01'
-        ];
+        // handle case where teacher not found
+        throw new \CodeIgniter\Exceptions\PageNotFoundException("Teacher not found");
     }
 
-    // Assign teacher/user data
     $this->data['teacher'] = $teacher;
 
-    // Optionally add other related data (dummy or fetched from models)
+    // Example: You can also load these from DB instead of hardcoding
     $this->data['schedule'] = [
         ['day' => 'Monday', 'time' => '10:00 - 11:00 AM', 'class_name' => 'Class 8 - Math'],
         ['day' => 'Wednesday', 'time' => '12:00 - 01:00 PM', 'class_name' => 'Class 9 - Math'],
