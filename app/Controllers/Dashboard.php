@@ -118,10 +118,8 @@ public function profile()
     ];
 
     $userId = $this->session->get('user_id');
-echo $userId."=chinmoy";
     // Load model and get teacher data
-    $userModel = new \App\Models\UserModel();
-    $teacher = $userModel->find($userId);
+    $teacher = $this->userModel->find($userId);
 
     if (!$teacher) {
         // handle case where teacher not found
@@ -130,28 +128,7 @@ echo $userId."=chinmoy";
 
     $this->data['teacher'] = $teacher;
 
-    // Example: You can also load these from DB instead of hardcoding
-    $this->data['schedule'] = [
-        ['day' => 'Monday', 'time' => '10:00 - 11:00 AM', 'class_name' => 'Class 8 - Math'],
-        ['day' => 'Wednesday', 'time' => '12:00 - 01:00 PM', 'class_name' => 'Class 9 - Math'],
-    ];
-
-    $this->data['attendance'] = [
-        ['date' => '2025-08-01', 'status' => 'Present'],
-        ['date' => '2025-08-02', 'status' => 'Absent'],
-    ];
-
-    $this->data['students'] = [
-        ['name' => 'Alice', 'class_name' => 'Class 8', 'phone' => '0171111111'],
-        ['name' => 'Bob', 'class_name' => 'Class 9', 'phone' => '0172222222'],
-    ];
-
-    $this->data['payments'] = [
-        ['date' => '2025-07-01', 'amount' => 25000, 'status' => 'Paid'],
-        ['date' => '2025-08-01', 'amount' => 25000, 'status' => 'Pending'],
-    ];
-
-//    return view('dashboard/profile', $this->data);
+    return view('dashboard/profile', $this->data);
 }
 
 	public function calendar()
