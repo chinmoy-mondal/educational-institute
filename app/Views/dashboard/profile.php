@@ -1,65 +1,58 @@
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
 
-<div class="content-header">
-  <div class="container-fluid">
-    <h1 class="mb-3">Student Profile</h1>
-    <a href="<?= site_url('ad-student') ?>" class="btn btn-secondary mb-3">← Back to List</a>
-  </div>
-</div>
+<div class="container-fluid py-4">
 
-<div class="content">
-  <div class="container-fluid">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
+  <!-- Profile Card with Ribbon -->
+  <div class="card position-relative mb-4" style="padding: 20px;">
 
-        <!-- Profile Card -->
-        <div class="card card-primary card-outline position-relative" style="overflow: hidden;">
+    <!-- Ribbon -->
+    <div class="ribbon-wrapper ribbon-lg">
+      <div class="ribbon bg-success text-lg">
+        Active
+      </div>
+    </div>
 
-          <!-- Ribbon -->
-          <div class="ribbon-wrapper ribbon-lg">
-            <div class="ribbon bg-success text-lg">
-              Active
-            </div>
-          </div>
+    <div class="row align-items-center">
+      <!-- Left: Photo -->
+      <div class="col-md-3 text-center">
+        <img src="https://via.placeholder.com/150" alt="Teacher Photo" class="img-fluid img-circle" style="max-width:150px;">
+      </div>
 
-          <!-- Profile Body -->
-          <div class="card-body box-profile text-center" style="padding-top: 50px;">
-
-            <!-- Profile Image -->
-            <img class="profile-user-img img-fluid img-circle mb-3"
-                 src=""
-                 alt="Profile picture">
-
-            <!-- Student Name -->
-            <h3 class="profile-username"></h3>
-
-            <!-- Basic Info -->
-            <p class="text-muted mb-1">Roll: </p>
-            <p class="text-muted mb-3">Class: </p>
-
-            <!-- Contact Info -->
-            <ul class="list-group list-group-unbordered mb-3 text-left">
-              <li class="list-group-item">
-                <b>Father's Name</b> <span class="float-right"></span>
-              </li>
-              <li class="list-group-item">
-                <b>Mother's Name</b> <span class="float-right"></span>
-              </li>
-              <li class="list-group-item">
-                <b>Phone</b> <span class="float-right"></span>
-              </li>
-              <li class="list-group-item">
-                <b>Address</b> <span class="float-right"></span>
-              </li>
-            </ul>
-
-          </div>
-        </div>
-
+      <!-- Right: Info -->
+      <div class="col-md-9">
+        <h2>John Doe</h2>
+        <h5 class="text-muted">Senior Mathematics Teacher</h5>
+        <p>Experienced teacher passionate about helping students excel in mathematics and science.</p>
       </div>
     </div>
   </div>
+
+  <!-- Classes Card -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h3 class="card-title">Classes</h3>
+    </div>
+    <div class="card-body">
+      <ul>
+        <li>Class 9 - Section A</li>
+        <li>Class 10 - Section B</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Attendance Card -->
+  <div class="card mb-4">
+    <div class="card-header">
+      <h3 class="card-title">Attendance</h3>
+    </div>
+    <div class="card-body">
+      <p>Present: 95%</p>
+      <p>Absent: 3%</p>
+      <p>Late: 2%</p>
+    </div>
+  </div>
+
 </div>
 
 <?= $this->endSection() ?>
