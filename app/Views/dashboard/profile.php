@@ -1,51 +1,21 @@
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
 
-<div class="container mt-4 mb-4">
-    <div class="card shadow-sm p-4">
-        <h2 class="mb-4">My Profile</h2>
-
-        <div class="row mb-3">
-            <div class="col-md-3 fw-bold">Name:</div>
-            <div class="col-md-9"><?= esc($user['name']) ?></div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-3 fw-bold">Role:</div>
-            <div class="col-md-9"><?= esc($user['role']) ?></div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-3 fw-bold">Designation:</div>
-            <div class="col-md-9"><?= esc($user['designation']) ?></div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-3 fw-bold">Email:</div>
-            <div class="col-md-9"><?= esc($user['email']) ?></div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-3 fw-bold">Phone:</div>
-            <div class="col-md-9"><?= esc($user['phone']) ?></div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-md-3 fw-bold">Subject:</div>
-            <div class="col-md-9"><?= esc($user['subject']) ?></div>
-        </div>
-
-        <?php if (!empty($user['picture'])): ?>
-        <div class="row mb-3">
-            <div class="col-md-3 fw-bold">Picture:</div>
-            <div class="col-md-9">
-                <img src="<?= base_url('uploads/' . $user['picture']) ?>" 
-                     alt="Profile Picture" 
-                     class="img-thumbnail" 
-                     style="max-width: 150px;">
+<div class="container mt-4">
+    <div class="card p-4 shadow-sm">
+        <div class="d-flex align-items-center">
+            <img src="<?= base_url('uploads/' . $user['picture']) ?>" 
+                 alt="Profile Picture" 
+                 class="rounded-circle" 
+                 width="120" height="120">
+            <div class="ms-3">
+                <h4><?= esc($user['name']) ?></h4>
+                <p class="mb-1"><strong>Email:</strong> <?= esc($user['email']) ?></p>
+                <p class="mb-1"><strong>Phone:</strong> <?= esc($user['phone']) ?></p>
+                <p class="mb-1"><strong>Designation:</strong> <?= esc($user['designation']) ?></p>
+                <p class="mb-1"><strong>Role:</strong> <?= esc($user['role']) ?></p>
             </div>
         </div>
-        <?php endif; ?>
     </div>
 </div>
 

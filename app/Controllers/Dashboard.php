@@ -126,7 +126,7 @@ public function profile()
         throw new \CodeIgniter\Exceptions\PageNotFoundException("Teacher not found");
     }
 
-    $this->data['teacher'] = $teacher;
+    $this->data['user'] = $teacher;
 
     return view('dashboard/profile', $this->data);
 }
