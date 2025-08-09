@@ -28,29 +28,29 @@
 
             <!-- Profile Image -->
             <img class="profile-user-img img-fluid img-circle mb-3"
-                 src="<?= base_url('uploads/profile/' . $student['photo']) ?>"
+                 src=""
                  alt="Profile picture">
 
             <!-- Student Name -->
-            <h3 class="profile-username"><?= esc($student['name']) ?></h3>
+            <h3 class="profile-username"></h3>
 
             <!-- Basic Info -->
-            <p class="text-muted mb-1">Roll: <?= esc($student['roll']) ?></p>
-            <p class="text-muted mb-3">Class: <?= esc($student['class']) ?></p>
+            <p class="text-muted mb-1">Roll: </p>
+            <p class="text-muted mb-3">Class: </p>
 
             <!-- Contact Info -->
             <ul class="list-group list-group-unbordered mb-3 text-left">
               <li class="list-group-item">
-                <b>Father's Name</b> <span class="float-right"><?= esc($student['father_name']) ?></span>
+                <b>Father's Name</b> <span class="float-right"></span>
               </li>
               <li class="list-group-item">
-                <b>Mother's Name</b> <span class="float-right"><?= esc($student['mother_name']) ?></span>
+                <b>Mother's Name</b> <span class="float-right"></span>
               </li>
               <li class="list-group-item">
-                <b>Phone</b> <span class="float-right"><?= esc($student['phone']) ?></span>
+                <b>Phone</b> <span class="float-right"></span>
               </li>
               <li class="list-group-item">
-                <b>Address</b> <span class="float-right"><?= esc($student['address']) ?></span>
+                <b>Address</b> <span class="float-right"></span>
               </li>
             </ul>
 
