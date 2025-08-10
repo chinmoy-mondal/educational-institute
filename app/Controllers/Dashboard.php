@@ -1113,9 +1113,9 @@ public function profile()
 			$this->data['examYear'] = $year;
 			$this->data['student'] = $student;
 			$this->data['marksheet'] = $marksheet;
-			echo '<pre>';
-			print_r($marksheet);
-			echo '</pre>';
+			// echo '<pre>';
+			// print_r($marksheet);
+			// echo '</pre>';
 
 			return view('dashboard/marksheet_view', $this->data);
 		}
