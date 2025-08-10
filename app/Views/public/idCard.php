@@ -71,6 +71,7 @@
         <p class="mb-0 fw-semibold">STUDENT</p>
         <p class="mb-0 fw-semibold">ID NO: <?= esc($student['id']) ?></p>
         <p class="mb-0">Blood Group: <?= esc($student['blood_group']) ?></p>
+        <p class="mb-0"><?= esc($student['phone']) ?></p>
       
       </div>
 
