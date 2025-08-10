@@ -54,7 +54,7 @@
       <!-- School name -->
       <h6 class="text-white text-center fw-bold mb-0"><?= esc($student['eiin']) ?></h6>
       <h6 class="text-white text-center fw-bold mb-0"><?= esc($student['school_name']) ?></h6>
-      <br>
+      
 
       <!-- Photo -->
       <div class="d-flex justify-content-center mb-3">
@@ -71,7 +71,7 @@
         <p class="mb-0 fw-semibold">STUDENT</p>
         <p class="mb-0 fw-semibold">ID NO: <?= esc($student['id']) ?></p>
         <p class="mb-0">Blood Group: <?= esc($student['blood_group']) ?></p>
-        <p class="mb-0"><?= esc($student['phone']) ?></p>
+        <p class="mb-0"><i class="fas fa-phone me-2"></i><?= esc($student['phone']) ?></p>
       
       </div>
 
