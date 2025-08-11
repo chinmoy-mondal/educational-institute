@@ -35,7 +35,7 @@
     border-radius: 6px;
   }
   .signature {
-    width: 100px;
+    width: 75px;
   }
 </style>
 
