@@ -106,12 +106,12 @@
 										<a href="<?= site_url('admin/students/view/' . $s['id']) ?>" class="btn btn-info btn-sm" target="_blank">
 											<i class="fas fa-eye"></i> View
 										</a>
+										<a href="<?= site_url('admin/students/delete/' . $s['id']) ?>"
+											class="btn btn-danger btn-sm"
+											onclick="return confirm('Are you sure you want to delete this student?');">
+											<i class="fas fa-trash-alt"></i> Delete
+										</a>
 									</td>
-									<a href="<?= site_url('admin/students/delete/' . $s['id']) ?>"
-										class="btn btn-danger btn-sm"
-										onclick="return confirm('Are you sure you want to delete this student?');">
-										<i class="fas fa-trash-alt"></i> Delete
-									</a>
 								</tr>
 							<?php endforeach ?>
 						</tbody>
