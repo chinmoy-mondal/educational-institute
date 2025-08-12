@@ -1216,10 +1216,10 @@ $ids = $this->subjectModel
 $ids = array_column($ids, 'id'); // flatten to simple array
 
 // Check if $subjectText exists in the IDs list
-if (in_array((int)$subjectText, $ids)) {
-    echo "Found in list";
+if (in_array((int)$selectId, $ids)) {
+    echo "Found in list=$selectId";
 } else {
-    echo "Not found";
+    echo "Not found=$selectId";
 }
 
 exit;
