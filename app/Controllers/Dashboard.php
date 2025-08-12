@@ -1198,7 +1198,7 @@ class Dashboard extends Controller
 			$subject = $this->subjectModel->find($selectId);
 			$subjectNames = array_map('trim', explode(',', $subject['subject']));
 			$subjectText = implode(', ', $subjectNames);
-			$subjectText = preg_replace('/\s+/', ' ', $subjectText);
+			//$subjectText = preg_replace('/\s+/', ' ', $subjectText);
 		}
 
 		if (!in_array($subjectText, ['Higher Mathematics', 'Biology', 'Agriculture Studies', 'Agriculture Studies-1', 'Agriculture Studies-2'])) {
