@@ -1199,7 +1199,7 @@ class Dashboard extends Controller
 			$subjectNames = array_map('trim', explode(',', $subject['subject']));
 			$subjectText = implode(', ', $subjectNames);
 		}
-
+return redirect()->back()->with('error', $subjectText);
 		if (!in_array($subjectText, ['Higher Mathematics', 'Biology', 'Agriculture Studies', 'Agriculture Studies-1', 'Agriculture Studies-2'])) {
 			return redirect()->back()->with('error', 'Sorry sir, (' . $subjectText . ') is not a 4th subject.');
 		} else {
