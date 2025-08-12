@@ -1199,7 +1199,9 @@ class Dashboard extends Controller
 			$subjectNames = array_map('trim', explode(',', $subject['subject']));
 			$subjectText = implode(', ', $subjectNames);
 		}
-
+		echo "<pre>";
+print_r($subjectText);
+exit;
 		if ($subjectText == 'Agriculture Studies') {
 
 			return redirect()->back()->with('error', 'yes');
