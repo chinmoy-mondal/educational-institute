@@ -1199,8 +1199,8 @@ class Dashboard extends Controller
 			$subjectNames = array_map('trim', explode(',', $subject['subject']));
 			$subjectText = implode(', ', $subjectNames);
 		}
-		echo "<pre>";
-print_r($subjectText);
+		
+echo $subjectText;
 exit;
 		if ($subjectText == 'Agriculture Studies') {
 
