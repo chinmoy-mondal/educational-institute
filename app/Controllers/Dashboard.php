@@ -1198,11 +1198,35 @@ class Dashboard extends Controller
 			$subject = $this->subjectModel->find($selectId);
 			$subjectNames = array_map('trim', explode(',', $subject['subject']));
 			$subjectText = implode(', ', $subjectNames);
-			//$subjectText = preg_replace('/\s+/', ' ', $subjectText);
 		}
-// echo "<pre>";
-// print_r($subjectText);
-// exit;
+
+// Get IDs as plain array from the model
+$ids = $this->subjectModel
+    ->select('id')
+    ->whereIn('subject', [
+        'Higher Mathematics',
+        'Biology',
+        'Agriculture Studies',
+        'Agriculture Studies-1',
+        'Agriculture Studies-2'
+    ])
+    ->whereIn('class', [9, 10])
+    ->findAll();
+
+$ids = array_column($ids, 'id'); // flatten to simple array
+
+// Check if $subjectText exists in the IDs list
+if (in_array((int)$subjectText, $ids)) {
+    echo "Found in list";
+} else {
+    echo "Not found";
+}
+
+exit;
+
+
+
+
 		if (!in_array($subjectText, ['Higher Mathematics', 'Biology', 'Agriculture Studies', 'Agriculture Studies-1', 'Agriculture Studies-2'])) {
 			return redirect()->back()->with('error', 'Sorry sir, (' . $subjectText . ') is not a 4th subject.');
 		} else {
