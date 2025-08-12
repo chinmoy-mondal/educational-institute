@@ -1198,10 +1198,9 @@ class Dashboard extends Controller
 			$subject = $this->subjectModel->find($selectId);
 			$subjectNames = array_map('trim', explode(',', $subject['subject']));
 			$subjectText = implode(', ', $subjectNames);
+			$subjectText = preg_replace('/\s+/', ' ', $subjectText);
 		}
 		
-echo $subjectText;
-exit;
 		if ($subjectText == 'Agriculture Studies') {
 
 			return redirect()->back()->with('error', 'yes');
