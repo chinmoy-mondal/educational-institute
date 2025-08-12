@@ -1200,9 +1200,9 @@ class Dashboard extends Controller
 			$subjectText = implode(', ', $subjectNames);
 			//$subjectText = preg_replace('/\s+/', ' ', $subjectText);
 		}
-echo "<pre>";
-print_r($subjectText);
-exit;
+// echo "<pre>";
+// print_r($subjectText);
+// exit;
 		if (!in_array($subjectText, ['Higher Mathematics', 'Biology', 'Agriculture Studies', 'Agriculture Studies-1', 'Agriculture Studies-2'])) {
 			return redirect()->back()->with('error', 'Sorry sir, (' . $subjectText . ') is not a 4th subject.');
 		} else {
