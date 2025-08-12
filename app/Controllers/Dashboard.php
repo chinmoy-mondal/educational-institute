@@ -1198,52 +1198,39 @@ class Dashboard extends Controller
 			$subject = $this->subjectModel->find($selectId);
 			$subjectNames = array_map('trim', explode(',', $subject['subject']));
 			$subjectText = implode(', ', $subjectNames);
-		}
 
-// Get IDs as plain array from the model
-$ids = $this->subjectModel
-    ->select('id')
-    ->whereIn('subject', [
-        'Higher Mathematics',
-        'Biology',
-        'Agriculture Studies',
-        'Agriculture Studies-1',
-        'Agriculture Studies-2'
-    ])
-    ->whereIn('class', [9, 10])
-    ->findAll();
+			$ids = $this->subjectModel
+				->select('id')
+				->whereIn('subject', [
+					'Higher Mathematics',
+					'Biology',
+					'Agriculture Studies',
+					'Agriculture Studies-1',
+					'Agriculture Studies-2'
+				])
+				->whereIn('class', [9, 10])
+				->findAll();
 
-$ids = array_column($ids, 'id'); // flatten to simple array
+			$ids = array_column($ids, 'id');
 
-// Check if $subjectText exists in the IDs list
-if (in_array((int)$selectId, $ids)) {
-    echo "Found in list=$selectId";
-} else {
-    echo "Not found=$selectId";
-}
-
-exit;
-
-
-
-
-		if (!in_array($subjectText, ['Higher Mathematics', 'Biology', 'Agriculture Studies', 'Agriculture Studies-1', 'Agriculture Studies-2'])) {
-			return redirect()->back()->with('error', 'Sorry sir, (' . $subjectText . ') is not a 4th subject.');
-		} else {
-			$replace = $selectId . "*";
-			$updated = str_replace($selectId, $replace, $subjectId);
-
-			$updatedResult = $this->studentModel->update($id, [
-				'assign_sub' => $updated,
-			]);
-
-			if ($updatedResult) {
-				return redirect()->back()->with('success', $subjectText . ' is selected as 4th subject updated successfully to ID ' . $id);
+			if (!in_array((int)$selectId, $ids)) {
+				return redirect()->back()->with('error', 'Sorry sir, (' . $subjectText . ') is not a 4th subject.');
 			} else {
-				$dbError = $this->studentModel->db->error();
-				$errorMsg = $dbError['message'] ?? 'Unknown error occurred.';
+				$replace = $selectId . "*";
+				$updated = str_replace($selectId, $replace, $subjectId);
 
-				return redirect()->back()->with('error', 'Update failed: ' . $errorMsg);
+				$updatedResult = $this->studentModel->update($id, [
+					'assign_sub' => $updated,
+				]);
+
+				if ($updatedResult) {
+					return redirect()->back()->with('success', $subjectText . ' is selected as 4th subject updated successfully to ID ' . $id);
+				} else {
+					$dbError = $this->studentModel->db->error();
+					$errorMsg = $dbError['message'] ?? 'Unknown error occurred.';
+
+					return redirect()->back()->with('error', 'Update failed: ' . $errorMsg);
+				}
 			}
 		}
 	}
