@@ -105,31 +105,31 @@ class Dashboard extends Controller
 		return view('dashboard/index', $this->data);
 	}
 
-public function profile()
-{
-    $this->data['title'] = 'Profile';
-    $this->data['activeSection'] = 'dashboard';
+	public function profile()
+	{
+		$this->data['title'] = 'Profile';
+		$this->data['activeSection'] = 'dashboard';
 
-    $this->data['navbarItems'] = [
-        ['label' => 'Dashboard', 'url' => base_url('dashboard')],
-        ['label' => 'Calendar', 'url' => base_url('calendar')],
-        ['label' => 'Result', 'url' => base_url('ad-result')],
-        ['label' => 'Accounts', 'url' => base_url('accounts')],
-    ];
+		$this->data['navbarItems'] = [
+			['label' => 'Dashboard', 'url' => base_url('dashboard')],
+			['label' => 'Calendar', 'url' => base_url('calendar')],
+			['label' => 'Result', 'url' => base_url('ad-result')],
+			['label' => 'Accounts', 'url' => base_url('accounts')],
+		];
 
-    $userId = $this->session->get('user_id');
-    // Load model and get teacher data
-    $teacher = $this->userModel->find($userId);
+		$userId = $this->session->get('user_id');
+		// Load model and get teacher data
+		$teacher = $this->userModel->find($userId);
 
-    if (!$teacher) {
-        // handle case where teacher not found
-        throw new \CodeIgniter\Exceptions\PageNotFoundException("Teacher not found");
-    }
+		if (!$teacher) {
+			// handle case where teacher not found
+			throw new \CodeIgniter\Exceptions\PageNotFoundException("Teacher not found");
+		}
 
-    $this->data['user'] = $teacher;
+		$this->data['user'] = $teacher;
 
-    return view('dashboard/profile', $this->data);
-}
+		return view('dashboard/profile', $this->data);
+	}
 
 	public function calendar()
 	{
@@ -1068,7 +1068,7 @@ public function profile()
 			}
 
 			$student = $builder->first();
-			
+
 			if (!$student) {
 				return redirect()->back()->with('error', 'Student not found for given Class/Roll.');
 			}
@@ -1187,15 +1187,17 @@ public function profile()
 		$selectId  = $this->request->getPost('selectid');
 		$className = $this->request->getPost('subject_class');
 
-		$subject = $this->subjectModel->find($selectId);
-		$subjectNames = array_map('trim', explode(',', $subject['subject']));
-		$subjectText = implode(', ', $subjectNames);
+
 
 		if (in_array($className, [6, 7, 8])) {
 			return redirect()->back()->with('error', 'Sorry Class 6, 7, 8 does not have 4th subject.');
 		}
 		if (!$selectId) {
 			return redirect()->back()->with('error', 'Sir, No subject is selected.');
+		} else {
+			$subject = $this->subjectModel->find($selectId);
+			$subjectNames = array_map('trim', explode(',', $subject['subject']));
+			$subjectText = implode(', ', $subjectNames);
 		}
 
 		if (!in_array($subjectText, ['Higher Mathematics', 'Biology', 'Agriculture Studies', 'Agriculture Studies-1', 'Agriculture Studies-2'])) {
