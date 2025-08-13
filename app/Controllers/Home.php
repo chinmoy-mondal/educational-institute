@@ -81,12 +81,35 @@ class Home extends BaseController
 
 		// Load view
 		return view('public/student_portal', [
-				'students' => $students,
-				'pager' => $studentModel->pager,
-				'q' => $q,
-				'class' => $class,
-				'section' => $section,
-				'sections' => $sections,
+			'students' => $students,
+			'pager' => $studentModel->pager,
+			'q' => $q,
+			'class' => $class,
+			'section' => $section,
+			'sections' => $sections,
+		]);
+	}
+	public function studentById()
+	{
+		$studentModel = new StudentModel();
+
+		$q = $this->request->getGet('q');
+
+		if (empty($q)) {
+			return redirect()->back()->with('error', 'Student ID is required.');
+		}
+
+		$students = $studentModel
+			->where('id', $q)
+			->findAll();
+
+		return view('public/student_portal', [
+			'students' => $students,
+			'pager'    => null,
+			'q'        => $q,
+			'class'    => null,
+			'section'  => null,
+			'sections' => [],
 		]);
 	}
 	public function idCard($id)
@@ -99,7 +122,7 @@ class Home extends BaseController
 		}
 
 		$student['school_name'] = "MULGRAM SECONDARY SCHOOL";
-		$student['eiin'] = "EIIN-115832"; 
+		$student['eiin'] = "EIIN-115832";
 		$student['school_name'] = "MULGRAM SECONDARY SCHOOL";
 		$student['logo'] = base_url('public/assets/img/logo.jpg');
 		$student['signature'] = base_url('public/assets/img/sign.png');

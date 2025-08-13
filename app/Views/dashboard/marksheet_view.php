@@ -857,7 +857,7 @@ if (!is_null($roll)) {
     </div>
 
     <?php
-    $url = 'https://mulss.edu.bd/student?q=' . $student['id'];
+    $url = 'https://mulss.edu.bd/student-id?q=' . $student['id'];
     ?>
     <div class="col-md-3 qr-code text-center">
       <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= urlencode($url) ?>" class="qr-img" alt="Student QR">
