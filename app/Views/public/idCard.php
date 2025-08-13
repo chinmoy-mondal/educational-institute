@@ -96,7 +96,7 @@
       <!-- QR Code -->
 	<div class="text-center mb-3">
 	    <img
-		src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=<?= urlencode('https://mulss.edu.bd/student?q=' . $student['id'] . '&class=&section=') ?>"
+		src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=<?= urlencode('https://mulss.edu.bd/student-id?q=' . $student['id']) ?>"
 		class="qr-img"
 		alt="Student QR"
 	    />
