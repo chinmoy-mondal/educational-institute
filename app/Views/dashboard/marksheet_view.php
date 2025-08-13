@@ -173,7 +173,7 @@ if (!is_null($roll)) {
   <!-- School Info -->
   <div class="school-header">
     <h2>Mulgram Secondary School</h2>
-    <h5>Keshoppur, Jessore</h5>
+    <h5>Keshabpur, Jashore</h5>
   </div>
 
   <div class="row align-items-center">
@@ -857,8 +857,7 @@ if (!is_null($roll)) {
     </div>
 
     <?php
-    $studentId = 207; // Example: dynamically from DB
-    $url = 'https://mulss.edu.bd/student?q=' . $studentId;
+    $url = 'https://mulss.edu.bd/student?q=' . $student['id'];
     ?>
     <div class="col-md-3 qr-code text-center">
       <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= urlencode($url) ?>" class="qr-img" alt="Student QR">
