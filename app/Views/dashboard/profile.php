@@ -73,22 +73,24 @@
   </div>
 
   <!-- Info Cards -->
+  <!-- Info Cards -->
   <div class="row mb-4">
-    <div class="col-md-4">
-      <div class="card">
+    <div class="col-md-4 d-flex">
+      <div class="card h-100 flex-fill">
         <div class="card-header">
           <h3 class="card-title">Classes</h3>
         </div>
         <div class="card-body">
-          <ul>
+          <ul class="mb-0">
             <li>Class 9 - Section A</li>
             <li>Class 10 - Section B</li>
           </ul>
         </div>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="card">
+
+    <div class="col-md-4 d-flex">
+      <div class="card h-100 flex-fill">
         <div class="card-header">
           <h3 class="card-title">Attendance</h3>
         </div>
@@ -99,8 +101,9 @@
         </div>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="card">
+
+    <div class="col-md-4 d-flex">
+      <div class="card h-100 flex-fill">
         <div class="card-header">
           <h3 class="card-title">Payments</h3>
         </div>
