@@ -25,7 +25,7 @@
         <p class="text-muted"><?= esc($user['designation']) ?></p>
 
         <!-- Attendance Graph Below -->
-        <div class="mt-3">
+        <div class="mt-3 w-100 d-flex justify-content-center">
           <canvas id="attendanceChart" width="150" height="150"></canvas>
         </div>
       </div>
@@ -79,8 +79,6 @@
           </table>
         </div>
       </div>
-
-
     </div>
   </div>
 
@@ -129,25 +127,24 @@
   <!-- Bottom row: Calendar and Bar Graph -->
   <div class="row">
     <div class="col-md-6">
-      <div class="card">
+      <div class="card h-100">
         <div class="card-header">
           <h3 class="card-title">Calendar</h3>
         </div>
-        <div class="card-body">
-          <div id="calendar" style="height: 300px; background: #f4f6f9; display:flex; align-items:center; justify-content:center;">
-            Calendar placeholder
-          </div>
+        <div class="card-body d-flex align-items-center justify-content-center" style="min-height: 300px; background: #f4f6f9;">
+          <!-- FullCalendar or placeholder -->
+          <div id="calendar">Calendar placeholder</div>
         </div>
       </div>
     </div>
 
     <div class="col-md-6">
-      <div class="card">
+      <div class="card h-100">
         <div class="card-header">
           <h3 class="card-title">Graph</h3>
         </div>
-        <div class="card-body">
-          <canvas id="chart" style="height: 300px;"></canvas>
+        <div class="card-body d-flex align-items-center justify-content-center" style="min-height: 300px;">
+          <canvas id="chart" style="max-height: 100%; width: 100%;"></canvas>
         </div>
       </div>
     </div>
@@ -172,6 +169,7 @@
       },
       options: {
         responsive: true,
+        maintainAspectRatio: false,
         scales: {
           y: {
             beginAtZero: true,
@@ -189,11 +187,11 @@
         labels: ['Present', 'Absent', 'Leave'],
         datasets: [{
           label: 'Attendance',
-          data: [95, 3, 2], // Example data
+          data: [95, 3, 2],
           backgroundColor: [
-            'rgba(54, 162, 235, 0.7)', // Present
-            'rgba(255, 99, 132, 0.7)', // Absent
-            'rgba(255, 206, 86, 0.7)' // Leave
+            'rgba(54, 162, 235, 0.7)',
+            'rgba(255, 99, 132, 0.7)',
+            'rgba(255, 206, 86, 0.7)'
           ],
           borderColor: [
             'rgba(54, 162, 235, 1)',
