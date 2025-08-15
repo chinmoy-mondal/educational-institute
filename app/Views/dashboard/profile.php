@@ -12,11 +12,23 @@
       <div class="col-md-3 text-center">
         <img src="https://via.placeholder.com/150" alt="Teacher Photo" class="img-fluid img-circle" style="max-width:150px;">
       </div>
-      <div class="col-md-9">
-        <h2><?= esc($user['name']) ?></h2>
-        <h5 class="text-muted">Senior Mathematics Teacher</h5>
-        <p>Experienced teacher passionate about helping students excel in mathematics and science.</p>
-      </div>
+<div class="col-md-9">
+    <h2><?= esc($user['name']) ?></h2>
+    <h5 class="text-muted"><?= esc($user['designation']) ?></h5>
+
+    <ul class="list-group mt-3">
+        <li class="list-group-item"><strong>Role:</strong> <?= esc($user['role']) ?></li>
+        <li class="list-group-item"><strong>Subject:</strong> <?= esc($user['subject']) ?></li>
+        <li class="list-group-item"><strong>Gender:</strong> <?= esc($user['gender']) ?></li>
+        <li class="list-group-item"><strong>Phone:</strong> <?= esc($user['phone']) ?></li>
+        <li class="list-group-item"><strong>Email:</strong> <?= esc($user['email']) ?></li>
+        <li class="list-group-item"><strong>Assigned Subject:</strong> <?= esc($user['assagin_sub']) ?></li>
+        <li class="list-group-item"><strong>Account Status:</strong> <?= esc($user['account_status']) ?></li>
+        <li class="list-group-item"><strong>Permit By:</strong> <?= esc($user['permit_by']) ?></li>
+        <li class="list-group-item"><strong>Created At:</strong> <?= esc($user['created_at']) ?></li>
+        <li class="list-group-item"><strong>Updated At:</strong> <?= esc($user['updated_at']) ?></li>
+    </ul>
+</div>
     </div>
   </div>
 
