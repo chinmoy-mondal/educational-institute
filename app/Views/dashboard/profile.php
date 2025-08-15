@@ -13,7 +13,7 @@
 
     <div class="row">
       <!-- Left: Profile Picture -->
-      <div class="col-md-6 text-center" style="align-self: flex-start;">
+      <div class="col-md-3 text-center" style="align-self: flex-start;">
         <img class="profile-user-img img-fluid img-circle mb-2"
           src="<?= base_url('public/assets/img/headsir.jpg'); ?>"
           alt="Teacher Photo"
@@ -22,8 +22,8 @@
         <p class="text-muted"><?= esc($user['designation']) ?></p>
       </div>
 
-      <!-- Right: User Info Table -->
-      <div class="col-md-6">
+      <!-- Middle: User Info Table -->
+      <div class="col-md-5">
         <div class="table-responsive">
           <table class="table table-striped table-hover mb-0">
             <tbody>
@@ -71,6 +71,11 @@
           </table>
         </div>
       </div>
+
+      <!-- Right: Circular Graph -->
+<div class="col-md-4 text-center" style="align-self: flex-start;">
+    <canvas id="userProgressChart" width="150" height="150"></canvas>
+</div>
     </div>
   </div>
 
@@ -168,6 +173,38 @@
       }
     }
   });
+</script>
+<!-- Include Chart.js (CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('userProgressChart').getContext('2d');
+    const userProgressChart = new Chart(ctx, {
+        type: 'doughnut', // circular graph
+        data: {
+            labels: ['Completed', 'Remaining'],
+            datasets: [{
+                label: 'Profile Completion',
+                data: [75, 25], // example data: 75% completed
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.7)', // Completed
+                    'rgba(211, 211, 211, 0.3)' // Remaining
+                ],
+                borderWidth: 1,
+            }]
+        },
+        options: {
+            cutout: '70%', // makes it a donut-style circle
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                },
+                tooltip: {
+                    enabled: true
+                }
+            }
+        }
+    });
 </script>
 
 <?= $this->endSection() ?>
