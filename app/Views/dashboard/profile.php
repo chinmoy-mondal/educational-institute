@@ -64,7 +64,6 @@
         <div class="card">
           <div class="card-body">
 
-            <canvas id="attendanceChart"></canvas>
             <div class="mt-3" style="width:150px; height:150px;">
               <canvas id="attendanceChart"></canvas>
             </div>
