@@ -3,75 +3,73 @@
 
 <div class="container-fluid py-4">
 <!-- Profile Card -->
-<div class="card card-primary card-outline mb-4">
-    <div class="card-body box-profile">
-        <div class="text-center mb-3">
-            <img class="profile-user-img img-fluid img-circle"
+<div class="card card-primary card-outline mb-4 position-relative p-3">
+    <!-- Ribbon for Roll -->
+    <div class="ribbon-wrapper ribbon-lg position-absolute" style="top:10px; right:-5px;">
+        <div class="ribbon bg-info text-lg">
+            Roll: <?= esc($user['roll']) ?>
+        </div>
+    </div>
+
+    <div class="row align-items-center">
+        <!-- Left: Profile Picture -->
+        <div class="col-md-3 text-center">
+            <img class="profile-user-img img-fluid img-circle mb-2"
                  src="<?= esc($user['photo'] ?? 'https://via.placeholder.com/150') ?>"
-                 alt="Teacher Photo">
+                 alt="Teacher Photo"
+                 style="max-width:150px;">
+            <h4 class="mt-2"><?= esc($user['name']) ?></h4>
+            <p class="text-muted"><?= esc($user['designation']) ?></p>
         </div>
 
-        <h3 class="profile-username text-center"><?= esc($user['name']) ?></h3>
-        <p class="text-muted text-center"><?= esc($user['designation']) ?></p>
-
-        <div class="ribbon-wrapper ribbon-lg position-absolute" style="top:10px; right:-5px;">
-            <div class="ribbon bg-<?= ($user['account_status'] === 'Active') ? 'success' : 'danger' ?> text-lg">
-                <?= esc($user['account_status']) ?>
+        <!-- Right: User Info Table -->
+        <div class="col-md-9">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0">
+                    <tbody>
+                        <tr>
+                            <th><i class="fas fa-user-tag mr-2"></i> Role</th>
+                            <td><?= esc($user['role']) ?></td>
+                        </tr>
+                        <tr>
+                            <th><i class="fas fa-book mr-2"></i> Subject</th>
+                            <td><?= esc($user['subject']) ?></td>
+                        </tr>
+                        <tr>
+                            <th><i class="fas fa-venus-mars mr-2"></i> Gender</th>
+                            <td><?= esc($user['gender']) ?></td>
+                        </tr>
+                        <tr>
+                            <th><i class="fas fa-phone-alt mr-2"></i> Phone</th>
+                            <td><?= esc($user['phone']) ?></td>
+                        </tr>
+                        <tr>
+                            <th><i class="fas fa-envelope mr-2"></i> Email</th>
+                            <td><?= esc($user['email']) ?></td>
+                        </tr>
+                        <tr>
+                            <th><i class="fas fa-book-reader mr-2"></i> Assigned Subject</th>
+                            <td><?= esc($user['assagin_sub']) ?></td>
+                        </tr>
+                        <tr>
+                            <th><i class="fas fa-user-check mr-2"></i> Account Status</th>
+                            <td><?= esc($user['account_status']) ?></td>
+                        </tr>
+                        <tr>
+                            <th><i class="fas fa-user-shield mr-2"></i> Permit By</th>
+                            <td><?= esc($user['permit_by']) ?></td>
+                        </tr>
+                        <tr>
+                            <th><i class="fas fa-calendar-plus mr-2"></i> Created At</th>
+                            <td><?= esc($user['created_at']) ?></td>
+                        </tr>
+                        <tr>
+                            <th><i class="fas fa-calendar-check mr-2"></i> Updated At</th>
+                            <td><?= esc($user['updated_at']) ?></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        </div>
-
-        <!-- User Info Table -->
-        <div class="table-responsive mt-4">
-            <table class="table table-striped table-hover">
-                <tbody>
-                    <tr>
-                        <th><i class="fas fa-user-tag mr-2"></i> Role</th>
-                        <td><?= esc($user['role']) ?></td>
-                    </tr>
-                    <tr>
-                        <th><i class="fas fa-book mr-2"></i> Subject</th>
-                        <td><?= esc($user['subject']) ?></td>
-                    </tr>
-                    <tr>
-                        <th><i class="fas fa-venus-mars mr-2"></i> Gender</th>
-                        <td><?= esc($user['gender']) ?></td>
-                    </tr>
-                    <tr>
-                        <th><i class="fas fa-phone-alt mr-2"></i> Phone</th>
-                        <td><?= esc($user['phone']) ?></td>
-                    </tr>
-                    <tr>
-                        <th><i class="fas fa-envelope mr-2"></i> Email</th>
-                        <td><?= esc($user['email']) ?></td>
-                    </tr>
-                    <tr>
-                        <th><i class="fas fa-book-reader mr-2"></i> Assigned Subject</th>
-                        <td><?= esc($user['assagin_sub']) ?></td>
-                    </tr>
-                    <tr>
-                        <th><i class="fas fa-user-check mr-2"></i> Permit By</th>
-                        <td><?= esc($user['permit_by']) ?></td>
-                    </tr>
-                    <tr>
-                        <th><i class="fas fa-calendar-plus mr-2"></i> Created At</th>
-                        <td><?= esc($user['created_at']) ?></td>
-                    </tr>
-                    <tr>
-                        <th><i class="fas fa-calendar-check mr-2"></i> Updated At</th>
-                        <td><?= esc($user['updated_at']) ?></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Optional Buttons -->
-        <div class="text-center mt-3">
-            <a href="<?= site_url('dashboard/edit-profile/'.$user['id']) ?>" class="btn btn-primary btn-sm">
-                <i class="fas fa-edit"></i> Edit Profile
-            </a>
-            <a href="<?= site_url('dashboard') ?>" class="btn btn-secondary btn-sm">
-                <i class="fas fa-arrow-left"></i> Back
-            </a>
         </div>
     </div>
 </div>
