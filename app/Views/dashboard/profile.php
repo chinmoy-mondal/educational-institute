@@ -7,7 +7,7 @@
     <!-- Ribbon for Roll -->
     <div class="ribbon-wrapper ribbon-lg position-absolute" style="top:10px; right:-5px;">
         <div class="ribbon bg-info text-lg">
-            Roll: <?= esc($user['roll']) ?>
+            Roll: 
         </div>
     </div>
 
