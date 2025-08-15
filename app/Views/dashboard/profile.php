@@ -173,11 +173,7 @@
       }
     }
   });
-</script>
-<!-- Include Chart.js (CDN) -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    const ctx = document.getElementById('userProgressChart').getContext('2d');
+      const ctx = document.getElementById('userProgressChart').getContext('2d');
     const userProgressChart = new Chart(ctx, {
         type: 'doughnut', // circular graph
         data: {
@@ -206,5 +202,7 @@
         }
     });
 </script>
+<!-- Include Chart.js (CDN) -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <?= $this->endSection() ?>
