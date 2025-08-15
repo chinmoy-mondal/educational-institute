@@ -15,7 +15,7 @@
         <!-- Left: Profile Picture -->
         <div class="col-md-3 text-center">
             <img class="profile-user-img img-fluid img-circle mb-2"
-                 src="<?= esc($user['photo'] ?? 'https://via.placeholder.com/150') ?>"
+                 src="<?= base_url('public/assets/img/headsir.jpg'); ?>"
                  alt="Teacher Photo"
                  style="max-width:150px;">
             <h4 class="mt-2"><?= esc($user['name']) ?></h4>
