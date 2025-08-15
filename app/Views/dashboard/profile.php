@@ -13,17 +13,17 @@
 
     <div class="row">
       <!-- Left: Profile Picture -->
-      <div class="col-md-3 text-center" style="align-self: flex-start;">
+      <div class="col-md-6 text-center" style="align-self: flex-start;">
         <img class="profile-user-img img-fluid img-circle mb-2"
           src="<?= base_url('public/assets/img/headsir.jpg'); ?>"
           alt="Teacher Photo"
-          style="width:137px; height:177px; object-fit:cover; border-radius:8px;">
+          style="width:200px; height:250px; object-fit:cover; border-radius:8px;">
         <h4 class="mt-2"><?= esc($user['name']) ?></h4>
         <p class="text-muted"><?= esc($user['designation']) ?></p>
       </div>
 
       <!-- Right: User Info Table -->
-      <div class="col-md-9">
+      <div class="col-md-6">
         <div class="table-responsive">
           <table class="table table-striped table-hover mb-0">
             <tbody>
