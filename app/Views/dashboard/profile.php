@@ -4,11 +4,12 @@
 <div class="container-fluid py-4">
   <!-- Profile Card -->
   <div class="card card-primary card-outline mb-4 position-relative p-3">
-    <!-- Ribbon for Role -->
+    
+    <!-- Ribbon -->
     <div class="ribbon-wrapper position-absolute" style="top:0; right:0; z-index:10;">
-      <div class="ribbon bg-info text-white font-weight-bold py-1 px-3" style="border-bottom-left-radius:4px;">
-        <?= esc($user['role']) ?>
-      </div>
+        <div class="ribbon bg-info text-white font-weight-bold py-1 px-3" style="border-bottom-left-radius:4px;">
+            <?= esc($user['role']) ?>
+        </div>
     </div>
 
     <div class="row">
@@ -77,7 +78,7 @@
         <canvas id="attendanceChart" width="150" height="150"></canvas>
       </div>
     </div>
-  </div>
+</div>
 
   <!-- 3 Cards in a row -->
   <div class="row mb-4">
