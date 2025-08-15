@@ -4,10 +4,9 @@
 <div class="container-fluid py-4">
   <!-- Profile Card -->
   <div class="card card-primary card-outline mb-4 position-relative p-3">
-    
     <!-- Ribbon -->
-    <div class="ribbon-wrapper position-absolute" style="top:0; right:0; z-index:10;">
-        <div class="ribbon bg-info text-white font-weight-bold py-1 px-3" style="border-bottom-left-radius:4px;">
+    <div class="ribbon-wrapper ribbon-lg">
+        <div class="ribbon bg-info text-white">
             <?= esc($user['role']) ?>
         </div>
     </div>
