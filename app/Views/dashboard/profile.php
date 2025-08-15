@@ -22,7 +22,7 @@
 
       <!-- Middle: User Info Section -->
       <div class="col-md-5">
-        <div class="card">
+        <div class="card h-100">
           <div class="card-body">
             <dl class="row mb-0">
               <dt class="col-sm-4"><i class="fas fa-user-tag mr-2"></i>Role</dt>
@@ -59,12 +59,11 @@
         </div>
       </div>
 
-      <!-- Right: User Info Section -->
+      <!-- Right: Attendance Chart -->
       <div class="col-md-4">
-        <div class="card">
-          <div class="card-body">
-
-            <div class="mt-3" style="width:150px; height:150px;">
+        <div class="card h-100 d-flex align-items-center justify-content-center">
+          <div class="card-body d-flex align-items-center justify-content-center">
+            <div style="width:200px; height:200px;">
               <canvas id="attendanceChart"></canvas>
             </div>
           </div>
