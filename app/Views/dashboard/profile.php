@@ -2,41 +2,87 @@
 <?= $this->section('content') ?>
 
 <div class="container-fluid py-4">
+<!-- Profile Card -->
+<div class="card card-primary card-outline mb-4">
+    <div class="card-body box-profile">
+        <div class="text-center mb-3">
+            <img class="profile-user-img img-fluid img-circle"
+                 src="<?= esc($user['photo'] ?? 'https://via.placeholder.com/150') ?>"
+                 alt="Teacher Photo">
+        </div>
 
-  <!-- Profile Card with Ribbon -->
-  <div class="card position-relative mb-4" style="padding: 20px;">
-    <div class="ribbon-wrapper ribbon-lg">
-      <div class="ribbon bg-success text-lg">Active</div>
+        <h3 class="profile-username text-center"><?= esc($user['name']) ?></h3>
+        <p class="text-muted text-center"><?= esc($user['designation']) ?></p>
+
+        <div class="ribbon-wrapper ribbon-lg position-absolute" style="top:10px; right:-5px;">
+            <div class="ribbon bg-<?= ($user['account_status'] === 'Active') ? 'success' : 'danger' ?> text-lg">
+                <?= esc($user['account_status']) ?>
+            </div>
+        </div>
+
+        <!-- User Info Table -->
+        <div class="table-responsive mt-4">
+            <table class="table table-striped table-hover">
+                <tbody>
+                    <tr>
+                        <th><i class="fas fa-user-tag mr-2"></i> Role</th>
+                        <td><?= esc($user['role']) ?></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-book mr-2"></i> Subject</th>
+                        <td><?= esc($user['subject']) ?></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-venus-mars mr-2"></i> Gender</th>
+                        <td><?= esc($user['gender']) ?></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-phone-alt mr-2"></i> Phone</th>
+                        <td><?= esc($user['phone']) ?></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-envelope mr-2"></i> Email</th>
+                        <td><?= esc($user['email']) ?></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-book-reader mr-2"></i> Assigned Subject</th>
+                        <td><?= esc($user['assagin_sub']) ?></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-user-check mr-2"></i> Permit By</th>
+                        <td><?= esc($user['permit_by']) ?></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-calendar-plus mr-2"></i> Created At</th>
+                        <td><?= esc($user['created_at']) ?></td>
+                    </tr>
+                    <tr>
+                        <th><i class="fas fa-calendar-check mr-2"></i> Updated At</th>
+                        <td><?= esc($user['updated_at']) ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Optional Buttons -->
+        <div class="text-center mt-3">
+            <a href="<?= site_url('dashboard/edit-profile/'.$user['id']) ?>" class="btn btn-primary btn-sm">
+                <i class="fas fa-edit"></i> Edit Profile
+            </a>
+            <a href="<?= site_url('dashboard') ?>" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+        </div>
     </div>
-    <div class="row align-items-center">
-      <div class="col-md-3 text-center">
-        <img src="https://via.placeholder.com/150" alt="Teacher Photo" class="img-fluid img-circle" style="max-width:150px;">
-      </div>
-<div class="col-md-9">
-    <h2><?= esc($user['name']) ?></h2>
-    <h5 class="text-muted"><?= esc($user['designation']) ?></h5>
-
-    <ul class="list-group mt-3">
-        <li class="list-group-item"><strong>Role:</strong> <?= esc($user['role']) ?></li>
-        <li class="list-group-item"><strong>Subject:</strong> <?= esc($user['subject']) ?></li>
-        <li class="list-group-item"><strong>Gender:</strong> <?= esc($user['gender']) ?></li>
-        <li class="list-group-item"><strong>Phone:</strong> <?= esc($user['phone']) ?></li>
-        <li class="list-group-item"><strong>Email:</strong> <?= esc($user['email']) ?></li>
-        <li class="list-group-item"><strong>Assigned Subject:</strong> <?= esc($user['assagin_sub']) ?></li>
-        <li class="list-group-item"><strong>Account Status:</strong> <?= esc($user['account_status']) ?></li>
-        <li class="list-group-item"><strong>Permit By:</strong> <?= esc($user['permit_by']) ?></li>
-        <li class="list-group-item"><strong>Created At:</strong> <?= esc($user['created_at']) ?></li>
-        <li class="list-group-item"><strong>Updated At:</strong> <?= esc($user['updated_at']) ?></li>
-    </ul>
 </div>
-    </div>
-  </div>
 
   <!-- 3 Cards in a row -->
   <div class="row mb-4">
     <div class="col-md-4">
       <div class="card">
-        <div class="card-header"><h3 class="card-title">Classes</h3></div>
+        <div class="card-header">
+          <h3 class="card-title">Classes</h3>
+        </div>
         <div class="card-body">
           <ul>
             <li>Class 9 - Section A</li>
@@ -48,7 +94,9 @@
 
     <div class="col-md-4">
       <div class="card">
-        <div class="card-header"><h3 class="card-title">Attendance</h3></div>
+        <div class="card-header">
+          <h3 class="card-title">Attendance</h3>
+        </div>
         <div class="card-body">
           <p>Present: 95%</p>
           <p>Absent: 3%</p>
@@ -59,7 +107,9 @@
 
     <div class="col-md-4">
       <div class="card">
-        <div class="card-header"><h3 class="card-title">Payments</h3></div>
+        <div class="card-header">
+          <h3 class="card-title">Payments</h3>
+        </div>
         <div class="card-body">
           <p>Paid: $1200</p>
           <p>Pending: $300</p>
@@ -72,7 +122,9 @@
   <div class="row">
     <div class="col-md-6">
       <div class="card">
-        <div class="card-header"><h3 class="card-title">Calendar</h3></div>
+        <div class="card-header">
+          <h3 class="card-title">Calendar</h3>
+        </div>
         <div class="card-body">
           <div id="calendar" style="height: 300px; background: #f4f6f9; display:flex; align-items:center; justify-content:center;">
             Calendar placeholder
@@ -83,7 +135,9 @@
 
     <div class="col-md-6">
       <div class="card">
-        <div class="card-header"><h3 class="card-title">Graph</h3></div>
+        <div class="card-header">
+          <h3 class="card-title">Graph</h3>
+        </div>
         <div class="card-body">
           <canvas id="chart" style="height: 300px;"></canvas>
         </div>
@@ -109,11 +163,13 @@
     options: {
       responsive: true,
       scales: {
-        y: { beginAtZero: true, max: 100 }
+        y: {
+          beginAtZero: true,
+          max: 100
+        }
       }
     }
   });
 </script>
 
 <?= $this->endSection() ?>
-
