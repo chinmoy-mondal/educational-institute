@@ -152,57 +152,52 @@
 <!-- ChartJS -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  const ctx = document.getElementById('chart').getContext('2d');
-  const chart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-      datasets: [{
-        label: 'Attendance %',
-        data: [95, 90, 93, 97, 92],
-        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-          max: 100
+document.addEventListener("DOMContentLoaded", function() {
+    // Bar chart
+    const ctxBar = document.getElementById('chart').getContext('2d');
+    new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+            datasets: [{
+                label: 'Attendance %',
+                data: [95, 90, 93, 97, 92],
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true, max: 100 }
+            }
         }
-      }
-    }
-  });
-      const ctx = document.getElementById('userProgressChart').getContext('2d');
-    const userProgressChart = new Chart(ctx, {
-        type: 'doughnut', // circular graph
+    });
+
+    // Circular (doughnut) chart
+    const ctxDoughnut = document.getElementById('userProgressChart').getContext('2d');
+    new Chart(ctxDoughnut, {
+        type: 'doughnut',
         data: {
             labels: ['Completed', 'Remaining'],
             datasets: [{
                 label: 'Profile Completion',
-                data: [75, 25], // example data: 75% completed
+                data: [75, 25],
                 backgroundColor: [
-                    'rgba(54, 162, 235, 0.7)', // Completed
-                    'rgba(211, 211, 211, 0.3)' // Remaining
+                    'rgba(54, 162, 235, 0.7)',
+                    'rgba(211, 211, 211, 0.3)'
                 ],
                 borderWidth: 1,
             }]
         },
         options: {
-            cutout: '70%', // makes it a donut-style circle
+            cutout: '70%',
             plugins: {
-                legend: {
-                    display: true,
-                    position: 'bottom'
-                },
-                tooltip: {
-                    enabled: true
-                }
+                legend: { display: true, position: 'bottom' },
+                tooltip: { enabled: true }
             }
         }
     });
+});
 </script>
-<!-- Include Chart.js (CDN) -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <?= $this->endSection() ?>
