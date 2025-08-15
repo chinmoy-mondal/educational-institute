@@ -20,6 +20,10 @@
           style="width:150px; height:200px; object-fit:cover; border-radius:4px;">
         <h4 class="mt-2"><?= esc($user['name']) ?></h4>
         <p class="text-muted"><?= esc($user['designation']) ?></p>
+        <!-- Attendance Graph Below Profile -->
+        <div class="mt-3">
+          <canvas id="attendanceChart" width="150" height="150"></canvas>
+        </div>
       </div>
 
       <!-- Middle: User Info Table -->
@@ -72,10 +76,7 @@
         </div>
       </div>
 
-      <!-- Right: Circular Attendance Graph -->
-      <div class="col-md-4 text-center" style="align-self: flex-start;">
-        <canvas id="attendanceChart" width="150" height="150"></canvas>
-      </div>
+      
     </div>
 </div>
 
