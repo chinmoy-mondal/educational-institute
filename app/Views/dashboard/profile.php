@@ -18,9 +18,6 @@
         <h4 class="mt-2"><?= esc($user['name']) ?></h4>
         <p class="text-muted"><?= esc($user['designation']) ?></p>
 
-        <div class="mt-3" style="width:150px; height:150px;">
-          <canvas id="attendanceChart"></canvas>
-        </div>
       </div>
 
       <!-- Middle: User Info Section -->
@@ -58,6 +55,18 @@
               <dt class="col-sm-4"><i class="fas fa-calendar-check mr-2"></i>Updated At</dt>
               <dd class="col-sm-8"><?= esc($user['updated_at']) ?></dd>
             </dl>
+          </div>
+        </div>
+      </div>
+
+<!-- Middle: User Info Section -->
+      <div class="col-md-5">
+        <div class="card">
+          <div class="card-body">
+            
+        <div class="mt-3" style="width:150px; height:150px;">
+          <canvas id="attendanceChart"></canvas>
+        </div>
           </div>
         </div>
       </div>
