@@ -59,14 +59,15 @@
         </div>
       </div>
 
-<!-- Middle: User Info Section -->
-      <div class="col-md-5">
+      <!-- Right: User Info Section -->
+      <div class="col-md-4">
         <div class="card">
           <div class="card-body">
-            
-        <div class="mt-3" style="width:150px; height:150px;">
-          <canvas id="attendanceChart"></canvas>
-        </div>
+
+            <canvas id="attendanceChart"></canvas>
+            <div class="mt-3" style="width:150px; height:150px;">
+              <canvas id="attendanceChart"></canvas>
+            </div>
           </div>
         </div>
       </div>
