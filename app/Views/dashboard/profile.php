@@ -13,7 +13,7 @@
         <img src="https://via.placeholder.com/150" alt="Teacher Photo" class="img-fluid img-circle" style="max-width:150px;">
       </div>
       <div class="col-md-9">
-        <h2>John Doe</h2>
+        <h2><?= esc($user['name']) ?></h2>
         <h5 class="text-muted">Senior Mathematics Teacher</h5>
         <p>Experienced teacher passionate about helping students excel in mathematics and science.</p>
       </div>
