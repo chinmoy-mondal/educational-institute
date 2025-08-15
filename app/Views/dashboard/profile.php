@@ -2,14 +2,14 @@
 <?= $this->section('content') ?>
 
 <div class="container-fluid py-4">
-  <!-- Profile Card -->
-  <div class="card card-primary card-outline mb-4 position-relative p-3">
     <!-- Ribbon for Role -->
     <div class="ribbon-wrapper ribbon-lg position-absolute" style="top:10px; right:-5px;">
       <div class="ribbon bg-info text-lg">
         <?= esc($user['role']) ?>
       </div>
     </div>
+  <!-- Profile Card -->
+  <div class="card card-primary card-outline mb-4 position-relative p-3">
 
     <div class="row">
       <!-- Left: Profile Picture -->
