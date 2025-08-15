@@ -4,7 +4,7 @@
 <div class="container-fluid py-4">
   <!-- Profile Card -->
   <div class="card card-primary card-outline mb-4 position-relative p-3">
-    <!-- Ribbon for Roll -->
+    <!-- Ribbon for Role -->
     <div class="ribbon-wrapper ribbon-lg position-absolute" style="top:10px; right:-5px;">
       <div class="ribbon bg-info text-lg">
         <?= esc($user['role']) ?>
@@ -17,7 +17,7 @@
         <img class="profile-user-img img-fluid img-circle mb-2"
           src="<?= base_url('public/assets/img/headsir.jpg'); ?>"
           alt="Teacher Photo"
-          style="width:200px; height:250px; object-fit:cover; border-radius:8px;">
+          style="width:150px; height:200px; object-fit:cover; border-radius:50%;">
         <h4 class="mt-2"><?= esc($user['name']) ?></h4>
         <p class="text-muted"><?= esc($user['designation']) ?></p>
       </div>
@@ -27,55 +27,25 @@
         <div class="table-responsive">
           <table class="table table-striped table-hover mb-0">
             <tbody>
-              <tr>
-                <th><i class="fas fa-user-tag mr-2"></i> Role</th>
-                <td><?= esc($user['role']) ?></td>
-              </tr>
-              <tr>
-                <th><i class="fas fa-book mr-2"></i> Subject</th>
-                <td><?= esc($user['subject']) ?></td>
-              </tr>
-              <tr>
-                <th><i class="fas fa-venus-mars mr-2"></i> Gender</th>
-                <td><?= esc($user['gender']) ?></td>
-              </tr>
-              <tr>
-                <th><i class="fas fa-phone-alt mr-2"></i> Phone</th>
-                <td><?= esc($user['phone']) ?></td>
-              </tr>
-              <tr>
-                <th><i class="fas fa-envelope mr-2"></i> Email</th>
-                <td><?= esc($user['email']) ?></td>
-              </tr>
-              <tr>
-                <th><i class="fas fa-book-reader mr-2"></i> Assigned Subject</th>
-                <td><?= esc($user['assagin_sub']) ?></td>
-              </tr>
-              <tr>
-                <th><i class="fas fa-user-check mr-2"></i> Account Status</th>
-                <td><?= esc($user['account_status']) ?></td>
-              </tr>
-              <tr>
-                <th><i class="fas fa-user-shield mr-2"></i> Permit By</th>
-                <td><?= esc($user['permit_by']) ?></td>
-              </tr>
-              <tr>
-                <th><i class="fas fa-calendar-plus mr-2"></i> Created At</th>
-                <td><?= esc($user['created_at']) ?></td>
-              </tr>
-              <tr>
-                <th><i class="fas fa-calendar-check mr-2"></i> Updated At</th>
-                <td><?= esc($user['updated_at']) ?></td>
-              </tr>
+              <tr><th><i class="fas fa-user-tag mr-2"></i> Role</th><td><?= esc($user['role']) ?></td></tr>
+              <tr><th><i class="fas fa-book mr-2"></i> Subject</th><td><?= esc($user['subject']) ?></td></tr>
+              <tr><th><i class="fas fa-venus-mars mr-2"></i> Gender</th><td><?= esc($user['gender']) ?></td></tr>
+              <tr><th><i class="fas fa-phone-alt mr-2"></i> Phone</th><td><?= esc($user['phone']) ?></td></tr>
+              <tr><th><i class="fas fa-envelope mr-2"></i> Email</th><td><?= esc($user['email']) ?></td></tr>
+              <tr><th><i class="fas fa-book-reader mr-2"></i> Assigned Subject</th><td><?= esc($user['assagin_sub']) ?></td></tr>
+              <tr><th><i class="fas fa-user-check mr-2"></i> Account Status</th><td><?= esc($user['account_status']) ?></td></tr>
+              <tr><th><i class="fas fa-user-shield mr-2"></i> Permit By</th><td><?= esc($user['permit_by']) ?></td></tr>
+              <tr><th><i class="fas fa-calendar-plus mr-2"></i> Created At</th><td><?= esc($user['created_at']) ?></td></tr>
+              <tr><th><i class="fas fa-calendar-check mr-2"></i> Updated At</th><td><?= esc($user['updated_at']) ?></td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- Right: Circular Graph -->
-<div class="col-md-4 text-center" style="align-self: flex-start;">
-    <canvas id="userProgressChart" width="150" height="150"></canvas>
-</div>
+      <!-- Right: Circular Attendance Graph -->
+      <div class="col-md-4 text-center" style="align-self: flex-start;">
+        <canvas id="attendanceChart" width="150" height="150"></canvas>
+      </div>
     </div>
   </div>
 
@@ -83,9 +53,7 @@
   <div class="row mb-4">
     <div class="col-md-4">
       <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Classes</h3>
-        </div>
+        <div class="card-header"><h3 class="card-title">Classes</h3></div>
         <div class="card-body">
           <ul>
             <li>Class 9 - Section A</li>
@@ -97,9 +65,7 @@
 
     <div class="col-md-4">
       <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Attendance</h3>
-        </div>
+        <div class="card-header"><h3 class="card-title">Attendance</h3></div>
         <div class="card-body">
           <p>Present: 95%</p>
           <p>Absent: 3%</p>
@@ -110,9 +76,7 @@
 
     <div class="col-md-4">
       <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Payments</h3>
-        </div>
+        <div class="card-header"><h3 class="card-title">Payments</h3></div>
         <div class="card-body">
           <p>Paid: $1200</p>
           <p>Pending: $300</p>
@@ -121,13 +85,11 @@
     </div>
   </div>
 
-  <!-- Bottom row: Calendar and Graph -->
+  <!-- Bottom row: Calendar and Bar Graph -->
   <div class="row">
     <div class="col-md-6">
       <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Calendar</h3>
-        </div>
+        <div class="card-header"><h3 class="card-title">Calendar</h3></div>
         <div class="card-body">
           <div id="calendar" style="height: 300px; background: #f4f6f9; display:flex; align-items:center; justify-content:center;">
             Calendar placeholder
@@ -138,9 +100,7 @@
 
     <div class="col-md-6">
       <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Graph</h3>
-        </div>
+        <div class="card-header"><h3 class="card-title">Graph</h3></div>
         <div class="card-body">
           <canvas id="chart" style="height: 300px;"></canvas>
         </div>
@@ -167,26 +127,30 @@ document.addEventListener("DOMContentLoaded", function() {
         },
         options: {
             responsive: true,
-            scales: {
-                y: { beginAtZero: true, max: 100 }
-            }
+            scales: { y: { beginAtZero: true, max: 100 } }
         }
     });
 
-    // Circular (doughnut) chart
-    const ctxDoughnut = document.getElementById('userProgressChart').getContext('2d');
+    // Circular attendance chart
+    const ctxDoughnut = document.getElementById('attendanceChart').getContext('2d');
     new Chart(ctxDoughnut, {
         type: 'doughnut',
         data: {
-            labels: ['Completed', 'Remaining'],
+            labels: ['Present', 'Absent', 'Leave'],
             datasets: [{
-                label: 'Profile Completion',
-                data: [75, 25],
+                label: 'Attendance',
+                data: [95, 3, 2], // Example data
                 backgroundColor: [
-                    'rgba(54, 162, 235, 0.7)',
-                    'rgba(211, 211, 211, 0.3)'
+                    'rgba(54, 162, 235, 0.7)',  // Present
+                    'rgba(255, 99, 132, 0.7)',  // Absent
+                    'rgba(255, 206, 86, 0.7)'   // Leave
                 ],
-                borderWidth: 1,
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ],
+                borderWidth: 1
             }]
         },
         options: {
