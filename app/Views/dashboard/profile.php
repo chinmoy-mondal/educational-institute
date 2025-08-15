@@ -9,7 +9,7 @@
     </div>
 
     <div class="row">
-      <!-- Left: Profile Picture + Attendance -->
+      <!-- Left: Profile Picture + Attendance Doughnut -->
       <div class="col-md-3 d-flex flex-column align-items-center">
         <img class="profile-user-img img-fluid mb-2"
              src="<?= base_url('public/assets/img/headsir.jpg'); ?>"
@@ -69,7 +69,7 @@
     </div>
   </div>
 
-  <!-- Bottom Row: Calendar & Graph -->
+  <!-- Bottom Row: Calendar & Bar Chart -->
   <div class="row">
     <div class="col-md-6">
       <div class="card h-100">
@@ -82,7 +82,7 @@
 
     <div class="col-md-6">
       <div class="card h-100">
-        <div class="card-header"><h3 class="card-title">Attendance Graph</h3></div>
+        <div class="card-header"><h3 class="card-title">Monthly Attendance Graph</h3></div>
         <div class="card-body d-flex align-items-center justify-content-center" style="height: 350px;">
           <canvas id="chart" style="max-height:100%; width:100%;"></canvas>
         </div>
@@ -102,11 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var calendarEl = document.getElementById('calendar');
   var calendar = new FullCalendar.Calendar(calendarEl, {
     initialView: 'dayGridMonth',
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay'
-    },
+    headerToolbar: { left:'prev,next today', center:'title', right:'dayGridMonth,timeGridWeek,timeGridDay' },
     events: [
       { title: 'Exam', start: '2025-08-20' },
       { title: 'Meeting', start: '2025-08-18' }
@@ -114,43 +110,39 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   calendar.render();
 
-  // Bar Chart
+  // Bottom Bar Chart
   const ctxBar = document.getElementById('chart').getContext('2d');
   new Chart(ctxBar, {
     type: 'bar',
     data: {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-      datasets: [{
-        label: 'Attendance %',
-        data: [95, 90, 93, 97, 92],
-        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+      labels: ['Jan','Feb','Mar','Apr','May'],
+      datasets:[{
+        label:'Attendance %',
+        data:[95,90,93,97,92],
+        backgroundColor:'rgba(54,162,235,0.6)'
       }]
     },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: { y: { beginAtZero: true, max: 100 } }
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      scales:{ y:{ beginAtZero:true, max:100 } }
     }
   });
 
-  // Doughnut chart for profile
+  // Profile Doughnut Chart
   const ctxDoughnut = document.getElementById('attendanceChart').getContext('2d');
   new Chart(ctxDoughnut, {
-    type: 'doughnut',
-    data: {
-      labels: ['Present', 'Absent', 'Leave'],
-      datasets: [{
-        data: [95,3,2],
-        backgroundColor: [
-          'rgba(54, 162, 235, 0.7)',
-          'rgba(255, 99, 132, 0.7)',
-          'rgba(255, 206, 86, 0.7)'
-        ],
-        borderColor: ['rgba(54, 162, 235, 1)','rgba(255, 99, 132, 1)','rgba(255, 206, 86, 1)'],
+    type:'doughnut',
+    data:{
+      labels:['Present','Absent','Leave'],
+      datasets:[{
+        data:[95,3,2],
+        backgroundColor:['rgba(54,162,235,0.7)','rgba(255,99,132,0.7)','rgba(255,206,86,0.7)'],
+        borderColor:['rgba(54,162,235,1)','rgba(255,99,132,1)','rgba(255,206,86,1)'],
         borderWidth:1
       }]
     },
-    options: { cutout: '70%', plugins: { legend:{ display:true, position:'bottom' } } }
+    options:{ cutout:'70%', plugins:{ legend:{ display:true, position:'bottom' } } }
   });
 });
 </script>
