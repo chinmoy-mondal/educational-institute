@@ -6,21 +6,25 @@
   <div class="card card-primary card-outline mb-4 position-relative p-3">
     <!-- Ribbon -->
     <div class="ribbon-wrapper ribbon-lg">
-        <div class="ribbon bg-info text-white">
-            <?= esc($user['role']) ?>
-        </div>
+      <div class="ribbon bg-info text-white">
+        <?= esc($user['role']) ?>
+      </div>
     </div>
 
     <div class="row">
-      <!-- Left: Profile Picture -->
-      <div class="col-md-3 text-center" style="align-self: flex-start;">
+      <!-- Left: Profile Picture + Attendance Graph -->
+      <div class="col-md-3 d-flex flex-column align-items-center">
+        <!-- Profile Picture -->
         <img class="profile-user-img img-fluid mb-2"
           src="<?= base_url('public/assets/img/headsir.jpg'); ?>"
           alt="Teacher Photo"
           style="width:150px; height:200px; object-fit:cover; border-radius:4px;">
+
+        <!-- Name and Designation -->
         <h4 class="mt-2"><?= esc($user['name']) ?></h4>
         <p class="text-muted"><?= esc($user['designation']) ?></p>
-        <!-- Attendance Graph Below Profile -->
+
+        <!-- Attendance Graph Below -->
         <div class="mt-3">
           <canvas id="attendanceChart" width="150" height="150"></canvas>
         </div>
@@ -76,9 +80,9 @@
         </div>
       </div>
 
-      
+
     </div>
-</div>
+  </div>
 
   <!-- 3 Cards in a row -->
   <div class="row mb-4">
