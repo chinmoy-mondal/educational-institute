@@ -25,7 +25,7 @@
       <!-- Left: Profile Picture + Doughnut -->
       <div class="col-md-3 d-flex flex-column align-items-center">
         <div class="position-relative" style="width:150px; height:200px;">
-          <a href="<?= site_url('admin/students/edit-photo/' . $user['id']) ?>"
+          <a href="<?= site_url('profile/edit') ?>"
             class="position-absolute top-0 start-0 m-1 text-primary"
             title="Edit Photo">
             <i class="fas fa-edit"></i>
@@ -58,12 +58,6 @@
                 </h4>
               </div>
 
-              <!-- Right: Edit Button -->
-              <div>
-                <button type="submit" class="btn btn-primary btn-sm" id="updateSubjectBtn">
-                  <i class="fas fa-edit"></i> Edit
-                </button>
-              </div>
             </div>
 
             <!-- User details below -->
