@@ -11,6 +11,9 @@
     <div class="row">
       <!-- Left: Profile Picture + Doughnut -->
       <div class="col-md-3 d-flex flex-column align-items-center">
+        <a href="<?= site_url('admin/students/edit-photo/' . $student['id']) ?>" class="position-absolute top-0 start-0" title="Edit Photo">
+          <i class="fas fa-edit"></i>
+        </a>
         <img class="profile-user-img img-fluid mb-2"
           src="<?= base_url('public/assets/img/default.png'); ?>"
           alt="Teacher Photo"
