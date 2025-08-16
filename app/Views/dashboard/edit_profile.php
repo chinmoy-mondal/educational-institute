@@ -14,10 +14,11 @@
                     <!-- Left: Profile Picture -->
                     <div class="col-md-3 text-center">
                         <div class="mb-3">
-                            <img id="previewImage"
-                                src="<?= base_url('public/assets/img/' . ($user['photo'] ?? 'default-profile-pic.png')) ?>"
-                                alt="Profile Photo"
-                                class="img-fluid mb-2"
+                            <img class="profile-user-img img-fluid mb-2"
+                                src="<?= !empty($user['picture'])
+                                            ? base_url('uploads/students/' . $user['picture'])
+                                            : base_url('public/assets/img/default-profile-pic.png'); ?>"
+                                alt="Teacher Photo"
                                 style="width:150px; height:200px; object-fit:cover; border-radius:4px;">
                         </div>
                         <div class="mb-3">
