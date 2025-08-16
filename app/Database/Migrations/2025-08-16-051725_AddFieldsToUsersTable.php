@@ -4,22 +4,17 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class AddFieldsToUsersTable extends Migration
+class AddMpoDateAndBioToUsersTable extends Migration
 {
     public function up()
     {
         $fields = [
-            'index_number' => [
-                'type' => 'VARCHAR',
-                'constraint' => '50',
-                'null' => true,
-            ],
-            'dob' => [
+            'mpo_date' => [
                 'type' => 'DATE',
                 'null' => true,
             ],
-            'joining_date' => [
-                'type' => 'DATE',
+            'bio' => [
+                'type' => 'TEXT',
                 'null' => true,
             ],
         ];
@@ -29,6 +24,6 @@ class AddFieldsToUsersTable extends Migration
 
     public function down()
     {
-        $this->forge->dropColumn('users', ['index_number', 'dob', 'joining_date', 'religion']);
+        $this->forge->dropColumn('users', ['mpo_date', 'bio']);
     }
 }
