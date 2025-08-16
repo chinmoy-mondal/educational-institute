@@ -35,51 +35,50 @@
         <div class="card h-100">
           <div class="card-body">
             <dl class="row mb-0">
-              <dt class="col-sm-4"><i class="fas fa-user-tag mr-2"></i>Role</dt>
-              <dd class="col-sm-8"><?= esc($user['role']) ?></dd>
-              
-              <dt class="col-sm-4"><i class="fas fa-user-tag mr-2"></i>Index</dt>
-              <dd class="col-sm-8"><?= esc($user['role']) ?></dd>
-              
-              <dt class="col-sm-4"><i class="fas fa-user-tag mr-2"></i>DOB</dt>
-              <dd class="col-sm-8"><?= esc($user['role']) ?></dd>
-              
-              <dt class="col-sm-4"><i class="fas fa-user-tag mr-2"></i>Joining Date</dt>
-              <dd class="col-sm-8"><?= esc($user['role']) ?></dd>
-              
-              <dt class="col-sm-4"><i class="fas fa-user-tag mr-2"></i>MPO date</dt>
-              <dd class="col-sm-8"><?= esc($user['role']) ?></dd>
+              <dt class="col-sm-3"><i class="fas fa-user-tag mr-2"></i>Role</dt>
+              <dd class="col-sm-9"><?= esc($user['role']) ?></dd>
 
-              <dt class="col-sm-4"><i class="fas fa-book mr-2"></i>Subject</dt>
-              <dd class="col-sm-8"><?= esc($user['subject']) ?></dd>
+              <dt class="col-sm-3"><i class="fas fa-user-tag mr-2"></i>Index</dt>
+              <dd class="col-sm-9"><?= esc($user['role']) ?></dd>
 
-              <dt class="col-sm-4"><i class="fas fa-venus-mars mr-2"></i>Gender</dt>
-              <dd class="col-sm-8"><?= esc($user['gender']) ?></dd>
+              <dt class="col-sm-3"><i class="fas fa-user-tag mr-2"></i>DOB</dt>
+              <dd class="col-sm-9"><?= esc($user['role']) ?></dd>
 
-              <dt class="col-sm-4"><i class="fas fa-venus-mars mr-2"></i>Religion</dt>
-              <dd class="col-sm-8"><?= esc($user['gender']) ?></dd>
+              <dt class="col-sm-3"><i class="fas fa-user-tag mr-2"></i>Joining Date</dt>
+              <dd class="col-sm-9"><?= esc($user['role']) ?></dd>
 
-              <dt class="col-sm-4"><i class="fas fa-phone-alt mr-2"></i>Phone</dt>
-              <dd class="col-sm-8"><?= esc($user['phone']) ?></dd>
+              <dt class="col-sm-3"><i class="fas fa-user-tag mr-2"></i>MPO date</dt>
+              <dd class="col-sm-9"><?= esc($user['role']) ?></dd>
 
-              <dt class="col-sm-4"><i class="fas fa-envelope mr-2"></i>Email</dt>
-              <dd class="col-sm-8"><?= esc($user['email']) ?></dd>
+              <dt class="col-sm-3"><i class="fas fa-book mr-2"></i>Subject</dt>
+              <dd class="col-sm-9"><?= esc($user['subject']) ?></dd>
 
-              <dt class="col-sm-4"><i class="fas fa-book-reader mr-2"></i>Assigned Subject</dt>
-              <dd class="col-sm-8"><?= esc($user['assagin_sub']) ?></dd>
+              <dt class="col-sm-3"><i class="fas fa-venus-mars mr-2"></i>Gender</dt>
+              <dd class="col-sm-9"><?= esc($user['gender']) ?></dd>
 
-              <dt class="col-sm-4"><i class="fas fa-user-check mr-2"></i>Account Status</dt>
-              <dd class="col-sm-8"><?= esc($user['account_status']) ?></dd>
+              <dt class="col-sm-3"><i class="fas fa-venus-mars mr-2"></i>Religion</dt>
+              <dd class="col-sm-9"><?= esc($user['gender']) ?></dd>
 
-              <dt class="col-sm-4"><i class="fas fa-user-shield mr-2"></i>Permit By</dt>
-              <dd class="col-sm-8"><?= esc($user['permit_by']) ?></dd>
+              <dt class="col-sm-3"><i class="fas fa-phone-alt mr-2"></i>Phone</dt>
+              <dd class="col-sm-9"><?= esc($user['phone']) ?></dd>
 
-              <dt class="col-sm-4"><i class="fas fa-calendar-plus mr-2"></i>Created At</dt>
-              <dd class="col-sm-8"><?= esc($user['created_at']) ?></dd>
+              <dt class="col-sm-3"><i class="fas fa-envelope mr-2"></i>Email</dt>
+              <dd class="col-sm-9"><?= esc($user['email']) ?></dd>
 
-              <dt class="col-sm-4"><i class="fas fa-calendar-check mr-2"></i>Updated At</dt>
-              <dd class="col-sm-8"><?= esc($user['updated_at']) ?></dd>
-            </dl>
+              <dt class="col-sm-3"><i class="fas fa-book-reader mr-2"></i>Assigned Subject</dt>
+              <dd class="col-sm-9"><?= esc($user['assagin_sub']) ?></dd>
+
+              <dt class="col-sm-3"><i class="fas fa-user-check mr-2"></i>Account Status</dt>
+              <dd class="col-sm-9"><?= esc($user['account_status']) ?></dd>
+
+              <dt class="col-sm-3"><i class="fas fa-user-shield mr-2"></i>Permit By</dt>
+              <dd class="col-sm-9"><?= esc($user['permit_by']) ?></dd>
+
+              <dt class="col-sm-3"><i class="fas fa-calendar-plus mr-2"></i>Created At</dt>
+              <dd class="col-sm-9"><?= esc($user['created_at']) ?></dd>
+
+              <dt class="col-sm-3"><i class="fas fa-calendar-check mr-2"></i>Updated At</dt>
+              <dd class="col-sm-9"><?= esc($user['updated_at']) ?></dd>
           </div>
         </div>
       </div>
