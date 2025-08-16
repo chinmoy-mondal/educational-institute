@@ -25,7 +25,9 @@
 
         <h4 class="mt-2"><?= esc($user['name']) ?></h4>
         <p class="text-muted"><?= esc($user['designation']) ?></p>
-        <p class="text-muted"><?= esc($user['subject']) ?></p>
+        <button type="submit" class="btn btn-primary btn-sm mt-3 w-100" id="updateSubjectBtn">
+          <i class="fas fa-edit"></i> 4th subject
+        </button>
       </div>
 
       <!-- Middle: User Info Section -->
