@@ -16,7 +16,7 @@
                         <div class="mb-3">
                             <img class="profile-user-img img-fluid mb-2"
                                 src="<?= !empty($user['picture'])
-                                            ? base_url('uploads/users/' . $user['picture'])
+                                            ? base_url($user['picture'])
                                             : base_url('public/assets/img/default-profile-pic.png'); ?>"
                                 alt="Teacher Photo"
                                 style="width:150px; height:200px; object-fit:cover; border-radius:4px;">
