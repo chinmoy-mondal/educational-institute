@@ -57,7 +57,8 @@
 
                             <div class="col-md-6 mb-3">
                                 <label class="form-label"><i class="fas fa-praying-hands me-2"></i>Religion</label>
-                                <select name="religion" class="form-control">
+                                <select name="religion" class="form-control" required>
+                                    <option value="" disabled <?= empty($user['religion']) ? 'selected' : '' ?>>Select Religion</option>
                                     <option value="Islam" <?= $user['religion'] === 'Islam' ? 'selected' : '' ?>>Islam</option>
                                     <option value="Hinduism" <?= $user['religion'] === 'Hinduism' ? 'selected' : '' ?>>Hinduism</option>
                                     <option value="Christianity" <?= $user['religion'] === 'Christianity' ? 'selected' : '' ?>>Christianity</option>
@@ -82,16 +83,16 @@
 
 <!-- JS for Image Preview -->
 <script>
-document.getElementById('photoInput').addEventListener('change', function(event) {
-    let file = event.target.files[0];
-    if (file) {
-        let reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('previewImage').src = e.target.result;
+    document.getElementById('photoInput').addEventListener('change', function(event) {
+        let file = event.target.files[0];
+        if (file) {
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('previewImage').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
         }
-        reader.readAsDataURL(file);
-    }
-});
+    });
 </script>
 
 <?= $this->endSection() ?>

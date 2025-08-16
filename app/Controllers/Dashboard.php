@@ -157,6 +157,40 @@ class Dashboard extends Controller
 		return view('dashboard/edit_profile', $this->data);
 	}
 
+	public function update_user($id)
+	{
+
+		// Get POST data
+		$data = [
+			'index_number' => $this->request->getPost('index_number'),
+			'dob'          => $this->request->getPost('dob'),
+			'joining_date' => $this->request->getPost('joining_date'),
+			'mpo_date'     => $this->request->getPost('mpo_date'),
+			'religion'     => $this->request->getPost('religion'),
+		];
+
+		// Handle file upload
+		$photo = $this->request->getFile('photo');
+		if ($photo && $photo->isValid() && !$photo->hasMoved()) {
+			$newName = $photo->getRandomName();
+			$photo->move(WRITEPATH . 'uploads/users', $newName);
+			$data['photo'] = $newName;
+
+			// Delete old user photo
+			$user = $this->userModel->find($id);
+			if ($user && $user['photo'] && file_exists(WRITEPATH . 'uploads/users/' . $user['photo'])) {
+				unlink(WRITEPATH . 'uploads/users/' . $user['photo']);
+			}
+		}
+
+		// Update user
+		$this->userModel->update($id, $data);
+
+		// Redirect back with success message
+		return redirect()->to(base_url('profile'))
+                 ->with('success', 'User info updated successfully.');
+	}
+
 	public function calendar()
 	{
 		$this->data['title'] = 'Calendar';
