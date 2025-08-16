@@ -17,12 +17,15 @@ class UserModel extends Model
 		'gender',
 		'phone',
 		'email',
-		'password',
-		'assagin_sub',  // <- match this with your DB column name
+		'picture',
+		'assagin_sub',
 		'account_status',
 		'permit_by',
-		'created_at',
-		'updated_at'
+		'blood_group',
+		'index_number',
+		'dob',
+		'joining_date',
+		'religion'
 	];
 	protected $useTimestamps = true;
 	protected $createdField  = 'created_at';
