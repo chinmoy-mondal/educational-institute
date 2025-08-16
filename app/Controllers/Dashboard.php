@@ -174,7 +174,7 @@ class Dashboard extends Controller
 		if ($photo && $photo->isValid() && !$photo->hasMoved()) {
 			$newName = $photo->getRandomName();
 			$photo->move(WRITEPATH . 'uploads/users', $newName);
-			$data['photo'] = $newName;
+			$data['picture'] = $newName;
 
 			// Delete old user photo
 			$user = $this->userModel->find($id);
