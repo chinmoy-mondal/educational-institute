@@ -37,11 +37,26 @@
             <dl class="row mb-0">
               <dt class="col-sm-4"><i class="fas fa-user-tag mr-2"></i>Role</dt>
               <dd class="col-sm-8"><?= esc($user['role']) ?></dd>
+              
+              <dt class="col-sm-4"><i class="fas fa-user-tag mr-2"></i>Index</dt>
+              <dd class="col-sm-8"><?= esc($user['role']) ?></dd>
+              
+              <dt class="col-sm-4"><i class="fas fa-user-tag mr-2"></i>DOB</dt>
+              <dd class="col-sm-8"><?= esc($user['role']) ?></dd>
+              
+              <dt class="col-sm-4"><i class="fas fa-user-tag mr-2"></i>Joining Date</dt>
+              <dd class="col-sm-8"><?= esc($user['role']) ?></dd>
+              
+              <dt class="col-sm-4"><i class="fas fa-user-tag mr-2"></i>MPO date</dt>
+              <dd class="col-sm-8"><?= esc($user['role']) ?></dd>
 
               <dt class="col-sm-4"><i class="fas fa-book mr-2"></i>Subject</dt>
               <dd class="col-sm-8"><?= esc($user['subject']) ?></dd>
 
               <dt class="col-sm-4"><i class="fas fa-venus-mars mr-2"></i>Gender</dt>
+              <dd class="col-sm-8"><?= esc($user['gender']) ?></dd>
+
+              <dt class="col-sm-4"><i class="fas fa-venus-mars mr-2"></i>Religion</dt>
               <dd class="col-sm-8"><?= esc($user['gender']) ?></dd>
 
               <dt class="col-sm-4"><i class="fas fa-phone-alt mr-2"></i>Phone</dt>
