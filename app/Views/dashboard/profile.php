@@ -80,7 +80,6 @@
   </div>
 
   <!-- Info Cards -->
-  <!-- Info Cards -->
   <div class="row mb-4">
     <div class="col-md-4 d-flex">
       <div class="card h-100 flex-fill">
@@ -148,11 +147,8 @@
   </div>
 </div>
 
-<!-- Scripts -->
-<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+<!-- Page specific script -->
+<?= $this->section('scripts') ?>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     // Profile Doughnut Chart
@@ -212,18 +208,14 @@
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       },
-      events: [{
-          title: 'Exam',
-          start: '2025-08-20'
-        },
-        {
-          title: 'Meeting',
-          start: '2025-08-18'
-        }
+      events: [
+        { title: 'Exam', start: '2025-08-20' },
+        { title: 'Meeting', start: '2025-08-18' }
       ]
     });
     calendar.render();
   });
 </script>
+<?= $this->endSection() ?>
 
 <?= $this->endSection() ?>
