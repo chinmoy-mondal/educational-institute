@@ -53,7 +53,7 @@ $routes->get('logout', 'Account::logout');
 $routes->get('dashboard', 'Dashboard::index');
 $routes->get('profile', 'Dashboard::profile');
 $routes->get('profile/edit', 'Dashboard::edit_profile_view'); 
-$routes->get('admin/profile_edit/(:num)', 'Dashboard::update_user/$1'); 
+$routes->get('admin/user/update/(:num)', 'Dashboard::update_user/$1'); 
 
 
 $routes->get('calendar', 'Dashboard::calendar');
