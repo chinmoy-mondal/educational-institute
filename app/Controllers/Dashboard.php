@@ -130,7 +130,7 @@ class Dashboard extends Controller
 
 		return view('dashboard/profile', $this->data);
 	}
-	
+
 	public function edit_profile_view()
 	{
 		$this->data['title'] = 'Profile';
