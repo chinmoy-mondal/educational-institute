@@ -25,15 +25,20 @@
 
         <h4 class="mt-2"><?= esc($user['name']) ?></h4>
         <p class="text-muted"><?= esc($user['designation']) ?></p>
-        <button type="submit" class="btn btn-primary btn-sm mt-3" id="updateSubjectBtn">
-          <i class="fas fa-edit"></i> Edit
-        </button>
+        <p class="text-muted"><?= esc($user['bio']) ?></p>
+
       </div>
 
       <!-- Middle: User Info Section -->
       <div class="col-md-7">
         <div class="card h-100">
           <div class="card-body">
+            <div class="d-flex justify-content-end mb-3">
+              <button type="submit" class="btn btn-primary btn-sm" id="updateSubjectBtn">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+            </div>
+
             <dl class="row mb-0">
               <dt class="col-sm-3"><i class="fas fa-user-tag mr-2"></i>Role</dt>
               <dd class="col-sm-9"><?= esc($user['role']) ?></dd>
@@ -48,7 +53,7 @@
               <dd class="col-sm-9"><?= esc($user['joining_date']) ?></dd>
 
               <dt class="col-sm-3"><i class="fas fa-user-tag mr-2"></i>MPO date</dt>
-              <dd class="col-sm-9"><?= esc($user['role']) ?></dd>
+              <dd class="col-sm-9"><?= esc($user['mpo_date']) ?></dd>
 
               <dt class="col-sm-3"><i class="fas fa-book mr-2"></i>Subject</dt>
               <dd class="col-sm-9"><?= esc($user['subject']) ?></dd>
@@ -79,6 +84,7 @@
 
               <dt class="col-sm-3"><i class="fas fa-calendar-check mr-2"></i>Updated At</dt>
               <dd class="col-sm-9"><?= esc($user['updated_at']) ?></dd>
+            </dl>
           </div>
         </div>
       </div>

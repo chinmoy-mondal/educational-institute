@@ -25,7 +25,9 @@ class UserModel extends Model
 		'index_number',
 		'dob',
 		'joining_date',
-		'religion'
+		'religion',
+		'mpo_date',
+		'bio'
 	];
 	protected $useTimestamps = true;
 	protected $createdField  = 'created_at';
