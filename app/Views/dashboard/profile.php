@@ -36,8 +36,9 @@
             <div class="d-flex justify-content-between align-items-start mb-3">
               <!-- Left: Teacher Info -->
               <div>
-                <h4 class="mb-1"><?= esc($user['name']) ?></h4>
-                <p class="text-muted mb-0"><?= esc($user['designation']) ?></p>
+                <h4 class="mb-1 text-primary fw-bold">
+                  <i class="fas fa-user-circle me-2"></i><?= esc($user['role']) ?> Personal Info
+                </h4>
               </div>
 
               <!-- Right: Edit Button -->
