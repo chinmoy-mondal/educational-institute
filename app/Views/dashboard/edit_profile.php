@@ -14,7 +14,8 @@
                     <!-- Left: Profile Picture -->
                     <div class="col-md-3 text-center">
                         <div class="mb-3">
-                            <img src="<?= base_url('public/assets/img/' . ($user['photo'] ?? 'default-profile-pic.png')) ?>"
+                            <img id="previewImage"
+                                src="<?= base_url('public/assets/img/' . ($user['photo'] ?? 'default-profile-pic.png')) ?>"
                                 alt="Profile Photo"
                                 class="img-fluid mb-2"
                                 style="width:150px; height:200px; object-fit:cover; border-radius:4px;">
@@ -23,7 +24,7 @@
                             <label class="form-label"><i class="fas fa-image me-2"></i>Profile Photo</label>
                             <div class="input-group">
                                 <div class="custom-file">
-                                    <input type="file" name="photo" class="custom-file-input" id="photoInput">
+                                    <input type="file" name="photo" class="custom-file-input" id="photoInput" accept="image/*">
                                     <label class="custom-file-label" for="photoInput">Choose file</label>
                                 </div>
                             </div>
@@ -54,8 +55,6 @@
                                 <input type="date" name="mpo_date" value="<?= esc($user['mpo_date']) ?>" class="form-control">
                             </div>
 
-
-
                             <div class="col-md-6 mb-3">
                                 <label class="form-label"><i class="fas fa-praying-hands me-2"></i>Religion</label>
                                 <select name="religion" class="form-control">
@@ -66,7 +65,6 @@
                                     <option value="Other" <?= $user['religion'] === 'Other' ? 'selected' : '' ?>>Other</option>
                                 </select>
                             </div>
-
 
                         </div>
                     </div>
@@ -81,5 +79,19 @@
         </form>
     </div>
 </div>
+
+<!-- JS for Image Preview -->
+<script>
+document.getElementById('photoInput').addEventListener('change', function(event) {
+    let file = event.target.files[0];
+    if (file) {
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('previewImage').src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+    }
+});
+</script>
 
 <?= $this->endSection() ?>
