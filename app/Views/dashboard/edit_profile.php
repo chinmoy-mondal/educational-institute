@@ -7,7 +7,7 @@
         <div class="card-header">
             <h3 class="card-title"><i class="fas fa-user-edit me-2"></i>Edit <?= esc($user['role']) ?> Info</h3>
         </div>
-        <form action="<?= site_url('admin/students/update/' . $user['id']) ?>" method="post" enctype="multipart/form-data">
+        <form action="<?= site_url('admin/user/update/' . $user['id']) ?>" method="post" enctype="multipart/form-data">
             <?= csrf_field() ?>
             <div class="card-body">
                 <div class="row">
