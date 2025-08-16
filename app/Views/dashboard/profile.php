@@ -33,12 +33,22 @@
       <div class="col-md-7">
         <div class="card h-100">
           <div class="card-body">
-            <div class="d-flex justify-content-end mb-3">
-              <button type="submit" class="btn btn-primary btn-sm" id="updateSubjectBtn">
-                <i class="fas fa-edit"></i> Edit
-              </button>
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <!-- Left: Teacher Info -->
+              <div>
+                <h4 class="mb-1"><?= esc($user['name']) ?></h4>
+                <p class="text-muted mb-0"><?= esc($user['designation']) ?></p>
+              </div>
+
+              <!-- Right: Edit Button -->
+              <div>
+                <button type="submit" class="btn btn-primary btn-sm" id="updateSubjectBtn">
+                  <i class="fas fa-edit"></i> Edit
+                </button>
+              </div>
             </div>
 
+            <!-- User details below -->
             <dl class="row mb-0">
               <dt class="col-sm-3"><i class="fas fa-user-tag mr-2"></i>Role</dt>
               <dd class="col-sm-9"><?= esc($user['role']) ?></dd>
