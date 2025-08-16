@@ -22,11 +22,6 @@ class AddFieldsToUsersTable extends Migration
                 'type' => 'DATE',
                 'null' => true,
             ],
-            'religion' => [
-                'type' => 'VARCHAR',
-                'constraint' => '50',
-                'null' => true,
-            ],
         ];
 
         $this->forge->addColumn('users', $fields);
