@@ -11,16 +11,20 @@
     <div class="row">
       <!-- Left: Profile Picture + Doughnut -->
       <div class="col-md-3 d-flex flex-column align-items-center">
-        <a href="<?= site_url('admin/students/edit-photo/' . $user['id']) ?>" class="position-absolute top-0 start-0" title="Edit Photo">
-          <i class="fas fa-edit"></i>
-        </a>
-        <img class="profile-user-img img-fluid mb-2"
-          src="<?= base_url('public/assets/img/default.png'); ?>"
-          alt="Teacher Photo"
-          style="width:150px; height:200px; object-fit:cover; border-radius:4px;">
+        <div class="position-relative" style="width:150px; height:200px;">
+          <a href="<?= site_url('admin/students/edit-photo/' . $user['id']) ?>"
+            class="position-absolute top-0 start-0 m-1 text-primary"
+            title="Edit Photo">
+            <i class="fas fa-edit"></i>
+          </a>
+          <img class="profile-user-img img-fluid mb-2"
+            src="<?= base_url('public/assets/img/default.png'); ?>"
+            alt="Teacher Photo"
+            style="width:150px; height:200px; object-fit:cover; border-radius:4px;">
+        </div>
+
         <h4 class="mt-2"><?= esc($user['name']) ?></h4>
         <p class="text-muted"><?= esc($user['designation']) ?></p>
-
       </div>
 
       <!-- Middle: User Info Section -->
