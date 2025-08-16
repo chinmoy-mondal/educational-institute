@@ -52,6 +52,8 @@ $routes->get('logout', 'Account::logout');
 #Dashboard
 $routes->get('dashboard', 'Dashboard::index');
 $routes->get('profile', 'Dashboard::profile');
+$routes->get('admin/profile/edit', 'Dashboard::edit_profile_view');
+
 
 $routes->get('calendar', 'Dashboard::calendar');
 $routes->get('calendar/events', 'Dashboard::events');

@@ -130,6 +130,32 @@ class Dashboard extends Controller
 
 		return view('dashboard/profile', $this->data);
 	}
+	
+	public function edit_profile_view()
+	{
+		$this->data['title'] = 'Profile';
+		$this->data['activeSection'] = 'dashboard';
+
+		$this->data['navbarItems'] = [
+			['label' => 'Dashboard', 'url' => base_url('dashboard')],
+			['label' => 'Calendar', 'url' => base_url('calendar')],
+			['label' => 'Result', 'url' => base_url('ad-result')],
+			['label' => 'Accounts', 'url' => base_url('accounts')],
+		];
+
+		$userId = $this->session->get('user_id');
+		// Load model and get teacher data
+		$teacher = $this->userModel->find($userId);
+
+		if (!$teacher) {
+			// handle case where teacher not found
+			throw new \CodeIgniter\Exceptions\PageNotFoundException("Teacher not found");
+		}
+
+		$this->data['user'] = $teacher;
+
+		return view('dashboard/edit_profile', $this->data);
+	}
 
 	public function calendar()
 	{
