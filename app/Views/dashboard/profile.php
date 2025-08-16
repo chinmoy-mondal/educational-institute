@@ -31,7 +31,7 @@
       </div>
 
       <!-- Middle: User Info Section -->
-      <div class="col-md-5">
+      <div class="col-md-7">
         <div class="card h-100">
           <div class="card-body">
             <dl class="row mb-0">
@@ -70,7 +70,7 @@
       </div>
 
       <!-- Right: Attendance Chart -->
-      <div class="col-md-4">
+      <div class="col-md-2">
         <div class="card h-100 d-flex align-items-center justify-content-center">
           <div class="card-body d-flex align-items-center justify-content-center">
             <div style="width:200px; height:200px;">
