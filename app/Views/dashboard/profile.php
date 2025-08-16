@@ -12,7 +12,7 @@
       <!-- Left: Profile Picture + Doughnut -->
       <div class="col-md-3 d-flex flex-column align-items-center">
         <img class="profile-user-img img-fluid mb-2"
-          src="<?= base_url('public/assets/img/headsir.jpg'); ?>"
+          src="<?= base_url('public/assets/img/default.png'); ?>"
           alt="Teacher Photo"
           style="width:150px; height:200px; object-fit:cover; border-radius:4px;">
         <h4 class="mt-2"><?= esc($user['name']) ?></h4>
