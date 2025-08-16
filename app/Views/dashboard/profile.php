@@ -39,7 +39,7 @@
               <!-- Left: Teacher Info -->
               <div>
                 <h4 class="mb-1 text-primary fw-bold">
-                  <i class="fas fa-user-circle me-2"></i><?= esc($user['role']) ?> Personal Info
+                  <i class="fas fa-user-circle me-2"></i><?= esc($user['role']) ?>'s Personal Info
                 </h4>
               </div>
 
@@ -53,19 +53,19 @@
 
             <!-- User details below -->
             <dl class="row mb-0">
-              <dt class="col-sm-3"><i class="fas fa-user-tag mr-2"></i>Role</dt>
+              <dt class="col-sm-3"><i class="fas fa-user-tag mr-2"></i>Position</dt>
               <dd class="col-sm-9"><?= esc($user['role']) ?></dd>
 
-              <dt class="col-sm-3"><i class="fas fa-user-tag mr-2"></i>Index</dt>
+              <dt class="col-sm-3"><i class="fas fa-id-card mr-2"></i>Index</dt>
               <dd class="col-sm-9"><?= esc($user['index_number']) ?></dd>
 
-              <dt class="col-sm-3"><i class="fas fa-user-tag mr-2"></i>DOB</dt>
+              <dt class="col-sm-3"><i class="fas fa-calendar-alt mr-2"></i>DOB</dt>
               <dd class="col-sm-9"><?= esc($user['dob']) ?></dd>
 
-              <dt class="col-sm-3"><i class="fas fa-user-tag mr-2"></i>Joining Date</dt>
+              <dt class="col-sm-3"><i class="fas fa-user-clock mr-2"></i>Joining Date</dt>
               <dd class="col-sm-9"><?= esc($user['joining_date']) ?></dd>
 
-              <dt class="col-sm-3"><i class="fas fa-user-tag mr-2"></i>MPO date</dt>
+              <dt class="col-sm-3"><i class="fas fa-user-clock mr-2"></i>MPO date</dt>
               <dd class="col-sm-9"><?= esc($user['mpo_date']) ?></dd>
 
               <dt class="col-sm-3"><i class="fas fa-book mr-2"></i>Subject</dt>
@@ -74,7 +74,7 @@
               <dt class="col-sm-3"><i class="fas fa-venus-mars mr-2"></i>Gender</dt>
               <dd class="col-sm-9"><?= esc($user['gender']) ?></dd>
 
-              <dt class="col-sm-3"><i class="fas fa-venus-mars mr-2"></i>Religion</dt>
+              <dt class="col-sm-3"><i class="fas fa-praying-hands mr-2"></i>Religion</dt>
               <dd class="col-sm-9"><?= esc($user['religion']) ?></dd>
 
               <dt class="col-sm-3"><i class="fas fa-phone-alt mr-2"></i>Phone</dt>
