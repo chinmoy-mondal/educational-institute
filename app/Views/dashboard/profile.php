@@ -25,7 +25,9 @@
 
         <h4 class="mt-2"><?= esc($user['name']) ?></h4>
         <p class="text-muted"><?= esc($user['designation']) ?></p>
-        <p class="text-muted"><?= esc($user['bio']) ?></p>
+        <p class="text-muted" style="text-align: justify;">
+          <?= esc($user['bio']) ?>
+        </p>
 
       </div>
 
