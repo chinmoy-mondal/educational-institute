@@ -178,8 +178,8 @@ class Dashboard extends Controller
 
 			// Delete old user photo
 			$user = $this->userModel->find($id);
-			if ($user && $user['photo'] && file_exists(WRITEPATH . 'uploads/users/' . $user['photo'])) {
-				unlink(WRITEPATH . 'uploads/users/' . $user['photo']);
+			if ($user && $user['picture'] && $user['picture'] && file_exists(WRITEPATH . 'uploads/users/' . $user['picture'])) {
+				unlink(WRITEPATH . 'uploads/users/' . $user['picture']);
 			}
 		}
 
