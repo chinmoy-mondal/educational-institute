@@ -167,20 +167,32 @@ class Dashboard extends Controller
 			'joining_date' => $this->request->getPost('joining_date'),
 			'mpo_date'     => $this->request->getPost('mpo_date'),
 			'religion'     => $this->request->getPost('religion'),
+			'bio'      => $this->request->getPost('bio'),
 		];
 
-		// Handle file upload
 		$photo = $this->request->getFile('photo');
+
 		if ($photo && $photo->isValid() && !$photo->hasMoved()) {
 			$newName = $photo->getRandomName();
-			$photo->move(WRITEPATH . 'uploads/users', $newName);
-			$data['picture'] = 'uploads/users/' . $newName;
+			$uploadPath = FCPATH . 'uploads/users/';
 
-			// Delete old user photo
-			$user = $this->userModel->find($id);
-			if ($user && $user['picture'] && $user['picture'] && file_exists(WRITEPATH . 'uploads/users/' . $user['picture'])) {
-				unlink(WRITEPATH . 'uploads/users/' . $user['picture']);
+			// Make sure folder exists
+			if (!is_dir($uploadPath)) {
+				mkdir($uploadPath, 0777, true);
 			}
+
+			// Delete old photo first
+			$user = $this->userModel->find($id);
+			if ($user && !empty($user['picture'])) {
+				$oldFile = FCPATH . $user['picture'];
+				if (file_exists($oldFile)) {
+					unlink($oldFile);
+				}
+			}
+
+			// Move new file
+			$photo->move($uploadPath, $newName);
+			$data['picture'] = 'uploads/users/' . $newName;
 		}
 
 		// Update user
@@ -188,7 +200,7 @@ class Dashboard extends Controller
 
 		// Redirect back with success message
 		return redirect()->to(base_url('profile'))
-                 ->with('success', 'User info updated successfully.');
+			->with('success', 'User info updated successfully.');
 	}
 
 	public function calendar()

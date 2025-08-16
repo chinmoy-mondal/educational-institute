@@ -67,6 +67,10 @@
                                     <option value="Other" <?= $user['religion'] === 'Other' ? 'selected' : '' ?>>Other</option>
                                 </select>
                             </div>
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label"><i class="fas fa-align-left me-2"></i>Bio</label>
+                                <textarea name="bio" class="form-control" rows="4" placeholder="Write something about the user..."><?= esc($user['bio']) ?></textarea>
+                            </div>
 
                         </div>
                     </div>
