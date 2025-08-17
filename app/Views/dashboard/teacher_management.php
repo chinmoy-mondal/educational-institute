@@ -36,29 +36,27 @@
                       <td><?= esc($user['name']) ?></td>
                       <td><?= esc($user['subject']) ?></td>
                       <td class="text-center">
-                        <div class="d-flex justify-content-center gap-1">
-                          <a href="#" class="btn btn-sm btn-info edit-btn"
-                            data-id="<?= $user['id'] ?>"
-                            data-name="<?= esc($user['name']) ?>"
-                            data-subject="<?= esc($user['subject']) ?>"
-                            data-photo="<?= !empty($user['photo'])
-                                          ? base_url($user['photo'])
-                                          : base_url('public/assets/img/default.png') ?>">
-                            <i class="fas fa-edit"></i>
-                          </a>
+                        <a href="#" class="btn btn-sm btn-info edit-btn me-1"
+                          data-id="<?= $user['id'] ?>"
+                          data-name="<?= esc($user['name']) ?>"
+                          data-subject="<?= esc($user['subject']) ?>"
+                          data-photo="<?= !empty($user['photo'])
+                                        ? base_url($user['photo'])
+                                        : base_url('public/assets/img/default.png') ?>">
+                          <i class="fas fa-edit"></i>
+                        </a>
 
-                          <a href="<?= site_url('profile_id/' . $user['id']) ?>"
-                            class="btn btn-sm btn-primary"
-                            title="View Profile">
-                            <i class="fas fa-user"></i>
-                          </a>
+                        <a href="<?= site_url('profile_id/' . $user['id']) ?>"
+                          class="btn btn-sm btn-primary me-1"
+                          title="View Profile">
+                          <i class="fas fa-user"></i>
+                        </a>
 
-                          <a href="<?= site_url('assignSubject/' . $user['id']) ?>"
-                            class="btn btn-sm btn-success"
-                            title="Exam">
-                            <i class="fas fa-file-alt"></i>
-                          </a>
-                        </div>
+                        <a href="<?= site_url('assignSubject/' . $user['id']) ?>"
+                          class="btn btn-sm btn-success"
+                          title="Exam">
+                          <i class="fas fa-file-alt"></i>
+                        </a>
                       </td>
                     </tr>
                   <?php endforeach; ?>
