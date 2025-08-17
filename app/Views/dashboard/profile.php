@@ -58,6 +58,15 @@
                 </h4>
               </div>
 
+              <!-- Right: Edit Button -->
+              <div>
+                <a href="<?= site_url('profile/edit/' . $user['id']) ?>"
+                  class="text-primary"
+                  title="Edit Subject">
+                  <i class="fas fa-edit"></i>
+                </a>
+              </div>
+
             </div>
 
             <!-- User details below -->
