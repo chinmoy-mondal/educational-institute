@@ -86,6 +86,9 @@
               <dt class="col-sm-3"><i class="fas fa-venus-mars mr-2"></i>Gender</dt>
               <dd class="col-sm-9"><?= esc($user['gender']) ?></dd>
 
+              <dt class="col-sm-3"><i class="fas fa-tint mr-2"></i>Blood group</dt>
+              <dd class="col-sm-9"><?= esc($user['blood_group']) ?></dd>
+
               <dt class="col-sm-3"><i class="fas fa-praying-hands mr-2"></i>Religion</dt>
               <dd class="col-sm-9"><?= esc($user['religion']) ?></dd>
 
