@@ -53,6 +53,9 @@
                                     <a href="" target="_blank" class="btn btn-outline-secondary btn-sm">
                                         <i class="fab fa-linkedin"></i> Profile
                                     </a>
+                                    <a href="#" target="_blank" class="btn btn-outline-secondary btn-sm">
+                                        <i class="fas fa-id-card"></i> Card
+                                    </a>
                                 </div>
                             </div>
                         </div>
