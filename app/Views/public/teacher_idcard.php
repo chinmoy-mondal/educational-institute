@@ -70,11 +70,11 @@
         <h4 class="mb-1 fw-bold"><?= esc($user['name']) ?></h4>
         <p class="mb-0 fw-semibold"><?= esc($user['designation']) ?></p>
         <p class="mb-0">
-          ID: <?= esc($user['id']) ?> 
+          <i class="fas fa-id-card"></i> ID: <?= esc($user['id']) ?> 
           <span class="mx-1"></span>
           <i class="fas fa-tint"></i> <?= esc($user['blood_group']) ?>
           <span class="mx-1"></span>
-          <i class="fas fa-tint"></i> <?= esc($user['index_number']) ?>
+          <i class="fas fa-id-badge"></i> <?= esc($user['index_number']) ?>
         </p>
         <p class="mb-0"><i class="fas fa-phone me-2"></i><?= esc($user['phone']) ?></p>
       
