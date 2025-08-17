@@ -33,6 +33,9 @@
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
                             <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Enter password" required>
+                            <div class="text-end mt-1">
+                                <a href="<?= base_url('/forgot-password') ?>" class="small">Forgot Password?</a>
+                            </div>
                         </div>
 
                         <!-- Submit -->
