@@ -140,7 +140,7 @@ class Home extends BaseController
 		$userModel = new UserModel();
 		$user = $userModel->find($id);
 
-		if (!$student) {
+		if (!$user) {
 			echo "no result found";
 		}
 
