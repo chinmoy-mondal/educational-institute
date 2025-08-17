@@ -147,7 +147,7 @@ class Auth extends BaseController
         $token = $this->request->getPost('token');
         $password = $this->request->getPost('password');
         $password_confirm = $this->request->getPost('password_confirm');
-        echo $password . '<br>';
+        
 
         if ($password !== $password_confirm) {
             return redirect()->back()->with('error', 'Passwords do not match.');
