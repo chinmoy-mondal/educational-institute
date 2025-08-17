@@ -147,6 +147,7 @@ class Auth extends BaseController
         $token = $this->request->getPost('token');
         $password = $this->request->getPost('password');
         $password_confirm = $this->request->getPost('password_confirm');
+        echo $password.'<br>';
 
         if ($password !== $password_confirm) {
             return redirect()->back()->with('error', 'Passwords do not match.');
@@ -161,16 +162,17 @@ class Auth extends BaseController
 
         $userModel = new UserModel();
         $user = $userModel->where('email', $record['email'])->first();
+        print_r($user);
 
-        if ($user) {
-            $userModel->update($user['id'], [
-                'password' => password_hash($password, PASSWORD_DEFAULT)
-            ]);
+        // if (isset($user['id']) && !empty($user['id'])) {
+        //     $userModel->update($user['id'], [
+        //         'password' => password_hash($password, PASSWORD_DEFAULT)
+        //     ]);
 
-            $resetModel->update($record['id'], ['used' => 1]);
+        //     $resetModel->update($record['id'], ['used' => 1]);
 
-            return redirect()->to('/login')->with('success', 'Password updated. You can now login.');
-        }
+        //     return redirect()->to('/login')->with('success', 'Password updated. You can now login.');
+        // }
 
         return redirect()->to('/login')->with('error', 'User not found.');
     }
