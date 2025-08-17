@@ -87,13 +87,11 @@ class Auth extends BaseController
     }
 
     // password reset method 
-    // Show forgot password form
     public function forgotPassword()
     {
         return view('auth/forgot_password');
     }
 
-    // Handle request for reset link
     public function sendResetLink()
     {
         $email = $this->request->getPost('email');
@@ -104,9 +102,8 @@ class Auth extends BaseController
             return redirect()->back()->with('error', 'Email not found.');
         }
 
-        // Generate token
         $token = bin2hex(random_bytes(32));
-        $expires = date('Y-m-d H:i:s', time() + 120); // 2 min expiry
+        $expires = date('Y-m-d H:i:s', time() + 120); // 2 minutes expiry
 
         $resetModel = new PasswordResetModel();
         $resetModel->insert([
@@ -118,11 +115,21 @@ class Auth extends BaseController
 
         $resetLink = base_url("/reset-password/$token");
 
-        // TODO: send via Email
-        return redirect()->back()->with('success', "Reset link (valid 2 mins): <a href='$resetLink'>$resetLink</a>");
+        // ✅ Send simple email using PHP mail()
+        $message = "
+        Hello,<br><br>
+        Click the link to reset your password (valid 2 minutes):<br>
+        <a href='$resetLink'>$resetLink</a><br><br>
+        If you did not request this, ignore this email.
+    ";
+
+        if (mail($email, "Password Reset Request", $message, "Content-type:text/html")) {
+            return redirect()->back()->with('success', 'Reset link has been sent to your email.');
+        } else {
+            return redirect()->back()->with('error', 'Failed to send email. Try again.');
+        }
     }
 
-    // Show reset form
     public function resetPassword($token = null)
     {
         $resetModel = new PasswordResetModel();
@@ -135,16 +142,19 @@ class Auth extends BaseController
         return view('auth/reset_password', ['token' => $token]);
     }
 
-    // Handle new password save
     public function updatePassword()
     {
         $token = $this->request->getPost('token');
         $password = $this->request->getPost('password');
+        $password_confirm = $this->request->getPost('password_confirm');
+
+        if ($password !== $password_confirm) {
+            return redirect()->back()->with('error', 'Passwords do not match.');
+        }
 
         $resetModel = new PasswordResetModel();
         $record = $resetModel->where('token', $token)->where('used', 0)->first();
 
-        // ✅ Check token validity & expiry
         if (!$record || strtotime($record['expires_at']) < time()) {
             return redirect()->to('/login')->with('error', 'Token expired or invalid.');
         }
@@ -152,13 +162,11 @@ class Auth extends BaseController
         $userModel = new UserModel();
         $user = $userModel->where('email', $record['email'])->first();
 
-        // ✅ Update password by user ID (avoids "no data to update")
         if ($user) {
             $userModel->update($user['id'], [
                 'password' => password_hash($password, PASSWORD_DEFAULT)
             ]);
 
-            // ✅ Mark token as used (so it can’t be reused)
             $resetModel->update($record['id'], ['used' => 1]);
 
             return redirect()->to('/login')->with('success', 'Password updated. You can now login.');
