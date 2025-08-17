@@ -53,12 +53,12 @@
                                     </a>
 
                                     <!-- Profile Button -->
-                                    <a href="<?= esc($member['linkedin'] ?? '#'); ?>" target="_blank" class="btn btn-outline-secondary btn-sm">
+                                    <a href="<?= esc($member['linkedin'] ?? '#'); ?>" target="_blank" class="btn btn-outline-primary btn-sm">
                                         <i class="fab fa-linkedin"></i> Profile
                                     </a>
 
                                     <!-- Card Button -->
-                                    <a href="<?= esc($member['card_link'] ?? '#'); ?>" target="_blank" class="btn btn-outline-secondary btn-sm">
+                                    <a href="<?= esc($member['card_link'] ?? '#'); ?>" target="_blank" class="btn btn-outline-primary btn-sm">
                                         <i class="fas fa-id-card"></i> Card
                                     </a>
                                 </div>
