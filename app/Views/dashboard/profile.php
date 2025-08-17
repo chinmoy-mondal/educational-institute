@@ -25,11 +25,6 @@
       <!-- Left: Profile Picture + Doughnut -->
       <div class="col-md-3 d-flex flex-column align-items-center">
         <div class="position-relative" style="width:150px; height:200px;">
-          <a href="<?= site_url('profile/edit') ?>"
-            class="position-absolute top-0 start-0 m-1 text-primary"
-            title="Edit Photo">
-            <i class="fas fa-edit"></i>
-          </a>
           <img class="profile-user-img img-fluid mb-2"
             src="<?= !empty($user['picture'])
                     ? base_url($user['picture'])
@@ -61,9 +56,8 @@
               <!-- Right: Edit Button -->
               <div>
                 <a href="<?= site_url('profile/edit/' . $user['id']) ?>"
-                  class="text-primary"
-                  title="Edit Subject">
-                  <i class="fas fa-edit"></i>
+                  class="text-primary">
+                  <i class="fas fa-edit"></i> Edit
                 </a>
               </div>
 

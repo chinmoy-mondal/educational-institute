@@ -52,7 +52,7 @@ $routes->get('logout', 'Account::logout');
 #Dashboard
 $routes->get('dashboard', 'Dashboard::index');
 $routes->get('profile', 'Dashboard::profile');
-$routes->get('profile/edit', 'Dashboard::edit_profile_view'); 
+$routes->get('profile/edit/(:num)', 'Dashboard::edit_profile_view/$1'); 
 $routes->post('admin/user/update/(:num)', 'Dashboard::update_user/$1'); 
 
 

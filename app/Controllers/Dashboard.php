@@ -131,7 +131,7 @@ class Dashboard extends Controller
 		return view('dashboard/profile', $this->data);
 	}
 
-	public function edit_profile_view()
+	public function edit_profile_view($id)
 	{
 		$this->data['title'] = 'Profile';
 		$this->data['activeSection'] = 'dashboard';
@@ -143,9 +143,7 @@ class Dashboard extends Controller
 			['label' => 'Accounts', 'url' => base_url('accounts')],
 		];
 
-		$userId = $this->session->get('user_id');
-		// Load model and get teacher data
-		$teacher = $this->userModel->find($userId);
+		$teacher = $this->userModel->find($id);
 
 		if (!$teacher) {
 			// handle case where teacher not found
