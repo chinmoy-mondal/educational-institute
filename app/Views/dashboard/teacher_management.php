@@ -26,8 +26,8 @@
                     <tr>
                       <td class="text-center">
                         <a href="<?= base_url('profile_id/' . $user['id']) ?>">
-                          <img src="<?= !empty($user['photo'])
-                                      ? $user['photo']
+                          <img src="<?= !empty($user['picture'])
+                                      ? $user['picture']
                                       : base_url('public/assets/img/default.png') ?>"
                             width="50" height="50" class="rounded-circle">
                         </a>
