@@ -157,7 +157,7 @@ class Dashboard extends Controller
 
 	public function edit_profile_view($id)
 	{
-		$this->data['title'] = 'Profile';
+		$this->data['title'] = 'Profile Edit';
 		$this->data['activeSection'] = 'dashboard';
 
 		$this->data['navbarItems'] = [
