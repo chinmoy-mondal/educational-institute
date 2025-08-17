@@ -189,6 +189,7 @@ class Dashboard extends Controller
 			'joining_date' => $this->request->getPost('joining_date'),
 			'mpo_date'     => $this->request->getPost('mpo_date'),
 			'religion'     => $this->request->getPost('religion'),
+			'blood_group'     => $this->request->getPost('blood_group'),
 			'bio'      => $this->request->getPost('bio'),
 		];
 

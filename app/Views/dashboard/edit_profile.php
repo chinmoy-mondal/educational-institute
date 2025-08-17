@@ -67,6 +67,22 @@
                                     <option value="Other" <?= $user['religion'] === 'Other' ? 'selected' : '' ?>>Other</option>
                                 </select>
                             </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-tint me-2"></i>Blood Group</label>
+                                <select name="blood_group" class="form-control" required>
+                                    <option value="" disabled <?= empty($user['blood_group']) ? 'selected' : '' ?>>Select Blood Group</option>
+                                    <option value="A+" <?= ($user['blood_group'] ?? '') === 'A+' ? 'selected' : '' ?>>A+</option>
+                                    <option value="A-" <?= ($user['blood_group'] ?? '') === 'A-' ? 'selected' : '' ?>>A-</option>
+                                    <option value="B+" <?= ($user['blood_group'] ?? '') === 'B+' ? 'selected' : '' ?>>B+</option>
+                                    <option value="B-" <?= ($user['blood_group'] ?? '') === 'B-' ? 'selected' : '' ?>>B-</option>
+                                    <option value="AB+" <?= ($user['blood_group'] ?? '') === 'AB+' ? 'selected' : '' ?>>AB+</option>
+                                    <option value="AB-" <?= ($user['blood_group'] ?? '') === 'AB-' ? 'selected' : '' ?>>AB-</option>
+                                    <option value="O+" <?= ($user['blood_group'] ?? '') === 'O+' ? 'selected' : '' ?>>O+</option>
+                                    <option value="O-" <?= ($user['blood_group'] ?? '') === 'O-' ? 'selected' : '' ?>>O-</option>
+                                </select>
+                            </div>
+
                             <div class="col-md-12 mb-3">
                                 <label class="form-label"><i class="fas fa-align-left me-2"></i>Bio</label>
                                 <textarea name="bio" class="form-control" rows="4" placeholder="Write something about the user..."><?= esc($user['bio']) ?></textarea>
