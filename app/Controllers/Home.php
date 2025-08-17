@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\SubjectModel;
 use App\Models\StudentModel;
+use App\Models\UserModel;
 
 class Home extends BaseController
 {
@@ -28,7 +29,10 @@ class Home extends BaseController
 
 	public function staff()
 	{
-		return view('public/staff');
+		$userModel = new UserModel();
+
+		$faculty = $userModel->where('roll','Teacher')->findAll();
+		return view('public/staff',['faculty' => $faculty]);
 	}
 	public function subjects()
 	{
