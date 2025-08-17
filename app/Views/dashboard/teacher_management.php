@@ -36,7 +36,7 @@
                       <td><?= esc($user['name']) ?></td>
                       <td><?= esc($user['subject']) ?></td>
                       <td class="text-center">
-                        <div class="d-flex justify-content-center">
+                        <div class="d-flex justify-content-center align-items-center">
                           <a href="#" class="btn btn-sm btn-info edit-btn me-1"
                             data-id="<?= $user['id'] ?>"
                             data-name="<?= esc($user['name']) ?>"
