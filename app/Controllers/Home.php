@@ -31,8 +31,10 @@ class Home extends BaseController
 	{
 		$userModel = new UserModel();
 
-		$faculty = $userModel->where('role','Teacher')->findAll();
-		return view('public/staff',['faculty' => $faculty]);
+		$faculty = $userModel
+			// ->where('role', 'Teacher')
+			->findAll();
+		return view('public/staff', ['faculty' => $faculty]);
 	}
 	public function subjects()
 	{
