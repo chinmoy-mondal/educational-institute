@@ -163,6 +163,8 @@ class Auth extends BaseController
         $userModel = new UserModel();
         $user = $userModel->where('email', $record['email'])->first();
         print_r($user);
+        $newPasswordHash = password_hash($password, PASSWORD_DEFAULT);
+        echo "<br>".$newPasswordHash."<br>";
 
         // if (isset($user['id']) && !empty($user['id'])) {
         //     $userModel->update($user['id'], [
