@@ -70,7 +70,7 @@
         <h4 class="mb-1 fw-bold"><?= esc($student['student_name']) ?></h4>
         <p class="mb-0 fw-semibold">STUDENT</p>
         <p class="mb-0">
-          ID: <?= esc($student['id']) ?> 
+          <i class="fas fa-id-card"></i>ID: <?= esc($student['id']) ?> 
           <span class="mx-1"></span>
           <i class="fas fa-tint"></i> <?= esc($student['blood_group']) ?>
         </p>
