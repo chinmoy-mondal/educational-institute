@@ -27,7 +27,8 @@ class UserModel extends Model
 		'joining_date',
 		'religion',
 		'mpo_date',
-		'bio'
+		'bio',
+		'password'  // <-- must include this
 	];
 	protected $useTimestamps = true;
 	protected $createdField  = 'created_at';
