@@ -80,7 +80,7 @@
             <!-- Buttons -->
             <div class="card-footer text-end">
                 <button type="submit" class="btn btn-success"><i class="fas fa-save me-2"></i>Save Changes</button>
-                <a href="<?= site_url('admin/students/profile/' . $user['id']) ?>" class="btn btn-secondary"><i class="fas fa-times me-2"></i>Cancel</a>
+                <a href="<?= site_url('profile/' . $user['id']) ?>" class="btn btn-secondary"><i class="fas fa-times me-2"></i>Cancel</a>
             </div>
         </form>
     </div>
