@@ -15,35 +15,54 @@
 
 
     <!--start-->
-    <section class="faculty-staff py-5">
-        <div class="container">
-            <div class="text-center mb-4">
-                <h2 class="fw-bold">Meet Our Faculty & Staff</h2>
-                <p class="text-muted">Dedicated professionals committed to excellence in education.</p>
-            </div>
+<section class="faculty-staff py-5">
+    <div class="container">
+        <!-- Section Header -->
+        <div class="text-center mb-5">
+            <h2 class="fw-bold text-primary">Meet Our Faculty & Staff</h2>
+            <p class="text-muted fs-5">Dedicated professionals committed to excellence in education</p>
+        </div>
 
-            <div class="row">
-                <?php if (!empty($faculty)): ?>
-                    <?php foreach ($faculty as $member): ?>
-                        <div class="col-md-4 mb-4">
-                            <div class="card text-center shadow-sm border-0">
+        <div class="row g-4">
+            <?php if (!empty($faculty)): ?>
+                <?php foreach ($faculty as $member): ?>
+                    <div class="col-md-4">
+                        <div class="card h-100 text-center border-0 shadow-sm faculty-card">
+                            <!-- Profile Image -->
+                            <div class="p-3">
                                 <img src="<?= base_url($member['picture'] ?? 'public/assets/img/default.jpg'); ?>"
-                                    class="card-img-top faculty-img"
+                                    class="rounded-circle img-fluid faculty-img mb-3"
+                                    style="width:150px; height:150px; object-fit:cover; border:4px solid #f1f1f1;"
                                     alt="<?= esc($member['name']); ?>">
-                                <div class="card-body">
-                                    <h5 class="fw-bold"><?= esc($member['name']); ?></h5>
-                                    <p class="text-muted"><?= esc($member['designation']); ?></p>
-                                    <p class="small"><?= esc($member['bio']); ?></p>
-                                </div>
+                            </div>
+
+                            <!-- Card Body -->
+                            <div class="card-body">
+                                <h5 class="fw-bold mb-1"><?= esc($member['name']); ?></h5>
+                                <p class="text-primary small mb-2"><?= esc($member['designation']); ?></p>
+                                <p class="text-muted small" style="text-align: justify;">
+                                    <?= esc($member['bio']); ?>
+                                </p>
+                            </div>
+
+                            <!-- Card Footer -->
+                            <div class="card-footer bg-white border-0">
+                                <a href="mailto:<?= esc($member['email'] ?? ''); ?>" class="btn btn-outline-primary btn-sm me-2">
+                                    <i class="fas fa-envelope"></i> Email
+                                </a>
+                                <a href="<?= esc($member['linkedin'] ?? '#'); ?>" target="_blank" class="btn btn-outline-secondary btn-sm">
+                                    <i class="fab fa-linkedin"></i> Profile
+                                </a>
                             </div>
                         </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <p class="text-center">No faculty members found.</p>
-                <?php endif; ?>
-            </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p class="text-center">No faculty members found.</p>
+            <?php endif; ?>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Styles -->
     <style>
