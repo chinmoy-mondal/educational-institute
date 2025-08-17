@@ -101,6 +101,7 @@ class Auth extends BaseController
         if (!$user) {
             return redirect()->back()->with('error', 'Email not found.');
         }
+        $name = $user['name'];
 
         $token = bin2hex(random_bytes(32));
         $expires = date('Y-m-d H:i:s', time() + 300); // 5 minutes expiry
@@ -117,7 +118,7 @@ class Auth extends BaseController
 
         // ✅ Send simple email using PHP mail()
         $message = "
-        Hello,<br><br>
+        Hello $name,<br><br>
         Click the link to reset your password (valid 5 minutes):<br>
         <a href='$resetLink'>$resetLink</a><br><br>
         If you did not request this, ignore this email.
