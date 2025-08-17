@@ -41,13 +41,24 @@
                           data-name="<?= esc($user['name']) ?>"
                           data-subject="<?= esc($user['subject']) ?>"
                           data-photo="<?= !empty($user['photo'])
-                                        ? base_url('uploads/' . $user['photo'])
+                                        ? base_url($user['photo'])
                                         : base_url('public/assets/img/default.png') ?>">
                           <i class="fas fa-edit"></i>
                         </a>
                         <a href="<?= site_url('profile_id/' . $user['id']) ?>"
-                          class="text-primary">
+                          class="btn btn-sm btn-info"
+                          title="View Profile">
                           <i class="fas fa-user"></i>
+                        </a>
+                        <a href="<?= site_url('profile_id/' . $user['id']) ?>"
+                          class="btn btn-sm btn-info"
+                          title="View Profile">
+                          <i class="fas fa-user"></i>
+                        </a>
+                        <a href="<?= site_url('exam_id/' . $user['id']) ?>"
+                          class="btn btn-sm btn-info"
+                          title="Exam">
+                          <i class="fas fa-file-alt"></i>
                         </a>
                       </td>
                     </tr>
