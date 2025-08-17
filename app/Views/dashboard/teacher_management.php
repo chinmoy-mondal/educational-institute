@@ -35,39 +35,29 @@
                       </td>
                       <td><?= esc($user['name']) ?></td>
                       <td><?= esc($user['subject']) ?></td>
-<td class="text-center">
-  <div class="d-flex justify-content-center align-items-center">
-    
-    <div class="me-1">
-      <a href="#" class="btn btn-sm btn-info edit-btn"
-         data-id="<?= $user['id'] ?>"
-         data-name="<?= esc($user['name']) ?>"
-         data-subject="<?= esc($user['subject']) ?>"
-         data-photo="<?= !empty($user['photo'])
-                       ? base_url($user['photo'])
-                       : base_url('public/assets/img/default.png') ?>">
-         <i class="fas fa-edit"></i>
-      </a>
-    </div>
+                      <td class="text-center">
+                        <a href="#" class="btn btn-sm btn-info edit-btn" style="margin-right:5px;"
+                          data-id="<?= $user['id'] ?>"
+                          data-name="<?= esc($user['name']) ?>"
+                          data-subject="<?= esc($user['subject']) ?>"
+                          data-photo="<?= !empty($user['photo'])
+                                        ? base_url($user['photo'])
+                                        : base_url('public/assets/img/default.png') ?>">
+                          <i class="fas fa-edit"></i>
+                        </a>
 
-    <div class="me-1">
-      <a href="<?= site_url('profile_id/' . $user['id']) ?>"
-         class="btn btn-sm btn-primary"
-         title="View Profile">
-         <i class="fas fa-user"></i>
-      </a>
-    </div>
+                        <a href="<?= site_url('profile_id/' . $user['id']) ?>"
+                          class="btn btn-sm btn-primary" style="margin-right:5px;"
+                          title="View Profile">
+                          <i class="fas fa-user"></i>
+                        </a>
 
-    <div>
-      <a href="<?= site_url('assignSubject/' . $user['id']) ?>"
-         class="btn btn-sm btn-success"
-         title="Exam">
-         <i class="fas fa-file-alt"></i>
-      </a>
-    </div>
-
-  </div>
-</td>
+                        <a href="<?= site_url('assignSubject/' . $user['id']) ?>"
+                          class="btn btn-sm btn-success"
+                          title="Exam">
+                          <i class="fas fa-file-alt"></i>
+                        </a>
+                      </td>
                     </tr>
                   <?php endforeach; ?>
                 </tbody>
