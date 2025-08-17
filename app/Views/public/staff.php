@@ -58,7 +58,7 @@
                                     </a>
 
                                     <!-- Card Button -->
-                                    <a href="<?= esc($member['card_link'] ?? '#'); ?>" target="_blank" class="btn btn-outline-primary btn-sm">
+                                    <a href="<?= base_url('teacher_idcard/' . $member['id']) ?>" target="_blank" class="btn btn-outline-primary btn-sm">
                                         <i class="fas fa-id-card"></i> Card
                                     </a>
                                 </div>
