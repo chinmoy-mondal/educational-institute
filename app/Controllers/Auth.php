@@ -144,19 +144,26 @@ class Auth extends BaseController
         $resetModel = new PasswordResetModel();
         $record = $resetModel->where('token', $token)->where('used', 0)->first();
 
+        // ✅ Check token validity & expiry
         if (!$record || strtotime($record['expires_at']) < time()) {
             return redirect()->to('/login')->with('error', 'Token expired or invalid.');
         }
 
         $userModel = new UserModel();
-        $userModel->where('email', $record['email'])
-                  ->set(['password' => password_hash($password, PASSWORD_DEFAULT)])
-                  ->update();
+        $user = $userModel->where('email', $record['email'])->first();
 
-        // Mark token as used
-        $resetModel->update($record['id'], ['used' => 1]);
+        // ✅ Update password by user ID (avoids "no data to update")
+        if ($user) {
+            $userModel->update($user['id'], [
+                'password' => password_hash($password, PASSWORD_DEFAULT)
+            ]);
 
-        return redirect()->to('/login')->with('success', 'Password updated. You can now login.');
+            // ✅ Mark token as used (so it can’t be reused)
+            $resetModel->update($record['id'], ['used' => 1]);
+
+            return redirect()->to('/login')->with('success', 'Password updated. You can now login.');
+        }
+
+        return redirect()->to('/login')->with('error', 'User not found.');
     }
 }
-
