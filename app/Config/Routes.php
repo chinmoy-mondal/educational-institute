@@ -49,6 +49,11 @@ $routes->get('login', 'Account::showLoginForm');
 $routes->post('login', 'Account::processLogin');
 $routes->get('logout', 'Account::logout');
 
+$routes->get('/forgot-password', 'Auth::forgotPassword');
+$routes->post('/forgot-password/send', 'Auth::sendResetLink');
+$routes->get('/reset-password/(:segment)', 'Auth::resetPassword/$1');
+$routes->post('/reset-password/update', 'Auth::updatePassword');
+
 #Dashboard
 $routes->get('dashboard', 'Dashboard::index');
 $routes->get('profile', 'Dashboard::profile');
