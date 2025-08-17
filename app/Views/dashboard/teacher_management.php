@@ -25,9 +25,9 @@
                   <?php foreach ($users as $user): ?>
                     <tr>
                       <td class="text-center">
-                        <a href="<?= base_url('assignSubject/' . $user['id']) ?>">
+                        <a href="<?= base_url('profile_id/' . $user['id']) ?>">
                           <img src="<?= !empty($user['photo'])
-                                      ? base_url('uploads/' . $user['photo'])
+                                      ? base_url($user['photo'])
                                       : base_url('public/assets/img/default.png') ?>"
                             width="50" height="50" class="rounded-circle">
                         </a>
@@ -46,17 +46,12 @@
                           <i class="fas fa-edit"></i>
                         </a>
                         <a href="<?= site_url('profile_id/' . $user['id']) ?>"
-                          class="btn btn-sm btn-info"
-                          title="View Profile">
-                          <i class="fas fa-user"></i>
-                        </a>
-                        <a href="<?= site_url('profile_id/' . $user['id']) ?>"
-                          class="btn btn-sm btn-info"
+                          class="btn btn-sm btn-primary"
                           title="View Profile">
                           <i class="fas fa-user"></i>
                         </a>
                         <a href="<?= site_url('assignSubject/' . $user['id']) ?>"
-                          class="btn btn-sm btn-info"
+                          class="btn btn-sm btn-success"
                           title="Exam">
                           <i class="fas fa-file-alt"></i>
                         </a>
