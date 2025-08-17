@@ -46,14 +46,19 @@
                                 </div>
 
                                 <!-- Card Footer -->
-                                <div class="card-footer bg-white border-0">
-                                    <a href="mailto:<?= esc($member['email'] ?? ''); ?>" class="btn btn-outline-primary btn-sm me-2">
+                                <div class="card-footer bg-white border-0 d-flex justify-content-center gap-2">
+                                    <!-- Email Button -->
+                                    <a href="mailto:<?= esc($member['email'] ?? ''); ?>" class="btn btn-outline-primary btn-sm">
                                         <i class="fas fa-envelope"></i> Email
                                     </a>
-                                    <a href="" target="_blank" class="btn btn-outline-secondary btn-sm">
+
+                                    <!-- Profile Button -->
+                                    <a href="<?= esc($member['linkedin'] ?? '#'); ?>" target="_blank" class="btn btn-outline-secondary btn-sm">
                                         <i class="fab fa-linkedin"></i> Profile
                                     </a>
-                                    <a href="#" target="_blank" class="btn btn-outline-secondary btn-sm">
+
+                                    <!-- Card Button -->
+                                    <a href="<?= esc($member['card_link'] ?? '#'); ?>" target="_blank" class="btn btn-outline-secondary btn-sm">
                                         <i class="fas fa-id-card"></i> Card
                                     </a>
                                 </div>
