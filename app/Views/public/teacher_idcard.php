@@ -40,7 +40,7 @@
 </style>
 
 <div class="container py-5">
-  <h4 class="text-center mb-4"><?= esc($student['school_name']) ?> – Student ID Card</h4>
+  <h4 class="text-center mb-4"><?= esc($user['school_name']) ?> – user ID Card</h4>
 
   <div class="d-flex flex-wrap justify-content-center gap-4">
 
@@ -48,18 +48,18 @@
     <div id="card-front" class="id-card" style="background-image: url('<?= base_url("public/assets/img/bg-front.png") ?>');">
       <!-- Logo -->
       <div class="text-center mb-2">
-        <img src="<?= esc($student['logo']) ?>" height="90" alt="Logo" />
+        <img src="<?= esc($user['logo']) ?>" height="90" alt="Logo" />
       </div>
 
       <!-- School name -->
-      <h6 class="text-white text-center fw-bold mb-0"><?= esc($student['eiin']) ?></h6>
-      <h6 class="text-white text-center fw-bold mb-0"><?= esc($student['school_name']) ?></h6>
+      <h6 class="text-white text-center fw-bold mb-0"><?= esc($user['eiin']) ?></h6>
+      <h6 class="text-white text-center fw-bold mb-0"><?= esc($user['school_name']) ?></h6>
       <br>
 
       <!-- Photo -->
       <div class="d-flex justify-content-center mb-3">
-	      <?php if (!empty($student['student_pic'])): ?>
-		<img src="/<?= esc($student['student_pic']) ?>" alt="Photo" class="photo" crossorigin="anonymous">
+	      <?php if (!empty($user['user_pic'])): ?>
+		<img src="/<?= esc($user['user_pic']) ?>" alt="Photo" class="photo" crossorigin="anonymous">
 	      <?php else: ?>
 		<img src="<?= base_url('public/assets/img/default.png') ?>" alt="Photo" class="photo" crossorigin="anonymous">
 	      <?php endif; ?>
@@ -67,22 +67,22 @@
 
       <!-- Info -->
       <div class="text-center text-black mb-1">
-        <h4 class="mb-1 fw-bold"><?= esc($student['student_name']) ?></h4>
-        <p class="mb-0 fw-semibold">STUDENT</p>
+        <h4 class="mb-1 fw-bold"><?= esc($user['user_name']) ?></h4>
+        <p class="mb-0 fw-semibold">user</p>
         <p class="mb-0">
-          ID: <?= esc($student['id']) ?> 
+          ID: <?= esc($user['id']) ?> 
           <span class="mx-1"></span>
-          <i class="fas fa-tint"></i> <?= esc($student['blood_group']) ?>
+          <i class="fas fa-tint"></i> <?= esc($user['blood_group']) ?>
         </p>
-        <p class="mb-0"><i class="fas fa-phone me-2"></i><?= esc($student['phone']) ?></p>
+        <p class="mb-0"><i class="fas fa-phone me-2"></i><?= esc($user['phone']) ?></p>
       
       </div>
 
       <!-- Signature -->
       <div class="d-flex justify-content-end align-items-end mt-auto">
         <div class="text-end">
-          <?php if (!empty($student['signature'])): ?>
-            <img src="<?= esc($student['signature']) ?>" alt="Signature" class="signature mb-1" />
+          <?php if (!empty($user['signature'])): ?>
+            <img src="<?= esc($user['signature']) ?>" alt="Signature" class="signature mb-1" />
           <?php else: ?>
             <div class="signature mb-1" style="background:#ccc;width:100px;height:30px;">[Signature]</div>
           <?php endif; ?>
@@ -96,9 +96,9 @@
       <!-- QR Code -->
 	<div class="text-center mb-3">
 	    <img
-		src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=<?= urlencode('https://mulss.edu.bd/student-id?q=' . $student['id']) ?>"
+		src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=<?= urlencode('https://mulss.edu.bd/user-id?q=' . $user['id']) ?>"
 		class="qr-img"
-		alt="Student QR"
+		alt="user QR"
 	    />
 	</div>
 
@@ -129,15 +129,15 @@
         </ul>
       </div>
 	<br>
-      <div class="text-center small text-white mt-2"><?= esc($student['school_name']) ?></div>      
+      <div class="text-center small text-white mt-2"><?= esc($user['school_name']) ?></div>      
       <div class="text-center small text-white mt-1">Keshabpur, Jessore</div>
     </div>
   </div>
 
   <!-- Download Buttons -->
   <div class="text-center mt-4">
-    <button class="btn btn-primary me-3" onclick="downloadCard('card-front', 'front_<?= $student['id'] ?>.jpg')">Download Front</button>
-    <button class="btn btn-secondary" onclick="downloadCard('card-back', 'back_<?= $student['id'] ?>.jpg')">Download Back</button>
+    <button class="btn btn-primary me-3" onclick="downloadCard('card-front', 'front_<?= $user['id'] ?>.jpg')">Download Front</button>
+    <button class="btn btn-secondary" onclick="downloadCard('card-back', 'back_<?= $user['id'] ?>.jpg')">Download Back</button>
   </div>
 </div>
 
