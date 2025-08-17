@@ -194,28 +194,31 @@ class Dashboard extends Controller
 
 		$photo = $this->request->getFile('photo');
 
-		if ($photo && $photo->isValid() && !$photo->hasMoved()) {
-			$newName = $photo->getRandomName();
-			$uploadPath = FCPATH . 'uploads/users/';
+		$userId = $this->session->get('user_id');
+		if ($userId == $id) {
+			if ($photo && $photo->isValid() && !$photo->hasMoved()) {
+				$newName = $photo->getRandomName();
+				$uploadPath = FCPATH . 'uploads/users/';
 
-			// Make sure folder exists
-			if (!is_dir($uploadPath)) {
-				mkdir($uploadPath, 0777, true);
-			}
-
-			// Delete old photo first
-			$user = $this->userModel->find($id);
-			if ($user && !empty($user['picture'])) {
-				$oldFile = FCPATH . $user['picture'];
-				if (file_exists($oldFile)) {
-					unlink($oldFile);
+				// Make sure folder exists
+				if (!is_dir($uploadPath)) {
+					mkdir($uploadPath, 0777, true);
 				}
-			}
 
-			// Move new file
-			$photo->move($uploadPath, $newName);
-			$data['picture'] = 'uploads/users/' . $newName;
-		}
+				// Delete old photo first
+				$user = $this->userModel->find($id);
+				if ($user && !empty($user['picture'])) {
+					$oldFile = FCPATH . $user['picture'];
+					if (file_exists($oldFile)) {
+						unlink($oldFile);
+					}
+				}
+
+				// Move new file
+				$photo->move($uploadPath, $newName);
+				$data['picture'] = 'uploads/users/' . $newName;
+			}
+		
 
 		// Update user
 		$this->userModel->update($id, $data);
@@ -223,6 +226,10 @@ class Dashboard extends Controller
 		// Redirect back with success message
 		return redirect()->to(base_url('profile'))
 			->with('success', 'User info updated successfully.');
+		}else {
+		return redirect()->to(base_url('profile'))
+			->with('error', 'You are not able to update this profile.');
+		}
 	}
 
 	public function calendar()
