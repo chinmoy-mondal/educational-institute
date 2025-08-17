@@ -103,7 +103,7 @@ class Auth extends BaseController
         }
 
         $token = bin2hex(random_bytes(32));
-        $expires = date('Y-m-d H:i:s', time() + 120); // 2 minutes expiry
+        $expires = date('Y-m-d H:i:s', time() + 300); // 5 minutes expiry
 
         $resetModel = new PasswordResetModel();
         $resetModel->insert([
@@ -118,7 +118,7 @@ class Auth extends BaseController
         // ✅ Send simple email using PHP mail()
         $message = "
         Hello,<br><br>
-        Click the link to reset your password (valid 2 minutes):<br>
+        Click the link to reset your password (valid 5 minutes):<br>
         <a href='$resetLink'>$resetLink</a><br><br>
         If you did not request this, ignore this email.
     ";
