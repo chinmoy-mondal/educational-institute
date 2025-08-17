@@ -58,8 +58,8 @@
 
       <!-- Photo -->
       <div class="d-flex justify-content-center mb-3">
-	      <?php if (!empty($user['user_pic'])): ?>
-		<img src="/<?= esc($user['user_pic']) ?>" alt="Photo" class="photo" crossorigin="anonymous">
+	      <?php if (!empty($user['picture'])): ?>
+		<img src="/<?= esc($user['picture']) ?>" alt="Photo" class="photo" crossorigin="anonymous">
 	      <?php else: ?>
 		<img src="<?= base_url('public/assets/img/default.png') ?>" alt="Photo" class="photo" crossorigin="anonymous">
 	      <?php endif; ?>
@@ -68,7 +68,7 @@
       <!-- Info -->
       <div class="text-center text-black mb-1">
         <h4 class="mb-1 fw-bold"><?= esc($user['name']) ?></h4>
-        <p class="mb-0 fw-semibold">user</p>
+        <p class="mb-0 fw-semibold"><?= esc($user['designation']) ?></p>
         <p class="mb-0">
           ID: <?= esc($user['id']) ?> 
           <span class="mx-1"></span>
