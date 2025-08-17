@@ -174,6 +174,6 @@ class Auth extends BaseController
         //     return redirect()->to('/login')->with('success', 'Password updated. You can now login.');
         // }
 
-        return redirect()->to('/login')->with('error', 'User not found.');
+        // return redirect()->to('/login')->with('error', 'User not found.');
     }
 }
