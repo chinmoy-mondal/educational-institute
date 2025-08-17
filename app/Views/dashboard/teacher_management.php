@@ -55,7 +55,7 @@
                           title="View Profile">
                           <i class="fas fa-user"></i>
                         </a>
-                        <a href="<?= site_url('exam_id/' . $user['id']) ?>"
+                        <a href="<?= site_url('assignSubject/' . $user['id']) ?>"
                           class="btn btn-sm btn-info"
                           title="Exam">
                           <i class="fas fa-file-alt"></i>
