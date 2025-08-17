@@ -8,83 +8,138 @@ use CodeIgniter\Controller;
 
 class Auth extends BaseController
 {
-    public function register()
-    {
-        helper(['form']);
+	public function showRegisterForm()
+	{
+		return view('auth/register');
+	}
 
-        if ($this->request->getMethod() === 'post') {
-            $rules = [
-                'name' => 'required|min_length[3]',
-                'role' => 'required',
-                'gender' => 'required',
-                'phone' => 'required|numeric',
-                'email' => 'required|valid_email|is_unique[users.email]',
-                'password' => 'required|min_length[6]',
-                'confirm_password' => 'matches[password]'
-            ];
+	public function processRegister()
+	{
+		// Validation rules
+		$validationRules = [
+			'name' => [
+				'label' => 'Full Name',
+			'rules' => 'required|min_length[3]'
+			],
+			'role' => [
+				'label' => 'Role',
+			'rules' => 'required|in_list[Teacher,Staff]'
+			],
+			'designation' => [
+				'label' => 'Designation',
+			'rules' => 'required'
+			],
+			'gender' => [
+				'label' => 'Gender',
+			'rules' => 'required|in_list[Male,Female,Others]'
+			],
+			'phone' => [
+				'label' => 'Phone Number',
+			'rules' => 'required|regex_match[/^(013|014|015|016|017|018|019)\d{8}$/]',
+			'errors' => [
+				'regex_match' => 'The {field} must be 11 digits and start with a valid prefix (013, 014, 015, 016, 017, 018, 019).'
+			]
+			],
+			'email' => [
+				'label' => 'Email',
+			'rules' => 'required|valid_email|is_unique[users.email]'
+			],
+			'password' => [
+				'label' => 'Password',
+			'rules' => 'required|min_length[6]'
+			],
+			'confirm_password' => [
+				'label' => 'Confirm Password',
+			'rules' => 'required|matches[password]'
+			],
+			];
 
-            if (!$this->validate($rules)) {
-                return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-            }
+			// Validate input
+			if (!$this->validate($validationRules)) {
+				return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+			}
 
-            $userModel = new UserModel();
-            $userModel->save([
-                'name' => $this->request->getPost('name'),
-                'role' => $this->request->getPost('role'),
-                'designation' => $this->request->getPost('designation'),
-                'subject' => $this->request->getPost('subject'),
-                'gender' => $this->request->getPost('gender'),
-                'phone' => $this->request->getPost('phone'),
-                'email' => $this->request->getPost('email'),
-                'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT)
-            ]);
+			// Prepare data for insertion
+			$data = [
+				'name'           => $this->request->getPost('name'),
+				'role'           => $this->request->getPost('role'),
+				'designation'    => $this->request->getPost('designation'),
+				'subject'        => $this->request->getPost('subject') ?? null,
+				'gender'         => $this->request->getPost('gender'),
+				'phone'          => $this->request->getPost('phone'),
+				'email'          => $this->request->getPost('email'),
+				'password'       => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+				'account_status' => 0,
+				'created_at'     => date('Y-m-d H:i:s'),
+				'updated_at'     => date('Y-m-d H:i:s'),
+			];
 
-            return redirect()->to('/login')->with('success', 'Registration successful!');
-        }
+			// Insert user into database
+			$userModel = new UserModel();
+			$userModel->insert($data);
 
-        return view('auth/register'); // your registration view
-    }
+			// Redirect to login with success message
+			return redirect()->to('/login')->with('success', 'Registration successful.');
+	}
 
-    public function login()
-    {
-        helper(['form']);
+	public function showLoginForm()
+	{
+		return view('auth/login');
+	}
 
-        if ($this->request->getMethod() === 'post') {
-            $rules = [
-                'email' => 'required|valid_email',
-                'password' => 'required'
-            ];
+	public function processLogin()
+	{
+		$session    = session();
+		$userModel  = new UserModel();
 
-            if (!$this->validate($rules)) {
-                return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-            }
+		$email      = $this->request->getPost('email');
+		$password   = $this->request->getPost('password');
 
-            $userModel = new UserModel();
-            $user = $userModel->where('email', $this->request->getPost('email'))->first();
+		// 1.  Look up the user
+		$user = $userModel->where('email', $email)->first();
 
-            if ($user && password_verify($this->request->getPost('password'), $user['password'])) {
-                // Set user session
-                session()->set([
-                    'user_id' => $user['id'],
-                    'name'    => $user['name'],
-                    'email'   => $user['email'],
-                    'isLoggedIn' => true
-                ]);
+		if (! $user) {
+			return redirect()->back()->withInput()
+				->with('error', 'Email not found.');
+		}
 
-                return redirect()->to('/dashboard');
-            } else {
-                return redirect()->back()->withInput()->with('errors', ['Invalid login credentials.']);
-            }
-        }
+		// 2.  Is the account allowed to log in?
+		//     0 = disabled / blocked
+		//     1 = normal user
+		//     2 = super-admin
+		if ($user['account_status'] === '0') {
+			return redirect()->back()->withInput()
+				->with('error', 'Your account is inactive. Please contact the administrator.');
+		}
 
-        return view('auth/login'); // your login view
-    }
+		// 3.  Check the password
+		if (! password_verify($password, $user['password'])) {
+			return redirect()->back()->withInput()
+				->with('error', 'Invalid password.');
+		}
 
-    public function logout()
-    {
-        session()->destroy();
-        return redirect()->to('/login');
-    }
+		// 4.  Success — build the session payload
+		$session->set([
+				'user_id'        => $user['id'],
+				'user_name'      => $user['name'],
+				'user_email'     => $user['email'],
+				'user_role'      => $user['role'],
+				'designation'    => $user['designation'],
+				'subject'        => $user['subject'],
+				'gender'         => $user['gender'],
+				'phone'          => $user['phone'],
+				'account_status' => $user['account_status'],
+				'created_at'     => $user['created_at'],
+				'updated_at'     => $user['updated_at'],
+				'isLoggedIn'     => true,
+		]);
+		return redirect()->to('/dashboard');
+	}
+	public function logout()
+	{
+		session()->destroy();
+		return redirect()->to('/login')->with('success', 'You are logged out.');
+	}
 
     // password reset method 
     public function forgotPassword()

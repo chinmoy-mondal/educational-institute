@@ -42,12 +42,12 @@ $routes->get('run-migration/(:any)', 'DevTools::migrate/$1');
 
 $routes->get('page', 'Page::index');
 
-$routes->get('register', 'Account::showRegisterForm');
-$routes->post('register', 'Account::processRegister');
+$routes->get('register', 'Auth::showRegisterForm');
+$routes->post('register', 'Auth::processRegister');
 
-$routes->get('login', 'Account::showLoginForm');
-$routes->post('login', 'Account::processLogin');
-$routes->get('logout', 'Account::logout');
+$routes->get('login', 'Auth::showLoginForm');
+$routes->post('login', 'Auth::processLogin');
+$routes->get('logout', 'Auth::logout');
 
 $routes->get('/forgot-password', 'Auth::forgotPassword');
 $routes->post('/forgot-password/send', 'Auth::sendResetLink');
