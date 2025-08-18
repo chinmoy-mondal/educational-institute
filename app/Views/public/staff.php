@@ -41,7 +41,7 @@
                                     <h5 class="fw-bold mb-1"><?= esc($member['name']); ?></h5>
                                     <p class="text-primary small mb-2"><?= esc($member['designation']); ?></p>
                                     <p class="text-muted small" style="text-align: justify;">
-                                        <?= esc($user['bio'], 'raw') ?>
+                                        <?= esc($member['bio'], 'raw') ?>
                                     </p>
                                 </div>
 
