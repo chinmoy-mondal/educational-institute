@@ -40,6 +40,7 @@
                                 <div class="card-body">
                                     <h5 class="fw-bold mb-1"><?= esc($member['name']); ?></h5>
                                     <p class="text-primary small mb-2"><?= esc($member['designation']); ?></p>
+                                    <p class="text-primary small mb-2"><?= esc($member['subject']); ?></p>
                                     <p class="text-muted small" style="text-align: justify;">
                                         <?= esc($member['bio'], 'raw') ?>
                                     </p>
@@ -50,6 +51,11 @@
                                     <!-- Email Button -->
                                     <a href="mailto:<?= esc($member['email'] ?? ''); ?>" class="btn btn-outline-primary btn-sm">
                                         <i class="fas fa-envelope"></i> Email
+                                    </a>
+
+                                    <!-- Call Button -->
+                                    <a href="tel:<?= esc($member['phone'] ?? ''); ?>" class="btn btn-outline-success btn-sm">
+                                        <i class="fas fa-phone"></i> Call
                                     </a>
 
                                     <!-- Profile Button -->
