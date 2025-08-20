@@ -743,7 +743,7 @@ if (!is_null($roll)) {
               ?>
             </td>
             <td>
-            <?= $subjectCount ?> = <?= $totalGPA + $forthGPA ?> 
+            test= <?= $written ?> = <?= ($written < 17)  ?>
             </td>
           <?php endif; ?>
         </tr>
