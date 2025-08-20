@@ -743,7 +743,7 @@ if (!is_null($roll)) {
               ?>
             </td>
             <td>
-            test= <?= $written ?> = <?= ($written < 17)  ?>
+            test= <?= $written ?> = <?= ($written < 17)  ?> u
             </td>
           <?php endif; ?>
         </tr>
