@@ -742,9 +742,9 @@ if (!is_null($roll)) {
               }
               ?>
             </td>
-            <!-- <td>
+            <td>
             <?= $subjectCount ?> = <?= $totalGPA + $forthGPA ?> 
-            </td> -->
+            </td>
           <?php endif; ?>
         </tr>
       <?php endforeach; ?>
