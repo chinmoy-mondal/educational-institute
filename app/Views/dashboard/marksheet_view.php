@@ -742,9 +742,9 @@ if (!is_null($roll)) {
               }
               ?>
             </td>
-            <td>
+            <!-- <td>
             <?= $subject ?> = <?= in_array($subject, ['Physics', 'Chemistry', 'Higher Mathematics ', 'Biology','ICT']) ? 'yes': 'no';  ?> u
-            </td>
+            </td> -->
           <?php endif; ?>
         </tr>
       <?php endforeach; ?>
