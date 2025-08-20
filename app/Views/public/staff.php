@@ -54,7 +54,7 @@
                                     </a>
 
                                     <!-- Call Button -->
-                                    <a href="tel:<?= esc($member['phone'] ?? ''); ?>" class="btn btn-outline-success btn-sm">
+                                    <a href="tel:<?= esc($member['phone'] ?? ''); ?>" class="btn btn-outline-primary btn-sm">
                                         <i class="fas fa-phone"></i> Call
                                     </a>
 
