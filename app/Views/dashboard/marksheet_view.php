@@ -742,8 +742,8 @@ if (!is_null($roll)) {
               }
               ?>
             </td>
-            <td>Higher
-             = <?= in_array($subject, ['Physics', 'Chemistry', 'Higher Mathematics', 'Biology','ICT']) ? 'yes': 'no';  ?> u
+            <td>
+            <?= $subject ?> = <?= in_array($subject, ['Physics', 'Chemistry', 'Higher Mathematics', 'Biology','ICT']) ? 'yes': 'no';  ?> u
             </td>
           <?php endif; ?>
         </tr>
