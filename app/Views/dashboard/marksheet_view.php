@@ -691,7 +691,7 @@ if (!is_null($roll)) {
                       $gpa = '0.00';
                     }
                   }
-                } else {
+                } elseif (!in_array($subject, ['Physics', 'Chemistry', 'Higher Math', 'Biology','ICT'])) {
                   if ($written < 23 || $mcq < 10) {
                     $grade = 'F';
                     $gpa = '0.00';
@@ -742,9 +742,9 @@ if (!is_null($roll)) {
               }
               ?>
             </td>
-            <td>
+            <!-- <td> test part
              = <?= ($written < 17 || $mcq < 8 || $practical < 8) ? 'yes' : 'no'; ?> u
-            </td>
+            </td> -->
           <?php endif; ?>
         </tr>
       <?php endforeach; ?>
