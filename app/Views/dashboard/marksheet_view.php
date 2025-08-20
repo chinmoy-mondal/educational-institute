@@ -661,7 +661,7 @@ if (!is_null($roll)) {
                       $gpa = '0.00';
                     }
                   }
-                } elseif (in_array($subject, ['Physics', 'Chemistry', 'Higher Math', 'Biology'])) {
+                } elseif (in_array($subject, ['Physics', 'Chemistry', 'Higher Mathematics', 'Biology'])) {
                   if ($written < 17 || $mcq < 8 || $practical < 8) {
                     $grade = 'F';
                     $gpa = '0.00';
@@ -691,7 +691,7 @@ if (!is_null($roll)) {
                       $gpa = '0.00';
                     }
                   }
-                } elseif (!in_array($subject, ['Physics', 'Chemistry', 'Higher Math', 'Biology','ICT'])) {
+                } else {
                   if ($written < 23 || $mcq < 10) {
                     $grade = 'F';
                     $gpa = '0.00';
@@ -742,8 +742,8 @@ if (!is_null($roll)) {
               }
               ?>
             </td>
-            <td>
-             = <?= $subject ?> u
+            <td>Higher
+             = <?= in_array($subject, ['Physics', 'Chemistry', 'Higher Mathematics', 'Biology','ICT']) ? 'yes': 'no';  ?> u
             </td>
           <?php endif; ?>
         </tr>
