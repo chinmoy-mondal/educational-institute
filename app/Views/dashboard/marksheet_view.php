@@ -742,9 +742,9 @@ if (!is_null($roll)) {
               }
               ?>
             </td>
-            <!-- <td> test part
-             = <?= ($written < 17 || $mcq < 8 || $practical < 8) ? 'yes' : 'no'; ?> u
-            </td> -->
+            <td>
+             = <?= $subject ?> u
+            </td>
           <?php endif; ?>
         </tr>
       <?php endforeach; ?>
