@@ -743,7 +743,7 @@ if (!is_null($roll)) {
               ?>
             </td>
             <td>
-             = <?= ($written < 17) ? 'yes' : 'no'; ?> u
+             = <?= ($written < 17 || $mcq < 8 || $practical < 8) ? 'yes' : 'no'; ?> u
             </td>
           <?php endif; ?>
         </tr>
