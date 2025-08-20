@@ -463,7 +463,7 @@ if (!is_null($roll)) {
           else:
           ?>
             <?php
-            $subject = $mark['subject'];
+            $subject = trim($mark['subject']);
             $class = (int)$student['class'];
             $total = $mark['total'];
             $fullMark = $mark['full_mark'];
