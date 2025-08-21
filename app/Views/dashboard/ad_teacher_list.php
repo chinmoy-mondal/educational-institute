@@ -3,21 +3,28 @@
 
 <section class="content">
   <div class="container-fluid">
-
-
-
-
-
-
-
-
-
     <div class="card card-primary card-outline shadow">
       <div class="card-header d-flex justify-content-between align-items-center">
         <h3 class="card-title mb-0"><i class="fas fa-chalkboard-teacher"></i> Teacher List</h3>
       </div>
 
       <div class="card-body">
+        <!-- Flash Messages -->
+        <?php if (session()->getFlashdata('success')): ?>
+          <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> <?= session()->getFlashdata('success') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        <?php endif; ?>
+
+        <?php if (session()->getFlashdata('error')): ?>
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> <?= session()->getFlashdata('error') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        <?php endif; ?>
+        <!-- End Flash Messages -->
+
         <div class="table-responsive">
           <table id="teacherTable" class="table table-bordered table-hover table-striped">
             <thead class="bg-navy text-center">
@@ -37,12 +44,12 @@
                 <?php foreach ($users as $user): ?>
                   <tr>
 
-		    <td class="text-center">
-		       <img src="<?= !empty($user['photo']) 
-			      ? base_url('uploads/' . $user['photo']) 
-			      : base_url('public/assets/img/default.png') ?>" 
-			    width="50" height="50" class="rounded-circle">
-		    </td>
+                    <td class="text-center">
+                      <img src="<?= !empty($user['picture'])
+                                  ? $user['picture']
+                                  : base_url('public/assets/img/default.png') ?>"
+                        width="50" height="50" class="rounded-circle">
+                    </td>
 
                     <td><?= esc($user['name']) ?></td>
                     <td><?= esc($user['designation']) ?></td>
@@ -51,17 +58,24 @@
                     <td><?= esc($user['phone']) ?></td>
                     <td class="text-center"><?= esc(ucfirst($user['gender'])) ?></td>
                     <td class="text-center">
-                      <a href="<?= base_url('teacher/edit/' . $user['id']) ?>" class="btn btn-sm btn-info">
-                        <i class="fas fa-edit"></i>
+                      <!-- Profile Button -->
+                      <a href="<?= site_url('profile_id/' . $user['id']) ?>" class="btn btn-sm btn-info" title="View Profile">
+                        <i class="fas fa-user"></i>
                       </a>
-                      <a href="<?= base_url('teacher/delete/' . $user['id']) ?>" onclick="return confirm('Are you sure?')" class="btn btn-sm btn-danger">
-                        <i class="fas fa-trash-alt"></i>
+
+                      <!-- Restrict Button -->
+                      <a href="<?= base_url('restrict/' . $user['id']) ?>"
+                        onclick="return confirm('Are you sure you want to restrict this user?')"
+                        class="btn btn-sm btn-warning" title="Restrict User">
+                        <i class="fas fa-user-slash"></i>
                       </a>
                     </td>
                   </tr>
                 <?php endforeach; ?>
               <?php else: ?>
-                <tr><td colspan="8" class="text-center text-muted">No teachers found.</td></tr>
+                <tr>
+                  <td colspan="8" class="text-center text-muted">No teachers found.</td>
+                </tr>
               <?php endif; ?>
             </tbody>
           </table>
