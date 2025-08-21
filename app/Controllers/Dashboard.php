@@ -219,17 +219,17 @@ class Dashboard extends Controller
 				$photo->move($uploadPath, $newName);
 				$data['picture'] = 'uploads/users/' . $newName;
 			}
-		
 
-		// Update user
-		$this->userModel->update($id, $data);
 
-		// Redirect back with success message
-		return redirect()->to(base_url('profile'))
-			->with('success', 'User info updated successfully.');
-		}else {
-		return redirect()->to(base_url('profile'))
-			->with('error', 'You are not able to update this profile.');
+			// Update user
+			$this->userModel->update($id, $data);
+
+			// Redirect back with success message
+			return redirect()->to(base_url('profile'))
+				->with('success', 'User info updated successfully.');
+		} else {
+			return redirect()->to(base_url('profile'))
+				->with('error', 'You are not able to update this profile.');
 		}
 	}
 
@@ -393,6 +393,17 @@ class Dashboard extends Controller
 	{
 		if (!$this->session->get('isLoggedIn')) {
 			return redirect()->to(base_url('login'));
+		}
+
+		// delete user where id = $id
+		if ($this->userModel->delete($id)) {
+			// success message
+			return redirect()->back()
+				->with('success', 'User deleted successfully.');
+		} else {
+			// fail message
+			return redirect()->back()
+				->with('error', 'Failed to delete user.');
 		}
 	}
 
