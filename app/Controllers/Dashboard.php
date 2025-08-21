@@ -154,6 +154,27 @@ class Dashboard extends Controller
 
 		return view('dashboard/profile', $this->data);
 	}
+	public function restrict($id)
+	{
+		if (!$this->session->get('isLoggedIn')) {
+			return redirect()->to(base_url('login'));
+		}
+
+		$accountStatus = $this->session->get('account_status');
+		if ($accountStatus != 2) {
+			return redirect()->to(base_url('login'))
+				->with('error', 'You are not a supper admin.');
+		} else {
+			// restrict user (soft delete by updating account_status to 0)
+			if ($this->userModel->update($id, ['account_status' => 0])) {
+				return redirect()->back()
+					->with('success', 'User restricted successfully.');
+			} else {
+				return redirect()->back()
+					->with('error', 'Failed to restrict user.');
+			}
+		}
+	}
 
 	public function edit_profile_view($id)
 	{
