@@ -162,7 +162,7 @@ class Dashboard extends Controller
 
 		$accountStatus = $this->session->get('account_status');
 		if ($accountStatus != 2) {
-			return redirect()->to(base_url('login'))
+			return redirect()->back()
 				->with('error', 'You are not a supper admin.');
 		} else {
 			// restrict user (soft delete by updating account_status to 0)
