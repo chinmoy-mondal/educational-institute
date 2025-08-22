@@ -355,10 +355,9 @@ class Dashboard extends Controller
 
 
 
-		$newUsers = $this->userModel->where('account_status', 0)->findAll();
-		$totalNewUsers = count($newUsers);
-
-		$users = $this->userModel->where('account_status !=', 0)->findAll();
+		$users = $this->userModel
+			->where('account_status !=', 0)
+			->orderBy('position', 'ASC')->findAll();
 		$totalUsers = count($users);
 
 		// Assign to $this->data
