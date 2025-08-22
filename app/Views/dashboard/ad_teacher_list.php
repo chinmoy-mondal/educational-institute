@@ -29,6 +29,7 @@
           <table id="teacherTable" class="table table-bordered table-hover table-striped">
             <thead class="bg-navy text-center">
               <tr>
+                <th>Serial no</th>
                 <th>Photo</th>
                 <th>Name</th>
                 <th>Designation</th>
@@ -43,7 +44,7 @@
               <?php if (!empty($users)): ?>
                 <?php foreach ($users as $user): ?>
                   <tr>
-
+                    <td><?= esc($user['position']) ?></td>
                     <td class="text-center">
                       <img src="<?= !empty($user['picture'])
                                   ? $user['picture']
