@@ -57,7 +57,7 @@
                     <td><?= esc($user['phone']) ?></td>
                     <td class="text-center"><?= esc(ucfirst($user['gender'])) ?></td>
                     <td class="text-center">
-                      <form action="<?= base_url('users/updatePosition') ?>" method="post" class="d-flex align-items-center">
+                      <form action="<?= base_url('admin/updatePosition/' . esc($user['id'])) ?>" method="post" class="d-flex align-items-center">
                         <select name="position" id="position" class="form-control me-1" style="width:auto; min-width:70px;" required>
                           <option value="0" disabled selected>Position</option>
                           <?php for ($i = 1; $i <= $total_users; $i++): ?>

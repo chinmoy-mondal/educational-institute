@@ -367,6 +367,19 @@ class Dashboard extends Controller
 		return view('dashboard/ad_teacher_list', $this->data);
 	}
 
+	public function updatePosition($id)
+	{
+		$position = $this->request->getPost('position');
+
+		if ($position === null) {
+			return redirect()->back()->with('error', 'Please select a position.');
+		}
+
+		$this->userModel->update($id, ['position' => $position]);
+
+		return redirect()->back()->with('success', 'Position updated successfully.');
+	}
+
 	public function newUser()
 	{
 

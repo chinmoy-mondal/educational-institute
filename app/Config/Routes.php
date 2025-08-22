@@ -71,6 +71,7 @@ $routes->post('calendar/update', 'Dashboard::updateEvent');
 $routes->post('calendar/delete', 'Dashboard::deleteEvent');
 
 $routes->get('ad_teacher_list', 'Dashboard::teachers');
+$routes->post('admin/updatePosition/(:num)', 'Dashboard::updatePosition/$1');
 $routes->get('ad_new_user', 'Dashboard::newUser');
 $routes->get('teacher_management', 'Dashboard::teacher_management');
 
