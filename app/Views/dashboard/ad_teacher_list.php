@@ -59,15 +59,15 @@
                     <td><?= esc($user['phone']) ?></td>
                     <td class="text-center"><?= esc(ucfirst($user['gender'])) ?></td>
                     <td class="text-center">
-<form action="<?= base_url('users/updatePosition') ?>" method="post" class="d-flex align-items-center">
-    <select name="position" id="position" class="form-control me-2" required>
-        <option value="0" disabled>Inactive (select position)</option>
-        <?php for ($i = 1; $i <= $total_users; $i++): ?>
-            <option value="<?= $i ?>"><?= $i ?></option>
-        <?php endfor; ?>
-    </select>
-    <button type="submit" class="btn btn-primary">Save</button>
-</form>
+                      <form action="<?= base_url('users/updatePosition') ?>" method="post" class="d-flex align-items-center">
+                        <select name="position" id="position" class="form-control me-2" required>
+                          <option value="0" disabled selected>Inactive (select position)</option>
+                          <?php for ($i = 1; $i <= $total_users; $i++): ?>
+                            <option value="<?= $i ?>"><?= $i ?></option>
+                          <?php endfor; ?>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                      </form>
                     </td>
                     <td class="text-center">
                       <!-- Profile Button -->
