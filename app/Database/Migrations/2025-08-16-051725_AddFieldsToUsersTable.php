@@ -4,18 +4,20 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class AddMpoDateAndBioToUsersTable extends Migration
+class AddMpoDateBioPositionProfileToUsersTable extends Migration
 {
     public function up()
     {
         $fields = [
-            'mpo_date' => [
-                'type' => 'DATE',
-                'null' => true,
+            'position' => [
+                'type'       => 'INT',
+                'constraint' => 11,   // you can adjust depending on need
+                'null'       => true,
             ],
-            'bio' => [
-                'type' => 'TEXT',
-                'null' => true,
+            'social_profile' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 255,  // can store photo filename or type
+                'null'       => true,
             ],
         ];
 
@@ -24,6 +26,6 @@ class AddMpoDateAndBioToUsersTable extends Migration
 
     public function down()
     {
-        $this->forge->dropColumn('users', ['mpo_date', 'bio']);
+        $this->forge->dropColumn('users', ['mpo_date', 'bio', 'position', 'profile']);
     }
 }
