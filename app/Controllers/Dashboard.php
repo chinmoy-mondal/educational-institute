@@ -205,13 +205,20 @@ class Dashboard extends Controller
 
 		// Get POST data
 		$data = [
-			'index_number' => $this->request->getPost('index_number'),
-			'dob'          => $this->request->getPost('dob'),
-			'joining_date' => $this->request->getPost('joining_date'),
-			'mpo_date'     => $this->request->getPost('mpo_date'),
-			'religion'     => $this->request->getPost('religion'),
-			'blood_group'     => $this->request->getPost('blood_group'),
-			'bio'      => $this->request->getPost('bio'),
+			'name'           => $this->request->getPost('name'),
+			'subject'        => $this->request->getPost('subject'),
+			'gender'         => $this->request->getPost('gender'),
+			'phone'          => $this->request->getPost('phone'),
+			'email'          => $this->request->getPost('email'),
+			'social_type'    => $this->request->getPost('social_type'),
+			'social_profile' => $this->request->getPost('social_profile'),
+			'index_number' 	=> $this->request->getPost('index_number'),
+			'dob'			=> $this->request->getPost('dob'),
+			'joining_date'	=> $this->request->getPost('joining_date'),
+			'mpo_date'		=> $this->request->getPost('mpo_date'),
+			'religion'		=> $this->request->getPost('religion'),
+			'blood_group'	=> $this->request->getPost('blood_group'),
+			'bio'      		=> $this->request->getPost('bio'),
 		];
 
 		$photo = $this->request->getFile('photo');
