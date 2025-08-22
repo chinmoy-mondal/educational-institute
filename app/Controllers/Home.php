@@ -33,7 +33,7 @@ class Home extends BaseController
 
 		$faculty = $userModel
 		->where('account_status !=', 0)
-			// ->where('role', 'Teacher')
+		->orderBy('position', 'ASC')
 			->findAll();
 		return view('public/staff', ['faculty' => $faculty]);
 	}
