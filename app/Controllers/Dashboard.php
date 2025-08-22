@@ -203,6 +203,22 @@ class Dashboard extends Controller
 	public function update_user($id)
 	{
 
+		$socialType    = $this->request->getPost('social_type');
+		$socialProfile = $this->request->getPost('social_profile');
+
+		// Add prefix if Facebook
+		switch ($socialType) {
+			case 'facebook':
+				$socialProfile = 'f:' . $socialProfile;
+				break;
+			case 'youtube':
+				$socialProfile = 'y:' . $socialProfile;
+				break;
+			case 'linkedin':
+				$socialProfile = 'l:' . $socialProfile;
+				break;
+		}
+
 		// Get POST data
 		$data = [
 			'name'           => $this->request->getPost('name'),
@@ -210,8 +226,7 @@ class Dashboard extends Controller
 			'gender'         => $this->request->getPost('gender'),
 			'phone'          => $this->request->getPost('phone'),
 			'email'          => $this->request->getPost('email'),
-			'social_type'    => $this->request->getPost('social_type'),
-			'social_profile' => $this->request->getPost('social_profile'),
+			'social_profile' => $socialProfile,
 			'index_number' 	=> $this->request->getPost('index_number'),
 			'dob'			=> $this->request->getPost('dob'),
 			'joining_date'	=> $this->request->getPost('joining_date'),
