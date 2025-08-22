@@ -63,7 +63,7 @@
                           <?php for ($i = 1; $i <= $total_users; $i++): ?>
                             <option value="<?= $i ?>"><?= $i ?></option>
                           <?php endfor; ?>
-                        </select>
+                        </select> &nbsp;
                         <button type="submit" class="btn btn-primary btn-sm">Save</button>
                       </form>
                     </td>
