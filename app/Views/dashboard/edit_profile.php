@@ -118,7 +118,6 @@
                                 <label class="form-label"><i class="fas fa-user-circle me-2"></i>Social Profile</label>
                                 <div class="input-group">
                                     <select name="social_type" class="form-control" required style="max-width: 150px;">
-                                        <option value="" disabled selected>Select</option>
                                         <option value="facebook" <?= ($user['social_type'] ?? '') === 'facebook' ? 'selected' : '' ?>>Facebook</option>
                                         <option value="youtube" <?= ($user['social_type'] ?? '') === 'youtube' ? 'selected' : '' ?>>YouTube</option>
                                         <option value="linkedin" <?= ($user['social_type'] ?? '') === 'linkedin' ? 'selected' : '' ?>>LinkedIn</option>

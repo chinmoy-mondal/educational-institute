@@ -59,9 +59,35 @@
                                     </a>
 
                                     <!-- Profile Button -->
-                                    <a href="<?= esc($member['linkedin'] ?? '#'); ?>" target="_blank" class="btn btn-outline-primary btn-sm">
-                                        <i class="fab fa-linkedin"></i> Profile
-                                    </a>
+                                    <?php if (!empty($member['social_profile'])): ?>
+                                        <?php
+                                        $profile = $member['social_profile'];
+                                        $icon = 'fab fa-linkedin'; // default
+                                        $url  = '#';
+
+                                        // Determine social type based on prefix
+                                        $prefix = substr($profile, 0, 2);
+                                        $link   = substr($profile, 2); // remove prefix
+
+                                        switch ($prefix) {
+                                            case 'f:':
+                                                $icon = 'fab fa-facebook';
+                                                $url  =  $link;
+                                                break;
+                                            case 'y:':
+                                                $icon = 'fab fa-youtube';
+                                                $url  =  $link;
+                                                break;
+                                            case 'l:':
+                                                $icon = 'fab fa-linkedin';
+                                                $url  =  $link;
+                                                break;
+                                        }
+                                        ?>
+                                        <a href="<?= esc($url) ?>" target="_blank" class="btn btn-outline-primary btn-sm">
+                                            <i class="<?= esc($icon) ?>"></i> Profile
+                                        </a>
+                                    <?php endif; ?>
 
                                     <!-- Card Button -->
                                     <a href="<?= base_url('teacher_idcard/' . $member['id']) ?>" target="_blank" class="btn btn-outline-primary btn-sm">
