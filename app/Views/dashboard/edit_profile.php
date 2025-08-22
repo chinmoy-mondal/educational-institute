@@ -84,60 +84,48 @@
                             </div>
 
 
-<div class="col-md-6 mb-3">
-    <label class="form-label"><i class="fas fa-user me-2"></i>Name</label>
-    <input type="text" name="name" value="<?= esc($user['name'] ?? '') ?>" class="form-control" placeholder="Enter full name" required>
-</div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-user me-2"></i>Name</label>
+                                <input type="text" name="name" value="<?= esc($user['name'] ?? '') ?>" class="form-control" placeholder="Enter full name" required>
+                            </div>
 
-<div class="col-md-6 mb-3">
-    <label class="form-label"><i class="fas fa-book me-2"></i>Subject</label>
-    <input type="text" name="subject" value="<?= esc($user['subject']) ?>" class="form-control" required>
-</div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-book me-2"></i>Subject</label>
+                                <input type="text" name="subject" value="<?= esc($user['subject']) ?>" class="form-control" required>
+                            </div>
 
-<div class="col-md-6 mb-3">
-    <label class="form-label"><i class="fas fa-venus-mars me-2"></i>Gender</label>
-    <select name="gender" class="form-control" required>
-        <option value="" disabled <?= empty($user['gender']) ? 'selected' : '' ?>>Select Gender</option>
-        <option value="Male" <?= ($user['gender'] ?? '') === 'Male' ? 'selected' : '' ?>>Male</option>
-        <option value="Female" <?= ($user['gender'] ?? '') === 'Female' ? 'selected' : '' ?>>Female</option>
-        <option value="Other" <?= ($user['gender'] ?? '') === 'Other' ? 'selected' : '' ?>>Other</option>
-    </select>
-</div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-venus-mars me-2"></i>Gender</label>
+                                <select name="gender" class="form-control" required>
+                                    <option value="" disabled <?= empty($user['gender']) ? 'selected' : '' ?>>Select Gender</option>
+                                    <option value="Male" <?= ($user['gender'] ?? '') === 'Male' ? 'selected' : '' ?>>Male</option>
+                                    <option value="Female" <?= ($user['gender'] ?? '') === 'Female' ? 'selected' : '' ?>>Female</option>
+                                    <option value="Other" <?= ($user['gender'] ?? '') === 'Other' ? 'selected' : '' ?>>Other</option>
+                                </select>
+                            </div>
 
-<div class="col-md-6 mb-3">
-    <label class="form-label"><i class="fas fa-phone me-2"></i>Phone</label>
-    <input type="text" name="phone" value="<?= esc($user['phone']) ?>" class="form-control" required>
-</div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-phone me-2"></i>Phone</label>
+                                <input type="text" name="phone" value="<?= esc($user['phone']) ?>" class="form-control" required>
+                            </div>
 
-<div class="col-md-6 mb-3">
-    <label class="form-label"><i class="fas fa-envelope me-2"></i>Email</label>
-    <input type="email" name="email" value="<?= esc($user['email']) ?>" class="form-control" required>
-</div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-envelope me-2"></i>Email</label>
+                                <input type="email" name="email" value="<?= esc($user['email']) ?>" class="form-control" required>
+                            </div>
 
-<div class="col-md-6 mb-3">
-    <label class="form-label"><i class="fas fa-praying-hands me-2"></i>Religion</label>
-    <select name="religion" class="form-control" required>
-        <option value="" disabled <?= empty($user['religion']) ? 'selected' : '' ?>>Select Religion</option>
-        <option value="Islam" <?= ($user['religion'] ?? '') === 'Islam' ? 'selected' : '' ?>>Islam</option>
-        <option value="Hinduism" <?= ($user['religion'] ?? '') === 'Hinduism' ? 'selected' : '' ?>>Hinduism</option>
-        <option value="Christianity" <?= ($user['religion'] ?? '') === 'Christianity' ? 'selected' : '' ?>>Christianity</option>
-        <option value="Buddhism" <?= ($user['religion'] ?? '') === 'Buddhism' ? 'selected' : '' ?>>Buddhism</option>
-        <option value="Other" <?= ($user['religion'] ?? '') === 'Other' ? 'selected' : '' ?>>Other</option>
-    </select>
-</div>
-
-<div class="col-md-6 mb-3">
-    <label class="form-label"><i class="fas fa-user-circle me-2"></i>Social Profile</label>
-    <div class="input-group">
-        <select name="social_type" class="form-control" required style="max-width: 150px;">
-            <option value="" disabled selected>Select</option>
-            <option value="facebook" <?= ($user['social_type'] ?? '') === 'facebook' ? 'selected' : '' ?>>Facebook</option>
-            <option value="youtube" <?= ($user['social_type'] ?? '') === 'youtube' ? 'selected' : '' ?>>YouTube</option>
-            <option value="linkedin" <?= ($user['social_type'] ?? '') === 'linkedin' ? 'selected' : '' ?>>LinkedIn</option>
-        </select>
-        <input type="text" name="social_profile" value="<?= esc($user['social_profile'] ?? '') ?>" class="form-control" placeholder="Profile URL or ID" required>
-    </div>
-</div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"><i class="fas fa-user-circle me-2"></i>Social Profile</label>
+                                <div class="input-group">
+                                    <select name="social_type" class="form-control" required style="max-width: 150px;">
+                                        <option value="" disabled selected>Select</option>
+                                        <option value="facebook" <?= ($user['social_type'] ?? '') === 'facebook' ? 'selected' : '' ?>>Facebook</option>
+                                        <option value="youtube" <?= ($user['social_type'] ?? '') === 'youtube' ? 'selected' : '' ?>>YouTube</option>
+                                        <option value="linkedin" <?= ($user['social_type'] ?? '') === 'linkedin' ? 'selected' : '' ?>>LinkedIn</option>
+                                    </select>
+                                    <input type="text" name="social_profile" value="<?= esc($user['social_profile'] ?? '') ?>" class="form-control" placeholder="Profile URL or ID" required>
+                                </div>
+                            </div>
 
                             <div class="col-md-12 mb-3">
                                 <label class="form-label"><i class="fas fa-align-left me-2"></i>Bio</label>
