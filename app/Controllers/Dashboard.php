@@ -442,8 +442,6 @@ class Dashboard extends Controller
 
 	public function teacher_management()
 	{
-
-
 		$subjects = $this->subjectModel->orderBy('id')->findAll();
 		$users    = $this->userModel
 			->where('account_status !=', 0)

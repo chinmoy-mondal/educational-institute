@@ -83,6 +83,16 @@
                                 </select>
                             </div>
 
+
+
+
+<div class="col-md-6 mb-3">
+    <label class="form-label"><i class="fas fa-book me-2"></i>Subject</label>
+    <input type="text" name="subject" value="<?= esc($user['subject']) ?>" class="form-control" required>
+</div>
+
+
+
                             <div class="col-md-12 mb-3">
                                 <label class="form-label"><i class="fas fa-align-left me-2"></i>Bio</label>
                                 <textarea name="bio" class="form-control" rows="4" placeholder="Write something about the user..."><?= esc($user['bio']) ?></textarea>
