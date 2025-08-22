@@ -36,6 +36,7 @@
                 <th>Email</th>
                 <th>Phone</th>
                 <th>Gender</th>
+                <th>Position</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -57,6 +58,20 @@
                     <td><?= esc($user['email']) ?></td>
                     <td><?= esc($user['phone']) ?></td>
                     <td class="text-center"><?= esc(ucfirst($user['gender'])) ?></td>
+                    <td class="text-center">
+                      <form action="<?= base_url('users/updatePosition') ?>" method="post">
+                        <div class="mb-3">
+                          <label for="position" class="form-label">Select Position</label>
+                          <select name="position" id="position" class="form-control" required>
+                            <option value="0" selected>Inactive (select position)</option>
+                            <?php for ($i = 1; $i <= $total_users; $i++): ?>
+                              <option value="<?= $i ?>"><?= $i ?></option>
+                            <?php endfor; ?>
+                          </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                      </form>
+                    </td>
                     <td class="text-center">
                       <!-- Profile Button -->
                       <a href="<?= site_url('profile_id/' . $user['id']) ?>" class="btn btn-sm btn-info" title="View Profile">
