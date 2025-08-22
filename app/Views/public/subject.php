@@ -25,7 +25,7 @@ foreach ($subjects as $row) {
 }
 
 // Sort by class and section
-ksort($grouped);
+ksort($grouped);print_r(array_keys($grouped));
 
 function renderTable($class, $section, $rows) {
     ?>
