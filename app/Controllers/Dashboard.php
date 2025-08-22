@@ -362,8 +362,6 @@ class Dashboard extends Controller
 		$totalUsers = count($users);
 
 		// Assign to $this->data
-		$this->data['newUsers'] = $newUsers;
-		$this->data['total_newUsers'] = $totalNewUsers;
 		$this->data['users'] = $users;
 		$this->data['total_users'] = $totalUsers;
 
