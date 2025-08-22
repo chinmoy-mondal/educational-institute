@@ -445,7 +445,10 @@ class Dashboard extends Controller
 
 
 		$subjects = $this->subjectModel->orderBy('id')->findAll();
-		$users    = $this->userModel->where('account_status !=', 0)->findAll();
+		$users    = $this->userModel
+			->where('account_status !=', 0)
+			->orderBy('position', 'ASC')
+			->findAll();
 
 		// Use $this->data which already has navbarItems, sidebarItems
 		$this->data['title'] = 'Teacher Management';
