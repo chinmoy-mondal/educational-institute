@@ -28,6 +28,8 @@ class UserModel extends Model
 		'religion',
 		'mpo_date',
 		'bio',
+		'position',
+		'social_profile',
 		'password'  // <-- must include this
 	];
 	protected $useTimestamps = true;
