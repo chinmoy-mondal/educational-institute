@@ -122,7 +122,7 @@
                                         <option value="youtube" <?= ($user['social_type'] ?? '') === 'youtube' ? 'selected' : '' ?>>YouTube</option>
                                         <option value="linkedin" <?= ($user['social_type'] ?? '') === 'linkedin' ? 'selected' : '' ?>>LinkedIn</option>
                                     </select>
-                                    <input type="text" name="social_profile" value="<?= esc($user['social_profile'] ?? '') ?>" class="form-control" placeholder="Profile URL or ID" required>
+                                    <input type="text" name="social_profile" value="<?= esc(trim(str_replace(['f:', 'y:', 'l:'], '', $user['social_profile'] ?? ''))) ?>" class="form-control" placeholder="Profile URL or ID" required>
                                 </div>
                             </div>
 
