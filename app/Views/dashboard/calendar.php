@@ -69,7 +69,7 @@
               <option value="">Select Subject</option>
               <?php foreach ($subjects as $subject): ?>
                 <option value="<?= esc($subject['id']) ?>">
-                  <?= esc($subject['id']) ?> - <?= esc($subject['name']) ?>
+                  <?= esc($subject['id']) ?> - <?= esc($subject['subject']) ?>
                 </option>
               <?php endforeach; ?>
             </select>
@@ -144,7 +144,7 @@
               <option value="">Select Subject</option>
               <?php foreach ($subjects as $subject): ?>
                 <option value="<?= esc($subject['id']) ?>">
-                  <?= esc($subject['id']) ?> - <?= esc($subject['name']) ?>
+                  <?= esc($subject['id']) ?> - <?= esc($subject['subject']) ?>
                 </option>
               <?php endforeach; ?>
             </select>
