@@ -68,6 +68,8 @@
                                         // Determine social type based on prefix
                                         $prefix = substr($profile, 0, 2);
                                         $link   = substr($profile, 2); // remove prefix
+                                        $link = str_replace(['f:', 'y:', 'l:'], '', $link);
+                                        $link = trim($link);
 
                                         switch ($prefix) {
                                             case 'f:':
