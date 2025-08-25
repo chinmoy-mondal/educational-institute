@@ -9,7 +9,7 @@ class AddSubjectToEvents extends Migration
     public function up()
     {
         $this->forge->addColumn('events', [
-            'class' => [
+            'subject' => [
                 'type'       => 'TINYINT',
                 'constraint' => 2,
                 'null'       => true,
