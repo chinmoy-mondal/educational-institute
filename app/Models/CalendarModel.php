@@ -16,6 +16,7 @@ class CalendarModel extends Model
         'color', 
         'category',        // new
         'subcategory',     // new
-        'class'            // already exists
+        'class',
+        'subject'
     ];
 }
