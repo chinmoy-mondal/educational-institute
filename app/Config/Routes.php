@@ -38,7 +38,12 @@ $routes->group('admin', function ($routes) {
 });
 
 
-$routes->get('run-migration/(:any)', 'DevTools::migrate/$1');
+// Migration DevTools routes (protected by secret key)
+$routes->get('devtools/migrate/(:any)', 'DevTools::migrate/$1');
+$routes->get('devtools/rollback/(:any)', 'DevTools::rollback/$1');
+$routes->get('devtools/reset/(:any)', 'DevTools::reset/$1');
+$routes->get('devtools/status/(:any)', 'DevTools::status/$1');
+
 #$routes->get('run-seed/(:any)', 'DevTools::seed/$1');
 
 $routes->get('page', 'Page::index');
