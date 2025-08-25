@@ -13,6 +13,13 @@ class AdmitCard extends BaseController
 		$studentModel = new StudentModel();
 		$eventModel = new CalendarModel();
 
+		return view('public/print_admit_card');
+	}
+	public function print($class = null)
+	{
+		$studentModel = new StudentModel();
+		$eventModel = new CalendarModel();
+
 		if ($class !== null) {
 			$students = $studentModel
 				->where('class', $class)
