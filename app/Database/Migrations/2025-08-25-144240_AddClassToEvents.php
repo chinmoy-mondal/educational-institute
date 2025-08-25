@@ -9,17 +9,21 @@ class AddClassToEvents extends Migration
     public function up()
     {
         $this->forge->addColumn('events', [
-            'class' => [
+            'category' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '10',
+                'constraint' => 100,
                 'null'       => true,
-                'after'      => 'color', // put it after 'color' column
+            ],
+            'subcategory' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 100,
+                'null'       => true,
             ],
         ]);
     }
 
     public function down()
     {
-        $this->forge->dropColumn('events', 'class');
+        $this->forge->dropColumn('events', 'category');
     }
 }
