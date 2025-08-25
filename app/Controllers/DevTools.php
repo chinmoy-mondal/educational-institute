@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Controllers;
 
@@ -16,9 +16,15 @@ class DevTools extends BaseController
         }
 
         $migrations = Services::migrations();
+
         try {
+            // rollback last batch
+            $migrations->regress();
+
+            // run latest migrations
             $migrations->latest();
-            return 'Migration completed.';
+
+            return 'Migration completed successfully.';
         } catch (\Throwable $e) {
             return 'Migration failed: ' . $e->getMessage();
         }
@@ -32,9 +38,9 @@ class DevTools extends BaseController
 
         $seeder = \Config\Database::seeder();
         try {
-	   // select the database when needed
-           //  $seeder->call('NoticeSeeder');
-	   //  $seeder->call('ImportSbjectsSeeder'); now call everytime
+            // select the database when needed
+            //  $seeder->call('NoticeSeeder');
+            //  $seeder->call('ImportSbjectsSeeder'); now call everytime
             return 'Seeding completed.';
         } catch (\Throwable $e) {
             return 'Seeding failed: ' . $e->getMessage();

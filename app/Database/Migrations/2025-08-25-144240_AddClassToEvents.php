@@ -19,12 +19,16 @@ class AddClassToEvents extends Migration
                 'constraint' => 100,
                 'null'       => true,
             ],
+            'class' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 20,
+                'null'       => true,
+            ],
         ]);
     }
 
     public function down()
     {
-        // Drop both columns at once
-        $this->forge->dropColumn('events', ['category', 'subcategory']);
+        $this->forge->dropColumn('events', ['category', 'subcategory', 'class']);
     }
 }
