@@ -39,10 +39,10 @@ $routes->group('admin', function ($routes) {
 
 
 // Migration DevTools routes (protected by secret key)
-$routes->get('devtools/migrate/(:any)', 'DevTools::migrate/$1');
-$routes->get('devtools/rollback/(:any)', 'DevTools::rollback/$1');
-$routes->get('devtools/reset/(:any)', 'DevTools::reset/$1');
-$routes->get('devtools/status/(:any)', 'DevTools::status/$1');
+$routes->get('run-migration/(:any)', 'DevTools::migrate/$1');
+$routes->get('run-rollback/(:any)', 'DevTools::rollback/$1');
+$routes->get('run-reset/(:any)', 'DevTools::reset/$1');
+$routes->get('run-status/(:any)', 'DevTools::status/$1');
 
 #$routes->get('run-seed/(:any)', 'DevTools::seed/$1');
 
