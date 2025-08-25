@@ -294,7 +294,10 @@ class Dashboard extends Controller
 			'role' => $this->session->get('role')
 		];
 
+		$subjects = $this->subjectModel->findAll();
+
 		$this->data['user'] = $user;
+		$this->data['subjects'] = $subjects;
 		//echo '<pre>';
 		//print_r($this->data);
 		return view('dashboard/calendar', $this->data);
@@ -338,6 +341,7 @@ class Dashboard extends Controller
 			'category'    => $this->request->getPost('category'),
 			'subcategory' => $this->request->getPost('subcategory'),
 			'class'       => $this->request->getPost('class'),
+			'subject'     => $this->request->getPost('subject'), 
 		];
 
 		// Save to database
@@ -358,6 +362,7 @@ class Dashboard extends Controller
 			'category'    => $this->request->getPost('category'),
 			'subcategory' => $this->request->getPost('subcategory'),
 			'class'       => $this->request->getPost('class'),
+			'subject'     => $this->request->getPost('subject'), 
 		];
 
 		// Update the event in database
