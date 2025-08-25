@@ -24,6 +24,7 @@ class AddClassToEvents extends Migration
 
     public function down()
     {
-        $this->forge->dropColumn('events', 'category');
+        // Drop both columns at once
+        $this->forge->dropColumn('events', ['category', 'subcategory']);
     }
 }
