@@ -328,29 +328,40 @@ class Dashboard extends Controller
 
 	public function addEvent()
 	{
-
-		$this->calendarModel->save([
-			'title' => $this->request->getPost('title'),
+		// Prepare data array
+		$data = [
+			'title'       => $this->request->getPost('title'),
 			'description' => $this->request->getPost('description'),
-			'start_date' => $this->request->getPost('start'),
-			'end_date' => $this->request->getPost('end'),
-			'color' => $this->request->getPost('color') ?? '#007bff'
-		]);
+			'start_date'  => $this->request->getPost('start'),
+			'end_date'    => $this->request->getPost('end'),
+			'color'       => $this->request->getPost('color') ?? '#007bff',
+			'category'    => $this->request->getPost('category'),
+			'subcategory' => $this->request->getPost('subcategory'),
+			'class'       => $this->request->getPost('class'),
+		];
+
+		// Save to database
+		$this->calendarModel->save($data);
 
 		return $this->response->setJSON(['status' => 'success']);
 	}
 
 	public function updateEvent()
 	{
-
-
-		$this->calendarModel->update($this->request->getPost('id'), [
+		// Prepare data array
+		$data = [
 			'title'       => $this->request->getPost('title'),
 			'description' => $this->request->getPost('description'),
 			'start_date'  => $this->request->getPost('start'),
 			'end_date'    => $this->request->getPost('end'),
-			'color'       => $this->request->getPost('color')
-		]);
+			'color'       => $this->request->getPost('color') ?? '#007bff',
+			'category'    => $this->request->getPost('category'),
+			'subcategory' => $this->request->getPost('subcategory'),
+			'class'       => $this->request->getPost('class'),
+		];
+
+		// Update the event in database
+		$this->calendarModel->update($this->request->getPost('id'), $data);
 
 		return $this->response->setJSON(['status' => 'success']);
 	}
