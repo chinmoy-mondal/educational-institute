@@ -35,6 +35,34 @@
           <div class="form-group"><label>Description</label>
             <textarea name="description" class="form-control"></textarea>
           </div>
+          <div class="form-group"><label>Category</label>
+            <select name="category" class="form-control" required>
+              <option value="">Select Category</option>
+              <option value="Exam">Exam</option>
+              <option value="Notice">Notice</option>
+              <option value="Holiday">Holiday</option>
+              <option value="Vacation">Vacation</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Sub Category</label>
+            <select name="subcategory" class="form-control">
+              <option value="">Select Sub Category</option>
+              <option value="Half Yearly Exam">Half Yearly Exam</option>
+              <option value="Final Exam">Final Exam</option>
+              <option value="Pre-Test Exam">Pre-Test Exam</option>
+              <option value="Test Exam">Test Exam</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Class</label>
+            <select name="class" class="form-control">
+              <option value="">Select Class</option>
+              <option value="6">Class 6</option>
+              <option value="7">Class 7</option>
+              <option value="8">Class 8</option>
+              <option value="9">Class 9</option>
+              <option value="10">Class 10</option>
+            </select>
+          </div>
           <div class="form-group"><label>Start Date</label>
             <input type="date" name="start" class="form-control" required>
           </div>
@@ -70,6 +98,34 @@
           </div>
           <div class="form-group"><label>Description</label>
             <textarea name="description" id="edit-description" class="form-control"></textarea>
+          </div>
+          <div class="form-group"><label>Category</label>
+            <select name="category" id="edit-category" class="form-control" required>
+              <option value="">Select Category</option>
+              <option value="Exam">Exam</option>
+              <option value="Notice">Notice</option>
+              <option value="Holiday">Holiday</option>
+              <option value="Vacation">Vacation</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Sub Category</label>
+            <select name="subcategory" id="edit-subcategory" class="form-control">
+              <option value="">Select Sub Category</option>
+              <option value="Half Yearly Exam">Half Yearly Exam</option>
+              <option value="Final Exam">Final Exam</option>
+              <option value="Pre-Test Exam">Pre-Test Exam</option>
+              <option value="Test Exam">Test Exam</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Class</label>
+            <select name="class" id="edit-class" class="form-control">
+              <option value="">Select Class</option>
+              <option value="6">Class 6</option>
+              <option value="7">Class 7</option>
+              <option value="8">Class 8</option>
+              <option value="9">Class 9</option>
+              <option value="10">Class 10</option>
+            </select>
           </div>
           <div class="form-group"><label>Start Date</label>
             <input type="date" name="start" id="edit-start" class="form-control" required>
@@ -112,6 +168,9 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('edit-id').value = event.id;
       document.getElementById('edit-title').value = event.title;
       document.getElementById('edit-description').value = event.extendedProps.description || '';
+      document.getElementById('edit-category').value = event.extendedProps.category || '';
+      document.getElementById('edit-subcategory').value = event.extendedProps.subcategory || '';
+      document.getElementById('edit-class').value = event.extendedProps.class || '';
       document.getElementById('edit-start').value = event.startStr.split('T')[0];
       document.getElementById('edit-end').value = event.endStr ? event.endStr.split('T')[0] : event.startStr.split('T')[0];
       document.getElementById('edit-color').value = event.backgroundColor || '#007bff';
