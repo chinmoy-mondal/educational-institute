@@ -2,14 +2,11 @@
 
 <?= $this->section("content"); ?>
 
-<!-- Fixed Wrapper for Navbar -->
 <div class="fixed-header">
     <?= $this->include("layouts/base-structure/header"); ?>
 </div>
 
 <div class="container content">
-
-    <!-- Calendar Section -->
     <section class="calendar-section py-5 bg-white">
         <div class="container">
             <div class="text-center mb-4">
@@ -23,7 +20,6 @@
             </div>
         </div>
     </section>
-
 </div>
 
 <?= $this->include("layouts/base-structure/footer"); ?>
@@ -56,7 +52,7 @@
   </div>
 </div>
 
-<!-- FullCalendar -->
+<!-- FullCalendar CSS & JS -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
@@ -74,12 +70,12 @@ document.addEventListener('DOMContentLoaded', function() {
             center: 'title',
             right: 'dayGridMonth,timeGridWeek'
         },
-        events: '/public-calendar/events', // Must return JSON
+        events: '/public-calendar/events', 
 
         eventClick: function(info) {
             const props = info.event.extendedProps;
 
-            // Only show date
+            // Format date
             let startDateStr = info.event.start ? info.event.start.toLocaleDateString() : '';
             let endDateStr = info.event.end ? info.event.end.toLocaleDateString() : '';
             let dateStr = startDateStr;
@@ -87,9 +83,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 dateStr = startDateStr + " → " + endDateStr;
             }
 
-            // Only show start & end times if provided
-            let startTime = props.start_time || ''; // backend should provide start_time
-            let endTime = props.end_time || '';     // backend should provide end_time
+            // Convert backend start_time / end_time to 12h format
+            function format12Hour(timeStr) {
+                if (!timeStr) return '';
+                const [hour, minute] = timeStr.split(':');
+                let h = parseInt(hour);
+                const m = minute;
+                const ampm = h >= 12 ? 'PM' : 'AM';
+                h = h % 12;
+                if (h === 0) h = 12;
+                return h + ':' + m + ' ' + ampm;
+            }
+
+            const startTime = format12Hour(props.start_time);
+            const endTime = format12Hour(props.end_time);
 
             // Fill modal
             document.getElementById('eventTitle').innerText = info.event.title || '';
