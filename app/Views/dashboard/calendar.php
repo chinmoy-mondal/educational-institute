@@ -177,107 +177,112 @@
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const calendarEl = document.getElementById('calendar');
-  const calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
-    height: 600,
-    headerToolbar: {
-      left: 'prev,next today',
-      center: 'title',
-      right: 'dayGridMonth,timeGridWeek'
-    },
-    events: '/calendar/events',
+  document.addEventListener('DOMContentLoaded', function() {
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      height: 600,
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek'
+      },
+      events: '/calendar/events',
 
-    eventClick: function(info) {
-      const event = info.event;
+      eventClick: function(info) {
+        const event = info.event;
 
-      // Fill edit modal
-      document.getElementById('edit-id').value = event.id;
-      document.getElementById('edit-title').value = event.title;
-      document.getElementById('edit-description').value = event.extendedProps.description || '';
-      document.getElementById('edit-category').value = event.extendedProps.category || '';
-      document.getElementById('edit-subcategory').value = event.extendedProps.subcategory || '';
-      document.getElementById('edit-class').value = event.extendedProps.class || '';
-      document.getElementById('edit-subject').value = event.extendedProps.subject || '';
-      document.getElementById('edit-color').value = event.backgroundColor || '#007bff';
+        // Fill modal
+        document.getElementById('edit-id').value = event.id;
+        document.getElementById('edit-title').value = event.title;
+        document.getElementById('edit-description').value = event.extendedProps.description || '';
+        document.getElementById('edit-category').value = event.extendedProps.category || '';
+        document.getElementById('edit-subcategory').value = event.extendedProps.subcategory || '';
+        document.getElementById('edit-class').value = event.extendedProps.class || '';
+        document.getElementById('edit-subject').value = event.extendedProps.subject || '';
+        document.getElementById('edit-start').value = event.startStr.split('T')[0];
+        document.getElementById('edit-end').value = event.endStr ? event.endStr.split('T')[0] : event.startStr.split('T')[0];
+        document.getElementById('edit-color').value = event.backgroundColor || '#007bff';
 
-      const start = new Date(event.start);
-      document.getElementById('edit-start-date').value = start.toISOString().split('T')[0];
-      document.getElementById('edit-start-time').value = start.toTimeString().substr(0,5);
-
-      const end = event.end ? new Date(event.end) : start;
-      document.getElementById('edit-end-date').value = end.toISOString().split('T')[0];
-      document.getElementById('edit-end-time').value = end.toTimeString().substr(0,5);
-
-      $('#editEventModal').modal('show');
-    }
-  });
-  calendar.render();
-
-  // Add Event
-  document.getElementById('eventForm').addEventListener('submit', function(e){
-    e.preventDefault();
-    const formData = new FormData(this);
-    fetch('/calendar/add', {method:'POST', body: formData})
-      .then(res => res.json())
-      .then(res => {
-        if(res.status === 'success'){
-          $('#addEventModal').modal('hide');
-          this.reset();
-          calendar.refetchEvents();
-        }
-      });
-  });
-
-  // Update Event
-  document.getElementById('editEventForm').addEventListener('submit', function(e){
-    e.preventDefault();
-    const formData = new FormData(this);
-    fetch('/calendar/update', {method:'POST', body: formData})
-      .then(res => res.json())
-      .then(res => {
-        if(res.status === 'success'){
-          $('#editEventModal').modal('hide');
-          calendar.refetchEvents();
-        }
-      });
-  });
-
-  // Delete Event
-  document.getElementById('deleteEvent').addEventListener('click', function(){
-    const id = document.getElementById('edit-id').value;
-    const csrfName = '<?= csrf_token() ?>';
-    const csrfHash = '<?= csrf_hash() ?>';
-
-    fetch('/calendar/delete', {
-      method:'POST',
-      headers: {'Content-Type':'application/x-www-form-urlencoded'},
-      body: new URLSearchParams({id, [csrfName]: csrfHash})
-    }).then(res=>res.json())
-      .then(res=>{
-        if(res.status==='success'){
-          $('#editEventModal').modal('hide');
-          calendar.refetchEvents();
-        }
-      });
-  });
-
-  // Filter subjects by class
-  function filterSubjects(classSelectId, subjectSelectId) {
-    const classVal = document.getElementById(classSelectId).value;
-    document.querySelectorAll(`#${subjectSelectId} option`).forEach(opt=>{
-      if(opt.value === "" || opt.dataset.class === classVal){
-        opt.style.display = '';
-      } else {
-        opt.style.display = 'none';
+        $('#editEventModal').modal('show');
       }
     });
-  }
+    calendar.render();
 
-  document.getElementById('add-class').addEventListener('change', ()=>filterSubjects('add-class','add-subject'));
-  document.getElementById('edit-class').addEventListener('change', ()=>filterSubjects('edit-class','edit-subject'));
-});
+    // Add Event
+    document.getElementById('eventForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      fetch('/calendar/add', {
+          method: 'POST',
+          body: formData
+        })
+        .then(res => res.json())
+        .then(res => {
+          if (res.status === 'success') {
+            $('#addEventModal').modal('hide');
+            this.reset();
+            calendar.refetchEvents();
+          }
+        });
+    });
+
+    // Update Event
+    document.getElementById('editEventForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      fetch('/calendar/update', {
+          method: 'POST',
+          body: formData
+        })
+        .then(res => res.json())
+        .then(res => {
+          if (res.status === 'success') {
+            $('#editEventModal').modal('hide');
+            calendar.refetchEvents();
+          }
+        });
+    });
+
+    // Delete Event
+    document.getElementById('deleteEvent').addEventListener('click', function() {
+      const id = document.getElementById('edit-id').value;
+      const csrfName = '<?= csrf_token() ?>';
+      const csrfHash = '<?= csrf_hash() ?>';
+
+      fetch('/calendar/delete', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams({
+            id,
+            [csrfName]: csrfHash
+          })
+        }).then(res => res.json())
+        .then(res => {
+          if (res.status === 'success') {
+            $('#editEventModal').modal('hide');
+            calendar.refetchEvents();
+          }
+        });
+    });
+
+    // Filter subjects by class
+    function filterSubjects(classSelectId, subjectSelectId) {
+      const classVal = document.getElementById(classSelectId).value;
+      document.querySelectorAll(`#${subjectSelectId} option`).forEach(opt => {
+        if (opt.value === "" || opt.dataset.class === classVal) {
+          opt.style.display = '';
+        } else {
+          opt.style.display = 'none';
+        }
+      });
+    }
+
+    document.getElementById('add-class').addEventListener('change', () => filterSubjects('add-class', 'add-subject'));
+    document.getElementById('edit-class').addEventListener('change', () => filterSubjects('edit-class', 'edit-subject'));
+  });
 </script>
 
 <?= $this->endSection() ?>
