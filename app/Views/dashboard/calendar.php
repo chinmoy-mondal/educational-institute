@@ -180,7 +180,6 @@
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
@@ -195,25 +194,17 @@
       eventClick: function(info) {
         const e = info.event;
         try {
-          const e = info.event;
-
           // Text inputs
-          document.getElementById('edit-id').value = e.id || '';
-          document.getElementById('edit-title').value = e.title || '';
-          document.getElementById('edit-description').value = e.extendedProps.description || '';
+          $('#edit-id').val(e.id || '');
+          $('#edit-title').val(e.title || '');
+          $('#edit-description').val(e.extendedProps.description || '');
+          $('#edit-color').val(e.backgroundColor || '#007bff');
 
-          // Selects
+          // Selects: helper to set value
           function setSelectValue(selectId, value) {
             const select = document.getElementById(selectId);
-            let optionExists = false;
-            for (let i = 0; i < select.options.length; i++) {
-              if (select.options[i].value == value) {
-                optionExists = true;
-                break;
-              }
-            }
-            if (!optionExists) {
-              // If option does not exist, add it dynamically
+            let optionExists = Array.from(select.options).some(opt => opt.value == value);
+            if (!optionExists && value) {
               const opt = document.createElement('option');
               opt.value = value;
               opt.text = value;
@@ -222,31 +213,35 @@
             select.value = value || '';
           }
 
-          // Example usage
           setSelectValue('edit-category', e.extendedProps.category);
           setSelectValue('edit-subcategory', e.extendedProps.subcategory);
           setSelectValue('edit-class', e.extendedProps.class);
 
-          // Filter subjects by class first
-          filterSubjects('edit-class', 'edit-subject');
+          // Filter subjects based on class and set value
+          const classVal = e.extendedProps.class || '';
+          $('#edit-subject option').each(function() {
+            const show = $(this).val() === "" || $(this).data('class') == classVal;
+            $(this).toggle(show);
+          });
           setSelectValue('edit-subject', e.extendedProps.subject);
 
-          // Date & Time
+          // Dates and times
           if (e.start) {
             const start = new Date(e.start);
-            document.getElementById('edit-start-date').value = start.toISOString().slice(0, 10);
-            document.getElementById('edit-start-time').value = start.toTimeString().slice(0, 5);
+            $('#edit-start-date').val(start.toISOString().slice(0,10));
+            $('#edit-start-time').val(start.toTimeString().slice(0,5));
           }
           if (e.end) {
             const end = new Date(e.end);
-            document.getElementById('edit-end-date').value = end.toISOString().slice(0, 10);
-            document.getElementById('edit-end-time').value = end.toTimeString().slice(0, 5);
+            $('#edit-end-date').val(end.toISOString().slice(0,10));
+            $('#edit-end-time').val(end.toTimeString().slice(0,5));
           }
 
-          // Color
-          document.getElementById('edit-color').value = e.backgroundColor || '#007bff';
+          // Show modal
+          const editModal = new bootstrap.Modal(document.getElementById('editEventModal'));
+          editModal.show();
 
-        } catch (err) {
+        } catch(err) {
           console.error('Event click error:', err);
         }
       }
@@ -254,13 +249,13 @@
 
     calendar.render();
 
-    function showAlert(msg, type = 'success') {
+    function showAlert(msg, type='success') {
       const wrapper = document.createElement('div');
       wrapper.innerHTML = `
-      <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-        ${msg}
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-      </div>`;
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+          ${msg}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>`;
       document.getElementById('alert-placeholder').append(wrapper);
       setTimeout(() => wrapper.remove(), 3000);
     }
@@ -272,19 +267,16 @@
       fd.set('start_time', $(this).find('input[name="start_time"]').val());
       fd.set('end_time', $(this).find('input[name="end_time"]').val());
 
-      fetch('/calendar/add', {
-          method: 'POST',
-          body: fd
-        })
-        .then(res => res.json())
-        .then(r => {
-          if (r.status === 'success') {
-            $('#addEventModal').modal('hide');
-            this.reset();
-            calendar.refetchEvents();
-            showAlert('Event added successfully!');
-          } else showAlert('Failed to add event', 'danger');
-        }).catch(() => showAlert('Something went wrong', 'danger'));
+      fetch('/calendar/add', { method:'POST', body: fd })
+      .then(res => res.json())
+      .then(r => {
+        if (r.status === 'success') {
+          $('#addEventModal').modal('hide');
+          this.reset();
+          calendar.refetchEvents();
+          showAlert('Event added successfully!');
+        } else showAlert('Failed to add event','danger');
+      }).catch(()=>showAlert('Something went wrong','danger'));
     });
 
     // Update Event
@@ -296,18 +288,15 @@
       fd.set('start_date', $('#edit-start-date').val());
       fd.set('end_date', $('#edit-end-date').val());
 
-      fetch('/calendar/update', {
-          method: 'POST',
-          body: fd
-        })
-        .then(res => res.json())
-        .then(r => {
-          if (r.status === 'success') {
-            $('#editEventModal').modal('hide');
-            calendar.refetchEvents();
-            showAlert('Event updated successfully!');
-          } else showAlert('Failed to update event', 'danger');
-        }).catch(() => showAlert('Something went wrong', 'danger'));
+      fetch('/calendar/update', { method:'POST', body: fd })
+      .then(res => res.json())
+      .then(r => {
+        if (r.status === 'success') {
+          $('#editEventModal').modal('hide');
+          calendar.refetchEvents();
+          showAlert('Event updated successfully!');
+        } else showAlert('Failed to update event','danger');
+      }).catch(()=>showAlert('Something went wrong','danger'));
     });
 
     // Delete Event
@@ -315,38 +304,30 @@
       const id = $('#edit-id').val();
       const csrfName = '<?= csrf_token() ?>';
       const csrfHash = '<?= csrf_hash() ?>';
-
       fetch('/calendar/delete', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({
-            id,
-            [csrfName]: csrfHash
-          })
-        })
-        .then(res => res.json())
-        .then(r => {
-          if (r.status === 'success') {
-            $('#editEventModal').modal('hide');
-            calendar.refetchEvents();
-            showAlert('Event deleted successfully!');
-          } else showAlert('Failed to delete event', 'danger');
-        }).catch(() => showAlert('Something went wrong', 'danger'));
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: new URLSearchParams({id,[csrfName]:csrfHash})
+      })
+      .then(res=>res.json())
+      .then(r=>{
+        if(r.status==='success'){
+          $('#editEventModal').modal('hide');
+          calendar.refetchEvents();
+          showAlert('Event deleted successfully!');
+        } else showAlert('Failed to delete event','danger');
+      }).catch(()=>showAlert('Something went wrong','danger'));
     });
 
-    // Filter subjects by class
-    function filterSubjects(classId, subjId) {
+    // Filter subjects on add/edit
+    function filterSubjects(classId, subjId){
       const val = document.getElementById(classId).value;
-      document.querySelectorAll(`#${subjId} option`).forEach(opt => {
-        opt.style.display = (opt.value === "" || opt.dataset.class === val) ? '' : 'none';
+      document.querySelectorAll(`#${subjId} option`).forEach(opt=>{
+        opt.style.display = (opt.value=="" || opt.dataset.class==val) ? '' : 'none';
       });
     }
-
-    $('#add-class').on('change', () => filterSubjects('add-class', 'add-subject'));
-    $('#edit-class').on('change', () => filterSubjects('edit-class', 'edit-subject'));
-
+    $('#add-class').on('change',()=>filterSubjects('add-class','add-subject'));
+    $('#edit-class').on('change',()=>filterSubjects('edit-class','edit-subject'));
   });
 </script>
 
