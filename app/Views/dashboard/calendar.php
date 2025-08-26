@@ -178,6 +178,7 @@
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -196,7 +197,6 @@ document.addEventListener('DOMContentLoaded', function() {
       const e = info.event;
 
       try {
-        // Fill edit modal
         document.getElementById('edit-id').value = e.id || '';
         document.getElementById('edit-title').value = e.title || '';
         document.getElementById('edit-description').value = e.extendedProps.description || '';
@@ -205,14 +205,12 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('edit-class').value = e.extendedProps.class || '';
         document.getElementById('edit-subject').value = e.extendedProps.subject || '';
 
-        // Start date & time
         if (e.start) {
           const start = new Date(e.start);
           document.getElementById('edit-start-date').value = start.toISOString().slice(0,10);
           document.getElementById('edit-start-time').value = start.toTimeString().slice(0,5);
         }
 
-        // End date & time
         if (e.end) {
           const end = new Date(e.end);
           document.getElementById('edit-end-date').value = end.toISOString().slice(0,10);
@@ -224,8 +222,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.getElementById('edit-color').value = e.backgroundColor || '#007bff';
 
-        // Show edit modal
-        const editModal = new bootstrap.Modal(document.getElementById('editEventModal'));
+        // Bootstrap 5 modal instance
+        const editModalEl = document.getElementById('editEventModal');
+        const editModal = bootstrap.Modal.getOrCreateInstance(editModalEl);
         editModal.show();
 
       } catch (err) {
@@ -236,9 +235,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   calendar.render();
 
-  // -------------------------
-  // Alert helper
-  // -------------------------
   function showAlert(msg, type = 'success') {
     const wrapper = document.createElement('div');
     wrapper.innerHTML = `
@@ -250,9 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
     setTimeout(() => wrapper.remove(), 3000);
   }
 
-  // -------------------------
   // Add Event
-  // -------------------------
   document.getElementById('eventForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const fd = new FormData(this);
@@ -264,20 +258,17 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(r => {
         if (r.status === 'success') {
           const addModalEl = document.getElementById('addEventModal');
-          const addModal = bootstrap.Modal.getInstance(addModalEl) || new bootstrap.Modal(addModalEl);
+          const addModal = bootstrap.Modal.getOrCreateInstance(addModalEl);
           addModal.hide();
 
           this.reset();
           calendar.refetchEvents();
           showAlert('Event added successfully!');
         } else showAlert('Failed to add event', 'danger');
-      })
-      .catch(() => showAlert('Something went wrong', 'danger'));
+      }).catch(() => showAlert('Something went wrong', 'danger'));
   });
 
-  // -------------------------
   // Update Event
-  // -------------------------
   document.getElementById('editEventForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const fd = new FormData(this);
@@ -291,26 +282,23 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(r => {
         if (r.status === 'success') {
           const editModalEl = document.getElementById('editEventModal');
-          const editModal = bootstrap.Modal.getInstance(editModalEl) || new bootstrap.Modal(editModalEl);
+          const editModal = bootstrap.Modal.getOrCreateInstance(editModalEl);
           editModal.hide();
 
           calendar.refetchEvents();
           showAlert('Event updated successfully!');
         } else showAlert('Failed to update event', 'danger');
-      })
-      .catch(() => showAlert('Something went wrong', 'danger'));
+      }).catch(() => showAlert('Something went wrong', 'danger'));
   });
 
-  // -------------------------
   // Delete Event
-  // -------------------------
   document.getElementById('deleteEvent').addEventListener('click', function() {
     const id = document.getElementById('edit-id').value;
     const csrfName = '<?= csrf_token() ?>';
     const csrfHash = '<?= csrf_hash() ?>';
 
     fetch('/calendar/delete', {
-      method: 'POST',
+      method:'POST',
       headers: { 'Content-Type':'application/x-www-form-urlencoded' },
       body: new URLSearchParams({ id, [csrfName]: csrfHash })
     })
@@ -318,19 +306,16 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(r => {
       if (r.status === 'success') {
         const editModalEl = document.getElementById('editEventModal');
-        const editModal = bootstrap.Modal.getInstance(editModalEl) || new bootstrap.Modal(editModalEl);
+        const editModal = bootstrap.Modal.getOrCreateInstance(editModalEl);
         editModal.hide();
 
         calendar.refetchEvents();
         showAlert('Event deleted successfully!');
       } else showAlert('Failed to delete event', 'danger');
-    })
-    .catch(() => showAlert('Something went wrong', 'danger'));
+    }).catch(() => showAlert('Something went wrong', 'danger'));
   });
 
-  // -------------------------
   // Filter subjects by class
-  // -------------------------
   function filterSubjects(classId, subjId) {
     const val = document.getElementById(classId).value;
     document.querySelectorAll(`#${subjId} option`).forEach(opt => {
