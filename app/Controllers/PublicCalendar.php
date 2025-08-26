@@ -18,14 +18,23 @@ class PublicCalendar extends Controller
         $events = $model->findAll();
 
         $data = array_map(function ($event) {
+            // Combine date and time
+            $start = $event['start_date'];
+            if (!empty($event['start_time'])) {
+                $start .= 'T' . $event['start_time'];
+            }
+
+            $end = $event['end_date'];
+            if (!empty($event['end_time'])) {
+                $end .= 'T' . $event['end_time'];
+            }
+
             return [
                 'id'          => $event['id'],
                 'title'       => $event['title'],
                 'description' => $event['description'],
-                'start'       => $event['start_date'],
-                'start_time'  => $event['start_time'],
-                'end'         => $event['end_date'],
-                'end_time'    => $event['end_time'],
+                'start'       => $start,
+                'end'         => $end,
                 'color'       => $event['color'],
                 'category'    => $event['category'],
                 'subcategory' => $event['subcategory'],

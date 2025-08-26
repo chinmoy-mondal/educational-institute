@@ -1,9 +1,8 @@
-
 <?= $this->extend("layouts/base.php") ?>
 
 <?= $this->section("content"); ?>
 
-<!-- Fixed Wrapper for Navbar -->
+<!-- Fixed Navbar -->
 <div class="fixed-header">
     <?= $this->include("layouts/base-structure/header"); ?>
 </div>
@@ -75,14 +74,15 @@ document.addEventListener('DOMContentLoaded', function () {
             center: 'title',
             right: 'dayGridMonth,timeGridWeek'
         },
-        events: '/public-calendar/events', // JSON must include all fields
+        events: '/public-calendar/events', // Backend must provide start & end in ISO format
 
         eventClick: function (info) {
             const props = info.event.extendedProps;
 
-            // Format date
-            const startDate = info.event.start ? new Date(info.event.start) : null;
-            const endDate = info.event.end ? new Date(info.event.end) : null;
+            // Format dates
+            const startDate = info.event.start;
+            const endDate = info.event.end;
+
             let dateStr = startDate ? startDate.toLocaleDateString() : '';
             if (startDate && endDate && startDate.toDateString() !== endDate.toDateString()) {
                 dateStr = startDate.toLocaleDateString() + ' → ' + endDate.toLocaleDateString();
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const startTime = format12Hour(startDate);
             const endTime = format12Hour(endDate);
 
-            // Fill modal with all information
+            // Fill modal fields
             document.getElementById('eventTitle').innerText = info.event.title || '';
             document.getElementById('eventDescription').innerText = props.description || '';
             document.getElementById('eventDate').innerText = dateStr;
