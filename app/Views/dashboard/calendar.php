@@ -179,6 +179,7 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const calendarEl = document.getElementById('calendar');
+
     const calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
       height: 600,
@@ -192,7 +193,7 @@
       eventClick: function(info) {
         const event = info.event;
 
-        // Fill modal
+        // Fill modal fields
         document.getElementById('edit-id').value = event.id;
         document.getElementById('edit-title').value = event.title;
         document.getElementById('edit-description').value = event.extendedProps.description || '';
@@ -201,18 +202,43 @@
         document.getElementById('edit-class').value = event.extendedProps.class || '';
         document.getElementById('edit-subject').value = event.extendedProps.subject || '';
         document.getElementById('edit-start').value = event.startStr.split('T')[0];
+        if (event.startStr.includes('T')) {
+          document.querySelector('input[name="start_time"]').value = event.startStr.split('T')[1].substring(0, 5);
+        }
         document.getElementById('edit-end').value = event.endStr ? event.endStr.split('T')[0] : event.startStr.split('T')[0];
+        if (event.endStr && event.endStr.includes('T')) {
+          document.querySelector('input[name="end_time"]').value = event.endStr.split('T')[1].substring(0, 5);
+        }
         document.getElementById('edit-color').value = event.backgroundColor || '#007bff';
 
         $('#editEventModal').modal('show');
       }
     });
+
     calendar.render();
 
+    // -------------------------
+    // Helper: Show Bootstrap Alert
+    // -------------------------
+    function showAlert(message, type = 'success') {
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = `
+            <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        `;
+      document.getElementById('alert-placeholder').append(wrapper);
+      setTimeout(() => wrapper.remove(), 3000);
+    }
+
+    // -------------------------
     // Add Event
+    // -------------------------
     document.getElementById('eventForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const formData = new FormData(this);
+
       fetch('/calendar/add', {
           method: 'POST',
           body: formData
@@ -223,14 +249,21 @@
             $('#addEventModal').modal('hide');
             this.reset();
             calendar.refetchEvents();
+            showAlert('Event added successfully!', 'success');
+          } else {
+            showAlert('Failed to add event.', 'danger');
           }
-        });
+        })
+        .catch(() => showAlert('Something went wrong.', 'danger'));
     });
 
+    // -------------------------
     // Update Event
+    // -------------------------
     document.getElementById('editEventForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const formData = new FormData(this);
+
       fetch('/calendar/update', {
           method: 'POST',
           body: formData
@@ -240,11 +273,17 @@
           if (res.status === 'success') {
             $('#editEventModal').modal('hide');
             calendar.refetchEvents();
+            showAlert('Event updated successfully!', 'success');
+          } else {
+            showAlert('Failed to update event.', 'danger');
           }
-        });
+        })
+        .catch(() => showAlert('Something went wrong.', 'danger'));
     });
 
+    // -------------------------
     // Delete Event
+    // -------------------------
     document.getElementById('deleteEvent').addEventListener('click', function() {
       const id = document.getElementById('edit-id').value;
       const csrfName = '<?= csrf_token() ?>';
@@ -259,16 +298,23 @@
             id,
             [csrfName]: csrfHash
           })
-        }).then(res => res.json())
+        })
+        .then(res => res.json())
         .then(res => {
           if (res.status === 'success') {
             $('#editEventModal').modal('hide');
             calendar.refetchEvents();
+            showAlert('Event deleted successfully!', 'success');
+          } else {
+            showAlert('Failed to delete event.', 'danger');
           }
-        });
+        })
+        .catch(() => showAlert('Something went wrong.', 'danger'));
     });
 
-    // Filter subjects by class
+    // -------------------------
+    // Filter Subjects by Class
+    // -------------------------
     function filterSubjects(classSelectId, subjectSelectId) {
       const classVal = document.getElementById(classSelectId).value;
       document.querySelectorAll(`#${subjectSelectId} option`).forEach(opt => {
@@ -282,6 +328,7 @@
 
     document.getElementById('add-class').addEventListener('change', () => filterSubjects('add-class', 'add-subject'));
     document.getElementById('edit-class').addEventListener('change', () => filterSubjects('edit-class', 'edit-subject'));
+
   });
 </script>
 
