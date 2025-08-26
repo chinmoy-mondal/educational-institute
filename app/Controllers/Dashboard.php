@@ -331,17 +331,23 @@ class Dashboard extends Controller
 
 	public function addEvent()
 	{
+		$request = $this->request;
+
+		// Combine date + time into ISO datetime format
+		$start = $request->getPost('start_date') . 'T' . $request->getPost('start_time');
+		$end   = $request->getPost('end_date') . 'T' . $request->getPost('end_time');
+
 		// Prepare data array
 		$data = [
-			'title'       => $this->request->getPost('title'),
-			'description' => $this->request->getPost('description'),
-			'start_date'  => $this->request->getPost('start'),
-			'end_date'    => $this->request->getPost('end'),
-			'color'       => $this->request->getPost('color') ?? '#007bff',
-			'category'    => $this->request->getPost('category'),
-			'subcategory' => $this->request->getPost('subcategory'),
-			'class'       => $this->request->getPost('class'),
-			'subject'     => $this->request->getPost('subject'), 
+			'title'       => $request->getPost('title'),
+			'description' => $request->getPost('description'),
+			'start_date'  => $start,
+			'end_date'    => $end,
+			'color'       => $request->getPost('color') ?: '#007bff',
+			'category'    => $request->getPost('category'),
+			'subcategory' => $request->getPost('subcategory'),
+			'class'       => $request->getPost('class'),
+			'subject'     => $request->getPost('subject'),
 		];
 
 		// Save to database
@@ -352,21 +358,28 @@ class Dashboard extends Controller
 
 	public function updateEvent()
 	{
+		$request = $this->request;
+		$id = $request->getPost('id');
+
+		// Combine date + time
+		$start = $request->getPost('start_date') . 'T' . $request->getPost('start_time');
+		$end   = $request->getPost('end_date') . 'T' . $request->getPost('end_time');
+
 		// Prepare data array
 		$data = [
-			'title'       => $this->request->getPost('title'),
-			'description' => $this->request->getPost('description'),
-			'start_date'  => $this->request->getPost('start'),
-			'end_date'    => $this->request->getPost('end'),
-			'color'       => $this->request->getPost('color') ?? '#007bff',
-			'category'    => $this->request->getPost('category'),
-			'subcategory' => $this->request->getPost('subcategory'),
-			'class'       => $this->request->getPost('class'),
-			'subject'     => $this->request->getPost('subject'), 
+			'title'       => $request->getPost('title'),
+			'description' => $request->getPost('description'),
+			'start_date'  => $start,
+			'end_date'    => $end,
+			'color'       => $request->getPost('color') ?: '#007bff',
+			'category'    => $request->getPost('category'),
+			'subcategory' => $request->getPost('subcategory'),
+			'class'       => $request->getPost('class'),
+			'subject'     => $request->getPost('subject'),
 		];
 
-		// Update the event in database
-		$this->calendarModel->update($this->request->getPost('id'), $data);
+		// Update the event
+		$this->calendarModel->update($id, $data);
 
 		return $this->response->setJSON(['status' => 'success']);
 	}
