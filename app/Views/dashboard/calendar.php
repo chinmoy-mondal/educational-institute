@@ -178,7 +178,6 @@
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -195,7 +194,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     eventClick: function(info) {
       const e = info.event;
-
       try {
         document.getElementById('edit-id').value = e.id || '';
         document.getElementById('edit-title').value = e.title || '';
@@ -222,10 +220,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.getElementById('edit-color').value = e.backgroundColor || '#007bff';
 
-        // Bootstrap 5 modal instance
-        const editModalEl = document.getElementById('editEventModal');
-        const editModal = bootstrap.Modal.getOrCreateInstance(editModalEl);
-        editModal.show();
+        // Show Bootstrap 4 modal
+        $('#editEventModal').modal('show');
 
       } catch (err) {
         console.error('Event click error:', err);
@@ -240,27 +236,24 @@ document.addEventListener('DOMContentLoaded', function() {
     wrapper.innerHTML = `
       <div class="alert alert-${type} alert-dismissible fade show" role="alert">
         ${msg}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
       </div>`;
     document.getElementById('alert-placeholder').append(wrapper);
     setTimeout(() => wrapper.remove(), 3000);
   }
 
   // Add Event
-  document.getElementById('eventForm').addEventListener('submit', function(e) {
+  $('#eventForm').on('submit', function(e) {
     e.preventDefault();
     const fd = new FormData(this);
-    fd.set('start_time', this.querySelector('input[name="start_time"]').value);
-    fd.set('end_time', this.querySelector('input[name="end_time"]').value);
+    fd.set('start_time', $(this).find('input[name="start_time"]').val());
+    fd.set('end_time', $(this).find('input[name="end_time"]').val());
 
     fetch('/calendar/add', { method:'POST', body: fd })
       .then(res => res.json())
       .then(r => {
         if (r.status === 'success') {
-          const addModalEl = document.getElementById('addEventModal');
-          const addModal = bootstrap.Modal.getOrCreateInstance(addModalEl);
-          addModal.hide();
-
+          $('#addEventModal').modal('hide');
           this.reset();
           calendar.refetchEvents();
           showAlert('Event added successfully!');
@@ -269,22 +262,19 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Update Event
-  document.getElementById('editEventForm').addEventListener('submit', function(e) {
+  $('#editEventForm').on('submit', function(e) {
     e.preventDefault();
     const fd = new FormData(this);
-    fd.set('start_time', document.getElementById('edit-start-time').value);
-    fd.set('end_time', document.getElementById('edit-end-time').value);
-    fd.set('start_date', document.getElementById('edit-start-date').value);
-    fd.set('end_date', document.getElementById('edit-end-date').value);
+    fd.set('start_time', $('#edit-start-time').val());
+    fd.set('end_time', $('#edit-end-time').val());
+    fd.set('start_date', $('#edit-start-date').val());
+    fd.set('end_date', $('#edit-end-date').val());
 
     fetch('/calendar/update', { method:'POST', body: fd })
       .then(res => res.json())
       .then(r => {
         if (r.status === 'success') {
-          const editModalEl = document.getElementById('editEventModal');
-          const editModal = bootstrap.Modal.getOrCreateInstance(editModalEl);
-          editModal.hide();
-
+          $('#editEventModal').modal('hide');
           calendar.refetchEvents();
           showAlert('Event updated successfully!');
         } else showAlert('Failed to update event', 'danger');
@@ -292,8 +282,8 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // Delete Event
-  document.getElementById('deleteEvent').addEventListener('click', function() {
-    const id = document.getElementById('edit-id').value;
+  $('#deleteEvent').on('click', function() {
+    const id = $('#edit-id').val();
     const csrfName = '<?= csrf_token() ?>';
     const csrfHash = '<?= csrf_hash() ?>';
 
@@ -305,10 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
     .then(res => res.json())
     .then(r => {
       if (r.status === 'success') {
-        const editModalEl = document.getElementById('editEventModal');
-        const editModal = bootstrap.Modal.getOrCreateInstance(editModalEl);
-        editModal.hide();
-
+        $('#editEventModal').modal('hide');
         calendar.refetchEvents();
         showAlert('Event deleted successfully!');
       } else showAlert('Failed to delete event', 'danger');
@@ -323,8 +310,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  document.getElementById('add-class').addEventListener('change', () => filterSubjects('add-class','add-subject'));
-  document.getElementById('edit-class').addEventListener('change', () => filterSubjects('edit-class','edit-subject'));
+  $('#add-class').on('change', () => filterSubjects('add-class','add-subject'));
+  $('#edit-class').on('change', () => filterSubjects('edit-class','edit-subject'));
 
 });
 </script>
