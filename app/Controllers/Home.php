@@ -175,14 +175,12 @@ class Home extends BaseController
 		$section   = $this->request->getPost('section');
 		$year      = $this->request->getPost('year');
 		$exam_name = $this->request->getPost('exam_name');
-		$group     = $this->request->getPost('group');
 
 		// For testing
 		echo "Class: $class<br>";
 		echo "Section: $section<br>";
 		echo "Year: $year<br>";
 		echo "Exam: $exam_name<br>";
-		echo "Group: $group<br>";
 
 		// if ($class !== null) {
 		// 	$students = $studentModel
