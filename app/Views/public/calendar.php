@@ -76,41 +76,43 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         events: '/public-calendar/events', // JSON must include all fields
 
-        eventClick: function (info) {
-            const props = info.event.extendedProps;
+eventClick: function (info) {
+    const props = info.event.extendedProps;
 
-            // Format date
-            const startDate = info.event.start_date ;
-            const endDate = info.event.end_date ;
-            let dateStr = startDate ? startDate.toLocaleDateString() : '';
-            if (startDate && endDate && startDate.toDateString() !== endDate.toDateString()) {
-                dateStr = startDate.toLocaleDateString() + ' → ' + endDate.toLocaleDateString();
-            }
+    // Convert backend date/time strings into Date objects
+    const startDate = info.event.start ? new Date(info.event.start) : null;
+    const endDate   = info.event.end ? new Date(info.event.end) : null;
 
-            // Format 12-hour time
-            function format12Hour(dateObj) {
-                if (!dateObj) return '';
-                return dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
-            }
+    // Format date string
+    let dateStr = startDate ? startDate.toLocaleDateString() : '';
+    if (startDate && endDate && startDate.toDateString() !== endDate.toDateString()) {
+        dateStr = startDate.toLocaleDateString() + ' → ' + endDate.toLocaleDateString();
+    }
 
-            const startTime = startDate;
-            const endTime = endDate;
+    // Format time in 12-hour format
+    function format12Hour(dateObj) {
+        if (!dateObj) return '';
+        return dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+    }
 
-            // Fill modal with all information
-            document.getElementById('eventTitle').innerText = info.event.title || '';
-            document.getElementById('eventDescription').innerText = props.description || '';
-            document.getElementById('eventDate').innerText = dateStr;
-            document.getElementById('eventStartTime').innerText = startTime;
-            document.getElementById('eventEndTime').innerText = endTime;
-            document.getElementById('eventCategory').innerText = props.category || '';
-            document.getElementById('eventSubcategory').innerText = props.subcategory || '';
-            document.getElementById('eventClass').innerText = props.class || '';
-            document.getElementById('eventSubject').innerText = props.subject || '';
+    const startTime = format12Hour(startDate);
+    const endTime   = format12Hour(endDate);
 
-            // Show modal
-            const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
-            eventModal.show();
-        }
+    // Fill modal fields
+    document.getElementById('eventTitle').innerText = info.event.title || '';
+    document.getElementById('eventDescription').innerText = props.description || '';
+    document.getElementById('eventDate').innerText = dateStr;
+    document.getElementById('eventStartTime').innerText = startTime;
+    document.getElementById('eventEndTime').innerText = endTime;
+    document.getElementById('eventCategory').innerText = props.category || '';
+    document.getElementById('eventSubcategory').innerText = props.subcategory || '';
+    document.getElementById('eventClass').innerText = props.class || '';
+    document.getElementById('eventSubject').innerText = props.subject || '';
+
+    // Show modal
+    const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
+    eventModal.show();
+}
     });
 
     calendar.render();
