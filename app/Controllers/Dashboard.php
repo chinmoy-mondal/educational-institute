@@ -331,7 +331,7 @@ class Dashboard extends Controller
 
 	public function addEvent()
 	{
-		// $time = $this->request->getPost('end_time');
+		$time = $this->request->getPost('end_time');
 		// echo "Time-".$time;
 		$data = [
 			'title'       => $this->request->getPost('title'),
@@ -349,7 +349,7 @@ class Dashboard extends Controller
 
 		$this->calendarModel->save($data);
 
-		return $this->response->setJSON(['status' => 'success']);
+		return $this->response->setJSON(['status' => 'success'.$time]);
 	}
 
 	public function updateEvent()
