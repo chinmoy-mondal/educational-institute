@@ -24,7 +24,7 @@ class PublicCalendar extends Controller
                 'description' => $event['description'],
                 'start'       => $event['start_date'],
                 'start_time'  => $event['start_time'],
-                'end'         => date('Y-m-d', strtotime($event['end_date'] . ' +1 day')),
+                'end'         => $event['end_date'],
                 'end_time'    => $event['end_time'],
                 'color'       => $event['color'],
                 'category'    => $event['category'],
