@@ -1,3 +1,4 @@
+
 <?= $this->extend("layouts/base.php") ?>
 
 <?= $this->section("content"); ?>
@@ -76,52 +77,41 @@ document.addEventListener('DOMContentLoaded', function () {
         },
         events: '/public-calendar/events', // JSON must include all fields
 
-eventClick: function (info) {
-    const props = info.event.extendedProps;
+        eventClick: function (info) {
+            const props = info.event.extendedProps;
 
-    // Combine date and time strings from backend
-    const startDate = props.start_date && props.start_time 
-        ? new Date(props.start_date + 'T' + props.start_time)
-        : props.start_date 
-            ? new Date(props.start_date) 
-            : null;
+            // Format date
+            const startDate = info.event.start ? new Date(info.event.start) : null;
+            const endDate = info.event.end ? new Date(info.event.end) : null;
+            let dateStr = startDate ? startDate.toLocaleDateString() : '';
+            if (startDate && endDate && startDate.toDateString() !== endDate.toDateString()) {
+                dateStr = startDate.toLocaleDateString() + ' → ' + endDate.toLocaleDateString();
+            }
 
-    const endDate = props.end_date && props.end_time
-        ? new Date(props.end_date + 'T' + props.end_time)
-        : props.end_date
-            ? new Date(props.end_date)
-            : null;
+            // Format 12-hour time
+            function format12Hour(dateObj) {
+                if (!dateObj) return '';
+                return dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+            }
 
-    // Format date string
-    let dateStr = startDate ? startDate.toLocaleDateString() : '';
-    if (startDate && endDate && startDate.toDateString() !== endDate.toDateString()) {
-        dateStr = startDate.toLocaleDateString() + ' → ' + endDate.toLocaleDateString();
-    }
+            const startTime = format12Hour(startDate);
+            const endTime = format12Hour(endDate);
 
-    // Format 12-hour time
-    function format12Hour(dateObj) {
-        if (!dateObj) return '';
-        return dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
-    }
+            // Fill modal with all information
+            document.getElementById('eventTitle').innerText = info.event.title || '';
+            document.getElementById('eventDescription').innerText = props.description || '';
+            document.getElementById('eventDate').innerText = dateStr;
+            document.getElementById('eventStartTime').innerText = startTime;
+            document.getElementById('eventEndTime').innerText = endTime;
+            document.getElementById('eventCategory').innerText = props.category || '';
+            document.getElementById('eventSubcategory').innerText = props.subcategory || '';
+            document.getElementById('eventClass').innerText = props.class || '';
+            document.getElementById('eventSubject').innerText = props.subject || '';
 
-    const startTime = format12Hour(startDate);
-    const endTime   = format12Hour(endDate);
-
-    // Fill modal
-    document.getElementById('eventTitle').innerText = info.event.title || '';
-    document.getElementById('eventDescription').innerText = props.description || '';
-    document.getElementById('eventDate').innerText = dateStr;
-    document.getElementById('eventStartTime').innerText = startTime;
-    document.getElementById('eventEndTime').innerText = endTime;
-    document.getElementById('eventCategory').innerText = props.category || '';
-    document.getElementById('eventSubcategory').innerText = props.subcategory || '';
-    document.getElementById('eventClass').innerText = props.class || '';
-    document.getElementById('eventSubject').innerText = props.subject || '';
-
-    // Show modal
-    const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
-    eventModal.show();
-}
+            // Show modal
+            const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
+            eventModal.show();
+        }
     });
 
     calendar.render();
