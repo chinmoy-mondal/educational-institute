@@ -1,5 +1,3 @@
-<!-- chinmoy is testing calendar page only -->
-
 <?= $this->extend("layouts/base.php") ?>
 
 <?= $this->section("content"); ?>
@@ -82,8 +80,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const props = info.event.extendedProps;
 
             // Format date
-            const startDate = info.event.start ? new Date(info.event.start) : null;
-            const endDate = info.event.end ? new Date(info.event.end) : null;
+            const startDate = info.event.start_date ;
+            const endDate = info.event.end_date ;
             let dateStr = startDate ? startDate.toLocaleDateString() : '';
             if (startDate && endDate && startDate.toDateString() !== endDate.toDateString()) {
                 dateStr = startDate.toLocaleDateString() + ' → ' + endDate.toLocaleDateString();
@@ -95,8 +93,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 return dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
             }
 
-            const startTime = format12Hour(startDate);
-            const endTime = format12Hour(endDate);
+            const startTime = startDate;
+            const endTime = endDate;
 
             // Fill modal with all information
             document.getElementById('eventTitle').innerText = info.event.title || '';
