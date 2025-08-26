@@ -331,25 +331,22 @@ class Dashboard extends Controller
 
 	public function addEvent()
 	{
-		$time = $this->request->getPost('end_time');
-		// echo "Time-".$time;
 		$data = [
 			'title'       => $this->request->getPost('title'),
 			'description' => $this->request->getPost('description'),
-			'category'    => $this->request->getPost('category'),
-			'subcategory' => $this->request->getPost('subcategory') ?: null,
-			'class'       => $this->request->getPost('class'),
-			'subject'     => $this->request->getPost('subject'),
 			'start_date'  => $this->request->getPost('start_date'),
 			'start_time'  => $this->request->getPost('start_time'),
 			'end_date'    => $this->request->getPost('end_date'),
 			'end_time'    => $this->request->getPost('end_time'),
-			'color'       => $this->request->getPost('color') ?: '#007bff',
+			'color'       => $this->request->getPost('color') ?? '#007bff',
+			'category'    => $this->request->getPost('category'),
+			'subcategory' => $this->request->getPost('subcategory'),
+			'class'       => $this->request->getPost('class'),
+			'subject'     => $this->request->getPost('subject')
 		];
 
 		$this->calendarModel->save($data);
-
-		return $this->response->setJSON(['status' => 'success'.$time]);
+		return $this->response->setJSON(['status' => 'success']);
 	}
 
 	public function updateEvent()
@@ -359,19 +356,18 @@ class Dashboard extends Controller
 		$data = [
 			'title'       => $this->request->getPost('title'),
 			'description' => $this->request->getPost('description'),
-			'category'    => $this->request->getPost('category'),
-			'subcategory' => $this->request->getPost('subcategory') ?: null, // save null if empty
-			'class'       => $this->request->getPost('class'),
-			'subject'     => $this->request->getPost('subject'),
 			'start_date'  => $this->request->getPost('start_date'),
 			'start_time'  => $this->request->getPost('start_time'),
 			'end_date'    => $this->request->getPost('end_date'),
 			'end_time'    => $this->request->getPost('end_time'),
-			'color'       => $this->request->getPost('color') ?: '#007bff',
+			'color'       => $this->request->getPost('color') ?? '#007bff',
+			'category'    => $this->request->getPost('category'),
+			'subcategory' => $this->request->getPost('subcategory'),
+			'class'       => $this->request->getPost('class'),
+			'subject'     => $this->request->getPost('subject')
 		];
 
 		$this->calendarModel->update($id, $data);
-
 		return $this->response->setJSON(['status' => 'success']);
 	}
 

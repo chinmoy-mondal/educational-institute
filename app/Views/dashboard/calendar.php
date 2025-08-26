@@ -204,6 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('edit-class').value = e.extendedProps.class || '';
       document.getElementById('edit-subject').value = e.extendedProps.subject || '';
 
+      // Start date & time
       if(e.startStr.includes('T')){
         document.getElementById('edit-start-date').value = e.startStr.split('T')[0];
         document.getElementById('edit-start-time').value = e.startStr.split('T')[1].substring(0,5);
@@ -212,6 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('edit-start-time').value = '';
       }
 
+      // End date & time
       if(e.endStr){
         document.getElementById('edit-end-date').value = e.endStr.split('T')[0];
         document.getElementById('edit-end-time').value = e.endStr.split('T')[1].substring(0,5);
@@ -227,42 +229,65 @@ document.addEventListener('DOMContentLoaded', function() {
 
   calendar.render();
 
+  // -------------------------
   // Alert helper
+  // -------------------------
   function showAlert(msg, type='success'){
     const wrapper = document.createElement('div');
-    wrapper.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
-        ${msg}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
+    wrapper.innerHTML = `
+      <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+        ${msg}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>`;
     document.getElementById('alert-placeholder').append(wrapper);
     setTimeout(()=>wrapper.remove(), 3000);
   }
 
+  // -------------------------
   // Add Event
+  // -------------------------
   document.getElementById('eventForm').addEventListener('submit', function(e){
     e.preventDefault();
     const fd = new FormData(this);
+    // Append time fields just in case
+    fd.set('start_time', document.querySelector('#eventForm input[name="start_time"]').value);
+    fd.set('end_time', document.querySelector('#eventForm input[name="end_time"]').value);
+
     fetch('/calendar/add',{method:'POST', body:fd})
       .then(res=>res.json())
       .then(r=>{
         if(r.status==='success'){
-          $('#addEventModal').modal('hide'); this.reset(); calendar.refetchEvents(); showAlert('Event added successfully!');
+          $('#addEventModal').modal('hide'); 
+          this.reset(); 
+          calendar.refetchEvents(); 
+          showAlert('Event added successfully!');
         } else showAlert('Failed to add event','danger');
       }).catch(()=>showAlert('Something went wrong','danger'));
   });
 
+  // -------------------------
   // Update Event
+  // -------------------------
   document.getElementById('editEventForm').addEventListener('submit', function(e){
     e.preventDefault();
     const fd = new FormData(this);
+    fd.set('start_time', document.getElementById('edit-start-time').value);
+    fd.set('end_time', document.getElementById('edit-end-time').value);
+
     fetch('/calendar/update',{method:'POST', body:fd})
       .then(res=>res.json())
       .then(r=>{
         if(r.status==='success'){
-          $('#editEventModal').modal('hide'); calendar.refetchEvents(); showAlert('Event updated successfully!');
+          $('#editEventModal').modal('hide'); 
+          calendar.refetchEvents(); 
+          showAlert('Event updated successfully!');
         } else showAlert('Failed to update event','danger');
       }).catch(()=>showAlert('Something went wrong','danger'));
   });
 
+  // -------------------------
   // Delete Event
+  // -------------------------
   document.getElementById('deleteEvent').addEventListener('click', function(){
     const id = document.getElementById('edit-id').value;
     const csrfName = '<?= csrf_token() ?>';
@@ -274,17 +299,21 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(res=>res.json())
     .then(r=>{
-      if(r.status==='success'){ $('#editEventModal').modal('hide'); calendar.refetchEvents(); showAlert('Event deleted successfully!'); }
-      else showAlert('Failed to delete event','danger');
+      if(r.status==='success'){ 
+        $('#editEventModal').modal('hide'); 
+        calendar.refetchEvents(); 
+        showAlert('Event deleted successfully!');
+      } else showAlert('Failed to delete event','danger');
     }).catch(()=>showAlert('Something went wrong','danger'));
   });
 
+  // -------------------------
   // Filter subjects by class
+  // -------------------------
   function filterSubjects(classId, subjId){
     const val = document.getElementById(classId).value;
     document.querySelectorAll(`#${subjId} option`).forEach(opt=>{
-      opt.style.display = (opt.value===""||opt.dataset.class===val)?'none':'none';
-      if(opt.value===""||opt.dataset.class===val) opt.style.display='';
+      opt.style.display = (opt.value === "" || opt.dataset.class === val) ? '' : 'none';
     });
   }
 
