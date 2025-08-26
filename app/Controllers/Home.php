@@ -166,7 +166,7 @@ class Home extends BaseController
 		return view('public/print_admit_card');
 	}
 
-	public function print()
+	public function printAdmit()
 	{
 		$studentModel = new StudentModel();
 		$eventModel = new CalendarModel();

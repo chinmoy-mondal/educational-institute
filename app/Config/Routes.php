@@ -15,7 +15,7 @@ $routes->get('home/mission', 'Home::mission');
 $routes->get('home/staff', 'Home::staff');
 $routes->get('user', 'User::index');
 $routes->get('print-admit-form', 'Home::admit_print_view');
-$routes->post('print-admit', 'Home::print-admit');
+$routes->post('print-admit', 'Home::printAdmit');
 $routes->get('student', 'Home::student');
 $routes->get('student-id', 'Home::studentById');
 $routes->get('idcard/(:num)', 'Home::idCard/$1');
