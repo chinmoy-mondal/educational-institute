@@ -36,24 +36,38 @@
 
 <!-- Calendar Init -->
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const calendarEl = document.getElementById('calendar');
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        height: 600,
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek'
-        },
-        events: '/public-calendar/events', // Make sure this route returns JSON
-        eventClick: function (info) {
-            alert(info.event.title + "\n\n" + (info.event.extendedProps.description || ''));
-        }
-    });
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            height: 600,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek'
+            },
+            events: '/public-calendar/events', // Make sure this route returns JSON
+            eventClick: function(info) {
+                const props = info.event.extendedProps;
 
-    calendar.render();
-});
+                alert(
+                    "Title: " + info.event.title + "\n\n" +
+                    "Description: " + (props.description || '') + "\n\n" +
+                    "Start Date: " + (props.start_date || '') + "\n" +
+                    "Start Time: " + (props.start_time || '') + "\n\n" +
+                    "End Date: " + (props.end_date || '') + "\n" +
+                    "End Time: " + (props.end_time || '') + "\n\n" +
+                    "Color: " + (props.color || '') + "\n\n" +
+                    "Category: " + (props.category || '') + "\n" +
+                    "Subcategory: " + (props.subcategory || '') + "\n" +
+                    "Class: " + (props.class || '') + "\n" +
+                    "Subject: " + (props.subject || '')
+                );
+            }
+        });
+
+        calendar.render();
+    });
 </script>
 
 <?= $this->endSection(); ?>

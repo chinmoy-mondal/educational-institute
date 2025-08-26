@@ -298,8 +298,7 @@ class Dashboard extends Controller
 
 		$this->data['user'] = $user;
 		$this->data['subjects'] = $subjects;
-		//echo '<pre>';
-		//print_r($this->data);
+
 		return view('dashboard/calendar', $this->data);
 	}
 
