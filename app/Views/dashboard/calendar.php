@@ -179,173 +179,175 @@
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
 
-    const calendarEl = document.getElementById('calendar');
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: 'dayGridMonth',
-      height: 600,
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek'
-      },
-      events: '/calendar/events',
+  const calendarEl = document.getElementById('calendar');
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    height: 600,
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek'
+    },
+    events: '/calendar/events',
 
-      eventClick: function(info) {
-        const e = info.event;
+    eventClick: function(info) {
+      const e = info.event;
+      try {
+        // Fill edit modal fields
+        document.getElementById('edit-id').value = e.id || '';
+        document.getElementById('edit-title').value = e.title || '';
+        document.getElementById('edit-description').value = e.extendedProps.description || '';
+        document.getElementById('edit-category').value = e.extendedProps.category || '';
+        document.getElementById('edit-subcategory').value = e.extendedProps.subcategory || '';
+        document.getElementById('edit-class').value = e.extendedProps.class || '';
+        document.getElementById('edit-subject').value = e.extendedProps.subject || '';
 
-        try {
-          // Fill edit modal fields
-          document.getElementById('edit-id').value = e.id || '';
-          document.getElementById('edit-title').value = e.title || '';
-          document.getElementById('edit-description').value = e.extendedProps.description || '';
-          document.getElementById('edit-category').value = e.extendedProps.category || '';
-          document.getElementById('edit-subcategory').value = e.extendedProps.subcategory || '';
-          document.getElementById('edit-class').value = e.extendedProps.class || '';
-          document.getElementById('edit-subject').value = e.extendedProps.subject || '';
-
-          // Start date & time
-          if (e.start) {
-            const start = new Date(e.start);
-            document.getElementById('edit-start-date').value = start.toISOString().slice(0, 10);
-            document.getElementById('edit-start-time').value = start.toTimeString().slice(0, 5);
-          } else {
-            document.getElementById('edit-start-date').value = '';
-            document.getElementById('edit-start-time').value = '';
-          }
-
-          // End date & time
-          if (e.end) {
-            const end = new Date(e.end);
-            document.getElementById('edit-end-date').value = end.toISOString().slice(0, 10);
-            document.getElementById('edit-end-time').value = end.toTimeString().slice(0, 5);
-          } else {
-            document.getElementById('edit-end-date').value = document.getElementById('edit-start-date').value;
-            document.getElementById('edit-end-time').value = '';
-          }
-
-          // Color
-          document.getElementById('edit-color').value = e.backgroundColor || '#007bff';
-
-          // Show modal (Bootstrap 5)
-          const editModal = new bootstrap.Modal(document.getElementById('editEventModal'));
-          editModal.show();
-
-        } catch (err) {
-          console.error('Event click error:', err);
+        // Start date & time
+        if (e.start) {
+          const start = new Date(e.start);
+          document.getElementById('edit-start-date').value = start.toISOString().slice(0, 10);
+          document.getElementById('edit-start-time').value = start.toTimeString().slice(0, 5);
+        } else {
+          document.getElementById('edit-start-date').value = '';
+          document.getElementById('edit-start-time').value = '';
         }
+
+        // End date & time
+        if (e.end) {
+          const end = new Date(e.end);
+          document.getElementById('edit-end-date').value = end.toISOString().slice(0, 10);
+          document.getElementById('edit-end-time').value = end.toTimeString().slice(0, 5);
+        } else {
+          document.getElementById('edit-end-date').value = document.getElementById('edit-start-date').value;
+          document.getElementById('edit-end-time').value = '';
+        }
+
+        // Color
+        document.getElementById('edit-color').value = e.backgroundColor || '#007bff';
+
+        // Show modal (Bootstrap 5)
+        const editModalEl = document.getElementById('editEventModal');
+        const editModal = new bootstrap.Modal(editModalEl);
+        editModal.show();
+
+      } catch (err) {
+        console.error('Event click error:', err);
       }
-    });
+    }
+  });
 
-    calendar.render();
+  calendar.render();
 
-    // -------------------------
-    // Alert helper
-    // -------------------------
-    function showAlert(msg, type = 'success') {
-      const wrapper = document.createElement('div');
-      wrapper.innerHTML = `
+  // -------------------------
+  // Alert helper
+  // -------------------------
+  function showAlert(msg, type = 'success') {
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = `
       <div class="alert alert-${type} alert-dismissible fade show" role="alert">
         ${msg}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
       </div>`;
-      document.getElementById('alert-placeholder').append(wrapper);
-      setTimeout(() => wrapper.remove(), 3000);
-    }
+    document.getElementById('alert-placeholder').append(wrapper);
+    setTimeout(() => wrapper.remove(), 3000);
+  }
 
-    // -------------------------
-    // Add Event
-    // -------------------------
-    document.getElementById('eventForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      const fd = new FormData(this);
-      fd.set('start_time', document.querySelector('#eventForm input[name="start_time"]').value);
-      fd.set('end_time', document.querySelector('#eventForm input[name="end_time"]').value);
+  // -------------------------
+  // Add Event
+  // -------------------------
+  const addEventForm = document.getElementById('eventForm');
+  addEventForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const fd = new FormData(this);
+    fd.set('start_time', this.querySelector('input[name="start_time"]').value);
+    fd.set('end_time', this.querySelector('input[name="end_time"]').value);
 
-      fetch('/calendar/add', {
-          method: 'POST',
-          body: fd
-        })
-        .then(res => res.json())
-        .then(r => {
-          if (r.status === 'success') {
-            $('#addEventModal').modal('hide');
-            this.reset();
-            calendar.refetchEvents();
-            showAlert('Event added successfully!');
-          } else showAlert('Failed to add event', 'danger');
-        }).catch(() => showAlert('Something went wrong', 'danger'));
-    });
+    fetch('/calendar/add', { method: 'POST', body: fd })
+      .then(res => res.json())
+      .then(r => {
+        if (r.status === 'success') {
+          const addModalEl = document.getElementById('addEventModal');
+          const addModal = bootstrap.Modal.getInstance(addModalEl) || new bootstrap.Modal(addModalEl);
+          addModal.hide();
 
-    // -------------------------
-    // Update Event
-    // -------------------------
-    document.getElementById('editEventForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const fd = new FormData(this);
-      fd.set('start_time', document.getElementById('edit-start-time').value);
-      fd.set('end_time', document.getElementById('edit-end-time').value);
-      fd.set('start_date', document.getElementById('edit-start-date').value);
-      fd.set('end_date', document.getElementById('edit-end-date').value);
-
-      fetch('/calendar/update', {
-          method: 'POST',
-          body: fd
-        })
-        .then(res => res.json())
-        .then(r => {
-          if (r.status === 'success') {
-            $('#editEventModal').modal('hide');
-            calendar.refetchEvents();
-            showAlert('Event updated successfully!');
-          } else showAlert('Failed to update event', 'danger');
-        })
-        .catch(() => showAlert('Something went wrong', 'danger'));
-    });
-
-    // -------------------------
-    // Delete Event
-    // -------------------------
-    document.getElementById('deleteEvent').addEventListener('click', function() {
-      const id = document.getElementById('edit-id').value;
-      const csrfName = '<?= csrf_token() ?>';
-      const csrfHash = '<?= csrf_hash() ?>';
-      fetch('/calendar/delete', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({
-            id,
-            [csrfName]: csrfHash
-          })
-        })
-        .then(res => res.json())
-        .then(r => {
-          if (r.status === 'success') {
-            $('#editEventModal').modal('hide');
-            calendar.refetchEvents();
-            showAlert('Event deleted successfully!');
-          } else showAlert('Failed to delete event', 'danger');
-        }).catch(() => showAlert('Something went wrong', 'danger'));
-    });
-
-    // -------------------------
-    // Filter subjects by class
-    // -------------------------
-    function filterSubjects(classId, subjId) {
-      const val = document.getElementById(classId).value;
-      document.querySelectorAll(`#${subjId} option`).forEach(opt => {
-        opt.style.display = (opt.value === "" || opt.dataset.class === val) ? '' : 'none';
-      });
-    }
-
-    document.getElementById('add-class').addEventListener('change', () => filterSubjects('add-class', 'add-subject'));
-    document.getElementById('edit-class').addEventListener('change', () => filterSubjects('edit-class', 'edit-subject'));
-
+          this.reset();
+          calendar.refetchEvents();
+          showAlert('Event added successfully!');
+        } else showAlert('Failed to add event','danger');
+      })
+      .catch(() => showAlert('Something went wrong','danger'));
   });
+
+  // -------------------------
+  // Update Event
+  // -------------------------
+  const editEventForm = document.getElementById('editEventForm');
+  editEventForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const fd = new FormData(this);
+    fd.set('start_time', document.getElementById('edit-start-time').value);
+    fd.set('end_time', document.getElementById('edit-end-time').value);
+    fd.set('start_date', document.getElementById('edit-start-date').value);
+    fd.set('end_date', document.getElementById('edit-end-date').value);
+
+    fetch('/calendar/update', { method: 'POST', body: fd })
+      .then(res => res.json())
+      .then(r => {
+        if (r.status === 'success') {
+          const editModalEl = document.getElementById('editEventModal');
+          const editModal = bootstrap.Modal.getInstance(editModalEl) || new bootstrap.Modal(editModalEl);
+          editModal.hide();
+
+          calendar.refetchEvents();
+          showAlert('Event updated successfully!');
+        } else showAlert('Failed to update event','danger');
+      })
+      .catch(() => showAlert('Something went wrong','danger'));
+  });
+
+  // -------------------------
+  // Delete Event
+  // -------------------------
+  document.getElementById('deleteEvent').addEventListener('click', function() {
+    const id = document.getElementById('edit-id').value;
+    const csrfName = '<?= csrf_token() ?>';
+    const csrfHash = '<?= csrf_hash() ?>';
+
+    fetch('/calendar/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ id, [csrfName]: csrfHash })
+    })
+    .then(res => res.json())
+    .then(r => {
+      if (r.status === 'success') {
+        const editModalEl = document.getElementById('editEventModal');
+        const editModal = bootstrap.Modal.getInstance(editModalEl) || new bootstrap.Modal(editModalEl);
+        editModal.hide();
+
+        calendar.refetchEvents();
+        showAlert('Event deleted successfully!');
+      } else showAlert('Failed to delete event','danger');
+    })
+    .catch(() => showAlert('Something went wrong','danger'));
+  });
+
+  // -------------------------
+  // Filter subjects by class
+  // -------------------------
+  function filterSubjects(classId, subjId) {
+    const val = document.getElementById(classId).value;
+    document.querySelectorAll(`#${subjId} option`).forEach(opt => {
+      opt.style.display = (opt.value === "" || opt.dataset.class === val) ? '' : 'none';
+    });
+  }
+
+  document.getElementById('add-class').addEventListener('change', () => filterSubjects('add-class','add-subject'));
+  document.getElementById('edit-class').addEventListener('change', () => filterSubjects('edit-class','edit-subject'));
+
+});
 </script>
 
 <?= $this->endSection() ?>
