@@ -79,9 +79,18 @@ document.addEventListener('DOMContentLoaded', function () {
 eventClick: function (info) {
     const props = info.event.extendedProps;
 
-    // Convert backend date/time strings into Date objects
-    const startDate = info.event.start ? new Date(info.event.start) : null;
-    const endDate   = info.event.end ? new Date(info.event.end) : null;
+    // Combine date and time strings from backend
+    const startDate = props.start_date && props.start_time 
+        ? new Date(props.start_date + 'T' + props.start_time)
+        : props.start_date 
+            ? new Date(props.start_date) 
+            : null;
+
+    const endDate = props.end_date && props.end_time
+        ? new Date(props.end_date + 'T' + props.end_time)
+        : props.end_date
+            ? new Date(props.end_date)
+            : null;
 
     // Format date string
     let dateStr = startDate ? startDate.toLocaleDateString() : '';
@@ -89,7 +98,7 @@ eventClick: function (info) {
         dateStr = startDate.toLocaleDateString() + ' → ' + endDate.toLocaleDateString();
     }
 
-    // Format time in 12-hour format
+    // Format 12-hour time
     function format12Hour(dateObj) {
         if (!dateObj) return '';
         return dateObj.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
@@ -98,7 +107,7 @@ eventClick: function (info) {
     const startTime = format12Hour(startDate);
     const endTime   = format12Hour(endDate);
 
-    // Fill modal fields
+    // Fill modal
     document.getElementById('eventTitle').innerText = info.event.title || '';
     document.getElementById('eventDescription').innerText = props.description || '';
     document.getElementById('eventDate').innerText = dateStr;
