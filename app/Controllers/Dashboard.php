@@ -331,25 +331,25 @@ class Dashboard extends Controller
 
 	public function addEvent()
 	{
-		$time = $this->request->getPost('end_time');
-		echo "Time-".$time;
-		// $data = [
-		// 	'title'       => $this->request->getPost('title'),
-		// 	'description' => $this->request->getPost('description'),
-		// 	'category'    => $this->request->getPost('category'),
-		// 	'subcategory' => $this->request->getPost('subcategory') ?: null,
-		// 	'class'       => $this->request->getPost('class'),
-		// 	'subject'     => $this->request->getPost('subject'),
-		// 	'start_date'  => $this->request->getPost('start_date'),
-		// 	'start_time'  => $this->request->getPost('start_time'),
-		// 	'end_date'    => $this->request->getPost('end_date'),
-		// 	'end_time'    => $this->request->getPost('end_time'),
-		// 	'color'       => $this->request->getPost('color') ?: '#007bff',
-		// ];
+		// $time = $this->request->getPost('end_time');
+		// echo "Time-".$time;
+		$data = [
+			'title'       => $this->request->getPost('title'),
+			'description' => $this->request->getPost('description'),
+			'category'    => $this->request->getPost('category'),
+			'subcategory' => $this->request->getPost('subcategory') ?: null,
+			'class'       => $this->request->getPost('class'),
+			'subject'     => $this->request->getPost('subject'),
+			'start_date'  => $this->request->getPost('start_date'),
+			'start_time'  => $this->request->getPost('start_time'),
+			'end_date'    => $this->request->getPost('end_date'),
+			'end_time'    => $this->request->getPost('end_time'),
+			'color'       => $this->request->getPost('color') ?: '#007bff',
+		];
 
-		// $this->calendarModel->save($data);
+		$this->calendarModel->save($data);
 
-		// return $this->response->setJSON(['status' => 'success']);
+		return $this->response->setJSON(['status' => 'success']);
 	}
 
 	public function updateEvent()
