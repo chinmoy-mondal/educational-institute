@@ -12,8 +12,8 @@
     <!--start Form Section-->
     <section class="py-5">
         <div class="container">
-            <div class="card shadow-sm rounded-3 p-4">
-                <h4 class="mb-3 fw-bold text-center">Exam Selection</h4>
+            <div class="card shadow-sm rounded-3 p-4 mx-auto" style="max-width: 500px;">
+                <h4 class="mb-4 fw-bold text-center">Exam Selection</h4>
                 <form action="<?= base_url('print-admit') ?>" method="post">
 
                     <div class="mb-3">
@@ -45,7 +45,7 @@
                         </select>
                     </div>
 
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label for="exam_name" class="form-label">Exam Name</label>
                         <select id="exam_name" name="exam_name" class="form-select" required>
                             <option value="">-- Select Exam --</option>
