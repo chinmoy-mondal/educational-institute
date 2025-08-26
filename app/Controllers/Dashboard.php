@@ -331,28 +331,20 @@ class Dashboard extends Controller
 
 	public function addEvent()
 	{
-		$request = $this->request;
-
-		// Combine date + time into ISO datetime format
-		$start = $request->getPost('start_date') . 'T' . $request->getPost('start_time');
-		$end   = $request->getPost('end_date') . 'T' . $request->getPost('end_time');
-
-		// Prepare data array
 		$data = [
-			'title'       => $request->getPost('title'),
-			'description' => $request->getPost('description'),
-			'start_date'  => $start,
-			'end_date'    => $end,
-			'start_time' => $this->request->getPost('start_time'),
-			'end_time'   => $this->request->getPost('end_time'),
-			'color'       => $request->getPost('color') ?: '#007bff',
-			'category'    => $request->getPost('category'),
-			'subcategory' => $request->getPost('subcategory'),
-			'class'       => $request->getPost('class'),
-			'subject'     => $request->getPost('subject'),
+			'title'       => $this->request->getPost('title'),
+			'description' => $this->request->getPost('description'),
+			'category'    => $this->request->getPost('category'),
+			'subcategory' => $this->request->getPost('subcategory') ?: null,
+			'class'       => $this->request->getPost('class'),
+			'subject'     => $this->request->getPost('subject'),
+			'start_date'  => $this->request->getPost('start_date'),
+			'start_time'  => $this->request->getPost('start_time'),
+			'end_date'    => $this->request->getPost('end_date'),
+			'end_time'    => $this->request->getPost('end_time'),
+			'color'       => $this->request->getPost('color') ?: '#007bff',
 		];
 
-		// Save to database
 		$this->calendarModel->save($data);
 
 		return $this->response->setJSON(['status' => 'success']);
@@ -360,29 +352,22 @@ class Dashboard extends Controller
 
 	public function updateEvent()
 	{
-		$request = $this->request;
-		$id = $request->getPost('id');
+		$id = $this->request->getPost('id');
 
-		// Combine date + time
-		$start = $request->getPost('start_date') . 'T' . $request->getPost('start_time');
-		$end   = $request->getPost('end_date') . 'T' . $request->getPost('end_time');
-
-		// Prepare data array
 		$data = [
-			'title'       => $request->getPost('title'),
-			'description' => $request->getPost('description'),
-			'start_date'  => $start,
-			'end_date'    => $end,
-			'start_time' => $this->request->getPost('start_time'),
-			'end_time'   => $this->request->getPost('end_time'),
-			'color'       => $request->getPost('color') ?: '#007bff',
-			'category'    => $request->getPost('category'),
-			'subcategory' => $request->getPost('subcategory'),
-			'class'       => $request->getPost('class'),
-			'subject'     => $request->getPost('subject'),
+			'title'       => $this->request->getPost('title'),
+			'description' => $this->request->getPost('description'),
+			'category'    => $this->request->getPost('category'),
+			'subcategory' => $this->request->getPost('subcategory') ?: null, // save null if empty
+			'class'       => $this->request->getPost('class'),
+			'subject'     => $this->request->getPost('subject'),
+			'start_date'  => $this->request->getPost('start_date'),
+			'start_time'  => $this->request->getPost('start_time'),
+			'end_date'    => $this->request->getPost('end_date'),
+			'end_time'    => $this->request->getPost('end_time'),
+			'color'       => $this->request->getPost('color') ?: '#007bff',
 		];
 
-		// Update the event
 		$this->calendarModel->update($id, $data);
 
 		return $this->response->setJSON(['status' => 'success']);
