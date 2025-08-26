@@ -11,7 +11,7 @@
 
 <div class="container content">
 
-    <!-- Start: Calendar Section -->
+    <!-- Calendar Section -->
     <section class="calendar-section py-5 bg-white">
         <div class="container">
             <div class="text-center mb-4">
@@ -45,6 +45,10 @@
                     <li class="list-group-item"><strong>Date:</strong> <span id="eventDate"></span></li>
                     <li class="list-group-item"><strong>Start Time:</strong> <span id="eventStartTime"></span></li>
                     <li class="list-group-item"><strong>End Time:</strong> <span id="eventEndTime"></span></li>
+                    <li class="list-group-item"><strong>Category:</strong> <span id="eventCategory"></span></li>
+                    <li class="list-group-item"><strong>Subcategory:</strong> <span id="eventSubcategory"></span></li>
+                    <li class="list-group-item"><strong>Class:</strong> <span id="eventClass"></span></li>
+                    <li class="list-group-item"><strong>Subject:</strong> <span id="eventSubject"></span></li>
                 </ul>
             </div>
             <div class="modal-footer">
@@ -72,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function () {
             center: 'title',
             right: 'dayGridMonth,timeGridWeek'
         },
-        events: '/public-calendar/events', // Must return JSON
+        events: '/public-calendar/events', // JSON must include all fields
 
         eventClick: function (info) {
             const props = info.event.extendedProps;
@@ -94,12 +98,16 @@ document.addEventListener('DOMContentLoaded', function () {
             const startTime = format12Hour(startDate);
             const endTime = format12Hour(endDate);
 
-            // Fill modal
+            // Fill modal with all information
             document.getElementById('eventTitle').innerText = info.event.title || '';
             document.getElementById('eventDescription').innerText = props.description || '';
             document.getElementById('eventDate').innerText = dateStr;
             document.getElementById('eventStartTime').innerText = startTime;
             document.getElementById('eventEndTime').innerText = endTime;
+            document.getElementById('eventCategory').innerText = props.category || '';
+            document.getElementById('eventSubcategory').innerText = props.subcategory || '';
+            document.getElementById('eventClass').innerText = props.class || '';
+            document.getElementById('eventSubject').innerText = props.subject || '';
 
             // Show modal
             const eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
