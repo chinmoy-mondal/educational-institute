@@ -46,6 +46,8 @@
                                     <li><a class="dropdown-item" href="<?= base_url('subjects'); ?>">Subjects</a></li>
                                 </ul>
                             </li>
+
+                            
             
                             <!-- Admissions -->
                             <li class="nav-item">
@@ -63,8 +65,11 @@
                             </li>
             
                             <!-- Events -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="<?= base_url('print-admit-form'); ?>">Exams & Results</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Exam</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="<?= base_url('print-admit-form'); ?>">Exams & Results</a></li>
+                                </ul>
                             </li>
             
                             <!-- Contact -->
