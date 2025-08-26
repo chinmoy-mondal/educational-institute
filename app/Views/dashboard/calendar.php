@@ -223,6 +223,8 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       document.getElementById('edit-color').value = e.backgroundColor || '#007bff';
+
+      // Show modal
       $('#editEventModal').modal('show');
     }
   });
@@ -249,7 +251,6 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('eventForm').addEventListener('submit', function(e){
     e.preventDefault();
     const fd = new FormData(this);
-    // Append time fields just in case
     fd.set('start_time', document.querySelector('#eventForm input[name="start_time"]').value);
     fd.set('end_time', document.querySelector('#eventForm input[name="end_time"]').value);
 
@@ -257,10 +258,7 @@ document.addEventListener('DOMContentLoaded', function() {
       .then(res=>res.json())
       .then(r=>{
         if(r.status==='success'){
-          $('#addEventModal').modal('hide'); 
-          this.reset(); 
-          calendar.refetchEvents(); 
-          showAlert('Event added successfully!');
+          $('#addEventModal').modal('hide'); this.reset(); calendar.refetchEvents(); showAlert('Event added successfully!');
         } else showAlert('Failed to add event','danger');
       }).catch(()=>showAlert('Something went wrong','danger'));
   });
@@ -270,19 +268,26 @@ document.addEventListener('DOMContentLoaded', function() {
   // -------------------------
   document.getElementById('editEventForm').addEventListener('submit', function(e){
     e.preventDefault();
+
     const fd = new FormData(this);
     fd.set('start_time', document.getElementById('edit-start-time').value);
     fd.set('end_time', document.getElementById('edit-end-time').value);
+    fd.set('start_date', document.getElementById('edit-start-date').value);
+    fd.set('end_date', document.getElementById('edit-end-date').value);
 
-    fetch('/calendar/update',{method:'POST', body:fd})
-      .then(res=>res.json())
-      .then(r=>{
-        if(r.status==='success'){
-          $('#editEventModal').modal('hide'); 
-          calendar.refetchEvents(); 
-          showAlert('Event updated successfully!');
-        } else showAlert('Failed to update event','danger');
-      }).catch(()=>showAlert('Something went wrong','danger'));
+    fetch('/calendar/update',{
+      method:'POST', 
+      body: fd
+    })
+    .then(res=>res.json())
+    .then(r=>{
+      if(r.status==='success'){
+        $('#editEventModal').modal('hide'); 
+        calendar.refetchEvents(); 
+        showAlert('Event updated successfully!');
+      } else showAlert('Failed to update event','danger');
+    })
+    .catch(()=>showAlert('Something went wrong','danger'));
   });
 
   // -------------------------
