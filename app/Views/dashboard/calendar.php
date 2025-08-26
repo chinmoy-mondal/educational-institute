@@ -194,8 +194,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     eventClick: function(info) {
       const e = info.event;
+
       try {
-        // Fill edit modal fields
+        // Fill edit modal
         document.getElementById('edit-id').value = e.id || '';
         document.getElementById('edit-title').value = e.title || '';
         document.getElementById('edit-description').value = e.extendedProps.description || '';
@@ -207,29 +208,24 @@ document.addEventListener('DOMContentLoaded', function() {
         // Start date & time
         if (e.start) {
           const start = new Date(e.start);
-          document.getElementById('edit-start-date').value = start.toISOString().slice(0, 10);
-          document.getElementById('edit-start-time').value = start.toTimeString().slice(0, 5);
-        } else {
-          document.getElementById('edit-start-date').value = '';
-          document.getElementById('edit-start-time').value = '';
+          document.getElementById('edit-start-date').value = start.toISOString().slice(0,10);
+          document.getElementById('edit-start-time').value = start.toTimeString().slice(0,5);
         }
 
         // End date & time
         if (e.end) {
           const end = new Date(e.end);
-          document.getElementById('edit-end-date').value = end.toISOString().slice(0, 10);
-          document.getElementById('edit-end-time').value = end.toTimeString().slice(0, 5);
+          document.getElementById('edit-end-date').value = end.toISOString().slice(0,10);
+          document.getElementById('edit-end-time').value = end.toTimeString().slice(0,5);
         } else {
           document.getElementById('edit-end-date').value = document.getElementById('edit-start-date').value;
           document.getElementById('edit-end-time').value = '';
         }
 
-        // Color
         document.getElementById('edit-color').value = e.backgroundColor || '#007bff';
 
-        // Show modal (Bootstrap 5)
-        const editModalEl = document.getElementById('editEventModal');
-        const editModal = new bootstrap.Modal(editModalEl);
+        // Show edit modal
+        const editModal = new bootstrap.Modal(document.getElementById('editEventModal'));
         editModal.show();
 
       } catch (err) {
@@ -257,14 +253,13 @@ document.addEventListener('DOMContentLoaded', function() {
   // -------------------------
   // Add Event
   // -------------------------
-  const addEventForm = document.getElementById('eventForm');
-  addEventForm.addEventListener('submit', function(e) {
+  document.getElementById('eventForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const fd = new FormData(this);
     fd.set('start_time', this.querySelector('input[name="start_time"]').value);
     fd.set('end_time', this.querySelector('input[name="end_time"]').value);
 
-    fetch('/calendar/add', { method: 'POST', body: fd })
+    fetch('/calendar/add', { method:'POST', body: fd })
       .then(res => res.json())
       .then(r => {
         if (r.status === 'success') {
@@ -275,16 +270,15 @@ document.addEventListener('DOMContentLoaded', function() {
           this.reset();
           calendar.refetchEvents();
           showAlert('Event added successfully!');
-        } else showAlert('Failed to add event','danger');
+        } else showAlert('Failed to add event', 'danger');
       })
-      .catch(() => showAlert('Something went wrong','danger'));
+      .catch(() => showAlert('Something went wrong', 'danger'));
   });
 
   // -------------------------
   // Update Event
   // -------------------------
-  const editEventForm = document.getElementById('editEventForm');
-  editEventForm.addEventListener('submit', function(e) {
+  document.getElementById('editEventForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const fd = new FormData(this);
     fd.set('start_time', document.getElementById('edit-start-time').value);
@@ -292,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
     fd.set('start_date', document.getElementById('edit-start-date').value);
     fd.set('end_date', document.getElementById('edit-end-date').value);
 
-    fetch('/calendar/update', { method: 'POST', body: fd })
+    fetch('/calendar/update', { method:'POST', body: fd })
       .then(res => res.json())
       .then(r => {
         if (r.status === 'success') {
@@ -302,9 +296,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
           calendar.refetchEvents();
           showAlert('Event updated successfully!');
-        } else showAlert('Failed to update event','danger');
+        } else showAlert('Failed to update event', 'danger');
       })
-      .catch(() => showAlert('Something went wrong','danger'));
+      .catch(() => showAlert('Something went wrong', 'danger'));
   });
 
   // -------------------------
@@ -317,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     fetch('/calendar/delete', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: { 'Content-Type':'application/x-www-form-urlencoded' },
       body: new URLSearchParams({ id, [csrfName]: csrfHash })
     })
     .then(res => res.json())
@@ -329,9 +323,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
         calendar.refetchEvents();
         showAlert('Event deleted successfully!');
-      } else showAlert('Failed to delete event','danger');
+      } else showAlert('Failed to delete event', 'danger');
     })
-    .catch(() => showAlert('Something went wrong','danger'));
+    .catch(() => showAlert('Something went wrong', 'danger'));
   });
 
   // -------------------------
