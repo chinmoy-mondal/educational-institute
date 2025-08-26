@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\SubjectModel;
 use App\Models\StudentModel;
 use App\Models\UserModel;
+use App\Models\CalendarModel;
 
 class Home extends BaseController
 {
@@ -44,7 +45,7 @@ class Home extends BaseController
 		$subjects = $model
 			->orderBy('CAST(class AS UNSIGNED)', 'ASC')
 			->findAll();
-			
+
 		return view('public/subject', ['subjects' => $subjects]);
 	}
 	public function student()
@@ -155,5 +156,50 @@ class Home extends BaseController
 		$user['signature'] = base_url('public/assets/img/sign.png');
 
 		return view('public/teacher_idcard', ['user' => $user]);
+	}
+
+	public function admit_print_view()
+	{
+		$studentModel = new StudentModel();
+		$eventModel = new CalendarModel();
+
+		return view('public/print_admit_card');
+	}
+
+	public function print()
+	{
+		$studentModel = new StudentModel();
+		$eventModel = new CalendarModel();
+
+		$class     = $this->request->getPost('class');
+		$section   = $this->request->getPost('section');
+		$year      = $this->request->getPost('year');
+		$exam_name = $this->request->getPost('exam_name');
+		$group     = $this->request->getPost('group');
+
+		// For testing
+		echo "Class: $class<br>";
+		echo "Section: $section<br>";
+		echo "Year: $year<br>";
+		echo "Exam: $exam_name<br>";
+		echo "Group: $group<br>";
+
+		// if ($class !== null) {
+		// 	$students = $studentModel
+		// 		->where('class', $class)
+		// 		->orderBy('roll', 'ASC')
+		// 		->findAll();
+		// 	$events = $eventModel->findAll();
+		// } else {
+		// 	$students = $studentModel
+		// 		->where('class !=', '10')
+		// 		->orderBy('class', 'ASC')
+		// 		->findAll();
+		// 	$events = $eventModel->findAll();
+		// }
+		// return view('public/admit_card', [
+		// 	'students' => $students,
+		// 	'events' => $events
+		// ]);
 	}
 }

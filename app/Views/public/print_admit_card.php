@@ -14,7 +14,7 @@
         <div class="container">
             <div class="card shadow-sm rounded-3 p-4">
                 <h4 class="mb-3 fw-bold text-center">Exam Selection</h4>
-                <form action="<?= base_url('exam/submit') ?>" method="post">
+                <form action="<?= base_url('print-admit') ?>" method="post">
 
                     <div class="row mb-3">
                         <div class="col-md-4">
@@ -67,6 +67,7 @@
                                 <option value="General">General</option>
                                 <option value="Science">Science</option>
                                 <option value="Commerce">Commerce</option>
+                                <option value="Humanities">Humanities</option>
                                 <option value="Vocational">Vocational</option>
                             </select>
                         </div>
