@@ -74,24 +74,28 @@
                 info.el.style.backgroundColor = "#2984e0ff";
             },
             eventClick: function(info) {
-                // Format date and time separately
-                let startDate = info.event.start ? info.event.start.toLocaleDateString() : "";
-                let startTime = info.event.start ? info.event.start.toLocaleTimeString([], {
+                const event = info.event;
+
+                // Format start & end date/time
+                const startDate = event.start ? event.start.toLocaleDateString() : '';
+                const startTime = event.start ? event.start.toLocaleTimeString([], {
                     hour: '2-digit',
                     minute: '2-digit'
-                }) : "";
-                let endTime = info.event.end ? info.event.end.toLocaleTimeString([], {
+                }) : '';
+                const endDate = event.end ? event.end.toLocaleDateString() : '';
+                const endTime = event.end ? event.end.toLocaleTimeString([], {
                     hour: '2-digit',
                     minute: '2-digit'
-                }) : "";
+                }) : '';
 
                 // Populate modal
-                document.getElementById("modal-title").innerText = info.event.title;
-                document.getElementById("modal-desc").innerText = info.event.description;
-                document.getElementById("modal-subject").innerText = info.event.subject;
-                document.getElementById("modal-date").innerText = startDate;
-                document.getElementById("modal-start").innerText = startTime;
-                document.getElementById("modal-end").innerText = endTime;
+                document.getElementById("modal-title").innerText = event.title || "";
+                document.getElementById("modal-desc").innerText = event.extendedProps.description || "";
+                document.getElementById("modal-category").innerText = event.extendedProps.category || "";
+                document.getElementById("modal-class").innerText = event.extendedProps.class || "";
+                document.getElementById("modal-subject").innerText = event.extendedProps.subject || "";
+                document.getElementById("modal-start").innerText = startDate + " " + startTime;
+                document.getElementById("modal-end").innerText = endDate + " " + endTime;
 
                 // Show modal
                 new bootstrap.Modal(document.getElementById('eventModal')).show();
