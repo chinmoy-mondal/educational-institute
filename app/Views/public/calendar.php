@@ -76,7 +76,12 @@
             eventClick: function(info) {
                 const event = info.event;
 
-                // Format start & end date/time
+                document.getElementById("modal-title").innerText = event.title || "";
+                document.getElementById("modal-desc").innerText = event.extendedProps.description || "";
+                document.getElementById("modal-category").innerText = event.extendedProps.category || "";
+                document.getElementById("modal-class").innerText = event.extendedProps.class || "";
+                document.getElementById("modal-subject").innerText = event.extendedProps.subject || "";
+
                 const startDate = event.start ? event.start.toLocaleDateString() : '';
                 const startTime = event.start ? event.start.toLocaleTimeString([], {
                     hour: '2-digit',
@@ -88,16 +93,9 @@
                     minute: '2-digit'
                 }) : '';
 
-                // Populate modal
-                document.getElementById("modal-title").innerText = event.title || "";
-                document.getElementById("modal-desc").innerText = event.extendedProps.description;
-                document.getElementById("modal-category").innerText = event.extendedProps.category;
-                document.getElementById("modal-class").innerText = event.extendedProps.class;
-                document.getElementById("modal-subject").innerText = event.extendedProps.subject;
                 document.getElementById("modal-start").innerText = startDate + " " + startTime;
                 document.getElementById("modal-end").innerText = endDate + " " + endTime;
 
-                // Show modal
                 new bootstrap.Modal(document.getElementById('eventModal')).show();
             }
         });

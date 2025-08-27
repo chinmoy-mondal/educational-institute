@@ -18,28 +18,22 @@ class PublicCalendar extends Controller
         $events = $model->findAll();
 
         $data = array_map(function ($event) {
-            // Combine date and time
-            $start = $event['start_date'];
-            if (!empty($event['start_time'])) {
-                $start .= 'T' . $event['start_time'];
-            }
-
-            $end = $event['end_date'];
-            if (!empty($event['end_time'])) {
-                $end .= 'T' . $event['end_time'];
-            }
+            $start = $event['start_date'] . (!empty($event['start_time']) ? 'T' . $event['start_time'] : '');
+            $end   = $event['end_date'] . (!empty($event['end_time']) ? 'T' . $event['end_time'] : '');
 
             return [
-                'id'          => $event['id'],
-                'title'       => $event['title'],
-                'description' => $event['description'],
-                'start'       => $start,
-                'end'         => $end,
-                'color'       => $event['color'],
-                'category'    => $event['category'],
-                'subcategory' => $event['subcategory'],
-                'class'       => $event['class'],
-                'subject'     => $event['subject']
+                'id'    => $event['id'],
+                'title' => $event['title'],
+                'start' => $start,
+                'end'   => $end,
+                'color' => $event['color'],
+                'extendedProps' => [
+                    'description' => $event['description'],
+                    'category'    => $event['category'],
+                    'subcategory' => $event['subcategory'],
+                    'class'       => $event['class'],
+                    'subject'     => $event['subject'],
+                ]
             ];
         }, $events);
 
