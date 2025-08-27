@@ -9,7 +9,7 @@
     body { margin: 0; }
 }
 body { font-family: 'Kalpurush', 'Noto Sans Bengali', sans-serif, sans-serif; background-color: #fff; }
-.page { width: 210mm; height: 335mm; padding: 15mm; display: flex; flex-direction: column; justify-content: space-between; page-break-after: always; }
+.page { width: 210mm; height: 335mm; padding: 5mm 15mm 15mm 15mm;; display: flex; flex-direction: column; justify-content: space-between; page-break-after: always; }
 .admit-card { border: 1px solid #000; padding: 6px; height: 48%; margin-bottom: 25px; box-sizing: border-box; }
 .title { text-align: center; font-size: 16px; font-weight: bold; text-decoration: underline; margin-bottom: 8px; }
 .info { font-size: 13px; margin-bottom: 8px; line-height: 1.5; }
