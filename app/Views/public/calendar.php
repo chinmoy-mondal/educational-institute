@@ -57,48 +57,49 @@
 
 <!-- Calendar Init -->
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const calendarEl = document.getElementById('calendar');
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        height: 600,
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek'
-        },
-        events: 'publiccalendar/events', // JSON feed
-        eventDidMount: function(info) {
-            // Left color ribbon
-            info.el.style.borderLeft = "5px solid " + (info.event.backgroundColor || "#0d6efd");
-            info.el.style.backgroundColor = "#f8f9fa";
-            info.el.style.padding = "3px 5px";
-            info.el.style.borderRadius = "4px";
-            info.el.style.fontWeight = "500";
-        },
-        eventClick: function(info) {
-            // Format date and time
-            const startDate = info.event.start ? info.event.start.toLocaleDateString() : "";
-            const startTime = info.event.start ? info.event.start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "";
-            const endTime = info.event.end ? info.event.end.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : "";
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            height: 650,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,listMonth'
+            },
+            events: '/calendar/events', // JSON feed
+            eventDidMount: function(info) {
+                // style: left color ribbon
+                info.el.style.borderLeft = "5px solid " + (info.event.backgroundColor || "#0d6efd");
+                info.el.style.backgroundColor = "#2984e0ff";
+            },
+            eventClick: function(info) {
+                // Format date and time separately
+                let startDate = info.event.start ? info.event.start.toLocaleDateString() : "";
+                let startTime = info.event.start ? info.event.start.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) : "";
+                let endTime = info.event.end ? info.event.end.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) : "";
 
-            // Populate modal
-            document.getElementById("modal-title").innerText = info.event.title || "";
-            document.getElementById("modal-desc").innerText = info.event.extendedProps.description || "";
-            document.getElementById("modal-category").innerText = info.event.extendedProps.category || "";
-            document.getElementById("modal-class").innerText = info.event.extendedProps.class || "";
-            document.getElementById("modal-subject").innerText = info.event.extendedProps.subject || "";
-            document.getElementById("modal-date").innerText = startDate;
-            document.getElementById("modal-start").innerText = startTime;
-            document.getElementById("modal-end").innerText = endTime;
+                // Populate modal
+                document.getElementById("modal-title").innerText = info.event.title || "";
+                document.getElementById("modal-desc").innerText = info.event.extendedProps.description || "";
+                document.getElementById("modal-subject").innerText = info.event.extendedProps.subject || "";
+                document.getElementById("modal-date").innerText = startDate;
+                document.getElementById("modal-start").innerText = startTime;
+                document.getElementById("modal-end").innerText = endTime;
 
-            // Show modal
-            new bootstrap.Modal(document.getElementById('eventModal')).show();
-        }
+                // Show modal
+                new bootstrap.Modal(document.getElementById('eventModal')).show();
+            }
+        });
+
+        calendar.render();
     });
-
-    calendar.render();
-});
 </script>
 
 <?= $this->endSection(); ?>
