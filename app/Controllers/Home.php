@@ -169,7 +169,8 @@ class Home extends BaseController
 	public function printAdmit()
 	{
 		$studentModel = new StudentModel();
-		$eventModel = new CalendarModel();
+		$eventModel   = new CalendarModel();
+		$subject      = new SubjectModel();
 
 		$class     = $this->request->getPost('class');
 		$section   = $this->request->getPost('section');
@@ -194,8 +195,29 @@ class Home extends BaseController
 
 		$students = $studentModel->findAll();
 
+
+		$allData = [];
+
+		foreach ($students as $student) {
+			// Get subject IDs for this student
+			$subjectIds = array_map('trim', explode(',', $student['assign_sub']));
+
+			// Fetch subjects
+			$subjects = $subject->whereIn('subject', $subjectIds)->findAll();
+
+			// Fetch routines
+			$routines = $eventModel->whereIn('id', $subjectIds)->findAll();
+
+			// Combine into one array
+			$allData[] = [
+				'student' => $student,
+				'subjects' => $subjects,
+				'routines' => $routines
+			];
+		}
+
 		echo "<pre>";
-		print_r($students);
+		print_r($allData);
 
 		// if ($class !== null) {
 		// 	$students = $studentModel
