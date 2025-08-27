@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function () {
             center: 'title',
             right: 'dayGridMonth,timeGridWeek'
         },
-        events: '<?= base_url("publiccalendar/events"); ?>', // JSON feed
+        events: 'publiccalendar/events', // JSON feed
         eventDidMount: function(info) {
             // Left color ribbon
             info.el.style.borderLeft = "5px solid " + (info.event.backgroundColor || "#0d6efd");
