@@ -9,8 +9,23 @@
     body { margin: 0; }
 }
 body { font-family: 'Kalpurush', 'Noto Sans Bengali', sans-serif, sans-serif; background-color: #fff; }
-.page { width: 210mm; height: 335mm; padding: 5mm 15mm 15mm 15mm;; display: flex; flex-direction: column; justify-content: space-between; page-break-after: always; }
-.admit-card { border: 1px solid #000; padding: 6px; height: 48%; margin-bottom: 25px; box-sizing: border-box; }
+.page {
+    width: 210mm;
+    height: 297mm; /* A4 height */
+    padding: 5mm 15mm 5mm 15mm;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 4mm; /* spacing between two cards */
+    page-break-after: always;
+}
+
+.admit-card {
+    border: 1px solid #000;
+    padding: 6px;
+    height: 48%; /* Two cards fit in one page */
+    box-sizing: border-box;
+}
 .title { text-align: center; font-size: 16px; font-weight: bold; text-decoration: underline; margin-bottom: 8px; }
 .info { font-size: 13px; margin-bottom: 8px; line-height: 1.5; }
 .routine-table { font-size: 12px; margin-bottom: 10px; border-collapse: collapse; width: 100%; }
