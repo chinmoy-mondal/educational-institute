@@ -203,10 +203,10 @@ class Home extends BaseController
 			$subjectIds = array_map('trim', explode(',', $student['assign_sub']));
 
 			// Fetch subjects
-			$subjects = $subject->whereIn('subject', $subjectIds)->findAll();
+			$subjects = $subject->whereIn('id', $subjectIds)->findAll();
 
 			// Fetch routines
-			$routines = $eventModel->whereIn('id', $subjectIds)->findAll();
+			$routines = $eventModel->whereIn('subject', $subjectIds)->findAll();
 
 			// Combine into one array
 			$allData[] = [
