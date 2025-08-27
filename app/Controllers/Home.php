@@ -182,12 +182,20 @@ class Home extends BaseController
 		echo "Year: $year<br>";
 		echo "Exam: $exam_name<br>";
 
-		$students = $studentModel->where('class', $class)
-                                 ->where('section', $section)
-                                 ->findAll();
+		$studentModel->where('class', $class);
 
-								 echo "<pre>";
-								 print_r($students);
+		if (strtolower($section) === 'general') {
+			// Exclude any section containing "Vocational"
+			$studentModel->notLike('section', 'Vocational');
+		} else {
+			// Partial match for section
+			$studentModel->like('section', $section);
+		}
+
+		$students = $studentModel->findAll();
+
+		echo "<pre>";
+		print_r($students);
 
 		// if ($class !== null) {
 		// 	$students = $studentModel
