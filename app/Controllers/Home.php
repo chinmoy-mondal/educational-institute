@@ -216,12 +216,12 @@ class Home extends BaseController
 			];
 		}
 
-		echo "<pre>";
-		print_r($allData);
+		// echo "<pre>";
+		// print_r($allData);
 
 		
-		// return view('public/admit_crd', [
-		// 	'data' => $allData
-		// ]);
+		return view('public/admit_crd', [
+			'data' => $allData
+		]);
 	}
 }

@@ -1,152 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Admit Cards</title>
-  <style>
-    @media print {
-      @page { size: A4; margin: 1mm 15mm; }
-      body { margin: 0; }
-    }
-
-    body {
-      font-family: 'Kalpurush', 'Noto Sans Bengali', sans-serif;
-      background-color: #fff;
-    }
-
-    .page {
-      width: 210mm;
-      height: 335mm;
-      padding: 15mm;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      page-break-after: always;
-    }
-
-    .admit-card {
-      border: 1px solid #000;
-      padding: 6px;
-      height: 48%;
-      margin-bottom: 4px;
-      box-sizing: border-box;
-    }
-
-    .title { text-align: center; font-size: 16px; font-weight: bold; text-decoration: underline; margin-bottom: 8px; }
-
-    .info { font-size: 13px; margin-bottom: 8px; line-height: 1.5; }
-
-    .routine-table {
-      font-size: 12px;
-      margin-bottom: 10px;
-      border-collapse: collapse;
-      width: 100%;
-    }
-
-    .routine-table th, .routine-table td {
-      padding: 2px 6px;
-      font-size: 12px;
-      line-height: 1.2;
-      text-align: center;
-      border: 1px solid #000;
-    }
-
-    .footer-note { font-size: 11px; margin-top: 8px; }
-
-    .sign { display: flex; justify-content: space-between; margin-top: 10px; font-size: 12px; }
-  </style>
+<meta charset="UTF-8">
+<title>Admit Cards</title>
+<style>
+@media print {
+    @page { size: A4; margin: 1mm 15mm; }
+    body { margin: 0; }
+}
+body { font-family: 'Kalpurush', 'Noto Sans Bengali', sans-serif, sans-serif; background-color: #fff; }
+.page { width: 210mm; height: 335mm; padding: 15mm; display: flex; flex-direction: column; justify-content: space-between; page-break-after: always; }
+.admit-card { border: 1px solid #000; padding: 6px; height: 48%; margin-bottom: 4px; box-sizing: border-box; }
+.title { text-align: center; font-size: 16px; font-weight: bold; text-decoration: underline; margin-bottom: 8px; }
+.info { font-size: 13px; margin-bottom: 8px; line-height: 1.5; }
+.routine-table { font-size: 12px; margin-bottom: 10px; border-collapse: collapse; width: 100%; }
+.routine-table th, .routine-table td { padding: 2px 6px; font-size: 12px; text-align: center; border: 1px solid #000; }
+.footer-note { font-size: 11px; margin-top: 8px; }
+.sign { display: flex; justify-content: space-between; margin-top: 10px; font-size: 12px; }
+</style>
 </head>
 <body>
 
-<?php for ($i = 0; $i < count($students); $i += 2): ?>
-<div class="page">
-  <?php for ($j = $i; $j < $i + 2 && $j < count($students); $j++): ?>
-    <div class="admit-card">
-      <table style="width:100%; text-align:center;">
-        <tr>
-          <td style="width:80px;">
-            <img src="<?= base_url('public/assets/img/logo.jpg') ?>" style="width:80px; height:80px;" alt="Left Logo">
-          </td>
-          <td>
-            <div style="font-size:16px; font-weight:bold; line-height:1.5;">
-              Mulgram Secondary School<br>
-              Keshabpur, Jashore<br>
-              <strong>ADMIT CARD</strong><br>
-              Half yearly exam - 2025
-            </div>
-          </td>
-          <td style="width:80px;">
-            <img src="<?= base_url(esc($students[$j]['student_pic'] ?? 'public/assets/img/default.png')) ?>" width="60" height="70" alt="Student Photo">
-          </td>
-        </tr>
-      </table>
+<?php if(!empty($data)): ?>
+    <?php for ($i = 0; $i < count($data); $i += 2): ?>
+        <div class="page">
+            <?php for ($j = $i; $j < $i + 2 && $j < count($data); $j++): ?>
+                <?php $studentData = $data[$j]; ?>
+                <?php $student = $studentData['student']; ?>
+                <?php $subjects = $studentData['subjects']; ?>
+                <?php $routines = $studentData['routines']; ?>
 
-      <div class="info-two-line">
-        <div>
-          <strong>Name:</strong> <?= esc($students[$j]['student_name'] ?? 'N/A') ?>  
-          <strong>Roll:</strong> <?= esc($students[$j]['roll'] ?? 'N/A') ?>  
-          <strong>Class:</strong> <?= esc($students[$j]['class'] ?? 'N/A') ?>  
-          <strong>Section:</strong> <?= esc($students[$j]['section'] ?? 'N/A') ?>
+                <div class="admit-card">
+                    <table style="width:100%; text-align:center;">
+                        <tr>
+                            <td style="width:80px;"><img src="<?= base_url('public/assets/img/logo.jpg') ?>" style="width:80px; height:80px;" alt="Logo"></td>
+                            <td>
+                                <div style="font-size:16px; font-weight:bold; line-height:1.5;">
+                                    Mulgram Secondary School<br>
+                                    Keshabpur, Jashore<br>
+                                    <strong>ADMIT CARD</strong><br>
+                                    Half yearly exam - <?= esc($student['year'] ?? date('Y')) ?>
+                                </div>
+                            </td>
+                            <td style="width:80px;"><img src="<?= base_url(esc($student['student_pic'])) ?>" width="60" height="70" alt="Student Photo"></td>
+                        </tr>
+                    </table>
+
+                    <div class="info">
+                        <strong>Name:</strong> <?= esc($student['student_name']) ?>
+                        <strong>Roll:</strong> <?= esc($student['roll']) ?>
+                        <strong>Class:</strong> <?= esc($student['class']) ?>
+                        <strong>Section:</strong> <?= esc($student['section'] ?? 'N/A') ?><br>
+                        <strong>Father's Name:</strong> <?= esc($student['father_name']) ?>
+                        <strong>Mother's Name:</strong> <?= esc($student['mother_name']) ?>
+                    </div>
+
+                    <table class="routine-table">
+                        <tr>
+                            <th>ক্রমিক</th>
+                            <th>তারিখ</th>
+                            <th>সময়</th>
+                            <th>দিন</th>
+                            <th>বিষয়</th>
+                        </tr>
+                        <?php if(!empty($routines)): $count=1; ?>
+                            <?php foreach($routines as $routine): ?>
+                                <tr>
+                                    <td><?= $count++ ?></td>
+                                    <td><?= date('d/m/Y', strtotime($routine['start_date'])) ?></td>
+                                    <td><?= date('h:i A', strtotime($routine['start_time'])) ?> - <?= date('h:i A', strtotime($routine['end_time'])) ?></td>
+                                    <td><?= bangla_day(date('l', strtotime($routine['start_date']))) ?></td>
+                                    <td>
+                                        <?php
+                                        $subjectName = '';
+                                        foreach($subjects as $sub) {
+                                            if($sub['id'] == $routine['subject']) {
+                                                $subjectName = $sub['subject'];
+                                                break;
+                                            }
+                                        }
+                                        echo esc($subjectName);
+                                        ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr><td colspan="5">No routine available</td></tr>
+                        <?php endif; ?>
+                    </table>
+
+                    <div class="footer-note">
+                        পরীক্ষার দিন নির্ধারিত সময়ের ৩০ মিনিট পূর্বে কেন্দ্রে উপস্থিত থাকতে হবে।
+                    </div>
+
+                    <div class="sign">
+                        <span><br><br><br>Class Teacher</span>
+                        <span style="text-align:center;">
+                            <img src="<?= base_url('public/assets/img/sign.png') ?>" alt="Signature" style="width:100px; display:block; margin:0 auto;">
+                            Head Teacher
+                        </span>
+                    </div>
+                </div>
+            <?php endfor; ?>
         </div>
-        <div>
-          <strong>Father's Name:</strong> <?= esc($students[$j]['father_name'] ?? 'N/A') ?>
-          <strong>Mother's Name:</strong> <?= esc($students[$j]['mother_name'] ?? 'N/A') ?> 
-        </div>
-      </div>
-
-      <table class="routine-table">
-        <tr>
-          <th>ক্রমিক</th>
-          <th>তারিখ</th>
-          <th>সময়</th>
-          <th>দিন</th>
-          <th>বিষয়</th>
-        </tr>
-
-        <?php
-          $count = 1;
-          $studentSubjects = explode(',', $students[$j]['assign_sub'] ?? '');
-          foreach ($routines as $r):
-            if (!in_array($r['subject_id'] ?? 0, $studentSubjects)) continue;
-
-            $eventDateRaw = $r['date'] ?? ($r['start'] ?? null);
-            $eventTime = $r['time'] ?? ($r['start_time'] ?? '10:00 AM - 1:00 PM');
-
-            $eventDate = $eventDateRaw ? date('d/m/Y', strtotime($eventDateRaw)) : 'N/A';
-            $eventDay  = $eventDateRaw ? bangla_day(date('l', strtotime($eventDateRaw))) : 'N/A';
-        ?>
-        <tr>
-          <td><?= $count++ ?></td>
-          <td><?= $eventDate ?></td>
-          <td><?= $eventTime ?></td>
-          <td><?= $eventDay ?></td>
-          <td><?= esc($r['subject_name'] ?? $r['description'] ?? 'N/A') ?></td>
-        </tr>
-        <?php endforeach; ?>
-
-      </table>
-
-      <div class="footer-note">
-        পরীক্ষার দিন নির্ধারিত সময়ের ৩০ মিনিট পূর্বে কেন্দ্রে উপস্থিত থাকতে হবে।
-      </div>
-
-      <div class="sign">
-        <span><br><br><br>Class Teacher</span>
-        <span style="text-align:center;">
-          <img src="<?= base_url('public/assets/img/sign.png') ?>" alt="Signature" style="width:100px; height:auto; display:block; margin:0 auto;">
-          Head Teacher
-        </span>
-      </div>
-
-    </div>
-  <?php endfor; ?>
-</div>
-<?php endfor; ?>
+    <?php endfor; ?>
+<?php else: ?>
+    <p>No student data found.</p>
+<?php endif; ?>
 
 <script>
-  window.onload = () => window.print();
+window.onload = () => window.print();
 </script>
-
 </body>
 </html>
