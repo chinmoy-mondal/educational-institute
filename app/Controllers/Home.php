@@ -177,11 +177,7 @@ class Home extends BaseController
 		$year      = $this->request->getPost('year');
 		$exam_name = $this->request->getPost('exam_name');
 
-		// For testing
-		echo "Class: $class<br>";
-		echo "Section: $section<br>";
-		echo "Year: $year<br>";
-		echo "Exam: $exam_name<br>";
+	
 
 		$studentModel->where('class', $class);
 
