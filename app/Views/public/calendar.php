@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
         eventDidMount: function(info) {
             // style: left color ribbon
             info.el.style.borderLeft = "5px solid " + (info.event.backgroundColor || "#0d6efd");
-            info.el.style.backgroundColor = "#f8f9fa";
+            info.el.style.backgroundColor = "#2984e0ff";
             info.el.style.padding = "3px 5px";
             info.el.style.borderRadius = "4px";
             info.el.style.fontWeight = "500";
