@@ -87,12 +87,10 @@
                 // Populate modal
                 document.getElementById("modal-title").innerText = info.event.title || "";
                 document.getElementById("modal-desc").innerText = info.event.extendedProps.description || "";
+                document.getElementById("modal-subject").innerText = info.event.extendedProps.subject || "";
                 document.getElementById("modal-date").innerText = startDate;
                 document.getElementById("modal-start").innerText = startTime;
                 document.getElementById("modal-end").innerText = endTime;
-                document.getElementById("modal-category").innerText = info.event.extendedProps.category || "";
-                document.getElementById("modal-class").innerText = info.event.extendedProps.class || "";
-                document.getElementById("modal-subject").innerText = info.event.extendedProps.subject || "";
 
                 // Show modal
                 new bootstrap.Modal(document.getElementById('eventModal')).show();
