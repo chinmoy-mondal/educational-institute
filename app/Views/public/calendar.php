@@ -8,7 +8,7 @@
     <?= $this->include("layouts/base-structure/header"); ?>
 </div>
 
-<div class="container content" style="padding-top: 90px;"> <!-- offset for fixed navbar -->
+<div class="container content"> <!-- offset for fixed navbar -->
 
     <!-- Start: Calendar Section -->
     <section class="calendar-section py-5 bg-white">
