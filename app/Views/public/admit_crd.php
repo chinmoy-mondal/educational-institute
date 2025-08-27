@@ -54,7 +54,7 @@ body { font-family: 'Kalpurush', 'Noto Sans Bengali', sans-serif, sans-serif; ba
                                     Mulgram Secondary School<br>
                                     Keshabpur, Jashore<br>
                                     <strong>ADMIT CARD</strong><br>
-                                    Half yearly exam - <?= esc($student['year'] ?? date('Y')) ?>
+                                    Pre-Test Exam exam - <?= esc($student['year'] ?? date('Y')) ?>
                                 </div>
                             </td>
                             <td style="width:80px;"><img src="<?= base_url(esc($student['student_pic'])) ?>" width="60" height="70" alt="Student Photo"></td>
