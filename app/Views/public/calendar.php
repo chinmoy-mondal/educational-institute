@@ -1,79 +1,96 @@
-<?= $this->extend('layouts/base') ?>
-<?= $this->section('content') ?>
+<!-- chinmoy is testing calendar page only -->
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
-  <div class="container">
-    <a class="navbar-brand fw-bold" href="<?= base_url('/') ?>">School Name</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="<?= base_url('/') ?>">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="<?= base_url('publiccalendar') ?>">Calendar</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="<?= base_url('about') ?>">About</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="<?= base_url('contact') ?>">Contact</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
+<?= $this->extend("layouts/base.php") ?>
+<?= $this->section("content"); ?>
 
-<!-- Calendar -->
-<div class="container py-4">
-  <div class="row justify-content-center">
-    <div class="col-md-10">
-      <div class="card shadow border-0 rounded-3">
-        <div class="card-header bg-primary text-white">
-          <h5 class="mb-0">School Event Calendar</h5>
+<!-- Fixed Wrapper for Navbar -->
+<div class="fixed-header">
+    <?= $this->include("layouts/base-structure/header"); ?>
+</div>
+
+<div class="container content" style="padding-top: 90px;"> <!-- offset for fixed navbar -->
+
+    <!-- Start: Calendar Section -->
+    <section class="calendar-section py-5 bg-white">
+        <div class="container">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">📅 School Event Calendar</h2>
+                <p class="text-muted">Stay updated with holidays, exams, meetings and more.</p>
+            </div>
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-body">
+                    <div id="calendar"></div>
+                </div>
+            </div>
         </div>
-        <div class="card-body">
-          <div id="calendar"></div>
-        </div>
+    </section>
+
+</div>
+
+<?= $this->include("layouts/base-structure/footer"); ?>
+
+<!-- FullCalendar CSS & JS -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+<!-- Event Details Modal -->
+<div class="modal fade" id="eventModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-3 shadow">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Event Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Title:</strong> <span id="modal-title"></span></p>
+        <p><strong>Description:</strong> <span id="modal-desc"></span></p>
+        <p><strong>Category:</strong> <span id="modal-category"></span></p>
+        <p><strong>Class:</strong> <span id="modal-class"></span></p>
+        <p><strong>Subject:</strong> <span id="modal-subject"></span></p>
+        <p><strong>Start:</strong> <span id="modal-start"></span></p>
+        <p><strong>End:</strong> <span id="modal-end"></span></p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- FullCalendar JS -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<!-- Calendar Init -->
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: 'dayGridMonth',
-      height: 650,
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-      },
-      events: '<?= base_url('publiccalendar/events') ?>',
-      eventClick: function(info) {
-        alert(
-          "Title: " + info.event.title + "\n\n" +
-          "Description: " + (info.event.extendedProps.description || '') + "\n" +
-          "Start: " + info.event.start.toLocaleString() + "\n" +
-          "End: " + (info.event.end ? info.event.end.toLocaleString() : '') + "\n" +
-          "Category: " + (info.event.extendedProps.category || '') + "\n" +
-          "Subcategory: " + (info.event.extendedProps.subcategory || '') + "\n" +
-          "Class: " + (info.event.extendedProps.class || '') + "\n" +
-          "Subject: " + (info.event.extendedProps.subject || '')
-        );
-      }
+        initialView: 'dayGridMonth',
+        height: 650,
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,listMonth'
+        },
+        events: '<?= base_url("publiccalendar/events"); ?>', // JSON feed
+        eventDidMount: function(info) {
+            // style: left color ribbon
+            info.el.style.borderLeft = "5px solid " + (info.event.backgroundColor || "#0d6efd");
+            info.el.style.backgroundColor = "#f8f9fa";
+            info.el.style.padding = "3px 5px";
+            info.el.style.borderRadius = "4px";
+            info.el.style.fontWeight = "500";
+        },
+        eventClick: function (info) {
+            // populate modal
+            document.getElementById("modal-title").innerText = info.event.title || "";
+            document.getElementById("modal-desc").innerText = info.event.extendedProps.description || "";
+            document.getElementById("modal-category").innerText = info.event.extendedProps.category || "";
+            document.getElementById("modal-class").innerText = info.event.extendedProps.class || "";
+            document.getElementById("modal-subject").innerText = info.event.extendedProps.subject || "";
+            document.getElementById("modal-start").innerText = info.event.start ? info.event.start.toLocaleString() : "";
+            document.getElementById("modal-end").innerText = info.event.end ? info.event.end.toLocaleString() : "";
+            
+            new bootstrap.Modal(document.getElementById('eventModal')).show();
+        }
     });
+
     calendar.render();
-  });
+});
 </script>
 
-<?= $this->endSection() ?>
+<?= $this->endSection(); ?>
