@@ -182,12 +182,21 @@ class Home extends BaseController
 		echo "Year: $year<br>";
 		echo "Exam: $exam_name<br>";
 
+		$students = $studentModel->where('class', $class)
+                                 ->where('section', $section)
+                                 ->findAll();
+
+								 echo "<pre>";
+								 print_r($students);
+
 		// if ($class !== null) {
 		// 	$students = $studentModel
 		// 		->where('class', $class)
 		// 		->orderBy('roll', 'ASC')
 		// 		->findAll();
 		// 	$events = $eventModel->findAll();
+		// }elseif($section !== null){
+
 		// } else {
 		// 	$students = $studentModel
 		// 		->where('class !=', '10')
