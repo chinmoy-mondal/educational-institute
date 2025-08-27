@@ -35,59 +35,72 @@
 
 <!-- Event Details Modal -->
 <div class="modal fade" id="eventModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content rounded-3 shadow">
-      <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title">Event Details</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <p><strong>Title:</strong> <span id="modal-title"></span></p>
-        <p><strong>Description:</strong> <span id="modal-desc"></span></p>
-        <p><strong>Category:</strong> <span id="modal-category"></span></p>
-        <p><strong>Class:</strong> <span id="modal-class"></span></p>
-        <p><strong>Subject:</strong> <span id="modal-subject"></span></p>
-        <p><strong>Start:</strong> <span id="modal-start"></span></p>
-        <p><strong>End:</strong> <span id="modal-end"></span></p>
-      </div>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-3 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Event Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Title:</strong> <span id="modal-title"></span></p>
+                <p><strong>Description:</strong> <span id="modal-desc"></span></p>
+                <p><strong>Category:</strong> <span id="modal-category"></span></p>
+                <p><strong>Class:</strong> <span id="modal-class"></span></p>
+                <p><strong>Subject:</strong> <span id="modal-subject"></span></p>
+                <p><strong>Start:</strong> <span id="modal-start"></span></p>
+                <p><strong>End:</strong> <span id="modal-end"></span></p>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- Calendar Init -->
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const calendarEl = document.getElementById('calendar');
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        height: 650,
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,listMonth'
-        },
-        events: '/calendar/events', // JSON feed
-        eventDidMount: function(info) {
-            // style: left color ribbon
-            info.el.style.borderLeft = "5px solid " + (info.event.backgroundColor || "#0d6efd");
-            info.el.style.backgroundColor = "#2984e0ff";
-        },
-        eventClick: function (info) {
-            // populate modal
-            document.getElementById("modal-title").innerText = info.event.title || "";
-            document.getElementById("modal-desc").innerText = info.event.extendedProps.description || "";
-            document.getElementById("modal-category").innerText = info.event.extendedProps.category || "";
-            document.getElementById("modal-class").innerText = info.event.extendedProps.class || "";
-            document.getElementById("modal-subject").innerText = info.event.extendedProps.subject || "";
-            document.getElementById("modal-start").innerText = info.event.start ? info.event.start.toLocaleString() : "";
-            document.getElementById("modal-end").innerText = info.event.end ? info.event.end.toLocaleString() : "";
-            
-            new bootstrap.Modal(document.getElementById('eventModal')).show();
-        }
-    });
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            height: 650,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,listMonth'
+            },
+            events: '/calendar/events', // JSON feed
+            eventDidMount: function(info) {
+                // style: left color ribbon
+                info.el.style.borderLeft = "5px solid " + (info.event.backgroundColor || "#0d6efd");
+                info.el.style.backgroundColor = "#2984e0ff";
+            },
+            eventClick: function(info) {
+                // Format date and time separately
+                let startDate = info.event.start ? info.event.start.toLocaleDateString() : "";
+                let startTime = info.event.start ? info.event.start.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) : "";
+                let endTime = info.event.end ? info.event.end.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) : "";
 
-    calendar.render();
-});
+                // Populate modal
+                document.getElementById("modal-title").innerText = info.event.title || "";
+                document.getElementById("modal-desc").innerText = info.event.extendedProps.description || "";
+                document.getElementById("modal-date").innerText = startDate;
+                document.getElementById("modal-start").innerText = startTime;
+                document.getElementById("modal-end").innerText = endTime;
+                document.getElementById("modal-category").innerText = info.event.extendedProps.category || "";
+                document.getElementById("modal-class").innerText = info.event.extendedProps.class || "";
+                document.getElementById("modal-subject").innerText = info.event.extendedProps.subject || "";
+
+                // Show modal
+                new bootstrap.Modal(document.getElementById('eventModal')).show();
+            }
+        });
+
+        calendar.render();
+    });
 </script>
 
 <?= $this->endSection(); ?>
