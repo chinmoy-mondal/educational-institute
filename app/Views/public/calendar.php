@@ -88,7 +88,7 @@
                 // Populate modal
                 document.getElementById("modal-title").innerText = info.event.title || "";
                 document.getElementById("modal-desc").innerText = info.event.extendedProps.description || "";
-                document.getElementById("modal-subject").innerText = info.event.extendedProps.description || "dfsdfsdf";
+                document.getElementById("modal-subject").innerText = info.event.extendedProps.title || "dfsdfsdf";
                 document.getElementById("modal-date").innerText = startDate;
                 document.getElementById("modal-start").innerText = startTime;
                 document.getElementById("modal-end").innerText = endTime;
