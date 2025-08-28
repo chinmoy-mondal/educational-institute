@@ -25,7 +25,7 @@
             width: 210mm;
             height: 297mm;
             /* A4 */
-            padding: 2mm 12mm;
+            padding: 12mm 12mm;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -37,7 +37,7 @@
         .admit-card {
             border: 1px solid #000;
             padding: 2px 12px;
-            height: 49%;
+            height: 50%;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
