@@ -81,7 +81,6 @@
         .sign {
             display: flex;
             justify-content: center;
-            align-items: center;
             gap: 60px;
             height: 75px;
             margin-top: auto;
