@@ -86,8 +86,12 @@
             margin-top: auto;
         }
 
-        .sign .block {
-            text-align: center;
+        .sign .block1 {
+            text-align: left;
+            width: 40%;
+        }
+        .sign .block2 {
+            text-align: left;
             width: 40%;
         }
 
@@ -191,11 +195,11 @@
 
                         <!-- Signatures -->
                         <div class="sign">
-                            <div class="block">
+                            <div class="block1">
                                 <br><br>
                                 <span>Class Teacher</span>
                             </div>
-                            <div class="block">
+                            <div class="block2">
                                 <img src="<?= base_url('public/assets/img/sign.png') ?>" alt="Signature">
                                 <br>
                                 <span>Head Teacher</span>
