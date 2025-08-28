@@ -78,21 +78,13 @@
             text-align: center;
         }
 
-        /* signatures section always inside */
         .sign {
             display: flex;
             justify-content: center;
-            /* center horizontally */
             align-items: center;
-            /* center vertically */
             gap: 60px;
-            /* space between Class & Head teacher */
-            height: 120px;
-            /* give some fixed height so vertical centering works */
-            margin-top: 40px;
-            /* adjust spacing from content */
-            border-top: 1px dashed #000;
-            /* optional separator */
+            height: 75px;
+            margin-top: auto;
         }
 
         .sign .block {
@@ -204,6 +196,7 @@
                             </div>
                             <div class="block">
                                 <img src="<?= base_url('public/assets/img/sign.png') ?>" alt="Signature">
+                                <br>
                                 <span>Head Teacher</span>
                             </div>
                         </div>
