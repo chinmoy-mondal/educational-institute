@@ -41,8 +41,9 @@ body { font-family: 'Kalpurush', 'Noto Sans Bengali', sans-serif; background-col
 /* signatures section always inside */
 .sign {
     display: flex;
-    justify-content: space-between;
-    font-size: 12px;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 1px;
     margin-top: auto; /* pushes signatures to the bottom */
 }
 .sign .block { text-align: center; width: 40%; }
