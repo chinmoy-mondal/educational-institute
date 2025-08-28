@@ -88,11 +88,11 @@
 
         .sign .block1 {
             text-align: left;
-            width: 40%;
+            width: 50%;
         }
         .sign .block2 {
-            text-align: left;
-            width: 40%;
+            text-align: right;
+            width: 50%;
         }
 
         .sign .block span {
