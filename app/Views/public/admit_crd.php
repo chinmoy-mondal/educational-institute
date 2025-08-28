@@ -5,14 +5,14 @@
 <title>Admit Cards</title>
 <style>
 @media print {
-    @page { size: A4; margin: 5mm 12mm; }
+    @page { size: A4; margin: 2mm 12mm; }
     body { margin: 0; }
 }
 body { font-family: 'Kalpurush', 'Noto Sans Bengali', sans-serif; background-color: #fff; }
 .page {
     width: 210mm;
     height: 297mm; /* A4 */
-    padding: 8mm 12mm;
+    padding: 2mm 12mm;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -21,7 +21,7 @@ body { font-family: 'Kalpurush', 'Noto Sans Bengali', sans-serif; background-col
 }
 .admit-card {
     border: 1px solid #000;
-    padding: 10px 12px;
+    padding: 2px 12px;
     height: 49%;
     box-sizing: border-box;
     display: flex;
@@ -31,7 +31,7 @@ body { font-family: 'Kalpurush', 'Noto Sans Bengali', sans-serif; background-col
 .info { font-size: 13px; margin: 8px 0; line-height: 1.5; }
 .routine-table { font-size: 12px; border-collapse: collapse; width: 100%; margin-top: 5px; }
 .routine-table th, .routine-table td {
-    padding: 3px 6px;
+    padding: 1px 6px;
     font-size: 12px;
     text-align: center;
     border: 1px solid #000;
