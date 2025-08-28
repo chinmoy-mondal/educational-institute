@@ -49,7 +49,7 @@
                         <label for="exam_name" class="form-label">Exam Name</label>
                         <select id="exam_name" name="exam_name" class="form-select" required>
                             <option value="">-- Select Exam --</option>
-                            <option value="Pre Test Exam">Pre Test Exam</option>
+                            <option value="Pre-Test Exam">Pre-Test Exam</option>
                             <option value="Second Term">Second Term</option>
                             <option value="Final">Final</option>
                             <option value="Test Exam">Test Exam</option>
