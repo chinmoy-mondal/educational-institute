@@ -132,7 +132,7 @@
                                         Mulgram Secondary School<br>
                                         Keshabpur, Jashore<br>
                                         <strong>ADMIT CARD</strong><br>
-                                        <?= esc($student['exam_name'] ?? 'Exam') ?> - <?= esc($student['year'] ?? date('Y')) ?>
+                                        <?= esc($student['exam'] ?? 'Exam') ?> - <?= esc($student['year'] ?? date('Y')) ?>
                                     </div>
                                 </td>
                                 <td style="width:80px;">
