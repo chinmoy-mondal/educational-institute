@@ -208,7 +208,9 @@ class Home extends BaseController
 			$allData[] = [
 				'student' => $student,
 				'subjects' => $subjects,
-				'routines' => $routines
+				'routines' => $routines,
+				'year'     => $year,
+				'exam'     =>  $exam_name
 			];
 		}
 
