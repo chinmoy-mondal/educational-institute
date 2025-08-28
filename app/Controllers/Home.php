@@ -177,7 +177,7 @@ class Home extends BaseController
 		$year      = $this->request->getPost('year');
 		$exam_name = $this->request->getPost('exam_name');
 
-	
+
 
 		$studentModel->where('class', $class);
 
@@ -202,7 +202,11 @@ class Home extends BaseController
 			$subjects = $subject->whereIn('id', $subjectIds)->findAll();
 
 			// Fetch routines
-			$routines = $eventModel->whereIn('subject', $subjectIds)->findAll();
+			$routines = $eventModel
+				->whereIn('subject', $subjectIds)
+				->where('subcategory', $exam_name)
+				->where('YEAR(start_date)', $year)   // extract year from start_date
+				->findAll();
 
 			// Combine into one array
 			$allData[] = [
@@ -217,7 +221,7 @@ class Home extends BaseController
 		// echo "<pre>";
 		// print_r($allData);
 
-		
+
 		return view('public/admit_crd', [
 			'data' => $allData
 		]);
