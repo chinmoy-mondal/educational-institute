@@ -101,6 +101,7 @@
         .sign img {
             width: 90px;
             margin-bottom: 4px;
+            height: 37px;
         }
     </style>
 </head>
@@ -192,6 +193,7 @@
                         <!-- Signatures -->
                         <div class="sign">
                             <div class="block">
+                                <br><br>
                                 <span>Class Teacher</span>
                             </div>
                             <div class="block">
