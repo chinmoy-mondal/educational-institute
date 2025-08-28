@@ -5,33 +5,49 @@
 <title>Admit Cards</title>
 <style>
 @media print {
-    @page { size: A4; margin: 1mm 15mm; }
+    @page { size: A4; margin: 5mm 12mm; }
     body { margin: 0; }
 }
-body { font-family: 'Kalpurush', 'Noto Sans Bengali', sans-serif, sans-serif; background-color: #fff; }
+body { font-family: 'Kalpurush', 'Noto Sans Bengali', sans-serif; background-color: #fff; }
 .page {
     width: 210mm;
-    height: 297mm; /* A4 height */
-    padding: 5mm 15mm 5mm 15mm;
+    height: 297mm; /* A4 */
+    padding: 8mm 12mm;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 4mm; /* spacing between two cards */
+    gap: 6mm; /* space between 2 cards */
     page-break-after: always;
 }
-
 .admit-card {
     border: 1px solid #000;
-    padding: 6px;
-    height: 48%; /* Two cards fit in one page */
+    padding: 10px 12px;
+    height: 49%;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .title { text-align: center; font-size: 16px; font-weight: bold; text-decoration: underline; margin-bottom: 8px; }
-.info { font-size: 13px; margin-bottom: 8px; line-height: 1.5; }
-.routine-table { font-size: 12px; margin-bottom: 10px; border-collapse: collapse; width: 100%; }
-.routine-table th, .routine-table td { padding: 2px 6px; font-size: 12px; text-align: center; border: 1px solid #000; }
-.footer-note { font-size: 11px; margin-top: 8px; }
-.sign { display: flex; justify-content: space-between; margin-top: 10px; font-size: 12px; }
+.info { font-size: 13px; margin: 8px 0; line-height: 1.5; }
+.routine-table { font-size: 12px; border-collapse: collapse; width: 100%; margin-top: 5px; }
+.routine-table th, .routine-table td {
+    padding: 3px 6px;
+    font-size: 12px;
+    text-align: center;
+    border: 1px solid #000;
+}
+.footer-note { font-size: 11px; margin-top: 6px; text-align: center; }
+.sign {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    font-size: 12px;
+    align-items: flex-end;
+}
+.sign .block { text-align: center; width: 40%; }
+.sign .block span { display: inline-block; border-top: 1px solid #000; padding-top: 2px; }
+.sign img { width: 90px; margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -46,30 +62,37 @@ body { font-family: 'Kalpurush', 'Noto Sans Bengali', sans-serif, sans-serif; ba
                 <?php $routines = $studentData['routines']; ?>
 
                 <div class="admit-card">
-                    <table style="width:100%; text-align:center;">
+                    <!-- Header -->
+                    <table style="width:100%; text-align:center; margin-bottom: 5px;">
                         <tr>
-                            <td style="width:80px;"><img src="<?= base_url('public/assets/img/logo.jpg') ?>" style="width:80px; height:80px;" alt="Logo"></td>
+                            <td style="width:80px;">
+                                <img src="<?= base_url('public/assets/img/logo.jpg') ?>" style="width:70px; height:70px;" alt="Logo">
+                            </td>
                             <td>
                                 <div style="font-size:16px; font-weight:bold; line-height:1.5;">
                                     Mulgram Secondary School<br>
                                     Keshabpur, Jashore<br>
                                     <strong>ADMIT CARD</strong><br>
-                                    Pre-Test Exam exam - <?= esc($student['year'] ?? date('Y')) ?>
+                                    <?= esc($student['exam_name'] ?? 'Exam') ?> - <?= esc($student['year'] ?? date('Y')) ?>
                                 </div>
                             </td>
-                            <td style="width:80px;"><img src="<?= base_url(esc($student['student_pic'])) ?>" width="60" height="70" alt="Student Photo"></td>
+                            <td style="width:80px;">
+                                <img src="<?= base_url(esc($student['student_pic'])) ?>" width="65" height="75" alt="Student Photo">
+                            </td>
                         </tr>
                     </table>
 
+                    <!-- Info -->
                     <div class="info">
-                        <strong>Name:</strong> <?= esc($student['student_name']) ?>
-                        <strong>Roll:</strong> <?= esc($student['roll']) ?>
-                        <strong>Class:</strong> <?= esc($student['class']) ?>
+                        <strong>Name:</strong> <?= esc($student['student_name']) ?> &nbsp;
+                        <strong>Roll:</strong> <?= esc($student['roll']) ?> &nbsp;
+                        <strong>Class:</strong> <?= esc($student['class']) ?> &nbsp;
                         <strong>Section:</strong> <?= esc($student['section'] ?? 'N/A') ?><br>
-                        <strong>Father's Name:</strong> <?= esc($student['father_name']) ?>
+                        <strong>Father's Name:</strong> <?= esc($student['father_name']) ?> &nbsp;
                         <strong>Mother's Name:</strong> <?= esc($student['mother_name']) ?>
                     </div>
 
+                    <!-- Routine -->
                     <table class="routine-table">
                         <tr>
                             <th>ক্রমিক</th>
@@ -104,16 +127,20 @@ body { font-family: 'Kalpurush', 'Noto Sans Bengali', sans-serif, sans-serif; ba
                         <?php endif; ?>
                     </table>
 
+                    <!-- Footer Note -->
                     <div class="footer-note">
                         পরীক্ষার দিন নির্ধারিত সময়ের ৩০ মিনিট পূর্বে কেন্দ্রে উপস্থিত থাকতে হবে।
                     </div>
 
+                    <!-- Signatures -->
                     <div class="sign">
-                        <span><br><br><br>Class Teacher</span>
-                        <span style="text-align:center;">
-                            <img src="<?= base_url('public/assets/img/sign.png') ?>" alt="Signature" style="width:100px; display:block; margin:0 auto;">
-                            Head Teacher
-                        </span>
+                        <div class="block">
+                            <span>Class Teacher</span>
+                        </div>
+                        <div class="block">
+                            <img src="<?= base_url('public/assets/img/sign.png') ?>" alt="Signature">
+                            <span>Head Teacher</span>
+                        </div>
                     </div>
                 </div>
             <?php endfor; ?>
