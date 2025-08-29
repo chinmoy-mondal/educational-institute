@@ -101,46 +101,18 @@ class Home extends BaseController
 
 	public function student_stat()
 	{
-		$students = new \App\Models\StudentModel();
+		$studentModel = new StudentModel();
 
-		// Gender Counts
-		$maleCount   = $students->where('gender', 'Male')->countAllResults();
-		$femaleCount = $students->where('gender', 'Female')->countAllResults();
-		$students->resetQuery();
+		$data = [
+			'total'        => $studentModel->countAll(),
+			'byClass'      => $studentModel->select('class, COUNT(*) as total')->groupBy('class')->findAll(),
+			'bySection'    => $studentModel->select('section, COUNT(*) as total')->groupBy('section')->findAll(),
+			'byGender'     => $studentModel->select('gender, COUNT(*) as total')->groupBy('gender')->findAll(),
+			'byReligion'   => $studentModel->select('religion, COUNT(*) as total')->groupBy('religion')->findAll(),
+			'byBloodGroup' => $studentModel->select('blood_group, COUNT(*) as total')->groupBy('blood_group')->findAll(),
+		];
 
-		// Religion Counts
-		$hinduCount  = $students->where('religion', 'Hindu')->countAllResults();
-		$muslimCount = $students->where('religion', 'Muslim')->countAllResults();
-		$students->resetQuery();
-
-		// Group Counts
-		$groups = ['Science', 'Commerce', 'Arts', 'Vocational'];
-		$groupCounts = [];
-		foreach ($groups as $g) {
-			$groupCounts[$g] = $students->where('group', $g)->countAllResults();
-			$students->resetQuery();
-		}
-
-		// Class-wise counts (1–10)
-		$classCounts = [];
-		for ($i = 1; $i <= 10; $i++) {
-			$classCounts["Class $i"] = $students->where('class', $i)->countAllResults();
-			$students->resetQuery();
-		}
-
-		// Total Students
-		$totalStudents = $students->countAllResults();
-
-		// Send to view
-		return view('statistics/index', [
-			'maleCount'     => $maleCount,
-			'femaleCount'   => $femaleCount,
-			'hinduCount'    => $hinduCount,
-			'muslimCount'   => $muslimCount,
-			'groupCounts'   => $groupCounts,
-			'classCounts'   => $classCounts,
-			'totalStudents' => $totalStudents,
-		]);
+		return view('students_stat', $data);
 	}
 
 	public function studentById()
