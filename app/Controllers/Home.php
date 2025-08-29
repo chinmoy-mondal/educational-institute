@@ -134,7 +134,9 @@ class Home extends BaseController
 			$data['religion'][$r['religion']] = $r['count'];
 		}
 
-		return view('public/student_stat', $data);
+		echo "<pre>";
+		print_r($data);
+		//return view('public/student_stat', $data);
 	}
 
 	public function studentById()
