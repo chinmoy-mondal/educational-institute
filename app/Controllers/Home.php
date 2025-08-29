@@ -101,6 +101,7 @@ class Home extends BaseController
 
 	public function student_stat() {
 		$students = new StudentModel();
+		echo "hello world";
 		echo "<pre>";
 		print_r($students);
 	}
