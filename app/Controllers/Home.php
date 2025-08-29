@@ -101,16 +101,22 @@ class Home extends BaseController
 
 	public function student_stat()
 	{
-		$studentModel = new StudentModel();
+        $studentModel = new StudentModel();
 
-		$data = [
-			'total'        => $studentModel->countAll(),
-			'byClass'      => $studentModel->select('class, COUNT(*) as total')->groupBy('class')->findAll(),
-			'bySection'    => $studentModel->select('section, COUNT(*) as total')->groupBy('section')->findAll(),
-			'byGender'     => $studentModel->select('gender, COUNT(*) as total')->groupBy('gender')->findAll(),
-			'byReligion'   => $studentModel->select('religion, COUNT(*) as total')->groupBy('religion')->findAll(),
-			'byBloodGroup' => $studentModel->select('blood_group, COUNT(*) as total')->groupBy('blood_group')->findAll(),
-		];
+        $data['totalStudents'] = $studentModel->countAllResults();
+        $data['totalBoys'] = $studentModel->where('gender', 'Male')->countAllResults();
+        $data['totalGirls'] = $studentModel->where('gender', 'Female')->countAllResults();
+        $data['totalSections'] = $studentModel->select('section')->distinct()->countAllResults();
+
+        $data['studentsByClass'] = $studentModel
+            ->select('class, COUNT(*) as count')
+            ->groupBy('class')
+            ->findAll();
+
+        $data['studentsBySection'] = $studentModel
+            ->select('section, COUNT(*) as count')
+            ->groupBy('section')
+            ->findAll();
 
 		return view('public/student_stat', $data);
 	}
