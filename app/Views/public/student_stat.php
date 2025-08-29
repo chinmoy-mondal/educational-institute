@@ -12,7 +12,12 @@
         <?php foreach ($classSummary as $class => $data): ?>
             <div class="card mb-5 shadow-sm">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Class <?= esc($class) ?> (Total: <?= esc($summary['boys'] + $summary['girls']) ?>)</h5>
+                    <h5 class="mb-0">
+                        Class <?= esc($class) ?>
+                        (Male: <?= esc($data['gender']['Male'] ?? 0) ?>,
+                        Female: <?= esc($data['gender']['Female'] ?? 0) ?>,
+                        Total: <?= esc(array_sum($data['gender'])) ?>)
+                    </h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
