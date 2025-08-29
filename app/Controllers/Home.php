@@ -104,47 +104,45 @@ class Home extends BaseController
 		$studentModel = new StudentModel();
 		$students = $studentModel->findAll();
 
-		$result = [];
+		$classSummary = [];
 
 		foreach ($students as $student) {
 			$class = $student['class'];
+			$gender = $student['gender'];      // e.g. 'boy', 'girl'
+			$religion = $student['religion'];  // e.g. 'Islam', 'Hinduism'
+			$blood = $student['blood_group'];  // e.g. 'A+', 'O-', etc.
 
-			// if not exist, initialize class data
-			if (!isset($result[$class])) {
-				$result[$class] = [
-					'boys' => 0,
-					'girls' => 0,
-					'hindu' => 0,
-					'muslim' => 0,
-					'blood' => [] // blood groups dynamic
+			// Ensure class exists
+			if (!isset($classSummary[$class])) {
+				$classSummary[$class] = [
+					'gender' => [],
+					'religion' => [],
+					'blood' => []
 				];
 			}
 
-			// count gender
-			if (strtolower($student['gender']) == 'male' || strtolower($student['gender']) == 'boy') {
-				$result[$class]['boys']++;
-			} else {
-				$result[$class]['girls']++;
+			// Count genders dynamically
+			if (!isset($classSummary[$class]['gender'][$gender])) {
+				$classSummary[$class]['gender'][$gender] = 0;
 			}
+			$classSummary[$class]['gender'][$gender]++;
 
-			// count religion
-			if (strtolower($student['religion']) == 'hindu') {
-				$result[$class]['hindu']++;
-			} elseif (strtolower($student['religion']) == 'muslim') {
-				$result[$class]['muslim']++;
+			// Count religions dynamically
+			if (!isset($classSummary[$class]['religion'][$religion])) {
+				$classSummary[$class]['religion'][$religion] = 0;
 			}
+			$classSummary[$class]['religion'][$religion]++;
 
-			// count blood group
-			$blood = strtoupper($student['blood_group']);
-			if (!isset($result[$class]['blood'][$blood])) {
-				$result[$class]['blood'][$blood] = 0;
+			// Count blood groups dynamically
+			if (!isset($classSummary[$class]['blood'][$blood])) {
+				$classSummary[$class]['blood'][$blood] = 0;
 			}
-			$result[$class]['blood'][$blood]++;
+			$classSummary[$class]['blood'][$blood]++;
 		}
 
 		// Example output
 		echo "<pre>";
-		print_r($result);
+		print_r($classSummary);
 		echo "</pre>";
 		//return view('public/student_stat', $data);
 	}
