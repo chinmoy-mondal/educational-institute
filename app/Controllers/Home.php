@@ -49,7 +49,7 @@ class Home extends BaseController
 		return view('public/subject', ['subjects' => $subjects]);
 	}
 	public function student()
-	{
+	{ 
 		$studentModel = new StudentModel();
 
 		// Get filter inputs
@@ -98,6 +98,13 @@ class Home extends BaseController
 			'sections' => $sections,
 		]);
 	}
+
+	public function student_stat() {
+		$students = new StudentModel();
+		echo "<pre>";
+		print_r($students);
+	}
+
 	public function studentById()
 	{
 		$studentModel = new StudentModel();
