@@ -102,40 +102,50 @@ class Home extends BaseController
 	public function student_stat()
 	{
 		$studentModel = new StudentModel();
+		$students = $studentModel->findAll();
 
-		// Total counts
-		$data['totalStudents'] = $studentModel->countAllResults();
-		$data['totalBoys'] = $studentModel->where('gender', 'Male')->countAllResults();
-		$data['totalGirls'] = $studentModel->where('gender', 'Female')->countAllResults();
-		$data['totalSections'] = $studentModel->select('section')->distinct()->countAllResults();
+		$result = [];
 
-		// Students by class with sections
-		$classes = $studentModel->select('class, section, COUNT(*) as count')
-			->groupBy(['class', 'section'])
-			->orderBy('class', 'ASC')
-			->findAll();
-		$data['classBySection'] = [];
-		foreach ($classes as $c) {
-			$data['classBySection'][$c['class']][$c['section']] = $c['count'];
+		foreach ($students as $student) {
+			$class = $student['class'];
+
+			// if not exist, initialize class data
+			if (!isset($result[$class])) {
+				$result[$class] = [
+					'boys' => 0,
+					'girls' => 0,
+					'hindu' => 0,
+					'muslim' => 0,
+					'blood' => [] // blood groups dynamic
+				];
+			}
+
+			// count gender
+			if (strtolower($student['gender']) == 'male' || strtolower($student['gender']) == 'boy') {
+				$result[$class]['boys']++;
+			} else {
+				$result[$class]['girls']++;
+			}
+
+			// count religion
+			if (strtolower($student['religion']) == 'hindu') {
+				$result[$class]['hindu']++;
+			} elseif (strtolower($student['religion']) == 'muslim') {
+				$result[$class]['muslim']++;
+			}
+
+			// count blood group
+			$blood = strtoupper($student['blood_group']);
+			if (!isset($result[$class]['blood'][$blood])) {
+				$result[$class]['blood'][$blood] = 0;
+			}
+			$result[$class]['blood'][$blood]++;
 		}
 
-		// Students by gender (overall)
-		$data['gender'] = [
-			'Male' => $studentModel->where('gender', 'Male')->countAllResults(),
-			'Female' => $studentModel->where('gender', 'Female')->countAllResults()
-		];
-
-		// Students by religion (overall)
-		$religions = $studentModel->select('religion, COUNT(*) as count')
-			->groupBy('religion')
-			->findAll();
-		$data['religion'] = [];
-		foreach ($religions as $r) {
-			$data['religion'][$r['religion']] = $r['count'];
-		}
-
+		// Example output
 		echo "<pre>";
-		print_r($data);
+		print_r($result);
+		echo "</pre>";
 		//return view('public/student_stat', $data);
 	}
 
