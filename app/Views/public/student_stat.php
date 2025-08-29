@@ -1,6 +1,11 @@
 <?= $this->extend('layouts/base') ?>
 <?= $this->section('content') ?>
 
+<!-- Fixed Wrapper for Navbar -->
+<div class="fixed-header">
+    <?= $this->include("layouts/base-structure/header"); ?>
+</div>
+
 <div class="container py-5">
     <h2 class="text-center mb-4">📊 Student Statistics by Class</h2>
 
