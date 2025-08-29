@@ -99,53 +99,49 @@ class Home extends BaseController
 		]);
 	}
 
-	public function student_stat()
-	{
-		$studentModel = new StudentModel();
-		$students = $studentModel->findAll();
+public function student_stat()
+{
+    $studentModel = new StudentModel();
+    $students = $studentModel->findAll();
 
-		$classSummary = [];
+    $classSummary = [];
 
-		foreach ($students as $student) {
-			$class = $student['class'];
-			$gender = $student['gender'];      // e.g. 'boy', 'girl'
-			$religion = $student['religion'];  // e.g. 'Islam', 'Hinduism'
-			$blood = $student['blood_group'];  // e.g. 'A+', 'O-', etc.
+    foreach ($students as $student) {
+        $class = $student['class'];
+        $gender = $student['gender'];
+        $religion = $student['religion'];
+        $blood = $student['blood_group'];
 
-			// Ensure class exists
-			if (!isset($classSummary[$class])) {
-				$classSummary[$class] = [
-					'gender' => [],
-					'religion' => [],
-					'blood' => []
-				];
-			}
+        if (!isset($classSummary[$class])) {
+            $classSummary[$class] = [
+                'gender' => [],
+                'religion' => [],
+                'blood' => []
+            ];
+        }
 
-			// Count genders dynamically
-			if (!isset($classSummary[$class]['gender'][$gender])) {
-				$classSummary[$class]['gender'][$gender] = 0;
-			}
-			$classSummary[$class]['gender'][$gender]++;
+        // Gender
+        if (!isset($classSummary[$class]['gender'][$gender])) {
+            $classSummary[$class]['gender'][$gender] = 0;
+        }
+        $classSummary[$class]['gender'][$gender]++;
 
-			// Count religions dynamically
-			if (!isset($classSummary[$class]['religion'][$religion])) {
-				$classSummary[$class]['religion'][$religion] = 0;
-			}
-			$classSummary[$class]['religion'][$religion]++;
+        // Religion
+        if (!isset($classSummary[$class]['religion'][$religion])) {
+            $classSummary[$class]['religion'][$religion] = 0;
+        }
+        $classSummary[$class]['religion'][$religion]++;
 
-			// Count blood groups dynamically
-			if (!isset($classSummary[$class]['blood'][$blood])) {
-				$classSummary[$class]['blood'][$blood] = 0;
-			}
-			$classSummary[$class]['blood'][$blood]++;
-		}
+        // Blood
+        if (!isset($classSummary[$class]['blood'][$blood])) {
+            $classSummary[$class]['blood'][$blood] = 0;
+        }
+        $classSummary[$class]['blood'][$blood]++;
+    }
 
-		// Example output
-		echo "<pre>";
-		print_r($classSummary);
-		echo "</pre>";
-		//return view('public/student_stat', $data);
-	}
+    // Pass as array to view
+    return view('public/student_stat', ['classSummary' => $classSummary]);
+}
 
 	public function studentById()
 	{
