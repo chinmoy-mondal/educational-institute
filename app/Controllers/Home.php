@@ -112,7 +112,7 @@ class Home extends BaseController
 			'byBloodGroup' => $studentModel->select('blood_group, COUNT(*) as total')->groupBy('blood_group')->findAll(),
 		];
 
-		return view('students_stat', $data);
+		return view('student_stat', $data);
 	}
 
 	public function studentById()
