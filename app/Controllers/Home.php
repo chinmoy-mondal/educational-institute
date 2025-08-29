@@ -99,49 +99,51 @@ class Home extends BaseController
 		]);
 	}
 
-public function student_stat()
-{
-    $studentModel = new StudentModel();
-    $students = $studentModel->findAll();
+	public function student_stat()
+	{
+		$studentModel = new StudentModel();
+		$students = $studentModel->findAll();
 
-    $classSummary = [];
+		$classSummary = [];
 
-    foreach ($students as $student) {
-        $class = $student['class'];
-        $gender = $student['gender'];
-        $religion = $student['religion'];
-        $blood = $student['blood_group'];
+		foreach ($students as $student) {
+			$class = $student['class'];
+			$gender = $student['gender'];
+			$religion = $student['religion'];
+			$blood = $student['blood_group'];
 
-        if (!isset($classSummary[$class])) {
-            $classSummary[$class] = [
-                'gender' => [],
-                'religion' => [],
-                'blood' => []
-            ];
-        }
+			if (!isset($classSummary[$class])) {
+				$classSummary[$class] = [
+					'gender' => [],
+					'religion' => [],
+					'blood' => []
+				];
+			}
 
-        // Gender
-        if (!isset($classSummary[$class]['gender'][$gender])) {
-            $classSummary[$class]['gender'][$gender] = 0;
-        }
-        $classSummary[$class]['gender'][$gender]++;
+			// Gender
+			if (!isset($classSummary[$class]['gender'][$gender])) {
+				$classSummary[$class]['gender'][$gender] = 0;
+			}
+			$classSummary[$class]['gender'][$gender]++;
 
-        // Religion
-        if (!isset($classSummary[$class]['religion'][$religion])) {
-            $classSummary[$class]['religion'][$religion] = 0;
-        }
-        $classSummary[$class]['religion'][$religion]++;
+			// Religion
+			if (!isset($classSummary[$class]['religion'][$religion])) {
+				$classSummary[$class]['religion'][$religion] = 0;
+			}
+			$classSummary[$class]['religion'][$religion]++;
 
-        // Blood
-        if (!isset($classSummary[$class]['blood'][$blood])) {
-            $classSummary[$class]['blood'][$blood] = 0;
-        }
-        $classSummary[$class]['blood'][$blood]++;
-    }
-
-    // Pass as array to view
-    return view('public/student_stat', ['classSummary' => $classSummary]);
-}
+			// Blood
+			if (!isset($classSummary[$class]['blood'][$blood])) {
+				$classSummary[$class]['blood'][$blood] = 0;
+			}
+			$classSummary[$class]['blood'][$blood]++;
+		}
+		// Sort classes numerically
+		ksort($classSummary);
+		
+		// Pass as array to view
+		return view('public/student_stat', ['classSummary' => $classSummary]);
+	}
 
 	public function studentById()
 	{
