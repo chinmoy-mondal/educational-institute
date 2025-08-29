@@ -9,8 +9,7 @@
         </div>
     </div>
 
-    <div class="row text-center">
-
+    <div class="row text-center mb-4">
         <!-- Total Students -->
         <div class="col-md-3 mb-3">
             <div class="card shadow border-0">
@@ -52,51 +51,125 @@
         </div>
     </div>
 
-    <!-- Students by Class -->
-    <div class="row mt-5">
-        <div class="col-md-12">
-            <h4 class="fw-bold mb-3">Students by Class</h4>
-            <table class="table table-bordered table-striped">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Class</th>
-                        <th>Total Students</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($studentsByClass as $row): ?>
-                        <tr>
-                            <td>Class <?= $row['class'] ?></td>
-                            <td><?= $row['count'] ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+    <!-- Charts Row -->
+    <div class="row">
+        <!-- Students by Class -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">Students by Class</div>
+                <div class="card-body">
+                    <canvas id="classChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students by Section -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">Students by Section</div>
+                <div class="card-body">
+                    <canvas id="sectionChart"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Students by Section -->
-    <div class="row mt-5">
-        <div class="col-md-12">
-            <h4 class="fw-bold mb-3">Students by Section</h4>
-            <table class="table table-bordered table-striped">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Section</th>
-                        <th>Total Students</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($studentsBySection as $row): ?>
-                        <tr>
-                            <td>Section <?= $row['section'] ?></td>
-                            <td><?= $row['count'] ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+    <div class="row">
+        <!-- Gender Distribution -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">Gender Distribution</div>
+                <div class="card-body">
+                    <canvas id="genderChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Religion Distribution -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-warning text-white">Religion Distribution</div>
+                <div class="card-body">
+                    <canvas id="religionChart"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Data from PHP
+    const classData = <?= json_encode($studentsByClass) ?>;
+    const sectionData = <?= json_encode($studentsBySection) ?>;
+    const genderData = <?= json_encode([
+                            ['gender' => 'Male', 'count' => $totalBoys],
+                            ['gender' => 'Female', 'count' => $totalGirls]
+                        ]) ?>;
+    const religionData = <?= json_encode($studentsByReligion ?? []) ?>;
+
+    // Class Chart
+    new Chart(document.getElementById('classChart'), {
+        type: 'bar',
+        data: {
+            labels: classData.map(c => 'Class ' + c.class),
+            datasets: [{
+                label: 'Students',
+                data: classData.map(c => c.count),
+                backgroundColor: '#007bff'
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+    // Section Chart
+    new Chart(document.getElementById('sectionChart'), {
+        type: 'bar',
+        data: {
+            labels: sectionData.map(s => 'Section ' + s.section),
+            datasets: [{
+                label: 'Students',
+                data: sectionData.map(s => s.count),
+                backgroundColor: '#28a745'
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+    // Gender Chart
+    new Chart(document.getElementById('genderChart'), {
+        type: 'pie',
+        data: {
+            labels: genderData.map(g => g.gender),
+            datasets: [{
+                data: genderData.map(g => g.count),
+                backgroundColor: ['#17a2b8', '#dc3545']
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+    // Religion Chart
+    new Chart(document.getElementById('religionChart'), {
+        type: 'pie',
+        data: {
+            labels: religionData.map(r => r.religion),
+            datasets: [{
+                data: religionData.map(r => r.count),
+                backgroundColor: ['#ffc107', '#6f42c1', '#fd7e14', '#20c997']
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+</script>
 
 <?= $this->endSection() ?>

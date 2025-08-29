@@ -101,22 +101,38 @@ class Home extends BaseController
 
 	public function student_stat()
 	{
-        $studentModel = new StudentModel();
+		$studentModel = new StudentModel();
 
-        $data['totalStudents'] = $studentModel->countAllResults();
-        $data['totalBoys'] = $studentModel->where('gender', 'Male')->countAllResults();
-        $data['totalGirls'] = $studentModel->where('gender', 'Female')->countAllResults();
-        $data['totalSections'] = $studentModel->select('section')->distinct()->countAllResults();
+		// Total counts
+		$data['totalStudents'] = $studentModel->countAllResults();
+		$data['totalBoys'] = $studentModel->where('gender', 'Male')->countAllResults();
+		$data['totalGirls'] = $studentModel->where('gender', 'Female')->countAllResults();
+		$data['totalSections'] = $studentModel->select('section')->distinct()->countAllResults();
 
-        $data['studentsByClass'] = $studentModel
-            ->select('class, COUNT(*) as count')
-            ->groupBy('class')
-            ->findAll();
+		// Students by class with sections
+		$classes = $studentModel->select('class, section, COUNT(*) as count')
+			->groupBy(['class', 'section'])
+			->orderBy('class', 'ASC')
+			->findAll();
+		$data['classBySection'] = [];
+		foreach ($classes as $c) {
+			$data['classBySection'][$c['class']][$c['section']] = $c['count'];
+		}
 
-        $data['studentsBySection'] = $studentModel
-            ->select('section, COUNT(*) as count')
-            ->groupBy('section')
-            ->findAll();
+		// Students by gender (overall)
+		$data['gender'] = [
+			'Male' => $studentModel->where('gender', 'Male')->countAllResults(),
+			'Female' => $studentModel->where('gender', 'Female')->countAllResults()
+		];
+
+		// Students by religion (overall)
+		$religions = $studentModel->select('religion, COUNT(*) as count')
+			->groupBy('religion')
+			->findAll();
+		$data['religion'] = [];
+		foreach ($religions as $r) {
+			$data['religion'][$r['religion']] = $r['count'];
+		}
 
 		return view('public/student_stat', $data);
 	}
