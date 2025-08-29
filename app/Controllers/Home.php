@@ -49,7 +49,7 @@ class Home extends BaseController
 		return view('public/subject', ['subjects' => $subjects]);
 	}
 	public function student()
-	{ 
+	{
 		$studentModel = new StudentModel();
 
 		// Get filter inputs
@@ -99,11 +99,48 @@ class Home extends BaseController
 		]);
 	}
 
-	public function student_stat() {
-		$students = new StudentModel();
-		echo "hello world";
-		echo "<pre>";
-		print_r($students);
+	public function student_stat()
+	{
+		$students = new \App\Models\StudentModel();
+
+		// Gender Counts
+		$maleCount   = $students->where('gender', 'Male')->countAllResults();
+		$femaleCount = $students->where('gender', 'Female')->countAllResults();
+		$students->resetQuery();
+
+		// Religion Counts
+		$hinduCount  = $students->where('religion', 'Hindu')->countAllResults();
+		$muslimCount = $students->where('religion', 'Muslim')->countAllResults();
+		$students->resetQuery();
+
+		// Group Counts
+		$groups = ['Science', 'Commerce', 'Arts', 'Vocational'];
+		$groupCounts = [];
+		foreach ($groups as $g) {
+			$groupCounts[$g] = $students->where('group', $g)->countAllResults();
+			$students->resetQuery();
+		}
+
+		// Class-wise counts (1–10)
+		$classCounts = [];
+		for ($i = 1; $i <= 10; $i++) {
+			$classCounts["Class $i"] = $students->where('class', $i)->countAllResults();
+			$students->resetQuery();
+		}
+
+		// Total Students
+		$totalStudents = $students->countAllResults();
+
+		// Send to view
+		return view('statistics/index', [
+			'maleCount'     => $maleCount,
+			'femaleCount'   => $femaleCount,
+			'hinduCount'    => $hinduCount,
+			'muslimCount'   => $muslimCount,
+			'groupCounts'   => $groupCounts,
+			'classCounts'   => $classCounts,
+			'totalStudents' => $totalStudents,
+		]);
 	}
 
 	public function studentById()
