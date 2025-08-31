@@ -7,7 +7,7 @@
 </div>
 <div class="container content"> <!-- offset for fixed navbar -->
     <div class="container py-5">
-        <h2 class="text-center mb-4">📊 Student Statistics by Class</h2>
+        <h2 class="text-center mb-4">📊 Student's Class Wise Statistics</h2>
 
         <?php foreach ($classSummary as $class => $data): ?>
             <div class="card mb-5 shadow-sm">
