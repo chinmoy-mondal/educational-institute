@@ -643,6 +643,10 @@ class Dashboard extends Controller
 			->findAll();
 		// Build query
 		$builder = $this->studentModel;
+
+		// Always apply permission filter
+		$builder = $builder->where('permission', 0);
+
 		if ($q) {
 			$builder = $builder->groupStart()
 				->like('student_name', $q)
@@ -701,11 +705,9 @@ class Dashboard extends Controller
 		$student = $this->studentModel->find($id);
 
 		if ($student) {
-			// Toggle permission (if 1 → 0, if 0 → 1)
-			$newPermission = $student['permission'] == 1 ? 0 : 1;
 
 			// Update student
-			$this->studentModel->update($id, ['permission' => $newPermission]);
+			$this->studentModel->update($id, ['permission' => 1]);
 
 			return redirect()->back()->with('message', 'Permission updated successfully');
 		}
