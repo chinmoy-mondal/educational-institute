@@ -14,11 +14,26 @@ class StudentModel extends Model
     protected $useSoftDeletes   = false;
 
     protected $allowedFields = [
-        'student_name', 'roll', 'class', 'section', 'esif',
-        'father_name', 'mother_name', 'dob', 'gender', 'phone',
-        'student_pic', 'birth_registration_number', 'father_nid_number',
-        'mother_nid_number', 'religion', 'blood_group', 'assign_sub',
-        'created_at', 'updated_at'
+        'student_name',
+        'roll',
+        'class',
+        'section',
+        'esif',
+        'father_name',
+        'mother_name',
+        'dob',
+        'gender',
+        'phone',
+        'student_pic',
+        'birth_registration_number',
+        'father_nid_number',
+        'mother_nid_number',
+        'religion',
+        'blood_group',
+        'assign_sub',
+        'permission',
+        'created_at',
+        'updated_at'
     ];
 
     protected $useTimestamps = true;

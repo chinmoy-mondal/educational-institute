@@ -696,7 +696,21 @@ class Dashboard extends Controller
 
 	public function softDelete($id)
 	{
-		echo $id."hello world";
+
+		// Get current student
+		$student = $this->studentModel->find($id);
+
+		if ($student) {
+			// Toggle permission (if 1 → 0, if 0 → 1)
+			$newPermission = $student['permission'] == 1 ? 0 : 1;
+
+			// Update student
+			$this->studentModel->update($id, ['permission' => $newPermission]);
+
+			return redirect()->back()->with('message', 'Permission updated successfully');
+		}
+
+		return redirect()->back()->with('error', 'Student not found');
 	}
 
 	public function stAssaginSubView()
