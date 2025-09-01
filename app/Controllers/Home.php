@@ -60,6 +60,8 @@ class Home extends BaseController
 		// Build query with filters
 		$builder = $studentModel;
 
+		$builder = $builder->where('permission', 0);
+
 		if ($q) {
 			$builder = $builder->groupStart()
 				->like('student_name', $q)

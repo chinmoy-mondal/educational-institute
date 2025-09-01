@@ -93,7 +93,7 @@ class Dashboard extends Controller
 			['label' => 'Result', 'url' => base_url('ad-result')],
 			['label' => 'Accounts', 'url' => base_url('accounts')],
 		];
-		$this->data['total_students'] = $this->studentModel->countAll();
+		$this->data['total_students'] = $this->studentModel->where('account_status', 0)->countAll();
 		$this->data['total_users'] = $this->userModel->where('account_status !=', 0)->countAllResults();
 		$this->data['total_new_users'] = $this->userModel->where('account_status', 0)->countAllResults();
 
@@ -563,6 +563,7 @@ class Dashboard extends Controller
 			['label' => 'Student List', 'url' => base_url('admin/student')],
 			['label' => 'Add Student', 'url' => base_url('admin/student/create')],
 			['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
+			['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
 		];
 		return view('dashboard/student_form', $this->data);
 	}
@@ -710,7 +711,7 @@ class Dashboard extends Controller
 			// Update student
 			$this->studentModel->update($id, ['permission' => 1]);
 
-			return redirect()->back()->with('message', 'Permission updated successfully');
+			return redirect()->back()->with('success', 'Permission updated successfully');
 		}
 
 		return redirect()->back()->with('error', 'Student not found');
@@ -800,7 +801,7 @@ class Dashboard extends Controller
 			// Update student
 			$this->studentModel->update($id, ['permission' => 0]);
 
-			return redirect()->back()->with('message', 'Permission updated successfully');
+			return redirect()->back()->with('success', 'Permission updated successfully');
 		}
 
 		return redirect()->back()->with('error', 'Student not found');
@@ -867,6 +868,7 @@ class Dashboard extends Controller
 			['label' => 'Student List', 'url' => base_url('admin/student')],
 			['label' => 'Add Student', 'url' => base_url('admin/student/create')],
 			['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
+			['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
 		];
 		$this->data['students']      = $students;
 		$this->data['subjects']      = $subjects;
