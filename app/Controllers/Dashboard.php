@@ -682,6 +682,7 @@ class Dashboard extends Controller
 			['label' => 'Student List', 'url' => base_url('admin/student')],
 			['label' => 'Add Student', 'url' => base_url('admin/student/create')],
 			['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
+			['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
 		];
 		$this->data['students']      = $students;
 		$this->data['pager']         = $this->studentModel->pager;
@@ -708,6 +709,96 @@ class Dashboard extends Controller
 
 			// Update student
 			$this->studentModel->update($id, ['permission' => 1]);
+
+			return redirect()->back()->with('message', 'Permission updated successfully');
+		}
+
+		return redirect()->back()->with('error', 'Student not found');
+	}
+
+	public function deleted_student()
+	{
+
+
+		// Get filter inputs
+		$q       = $this->request->getGet('q');
+		$class   = $this->request->getGet('class');
+		$section = $this->request->getGet('section');
+		$religion = $this->request->getGet('religion');
+		$religions = $this->studentModel
+			->select('religion')
+			->distinct()
+			->where('religion IS NOT NULL')
+			->orderBy('religion')
+			->findAll();
+		// Build query
+		$builder = $this->studentModel;
+
+		// Always apply permission filter
+		$builder = $builder->where('permission', 1);
+
+		if ($q) {
+			$builder = $builder->groupStart()
+				->like('student_name', $q)
+				->orLike('roll', $q)
+				->orLike('id', $q)
+				->groupEnd();
+		}
+		if ($class) {
+			$builder = $builder->where('class', $class);
+		}
+		if ($section) {
+			$builder = $builder->where('section', $section);
+		}
+		if ($religion) {
+			if ($religion === '__NULL__') {
+				$builder = $builder->where('religion IS NULL'); // ✅ Matches "Not Set"
+			} else {
+				$builder = $builder->where('religion', $religion);
+			}
+		}
+		$total = $builder->countAllResults(false);
+		$perPage  = 20;
+		$students = $builder
+			->orderBy('CAST(class as UNSIGNED) ASC')
+			->orderBy('CAST(roll as UNSIGNED) ASC')
+			->paginate($perPage, 'bootstrap');
+
+		$sections = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
+
+		$this->data['title']         = 'Student Management';
+		$this->data['activeSection'] = 'student';
+		$this->data['navbarItems']   = [
+			['label' => 'Student List', 'url' => base_url('admin/student')],
+			['label' => 'Add Student', 'url' => base_url('admin/student/create')],
+			['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
+			['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
+		];
+		$this->data['students']      = $students;
+		$this->data['pager']         = $this->studentModel->pager;
+		$this->data['q']             = $q;
+		$this->data['class']         = $class;
+		$this->data['section']       = $section;
+		$this->data['sections']      = $sections;
+		$this->data['religion']   = $religion;
+		$this->data['religions']  = $religions;
+		$this->data['total']  = $total;
+
+
+
+		return view('dashboard/deleted_student', $this->data);
+	}
+
+	public function softActive($id)
+	{
+
+		// Get current student
+		$student = $this->studentModel->find($id);
+
+		if ($student) {
+
+			// Update student
+			$this->studentModel->update($id, ['permission' => 0]);
 
 			return redirect()->back()->with('message', 'Permission updated successfully');
 		}

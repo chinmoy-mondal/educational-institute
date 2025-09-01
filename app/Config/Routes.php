@@ -95,6 +95,7 @@ $routes->get('admin/select-marksheet', 'Dashboard::selectMarksheetForm');
 $routes->get('admin/show-marksheet', 'Dashboard::showMarksheet');
 
 $routes->get('admin/student', 'Dashboard::student');
+$routes->get('admin/deletedStudent', 'Dashboard::deleted_student');
 $routes->get('admin/students/view/(:num)', 'Dashboard::viewStudent/$1');
 $routes->get('admin/students/edit/(:num)', 'Dashboard::editStudent/$1');
 $routes->post('admin/students/update/(:num)', 'Dashboard::updateStudent/$1');
@@ -105,6 +106,7 @@ $routes->get('admin/stAssaginSubView', 'Dashboard::stAssaginSubView');
 $routes->post('admin/assignStudentsSubjects', 'Dashboard::assignStudentsSubjects');
 
 $routes->get('admin/students/delete/(:num)', 'Dashboard::softDelete/$1');
+$routes->get('admin/students/active/(:num)', 'Dashboard::softActive/$1');
 
 
 
