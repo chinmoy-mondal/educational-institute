@@ -694,6 +694,11 @@ class Dashboard extends Controller
 		return view('dashboard/student', $this->data);
 	}
 
+	public function softDelete($id)
+	{
+		echo $id."hello world";
+	}
+
 	public function stAssaginSubView()
 	{
 
