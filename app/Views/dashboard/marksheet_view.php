@@ -867,7 +867,7 @@ if (!is_null($roll)) {
   <div class="row">
 
     <div class="col-md-6 signature text-left">
-      <br><br>
+      <img src="<?= base_url('public/assets/img/sign.png') ?>" alt="Signature" style="width: 100px; height: auto; display: block; margin: 0 auto;">
       ____________________<br>
       Head Teacher
     </div>
