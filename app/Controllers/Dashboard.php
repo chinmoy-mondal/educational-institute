@@ -627,78 +627,96 @@ class Dashboard extends Controller
 		return redirect()->to(site_url('admin/students'))->with('success', 'Student registered successfully!');
 	}
 
-	public function student()
-	{
+public function student()
+{
+    // Get filter inputs
+    $q        = $this->request->getGet('q');
+    $class    = $this->request->getGet('class');
+    $section  = $this->request->getGet('section');
+    $religion = $this->request->getGet('religion');
+    $gender   = $this->request->getGet('gender'); // ✅ separate variable
 
+    // Distinct religions
+    $religions = $this->studentModel
+        ->select('religion')
+        ->distinct()
+        ->where('religion IS NOT NULL')
+        ->orderBy('religion')
+        ->findAll();
 
-		// Get filter inputs
-		$q       = $this->request->getGet('q');
-		$class   = $this->request->getGet('class');
-		$section = $this->request->getGet('section');
-		$religion = $this->request->getGet('religion');
-		$religions = $this->studentModel
-			->select('religion')
-			->distinct()
-			->where('religion IS NOT NULL')
-			->orderBy('religion')
-			->findAll();
-		// Build query
-		$builder = $this->studentModel;
+    // Distinct genders
+    $genders = $this->studentModel
+        ->select('gender')
+        ->distinct()
+        ->where('gender IS NOT NULL')
+        ->orderBy('gender')
+        ->findAll();
 
-		// Always apply permission filter
-		$builder = $builder->where('permission', 0);
+    // Build query
+    $builder = $this->studentModel;
 
-		if ($q) {
-			$builder = $builder->groupStart()
-				->like('student_name', $q)
-				->orLike('roll', $q)
-				->orLike('id', $q)
-				->groupEnd();
-		}
-		if ($class) {
-			$builder = $builder->where('class', $class);
-		}
-		if ($section) {
-			$builder = $builder->where('section', $section);
-		}
-		if ($religion) {
-			if ($religion === '__NULL__') {
-				$builder = $builder->where('religion IS NULL'); // ✅ Matches "Not Set"
-			} else {
-				$builder = $builder->where('religion', $religion);
-			}
-		}
-		$total = $builder->countAllResults(false);
-		$perPage  = 20;
-		$students = $builder
-			->orderBy('CAST(class as UNSIGNED) ASC')
-			->orderBy('CAST(roll as UNSIGNED) ASC')
-			->paginate($perPage, 'bootstrap');
+    // Always apply permission filter
+    $builder = $builder->where('permission', 0);
 
-		$sections = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
+    if ($q) {
+        $builder = $builder->groupStart()
+            ->like('student_name', $q)
+            ->orLike('roll', $q)
+            ->orLike('id', $q)
+            ->groupEnd();
+    }
+    if ($class) {
+        $builder = $builder->where('class', $class);
+    }
+    if ($section) {
+        $builder = $builder->where('section', $section);
+    }
+    if ($religion) {
+        if ($religion === '__NULL__') {
+            $builder = $builder->where('religion IS NULL'); // ✅ Matches "Not Set"
+        } else {
+            $builder = $builder->where('religion', $religion);
+        }
+    }
+    if ($gender) {
+        if ($gender === '__NULL__') {
+            $builder = $builder->where('gender IS NULL'); // ✅ Matches "Not Set"
+        } else {
+            $builder = $builder->where('gender', $gender);
+        }
+    }
 
-		$this->data['title']         = 'Student Management';
-		$this->data['activeSection'] = 'student';
-		$this->data['navbarItems']   = [
-			['label' => 'Student List', 'url' => base_url('admin/student')],
-			['label' => 'Add Student', 'url' => base_url('admin/student/create')],
-			['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
-			['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
-		];
-		$this->data['students']      = $students;
-		$this->data['pager']         = $this->studentModel->pager;
-		$this->data['q']             = $q;
-		$this->data['class']         = $class;
-		$this->data['section']       = $section;
-		$this->data['sections']      = $sections;
-		$this->data['religion']   = $religion;
-		$this->data['religions']  = $religions;
-		$this->data['total']  = $total;
+    $total = $builder->countAllResults(false);
+    $perPage  = 20;
+    $students = $builder
+        ->orderBy('CAST(class as UNSIGNED) ASC')
+        ->orderBy('CAST(roll as UNSIGNED) ASC')
+        ->paginate($perPage, 'bootstrap');
 
+    $sections = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
 
+    $this->data['title']         = 'Student Management';
+    $this->data['activeSection'] = 'student';
+    $this->data['navbarItems']   = [
+        ['label' => 'Student List', 'url' => base_url('admin/student')],
+        ['label' => 'Add Student', 'url' => base_url('admin/student/create')],
+        ['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
+        ['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
+    ];
+    $this->data['students']   = $students;
+    $this->data['pager']      = $this->studentModel->pager;
+    $this->data['q']          = $q;
+    $this->data['class']      = $class;
+    $this->data['section']    = $section;
+    $this->data['sections']   = $sections;
+    $this->data['religion']   = $religion;
+    $this->data['religions']  = $religions;
+    $this->data['gender']     = $gender;   // ✅ new
+    $this->data['genders']    = $genders;  // ✅ new
+    $this->data['total']      = $total;
 
-		return view('dashboard/student', $this->data);
-	}
+    return view('dashboard/student', $this->data);
+}
 
 	public function softDelete($id)
 	{

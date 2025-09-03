@@ -37,7 +37,7 @@
 			<div class="card-body">
 				<form method="get" action="<?= site_url('admin/student') ?>">
 					<div class="row align-items-end">
-						<div class="col-md-4">
+						<div class="col-md-2">
 							<div class="form-group">
 								<label for="search">Search</label>
 								<input type="text" name="q" id="search" class="form-control" placeholder="Name, Roll, or ID" value="<?= esc($q ?? '') ?>">
@@ -77,6 +77,21 @@
 									<?php foreach ($religions as $r): ?>
 										<option value="<?= esc($r['religion']) ?>" <?= ($religion ?? '') === $r['religion'] ? 'selected' : '' ?>>
 											<?= esc(ucfirst($r['religion'])) ?>
+										</option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="gender">Gender</label>
+								<select name="gender" id="gender" class="form-control">
+									<option value="" <?= ($gender ?? '') === '' ? 'selected' : '' ?>>All Genders</option>
+									<option value="__NULL__" <?= ($gender ?? '') === '__NULL__' ? 'selected' : '' ?>>Not Set</option> <!-- ✅ New Option -->
+
+									<?php foreach ($genders as $g): ?>
+										<option value="<?= esc($g['gender']) ?>" <?= ($gender ?? '') === $g['gender'] ? 'selected' : '' ?>>
+											<?= esc(ucfirst($g['gender'])) ?>
 										</option>
 									<?php endforeach; ?>
 								</select>
