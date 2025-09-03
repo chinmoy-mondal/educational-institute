@@ -13,6 +13,7 @@ $routes->get('home/welcome', 'Home::welcome');
 $routes->get('home/history', 'Home::history');
 $routes->get('home/mission', 'Home::mission');
 $routes->get('home/staff', 'Home::staff');
+$routes->get('user-id', 'Home::userProfile');
 $routes->get('user', 'User::index');
 $routes->get('print-admit-form', 'Home::admit_print_view');
 $routes->post('print-admit', 'Home::printAdmit');

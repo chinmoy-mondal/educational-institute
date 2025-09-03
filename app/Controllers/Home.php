@@ -38,6 +38,24 @@ class Home extends BaseController
 			->findAll();
 		return view('public/staff', ['faculty' => $faculty]);
 	}
+
+	public function userProfile()
+	{
+		$id = $this->request->getGet('q'); // read ?q=7
+		$userModel = new UserModel();
+
+		$user = $userModel
+			->where('id', $id)
+			->where('account_status !=', 0)
+			->first();
+
+		if (!$user) {
+			throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("User not found");
+		}
+
+		return view('public/user_profile', ['user' => $user]);
+	}
+
 	public function subjects()
 	{
 		$model = new SubjectModel();  // ✅ Correct instantiation
@@ -142,7 +160,7 @@ class Home extends BaseController
 		}
 		// Sort classes numerically
 		ksort($classSummary);
-		
+
 		// Pass as array to view
 		return view('public/student_stat', ['classSummary' => $classSummary]);
 	}
