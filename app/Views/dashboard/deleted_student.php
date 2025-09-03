@@ -35,7 +35,7 @@
 		<!-- Search & Filter Form -->
 		<div class="card">
 			<div class="card-body">
-				<form method="get" action="<?= site_url('admin/student') ?>">
+				<form method="get" action="<?= site_url('admin/deletedStudent') ?>">
 					<div class="row align-items-end">
 						<div class="col-md-4">
 							<div class="form-group">
