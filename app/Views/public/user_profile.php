@@ -17,8 +17,8 @@
             </div>
 
             <div class="row g-4">
-                <?php if (!empty($faculty)): ?>
-                    <?php foreach ($faculty as $member): ?>
+                <?php if (!empty($user)): ?>
+                    <?php foreach ($user as $member): ?>
                         <div class="col-md-4">
                             <div class="card h-100 text-center border-0 shadow-sm faculty-card">
                                 
