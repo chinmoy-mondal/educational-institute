@@ -52,9 +52,9 @@ class Home extends BaseController
 		if (!$user) {
 			throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("User not found");
 		}
-echo "<pre>";
-print_r($user);
-		// return view('public/user_profile', ['user' => $user]);
+// echo "<pre>";
+// print_r($user);
+		return view('public/user_profile', ['user' => $user]);
 	}
 
 	public function subjects()
