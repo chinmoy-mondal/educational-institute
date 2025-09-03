@@ -68,7 +68,7 @@
       <!-- Info -->
       <div class="text-center text-black mb-1">
         <h4 class="mb-1 fw-bold"><?= esc($user['name']) ?></h4>
-        <p class="mb-0 fw-semibold"><?= esc(strtoupper($member['designation'])); ?></p>
+        <p class="mb-0 fw-semibold"><?= esc(strtoupper($user['designation'])) ?></p>
         <p class="mb-0">
           <i class="fas fa-id-card"></i> ID: <?= esc($user['id']) ?> 
           <span class="mx-1"></span>
