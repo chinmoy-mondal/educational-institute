@@ -39,7 +39,7 @@
                                 <!-- Card Body -->
                                 <div class="card-body">
                                     <h5 class="fw-bold mb-1"><?= esc($member['name']); ?></h5>
-                                    <p class="text-primary small mb-2"><?= esc($member['designation']); ?></p>
+                                    <p class="text-primary small mb-2"><?= esc(strtoupper($member['designation'])); ?></p>
                                     <p class="text-primary small mb-2"><?= esc($member['subject']); ?></p>
                                     <p class="text-muted small" style="text-align: justify;">
                                         <?= esc($member['bio'], 'raw') ?>
