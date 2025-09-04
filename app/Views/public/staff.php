@@ -27,6 +27,7 @@
                 <?php if (!empty($faculty)): ?>
                     <?php foreach ($faculty as $member): ?>
                         <div class="col-md-4">
+                            <a href="<?= base_url('/user-id?q=' . $member['id']) ?>">
                             <div class="card h-100 text-center border-0 shadow-sm faculty-card">
                                 <!-- Profile Image -->
                                 <div class="p-3">
@@ -97,6 +98,7 @@
                                     </a>
                                 </div>
                             </div>
+                            </a>
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>
