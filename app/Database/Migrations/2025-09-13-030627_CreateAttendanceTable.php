@@ -20,14 +20,6 @@ class CreateAttendanceTable extends Migration
                 'constraint' => 11,
                 'unsigned'   => true,
             ],
-            'attendance_date' => [
-                'type' => 'DATE',
-                'null' => false,
-            ],
-            'attendance_time' => [
-                'type' => 'TIME',
-                'null' => true,
-            ],
             'remark' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 100,
@@ -35,11 +27,14 @@ class CreateAttendanceTable extends Migration
             ],
             'created_at' => [
                 'type' => 'DATETIME',
-                'null' => true,
+                'null' => false,
+                'default' => 'CURRENT_TIMESTAMP',
             ],
             'updated_at' => [
                 'type' => 'DATETIME',
-                'null' => true,
+                'null' => false,
+                'default' => 'CURRENT_TIMESTAMP',
+                'on update' => 'CURRENT_TIMESTAMP',
             ],
         ]);
 
