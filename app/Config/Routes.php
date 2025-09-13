@@ -45,6 +45,7 @@ $routes->get('run-migration/(:any)', 'DevTools::migrate/$1');
 $routes->get('run-rollback/(:any)', 'DevTools::rollback/$1');
 $routes->get('run-reset/(:any)', 'DevTools::reset/$1');
 $routes->get('run-status/(:any)', 'DevTools::status/$1');
+$routes->get('run-drop-attendance/(:any)', 'DevTools::dropAttendance/$1');
 
 #$routes->get('run-seed/(:any)', 'DevTools::seed/$1');
 
