@@ -301,18 +301,20 @@ class Home extends BaseController
 			->orderBy('student_id', 'ASC')
 			->findAll();
 
-		// Prepare attendance sheet
+		// Prepare attendance sheet grouped by date
 		$data['attendances'] = [];
+
 		foreach ($records as $rec) {
-			$data['attendances'][] = [
+			$date = substr($rec['created_at'], 0, 10); // extract date (YYYY-MM-DD)
+
+			// Store inside date-indexed array
+			$data['attendances'][$date][] = [
 				'id'         => $rec['id'],
 				'student_id' => $rec['student_id'],
 				'remark'     => $rec['remark'],
-				'date'       => substr($rec['created_at'], 0, 10),
-				'time'       => substr($rec['created_at'], 11, 8),
+				'time'       => substr($rec['created_at'], 11, 8), // only time
 			];
 		}
-
 
 		// Load the view
 		return view('public/attendance_list', $data);
