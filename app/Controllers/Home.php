@@ -53,8 +53,8 @@ class Home extends BaseController
 		if (!$user) {
 			throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("User not found");
 		}
-// echo "<pre>";
-// print_r($user);
+		// echo "<pre>";
+		// print_r($user);
 		return view('public/user_profile', ['user' => $user]);
 	}
 
@@ -295,10 +295,26 @@ class Home extends BaseController
 	public function attendace()
 	{
 		$model = new AttendanceModel();
-		 // Fetch all attendance records
-        $data['attendances'] = $model->orderBy('created_at', 'DESC')->findAll();
 
-        // Load view
-        return view('public/attendance_list', $data);
+		// Fetch all records ordered by date and time
+		$records = $model->orderBy('created_at', 'ASC')
+			->orderBy('student_id', 'ASC')
+			->findAll();
+
+		// Prepare attendance sheet: group by student and date
+		$data['sheet'] = [];
+		foreach ($records as $rec) {
+			$day = substr($rec['created_at'], 0, 10); // date only
+			$time = substr($rec['created_at'], 11, 8); // HH:MM:SS
+
+			if ($rec['remark'] == 'A') {
+				$data['sheet'][$rec['student_id']][$day]['attend'] = $time;
+			} elseif ($rec['remark'] == 'L') {
+				$data['sheet'][$rec['student_id']][$day]['leave'] = $time;
+			}
+		}
+
+		// Load view
+		return view('public/attendance_list', $data);
 	}
 }
