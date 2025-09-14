@@ -296,27 +296,31 @@ class Home extends BaseController
 	{
 		$model = new AttendanceModel();
 
-		// Fetch all attendance records, sorted by date and student
+		// Fetch all attendance records
 		$records = $model->orderBy('created_at', 'ASC')
 			->orderBy('student_id', 'ASC')
 			->findAll();
 
-		// Prepare attendance sheet grouped by date
 		$data['attendances'] = [];
 
 		foreach ($records as $rec) {
-			$date = substr($rec['created_at'], 0, 10); // extract date (YYYY-MM-DD)
+			$date = substr($rec['created_at'], 0, 10);
 
-			// Store inside date-indexed array
 			$data['attendances'][$date][] = [
 				'id'         => $rec['id'],
 				'student_id' => $rec['student_id'],
 				'remark'     => $rec['remark'],
-				'time'       => substr($rec['created_at'], 11, 8), // only time
+				'time'       => substr($rec['created_at'], 11, 8),
 			];
 		}
 
-		// Load the view
+		// Sort students by ID inside each date
+		foreach ($data['attendances'] as &$dayRecords) {
+			usort($dayRecords, function ($a, $b) {
+				return $a['student_id'] <=> $b['student_id'];
+			});
+		}
+
 		return view('public/attendance_list', $data);
 	}
 }
