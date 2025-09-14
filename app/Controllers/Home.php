@@ -294,7 +294,7 @@ class Home extends BaseController
 
 	public function attendace()
 	{
-		$model = new \App\Models\AttendanceModel();
+		$model = new AttendanceModel();
 
 		// Fetch all attendance records, sorted by created_at ascending
 		$records = $model->orderBy('created_at', 'ASC')
