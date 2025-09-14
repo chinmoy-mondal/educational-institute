@@ -8,7 +8,7 @@ class AttendanceModel extends Model
 {
     protected $table      = 'attendance';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['student_id', 'remark']; // Only fields you want to insert/update
+    protected $allowedFields = ['id','student_id', 'remark','created_at','updated_at']; // Only fields you want to insert/update
 
     // If using created_at / updated_at auto-management
     protected $useTimestamps = true;

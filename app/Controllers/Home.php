@@ -6,6 +6,7 @@ use App\Models\SubjectModel;
 use App\Models\StudentModel;
 use App\Models\UserModel;
 use App\Models\CalendarModel;
+use App\Models\AttendanceModel;
 
 class Home extends BaseController
 {
@@ -286,12 +287,18 @@ class Home extends BaseController
 			];
 		}
 
-		// echo "<pre>";
-		// print_r($allData);
-
-
 		return view('public/admit_crd', [
 			'data' => $allData
 		]);
+	}
+
+	public function attendace()
+	{
+		$model = new AttendanceModel();
+		 // Fetch all attendance records
+        $data['attendances'] = $model->orderBy('created_at', 'DESC')->findAll();
+
+        // Load view
+        return view('public/attendance_list', $data);
 	}
 }
