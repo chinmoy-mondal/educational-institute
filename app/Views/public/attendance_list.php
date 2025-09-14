@@ -15,6 +15,7 @@
 <table>
     <thead>
         <tr>
+            <th>ID</th>
             <th>Student ID</th>
             <th>Remark</th>
             <th>Date</th>
@@ -24,6 +25,7 @@
         <?php if(!empty($attendances) && is_array($attendances)): ?>
             <?php foreach($attendances as $att): ?>
                 <tr>
+                    <td><?= $att['id'] ?></td>
                     <td><?= $att['student_id'] ?></td>
                     <td><?= $att['remark'] ?></td>
                     <td><?= $att['created_at'] ?></td>

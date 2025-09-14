@@ -296,23 +296,23 @@ class Home extends BaseController
 	{
 		$model = new AttendanceModel();
 
-		// Fetch all attendance records, sorted by created_at ascending
+		// Fetch all attendance records, sorted by date and student
 		$records = $model->orderBy('created_at', 'ASC')
 			->orderBy('student_id', 'ASC')
 			->findAll();
 
-		// Prepare grouped attendance sheet
+		// Prepare attendance sheet
 		$data['attendances'] = [];
 		foreach ($records as $rec) {
-			$day = substr($rec['created_at'], 0, 10); // extract date YYYY-MM-DD
-			$time = substr($rec['created_at'], 11, 8); // extract time HH:MM:SS
-
-			if ($rec['remark'] == 'A') {
-				$data['attendances'][$day][$rec['student_id']]['attend'] = $time;
-			} elseif ($rec['remark'] == 'L') {
-				$data['attendances'][$day][$rec['student_id']]['leave'] = $time;
-			}
+			$data['attendances'][] = [
+				'id'         => $rec['id'],
+				'student_id' => $rec['student_id'],
+				'remark'     => $rec['remark'],
+				'date'       => substr($rec['created_at'], 0, 10),
+				'time'       => substr($rec['created_at'], 11, 8),
+			];
 		}
+
 
 		// Load the view
 		return view('public/attendance_list', $data);
