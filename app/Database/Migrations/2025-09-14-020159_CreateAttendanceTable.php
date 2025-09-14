@@ -25,21 +25,14 @@ class CreateAttendanceTable extends Migration
                 'constraint' => 100,
                 'null'       => true,
             ],
-            'created_at' => [
-                'type' => 'DATETIME',
-                'null' => false,
-                'default' => 'CURRENT_TIMESTAMP',
-            ],
-            'updated_at' => [
-                'type' => 'DATETIME',
-                'null' => false,
-                'default' => 'CURRENT_TIMESTAMP',
-                'on update' => 'CURRENT_TIMESTAMP',
-            ],
+            'created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
+            'updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP',
         ]);
 
+        // Primary key
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('student_id', 'students', 'id', 'CASCADE', 'CASCADE');
+
+        // Create table
         $this->forge->createTable('attendance');
     }
 
