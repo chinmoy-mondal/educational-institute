@@ -40,7 +40,7 @@
                         <tr>
                             <th>Student ID</th>
                             <?php foreach ($allDates as $date): ?>
-                                <th><?= esc(date('D, M d, Y', strtotime($date))) ?></th>
+                                <th><?= esc(date('D d', strtotime($date))) ?></th>
                             <?php endforeach; ?>
                         </tr>
                     </thead>
