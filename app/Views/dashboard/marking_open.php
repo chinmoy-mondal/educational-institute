@@ -13,24 +13,34 @@
     <section class="content">
         <div class="container-fluid">
 
+            <?php if(session()->getFlashdata('success')): ?>
+                <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
+            <?php endif; ?>
+            <?php if(session()->getFlashdata('error')): ?>
+                <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
+            <?php endif; ?>
+
             <div class="row justify-content-center">
-                <div class="col-md-6"> <!-- centers the card, width 6/12 -->
+                <div class="col-md-6">
                     <div class="card">
                         <div class="card-header bg-primary">
-                            <h3 class="card-title">Select Exam</h3>
+                            <h3 class="card-title">Select Exam(s)</h3>
                         </div>
                         <div class="card-body">
                             <form method="post" action="<?= base_url('marking_open/process') ?>">
+
                                 <div class="form-group">
-                                    <label for="exam_name">Exam Name</label>
-                                    <select name="exam_name" id="exam_name" class="form-control">
-                                        <option value="">-- Select Exam --</option>
-                                        <?php foreach ($exam_name as $exam): ?>
-                                            <option value="<?= esc($exam['subcategory']) ?>">
+                                    <?php foreach ($exam_name as $exam): ?>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" 
+                                                   name="exam_name[]" 
+                                                   value="<?= esc($exam['subcategory']) ?>" 
+                                                   id="exam_<?= esc($exam['subcategory']) ?>">
+                                            <label class="form-check-label" for="exam_<?= esc($exam['subcategory']) ?>">
                                                 <?= esc($exam['subcategory']) ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
+                                            </label>
+                                        </div>
+                                    <?php endforeach; ?>
                                 </div>
 
                                 <div class="text-center mt-3">
@@ -38,6 +48,7 @@
                                         <i class="fas fa-check"></i> Open Marking
                                     </button>
                                 </div>
+
                             </form>
                         </div>
                     </div>

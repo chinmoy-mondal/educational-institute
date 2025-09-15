@@ -572,15 +572,33 @@ class Dashboard extends Controller
 		$calendarModel = new CalendarModel();
 
 		$examNames = $calendarModel
-		->select('subcategory')
-		->distinct()
-		->orderBy('subcategory', 'ASC')
-		->findAll();
+			->select('subcategory')
+			->distinct()
+			->orderBy('subcategory', 'ASC')
+			->findAll();
 		$this->data['exam_name'] = $examNames;
 
 		return view('dashboard/marking_open', $this->data);
 	}
 
+	// New function to process the form
+	public function processMarkingOpen()
+	{
+		$examName = $this->request->getPost('exam_name');
+
+		if (!$examName) {
+			return redirect()->back()->with('error', 'Please select an exam!');
+		}
+
+		// Example: save or mark the exam as "open" in the database
+		$calendarModel = new CalendarModel();
+		$calendarModel->where('subcategory', $examName)
+			->set(['marking_status' => 'open']) // assuming you have a column
+			->update();
+
+		return redirect()->to(base_url('marking_open'))
+			->with('success', "Marking opened for exam: $examName");
+	}
 
 	public function createStudentForm()
 	{
