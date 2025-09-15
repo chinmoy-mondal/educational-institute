@@ -390,7 +390,7 @@ class Dashboard extends Controller
 			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
 			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
 			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
-			['label' => 'Marking Open', 'url' => base_url('marking_open')],
+			['label' => 'Marking Action', 'url' => base_url('marking_open')],
 		];
 
 
@@ -432,7 +432,7 @@ class Dashboard extends Controller
 			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
 			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
 			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
-			['label' => 'Marking Open', 'url' => base_url('marking_open')],
+			['label' => 'Marking Action', 'url' => base_url('marking_open')],
 		];
 		$newUsers = $this->userModel
 			->where('account_status', 0)
@@ -496,7 +496,7 @@ class Dashboard extends Controller
 			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
 			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
 			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
-			['label' => 'Marking Open', 'url' => base_url('marking_open')],
+			['label' => 'Marking Action', 'url' => base_url('marking_open')],
 		];
 		$this->data['users'] = $users;
 		$this->data['subjects'] = $subjects;
@@ -548,7 +548,7 @@ class Dashboard extends Controller
 			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
 			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
 			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
-			['label' => 'Marking Open', 'url' => base_url('marking_open')],
+			['label' => 'Marking Action', 'url' => base_url('marking_open')],
 		];
 		$this->data['user']          = $user;
 		$this->data['subjects']      = $subjects;
@@ -566,7 +566,7 @@ class Dashboard extends Controller
 			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
 			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
 			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
-			['label' => 'Marking Open', 'url' => base_url('marking_open')],
+			['label' => 'Marking Action', 'url' => base_url('marking_open')],
 		];
 
 
@@ -1008,7 +1008,7 @@ class Dashboard extends Controller
 			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
 			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
 			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
-			['label' => 'Marking Open', 'url' => base_url('marking_open')],
+			['label' => 'Marking Action', 'url' => base_url('marking_open')],
 		];
 		$this->data['user']            = $user;
 		$this->data['subject']         = $subject;
@@ -1091,7 +1091,7 @@ class Dashboard extends Controller
 			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
 			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
 			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
-			['label' => 'Marking Open', 'url' => base_url('marking_open')],
+			['label' => 'Marking Action', 'url' => base_url('marking_open')],
 		];
 		$this->data['subject'] = $subject;
 		$this->data['users'] = $users;
