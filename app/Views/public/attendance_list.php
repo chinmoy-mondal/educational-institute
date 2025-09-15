@@ -49,7 +49,10 @@
                             <tr>
                                 <td class="fw-bold"><?= esc($studentId) ?></td>
                                 <?php foreach ($allDates as $date): ?>
-                                    <td>
+                                    <td
+                                        <?php if (isset($attendances[$date][$studentId])): ?>
+                                        title="<?= esc(implode(', ', array_column($attendances[$date][$studentId], 'time'))) ?>"
+                                        <?php endif; ?>>
                                         <?php if (isset($attendances[$date][$studentId])): ?>
                                             <?php
                                             $remarks = array_column($attendances[$date][$studentId], 'remark');
