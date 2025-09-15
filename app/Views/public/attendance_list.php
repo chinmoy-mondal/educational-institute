@@ -51,7 +51,11 @@
                                 <?php foreach ($allDates as $date): ?>
                                     <td
                                         <?php if (isset($attendances[$date][$studentId])): ?>
-                                        title="<?= esc(implode(', ', array_column($attendances[$date][$studentId], 'time'))) ?>"
+                                        title="<?php
+                                                $times = array_column($attendances[$date][$studentId], 'time');
+                                                $formattedTimes = array_map(fn($t) => date('h:i A', strtotime($t)), $times);
+                                                echo esc(implode(', ', $formattedTimes));
+                                                ?>"
                                         <?php endif; ?>>
                                         <?php if (isset($attendances[$date][$studentId])): ?>
                                             <?php
