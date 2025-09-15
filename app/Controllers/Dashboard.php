@@ -567,8 +567,16 @@ class Dashboard extends Controller
 			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
 			['label' => 'Marking Open', 'url' => base_url('marking_open')],
 		];
-		$this->data['users'] = $users;
-		$this->data['subjects'] = $subjects;
+
+
+		$calendarModel = new CalendarModel();
+
+		$examNames = $calendarModel
+		->select('subcategory')
+		->distinct()
+		->orderBy('subcategory', 'ASC')
+		->findAll();
+		$this->data['exam_name'] = $examNames;
 
 		return view('dashboard/marking_open', $this->data);
 	}
