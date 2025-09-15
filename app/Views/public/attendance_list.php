@@ -14,48 +14,61 @@
         <section class="attendance-section py-5">
             <div class="container">
                 <div class="text-center mb-4">
-                    <h2 class="fw-bold">Attendance List</h2>
-                    <p class="text-muted">Daily records of students</p>
+                    <h2 class="fw-bold">Attendance Calendar</h2>
+                    <p class="text-muted">Student attendance overview by date</p>
                 </div>
 
-                <table class="table table-bordered table-striped">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Student ID</th>
-                            <th>Remark</th>
-                            <th>Time</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($attendances)): ?>
-                            <?php foreach ($attendances as $date => $students): ?>
-                                <!-- Date Header Row -->
-                                <tr class="table-info fw-bold">
-                                    <td colspan="3">Date: <?= esc($date) ?></td>
-                                </tr>
+                <?php if (!empty($attendances)): ?>
+                    <?php
+                        // Collect all dates
+                        $allDates = array_keys($attendances);
+                        sort($allDates);
 
-                                <?php foreach ($students as $studentId => $records): ?>
-                                    <!-- Student Header Row -->
-                                    <tr class="table-secondary">
-                                        <td colspan="3">Student ID: <?= esc($studentId) ?></td>
-                                    </tr>
+                        // Collect all student IDs
+                        $allStudents = [];
+                        foreach ($attendances as $date => $students) {
+                            foreach ($students as $studentId => $records) {
+                                $allStudents[$studentId] = true;
+                            }
+                        }
+                        $allStudents = array_keys($allStudents);
+                        sort($allStudents);
+                    ?>
 
-                                    <?php foreach ($records as $rec): ?>
-                                        <tr>
-                                            <td><?= esc($studentId) ?></td>
-                                            <td><?= esc($rec['remark']) ?></td>
-                                            <td><?= esc($rec['time']) ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php endforeach; ?>
-                            <?php endforeach; ?>
-                        <?php else: ?>
+                    <table class="table table-bordered table-sm text-center align-middle">
+                        <thead class="table-light">
                             <tr>
-                                <td colspan="3" class="text-center">No attendance records found.</td>
+                                <th>Student ID</th>
+                                <?php foreach ($allDates as $date): ?>
+                                    <th><?= esc($date) ?></th>
+                                <?php endforeach; ?>
                             </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($allStudents as $studentId): ?>
+                                <tr>
+                                    <td class="fw-bold"><?= esc($studentId) ?></td>
+                                    <?php foreach ($allDates as $date): ?>
+                                        <td>
+                                            <?php if (isset($attendances[$date][$studentId])): ?>
+                                                <?php 
+                                                    $remarks = array_column($attendances[$date][$studentId], 'remark');
+                                                    echo esc(implode(', ', $remarks));
+                                                ?>
+                                            <?php else: ?>
+                                                -
+                                            <?php endif; ?>
+                                        </td>
+                                    <?php endforeach; ?>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <div class="alert alert-info text-center">
+                        No attendance records found.
+                    </div>
+                <?php endif; ?>
             </div>
         </section>
         <!--end-->
