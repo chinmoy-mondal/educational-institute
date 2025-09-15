@@ -1,48 +1,67 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Attendance List</title>
-    <style>
-        table { border-collapse: collapse; width: 90%; margin: 20px auto; }
-        th, td { border: 1px solid #333; padding: 8px; text-align: center; }
-        th { background-color: #f2f2f2; }
-        .date-row { background: #d9edf7; font-weight: bold; text-align: left; }
-    </style>
-</head>
-<body>
+<!-- chinmoy is testing new code -->
 
-<h2 style="text-align:center;">Attendance List</h2>
+<?= $this->extend("layouts/base.php") ?>
 
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Student ID</th>
-            <th>Remark</th>
-            <th>Time</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php if(!empty($attendances)): ?>
-            <?php foreach($attendances as $date => $records): ?>
-                <!-- Date Header Row -->
-                <tr class="date-row">
-                    <td colspan="4">Date: <?= $date ?></td>
-                </tr>
-                <?php foreach($records as $att): ?>
-                    <tr>
-                        <td><?= $att['id'] ?></td>
-                        <td><?= $att['student_id'] ?></td>
-                        <td><?= $att['remark'] ?></td>
-                        <td><?= $att['time'] ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <tr><td colspan="4">No attendance records found.</td></tr>
-        <?php endif; ?>
-    </tbody>
-</table>
+<?= $this->section("content"); ?>
 
-</body>
-</html>
+    <!--  Fixed Wrapper for Navbar -->
+    <div class="fixed-header">
+        <?= $this->include("layouts/base-structure/header"); ?>
+    </div>
+    <div class="container content">
+
+        <!--start-->
+        <section class="attendance-section py-5">
+            <div class="container">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold">Attendance List</h2>
+                    <p class="text-muted">Daily records of students</p>
+                </div>
+
+                <table class="table table-bordered table-striped">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Remark</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (!empty($attendances)): ?>
+                            <?php foreach ($attendances as $date => $students): ?>
+                                <!-- Date Header Row -->
+                                <tr class="table-info fw-bold">
+                                    <td colspan="3">Date: <?= esc($date) ?></td>
+                                </tr>
+
+                                <?php foreach ($students as $studentId => $records): ?>
+                                    <!-- Student Header Row -->
+                                    <tr class="table-secondary">
+                                        <td colspan="3">Student ID: <?= esc($studentId) ?></td>
+                                    </tr>
+
+                                    <?php foreach ($records as $rec): ?>
+                                        <tr>
+                                            <td><?= esc($studentId) ?></td>
+                                            <td><?= esc($rec['remark']) ?></td>
+                                            <td><?= esc($rec['time']) ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endforeach; ?>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="3" class="text-center">No attendance records found.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <!--end-->
+
+    </div>
+
+    <?= $this->include("layouts/base-structure/footer"); ?>
+
+<?= $this->endSection(); ?>

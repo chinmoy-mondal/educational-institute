@@ -306,19 +306,15 @@ class Home extends BaseController
 		foreach ($records as $rec) {
 			$date = substr($rec['created_at'], 0, 10);
 
-			$data['attendances'][$date][] = [
-				'id'         => $rec['id'],
-				'student_id' => $rec['student_id'],
-				'remark'     => $rec['remark'],
-				'time'       => substr($rec['created_at'], 11, 8),
+			$data['attendances'][$date][$rec['student_id']][] = [
+				'remark' => $rec['remark'],
+				'time'   => substr($rec['created_at'], 11, 8),
 			];
 		}
 
-		// Sort students by ID inside each date
+		// Sort student IDs inside each date
 		foreach ($data['attendances'] as &$dayRecords) {
-			usort($dayRecords, function ($a, $b) {
-				return $a['student_id'] <=> $b['student_id'];
-			});
+			ksort($dayRecords); // ensures student_id sorted ascending
 		}
 
 		return view('public/attendance_list', $data);
