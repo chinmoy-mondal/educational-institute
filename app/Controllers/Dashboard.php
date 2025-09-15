@@ -584,8 +584,8 @@ class Dashboard extends Controller
 
 	public function processMarkingOpen()
 	{
-		$examNames = $this->request->getPost('exam_name'); // selected exams
-		$statuses  = $this->request->getPost('status');    // status per exam
+		$examNames = $this->request->getPost('exam_name'); // array of selected exams
+		$status    = $this->request->getPost('status');    // single status for all
 
 		if (empty($examNames)) {
 			return redirect()->back()->with('error', 'Please select at least one exam!');
@@ -594,8 +594,6 @@ class Dashboard extends Controller
 		$markingModel = new MarkingOpenModel();
 
 		foreach ($examNames as $examName) {
-			$status = isset($statuses[$examName]) ? $statuses[$examName] : 'open';
-
 			$exists = $markingModel->where('exam_name', $examName)->first();
 			if ($exists) {
 				$markingModel->update($exists['id'], ['status' => $status]);
