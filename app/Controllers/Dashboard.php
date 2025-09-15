@@ -9,6 +9,7 @@ use App\Models\StudentModel;
 use App\Models\SubjectModel;
 use App\Models\ResultModel;
 use App\Models\CalendarModel;
+use App\Models\MarkingOpenModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Dashboard extends Controller
@@ -581,23 +582,29 @@ class Dashboard extends Controller
 		return view('dashboard/marking_open', $this->data);
 	}
 
-	// New function to process the form
 	public function processMarkingOpen()
 	{
-		$examName = $this->request->getPost('exam_name');
+		$examNames = $this->request->getPost('exam_name'); // array from checkboxes
 
-		if (!$examName) {
-			return redirect()->back()->with('error', 'Please select an exam!');
+		if (empty($examNames)) {
+			return redirect()->back()->with('error', 'Please select at least one exam!');
 		}
 
-		// Example: save or mark the exam as "open" in the database
-		$calendarModel = new CalendarModel();
-		$calendarModel->where('subcategory', $examName)
-			->set(['marking_status' => 'open']) // assuming you have a column
-			->update();
+		$markingModel = new MarkingOpenModel();
+
+		foreach ($examNames as $examName) {
+			// check if already exists to avoid duplicates
+			$exists = $markingModel->where('exam_name', $examName)->first();
+			if (!$exists) {
+				$markingModel->insert([
+					'exam_name' => $examName,
+					'status'    => 'open',
+				]);
+			}
+		}
 
 		return redirect()->to(base_url('marking_open'))
-			->with('success', "Marking opened for exam: $examName");
+			->with('success', 'Selected exams marked as open successfully.');
 	}
 
 	public function createStudentForm()
