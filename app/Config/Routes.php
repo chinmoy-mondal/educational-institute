@@ -86,6 +86,8 @@ $routes->get('teacher_management', 'Dashboard::teacher_management');
 
 $routes->post('sub-update', 'Dashboard::teacherSubUpdate');
 $routes->get('assignSubject/(:num)', 'Dashboard::assignSubject/$1');
+$routes->get('marking_open', 'Dashboard::marking_open');
+
 
 $routes->get('ad-result/(:num)/(:num)', 'Dashboard::result/$1/$2');
 $routes->get('admin/resultCheck/(:num)/(:num)', 'Dashboard::ResultCheck/$1/$2');

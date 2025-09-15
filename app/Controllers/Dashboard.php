@@ -556,7 +556,22 @@ class Dashboard extends Controller
 	}
 
 
+	public function marking_open()
+	{
+		// Use $this->data which already has navbarItems, sidebarItems
+		$this->data['title'] = 'Teacher Management';
+		$this->data['activeSection'] = 'teacher';
+		$this->data['navbarItems'] = [
+			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
+			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
+			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
+			['label' => 'Marking Open', 'url' => base_url('marking_open')],
+		];
+		$this->data['users'] = $users;
+		$this->data['subjects'] = $subjects;
 
+		return view('dashboard/marking_open', $this->data);
+	}
 
 
 	public function createStudentForm()
