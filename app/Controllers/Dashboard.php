@@ -584,7 +584,8 @@ class Dashboard extends Controller
 
 	public function processMarkingOpen()
 	{
-		$examNames = $this->request->getPost('exam_name'); // array from checkboxes
+		$examNames = $this->request->getPost('exam_name'); // selected exams
+		$statuses  = $this->request->getPost('status');    // status per exam
 
 		if (empty($examNames)) {
 			return redirect()->back()->with('error', 'Please select at least one exam!');
@@ -593,18 +594,21 @@ class Dashboard extends Controller
 		$markingModel = new MarkingOpenModel();
 
 		foreach ($examNames as $examName) {
-			// check if already exists to avoid duplicates
+			$status = isset($statuses[$examName]) ? $statuses[$examName] : 'open';
+
 			$exists = $markingModel->where('exam_name', $examName)->first();
-			if (!$exists) {
+			if ($exists) {
+				$markingModel->update($exists['id'], ['status' => $status]);
+			} else {
 				$markingModel->insert([
 					'exam_name' => $examName,
-					'status'    => 'open',
+					'status'    => $status
 				]);
 			}
 		}
 
 		return redirect()->to(base_url('marking_open'))
-			->with('success', 'Selected exams marked as open successfully.');
+			->with('success', 'Selected exams saved successfully.');
 	}
 
 	public function createStudentForm()
