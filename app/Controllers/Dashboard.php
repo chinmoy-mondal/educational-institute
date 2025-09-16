@@ -1102,7 +1102,9 @@ class Dashboard extends Controller
 			}
 		}
 
-		return redirect()->back()->with('message', 'Results submitted successfully.');
+		// return redirect()->back()->with('message', 'Results submitted successfully.');
+		$url = previous_url() ?? base_url('marking_open');
+		return redirect()->to($url)->with('message', 'Results submitted successfully.');
 	}
 
 	public function ResultCheck($userId, $subjectId)
