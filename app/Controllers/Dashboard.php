@@ -1008,48 +1008,47 @@ class Dashboard extends Controller
 
 		$user    = $this->userModel->find($userId);
 		$user = $this->subjectModel->find($subjectId);
-		echo $user."<br>";
-		echo $user."<br>";
+		
 
-		// if (!$user || !$subject) {
-		// 	$routes   = \Config\Services::routes();
-		// 	$override = $routes->get404Override();
-		// 	return is_callable($override) ? $override() : throw PageNotFoundException::forPageNotFound();
-		// }
+		if (!$user || !$subject) {
+			$routes   = \Config\Services::routes();
+			$override = $routes->get404Override();
+			return is_callable($override) ? $override() : throw PageNotFoundException::forPageNotFound();
+		}
 
-		// $students = $this->studentModel
-		// 	->where("FIND_IN_SET(" . (int)$subjectId . ", assign_sub) >", 0, false)
-		// 	->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
-		// 	->findAll();
+		$students = $this->studentModel
+			->where("FIND_IN_SET(" . (int)$subjectId . ", assign_sub) >", 0, false)
+			->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
+			->findAll();
 
-		// // 🔄 Load existing results for this teacher and subject
-		// $results = $this->resultModel
-		// 	->where('teacher_id', $userId)
-		// 	->where('subject_id', $subjectId)
-		// 	->where('year', date('Y')) // optional filter
-		// 	->findAll();
+		// 🔄 Load existing results for this teacher and subject
+		$results = $this->resultModel
+			->where('teacher_id', $userId)
+			->where('subject_id', $subjectId)
+			->where('year', date('Y')) // optional filter
+			->findAll();
 
-		// // 🔃 Index results by student_id for quick lookup
-		// $indexedResults = [];
-		// foreach ($results as $r) {
-		// 	$indexedResults[$r['student_id']] = $r;
-		// }
+		// 🔃 Index results by student_id for quick lookup
+		$indexedResults = [];
+		foreach ($results as $r) {
+			$indexedResults[$r['student_id']] = $r;
+		}
 
-		// $this->data['title']           = 'Result Entry';
-		// $this->data['activeSection']   = 'teacher';
-		// $this->data['navbarItems']     = [
-		// 	['label' => 'Teacher List', 'url' => base_url('teacher_management')],
-		// 	['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
-		// 	['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
-		// 	['label' => 'Marking Open', 'url' => base_url('marking_open')],
-		// ];
-		// $this->data['user']            = $user;
-		// $this->data['subject']         = $subject;
-		// $this->data['exam_name']         = $exam_name;
-		// $this->data['students']        = $students;
-		// $this->data['existingResults'] = $indexedResults;
+		$this->data['title']           = 'Result Entry';
+		$this->data['activeSection']   = 'teacher';
+		$this->data['navbarItems']     = [
+			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
+			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
+			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
+			['label' => 'Marking Open', 'url' => base_url('marking_open')],
+		];
+		$this->data['user']            = $user;
+		$this->data['subject']         = $subject;
+		$this->data['exam_name']         = $exam_name;
+		$this->data['students']        = $students;
+		$this->data['existingResults'] = $indexedResults;
 
-		// return view('dashboard/ad_result', $this->data);
+		return view('dashboard/ad_result', $this->data);
 	}
 
 	public function submitResults()
