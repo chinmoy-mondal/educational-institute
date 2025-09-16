@@ -1102,7 +1102,7 @@ class Dashboard extends Controller
 			}
 		}
 
-		return redirect()->to(base_url('admin/resultCheck/'.$teacherId.'/'.$subjectId))
+		return redirect()->to(base_url('exam_name/'.$teacherId.'/'.$subjectId))
 			->with('success', 'Results submitted successfully.');  
 	}
 
