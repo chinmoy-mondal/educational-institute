@@ -1051,7 +1051,12 @@ class Dashboard extends Controller
 		$this->data['students']        = $students;
 		$this->data['existingResults'] = $indexedResults;
 
-		return view('dashboard/ad_result', $this->data);
+		echo '<pre>';
+print_r($this->data);   // or var_dump($this->data)
+echo '</pre>';
+exit;  // stop execution to see the output clearly
+
+		// return view('dashboard/ad_result', $this->data);
 	}
 
 	public function submitResults()
