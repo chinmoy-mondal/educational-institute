@@ -92,7 +92,8 @@ $routes->post('marking_open/process', 'Dashboard::processMarkingOpen');
 
 $routes->post('ad-result', 'Dashboard::result');
 $routes->get('exam_name/(:num)/(:num)', 'Dashboard::exam_name/$1/$2');
-$routes->get('admin/resultCheck/(:num)/(:num)', 'Dashboard::ResultCheck/$1/$2');
+$routes->get('exam_name_result_check/(:num)/(:num)', 'Dashboard::exam_name_result_check/$1/$2');
+$routes->post('admin/resultCheck', 'Dashboard::ResultCheck');
 $routes->post('results/submit', 'Dashboard::submitResults');
 
 $routes->get('admin/tabulation_form', 'Dashboard::selectTabulationForm');

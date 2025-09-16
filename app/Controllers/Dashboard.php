@@ -1102,22 +1102,60 @@ class Dashboard extends Controller
 			}
 		}
 
-		return redirect()->to(base_url('exam_name/'.$teacherId.'/'.$subjectId))
-			->with('success', 'Results submitted successfully.');  
+		return redirect()->to(base_url('exam_name/' . $teacherId . '/' . $subjectId))
+			->with('success', 'Results submitted successfully.');
 	}
 
-	public function ResultCheck($userId, $subjectId)
+	public function exam_name_result_check($userId, $subjectId)
 	{
+		$this->data['title']         = 'Select Exam';
+		$this->data['activeSection'] = 'teacher';
+		$this->data['navbarItems']   = [
+			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
+			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
+			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
+			['label' => 'Marking Action', 'url' => base_url('marking_open')],
+		];
+		$this->data['user_id']    = $userId;
+		$this->data['subject_id'] = $subjectId;
+
+		// ✅ fetch all exams where status is open (id + exam_name only)
+		$this->data['exams'] = $this->markingModel
+			->select('id, exam_name')
+			->where('status', 'open')
+			->findAll();
+
+		return view('dashboard/exam_name_result_check', $this->data);
+	}
+
+	public function ResultCheck()
+	{
+		$userId     = $this->request->getPost('user_id');
+		$subjectId  = $this->request->getPost('subject_id');
+		$exam_name  = $this->request->getPost('exam_name');
 
 		$subject = $this->subjectModel->find($subjectId);
-
 		$users	= $this->userModel->find($userId);
+
+		$class = $subject['class'];
+
+		if (!$users) {
+			return redirect()->back()->with('error', 'User data is not Found.');
+		} elseif (!$subject) {
+			return redirect()->back()->with('error', 'Subject is not found.');
+		} elseif (!$exam_name) {
+			return redirect()->back()->with('error', 'No Exam is selected.');
+		} elseif (($exam_name == 'Pre-Test Exam' || $exam_name == 'Test Exam') && $class != 10) {
+			return redirect()->back()
+				->with('error', $exam_name . ' is not allowed for class ' . $class);
+		}
 
 		$result = $this->resultModel
 			->select('results.*, students.student_name, students.roll, students.class')
 			->join('students', 'students.id = results.student_id')
 			->where('results.subject_id', $subjectId)
 			->where('results.teacher_id', $userId)
+			->where('results.exam', $exam_name)
 			->orderBy('CAST(students.roll AS UNSIGNED)', 'ASC', false)
 			->findAll();
 
