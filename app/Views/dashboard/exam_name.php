@@ -5,7 +5,7 @@
     <div class="card shadow-lg p-4" style="width: 500px;">
         <div class="card-header text-center bg-primary text-white">
             <h4 class="mb-0">Select Exam</h4>
-        </div>
+        </div> 
         <div class="card-body">
             <form action="<?= site_url('ad-result') ?>" method="post">
                 <!-- Hidden fields for user and subject -->
