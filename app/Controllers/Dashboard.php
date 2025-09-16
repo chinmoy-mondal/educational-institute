@@ -1054,7 +1054,7 @@ class Dashboard extends Controller
 		echo '<pre>';
 print_r($this->data);   // or var_dump($this->data)
 echo '</pre>';
-exit;  // stop execution to see the output clearly
+exit;  // stop execution to see the output clearly 
 
 		// return view('dashboard/ad_result', $this->data);
 	}
