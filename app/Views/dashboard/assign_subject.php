@@ -44,7 +44,7 @@
                         <a href="<?= base_url('exam_name/' . $user['id'] . '/' . $sub['id']) ?>" class="btn btn-sm btn-info">
                           <i class="fas fa-file-alt"></i>
                         </a>
-                        <a href="<?= base_url('admin/resultCheck/' . $user['id'] . '/' . $sub['id']) ?>" class="btn btn-sm btn-info">
+                        <a href="<?= base_url('admin/exam_name_result_check/' . $user['id'] . '/' . $sub['id']) ?>" class="btn btn-sm btn-info">
                           <i class="fas fa-chart-bar"></i>
                         </a>
                       </td>
