@@ -1002,54 +1002,57 @@ class Dashboard extends Controller
 		$subjectId  = $this->request->getPost('subject_id');
 		$exam_name  = $this->request->getPost('exam_name');
 
+		echo $exam_name;
+
 		$user    = $this->userModel->find($userId);
 		$subject = $this->subjectModel->find($subjectId);
 		$class = $subject['class'];
 
-		if (!$user) {
-			return redirect()->back()->with('error', 'User data is not Found.');
-		} elseif (!$subject) {
-			return redirect()->back()->with('error', 'Subject is not found.');
-		} elseif (!$exam_name) {
-			return redirect()->back()->with('error', 'No Exam is selected.');
-		} elseif( ($exam_name = 'Pre-Test Exam' || $exam_name = 'Test Exam') &&  $class !=10){
-			return redirect()->back()->with('error', $exam_name.' is not for '.$class.' class');
-		}
+		// if (!$user) {
+		// 	return redirect()->back()->with('error', 'User data is not Found.');
+		// } elseif (!$subject) {
+		// 	return redirect()->back()->with('error', 'Subject is not found.');
+		// } elseif (!$exam_name) {
+		// 	return redirect()->back()->with('error', 'No Exam is selected.');
+		// } elseif (($exam_name == 'Pre-Test Exam' || $exam_name == 'Test Exam') && $class != 10) {
+		// 	return redirect()->back()
+		// 		->with('error', $exam_name . ' is not allowed for class ' . $class);
+		// }
 
-		$students = $this->studentModel
-			->where("FIND_IN_SET(" . (int)$subjectId . ", assign_sub) >", 0, false)
-			->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
-			->findAll();
+		// $students = $this->studentModel
+		// 	->where("FIND_IN_SET(" . (int)$subjectId . ", assign_sub) >", 0, false)
+		// 	->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
+		// 	->findAll();
 
-		// 🔄 Load existing results for this teacher and subject
-		$results = $this->resultModel
-			->where('teacher_id', $userId)
-			->where('subject_id', $subjectId)
-			->where('exam', $exam_name)
-			->where('year', date('Y')) // optional filter
-			->findAll();
+		// // 🔄 Load existing results for this teacher and subject
+		// $results = $this->resultModel
+		// 	->where('teacher_id', $userId)
+		// 	->where('subject_id', $subjectId)
+		// 	->where('exam', $exam_name)
+		// 	->where('year', date('Y')) // optional filter
+		// 	->findAll();
 
-		// 🔃 Index results by student_id for quick lookup
-		$indexedResults = [];
-		foreach ($results as $r) {
-			$indexedResults[$r['student_id']] = $r;
-		}
+		// // 🔃 Index results by student_id for quick lookup
+		// $indexedResults = [];
+		// foreach ($results as $r) {
+		// 	$indexedResults[$r['student_id']] = $r;
+		// }
 
-		$this->data['title']           = 'Result Entry';
-		$this->data['activeSection']   = 'teacher';
-		$this->data['navbarItems']     = [
-			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
-			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
-			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
-			['label' => 'Marking Open', 'url' => base_url('marking_open')],
-		];
-		$this->data['user']            = $user;
-		$this->data['subject']         = $subject;
-		$this->data['exam_name']         = $exam_name;
-		$this->data['students']        = $students;
-		$this->data['existingResults'] = $indexedResults;
+		// $this->data['title']           = 'Result Entry';
+		// $this->data['activeSection']   = 'teacher';
+		// $this->data['navbarItems']     = [
+		// 	['label' => 'Teacher List', 'url' => base_url('teacher_management')],
+		// 	['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
+		// 	['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
+		// 	['label' => 'Marking Open', 'url' => base_url('marking_open')],
+		// ];
+		// $this->data['user']            = $user;
+		// $this->data['subject']         = $subject;
+		// $this->data['exam_name']         = $exam_name;
+		// $this->data['students']        = $students;
+		// $this->data['existingResults'] = $indexedResults;
 
-		return view('dashboard/ad_result', $this->data);
+		// return view('dashboard/ad_result', $this->data);
 	}
 
 	public function submitResults()
