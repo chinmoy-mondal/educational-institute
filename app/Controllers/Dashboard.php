@@ -390,8 +390,6 @@ class Dashboard extends Controller
 		// Common navbar and sidebar for all views
 		$this->data['navbarItems'] = [
 			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
-			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
-			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
 			['label' => 'Marking Action', 'url' => base_url('marking_open')],
 		];
 
@@ -432,8 +430,6 @@ class Dashboard extends Controller
 		// Common navbar and sidebar for all views
 		$this->data['navbarItems'] = [
 			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
-			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
-			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
 			['label' => 'Marking Action', 'url' => base_url('marking_open')],
 		];
 		$newUsers = $this->userModel
@@ -496,8 +492,6 @@ class Dashboard extends Controller
 		$this->data['activeSection'] = 'teacher';
 		$this->data['navbarItems'] = [
 			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
-			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
-			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
 			['label' => 'Marking Action', 'url' => base_url('marking_open')],
 		];
 		$this->data['users'] = $users;
@@ -548,8 +542,6 @@ class Dashboard extends Controller
 		$this->data['activeSection'] = 'teacher';
 		$this->data['navbarItems']   = [
 			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
-			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
-			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
 			['label' => 'Marking Action', 'url' => base_url('marking_open')],
 		];
 		$this->data['user']          = $user;
@@ -566,8 +558,6 @@ class Dashboard extends Controller
 		$this->data['activeSection'] = 'teacher';
 		$this->data['navbarItems'] = [
 			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
-			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
-			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
 			['label' => 'Marking Action', 'url' => base_url('marking_open')],
 		];
 
@@ -980,8 +970,6 @@ class Dashboard extends Controller
 		$this->data['activeSection'] = 'teacher';
 		$this->data['navbarItems']   = [
 			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
-			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
-			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
 			['label' => 'Marking Action', 'url' => base_url('marking_open')],
 		];
 		$this->data['user_id']    = $userId;
@@ -1041,8 +1029,6 @@ class Dashboard extends Controller
 		$this->data['activeSection']   = 'teacher';
 		$this->data['navbarItems']     = [
 			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
-			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
-			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
 			['label' => 'Marking Open', 'url' => base_url('marking_open')],
 		];
 		$this->data['user']            = $user;
@@ -1112,8 +1098,6 @@ class Dashboard extends Controller
 		$this->data['activeSection'] = 'teacher';
 		$this->data['navbarItems']   = [
 			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
-			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
-			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
 			['label' => 'Marking Action', 'url' => base_url('marking_open')],
 		];
 		$this->data['user_id']    = $userId;
@@ -1164,8 +1148,6 @@ class Dashboard extends Controller
 		$this->data['activeSection'] = 'teacher';
 		$this->data['navbarItems'] = [
 			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
-			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
-			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
 			['label' => 'Marking Action', 'url' => base_url('marking_open')],
 		];
 		$this->data['subject'] = $subject;
