@@ -1036,8 +1036,17 @@ class Dashboard extends Controller
 			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
 			['label' => 'Marking Action', 'url' => base_url('marking_open')],
 		];
-		$this->data['user']            = $userId;
-		$this->data['subject']         = $subjectId;
+
+		// Fetch user info from database
+		$user = $this->userModel->find($userId); // $user is now an array with 'name', 'designation', etc.
+
+		// Fetch subject info from database
+		$subject = $this->subjectModel->find($subjectId); // $subject is now an array with 'subject', 'class', 'section', etc.
+
+		// Pass them to the view
+		$this->data['user'] = $user;
+		$this->data['subject'] = $subject;
+
 		$this->data['exam_name']       = $exam_name;
 		$this->data['students']        = $students;
 		$this->data['existingResults'] = $indexedResults;
