@@ -1006,10 +1006,10 @@ class Dashboard extends Controller
 		echo $subjectId."<br>";
 		echo $exam_name."<br>";
 
-		$user    = $this->userModel->find($userId);
-		$user = $this->subjectModel->find($subjectId);
-		echo $user."<br>";
-		echo $user."<br>";
+		// $user    = $this->userModel->find($userId);
+		// $user = $this->subjectModel->find($subjectId);
+		// echo $user."<br>";
+		// echo $user."<br>";
 
 		// if (!$user || !$subject) {
 		// 	$routes   = \Config\Services::routes();
