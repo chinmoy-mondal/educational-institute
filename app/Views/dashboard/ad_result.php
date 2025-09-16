@@ -43,8 +43,12 @@
                     <form method="post" action="<?= site_url('results/submit') ?>" onsubmit="return validateTotals();">
                         <div class="mb-3 d-flex justify-content-between align-items-center flex-wrap">
                             <div>
-                                <h1><?= esc($exam_name) ?></h1>
-                                <input type="hidden" name="exam_name" value="<?= esc($exam_name) ?>">
+                                <!-- Label showing the exam name -->
+                                <label class="fw-bold">Exam:</label>
+                                <span class="ms-2"><?= esc($exam_name) ?></span>
+
+                                <!-- Hidden input to submit exam_name -->
+                                <input type="hidden" name="exam" value="<?= esc($exam_name) ?>">
                             </div>
                         </div>
                         <input type="hidden" name="class" value="<?= esc($subject['class']) ?>">
