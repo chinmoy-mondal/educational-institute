@@ -996,68 +996,50 @@ class Dashboard extends Controller
 		return view('dashboard/exam_name', $this->data);
 	}
 
-	public function result()
-	{
-		// Receive POST data
-		$userId     = $this->request->getPost('user_id');
-		$subjectId  = $this->request->getPost('subject_id');
-		$exam_name  = $this->request->getPost('exam_name');
+public function result()
+{
+    $userId = $this->request->getPost('user_id');
+    $subjectId = $this->request->getPost('subject_id');
+    $exam_name = $this->request->getPost('exam_name');
 
-		if (!$userId || !$subjectId || !$exam_name) {
-			$routes   = \Config\Services::routes();
-			$override = $routes->get404Override();
-			return is_callable($override) ? $override() : throw PageNotFoundException::forPageNotFound();
-		}
+    if (!$userId || !$subjectId || !$exam_name) {
+        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+    }
 
-		$students = $this->studentModel
-			->where("FIND_IN_SET(" . (int)$subjectId . ", assign_sub) >", 0, false)
-			->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
-			->findAll();
+    // Fetch user (teacher)
+    $user = $this->userModel->find($userId);
 
-		// 🔄 Load existing results for this teacher and subject
-		$results = $this->resultModel
-			->where('teacher_id', $userId)
-			->where('subject_id', $subjectId)
-			->where('exam', $exam_name)
-			->where('year', date('Y')) // optional filter
-			->findAll();
+    // Fetch subject
+    $subject = $this->subjectModel->find($subjectId);
 
-		// 🔃 Index results by student_id for quick lookup
-		$indexedResults = [];
-		foreach ($results as $r) {
-			$indexedResults[$r['student_id']] = $r;
-		}
+    // Fetch students
+    $students = $this->studentModel
+        ->where("FIND_IN_SET(" . (int)$subjectId . ", assign_sub) >", 0, false)
+        ->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
+        ->findAll();
 
-		$this->data['title']           = 'Result Entry';
-		$this->data['activeSection']   = 'teacher';
-		$this->data['navbarItems']     = [
-			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
-			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
-			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
-			['label' => 'Marking Action', 'url' => base_url('marking_open')],
-		];
+    // Existing results
+    $results = $this->resultModel
+        ->where('teacher_id', $userId)
+        ->where('subject_id', $subjectId)
+        ->where('exam', $exam_name)
+        ->where('year', date('Y'))
+        ->findAll();
 
-		// Fetch user info from database
-		$user = $this->userModel->find($userId); // $user is now an array with 'name', 'designation', etc.
+    $indexedResults = [];
+    foreach ($results as $r) {
+        $indexedResults[$r['student_id']] = $r;
+    }
 
-		// Fetch subject info from database
-		$subject = $this->subjectModel->find($subjectId); // $subject is now an array with 'subject', 'class', 'section', etc.
+    // Pass data to view
+    $this->data['user'] = $user;
+    $this->data['subject'] = $subject;
+    $this->data['students'] = $students;
+    $this->data['existingResults'] = $indexedResults;
+    $this->data['exam_name'] = $exam_name;
 
-		// Pass them to the view
-		$this->data['user'] = $user;
-		$this->data['subject'] = $subject;
-
-		$this->data['exam_name']       = $exam_name;
-		$this->data['students']        = $students;
-		$this->data['existingResults'] = $indexedResults;
-
-		echo '<pre>';
-print_r($this->data);   // or var_dump($this->data)
-echo '</pre>';
-exit;  // stop execution to see the output clearly  
-
-		// return view('dashboard/ad_result', $this->data);
-	}
+    return view('dashboard/ad_result', $this->data);
+}
 
 	public function submitResults()
 	{
