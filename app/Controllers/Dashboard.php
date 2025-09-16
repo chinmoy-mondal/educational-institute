@@ -1006,7 +1006,7 @@ class Dashboard extends Controller
 		$subject = $this->subjectModel->find($subjectId);
 		
 
-		if (!$user || !$subject) {
+		if (!$user || !$subject || $exam_name) {
 			$routes   = \Config\Services::routes();
 			$override = $routes->get404Override();
 			return is_callable($override) ? $override() : throw PageNotFoundException::forPageNotFound();
