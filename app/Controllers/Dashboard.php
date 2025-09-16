@@ -996,12 +996,14 @@ class Dashboard extends Controller
 		return view('dashboard/exam_name', $this->data);
 	}
 
-	public function result($userId, $subjectId)
+	public function result()
 	{
-		$user    = $this->userModel->find($userId);
-		$subject = $this->subjectModel->find($subjectId);
+		// Receive POST data
+		$userId     = $this->request->getPost('user_id');
+		$subjectId  = $this->request->getPost('subject_id');
+		$exam_name  = $this->request->getPost('exam_name');
 
-		if (!$user || !$subject) {
+		if (!$userId || !$subjectId || !$exam_name) {
 			$routes   = \Config\Services::routes();
 			$override = $routes->get404Override();
 			return is_callable($override) ? $override() : throw PageNotFoundException::forPageNotFound();
@@ -1016,6 +1018,7 @@ class Dashboard extends Controller
 		$results = $this->resultModel
 			->where('teacher_id', $userId)
 			->where('subject_id', $subjectId)
+			->where('exam', $exam_name)
 			->where('year', date('Y')) // optional filter
 			->findAll();
 
@@ -1033,8 +1036,9 @@ class Dashboard extends Controller
 			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
 			['label' => 'Marking Action', 'url' => base_url('marking_open')],
 		];
-		$this->data['user']            = $user;
-		$this->data['subject']         = $subject;
+		$this->data['user']            = $userId;
+		$this->data['subject']         = $subjectId;
+		$this->data['exam_name']       = $exam_name;
 		$this->data['students']        = $students;
 		$this->data['existingResults'] = $indexedResults;
 

@@ -90,7 +90,7 @@ $routes->get('marking_open', 'Dashboard::marking_open');
 $routes->post('marking_open/process', 'Dashboard::processMarkingOpen');
 
 
-$routes->get('ad-result/(:num)/(:num)', 'Dashboard::result/$1/$2');
+$routes->post('ad-result', 'Dashboard::result');
 $routes->get('exam_name/(:num)/(:num)', 'Dashboard::exam_name/$1/$2');
 $routes->get('admin/resultCheck/(:num)/(:num)', 'Dashboard::ResultCheck/$1/$2');
 $routes->post('results/submit', 'Dashboard::submitResults');

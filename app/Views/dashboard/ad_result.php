@@ -43,12 +43,8 @@
                     <form method="post" action="<?= site_url('results/submit') ?>" onsubmit="return validateTotals();">
                         <div class="mb-3 d-flex justify-content-between align-items-center flex-wrap">
                             <div>
-                                <label for="exam" class="me-2 fw-bold">Select Exam:</label>
-                                <select name="exam" id="exam" class="form-select d-inline-block w-auto" required>
-                                    <option value="half-yearly">Half Yearly Exam</option>
-                                    <option value="Final">Final Exam</option>
-                                    <option value="Class Test">Class Test</option>
-                                </select>
+                                <h1><?= esc($exam_name) ?></h1>
+                                <input type="hidden" name="exam_name" value="<?= esc($exam_name) ?>">
                             </div>
                         </div>
                         <input type="hidden" name="class" value="<?= esc($subject['class']) ?>">
