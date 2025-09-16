@@ -1023,6 +1023,7 @@ class Dashboard extends Controller
 		$results = $this->resultModel
 			->where('teacher_id', $userId)
 			->where('subject_id', $subjectId)
+			->where('exam', $exam_name)
 			->where('year', date('Y')) // optional filter
 			->findAll();
 
