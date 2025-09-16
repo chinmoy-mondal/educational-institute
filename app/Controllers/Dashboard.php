@@ -1007,7 +1007,7 @@ class Dashboard extends Controller
 		echo $exam_name."<br>";
 
 		$user    = $this->userModel->find($userId);
-		$user = $this->subjectModel->find($subjectId);
+		$subject = $this->subjectModel->find($subjectId);
 		
 
 		if (!$user || !$subject) {
