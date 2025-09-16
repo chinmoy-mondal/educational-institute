@@ -24,20 +24,23 @@
                     <input type="hidden" name="subject_id" value="<?= esc($subject_id) ?>">
 
                     <div class="card-body">
+                        <label>Choose Exam</label>
                         <div class="form-group">
-                            <label for="exam">Choose Exam</label>
-                            <select name="exam_id" id="exam" class="form-control" required>
-                                <option value="">-- Select Exam --</option>
-                                <?php if (!empty($exams)): ?>
-                                    <?php foreach ($exams as $exam): ?>
-                                        <option value="<?= esc($exam['id']) ?>">
+                            <?php if (!empty($exams)): ?>
+                                <?php foreach ($exams as $exam): ?>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" 
+                                               name="exam_id" 
+                                               id="exam<?= esc($exam['id']) ?>" 
+                                               value="<?= esc($exam['id']) ?>" required>
+                                        <label class="form-check-label" for="exam<?= esc($exam['id']) ?>">
                                             <?= esc($exam['exam_name']) ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <option value="">No open exams available</option>
-                                <?php endif; ?>
-                            </select>
+                                        </label>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <p class="text-danger">No open exams available.</p>
+                            <?php endif; ?>
                         </div>
                     </div>
 
