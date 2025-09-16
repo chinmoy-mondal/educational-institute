@@ -1002,10 +1002,6 @@ class Dashboard extends Controller
 		$subjectId  = $this->request->getPost('subject_id');
 		$exam_name  = $this->request->getPost('exam_name');
 
-		echo $userId."<br>";
-		echo $subjectId."<br>";
-		echo $exam_name."<br>";
-
 		$user    = $this->userModel->find($userId);
 		$subject = $this->subjectModel->find($subjectId);
 		
