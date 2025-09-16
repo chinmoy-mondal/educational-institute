@@ -2,33 +2,41 @@
 
 <?= $this->section('content') ?>
 <div class="content-wrapper d-flex justify-content-center align-items-center" style="min-height: 80vh;">
-    <div class="card p-4 shadow-lg" style="width: 400px;">
-        <h4 class="text-center mb-3">Select Exam</h4>
+    <div class="card shadow-lg p-4" style="width: 500px;">
+        <div class="card-header text-center bg-primary text-white">
+            <h4 class="mb-0">Select Exam</h4>
+        </div>
+        <div class="card-body">
+            <form action="<?= site_url('ad-result') ?>" method="post">
+                <!-- Hidden fields for user and subject -->
+                <input type="hidden" name="user_id" value="<?= esc($user_id) ?>">
+                <input type="hidden" name="subject_id" value="<?= esc($subject_id) ?>">
 
-        <form action="<?= site_url('ad-result') ?>" method="post">
-            <!-- Hidden fields for user and subject -->
-            <input type="hidden" name="user_id" value="<?= esc($user_id) ?>">
-            <input type="hidden" name="subject_id" value="<?= esc($subject_id) ?>">
-
-            <?php if (!empty($exams)): ?>
-                <?php foreach ($exams as $exam): ?>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio"
-                            name="exam_name"
-                            value="<?= esc($exam['exam_name']) ?>" required>
-                        <label class="form-check-label">
-                            <?= esc($exam['exam_name']) ?>
-                        </label>
+                <?php if (!empty($exams)): ?>
+                    <div class="mb-3">
+                        <label class="fw-bold d-block mb-2">Available Exams:</label>
+                        <?php foreach ($exams as $exam): ?>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio"
+                                    name="exam_name"
+                                    id="exam<?= esc($exam['exam_name']) ?>"
+                                    value="<?= esc($exam['exam_name']) ?>" required>
+                                <label class="form-check-label" for="exam<?= esc($exam['exam_name']) ?>">
+                                    <?= esc($exam['exam_name']) ?>
+                                </label>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p class="text-danger text-center">No open exams available</p>
-            <?php endif; ?>
+                <?php else: ?>
+                    <p class="text-danger text-center">No open exams available</p>
+                <?php endif; ?>
 
-            <div class="text-center mt-3">
-                <button type="submit" class="btn btn-primary px-4">Submit</button>
-            </div>
-        </form>
+                <div class="d-flex justify-content-between mt-4">
+                    <a href="<?= base_url('marking_open') ?>" class="btn btn-secondary px-4">Cancel</a>
+                    <button type="submit" class="btn btn-success px-4">Continue</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 <?= $this->endSection() ?>
