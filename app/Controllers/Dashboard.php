@@ -1102,8 +1102,8 @@ class Dashboard extends Controller
 			}
 		}
 
-		 return redirect()->back()->with('success', 'Results submitted successfully.');
-		
+		return redirect()->to(base_url('ad-result'))
+			->with('success', 'Results submitted successfully.');
 	}
 
 	public function ResultCheck($userId, $subjectId)
