@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/admin') ?>
 
 <?= $this->section('content') ?>
-<div class="content-wrapper d-flex justify-content-center" style="padding-top: 50px;">
+<div class=" d-flex justify-content-center" style="padding-top: 20px;">
     <div class="card shadow-lg p-4" style="width: 500px;">
         <div class="card-header text-center bg-primary text-white">
             <h4 class="mb-0">Select Exam</h4>
