@@ -1004,7 +1004,7 @@ class Dashboard extends Controller
 
 		$user    = $this->userModel->find($userId);
 		$subject = $this->subjectModel->find($subjectId);
-
+		$class = $subject->class;
 
 		if (!$user) {
 			return redirect()->back()->with('error', 'User data is not Found.');
@@ -1012,6 +1012,8 @@ class Dashboard extends Controller
 			return redirect()->back()->with('error', 'Subject is not found.');
 		} elseif (!$exam_name) {
 			return redirect()->back()->with('error', 'No Exam is selected.');
+		}elseif( ($exam_name = 'Pre-Test Exam' || $exam_name = 'Test Exam') &&  $class !=10){
+			return redirect()->back()->with('error', $exam_name.' is not for '.$class.' class');
 		}
 
 		$students = $this->studentModel
