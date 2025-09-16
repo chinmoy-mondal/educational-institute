@@ -2,6 +2,20 @@
 
 <?= $this->section('content') ?>
 <div class=" d-flex justify-content-center" style="padding-top: 20px;">
+     <!-- Flash messages -->
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="alert alert-success alert-dismissible fade show w-50" role="alert">
+            <?= session()->getFlashdata('success') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
+
+    <?php if (session()->getFlashdata('error')): ?>
+        <div class="alert alert-danger alert-dismissible fade show w-50" role="alert">
+            <?= session()->getFlashdata('error') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
     <div class="card shadow-lg p-4" style="width: 500px;">
         <div class="card-header text-center bg-primary text-white">
             <h4 class="mb-0">Select Exam</h4>

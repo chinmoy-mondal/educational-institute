@@ -1004,12 +1004,14 @@ class Dashboard extends Controller
 
 		$user    = $this->userModel->find($userId);
 		$subject = $this->subjectModel->find($subjectId);
-		
 
-		if (!$user || !$subject || !$exam_name) {
-			$routes   = \Config\Services::routes();
-			$override = $routes->get404Override();
-			return is_callable($override) ? $override() : throw PageNotFoundException::forPageNotFound();
+
+		if (!$user) {
+			return redirect()->back()->with('error', 'User data is not Found.');
+		} elseif (!$subject) {
+			return redirect()->back()->with('error', 'Subject is not found.');
+		} elseif (!$exam_name) {
+			return redirect()->back()->with('error', 'No Exam is selected.');
 		}
 
 		$students = $this->studentModel
