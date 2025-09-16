@@ -19,6 +19,7 @@ class Dashboard extends Controller
 	protected $studentModel;
 	protected $resultModel;
 	protected $calendarModel;
+	protected $markingModel;
 	protected $session;
 	protected $data;
 
@@ -29,6 +30,7 @@ class Dashboard extends Controller
 		$this->studentModel  = new StudentModel();
 		$this->resultModel   = new ResultModel();
 		$this->calendarModel   = new CalendarModel();
+		$this->markingModel = new MarkingOpenModel();
 
 
 		$this->session       = session();
@@ -972,6 +974,27 @@ class Dashboard extends Controller
 		return redirect()->back()->with('error', 'Please select at least one student and one subject.');
 	}
 
+	public function exam_name($userId, $subjectId)
+	{
+		$this->data['title']         = 'Select Exam';
+		$this->data['activeSection'] = 'teacher';
+		$this->data['navbarItems']   = [
+			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
+			['label' => 'Add Teacher', 'url' => base_url('add_teacher')],
+			['label' => 'Assign Subject', 'url' => base_url('assign_subject')],
+			['label' => 'Marking Action', 'url' => base_url('marking_open')],
+		];
+		$this->data['user_id']    = $userId;
+		$this->data['subject_id'] = $subjectId;
+
+		// ✅ fetch all exams where status is open (id + exam_name only)
+		$this->data['exams'] = $this->markingModel
+			->select('id, exam_name')
+			->where('status', 'open')
+			->findAll();
+
+		return view('dashboard/exam_name', $this->data);
+	}
 
 	public function result($userId, $subjectId)
 	{
