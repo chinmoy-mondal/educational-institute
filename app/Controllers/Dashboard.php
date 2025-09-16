@@ -1005,8 +1005,8 @@ class Dashboard extends Controller
 		$user    = $this->userModel->find($userId);
 		$subject = $this->subjectModel->find($subjectId);
 		print_r($subject);
-		// $class = $subject->class;
-		// print_r($class);
+		$class = $subject['class'];
+		echo $class."===<br>";
 
 		if (!$user) {
 			return redirect()->back()->with('error', 'User data is not Found.');
