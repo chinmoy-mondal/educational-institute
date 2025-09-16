@@ -7,15 +7,15 @@
 
         <form action="<?= site_url('ad-result') ?>" method="post">
             <!-- Hidden fields for user and subject -->
-            <input type="hidden" name="user_id" value="1"> 
-            <input type="hidden" name="subject_id" value="101">
+            <input type="hidden" name="user_id" value="<?= esc($user_id) ?>">
+            <input type="hidden" name="subject_id" value="<?= esc($subject_id) ?>">
 
             <?php if (!empty($exams)): ?>
                 <?php foreach ($exams as $exam): ?>
                     <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" 
-                               name="exam_name" 
-                               value="<?= esc($exam['exam_name']) ?>" required>
+                        <input class="form-check-input" type="radio"
+                            name="exam_name"
+                            value="<?= esc($exam['exam_name']) ?>" required>
                         <label class="form-check-label">
                             <?= esc($exam['exam_name']) ?>
                         </label>
