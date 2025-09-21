@@ -37,7 +37,7 @@
             <h3><?= esc($totalTeachers) ?></h3>
             <p>Teachers Marking</p>
           </div>
-          <div class="icon"><i class="fas fa-user-edit"></i></div>
+          <div class="icon"><i class="fas fa-book"></i></div>
           <a href="<?= base_url('admin/teachers') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
@@ -49,7 +49,7 @@
             <h3><?= esc($total_users) ?></h3>
             <p>Total Users</p>
           </div>
-          <div class="icon"><i class="fas fa-chalkboard-teacher"></i></div>
+          <div class="icon"><i class="fas fa-user-tie"></i></div>
           <a href="<?= base_url('ad_teacher_list') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
