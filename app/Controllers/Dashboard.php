@@ -107,7 +107,16 @@ class Dashboard extends Controller
 			->where('status', 'open')
 			->findAll();
 
-		$this->data['total_exams'] = 5;
+		// Extract only exam names into array
+		$examNames = array_column($openExams, 'exam_name');
+
+		// Get unique teacher IDs from results where exam is in open exams
+		$teachers = $this->resultModel
+			->select('DISTINCT teacher_id')
+			->whereIn('exam', $examNames)
+			->findAll();
+
+		$this->data['total_exams'] = count($teachers);
 		$this->data['total_income'] = 150000.00;
 		$this->data['total_cost'] = 42000.00;
 
