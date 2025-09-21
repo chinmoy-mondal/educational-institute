@@ -101,6 +101,12 @@ class Dashboard extends Controller
 		$this->data['total_new_users'] = $this->userModel->where('account_status', 0)->countAllResults();
 
 		$this->data['total_applications'] = 10;
+
+
+		$openExams = $this->markingModel
+			->where('status', 'open')
+			->findAll();
+
 		$this->data['total_exams'] = 5;
 		$this->data['total_income'] = 150000.00;
 		$this->data['total_cost'] = 42000.00;
