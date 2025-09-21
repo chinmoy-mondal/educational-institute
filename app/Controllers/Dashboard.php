@@ -107,12 +107,17 @@ class Dashboard extends Controller
 			->where('status', 'open')
 			->findAll();
 
-		// Extract only exam names into array
+		$openExams = $this->markingModel
+			->where('status', 'open')
+			->findAll();
+
+		// Extract exam names
 		$examNames = array_column($openExams, 'exam_name');
 
-		// Get unique teacher IDs from results where exam is in open exams
+		// Get unique teacher IDs from results
 		$teachers = $this->resultModel
-			->select('DISTINCT teacher_id')
+			->distinct()               // ✅ this makes the SELECT DISTINCT
+			->select('teacher_id')
 			->whereIn('exam', $examNames)
 			->findAll();
 
