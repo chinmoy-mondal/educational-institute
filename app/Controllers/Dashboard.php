@@ -121,7 +121,7 @@ class Dashboard extends Controller
 			->whereIn('exam', $examNames)
 			->findAll();
 
-		$this->data['total_exams'] = count($teachers);
+		$this->data['totalTeachers'] = count($teachers);
 		$this->data['total_income'] = 150000.00;
 		$this->data['total_cost'] = 42000.00;
 

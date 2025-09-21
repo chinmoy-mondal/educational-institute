@@ -30,14 +30,15 @@
       </div>
 
       <!-- Exams -->
+      <!-- Teachers who gave marking -->
       <div class="col-lg-3 col-6">
         <div class="small-box bg-warning">
           <div class="inner">
-            <h3><?= esc($total_exams) ?></h3>
-            <p>Exams</p>
+            <h3><?= esc($totalTeachers) ?></h3>
+            <p>Teachers Marking</p>
           </div>
-          <div class="icon"><i class="fas fa-pencil-ruler"></i></div>
-          <a href="<?= base_url('admin/exams') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          <div class="icon"><i class="fas fa-user-edit"></i></div>
+          <a href="<?= base_url('admin/teachers') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
 
@@ -52,7 +53,7 @@
           <a href="<?= base_url('ad_teacher_list') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
-	
+
       <!-- Leave Applications -->
       <div class="col-lg-3 col-6">
         <div class="small-box bg-info">
@@ -88,7 +89,7 @@
           <a href="<?= base_url('admin/income') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
-  
+
       <!-- Total Cost -->
       <div class="col-lg-3 col-6">
         <div class="small-box bg-danger">
