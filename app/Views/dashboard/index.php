@@ -29,10 +29,10 @@
         </div>
       </div>
 
-      <!-- Exams -->
+      
       <!-- Teachers who gave marking -->
       <div class="col-lg-3 col-6">
-        <div class="small-box bg-warning">
+        <div class="small-box bg-info">
           <div class="inner">
             <h3><?= esc($totalTeachers) ?></h3>
             <p>Teachers Marking</p>
