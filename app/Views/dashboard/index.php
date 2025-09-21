@@ -56,7 +56,7 @@
 
       <!-- Leave Applications -->
       <div class="col-lg-3 col-6">
-        <div class="small-box bg-primary">
+        <div class="small-box bg-secondary">
           <div class="inner">
             <h3><?= esc($total_new_users) ?></h3>
             <p>New Users</p>
