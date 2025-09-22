@@ -102,26 +102,26 @@ class Dashboard extends Controller
 
 		$this->data['total_applications'] = 10;
 
-
 		$openExams = $this->markingModel
 			->where('status', 'open')
 			->findAll();
 
-		$openExams = $this->markingModel
-			->where('status', 'open')
-			->findAll();
+		if (!empty($openExams)) {
+			// Extract exam names
+			$examNames = array_column($openExams, 'exam_name');
 
-		// Extract exam names
-		$examNames = array_column($openExams, 'exam_name');
+			// Get unique teacher IDs from results
+			$teachers = $this->resultModel
+				->distinct()
+				->select('teacher_id')
+				->whereIn('exam', $examNames)
+				->findAll();
+		} else {
+			$teachers = []; // No open exams → no teachers
+		}
 
-		// Get unique teacher IDs from results
-		$teachers = $this->resultModel
-			->distinct()               // ✅ this makes the SELECT DISTINCT
-			->select('teacher_id')
-			->whereIn('exam', $examNames)
-			->findAll();
-
-		$this->data['totalTeachers'] = isset($teachers) ? count($teachers) : 0;
+		// Count teachers safely
+		$this->data['totalTeachers'] = count($teachers);
 		$this->data['total_income'] = 150000.00;
 		$this->data['total_cost'] = 42000.00;
 
