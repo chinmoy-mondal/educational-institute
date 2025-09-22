@@ -32,8 +32,8 @@
                 <th style="width: 60px;">Serial no</th>
                 <th style="width: 80px;">Photo</th>
                 <th style="width: 200px;">Name</th>
-                <th style="width: 100%;">Progress</th>
-                <th style="width: 120px;">Action</th>
+                <th style="width: 70%;">Progress</th>
+                <th style="width: 30%;">Action</th>
               </tr>
             </thead>
             <tbody>
