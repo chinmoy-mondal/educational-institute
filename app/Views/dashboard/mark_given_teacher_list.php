@@ -47,6 +47,12 @@
                                   : base_url('public/assets/img/default.png') ?>"
                         width="50" height="50" class="rounded-circle">
                     </td>
+                    <td>
+                      <div class="progress progress-xs">
+                        <div class="progress-bar bg-success" style="width: 70%"></div>
+                      </div>
+                      <small>70%</small>
+                    </td>
 
                     <td><?= esc($user['name']) ?></td>
                     <td class="text-center">
