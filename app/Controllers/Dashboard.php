@@ -473,7 +473,7 @@ class Dashboard extends Controller
 
 				// 2️⃣ Users assigned to this subject
 				$users = $this->userModel
-					->like('assign_sub', $subjectId) // matches if subjectId exists in assign_sub string
+					->like('assagin_sub', $subjectId) // matches if subjectId exists in assign_sub string
 					->findAll();
 
 				// 3️⃣ Results for this subject, exam, and year
