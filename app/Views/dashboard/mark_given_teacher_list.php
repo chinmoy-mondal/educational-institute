@@ -31,9 +31,9 @@
               <tr>
                 <th style="width: 60px;">Serial no</th>
                 <th style="width: 80px;">Photo</th>
-                <th style="width: 200px;">Name</th>
-                <th style="width: 70%;">Progress</th>
-                <th style="width: 30%;">Action</th>
+                <th style="width: 25%;">Name</th>
+                <th style="width: 60%;">Progress</th>
+                <th style="width: 15%;">Action</th>
               </tr>
             </thead>
             <tbody>
