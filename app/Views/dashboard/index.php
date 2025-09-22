@@ -34,7 +34,7 @@
       <div class="col-lg-3 col-6">
         <div class="small-box bg-info">
           <div class="inner">
-            <h3><?= esc($totalSubjects > 0 ? $givenSubjects . '/' . $totalSubjects : 0) ?></h3>
+            <h3><?= esc($totalSubjects > 0 ? $givenSubjects . ' / ' . $totalSubjects : 0) ?></h3>
             <p>Subjects Marking</p>
           </div>
           <div class="icon"><i class="fas fa-book"></i></div>
