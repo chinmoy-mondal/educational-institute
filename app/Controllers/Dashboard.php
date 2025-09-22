@@ -111,17 +111,26 @@ class Dashboard extends Controller
 			$examNames = array_column($openExams, 'exam_name');
 
 			// Get unique teacher IDs from results
-			$subjects = $this->resultModel
+			$given_subjects = $this->resultModel
 				->distinct()
 				->select('subject_id')
 				->whereIn('exam', $examNames)
 				->findAll();
+
+			$total_subjects = $this->calendarModel
+				->where('subcategory', 'Pre-Test Exam')
+				->where('category', 'Exam')
+				->findAll();
+
+			$totalSubject = count($total_subjects);
 		} else {
-			$subjects = []; // No open exams → no teachers
+			$given_subjects = []; // No open exams → no teachers
+			$totalSubject = []; // No open exams → no teachers
 		}
 
 		// Count teachers safely
-		$this->data['totalSubjects'] = count($subjects);
+		$this->data['givenSubjects'] = count($given_subjects);
+		$this->data['totalSubjects'] = count($totalSubject);
 		$this->data['total_income'] = 150000.00;
 		$this->data['total_cost'] = 42000.00;
 
