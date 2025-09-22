@@ -34,8 +34,8 @@
       <div class="col-lg-3 col-6">
         <div class="small-box bg-info">
           <div class="inner">
-            <h3><?= esc($totalTeachers) ?></h3>
-            <p>Teachers Marking</p>
+            <h3><?= esc($totalSubjects) ?></h3>
+            <p>Subjects Marking</p>
           </div>
           <div class="icon"><i class="fas fa-book"></i></div>
           <a href="<?= base_url('mark_given_teacher_list') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
