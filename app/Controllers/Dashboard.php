@@ -462,22 +462,33 @@ class Dashboard extends Controller
 
 			$finalData = [];
 
-			foreach ($total_subjects as $subjectEntry) {
+			foreach ($total_subjects as $calendar) {
 
-				$subjectId = $subjectEntry['subject']; // or $subjectEntry->subject if object
+				$subjectId = $calendar['subject']; // adjust if object: $calendar->subject
+				$examName  = $calendar['subcategory'];
+				$year      = date('Y', strtotime($calendar['start_date']));
 
-				// Get subject info
+				// 1️⃣ Subject info
 				$subjectInfo = $this->subjectModel->find($subjectId);
 
-				// Get users assigned to this subject
+				// 2️⃣ Users assigned to this subject
 				$users = $this->userModel
-					->like('assagin_sub', $subjectId) // matches if subjectId exists in assign_sub string
+					->like('assign_sub', $subjectId) // matches if subjectId exists in assign_sub string
 					->findAll();
 
+				// 3️⃣ Results for this subject, exam, and year
+				$results = $this->resultModel
+					->where('subject_id', $subjectId)
+					->where('exam', $examName)
+					->where('year', $year)
+					->findAll();
+
+				// Combine
 				$finalData[] = [
-					'calendar' => $subjectEntry,
+					'calendar' => $calendar,
 					'subject'  => $subjectInfo,
-					'users'    => $users
+					'users'    => $users,
+					'results'  => $results
 				];
 			}
 		} else {
