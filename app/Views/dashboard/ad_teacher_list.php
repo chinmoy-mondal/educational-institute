@@ -5,7 +5,12 @@
   <div class="container-fluid">
     <div class="card card-primary card-outline shadow">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <h3 class="card-title mb-0"><i class="fas fa-chalkboard-teacher"></i> Teacher List</h3>
+        <h3 class="card-title mb-0">
+          <i class="fas fa-chalkboard-teacher"></i> Teacher List
+        </h3>
+        <span class="badge bg-primary">
+          Total: <?= esc($total_users) ?>
+        </span>
       </div>
 
       <div class="card-body">
@@ -58,7 +63,7 @@
                     <td><?= esc($user['phone']) ?></td>
                     <td class="text-center"><?= esc(ucfirst($user['gender'])) ?></td>
                     <td class="text-center">
-                      <form action="<?= base_url('admin/updatePosition/' . esc($user['id'])) ?>" method="post" class="d-flex align-items-center"> 
+                      <form action="<?= base_url('admin/updatePosition/' . esc($user['id'])) ?>" method="post" class="d-flex align-items-center">
                         <select name="position" id="position" class="form-control me-1" style="width:auto; min-width:70px;" required>
                           <option value="0" disabled selected>Position</option>
                           <?php for ($i = 1; $i <= $total_users; $i++): ?>
