@@ -428,6 +428,55 @@ class Dashboard extends Controller
 		return view('dashboard/ad_teacher_list', $this->data);
 	}
 
+	public function teachers_mark_given()
+	{
+
+		$this->data['title'] = 'Teacher Management';
+		$this->data['activeSection'] = 'teacher';
+
+		// Common navbar and sidebar for all views
+		$this->data['navbarItems'] = [
+			['label' => 'Teacher List', 'url' => base_url('teacher_management')],
+			['label' => 'Marking Action', 'url' => base_url('marking_open')],
+		];
+
+
+
+		$openExams = $this->markingModel
+			->where('status', 'open')
+			->findAll();
+
+		if (!empty($openExams)) {
+			// Extract exam names
+			$examNames = array_column($openExams, 'exam_name');
+
+			// Get unique teacher IDs from results
+			$teachers = $this->resultModel
+				->distinct()
+				->select('teacher_id')
+				->whereIn('exam', $examNames)
+				->findAll();
+
+			// Extract teacher_id values
+			$teacherIds = array_column($teachers, 'teacher_id');
+
+			// Get teacher info from users
+			$users = $this->userModel
+				->where('account_status !=', 0)
+				->whereIn('id', $teacherIds)
+				->orderBy('position', 'ASC')
+				->findAll();
+		} else {
+			$users = [];
+		}
+
+		// Assign to $this->data
+		$this->data['users'] = $users;
+		$this->data['total_users'] = count($users); // ✅ total teacher count
+
+		return view('dashboard/mark_given_teacher_list', $this->data);
+	}
+
 	public function updatePosition($id)
 	{
 		$position = $this->request->getPost('position');
