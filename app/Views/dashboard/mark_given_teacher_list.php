@@ -26,76 +26,80 @@
         <!-- End Flash Messages -->
 
         <div class="table-responsive">
-          <table id="teacherTable" class="table table-bordered table-hover table-striped align-middle">
-            <thead class="bg-navy text-center">
-              <tr>
-                <th style="width: 60px;">Serial no</th>
-                <th style="width: 80px;">Photo</th>
-                <th style="width: 25%;">Name</th>
-                <th style="width: 60%;">Progress</th>
-                <th style="width: 15%;">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php if (!empty($joint_data)): ?>
-                <?php foreach ($joint_data as $entry): ?>
-                  <?php if (!empty($entry['users'])): ?>
-                    <?php foreach ($entry['users'] as $user): ?>
-                      <tr>
-                        <td class="text-center"><?= esc($user['position']) ?></td>
-                        <td class="text-center">
-                          <img src="<?= !empty($user['picture'])
-                                      ? $user['picture']
-                                      : base_url('public/assets/img/default.png') ?>"
-                            width="50" height="50" class="rounded-circle">
-                        </td>
-                        <td><?= esc($user['name']) ?></td>
+<table class="table table-bordered table-striped">
+    <thead class="bg-navy text-center">
+        <tr>
+            <th style="width: 60px;">Serial no</th>
+            <th style="width: 80px;">Photo</th>
+            <th style="width: 25%;">Name</th>
+            <th style="width: 60%;">Progress</th>
+            <th style="width: 15%;">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    <?php $serial = 1; ?>
+    <?php if (!empty($joint_data)): ?>
+        <?php foreach ($joint_data as $entry): ?>
+            <?php if (!empty($entry['users'])): ?>
+                <?php
+                    // Total students assigned to this subject
+                    $totalStudents = count($entry['results']);
+                    // Count of students with non-null total marks
+                    $completedStudents = count(array_filter($entry['results'], function($r) {
+                        return isset($r['total']) && $r['total'] !== null;
+                    }));
+                    // Progress percentage
+                    $progressPercentage = $totalStudents > 0 ? round($completedStudents / $totalStudents * 100) : 0;
+                ?>
+                <?php foreach ($entry['users'] as $user): ?>
+                    <tr class="text-center">
+                        <td><?= $serial++ ?></td>
                         <td>
-                          <?php
-                          // Example: Calculate total marks for this user for this subject & exam
-                          $userResults = array_filter($entry['results'], function ($r) use ($user) {
-                            return $r['student_id'] == $user['id'];
-                          });
-                          $totalMarks = array_sum(array_column($userResults, 'total'));
-                          $maxMarks   = !empty($entry['subject']['full_mark']) ? $entry['subject']['full_mark'] : 100;
-                          $progress   = $maxMarks > 0 ? round($totalMarks / $maxMarks * 100) : 0;
-                          ?>
-                          <div class="progress" style="height: 20px;">
-                            <div class="progress-bar bg-success" style="width: <?= $progress ?>%;"><?= $progress ?>%</div>
-                          </div>
+                            <img src="<?= !empty($user['picture'])
+                                        ? $user['picture']
+                                        : base_url('public/assets/img/default.png') ?>"
+                                 width="50" height="50" class="rounded-circle">
                         </td>
-                        <td class="text-center">
-                          <a href="<?= site_url('profile_id/' . $user['id']) ?>"
-                            class="btn btn-sm btn-info me-1"
-                            title="View Profile">
-                            <i class="fas fa-user"></i>
-                          </a>
-                          <a href="tel:<?= esc($user['phone'] ?? '') ?>"
-                            class="btn btn-sm btn-success me-1"
-                            title="Call Teacher">
-                            <i class="fas fa-phone"></i>
-                          </a>
-                          <a href="<?= site_url('teacher_result/' . $user['id']) ?>"
-                            class="btn btn-sm btn-warning"
-                            title="View Results">
-                            <i class="fas fa-chart-bar"></i>
-                          </a>
+                        <td class="text-start"><?= esc($user['name']) ?></td>
+                        <td>
+                            <div class="progress" style="height: 20px;">
+                                <div class="progress-bar bg-success" style="width: <?= $progressPercentage ?>%;">
+                                    <?= $progressPercentage ?>%
+                                </div>
+                            </div>
                         </td>
-                      </tr>
-                    <?php endforeach; ?>
-                  <?php else: ?>
-                    <tr>
-                      <td colspan="5" class="text-center text-muted">No teachers found for this exam/subject.</td>
+                        <td>
+                            <a href="<?= site_url('profile_id/' . $user['id']) ?>"
+                               class="btn btn-sm btn-info me-1"
+                               title="View Profile">
+                                <i class="fas fa-user"></i>
+                            </a>
+                            <a href="tel:<?= esc($user['phone'] ?? '') ?>"
+                               class="btn btn-sm btn-success me-1"
+                               title="Call Teacher">
+                                <i class="fas fa-phone"></i>
+                            </a>
+                            <a href="<?= site_url('teacher_result/' . $user['id']) ?>"
+                               class="btn btn-sm btn-warning"
+                               title="View Results">
+                                <i class="fas fa-chart-bar"></i>
+                            </a>
+                        </td>
                     </tr>
-                  <?php endif; ?>
                 <?php endforeach; ?>
-              <?php else: ?>
+            <?php else: ?>
                 <tr>
-                  <td colspan="5" class="text-center text-muted">No exam data found.</td>
+                    <td colspan="5" class="text-center text-muted">No teachers found for this exam/subject.</td>
                 </tr>
-              <?php endif; ?>
-            </tbody>
-          </table>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <tr>
+            <td colspan="5" class="text-center text-muted">No exam data found.</td>
+        </tr>
+    <?php endif; ?>
+    </tbody>
+</table>
         </div>
       </div>
     </div>
