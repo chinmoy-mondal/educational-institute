@@ -56,26 +56,28 @@
                       </div>
                     </td>
                     <td class="text-center">
-                      <!-- Profile Button -->
-                      <a href="<?= site_url('profile_id/' . $user['id']) ?>"
-                        class="btn btn-sm btn-info"
-                        title="View Profile">
-                        <i class="fas fa-user"></i>
-                      </a>
+                      <div class="btn-group" role="group">
+                        <!-- Profile Button -->
+                        <a href="<?= site_url('profile_id/' . $user['id']) ?>"
+                          class="btn btn-sm btn-info"
+                          title="View Profile">
+                          <i class="fas fa-user"></i>
+                        </a>
 
-                      <!-- Call Button -->
-                      <a href="tel:<?= esc($user['phone'] ?? '') ?>"
-                        class="btn btn-sm btn-success"
-                        title="Call Teacher">
-                        <i class="fas fa-phone"></i>
-                      </a>
+                        <!-- Call Button -->
+                        <a href="tel:<?= esc($user['phone'] ?? '') ?>"
+                          class="btn btn-sm btn-success"
+                          title="Call Teacher">
+                          <i class="fas fa-phone"></i>
+                        </a>
 
-                      <!-- Result View Button -->
-                      <a href="<?= site_url('teacher_result/' . $user['id']) ?>"
-                        class="btn btn-sm btn-warning"
-                        title="View Results">
-                        <i class="fas fa-chart-bar"></i>
-                      </a>
+                        <!-- Result View Button -->
+                        <a href="<?= site_url('teacher_result/' . $user['id']) ?>"
+                          class="btn btn-sm btn-warning"
+                          title="View Results">
+                          <i class="fas fa-chart-bar"></i>
+                        </a>
+                      </div>
                     </td>
                   </tr>
                 <?php endforeach; ?>
