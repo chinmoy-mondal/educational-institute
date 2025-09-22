@@ -118,7 +118,7 @@ class Dashboard extends Controller
 				->findAll();
 
 			$total_subjects = $this->calendarModel
-				->where('subcategory', 'Pre-Test Exam')
+				->where('subcategory', $examNames)
 				->where('category', 'Exam')
 				->findAll();
 		} else {
@@ -447,8 +447,6 @@ class Dashboard extends Controller
 			['label' => 'Marking Action', 'url' => base_url('marking_open')],
 		];
 
-
-
 		$openExams = $this->markingModel
 			->where('status', 'open')
 			->findAll();
@@ -457,31 +455,44 @@ class Dashboard extends Controller
 			// Extract exam names
 			$examNames = array_column($openExams, 'exam_name');
 
-			// Get unique teacher IDs from results
-			$teachers = $this->resultModel
-				->distinct()
-				->select('teacher_id')
-				->whereIn('exam', $examNames)
+			$total_subjects = $this->calendarModel
+				->where('subcategory', $examNames)
+				->where('category', 'Exam')
 				->findAll();
 
-			// Extract teacher_id values
-			$teacherIds = array_column($teachers, 'teacher_id');
+			$finalData = [];
 
-			// Get teacher info from users
-			$users = $this->userModel
-				->where('account_status !=', 0)
-				->whereIn('id', $teacherIds)
-				->orderBy('position', 'ASC')
-				->findAll();
+			foreach ($total_subjects as $subjectEntry) {
+
+				$subjectId = $subjectEntry['subject']; // or $subjectEntry->subject if object
+
+				// Get subject info
+				$subjectInfo = $this->subjectModel->find($subjectId);
+
+				// Get users assigned to this subject
+				$users = $this->userModel
+					->like('assign_sub', $subjectId) // matches if subjectId exists in assign_sub string
+					->findAll();
+
+				$finalData[] = [
+					'calendar' => $subjectEntry,
+					'subject'  => $subjectInfo,
+					'users'    => $users
+				];
+			}
 		} else {
-			$users = [];
+			$finalData = [];
 		}
 
 		// Assign to $this->data
-		$this->data['users'] = $users;
-		$this->data['total_users'] = count($users); // ✅ total teacher count
+		// $this->data['users'] = $users;
+		// $this->data['total_users'] = count($users); // ✅ total teacher count
 
-		return view('dashboard/mark_given_teacher_list', $this->data);
+		echo "<pre>";
+		print_r($finalData);
+		echo "</pre>";
+
+		// return view('dashboard/mark_given_teacher_list', $this->data);
 	}
 
 	public function updatePosition($id)
