@@ -29,10 +29,12 @@
 <table class="table table-bordered table-striped">
     <thead class="bg-navy text-center">
         <tr>
-            <th style="width: 60px;">Serial no</th>
+            <th style="width: 40px;">S/N</th>
             <th style="width: 80px;">Photo</th>
-            <th style="width: 25%;">Name</th>
-            <th style="width: 60%;">Progress</th>
+            <th style="width: 20%;">Name</th>
+            <th style="width: 20%;">Subject</th>
+            <th style="width: 10%;">Class</th>
+            <th style="width: 30%;">Progress</th>
             <th style="width: 15%;">Action</th>
         </tr>
     </thead>
@@ -40,17 +42,18 @@
     <?php $serial = 1; ?>
     <?php if (!empty($joint_data)): ?>
         <?php foreach ($joint_data as $entry): ?>
+            <?php
+                $subjectName = $entry['subject']['subject'] ?? '-';
+                $class = $entry['subject']['class'] ?? '-';
+                // Total students assigned to this subject
+                $totalStudents = count($entry['results']);
+                // Count of students with non-null total marks
+                $completedStudents = count(array_filter($entry['results'], function($r) {
+                    return isset($r['total']) && $r['total'] !== null;
+                }));
+                $progressPercentage = $totalStudents > 0 ? round($completedStudents / $totalStudents * 100) : 0;
+            ?>
             <?php if (!empty($entry['users'])): ?>
-                <?php
-                    // Total students assigned to this subject
-                    $totalStudents = count($entry['results']);
-                    // Count of students with non-null total marks
-                    $completedStudents = count(array_filter($entry['results'], function($r) {
-                        return isset($r['total']) && $r['total'] !== null;
-                    }));
-                    // Progress percentage
-                    $progressPercentage = $totalStudents > 0 ? round($completedStudents / $totalStudents * 100) : 0;
-                ?>
                 <?php foreach ($entry['users'] as $user): ?>
                     <tr class="text-center">
                         <td><?= $serial++ ?></td>
@@ -61,6 +64,8 @@
                                  width="50" height="50" class="rounded-circle">
                         </td>
                         <td class="text-start"><?= esc($user['name']) ?></td>
+                        <td><?= esc($subjectName) ?></td>
+                        <td><?= esc($class) ?></td>
                         <td>
                             <div class="progress" style="height: 20px;">
                                 <div class="progress-bar bg-success" style="width: <?= $progressPercentage ?>%;">
@@ -89,13 +94,13 @@
                 <?php endforeach; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="5" class="text-center text-muted">No teachers found for this exam/subject.</td>
+                    <td colspan="7" class="text-center text-muted">No teachers found for this exam/subject.</td>
                 </tr>
             <?php endif; ?>
         <?php endforeach; ?>
     <?php else: ?>
         <tr>
-            <td colspan="5" class="text-center text-muted">No exam data found.</td>
+            <td colspan="7" class="text-center text-muted">No exam data found.</td>
         </tr>
     <?php endif; ?>
     </tbody>
