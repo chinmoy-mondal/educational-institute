@@ -495,15 +495,13 @@ class Dashboard extends Controller
 			$finalData = [];
 		}
 
-		// Assign to $this->data
-		// $this->data['users'] = $users;
-		// $this->data['total_users'] = count($users); // ✅ total teacher count
+		$this->data['joint_data'] = $finalData;
 
-		echo "<pre>";
-		print_r($finalData);
-		echo "</pre>";
+		// echo "<pre>";
+		// print_r($finalData);
+		// echo "</pre>";
 
-		// return view('dashboard/mark_given_teacher_list', $this->data);
+		return view('dashboard/mark_given_teacher_list', $this->data);
 	}
 
 	public function updatePosition($id)

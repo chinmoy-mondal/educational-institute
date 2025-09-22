@@ -37,51 +37,61 @@
               </tr>
             </thead>
             <tbody>
-              <?php if (!empty($users)): ?>
-                <?php foreach ($users as $user): ?>
-                  <tr>
-                    <td class="text-center"><?= esc($user['position']) ?></td>
-                    <td class="text-center">
-                      <img src="<?= !empty($user['picture'])
-                                  ? $user['picture']
-                                  : base_url('public/assets/img/default.png') ?>"
-                        width="50" height="50" class="rounded-circle">
-                    </td>
-
-                    <td><?= esc($user['name']) ?></td>
-
-                    <td>
-                      <div class="progress" style="height: 20px;"> <!-- bigger bar -->
-                        <div class="progress-bar bg-success" style="width: 70%;">70%</div>
-                      </div>
-                    </td>
-<td class="text-center">
-  <!-- Profile Button -->
-  <a href="<?= site_url('profile_id/' . $user['id']) ?>"
-     class="btn btn-sm btn-info me-1"
-     title="View Profile">
-    <i class="fas fa-user"></i>
-  </a>
-
-  <!-- Call Button -->
-  <a href="tel:<?= esc($user['phone'] ?? '') ?>"
-     class="btn btn-sm btn-success me-1"
-     title="Call Teacher">
-    <i class="fas fa-phone"></i>
-  </a>
-
-  <!-- Result View Button -->
-  <a href="<?= site_url('teacher_result/' . $user['id']) ?>"
-     class="btn btn-sm btn-warning"
-     title="View Results">
-    <i class="fas fa-chart-bar"></i>
-  </a>
-</td>
-                  </tr>
+              <?php if (!empty($joint_data)): ?>
+                <?php foreach ($joint_data as $entry): ?>
+                  <?php if (!empty($entry['users'])): ?>
+                    <?php foreach ($entry['users'] as $user): ?>
+                      <tr>
+                        <td class="text-center"><?= esc($user['position']) ?></td>
+                        <td class="text-center">
+                          <img src="<?= !empty($user['picture'])
+                                      ? $user['picture']
+                                      : base_url('public/assets/img/default.png') ?>"
+                            width="50" height="50" class="rounded-circle">
+                        </td>
+                        <td><?= esc($user['name']) ?></td>
+                        <td>
+                          <?php
+                          // Example: Calculate total marks for this user for this subject & exam
+                          $userResults = array_filter($entry['results'], function ($r) use ($user) {
+                            return $r['student_id'] == $user['id'];
+                          });
+                          $totalMarks = array_sum(array_column($userResults, 'total'));
+                          $maxMarks   = !empty($entry['subject']['full_mark']) ? $entry['subject']['full_mark'] : 100;
+                          $progress   = $maxMarks > 0 ? round($totalMarks / $maxMarks * 100) : 0;
+                          ?>
+                          <div class="progress" style="height: 20px;">
+                            <div class="progress-bar bg-success" style="width: <?= $progress ?>%;"><?= $progress ?>%</div>
+                          </div>
+                        </td>
+                        <td class="text-center">
+                          <a href="<?= site_url('profile_id/' . $user['id']) ?>"
+                            class="btn btn-sm btn-info me-1"
+                            title="View Profile">
+                            <i class="fas fa-user"></i>
+                          </a>
+                          <a href="tel:<?= esc($user['phone'] ?? '') ?>"
+                            class="btn btn-sm btn-success me-1"
+                            title="Call Teacher">
+                            <i class="fas fa-phone"></i>
+                          </a>
+                          <a href="<?= site_url('teacher_result/' . $user['id']) ?>"
+                            class="btn btn-sm btn-warning"
+                            title="View Results">
+                            <i class="fas fa-chart-bar"></i>
+                          </a>
+                        </td>
+                      </tr>
+                    <?php endforeach; ?>
+                  <?php else: ?>
+                    <tr>
+                      <td colspan="5" class="text-center text-muted">No teachers found for this exam/subject.</td>
+                    </tr>
+                  <?php endif; ?>
                 <?php endforeach; ?>
               <?php else: ?>
                 <tr>
-                  <td colspan="5" class="text-center text-muted">No teachers found.</td>
+                  <td colspan="5" class="text-center text-muted">No exam data found.</td>
                 </tr>
               <?php endif; ?>
             </tbody>
