@@ -26,35 +26,35 @@
         <!-- End Flash Messages -->
 
         <div class="table-responsive">
-          <table id="teacherTable" class="table table-bordered table-hover table-striped">
+          <table id="teacherTable" class="table table-bordered table-hover table-striped align-middle">
             <thead class="bg-navy text-center">
               <tr>
-                <th>Serial no</th>
-                <th>Photo</th>
-                <th>Name</th>
-                <th>Progress</th>
-                <th>Action</th>
+                <th style="width: 60px;">Serial no</th>
+                <th style="width: 80px;">Photo</th>
+                <th style="width: 200px;">Name</th>
+                <th style="width: 100%;">Progress</th>
+                <th style="width: 120px;">Action</th>
               </tr>
             </thead>
             <tbody>
               <?php if (!empty($users)): ?>
                 <?php foreach ($users as $user): ?>
                   <tr>
-                    <td><?= esc($user['position']) ?></td>
+                    <td class="text-center"><?= esc($user['position']) ?></td>
                     <td class="text-center">
                       <img src="<?= !empty($user['picture'])
                                   ? $user['picture']
                                   : base_url('public/assets/img/default.png') ?>"
                         width="50" height="50" class="rounded-circle">
                     </td>
-                    <td>
-                      <div class="progress progress-xs">
-                        <div class="progress-bar bg-success" style="width: 70%"></div>
-                      </div>
-                      <small>70%</small>
-                    </td>
 
                     <td><?= esc($user['name']) ?></td>
+
+                    <td>
+                      <div class="progress" style="height: 20px;"> <!-- bigger bar -->
+                        <div class="progress-bar bg-success" style="width: 70%;">70%</div>
+                      </div>
+                    </td>
                     <td class="text-center">
                       <!-- Profile Button -->
                       <a href="<?= site_url('profile_id/' . $user['id']) ?>" class="btn btn-sm btn-info" title="View Profile">
@@ -65,7 +65,7 @@
                 <?php endforeach; ?>
               <?php else: ?>
                 <tr>
-                  <td colspan="8" class="text-center text-muted">No teachers found.</td>
+                  <td colspan="5" class="text-center text-muted">No teachers found.</td>
                 </tr>
               <?php endif; ?>
             </tbody>
