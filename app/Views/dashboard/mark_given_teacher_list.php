@@ -32,11 +32,7 @@
                 <th>Serial no</th>
                 <th>Photo</th>
                 <th>Name</th>
-                <th>Designation</th>
-                <th>Subject</th>
-                <th>Phone</th>
-                <th>Gender</th>
-                <th>Position</th>
+                <th>Progress</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -53,32 +49,10 @@
                     </td>
 
                     <td><?= esc($user['name']) ?></td>
-                    <td><?= esc($user['designation']) ?></td>
-                    <td><?= esc($user['subject']) ?></td>
-                    <td><?= esc($user['phone']) ?></td>
-                    <td class="text-center"><?= esc(ucfirst($user['gender'])) ?></td>
-                    <td class="text-center">
-                      <form action="<?= base_url('admin/updatePosition/' . esc($user['id'])) ?>" method="post" class="d-flex align-items-center"> 
-                        <select name="position" id="position" class="form-control me-1" style="width:auto; min-width:70px;" required>
-                          <option value="0" disabled selected>Position</option>
-                          <?php for ($i = 1; $i <= $total_users; $i++): ?>
-                            <option value="<?= $i ?>"><?= $i ?></option>
-                          <?php endfor; ?>
-                        </select> &nbsp;
-                        <button type="submit" class="btn btn-primary btn-sm">Save</button>
-                      </form>
-                    </td>
                     <td class="text-center">
                       <!-- Profile Button -->
                       <a href="<?= site_url('profile_id/' . $user['id']) ?>" class="btn btn-sm btn-info" title="View Profile">
                         <i class="fas fa-user"></i>
-                      </a>
-
-                      <!-- Restrict Button -->
-                      <a href="<?= base_url('restrict/' . $user['id']) ?>"
-                        onclick="return confirm('Are you sure you want to restrict this user?')"
-                        class="btn btn-sm btn-warning" title="Restrict User">
-                        <i class="fas fa-user-slash"></i>
                       </a>
                     </td>
                   </tr>
