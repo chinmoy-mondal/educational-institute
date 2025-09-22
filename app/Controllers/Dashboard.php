@@ -121,16 +121,14 @@ class Dashboard extends Controller
 				->where('subcategory', 'Pre-Test Exam')
 				->where('category', 'Exam')
 				->findAll();
-
-			$totalSubject = count($total_subjects);
 		} else {
 			$given_subjects = []; // No open exams → no teachers
-			$totalSubject = []; // No open exams → no teachers
+			$total_subjects = []; // No open exams → no teachers
 		}
 
 		// Count teachers safely
 		$this->data['givenSubjects'] = count($given_subjects);
-		$this->data['totalSubjects'] = count($totalSubject);
+		$this->data['totalSubjects'] = count($total_subjects);
 		$this->data['total_income'] = 150000.00;
 		$this->data['total_cost'] = 42000.00;
 
