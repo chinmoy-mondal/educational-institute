@@ -176,7 +176,12 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
       return ($e1['written'] + $e2['written']) < 66;
     }
 
-    if ($subject === 'ICT') return ($written + $mcq) < 8 || $practical < 9;
+    if ($subject === 'ICT') {
+      // Debugging
+      echo "Checking ICT: written=$written, mcq=$mcq, practical=$practical<br>";
+
+      return ($written + $mcq) < 8 || $practical < 9;
+    }
 
     if (in_array($subject, ['Physics', 'Chemistry', 'Higher Math', 'Biology'])) {
       return $written < 17 || $mcq < 8 || $practical < 8;
@@ -277,7 +282,7 @@ if (isset($finalData) && is_array($finalData)) {
                       $isFail = isSubjectFailed($class, $subject, $subjectMap, $group);
 
 
-                      echo esc($student['roll']). '='.$subject . " = " . ($isFail ? "Fail" : "Pass") . "\n";
+                      echo esc($student['roll']) . '=' . $subject . " = " . ($isFail ? "Fail" : "Pass") . "\n";
 
 
                       if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
