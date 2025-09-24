@@ -183,7 +183,7 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
       return ($written + $mcq) < 8 || $practical < 9;
     }
 
-    if (in_array(trim($subject), ['Physics', 'Chemistry', 'Higher Math', 'Biology'])) {
+    if (in_array(trim($subject), ['Physics', 'Chemistry', 'Higher Mathematics', 'Biology','Agriculture Studies'])) {
       return $written < 17 || $mcq < 8 || $practical < 8;
     }
 
@@ -329,7 +329,7 @@ if (isset($finalData) && is_array($finalData)) {
                           if ($practical < 9) {
                             $practicalClass = 'text-danger fw-bold';
                           }
-                        } elseif (in_array(trim($subject), ['Physics', 'Chemistry', 'Higher Math', 'Biology'])) {
+                        } elseif (in_array(trim($subject), ['Physics', 'Chemistry', 'Higher Mathematics', 'Biology','Agriculture Studies'])) {
                           if ($written < 17) $writtenClass = 'text-danger fw-bold';
                           if ($mcq < 8) $mcqClass = 'text-danger fw-bold';
                           if ($practical < 8) $practicalClass = 'text-danger fw-bold';
