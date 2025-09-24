@@ -1375,7 +1375,7 @@ class Dashboard extends Controller
 		// echo '<pre>';
 		// print_r($finalData);
 		// echo '</pre>';
-		return view('dashboard/mark', $this->data);
+		return view('dashboard/mark_copy', $this->data);
 	}
 	private function getTabulationData(): array
 	{
