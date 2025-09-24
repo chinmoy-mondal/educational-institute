@@ -275,7 +275,11 @@ if (isset($finalData) && is_array($finalData)) {
                       $studentTotal += is_numeric($total) ? $total : 0;
 
                       $isFail = isSubjectFailed($class, $subject, $subjectMap, $group);
-                      echo $isFail;
+
+                      
+                      echo $subject . " = " . ($isFail ? "Fail" : "Pass") . "\n";
+
+
                       if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
                         if (!$banglaFailCounted && $isFail) {
                           $failCount++;
