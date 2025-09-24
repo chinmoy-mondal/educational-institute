@@ -279,7 +279,7 @@ if (isset($finalData) && is_array($finalData)) {
 
 // Debug output
 echo "<pre>";
-echo "Subject: $subject\n";
+echo "Subject: * $subject*\n";
 echo "Written: $written\n";
 echo "MCQ: $mcq\n";
 echo "Practical: $practical\n";
