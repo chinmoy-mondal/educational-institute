@@ -176,7 +176,7 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
       return ($e1['written'] + $e2['written']) < 66;
     }
 
-    if ($subject === 'ICT') {
+    if ($subject === ' ICT ') {
       // Debugging
       echo "Checking ICT: written=$written, mcq=$mcq, practical=$practical<br>";
 
