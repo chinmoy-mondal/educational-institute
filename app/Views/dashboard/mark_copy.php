@@ -277,14 +277,14 @@ if (isset($finalData) && is_array($finalData)) {
                       $practical = $res['practical'] ?? 0;
                       $total = $res['total'] ?? 0;
 
-// Debug output
-echo "<pre>";
-echo "Subject: * $subject*\n";
-echo "Written: $written\n";
-echo "MCQ: $mcq\n";
-echo "Practical: $practical\n";
-echo "Total: $total\n";
-echo "</pre>";
+// // Debug output
+// echo "<pre>";
+// echo "Subject: * $subject*\n";
+// echo "Written: $written\n";
+// echo "MCQ: $mcq\n";
+// echo "Practical: $practical\n";
+// echo "Total: $total\n";
+// echo "</pre>";
 
                       $studentTotal += is_numeric($total) ? $total : 0;
 
