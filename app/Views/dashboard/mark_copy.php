@@ -276,8 +276,8 @@ if (isset($finalData) && is_array($finalData)) {
 
                       $isFail = isSubjectFailed($class, $subject, $subjectMap, $group);
 
-                      
-                      echo $subject . " = " . ($isFail ? "Fail" : "Pass") . "\n";
+
+                      echo $roll. '='.$subject . " = " . ($isFail ? "Fail" : "Pass") . "\n";
 
 
                       if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
