@@ -304,8 +304,13 @@ if (isset($finalData) && is_array($finalData)) {
                         // General or classes 6-8 styling
                         if ($subject === 'ICT' && in_array($class, ['6', '7', '8']) && ($written + $mcq + $practical) < 17) {
                           $writtenClass = $mcqClass = $practicalClass = 'text-danger fw-bold';
-                        } elseif ($subject === 'ICT' && in_array($class, ['9', '10']) && ($written + $mcq) < 8 && $practical < 9) {
-                          $writtenClass = $mcqClass = $practicalClass = 'text-danger fw-bold';
+                        } elseif ($subject === 'ICT' && in_array($class, ['9', '10'])) {
+                          if (($written + $mcq) < 8) {
+                            $writtenClass = $mcqClass = 'text-danger fw-bold';
+                          }
+                          if ($practical < 9) {
+                            $practicalClass = 'text-danger fw-bold';
+                          }
                         } elseif (in_array($subject, ['Physics', 'Chemistry', 'Higher Math', 'Biology'])) {
                           if ($written < 17) $writtenClass = 'text-danger fw-bold';
                           if ($mcq < 8) $mcqClass = 'text-danger fw-bold';
