@@ -136,15 +136,15 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
 
   // Classes 6-8 logic
   if (in_array($class, ['6', '7', '8'])) {
-    if ($subject === 'ICT') return ($written + $mcq + $practical) < 17;
+    if (trim($subject) === 'ICT') return ($written + $mcq + $practical) < 17;
 
-    if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
+    if (in_array(trim($subject), ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
       $b1 = $allSubjects['Bangla 1st Paper'] ?? ['written' => 0, 'mcq' => 0];
       $b2 = $allSubjects['Bangla 2nd Paper'] ?? ['written' => 0, 'mcq' => 0];
       return ($b1['written'] + $b1['mcq'] + $b2['written'] + $b2['mcq']) < 49;
     }
 
-    if (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
+    if (in_array(trim($subject), ['English 1st Paper', 'English 2nd Paper'])) {
       $e1 = $allSubjects['English 1st Paper'] ?? ['written' => 0];
       $e2 = $allSubjects['English 2nd Paper'] ?? ['written' => 0];
       return ($e1['written'] + $e2['written']) < 49;
@@ -157,20 +157,20 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
   if (in_array($class, ['9', '10'])) {
     if ($group === 'vocational') {
       // Vocational group thresholds
-      if (in_array($subject, ['Physics-1', 'Chemistry-1', 'Physics-2', 'Chemistry-2'])) {
+      if (in_array(trim($subject), ['Physics-1', 'Chemistry-1', 'Physics-2', 'Chemistry-2'])) {
         return $written < 10;
       }
       return $written < 20;
     }
 
     // General group thresholds
-    if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
+    if (in_array(trim($subject), ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
       $b1 = $allSubjects['Bangla 1st Paper'] ?? ['written' => 0, 'mcq' => 0];
       $b2 = $allSubjects['Bangla 2nd Paper'] ?? ['written' => 0, 'mcq' => 0];
       return ($b1['written'] + $b2['written'] < 46) || ($b1['mcq'] + $b2['mcq'] < 20);
     }
 
-    if (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
+    if (in_array(trim($subject), ['English 1st Paper', 'English 2nd Paper'])) {
       $e1 = $allSubjects['English 1st Paper'] ?? ['written' => 0];
       $e2 = $allSubjects['English 2nd Paper'] ?? ['written' => 0];
       return ($e1['written'] + $e2['written']) < 66;
@@ -183,7 +183,7 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
       return ($written + $mcq) < 8 || $practical < 9;
     }
 
-    if (in_array($subject, ['Physics', 'Chemistry', 'Higher Math', 'Biology'])) {
+    if (in_array(trim($subject), ['Physics', 'Chemistry', 'Higher Math', 'Biology'])) {
       return $written < 17 || $mcq < 8 || $practical < 8;
     }
 
