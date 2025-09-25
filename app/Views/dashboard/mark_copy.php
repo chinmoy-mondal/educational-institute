@@ -294,7 +294,7 @@ if (isset($finalData) && is_array($finalData)) {
                       $isFail = isSubjectFailed($class, trim($subject), $subjectMap, $group);
 
 
-                      echo esc($student['roll']) . '=' . $subject . " = " . ($isFail ? "Fail" : "Pass") . "\n";
+                      echo esc($student['roll']) . '=' . $subject . " = " . ($isFail ? "Fail" : "Pass") . "<br>";
 
 
                       if (in_array(trim($subject), ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
