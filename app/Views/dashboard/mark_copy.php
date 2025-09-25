@@ -152,10 +152,10 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
 
     return ($written + $mcq + $practical) < 33;
   }
-echo "group = ".$group;
   // Classes 9-10
   if (in_array($class, ['9', '10'])) {
-    if ($group === 'vocational') {
+    if ($group === 'Vocational') {
+      echo "yes vocational is working";
       // Vocational group thresholds
       if (in_array(trim($subject), ['Physics-1', 'Chemistry-1', 'Physics-2', 'Chemistry-2'])) {
         return $written < 10;
