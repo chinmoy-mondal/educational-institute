@@ -156,11 +156,11 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
   if (in_array($class, ['9', '10'])) {
     if ($group === 'Vocational') {
       // Vocational group thresholds
-      if (in_array(trim($subject), ['Physics-1', 'Chemistry-1', 'Physics-2', 'Chemistry-2','Self Employment and Entrepreneur','Bangladesh and Global studies-1','Bangladesh and Global studies-2'])) {
+      if (in_array(trim($subject), ['Physics-1', 'Chemistry-1', 'Physics-2', 'Chemistry-2', 'Self Employment and Entrepreneur', 'Bangladesh and Global studies-1', 'Bangladesh and Global studies-2'])) {
         return $written < 10;
-      } elseif(in_array(trim($subject), ['Agriculture Studies-1', 'Agriculture Studies-2'])) {
+      } elseif (in_array(trim($subject), ['Agriculture Studies-1', 'Agriculture Studies-2'])) {
         return $written < 15;
-      } elseif(in_array(trim($subject), ['Computer Application'])) {
+      } elseif (in_array(trim($subject), ['Computer Application'])) {
         return $practical < 17;
       }
       return $written < 20;
@@ -186,7 +186,7 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
       return ($written + $mcq) < 8 || $practical < 9;
     }
 
-    if (in_array(trim($subject), ['Physics', 'Chemistry', 'Higher Mathematics', 'Biology','Agriculture Studies'])) {
+    if (in_array(trim($subject), ['Physics', 'Chemistry', 'Higher Mathematics', 'Biology', 'Agriculture Studies'])) {
       return $written < 17 || $mcq < 8 || $practical < 8;
     }
 
@@ -280,14 +280,14 @@ if (isset($finalData) && is_array($finalData)) {
                       $practical = $res['practical'] ?? 0;
                       $total = $res['total'] ?? 0;
 
-// // Debug output
-// echo "<pre>";
-// echo "Subject: * $subject*\n";
-// echo "Written: $written\n";
-// echo "MCQ: $mcq\n";
-// echo "Practical: $practical\n";
-// echo "Total: $total\n";
-// echo "</pre>";
+                      // // Debug output
+                      // echo "<pre>";
+                      // echo "Subject: * $subject*\n";
+                      // echo "Written: $written\n";
+                      // echo "MCQ: $mcq\n";
+                      // echo "Practical: $practical\n";
+                      // echo "Total: $total\n";
+                      // echo "</pre>";
 
                       $studentTotal += is_numeric($total) ? $total : 0;
 
@@ -315,8 +315,12 @@ if (isset($finalData) && is_array($finalData)) {
 
                       if ($group === 'vocational') {
                         // Vocational fail styling
-                        if (in_array(trim($subject), ['Physics-1', 'Chemistry-1', 'Physics-2', 'Chemistry-2'])) {
+                        if (in_array(trim($subject), ['Physics-1', 'Chemistry-1', 'Physics-2', 'Chemistry-2', 'Self Employment and Entrepreneur', 'Bangladesh and Global studies-1', 'Bangladesh and Global studies-2'])) {
                           if ($written < 10) $writtenClass = 'text-danger fw-bold';
+                        } elseif (in_array(trim($subject), ['Agriculture Studies-1', 'Agriculture Studies-2'])) {
+                          if ($written < 15) $writtenClass = 'text-danger fw-bold';
+                        }elseif (in_array(trim($subject), ['Computer Application'])) {
+                          if ($practical < 17) $practicalClass = 'text-danger fw-bold';
                         } else {
                           if ($written < 20) $writtenClass = 'text-danger fw-bold';
                         }
@@ -332,7 +336,7 @@ if (isset($finalData) && is_array($finalData)) {
                           if ($practical < 9) {
                             $practicalClass = 'text-danger fw-bold';
                           }
-                        } elseif (in_array(trim($subject), ['Physics', 'Chemistry', 'Higher Mathematics', 'Biology','Agriculture Studies'])) {
+                        } elseif (in_array(trim($subject), ['Physics', 'Chemistry', 'Higher Mathematics', 'Biology', 'Agriculture Studies'])) {
                           if ($written < 17) $writtenClass = 'text-danger fw-bold';
                           if ($mcq < 8) $mcqClass = 'text-danger fw-bold';
                           if ($practical < 8) $practicalClass = 'text-danger fw-bold';
