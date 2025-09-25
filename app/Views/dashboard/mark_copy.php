@@ -158,9 +158,9 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
     if ($group === 'vocational') {
       // Vocational group thresholds
       if (in_array(trim($subject), ['Physics-1', 'Chemistry-1', 'Physics-2', 'Chemistry-2'])) {
-        return $written < 10;
+        return $written < 11;
       }
-      return $written < 20;
+      return $written < 21;
     }
 
     // General group thresholds
@@ -313,9 +313,9 @@ if (isset($finalData) && is_array($finalData)) {
                       if ($group === 'vocational') {
                         // Vocational fail styling
                         if (in_array(trim($subject), ['Physics-1', 'Chemistry-1', 'Physics-2', 'Chemistry-2'])) {
-                          if ($written < 10) $writtenClass = 'text-danger fw-bold';
+                          if ($written < 11) $writtenClass = 'text-danger fw-bold';
                         } else {
-                          if ($written < 20) $writtenClass = 'text-danger fw-bold';
+                          if ($written < 21) $writtenClass = 'text-danger fw-bold';
                         }
                         // MCQ and Practical classes can be added if needed
                       } else {
