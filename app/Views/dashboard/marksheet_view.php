@@ -518,13 +518,10 @@ if (!is_null($roll)) {
               // ✳ Vocational section
               if (strpos($section, 'vocational') !== false) {
                 if (
-                  strpos($subject, 'Bangla') !== false ||
-                  strpos($subject, 'English') !== false ||
-                  strpos($subject, 'Islamic Studies') !== false ||
-                  strpos($subject, 'Hindu Religion Studies') !== false ||
-                  strpos($subject, 'Mathematics') !== false ||
-                  strpos($subject, 'IT Support') !== false ||
-                  strpos($subject, 'Food Processing and Preservation') !== false
+                  strpos($subject, 'Physics') !== false ||
+                  strpos($subject, 'Chemistry') !== false ||
+                  strpos($subject, 'Self Employment and Entrepreneur') !== false ||
+                  strpos($subject, 'Bangladesh and Global studies') !== false
                 ) {
                   if ($written < 10) {
                     $grade = 'F';
@@ -556,7 +553,7 @@ if (!is_null($roll)) {
                     }
                   }
                 } elseif (str_contains($subject, 'Computer Application')) {
-                  if ($practical < 15) {
+                  if ($practical < 17) {
                     $grade = 'F';
                     $gpa = '0.00';
                     $totalFailed++;
@@ -594,36 +591,6 @@ if (!is_null($roll)) {
                   str_contains($subject, 'IT Support') ||
                   str_contains($subject, 'Food Processing and Preservation')
                 ) {
-                  if ($written < 20) {
-                    $grade = 'F';
-                    $gpa = '0.00';
-                    $totalFailed++;
-                  } else {
-
-                    if ($percentage >= 80) {
-                      $grade = 'A+';
-                      $gpa = '5.00';
-                    } elseif ($percentage >= 70) {
-                      $grade = 'A';
-                      $gpa = '4.00';
-                    } elseif ($percentage >= 60) {
-                      $grade = 'A-';
-                      $gpa = '3.50';
-                    } elseif ($percentage >= 50) {
-                      $grade = 'B';
-                      $gpa = '3.00';
-                    } elseif ($percentage >= 40) {
-                      $grade = 'C';
-                      $gpa = '2.00';
-                    } elseif ($percentage >= 33) {
-                      $grade = 'D';
-                      $gpa = '1.00';
-                    } else {
-                      $grade = 'N/A';
-                      $gpa = '0.00';
-                    }
-                  }
-                } else {
                   if ($written < 20) {
                     $grade = 'F';
                     $gpa = '0.00';
