@@ -585,8 +585,7 @@ if (!is_null($roll)) {
                       $gpa = '0.00';
                     }
                   }
-                }
-                if (
+                } elseif (
                   str_contains($subject, 'Bangla') ||
                   str_contains($subject, 'English') ||
                   str_contains($subject, 'Islamic Studies') ||
@@ -599,30 +598,60 @@ if (!is_null($roll)) {
                     $grade = 'F';
                     $gpa = '0.00';
                     $totalFailed++;
+                  } else {
+
+                    if ($percentage >= 80) {
+                      $grade = 'A+';
+                      $gpa = '5.00';
+                    } elseif ($percentage >= 70) {
+                      $grade = 'A';
+                      $gpa = '4.00';
+                    } elseif ($percentage >= 60) {
+                      $grade = 'A-';
+                      $gpa = '3.50';
+                    } elseif ($percentage >= 50) {
+                      $grade = 'B';
+                      $gpa = '3.00';
+                    } elseif ($percentage >= 40) {
+                      $grade = 'C';
+                      $gpa = '2.00';
+                    } elseif ($percentage >= 33) {
+                      $grade = 'D';
+                      $gpa = '1.00';
+                    } else {
+                      $grade = 'N/A';
+                      $gpa = '0.00';
+                    }
                   }
                 } else {
-
-                  if ($percentage >= 80) {
-                    $grade = 'A+';
-                    $gpa = '5.00';
-                  } elseif ($percentage >= 70) {
-                    $grade = 'A';
-                    $gpa = '4.00';
-                  } elseif ($percentage >= 60) {
-                    $grade = 'A-';
-                    $gpa = '3.50';
-                  } elseif ($percentage >= 50) {
-                    $grade = 'B';
-                    $gpa = '3.00';
-                  } elseif ($percentage >= 40) {
-                    $grade = 'C';
-                    $gpa = '2.00';
-                  } elseif ($percentage >= 33) {
-                    $grade = 'D';
-                    $gpa = '1.00';
-                  } else {
-                    $grade = 'N/A';
+                  if ($written < 20) {
+                    $grade = 'F';
                     $gpa = '0.00';
+                    $totalFailed++;
+                  } else {
+
+                    if ($percentage >= 80) {
+                      $grade = 'A+';
+                      $gpa = '5.00';
+                    } elseif ($percentage >= 70) {
+                      $grade = 'A';
+                      $gpa = '4.00';
+                    } elseif ($percentage >= 60) {
+                      $grade = 'A-';
+                      $gpa = '3.50';
+                    } elseif ($percentage >= 50) {
+                      $grade = 'B';
+                      $gpa = '3.00';
+                    } elseif ($percentage >= 40) {
+                      $grade = 'C';
+                      $gpa = '2.00';
+                    } elseif ($percentage >= 33) {
+                      $grade = 'D';
+                      $gpa = '1.00';
+                    } else {
+                      $grade = 'N/A';
+                      $gpa = '0.00';
+                    }
                   }
                 }
               }
@@ -743,7 +772,7 @@ if (!is_null($roll)) {
               ?>
             </td>
             <!-- <td>
-            <?= $subject ?> = <?= in_array($subject, ['Physics', 'Chemistry', 'Higher Mathematics ', 'Biology','ICT']) ? 'yes': 'no';  ?> u
+            <?= $subject ?> = <?= in_array($subject, ['Physics', 'Chemistry', 'Higher Mathematics ', 'Biology', 'ICT']) ? 'yes' : 'no';  ?> u
             </td> -->
           <?php endif; ?>
         </tr>
