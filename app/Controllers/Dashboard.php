@@ -1309,9 +1309,6 @@ class Dashboard extends Controller
 		$exam    = $this->request->getPost('exam');
 		$year    = $this->request->getPost('year');
 
-		$studentModel = new StudentModel();
-		$resultModel  = new ResultModel();
-		$subjectModel = new SubjectModel();
 
 		$builder = $this->studentModel->where('class', $class);
 
@@ -1330,7 +1327,7 @@ class Dashboard extends Controller
 			$studentId = $student['id'];
 
 			// Step 2: Get results for this student, exam, and year
-			$results = $resultModel
+			$results = $this->resultModel
 				->where('student_id', $studentId)
 				->where('exam', $exam)
 				->where('year', $year)
@@ -1339,7 +1336,7 @@ class Dashboard extends Controller
 			// Step 3: Build subject-wise results array
 			$subjectResults = [];
 			foreach ($results as $res) {
-				$subjectName = $subjectModel
+				$subjectName = $this->subjectModel
 					->select('subject')
 					->where('id', $res['subject_id'])
 					->first()['subject'] ?? 'Unknown';
@@ -1363,6 +1360,7 @@ class Dashboard extends Controller
 				'student_id' => $student['id'],
 				'name'       => $student['student_name'] ?? 'Unknown',
 				'roll'       => $student['roll'],
+				'group'      => $section ?? 'general',
 				'exam'       => $exam,
 				'year'       => $year,
 				'results'    => $subjectResults,
