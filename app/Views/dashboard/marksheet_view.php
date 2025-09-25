@@ -555,8 +555,8 @@ if (!is_null($roll)) {
                       $gpa = '0.00';
                     }
                   }
-                } elseif (str_contains($subject, 'Agriculture Studies')) {
-                  if ($written < 15) {
+                } elseif (str_contains($subject, 'Computer Application')) {
+                  if ($practical < 15) {
                     $grade = 'F';
                     $gpa = '0.00';
                     $totalFailed++;
