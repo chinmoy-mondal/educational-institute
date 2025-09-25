@@ -156,7 +156,7 @@ function isSubjectFailed(string $class, string $subject, array $allSubjects, str
   if (in_array($class, ['9', '10'])) {
     if ($group === 'Vocational') {
       // Vocational group thresholds
-      if (in_array(trim($subject), ['Physics-1', 'Chemistry-1', 'Physics-2', 'Chemistry-2'])) {
+      if (in_array(trim($subject), ['Physics-1', 'Chemistry-1', 'Physics-2', 'Chemistry-2','Self Employment and Entrepreneur','Bangladesh and Global studies-1','Bangladesh and Global studies-2'])) {
         return $written < 10;
       } elseif(in_array(trim($subject), ['Agriculture Studies-1', 'Agriculture Studies-2'])) {
         return $written < 15;
@@ -294,7 +294,7 @@ if (isset($finalData) && is_array($finalData)) {
                       $isFail = isSubjectFailed($class, trim($subject), $subjectMap, $group);
 
 
-                      // echo esc($student['roll']) . '=' . $subject . " = " . ($isFail ? "Fail" : "Pass") . "\n";
+                      echo esc($student['roll']) . '=' . $subject . " = " . ($isFail ? "Fail" : "Pass") . "\n";
 
 
                       if (in_array(trim($subject), ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
