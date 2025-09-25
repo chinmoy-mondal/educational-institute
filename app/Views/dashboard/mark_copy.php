@@ -319,7 +319,7 @@ if (isset($finalData) && is_array($finalData)) {
                           if ($written < 10) $writtenClass = 'text-danger fw-bold';
                         } elseif (in_array(trim($subject), ['Agriculture Studies-1', 'Agriculture Studies-2'])) {
                           if ($written < 15) $writtenClass = 'text-danger fw-bold';
-                        }elseif (in_array(trim($subject), ['Computer Application'])) {
+                        } elseif (in_array(trim($subject), ['Computer Application'])) {
                           if ($practical < 17) $practicalClass = 'text-danger fw-bold';
                         } else {
                           if ($written < 20) $writtenClass = 'text-danger fw-bold';
@@ -346,9 +346,9 @@ if (isset($finalData) && is_array($finalData)) {
                         }
                       }
                       ?>
-                      <td class="<?= $writtenClass ?>"><?= $written ?></td>
-                      <td class="<?= $mcqClass ?>"><?= $mcq ?></td>
-                      <td class="<?= $practicalClass ?>"><?= $practical ?></td>
+                      <td class="<?= $isFail ? 'text-danger fw-bold' : '' ?>"><?= $written ?></td>
+                      <td class="<?= $isFail ? 'text-danger fw-bold' : '' ?>"><?= $mcq ?></td>
+                      <td class="<?= $isFail ? 'text-danger fw-bold' : '' ?>"><?= $practical ?></td>
                       <td class="<?= $isFail ? 'text-danger fw-bold' : '' ?>"><?= $total ?></td>
                     <?php endif; ?>
                   <?php endforeach; ?>
