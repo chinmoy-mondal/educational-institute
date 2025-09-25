@@ -507,7 +507,7 @@ if (!is_null($roll)) {
               }
             } elseif (in_array($class, [9, 10])) {
               $section = strtolower($student['section']);
-              $subject = $mark['subject'];
+              $subject = trim($mark['subject']);
               $written = $mark['written'];
               $mcq = $mark['mcq'];
               $practical = $mark['practical'];
