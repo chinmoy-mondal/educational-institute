@@ -10,6 +10,7 @@ use App\Models\SubjectModel;
 use App\Models\ResultModel;
 use App\Models\CalendarModel;
 use App\Models\MarkingOpenModel;
+use App\Models\NoticeModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Dashboard extends Controller
@@ -19,6 +20,7 @@ class Dashboard extends Controller
 	protected $studentModel;
 	protected $resultModel;
 	protected $calendarModel;
+	protected $noticeModel;
 	protected $markingModel;
 	protected $session;
 	protected $data;
@@ -30,6 +32,7 @@ class Dashboard extends Controller
 		$this->studentModel  = new StudentModel();
 		$this->resultModel   = new ResultModel();
 		$this->calendarModel   = new CalendarModel();
+		$this->noticeModel   = new NoticeModel();
 		$this->markingModel = new MarkingOpenModel();
 
 
@@ -71,6 +74,12 @@ class Dashboard extends Controller
 				'url' => base_url('calendar'),
 				'icon' => 'fas fa-calendar-alt',
 				'section' => 'calendar'
+			],
+			[
+				'label' => 'Notice',
+				'url' => base_url('admin/notice'),
+				'icon' => 'fas fa-bullhorn',
+				'section' => 'notice'
 			],
 			[
 				'label' => 'Result',
@@ -1810,6 +1819,7 @@ class Dashboard extends Controller
 
 		return redirect()->to('admin/students/view/' . $id)->with('message', 'Student updated successfully.');
 	}
+
 	public function editStudentPhoto($id)
 	{
 		$this->studentModel = new StudentModel();
