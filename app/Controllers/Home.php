@@ -321,8 +321,6 @@ class Home extends BaseController
 	}
 	public function notice()
 	{
-		
-
 		return view('public/notice');
 	}
 }
