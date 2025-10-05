@@ -44,6 +44,7 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="#">Curriculum</a></li>
                                     <li><a class="dropdown-item" href="<?= base_url('subjects'); ?>">Subjects</a></li>
+                                    <li><a class="dropdown-item" href="<?= base_url('public-calendar'); ?>">Calendar</a></li>
                                 </ul>
                             </li>
 
@@ -51,7 +52,7 @@
             
                             <!-- Admissions -->
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= base_url('public-calendar'); ?>">Calendar</a>
+                                <a class="nav-link" href="<?= base_url('notice'); ?>">Notice</a>
                             </li>
             
                             <!-- Students -->
