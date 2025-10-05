@@ -319,4 +319,10 @@ class Home extends BaseController
 
 		return view('public/attendance_list', $data);
 	}
+	public function notice()
+	{
+		
+
+		return view('public/notice');
+	}
 }

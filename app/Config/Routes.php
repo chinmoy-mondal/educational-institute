@@ -23,6 +23,7 @@ $routes->get('student-id', 'Home::studentById');
 $routes->get('idcard/(:num)', 'Home::idCard/$1');
 $routes->get('teacher_idcard/(:num)', 'Home::teacher_idcard/$1');
 $routes->get('attendance', 'Home::attendace');
+$routes->get('notice', 'Home::notice');
 
 $routes->get('contain', 'Contain::index');
 $routes->get('about', 'About::index');
