@@ -1883,8 +1883,8 @@ class Dashboard extends Controller
 			['label' => 'Notice List', 'url' => current_url()],
 			['label' => 'Add Notice', 'url' => base_url('admin/noticeForm')],
 		];
-		$data['notices'] = $this->noticeModel->orderBy('id', 'DESC')->findAll();
-		return view('dashboard/notice_list', $data);
+		$this->data['notices'] = $this->noticeModel->orderBy('id', 'DESC')->findAll();
+		return view('dashboard/notice_list', $this->data);
 	}
 
 	// Show add form
@@ -1896,7 +1896,7 @@ class Dashboard extends Controller
 			['label' => 'Notice List', 'url' => base_url('admin/notices')],
 			['label' => 'Add Notice', 'url' => current_url()],
 		];
-		return view('dashboard/notice_form');
+		return view('dashboard/notice_form',$this->data);
 	}
 
 	// Save new notice
