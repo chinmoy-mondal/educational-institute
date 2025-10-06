@@ -123,6 +123,7 @@ $routes->get('admin/noticeForm', 'Dashboard::noticeForm');
 $routes->post('admin/saveNotice', 'Dashboard::saveNotice');
 $routes->get('admin/editNotice/(:num)', 'Dashboard::editNotice/$1');
 $routes->get('admin/deleteNotice/(:num)', 'Dashboard::deleteNotice/$1');
+$routes->post('admin/updateNotice/(:num)', 'Dashboard::updateNotice/$1');
 
 
 
