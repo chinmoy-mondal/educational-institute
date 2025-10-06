@@ -1932,13 +1932,13 @@ class Dashboard extends Controller
 			['label' => 'Add Notice', 'url' => current_url()],
 		];
 
-		$data['notice'] = $this->noticeModel->find($id);
+		$this->data['notice'] = $this->noticeModel->find($id);
 
-		if (!$data['notice']) {
+		if (!$this->data['notice']) {
 			return redirect()->to('admin/notices')->with('error', 'Notice not found');
 		}
 
-		return view('dashboard/notice_form_edit', $data);
+		return view('dashboard/notice_form_edit', $this->data);
 	}
 
 	// Update existing notice
