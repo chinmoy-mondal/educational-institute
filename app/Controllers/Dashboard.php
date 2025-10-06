@@ -77,7 +77,7 @@ class Dashboard extends Controller
 			],
 			[
 				'label' => 'Notice',
-				'url' => base_url('admin/notice'),
+				'url' => base_url('admin/notices'),
 				'icon' => 'fas fa-bullhorn',
 				'section' => 'notice'
 			],
@@ -1876,15 +1876,26 @@ class Dashboard extends Controller
 
 	// Show all notices
 	public function notices()
-	{
-		$noticeModel = new NoticeModel();
-		$data['notices'] = $noticeModel->orderBy('id', 'DESC')->findAll();
+	{		
+		$this->data['title'] = 'Notice List';
+		$this->data['activeSection'] = 'notice';
+		$this->data['navbarItems'] = [
+			['label' => 'Notice List', 'url' => current_url()],
+			['label' => 'Add Notice', 'url' => base_url('admin/noticeForm')],
+		];
+		$data['notices'] = $this->noticeModel->orderBy('id', 'DESC')->findAll();
 		return view('dashboard/notice_list', $data);
 	}
 
 	// Show add form
 	public function noticeForm()
-	{
+	{		
+		$this->data['title'] = 'Notice Form';
+		$this->data['activeSection'] = 'notice';
+		$this->data['navbarItems'] = [
+			['label' => 'Notice List', 'url' => base_url('admin/notices')],
+			['label' => 'Add Notice', 'url' => current_url()],
+		];
 		return view('dashboard/notice_form');
 	}
 
