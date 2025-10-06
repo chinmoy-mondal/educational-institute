@@ -7,6 +7,7 @@ use App\Models\StudentModel;
 use App\Models\UserModel;
 use App\Models\CalendarModel;
 use App\Models\AttendanceModel;
+use App\Models\NoticeModel;
 
 class Home extends BaseController
 {
@@ -319,8 +320,19 @@ class Home extends BaseController
 
 		return view('public/attendance_list', $data);
 	}
+
 	public function notice()
 	{
-		return view('public/notice');
+		$noticeModel = new NoticeModel();
+
+		// Fetch active notices only, latest first
+		$data['notices'] = $noticeModel
+			->where('status', 1)
+			->orderBy('notice_date', 'DESC')
+			->findAll();
+
+		$data['title'] = 'School Notices';
+
+		return view('public/notice', $data);
 	}
 }
