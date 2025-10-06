@@ -9,7 +9,7 @@
           <i class="fas fa-bullhorn"></i> Notice List
         </h3>
         <div>
-          <a href="<?= base_url('dashboard/noticeForm') ?>" class="btn btn-sm btn-success">
+          <a href="<?= base_url('admin/noticeForm') ?>" class="btn btn-sm btn-success">
             <i class="fas fa-plus-circle"></i> Add Notice
           </a>
         </div>
