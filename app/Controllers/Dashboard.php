@@ -1919,7 +1919,7 @@ class Dashboard extends Controller
 		}
 
 		$this->noticeModel->insert($data);
-		return redirect()->to('dashboard/notices')->with('success', 'Notice added successfully!');
+		return redirect()->to('admin/notices')->with('success', 'Notice added successfully!');
 	}
 
 	// Edit form
@@ -1928,10 +1928,10 @@ class Dashboard extends Controller
 		$data['notice'] = $this->noticeModel->find($id);
 
 		if (!$data['notice']) {
-			return redirect()->to('dashboard/notices')->with('error', 'Notice not found');
+			return redirect()->to('admin/notices')->with('error', 'Notice not found');
 		}
 
-		return view('dashboard/notice_form_edit', $data);
+		return view('admin/notice_form_edit', $data);
 	}
 
 	// Update existing notice
@@ -1941,7 +1941,7 @@ class Dashboard extends Controller
 		$notice = $noticeModel->find($id);
 
 		if (!$notice) {
-			return redirect()->to('dashboard/notices')->with('error', 'Notice not found');
+			return redirect()->to('admin/notices')->with('error', 'Notice not found');
 		}
 
 		$data = [
@@ -1962,7 +1962,7 @@ class Dashboard extends Controller
 		}
 
 		$noticeModel->update($id, $data);
-		return redirect()->to('dashboard/notices')->with('success', 'Notice updated successfully!');
+		return redirect()->to('admin/notices')->with('success', 'Notice updated successfully!');
 	}
 
 	// Delete notice
@@ -1978,6 +1978,6 @@ class Dashboard extends Controller
 			$noticeModel->delete($id);
 		}
 
-		return redirect()->to('dashboard/notices')->with('success', 'Notice deleted successfully!');
+		return redirect()->to('admin/notices')->with('success', 'Notice deleted successfully!');
 	}
 }

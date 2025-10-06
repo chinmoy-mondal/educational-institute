@@ -62,10 +62,10 @@
                       <?php endif; ?>
                     </td>
                     <td class="text-center">
-                      <a href="<?= base_url('dashboard/editNotice/' . $notice['id']) ?>" class="btn btn-sm btn-warning" title="Edit">
+                      <a href="<?= base_url('admin/editNotice/' . $notice['id']) ?>" class="btn btn-sm btn-warning" title="Edit">
                         <i class="fas fa-edit"></i>
                       </a>
-                      <a href="<?= base_url('dashboard/deleteNotice/' . $notice['id']) ?>"
+                      <a href="<?= base_url('admin/deleteNotice/' . $notice['id']) ?>"
                         onclick="return confirm('Are you sure you want to delete this notice?')"
                         class="btn btn-sm btn-danger" title="Delete">
                         <i class="fas fa-trash"></i>
