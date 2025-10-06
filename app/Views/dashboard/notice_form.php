@@ -15,8 +15,8 @@ $notice = $notice ?? [
 // Determine form mode
 $isEdit = !empty($notice['id']);
 $formAction = $isEdit
-  ? base_url('dashboard/updateNotice/' . $notice['id'])
-  : base_url('dashboard/saveNotice');
+  ? base_url('admin/updateNotice/' . $notice['id'])
+  : base_url('admin/saveNotice');
 ?>
 
 <section class="content-header">
