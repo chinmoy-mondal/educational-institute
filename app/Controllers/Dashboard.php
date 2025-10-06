@@ -1907,6 +1907,7 @@ class Dashboard extends Controller
 			'title'       => $this->request->getPost('title'),
 			'body'        => $this->request->getPost('body'),
 			'notice_date' => $this->request->getPost('notice_date'),
+			'status'      => $this->request->getPost('status'), // <--- Add this line
 			'created_at'  => date('Y-m-d H:i:s'),
 		];
 
@@ -1955,6 +1956,7 @@ class Dashboard extends Controller
 			'title'       => $this->request->getPost('title'),
 			'body'        => $this->request->getPost('body'),
 			'notice_date' => $this->request->getPost('notice_date'),
+			'status'      => $this->request->getPost('status'), // <--- Add this line
 		];
 
 		// File update
