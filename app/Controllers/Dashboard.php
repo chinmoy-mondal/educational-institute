@@ -1872,4 +1872,30 @@ class Dashboard extends Controller
 
 		return redirect()->back()->with('error', 'Photo upload failed.');
 	}
+
+	public function notice()
+	{		
+		$this->data['title'] = 'Calendar';
+		$this->data['activeSection'] = 'calendar';
+
+		// Common navbar and sidebar for all views
+		$this->data['navbarItems'] = [
+			['label' => 'Dashboard', 'url' => base_url('dashboard')],
+			['label' => 'Calendar', 'url' => base_url('calendar')],
+		];
+
+		$user = [
+			'name' => $this->session->get('name'),
+			'email' => $this->session->get('email'),
+			'phone' => $this->session->get('phone'),
+			'role' => $this->session->get('role')
+		];
+
+		$notice = $this->noticeModel->findAll();
+
+		$this->data['user'] = $user;
+		$this->data['notice'] = $notice;
+
+		return view('dashboard/notice', $this->data);
+	}
 }
