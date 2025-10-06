@@ -1876,7 +1876,7 @@ class Dashboard extends Controller
 
 	// Show all notices
 	public function notices()
-	{		
+	{
 		$this->data['title'] = 'Notice List';
 		$this->data['activeSection'] = 'notice';
 		$this->data['navbarItems'] = [
@@ -1889,14 +1889,14 @@ class Dashboard extends Controller
 
 	// Show add form
 	public function noticeForm()
-	{		
+	{
 		$this->data['title'] = 'Notice Form';
 		$this->data['activeSection'] = 'notice';
 		$this->data['navbarItems'] = [
 			['label' => 'Notice List', 'url' => base_url('admin/notices')],
 			['label' => 'Add Notice', 'url' => current_url()],
 		];
-		return view('dashboard/notice_form',$this->data);
+		return view('dashboard/notice_form', $this->data);
 	}
 
 	// Save new notice
