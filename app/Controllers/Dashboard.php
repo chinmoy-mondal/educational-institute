@@ -1925,6 +1925,13 @@ class Dashboard extends Controller
 	// Edit form
 	public function editNotice($id)
 	{
+		$this->data['title'] = 'Notice Form';
+		$this->data['activeSection'] = 'notice';
+		$this->data['navbarItems'] = [
+			['label' => 'Notice List', 'url' => base_url('admin/notices')],
+			['label' => 'Add Notice', 'url' => current_url()],
+		];
+		
 		$data['notice'] = $this->noticeModel->find($id);
 
 		if (!$data['notice']) {
