@@ -1888,34 +1888,14 @@ class Dashboard extends Controller
 	}
 
 	// Show add form
-	// Show add form OR edit form in one view
-	public function noticeForm($id = null)
+	public function noticeForm()
 	{
-		$this->data['title'] = $id ? 'Edit Notice' : 'Add Notice';
+		$this->data['title'] = 'Notice Form';
 		$this->data['activeSection'] = 'notice';
 		$this->data['navbarItems'] = [
 			['label' => 'Notice List', 'url' => base_url('admin/notices')],
-			['label' => $id ? 'Edit Notice' : 'Add Notice', 'url' => current_url()],
+			['label' => 'Add Notice', 'url' => current_url()],
 		];
-
-		if ($id) {
-			$notice = $this->noticeModel->find($id);
-			if (!$notice) {
-				return redirect()->to('dashboard/notices')->with('error', 'Notice not found');
-			}
-			$this->data['notice'] = $notice;
-		} else {
-			// For Add form, provide empty notice array
-			$this->data['notice'] = [
-				'id' => '',
-				'title' => '',
-				'body' => '',
-				'notice_date' => '',
-				'document_url' => '',
-				'status' => 1
-			];
-		}
-
 		return view('dashboard/notice_form', $this->data);
 	}
 
@@ -1943,34 +1923,15 @@ class Dashboard extends Controller
 	}
 
 	// Edit form
-	public function noticeForm($id = null)
+	public function editNotice($id)
 	{
-		$this->data['title'] = $id ? 'Edit Notice' : 'Add Notice';
-		$this->data['activeSection'] = 'notice';
-		$this->data['navbarItems'] = [
-			['label' => 'Notice List', 'url' => base_url('admin/notices')],
-			['label' => $id ? 'Edit Notice' : 'Add Notice', 'url' => current_url()],
-		];
+		$data['notice'] = $this->noticeModel->find($id);
 
-		// If $id exists, we are editing; otherwise, creating a new notice
-		$this->data['notice'] = $id
-			? $this->noticeModel->find($id)
-			: [
-				'id' => '',
-				'title' => '',
-				'body' => '',
-				'notice_date' => '',
-				'document_url' => '',
-				'status' => 1
-			];
-
-		// Redirect if editing but notice not found
-		if ($id && !$this->data['notice']) {
-			return redirect()->to('admin/notices')->with('error', 'Notice not found');
+		if (!$data['notice']) {
+			return redirect()->to('dashboard/notices')->with('error', 'Notice not found');
 		}
 
-		// Load the unified view
-		return view('dashboard/notice_form', $this->data);
+		return view('dashboard/notice_form_edit', $data);
 	}
 
 	// Update existing notice
