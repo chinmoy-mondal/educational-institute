@@ -41,6 +41,7 @@
                 <th>Notice Body</th>
                 <th>Date</th>
                 <th>Document</th>
+                <th>Status</th> <!-- New Status Column -->
                 <th width="15%">Action</th>
               </tr>
             </thead>
@@ -62,6 +63,9 @@
                       <?php endif; ?>
                     </td>
                     <td class="text-center">
+                      <?= $notice['status'] ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>' ?>
+                    </td>
+                    <td class="text-center">
                       <a href="<?= base_url('admin/editNotice/' . $notice['id']) ?>" class="btn btn-sm btn-warning" title="Edit">
                         <i class="fas fa-edit"></i>
                       </a>
@@ -75,7 +79,7 @@
                 <?php endforeach; ?>
               <?php else: ?>
                 <tr>
-                  <td colspan="6" class="text-center text-muted">No notices found.</td>
+                  <td colspan="7" class="text-center text-muted">No notices found.</td>
                 </tr>
               <?php endif; ?>
             </tbody>
