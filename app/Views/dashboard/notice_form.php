@@ -29,7 +29,7 @@ $formAction = $isEdit
         </h1>
       </div>
       <div class="col-sm-6 text-right">
-        <a href="<?= base_url('dashboard/notices') ?>" class="btn btn-secondary btn-sm">
+        <a href="<?= base_url('admin/notices') ?>" class="btn btn-secondary btn-sm">
           <i class="fas fa-arrow-left"></i> Back to List
         </a>
       </div>
