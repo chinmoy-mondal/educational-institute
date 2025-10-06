@@ -12,6 +12,7 @@ class NoticeModel extends Model
         'body',
         'notice_date',
         'document_url',
+        'status',
         'created_at'
     ];
 }
