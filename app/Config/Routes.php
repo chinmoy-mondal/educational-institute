@@ -117,7 +117,12 @@ $routes->post('admin/assignStudentsSubjects', 'Dashboard::assignStudentsSubjects
 
 $routes->get('admin/students/delete/(:num)', 'Dashboard::softDelete/$1');
 $routes->get('admin/students/active/(:num)', 'Dashboard::softActive/$1');
-$routes->get('admin/notice', 'Dashboard::notice');
+
+$routes->get('dashboard/notices', 'Dashboard::notices');
+$routes->get('dashboard/noticeForm', 'Dashboard::noticeForm');
+$routes->post('dashboard/saveNotice', 'Dashboard::saveNotice');
+$routes->get('dashboard/editNotice/(:num)', 'Dashboard::editNotice/$1');
+$routes->get('dashboard/deleteNotice/(:num)', 'Dashboard::deleteNotice/$1');
 
 
 

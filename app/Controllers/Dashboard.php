@@ -1873,29 +1873,102 @@ class Dashboard extends Controller
 		return redirect()->back()->with('error', 'Photo upload failed.');
 	}
 
-	public function notice()
-	{		
-		$this->data['title'] = 'Calendar';
-		$this->data['activeSection'] = 'calendar';
 
-		// Common navbar and sidebar for all views
-		$this->data['navbarItems'] = [
-			['label' => 'Dashboard', 'url' => base_url('dashboard')],
-			['label' => 'Calendar', 'url' => base_url('calendar')],
+	// Show all notices
+	public function notices()
+	{
+		$noticeModel = new NoticeModel();
+		$data['notices'] = $noticeModel->orderBy('id', 'DESC')->findAll();
+		return view('dashboard/notice_list', $data);
+	}
+
+	// Show add form
+	public function noticeForm()
+	{
+		return view('dashboard/notice_form');
+	}
+
+	// Save new notice
+	public function saveNotice()
+	{
+		$noticeModel = new NoticeModel();
+
+		$data = [
+			'title'       => $this->request->getPost('title'),
+			'body'        => $this->request->getPost('body'),
+			'notice_date' => $this->request->getPost('notice_date'),
+			'created_at'  => date('Y-m-d H:i:s'),
 		];
 
-		$user = [
-			'name' => $this->session->get('name'),
-			'email' => $this->session->get('email'),
-			'phone' => $this->session->get('phone'),
-			'role' => $this->session->get('role')
+		// Handle file upload
+		$file = $this->request->getFile('document_url');
+		if ($file && $file->isValid() && !$file->hasMoved()) {
+			$newName = $file->getRandomName();
+			$file->move('uploads/notices', $newName);
+			$data['document_url'] = $newName;
+		}
+
+		$noticeModel->insert($data);
+		return redirect()->to('dashboard/notices')->with('success', 'Notice added successfully!');
+	}
+
+	// Edit form
+	public function editNotice($id)
+	{
+		$noticeModel = new NoticeModel();
+		$data['notice'] = $noticeModel->find($id);
+
+		if (!$data['notice']) {
+			return redirect()->to('dashboard/notices')->with('error', 'Notice not found');
+		}
+
+		return view('dashboard/notice_form_edit', $data);
+	}
+
+	// Update existing notice
+	public function updateNotice($id)
+	{
+		$noticeModel = new NoticeModel();
+		$notice = $noticeModel->find($id);
+
+		if (!$notice) {
+			return redirect()->to('dashboard/notices')->with('error', 'Notice not found');
+		}
+
+		$data = [
+			'title'       => $this->request->getPost('title'),
+			'body'        => $this->request->getPost('body'),
+			'notice_date' => $this->request->getPost('notice_date'),
 		];
 
-		$notice = $this->noticeModel->findAll();
+		// File update
+		$file = $this->request->getFile('document_url');
+		if ($file && $file->isValid() && !$file->hasMoved()) {
+			if (!empty($notice['document_url']) && file_exists('uploads/notices/' . $notice['document_url'])) {
+				unlink('uploads/notices/' . $notice['document_url']);
+			}
+			$newName = $file->getRandomName();
+			$file->move('uploads/notices', $newName);
+			$data['document_url'] = $newName;
+		}
 
-		$this->data['user'] = $user;
-		$this->data['notice'] = $notice;
+		$noticeModel->update($id, $data);
+		return redirect()->to('dashboard/notices')->with('success', 'Notice updated successfully!');
+	}
 
-		return view('dashboard/notice', $this->data);
+	// Delete notice
+	public function deleteNotice($id)
+	{
+		$noticeModel = new NoticeModel();
+		$notice = $noticeModel->find($id);
+
+		if ($notice) {
+			if (!empty($notice['document_url']) && file_exists('uploads/notices/' . $notice['document_url'])) {
+				unlink('uploads/notices/' . $notice['document_url']);
+			}
+			$noticeModel->delete($id);
+		}
+
+		return redirect()->to('dashboard/notices')->with('success', 'Notice deleted successfully!');
 	}
 }
