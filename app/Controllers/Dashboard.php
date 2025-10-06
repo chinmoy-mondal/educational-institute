@@ -1884,7 +1884,7 @@ class Dashboard extends Controller
 			['label' => 'Add Notice', 'url' => base_url('admin/noticeForm')],
 		];
 		$data['notices'] = $this->noticeModel->orderBy('id', 'DESC')->findAll();
-		return view('dashboard/notice_list', $data);
+		// return view('dashboard/notice_list', $data);
 	}
 
 	// Show add form
