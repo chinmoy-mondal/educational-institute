@@ -293,50 +293,55 @@ class Home extends BaseController
 		]);
 	}
 
-public function attendace()
+public function attendance()
 {
-    $attendanceModel = new \App\Models\AttendanceModel();
     $studentModel = new \App\Models\StudentModel();
+    $attendanceModel = new \App\Models\AttendanceModel();
 
-    // Fetch all attendance records
-    $records = $attendanceModel->orderBy('created_at', 'ASC')
-        ->orderBy('student_id', 'ASC')
-        ->findAll();
+    // Fetch all students
+    $students = $studentModel->orderBy('class', 'ASC')
+                             ->orderBy('section', 'ASC')
+                             ->orderBy('roll', 'ASC')
+                             ->findAll();
 
-    $data['attendances'] = [];
+    $data['classes'] = [];
+    $malePresent = $maleTotal = $femalePresent = $femaleTotal = 0;
 
-    foreach ($records as $rec) {
-        $date = substr($rec['created_at'], 0, 10);
+    foreach ($students as $st) {
+        $class   = $st['class'];
+        $section = $st['section'];
+        $sid     = $st['id'];
 
-        $data['attendances'][$date][$rec['student_id']][] = [
-            'remark' => $rec['remark'],
-            'time'   => substr($rec['created_at'], 11, 8),
+        // Attendance counts
+        $total   = $attendanceModel->where('student_id', $sid)->countAllResults(false);
+        $present = $attendanceModel->where('student_id', $sid)->where('remark', 'P')->countAllResults(false);
+
+        $percentage = ($total > 0) ? round(($present / $total) * 100, 1) : 0;
+
+        // Grouped class/section
+        $data['classes'][$class][$section][] = [
+            'id'         => $sid,
+            'name'       => $st['student_name'],
+            'roll'       => $st['roll'],
+            'gender'     => strtolower($st['gender']),
+            'present'    => $present,
+            'total'      => $total,
+            'percentage' => $percentage,
         ];
-    }
 
-    // Sort student IDs inside each date
-    foreach ($data['attendances'] as &$dayRecords) {
-        ksort($dayRecords);
-    }
-
-    // Collect unique student IDs
-    $studentIds = [];
-    foreach ($records as $r) {
-        $studentIds[$r['student_id']] = true;
-    }
-
-    $studentDetails = [];
-    if (!empty($studentIds)) {
-        $students = $studentModel->whereIn('id', array_keys($studentIds))->findAll();
-        foreach ($students as $st) {
-            $studentDetails[$st['id']] = [
-                'name' => $st['student_name'],
-                'roll' => $st['roll']
-            ];
+        // Gender summary
+        if (strtolower($st['gender']) === 'male') {
+            $malePresent += $present;
+            $maleTotal   += $total;
+        } elseif (strtolower($st['gender']) === 'female') {
+            $femalePresent += $present;
+            $femaleTotal   += $total;
         }
     }
 
-    $data['students'] = $studentDetails;
+    // Gender attendance percentage
+    $data['malePercentage']   = ($maleTotal > 0)   ? round(($malePresent / $maleTotal) * 100, 1)   : 0;
+    $data['femalePercentage'] = ($femaleTotal > 0) ? round(($femalePresent / $femaleTotal) * 100, 1) : 0;
 
     return view('public/attendance_list', $data);
 }
