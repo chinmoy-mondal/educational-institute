@@ -293,53 +293,53 @@ class Home extends BaseController
 		]);
 	}
 
-	public function attendace()
-	{
-		$attendanceModel = new \App\Models\AttendanceModel();
-		$studentModel = new \App\Models\StudentModel();
+public function attendance()
+{
+    $attendanceModel = new \App\Models\AttendanceModel();
+    $studentModel = new \App\Models\StudentModel();
 
-		// Fetch all attendance records
-		$records = $attendanceModel->orderBy('created_at', 'ASC')
-			->orderBy('student_id', 'ASC')
-			->findAll();
+    // Fetch attendance data
+    $records = $attendanceModel
+        ->orderBy('created_at', 'ASC')
+        ->findAll();
 
-		$data['attendances'] = [];
+    if (empty($records)) {
+        return view('public/attendance_list', ['attendances' => []]);
+    }
 
-		foreach ($records as $rec) {
-			$date = substr($rec['created_at'], 0, 10);
+    // Collect student IDs
+    $studentIds = array_unique(array_column($records, 'student_id'));
 
-			$data['attendances'][$date][$rec['student_id']][] = [
-				'remark' => $rec['remark'],
-				'time'   => substr($rec['created_at'], 11, 8),
-			];
-		}
+    // Get student info
+    $students = $studentModel->whereIn('id', $studentIds)->findAll();
+    $studentDetails = [];
+    foreach ($students as $st) {
+        $studentDetails[$st['id']] = [
+            'name' => $st['student_name'],
+            'roll' => $st['roll'],
+            'class' => $st['class'],
+        ];
+    }
 
-		// Sort student IDs inside each date
-		foreach ($data['attendances'] as &$dayRecords) {
-			ksort($dayRecords);
-		}
+    // Group attendance by date
+    $attendances = [];
+    foreach ($records as $rec) {
+        $date = substr($rec['created_at'], 0, 10);
+        $attendances[$date][] = [
+            'student_id' => $rec['student_id'],
+            'remark' => $rec['remark'], // P or A
+            'time' => substr($rec['created_at'], 11, 8)
+        ];
+    }
 
-		// Collect unique student IDs
-		$studentIds = [];
-		foreach ($records as $r) {
-			$studentIds[$r['student_id']] = true;
-		}
+    // Sort dates descending
+    krsort($attendances);
 
-		$studentDetails = [];
-		if (!empty($studentIds)) {
-			$students = $studentModel->whereIn('id', array_keys($studentIds))->findAll();
-			foreach ($students as $st) {
-				$studentDetails[$st['id']] = [
-					'name' => $st['student_name'],
-					'roll' => $st['roll']
-				];
-			}
-		}
-
-		$data['students'] = $studentDetails;
-
-		return view('public/attendance_list', $data);
-	}
+    return view('public/attendance_list', [
+        'attendances' => $attendances,
+        'students' => $studentDetails
+    ]);
+}
 
 	public function notice()
 	{
