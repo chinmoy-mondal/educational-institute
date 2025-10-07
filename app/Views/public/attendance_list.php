@@ -64,15 +64,15 @@
                                         // Time-based status check
                                         $status = '';
                                         if ($in <= '10:00:00' && $out >= '16:00:00') {
-                                            $status = '<span class="badge bg-success">P</span>';
+                                            $status = '<span class="badge bg-success" title="Present">P</span>';
                                         } elseif ($in > '10:00:00' && $out >= '16:00:00') {
-                                            $status = '<span class="badge bg-warning text-dark">Late</span>';
+                                            $status = '<span class="badge bg-warning text-dark" title="Late">—</span>';
                                         } elseif ($in <= '10:00:00' && $out < '16:00:00') {
-                                            $status = '<span class="badge bg-info text-dark">Early Out</span>';
+                                            $status = '<span class="badge bg-info text-dark" title="Early Out">—</span>';
                                         } elseif ($in > '10:00:00' && $out < '16:00:00') {
-                                            $status = '<span class="badge bg-danger">Late & Early Out</span>';
+                                            $status = '<span class="badge bg-danger" title="Late & Early Out">—</span>';
                                         } else {
-                                            $status = '<span class="badge bg-secondary">—</span>';
+                                            $status = '<span class="badge bg-secondary" title="Absent">—</span>';
                                         }
 
                                         $tooltip = "In: " . date('h:i A', strtotime($in)) . " | Out: " . date('h:i A', strtotime($out));
