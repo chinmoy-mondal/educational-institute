@@ -1,16 +1,11 @@
-<!-- chinmoy is testing new code -->
-
 <?= $this->extend("layouts/base.php") ?>
-
 <?= $this->section("content"); ?>
 
-<!--  Fixed Wrapper for Navbar -->
 <div class="fixed-header">
     <?= $this->include("layouts/base-structure/header"); ?>
 </div>
-<div class="container content">
 
-    <!--start-->
+<div class="container content">
     <section class="attendance-section py-5">
         <div class="container">
             <div class="text-center mb-4">
@@ -39,6 +34,8 @@
                     <thead class="table-light">
                         <tr>
                             <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Roll</th>
                             <?php foreach ($allDates as $date): ?>
                                 <th><?= esc(date('D d', strtotime($date))) ?></th>
                             <?php endforeach; ?>
@@ -46,26 +43,45 @@
                     </thead>
                     <tbody>
                         <?php foreach ($allStudents as $studentId): ?>
+                            <?php
+                            $studentName = $students[$studentId]['name'] ?? 'Unknown';
+                            $studentRoll = $students[$studentId]['roll'] ?? '-';
+                            ?>
                             <tr>
                                 <td class="fw-bold"><?= esc($studentId) ?></td>
+                                <td><?= esc($studentName) ?></td>
+                                <td><?= esc($studentRoll) ?></td>
+
                                 <?php foreach ($allDates as $date): ?>
-                                    <td
-                                        <?php if (isset($attendances[$date][$studentId])): ?>
-                                        title="<?php
-                                                $times = array_column($attendances[$date][$studentId], 'time');
-                                                $formattedTimes = array_map(fn($t) => date('h:i A', strtotime($t)), $times);
-                                                echo esc(implode(', ', $formattedTimes));
-                                                ?>"
-                                        <?php endif; ?>>
-                                        <?php if (isset($attendances[$date][$studentId])): ?>
-                                            <?php
-                                            $remarks = array_column($attendances[$date][$studentId], 'remark');
-                                            echo esc(implode(', ', $remarks));
-                                            ?>
-                                        <?php else: ?>
-                                            -
-                                        <?php endif; ?>
-                                    </td>
+                                    <?php
+                                    if (isset($attendances[$date][$studentId])) {
+                                        $times = array_column($attendances[$date][$studentId], 'time');
+                                        sort($times);
+
+                                        $in = $times[0]; // first time
+                                        $out = end($times); // last time
+
+                                        // Time-based status check
+                                        $status = '';
+                                        if ($in <= '10:00:00' && $out >= '16:00:00') {
+                                            $status = '<span class="badge bg-success">P</span>';
+                                        } elseif ($in > '10:00:00' && $out >= '16:00:00') {
+                                            $status = '<span class="badge bg-warning text-dark">Late</span>';
+                                        } elseif ($in <= '10:00:00' && $out < '16:00:00') {
+                                            $status = '<span class="badge bg-info text-dark">Early Out</span>';
+                                        } elseif ($in > '10:00:00' && $out < '16:00:00') {
+                                            $status = '<span class="badge bg-danger">Late & Early Out</span>';
+                                        } else {
+                                            $status = '<span class="badge bg-secondary">—</span>';
+                                        }
+
+                                        $tooltip = "In: " . date('h:i A', strtotime($in)) . " | Out: " . date('h:i A', strtotime($out));
+                                    } else {
+                                        $status = '<span class="text-muted">-</span>';
+                                        $tooltip = '';
+                                    }
+                                    ?>
+                                    <td title="<?= esc($tooltip) ?>"><?= $status ?></td>
                                 <?php endforeach; ?>
                             </tr>
                         <?php endforeach; ?>
@@ -78,10 +94,7 @@
             <?php endif; ?>
         </div>
     </section>
-    <!--end-->
-
 </div>
 
 <?= $this->include("layouts/base-structure/footer"); ?>
-
 <?= $this->endSection(); ?>

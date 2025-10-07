@@ -295,10 +295,11 @@ class Home extends BaseController
 
 	public function attendace()
 	{
-		$model = new AttendanceModel();
+		$attendanceModel = new \App\Models\AttendanceModel();
+		$studentModel = new \App\Models\StudentModel();
 
 		// Fetch all attendance records
-		$records = $model->orderBy('created_at', 'ASC')
+		$records = $attendanceModel->orderBy('created_at', 'ASC')
 			->orderBy('student_id', 'ASC')
 			->findAll();
 
@@ -315,8 +316,27 @@ class Home extends BaseController
 
 		// Sort student IDs inside each date
 		foreach ($data['attendances'] as &$dayRecords) {
-			ksort($dayRecords); // ensures student_id sorted ascending
+			ksort($dayRecords);
 		}
+
+		// Collect unique student IDs
+		$studentIds = [];
+		foreach ($records as $r) {
+			$studentIds[$r['student_id']] = true;
+		}
+
+		$studentDetails = [];
+		if (!empty($studentIds)) {
+			$students = $studentModel->whereIn('id', array_keys($studentIds))->findAll();
+			foreach ($students as $st) {
+				$studentDetails[$st['id']] = [
+					'name' => $st['student_name'],
+					'roll' => $st['roll']
+				];
+			}
+		}
+
+		$data['students'] = $studentDetails;
 
 		return view('public/attendance_list', $data);
 	}
