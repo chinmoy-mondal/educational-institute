@@ -295,19 +295,41 @@ class Home extends BaseController
 
 public function attendance()
 {
-   
-       $studentModel = new StudentModel();
+    $studentModel = new \App\Models\StudentModel();
 
-        // Fetch all students ordered by class, section, roll
-        $students = $studentModel->orderBy('class', 'ASC')
-                                 ->orderBy('section', 'ASC')
-                                 ->orderBy('roll', 'ASC')
-                                 ->findAll();
+    // Get filter values from GET request
+    $class = $this->request->getGet('class');
+    $section = $this->request->getGet('section');
 
-        // Pass to view
-        $data['students'] = $students;
-// echo "hello";
-        return view('public/attendance_list', $data);
+    $builder = $studentModel;
+
+    if(!empty($class)) {
+        $builder = $builder->where('class', $class);
+    }
+
+    if(!empty($section)) {
+        $builder = $builder->where('section', $section);
+    }
+
+    // Fetch students ordered by class, section, roll
+    $students = $builder->orderBy('class', 'ASC')
+                        ->orderBy('section', 'ASC')
+                        ->orderBy('roll', 'ASC')
+                        ->findAll();
+
+    // Fetch distinct classes and sections for the select options
+    $classes = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->findAll();
+    $sections = $studentModel->select('section')->distinct()->orderBy('section', 'ASC')->findAll();
+
+    $data = [
+        'students' => $students,
+        'classes' => $classes,
+        'sections' => $sections,
+        'selectedClass' => $class,
+        'selectedSection' => $section
+    ];
+
+    return view('public/attendance_list', $data);
 }
 
 	public function notice()

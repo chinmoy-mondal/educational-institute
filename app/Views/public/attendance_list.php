@@ -4,6 +4,37 @@
 <div class="container mt-5">
     <h2 class="mb-4">Student Attendance List</h2>
 
+    <!-- Filter Form -->
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label for="class" class="form-label">Class</label>
+            <select name="class" id="class" class="form-select">
+                <option value="">All Classes</option>
+                <?php foreach($classes as $c): ?>
+                    <option value="<?= esc($c['class']) ?>" <?= ($selectedClass == $c['class']) ? 'selected' : '' ?>>
+                        <?= esc($c['class']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="section" class="form-label">Section</label>
+            <select name="section" id="section" class="form-select">
+                <option value="">All Sections</option>
+                <?php foreach($sections as $s): ?>
+                    <option value="<?= esc($s['section']) ?>" <?= ($selectedSection == $s['section']) ? 'selected' : '' ?>>
+                        <?= esc($s['section']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="col-md-3 align-self-end">
+            <button type="submit" class="btn btn-primary">Filter</button>
+            <a href="<?= base_url('attendance') ?>" class="btn btn-secondary">Reset</a>
+        </div>
+    </form>
+
+    <!-- Student Table -->
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
             <tr>
