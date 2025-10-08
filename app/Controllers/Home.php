@@ -306,8 +306,8 @@ public function attendance()
 
         // Pass to view
         $data['students'] = $students;
-
-        return view('public/attendance_list', $data);
+echo "hello";
+        // return view('public/attendance_list', $data);
 }
 
 	public function notice()
