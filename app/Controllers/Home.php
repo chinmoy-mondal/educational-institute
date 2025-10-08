@@ -295,55 +295,19 @@ class Home extends BaseController
 
 public function attendance()
 {
-    $studentModel = new \App\Models\StudentModel();
-    $attendanceModel = new \App\Models\AttendanceModel();
+   
+       $studentModel = new StudentModel();
 
-    // Fetch all students
-    $students = $studentModel->orderBy('class', 'ASC')
-                             ->orderBy('section', 'ASC')
-                             ->orderBy('roll', 'ASC')
-                             ->findAll();
+        // Fetch all students ordered by class, section, roll
+        $students = $studentModel->orderBy('class', 'ASC')
+                                 ->orderBy('section', 'ASC')
+                                 ->orderBy('roll', 'ASC')
+                                 ->findAll();
 
-    $data['classes'] = [];
-    $malePresent = $maleTotal = $femalePresent = $femaleTotal = 0;
+        // Pass to view
+        $data['students'] = $students;
 
-    foreach ($students as $st) {
-        $class   = $st['class'];
-        $section = $st['section'];
-        $sid     = $st['id'];
-
-        // Attendance counts
-        $total   = $attendanceModel->where('student_id', $sid)->countAllResults(false);
-        $present = $attendanceModel->where('student_id', $sid)->where('remark', 'P')->countAllResults(false);
-
-        $percentage = ($total > 0) ? round(($present / $total) * 100, 1) : 0;
-
-        // Grouped class/section
-        $data['classes'][$class][$section][] = [
-            'id'         => $sid,
-            'name'       => $st['student_name'],
-            'roll'       => $st['roll'],
-            'gender'     => strtolower($st['gender']),
-            'present'    => $present,
-            'total'      => $total,
-            'percentage' => $percentage,
-        ];
-
-        // Gender summary
-        if (strtolower($st['gender']) === 'male') {
-            $malePresent += $present;
-            $maleTotal   += $total;
-        } elseif (strtolower($st['gender']) === 'female') {
-            $femalePresent += $present;
-            $femaleTotal   += $total;
-        }
-    }
-
-    // Gender attendance percentage
-    $data['malePercentage']   = ($maleTotal > 0)   ? round(($malePresent / $maleTotal) * 100, 1)   : 0;
-    $data['femalePercentage'] = ($femaleTotal > 0) ? round(($femalePresent / $femaleTotal) * 100, 1) : 0;
-
-    return view('public/attendance_list', $data);
+        return view('public/attendance_list', $data);
 }
 
 	public function notice()
