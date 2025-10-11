@@ -2064,7 +2064,7 @@ class Dashboard extends Controller
 		$this->data['selectedDate'] = $selectedDate;
 		$this->data['attendanceMap'] = $attendanceMap;
 
-		return view('admin/attendance_calendar', $this->data);
+		return view('dashboard/attendance_calendar', $this->data);
 	}
 
 	public function saveAttendance()
