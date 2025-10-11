@@ -5,6 +5,21 @@
 
     <h4 class="mb-3">Student Attendance</h4>
 
+    <!-- ✅ Flash Messages -->
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle me-1"></i>
+            <?= session()->getFlashdata('success') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php elseif (session()->getFlashdata('error')): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle me-1"></i>
+            <?= session()->getFlashdata('error') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
+
     <!-- Filter Form -->
     <form method="post" action="<?= site_url('admin/attendance/calendar') ?>" class="d-flex align-items-center gap-2 mb-3 flex-wrap ps-2">
 
@@ -32,47 +47,47 @@
 
     </form>
 
-    <?php if(!empty($students) && !empty($selectedDate) && !empty($selectedClass)): ?>
-    <!-- Attendance Table Form -->
-    <form method="post" action="<?= site_url('admin/attendance/save') ?>">
-        <input type="hidden" name="class" value="<?= $selectedClass ?>">
-        <input type="hidden" name="date" value="<?= $selectedDate ?>">
+    <?php if (!empty($students) && !empty($selectedDate) && !empty($selectedClass)): ?>
+        <!-- Attendance Table Form -->
+        <form method="post" action="<?= site_url('admin/attendance/save') ?>">
+            <input type="hidden" name="class" value="<?= $selectedClass ?>">
+            <input type="hidden" name="date" value="<?= $selectedDate ?>">
 
-        <table class="table table-bordered table-sm">
-            <thead class="table-light text-center">
-                <tr>
-                    <th>Class</th>
-                    <th>Roll</th>
-                    <th class="text-start">Name</th>
-                    <th><?= date('d M Y', strtotime($selectedDate)) ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach($students as $s): 
-                    $studentAttendance = isset($attendanceMap[$s['id']]) && is_array($attendanceMap[$s['id']])
-                        ? $attendanceMap[$s['id']]
-                        : [];
-                    $remark = $studentAttendance[$selectedDate] ?? 'A'; // Default Absent
-                ?>
+            <table class="table table-bordered table-sm">
+                <thead class="table-light text-center">
                     <tr>
-                        <td class="text-center"><?= $selectedClass ?></td>
-                        <td class="text-center"><?= $s['roll'] ?></td>
-                        <td class="text-start"><?= $s['student_name'] ?></td>
-                        <td class="text-center">
-                            <button type="button" 
-                                    class="btn btn-sm <?= $remark=='P'?'btn-success':'btn-danger' ?>" 
-                                    onclick="toggleAttendance(this)">
-                                <?= $remark ?>
-                            </button>
-                            <input type="hidden" name="attendance[<?= $s['id'] ?>][<?= $selectedDate ?>]" value="<?= $remark ?>">
-                        </td>
+                        <th>Class</th>
+                        <th>Roll</th>
+                        <th class="text-start">Name</th>
+                        <th><?= date('d M Y', strtotime($selectedDate)) ?></th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <?php foreach ($students as $s):
+                        $studentAttendance = isset($attendanceMap[$s['id']]) && is_array($attendanceMap[$s['id']])
+                            ? $attendanceMap[$s['id']]
+                            : [];
+                        $remark = $studentAttendance[$selectedDate] ?? 'A'; // Default Absent
+                    ?>
+                        <tr>
+                            <td class="text-center"><?= $selectedClass ?></td>
+                            <td class="text-center"><?= $s['roll'] ?></td>
+                            <td class="text-start"><?= $s['student_name'] ?></td>
+                            <td class="text-center">
+                                <button type="button"
+                                    class="btn btn-sm <?= $remark == 'P' ? 'btn-success' : 'btn-danger' ?>"
+                                    onclick="toggleAttendance(this)">
+                                    <?= $remark ?>
+                                </button>
+                                <input type="hidden" name="attendance[<?= $s['id'] ?>][<?= $selectedDate ?>]" value="<?= $remark ?>">
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
 
-        <button type="submit" class="btn btn-success btn-sm mt-2">Submit Attendance</button>
-    </form>
+            <button type="submit" class="btn btn-success btn-sm mt-2">Submit Attendance</button>
+        </form>
     <?php else: ?>
         <p class="text-muted">Select class and date to show attendance.</p>
     <?php endif; ?>
@@ -80,21 +95,21 @@
 </div>
 
 <script>
-function toggleAttendance(btn) {
-    const input = btn.nextElementSibling; // hidden input
-    let current = btn.innerText;
+    function toggleAttendance(btn) {
+        const input = btn.nextElementSibling; // hidden input
+        let current = btn.innerText;
 
-    // Toggle between P and A
-    if(current === 'P') {
-        btn.innerText = 'A';
-        btn.className = 'btn btn-sm btn-danger';
-    } else {
-        btn.innerText = 'P';
-        btn.className = 'btn btn-sm btn-success';
+        // Toggle between P and A
+        if (current === 'P') {
+            btn.innerText = 'A';
+            btn.className = 'btn btn-sm btn-danger';
+        } else {
+            btn.innerText = 'P';
+            btn.className = 'btn btn-sm btn-success';
+        }
+
+        input.value = btn.innerText;
     }
-
-    input.value = btn.innerText;
-}
 </script>
 
 <?= $this->endSection() ?>
