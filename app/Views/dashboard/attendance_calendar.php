@@ -47,7 +47,10 @@
             </thead>
             <tbody>
                 <?php foreach($students as $s): 
-                    $remark = $attendanceMap[$s['id']][$selectedDate] ?? '';
+                    $studentAttendance = isset($attendanceMap[$s['id']]) && is_array($attendanceMap[$s['id']])
+                        ? $attendanceMap[$s['id']]
+                        : [];
+                    $remark = $studentAttendance[$selectedDate] ?? '';
                 ?>
                     <tr>
                         <td class="text-start"><?= $s['student_name'] ?> (<?= $s['roll'] ?>)</td>
