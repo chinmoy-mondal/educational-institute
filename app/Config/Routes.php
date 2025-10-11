@@ -138,7 +138,7 @@ $routes->get('public-calendar', 'PublicCalendar::index');
 $routes->get('public-calendar/events', 'PublicCalendar::events');
 
 
-$routes->get('admin/attendance/calendar', 'Dashboard::attendanceCalendar');
+$routes->match(['get','post'], 'admin/attendance/calendar', 'Dashboard::attendanceCalendar');
 $routes->post('admin/attendance/save', 'Dashboard::saveAttendance');
 
 $routes->set404Override(function () {
