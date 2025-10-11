@@ -2017,4 +2017,81 @@ class Dashboard extends Controller
 
 		return redirect()->to('admin/notices')->with('success', 'Notice deleted successfully!');
 	}
+
+	public function attendanceCalendar()
+	{
+		helper(['form', 'url']);
+
+		$studentModel = new \App\Models\StudentModel();
+		$attendanceModel = new \App\Models\AttendanceModel();
+
+		$students = $studentModel->findAll();
+		$month = $this->request->getPost('month') ?? date('Y-m');
+		$year = date('Y', strtotime($month));
+		$monthNum = date('m', strtotime($month));
+		$daysInMonth = cal_days_in_month(CAL_GREGORIAN, $monthNum, $year);
+
+		// Get attendance for the month
+		$startDate = "$year-$monthNum-01 00:00:00";
+		$endDate = "$year-$monthNum-$daysInMonth 23:59:59";
+
+		$attendances = $attendanceModel
+			->where('created_at >=', $startDate)
+			->where('created_at <=', $endDate)
+			->findAll();
+
+		// Map attendance: student_id => date => remark(s)
+		$attendanceMap = [];
+		foreach ($attendances as $a) {
+			$date = date('Y-m-d', strtotime($a['created_at']));
+			$attendanceMap[$a['student_id']][$date] = $a['remark'];
+		}
+
+		$data = [
+			'students' => $students,
+			'month' => $month,
+			'year' => $year,
+			'monthNum' => $monthNum,
+			'daysInMonth' => $daysInMonth,
+			'attendanceMap' => $attendanceMap
+		];
+
+		return view('attendance_calendar', $data);
+	}
+
+	public function saveAttendance()
+	{
+		$attendance = $this->request->getPost('attendance');
+		$attendanceModel = new \App\Models\AttendanceModel();
+
+		foreach ($attendance as $studentId => $dates) {
+			foreach ($dates as $date => $remark) {
+				if (!empty($remark)) {
+					// Check if attendance exists for this student and date
+					$existing = $attendanceModel
+						->where('student_id', $studentId)
+						->where('DATE(created_at)', $date)
+						->first();
+
+					if ($existing) {
+						// Update existing
+						$attendanceModel->update($existing['id'], [
+							'remark' => $remark,
+							'updated_at' => date('Y-m-d H:i:s')
+						]);
+					} else {
+						// Insert new
+						$attendanceModel->insert([
+							'student_id' => $studentId,
+							'remark' => $remark,
+							'created_at' => $date . ' 09:00:00', // Default time
+							'updated_at' => date('Y-m-d H:i:s')
+						]);
+					}
+				}
+			}
+		}
+
+		return redirect()->back()->with('success', 'Attendance updated successfully!');
+	}
 }
