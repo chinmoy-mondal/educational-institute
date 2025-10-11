@@ -41,7 +41,9 @@
         <table class="table table-bordered table-sm">
             <thead class="table-light text-center">
                 <tr>
-                    <th class="text-start">Name / Roll</th>
+                    <th>Class</th>
+                    <th>Roll</th>
+                    <th class="text-start">Name</th>
                     <th><?= date('d M Y', strtotime($selectedDate)) ?></th>
                 </tr>
             </thead>
@@ -50,15 +52,17 @@
                     $studentAttendance = isset($attendanceMap[$s['id']]) && is_array($attendanceMap[$s['id']])
                         ? $attendanceMap[$s['id']]
                         : [];
-                    $remark = $studentAttendance[$selectedDate] ?? '';
+                    $remark = $studentAttendance[$selectedDate] ?? 'P'; // default P
                 ?>
                     <tr>
-                        <td class="text-start"><?= $s['student_name'] ?> (<?= $s['roll'] ?>)</td>
+                        <td class="text-center"><?= $selectedClass ?></td>
+                        <td class="text-center"><?= $s['roll'] ?></td>
+                        <td class="text-start"><?= $s['student_name'] ?></td>
                         <td class="text-center">
                             <button type="button" 
-                                    class="btn btn-sm <?= $remark=='P'?'btn-success':($remark=='A'?'btn-danger':($remark=='L'?'btn-warning':'btn-outline-secondary')) ?>" 
+                                    class="btn btn-sm <?= $remark=='P'?'btn-success':'btn-danger' ?>" 
                                     onclick="toggleAttendance(this)">
-                                <?= $remark ?: '-' ?>
+                                <?= $remark ?>
                             </button>
                             <input type="hidden" name="attendance[<?= $s['id'] ?>][<?= $selectedDate ?>]" value="<?= $remark ?>">
                         </td>
@@ -80,22 +84,16 @@ function toggleAttendance(btn) {
     const input = btn.nextElementSibling; // hidden input
     let current = btn.innerText;
 
-    // Cycle: empty -> P -> A -> L -> empty
-    if(current === '' || current === '-') {
-        btn.innerText = 'P';
-        btn.className = 'btn btn-sm btn-success';
-    } else if(current === 'P') {
+    // Toggle between P and A
+    if(current === 'P') {
         btn.innerText = 'A';
         btn.className = 'btn btn-sm btn-danger';
-    } else if(current === 'A') {
-        btn.innerText = 'L';
-        btn.className = 'btn btn-sm btn-warning';
-    } else if(current === 'L') {
-        btn.innerText = '-';
-        btn.className = 'btn btn-sm btn-outline-secondary';
+    } else {
+        btn.innerText = 'P';
+        btn.className = 'btn btn-sm btn-success';
     }
 
-    input.value = btn.innerText === '-' ? '' : btn.innerText;
+    input.value = btn.innerText;
 }
 </script>
 
