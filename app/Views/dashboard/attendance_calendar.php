@@ -13,13 +13,13 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    
+
                     <!-- Filter Form -->
-                    <form method="post" action="<?= site_url('admin/attendance/calendar') ?>" class="d-flex flex-wrap align-items-end gap-2 mb-3">
+                    <form method="post" action="<?= site_url('admin/attendance/calendar') ?>" class="d-flex align-items-center gap-2 mb-3 flex-wrap">
 
                         <!-- Class Selector -->
-                        <div class="form-group">
-                            <label for="class" class="form-label mb-1 fw-bold">Class</label>
+                        <div class="d-flex flex-column">
+                            <label for="class" class="form-label fw-bold mb-0">Class</label>
                             <select name="class" id="class" class="form-select form-select-sm">
                                 <option value="">Select Class</option>
                                 <?php for ($c = 6; $c <= 10; $c++): ?>
@@ -29,13 +29,14 @@
                         </div>
 
                         <!-- Date Picker -->
-                        <div class="form-group">
-                            <label for="date" class="form-label mb-1 fw-bold">Date</label>
+                        <div class="d-flex flex-column">
+                            <label for="date" class="form-label fw-bold mb-0">Date</label>
                             <input type="date" name="date" id="date" value="<?= $selectedDate ?>" class="form-control form-control-sm">
                         </div>
 
                         <!-- Submit Button -->
-                        <div class="form-group align-self-end">
+                        <div class="d-flex flex-column align-items-start">
+                            <label class="form-label mb-0">&nbsp;</label> <!-- empty label to align with inputs -->
                             <button type="submit" class="btn btn-primary btn-sm">
                                 <i class="fas fa-calendar-alt me-1"></i> Show
                             </button>
