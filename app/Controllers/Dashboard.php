@@ -2030,49 +2030,41 @@ class Dashboard extends Controller
 
 	public function attendanceCalendar()
 	{
-		helper(['form', 'url']);
-
-		// 🔹 Dashboard / Page values
-		$this->data['title']         = 'Attendance';
+		$this->data['title'] = 'Attendance';
 		$this->data['activeSection'] = 'attendance';
-		$this->data['navbarItems']   = [
+		$this->data['navbarItems'] = [
 			['label' => 'Attendance', 'url' => base_url('attendance')],
 		];
 
-		// 🔹 Determine month (default = current month)
-		$month     = $this->request->getPost('month') ?? date('Y-m');
-		$year      = date('Y', strtotime($month));
-		$monthNum  = date('m', strtotime($month));
-		$daysInMonth = cal_days_in_month(CAL_GREGORIAN, $monthNum, $year);
+		helper(['form', 'url']);
 
-		// 🔹 Define date range for attendance records
-		$startDate = "$year-$monthNum-01 00:00:00";
-		$endDate   = "$year-$monthNum-$daysInMonth 23:59:59";
+		// Get POST values
+		$selectedClass = $this->request->getPost('class') ?? '';
+		$selectedDate  = $this->request->getPost('date') ?? date('Y-m-d');
 
-		// 🔹 Fetch students and attendance
-		$students = $this->studentModel->findAll();
+		// Filter students by class
+		$students = $selectedClass
+			? $this->studentModel->where('class', $selectedClass)->findAll()
+			: $this->studentModel->findAll();
+
+		// Get attendance for that date
 		$attendances = $this->attendanceModel
-			->where('created_at >=', $startDate)
-			->where('created_at <=', $endDate)
+			->where('created_at >=', $selectedDate . ' 00:00:00')
+			->where('created_at <=', $selectedDate . ' 23:59:59')
 			->findAll();
 
-		// 🔹 Build attendance map: student_id → date → remark
+		// Map attendance: student_id => remark
 		$attendanceMap = [];
 		foreach ($attendances as $a) {
-			$date = date('Y-m-d', strtotime($a['created_at']));
-			$attendanceMap[$a['student_id']][$date] = $a['remark'];
+			$attendanceMap[$a['student_id']] = $a['remark'];
 		}
 
-		// 🔹 Assign data to $this->data for the view
-		$this->data['students']      = $students;
-		$this->data['month']         = $month;
-		$this->data['year']          = $year;
-		$this->data['monthNum']      = $monthNum;
-		$this->data['daysInMonth']   = $daysInMonth;
+		$this->data['students'] = $students;
+		$this->data['selectedClass'] = $selectedClass;
+		$this->data['selectedDate'] = $selectedDate;
 		$this->data['attendanceMap'] = $attendanceMap;
 
-		// 🔹 Load the view
-		return view('dashboard/attendance_calendar', $this->data);
+		return view('admin/attendance_calendar', $this->data);
 	}
 
 	public function saveAttendance()
