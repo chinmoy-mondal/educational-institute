@@ -11,6 +11,7 @@ use App\Models\ResultModel;
 use App\Models\CalendarModel;
 use App\Models\MarkingOpenModel;
 use App\Models\NoticeModel;
+use App\Models\AttendanceModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Dashboard extends Controller
@@ -22,6 +23,8 @@ class Dashboard extends Controller
 	protected $calendarModel;
 	protected $noticeModel;
 	protected $markingModel;
+	protected $attendanceModel;
+
 	protected $session;
 	protected $data;
 
@@ -34,6 +37,7 @@ class Dashboard extends Controller
 		$this->calendarModel   = new CalendarModel();
 		$this->noticeModel   = new NoticeModel();
 		$this->markingModel = new MarkingOpenModel();
+		$this->attendanceModel = new AttendanceModel();
 
 
 		$this->session       = session();
@@ -68,6 +72,12 @@ class Dashboard extends Controller
 				'url' => base_url('admin/student'),
 				'icon' => 'fas fa-user-graduate',
 				'section' => 'student'
+			],
+			[
+				'label' => 'Attendance',
+				'url' => base_url('calendar'),
+				'icon' => 'fas fa-clock',
+				'section' => 'attendance'
 			],
 			[
 				'label' => 'Calendar',
@@ -2022,41 +2032,47 @@ class Dashboard extends Controller
 	{
 		helper(['form', 'url']);
 
-		$studentModel = new \App\Models\StudentModel();
-		$attendanceModel = new \App\Models\AttendanceModel();
+		// 🔹 Dashboard / Page values
+		$this->data['title']         = 'Attendance';
+		$this->data['activeSection'] = 'attendance';
+		$this->data['navbarItems']   = [
+			['label' => 'Attendance', 'url' => base_url('attendance')],
+		];
 
-		$students = $studentModel->findAll();
-		$month = $this->request->getPost('month') ?? date('Y-m');
-		$year = date('Y', strtotime($month));
-		$monthNum = date('m', strtotime($month));
+		// 🔹 Determine month (default = current month)
+		$month     = $this->request->getPost('month') ?? date('Y-m');
+		$year      = date('Y', strtotime($month));
+		$monthNum  = date('m', strtotime($month));
 		$daysInMonth = cal_days_in_month(CAL_GREGORIAN, $monthNum, $year);
 
-		// Get attendance for the month
+		// 🔹 Define date range for attendance records
 		$startDate = "$year-$monthNum-01 00:00:00";
-		$endDate = "$year-$monthNum-$daysInMonth 23:59:59";
+		$endDate   = "$year-$monthNum-$daysInMonth 23:59:59";
 
-		$attendances = $attendanceModel
+		// 🔹 Fetch students and attendance
+		$students = $this->studentModel->findAll();
+		$attendances = $this->attendanceModel
 			->where('created_at >=', $startDate)
 			->where('created_at <=', $endDate)
 			->findAll();
 
-		// Map attendance: student_id => date => remark(s)
+		// 🔹 Build attendance map: student_id → date → remark
 		$attendanceMap = [];
 		foreach ($attendances as $a) {
 			$date = date('Y-m-d', strtotime($a['created_at']));
 			$attendanceMap[$a['student_id']][$date] = $a['remark'];
 		}
 
-		$data = [
-			'students' => $students,
-			'month' => $month,
-			'year' => $year,
-			'monthNum' => $monthNum,
-			'daysInMonth' => $daysInMonth,
-			'attendanceMap' => $attendanceMap
-		];
+		// 🔹 Assign data to $this->data for the view
+		$this->data['students']      = $students;
+		$this->data['month']         = $month;
+		$this->data['year']          = $year;
+		$this->data['monthNum']      = $monthNum;
+		$this->data['daysInMonth']   = $daysInMonth;
+		$this->data['attendanceMap'] = $attendanceMap;
 
-		return view('attendance_calendar', $data);
+		// 🔹 Load the view
+		return view('attendance_calendar', $this->data);
 	}
 
 	public function saveAttendance()
