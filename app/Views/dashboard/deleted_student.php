@@ -129,6 +129,11 @@
 											onclick="return confirm('Are you sure you want to activate this student?');">
 											<i class="fas fa-check"></i> Active
 										</a>
+										<a href="<?= site_url('admin/students/harddelete/' . $s['id']) ?>"
+											class="btn btn-success btn-sm"
+											onclick="return confirm('Are you sure you want to hard delete this student?');">
+											<i class="fas fa-check"></i> Delete
+										</a>
 									</td>
 								</tr>
 							<?php endforeach ?>

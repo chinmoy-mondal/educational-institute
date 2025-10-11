@@ -766,7 +766,7 @@ class Dashboard extends Controller
 			'dob'          => $this->request->getPost('dob'),
 			'gender'       => $this->request->getPost('gender'),
 			'phone'        => $this->request->getPost('phone'),
-			'student_pic'  => 'uploads/students/'.$fileName,
+			'student_pic'  => 'uploads/students/' . $fileName,
 			'birth_registration_number' => $this->request->getPost('birth_registration_number'),
 			'father_nid_number'         => $this->request->getPost('father_nid_number'),
 			'mother_nid_number'         => $this->request->getPost('mother_nid_number'),
@@ -884,6 +884,34 @@ class Dashboard extends Controller
 		}
 
 		return redirect()->back()->with('error', 'Student not found');
+	}
+
+	public function hardDelete($id)
+	{
+		// Load student record
+		$student = $this->studentModel->find($id);
+
+		if ($student) {
+			// Check if student has a photo
+			if (!empty($student['student_pic'])) {
+				// Build full path to the file
+				$photoPath = FCPATH . $student['student_pic'];
+
+				// If file exists, delete it
+				if (file_exists($photoPath)) {
+					unlink($photoPath);
+				}
+			}
+
+			// Delete student record from database
+			$this->studentModel->delete($id);
+
+			// Redirect with success message
+			return redirect()->back()->with('success', 'Student and picture deleted successfully.');
+		}
+
+		// If student not found
+		return redirect()->back()->with('error', 'Student not found.');
 	}
 
 	public function deleted_student()

@@ -119,6 +119,7 @@ $routes->group('admin', function ($routes) {
 
 $routes->get('admin/students/delete/(:num)', 'Dashboard::softDelete/$1');
 $routes->get('admin/students/active/(:num)', 'Dashboard::softActive/$1');
+$routes->get('admin/students/harddelete/(:num)', 'Dashboard::hardDelete/$1');
 
 $routes->get('admin/notices', 'Dashboard::notices');
 $routes->get('admin/noticeForm', 'Dashboard::noticeForm');
