@@ -75,7 +75,7 @@ class Dashboard extends Controller
 			],
 			[
 				'label' => 'Attendance',
-				'url' => base_url('calendar'),
+				'url' => base_url('admin/attendance/calendar'),
 				'icon' => 'fas fa-clock',
 				'section' => 'attendance'
 			],
