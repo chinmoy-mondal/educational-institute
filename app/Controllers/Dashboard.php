@@ -2072,7 +2072,7 @@ class Dashboard extends Controller
 		$this->data['attendanceMap'] = $attendanceMap;
 
 		// 🔹 Load the view
-		return view('attendance_calendar', $this->data);
+		return view('dashboard/attendance_calendar', $this->data);
 	}
 
 	public function saveAttendance()
