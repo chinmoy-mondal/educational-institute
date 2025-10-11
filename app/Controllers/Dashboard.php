@@ -2074,25 +2074,38 @@ class Dashboard extends Controller
 
 		foreach ($attendance as $studentId => $dates) {
 			foreach ($dates as $date => $remark) {
-				if (!empty($remark)) {
-					// Check if attendance exists for this student and date
-					$existing = $attendanceModel
+
+				// Only process if student is Present (P)
+				if ($remark === 'P') {
+
+					// --- First record: Attend at 10:00 AM ---
+					$attendExists = $attendanceModel
 						->where('student_id', $studentId)
+						->where('remark', 'A')
 						->where('DATE(created_at)', $date)
 						->first();
 
-					if ($existing) {
-						// Update existing
-						$attendanceModel->update($existing['id'], [
-							'remark' => $remark,
-							'updated_at' => date('Y-m-d H:i:s')
-						]);
-					} else {
-						// Insert new
+					if (!$attendExists) {
 						$attendanceModel->insert([
 							'student_id' => $studentId,
-							'remark' => $remark,
-							'created_at' => $date . ' 09:00:00', // Default time
+							'remark' => 'A', // Attend
+							'created_at' => $date . ' 10:00:00',
+							'updated_at' => date('Y-m-d H:i:s')
+						]);
+					}
+
+					// --- Second record: Leave at 4:00 PM ---
+					$leaveExists = $attendanceModel
+						->where('student_id', $studentId)
+						->where('remark', 'L')
+						->where('DATE(created_at)', $date)
+						->first();
+
+					if (!$leaveExists) {
+						$attendanceModel->insert([
+							'student_id' => $studentId,
+							'remark' => 'L', // Leave
+							'created_at' => $date . ' 16:00:00',
 							'updated_at' => date('Y-m-d H:i:s')
 						]);
 					}
