@@ -766,7 +766,7 @@ class Dashboard extends Controller
 			'dob'          => $this->request->getPost('dob'),
 			'gender'       => $this->request->getPost('gender'),
 			'phone'        => $this->request->getPost('phone'),
-			'student_pic'  => $fileName,
+			'student_pic'  => 'uploads/students'.$fileName,
 			'birth_registration_number' => $this->request->getPost('birth_registration_number'),
 			'father_nid_number'         => $this->request->getPost('father_nid_number'),
 			'mother_nid_number'         => $this->request->getPost('mother_nid_number'),
