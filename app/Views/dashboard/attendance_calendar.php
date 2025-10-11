@@ -5,8 +5,12 @@
   <div class="row justify-content-center">
     <div class="col-md-10">
       <div class="card shadow border-0 rounded-3">
-        <div class="card-header bg-primary text-white">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
           <h5 class="mb-0"><i class="fas fa-user-check me-2"></i> Attendance</h5>
+          <!-- Show selected Class and Date -->
+          <div class="text-white fw-bold">
+            Class: <?= $selectedClass ?: 'All' ?> &nbsp; | &nbsp; Date: <?= $selectedDate ?>
+          </div>
         </div>
         <div class="card-body">
 
@@ -38,10 +42,11 @@
             <input type="hidden" name="class" value="<?= $selectedClass ?>">
 
             <div class="table-responsive">
-              <table class="table table-bordered table-sm align-middle">
-                <thead class="table-light text-center">
+              <table class="table table-bordered table-sm align-middle text-center">
+                <thead class="table-light">
                   <tr>
-                    <th>Name / Roll</th>
+                    <th>Roll</th>
+                    <th>Name</th>
                     <th>Attendance</th>
                   </tr>
                 </thead>
@@ -50,8 +55,9 @@
                     $remark = $attendanceMap[$s['id']] ?? '';
                   ?>
                     <tr>
-                      <td><?= esc($s['student_name']) ?> (<?= esc($s['roll']) ?>)</td>
-                      <td class="text-center">
+                      <td><?= esc($s['roll']) ?></td>
+                      <td><?= esc($s['student_name']) ?></td>
+                      <td>
                         <select name="attendance[<?= $s['id'] ?>]" class="form-select form-select-sm">
                           <option value="">--</option>
                           <option value="P" <?= $remark=='P'?'selected':'' ?>>P</option>
