@@ -138,12 +138,10 @@ $routes->get('public-calendar', 'PublicCalendar::index');
 $routes->get('public-calendar/events', 'PublicCalendar::events');
 
 
-// Attendance Calendar page (show table & select month)
-$routes->match(['get', 'post'], 'admin/attendance/calendar', 'Dashboard::attendanceCalendar', ['as' => 'attendance.calendar']);
+$routes->match(['get', 'post'], 'admin/attendance/calendar', 'Dashboard::attendanceCalendar');
 
-// Save attendance (submit form)
-$routes->post('admin/attendance/save', 'Dashboard::saveAttendance', ['as' => 'attendance.save']);
 
+$routes->post('admin/attendance/save', 'Dashboard::saveAttendance');
 
 $routes->set404Override(function () {
     $controller = new \App\Controllers\ErrorController();
