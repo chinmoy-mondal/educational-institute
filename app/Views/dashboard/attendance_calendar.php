@@ -52,7 +52,7 @@
                     $studentAttendance = isset($attendanceMap[$s['id']]) && is_array($attendanceMap[$s['id']])
                         ? $attendanceMap[$s['id']]
                         : [];
-                    $remark = $studentAttendance[$selectedDate] ?? 'P'; // default P
+                    $remark = $studentAttendance[$selectedDate] ?? 'A'; // Default Absent
                 ?>
                     <tr>
                         <td class="text-center"><?= $selectedClass ?></td>
