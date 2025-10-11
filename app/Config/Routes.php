@@ -36,10 +36,7 @@ $routes->get('subjects', 'Home::subjects');
 $routes->get('course-details/(:num)', 'Home::courseDetails/$1');
 $routes->get('activity-details/(:num)', 'Home::activityDetails/$1');
 
-$routes->group('admin', function ($routes) {
-    $routes->get('student/create', 'Dashboard::createStudentForm');
-    $routes->post('students/save', 'Dashboard::saveStudent');
-});
+
 
 
 // Migration DevTools routes (protected by secret key)
@@ -114,6 +111,11 @@ $routes->post('admin/students/edit-photo/(:num)', 'Dashboard::updateStudentPhoto
 $routes->post('admin/students/forth/(:num)', 'Dashboard::forthsub/$1');
 $routes->get('admin/stAssaginSubView', 'Dashboard::stAssaginSubView');
 $routes->post('admin/assignStudentsSubjects', 'Dashboard::assignStudentsSubjects');
+
+$routes->group('admin', function ($routes) {
+    $routes->get('student/create', 'Dashboard::createStudentForm');
+    $routes->post('students/save', 'Dashboard::saveStudent');
+});
 
 $routes->get('admin/students/delete/(:num)', 'Dashboard::softDelete/$1');
 $routes->get('admin/students/active/(:num)', 'Dashboard::softActive/$1');

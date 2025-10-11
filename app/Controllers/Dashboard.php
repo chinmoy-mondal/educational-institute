@@ -775,7 +775,7 @@ class Dashboard extends Controller
 		// Save to DB
 		$this->studentModel->insert($data);
 
-		return redirect()->to(site_url('admin/students'))->with('success', 'Student registered successfully!');
+		return redirect()->to(site_url('admin/student/create'))->with('success', 'Student registered successfully!');
 	}
 
 	public function student()
