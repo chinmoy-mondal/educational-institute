@@ -2047,16 +2047,20 @@ class Dashboard extends Controller
 			? $this->studentModel->where('class', $selectedClass)->findAll()
 			: $this->studentModel->findAll();
 
-		// Get attendance for that date
+		// Get attendance records for that date
 		$attendances = $this->attendanceModel
+			->select('student_id, remark, DATE(created_at) as date')
 			->where('created_at >=', $selectedDate . ' 00:00:00')
 			->where('created_at <=', $selectedDate . ' 23:59:59')
 			->findAll();
 
-		// Map attendance: student_id => remark
+		// Map attendance data
 		$attendanceMap = [];
 		foreach ($attendances as $a) {
-			$attendanceMap[$a['student_id']] = $a['remark'];
+			if (!isset($attendanceMap[$a['student_id']])) {
+				$attendanceMap[$a['student_id']] = [];
+			}
+			$attendanceMap[$a['student_id']][] = $a['remark']; // store both A and L if exist
 		}
 
 		$this->data['students'] = $students;
@@ -2103,7 +2107,7 @@ class Dashboard extends Controller
 
 					// --- 2️⃣ Leave Record (4:00 PM) ---
 					$leaveDateTime = $date . ' 16:00:00';
-					$leaveExists = $this->attendanceModel 
+					$leaveExists = $this->attendanceModel
 						->where('student_id', $studentId)
 						->where('remark', 'L')
 						->where('DATE(created_at)', $date)

@@ -67,7 +67,8 @@
                         $studentAttendance = isset($attendanceMap[$s['id']]) && is_array($attendanceMap[$s['id']])
                             ? $attendanceMap[$s['id']]
                             : [];
-                        $remark = $studentAttendance[$selectedDate] ?? 'A'; // Default Absent
+                        $remarks = $attendanceMap[$s['id']] ?? [];
+                        $remark = (in_array('A', $remarks) && in_array('L', $remarks)) ? 'P' : 'A';
                     ?>
                         <tr>
                             <td class="text-center"><?= $selectedClass ?></td>
