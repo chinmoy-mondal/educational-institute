@@ -21,46 +21,34 @@
     <?php endif; ?>
 
     <!-- ✅ Filter Form -->
-    <form method="post" action="<?= site_url('admin/attendance/calendar') ?>"
-          class="d-flex align-items-center flex-wrap gap-2 mb-3 ps-2">
+    <form action="<?= base_url('admin/attendance/calendar') ?>" method="post" class="d-flex flex-wrap align-items-center gap-3 mb-3">
 
-        <!-- Class Selector -->
-        <div class="form-group mb-0 me-2">
-            <select name="class" id="class" class="form-select form-select-sm" style="height: 34px;">
+        <!-- Class Select -->
+        <div>
+            <label for="class" class="form-label mb-1">Class</label>
+            <select name="class" id="class" class="form-select">
                 <option value="">Select Class</option>
-                <?php for ($c = 6; $c <= 10; $c++): ?>
-                    <option value="<?= $c ?>" <?= ($selectedClass ?? '') == $c ? 'selected' : '' ?>>Class <?= $c ?></option>
+                <?php for ($i = 1; $i <= 9; $i++): ?>
+                    <option value="<?= $i ?>">Class <?= $i ?></option>
                 <?php endfor; ?>
             </select>
         </div>
 
-        <!-- Date Picker -->
-        <div class="form-group mb-0 me-2">
-            <input type="date" name="date" id="date"
-                   value="<?= $selectedDate ?? '' ?>"
-                   class="form-control form-control-sm"
-                   style="height: 34px;">
+        <!-- Date Input -->
+        <div>
+            <label for="date" class="form-label mb-1">Date</label>
+            <input type="date" name="date" id="date" class="form-control">
         </div>
 
         <!-- Show Button -->
-        <div class="form-group mb-0 me-2">
-            <button type="submit" class="btn btn-primary btn-sm" style="height: 34px;">
-                <i class="fas fa-calendar-alt me-1"></i> Show
-            </button>
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Show</button>
         </div>
 
-        <!-- ✅ All Present / All Absent Buttons -->
-        <div class="form-group mb-0 d-flex align-items-center gap-2">
-            <button type="button" class="btn btn-success btn-sm" style="height: 34px;"
-                    onclick="setAllAttendance('P')">
-                <i class="fas fa-user-check me-1"></i> All Present
-            </button>
-            <button type="button" class="btn btn-danger btn-sm" style="height: 34px;"
-                    onclick="setAllAttendance('A')">
-                <i class="fas fa-user-times me-1"></i> All Absent
-            </button>
+        <!-- All Present Button -->
+        <div class="mt-4">
+            <button type="button" class="btn btn-success">All Present</button>
         </div>
-
     </form>
 
     <?php if (!empty($students) && !empty($selectedDate) && !empty($selectedClass)): ?>
