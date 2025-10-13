@@ -7,8 +7,8 @@
 
 <div class="page-title text-center py-5 bg-light">
   <div class="container">
-    <h2 class="fw-bold text-primary">Daily Attendance</h2>
-    <p class="text-muted mb-0">Select class and date to view student attendance</p>
+    <h2 class="fw-bold text-primary">Monthly Attendance Report</h2>
+    <p class="text-muted mb-0">Select class and month to view full attendance</p>
   </div>
 </div>
 
@@ -29,7 +29,7 @@
       </div>
 
       <div class="col-md-3">
-        <input type="date" name="date" class="form-control" value="<?= esc($selectedDate) ?>">
+        <input type="month" name="month" class="form-control" value="<?= esc($selectedMonth) ?>">
       </div>
 
       <div class="col-md-2 d-grid">
@@ -37,48 +37,65 @@
       </div>
     </form>
 
-    <!-- Attendance Table -->
     <?php if (!empty($students)): ?>
-      <div class="table-responsive shadow-sm">
-        <table class="table table-bordered align-middle text-center">
-          <thead class="table-dark">
+      <div class="table-responsive shadow-sm" style="max-height: 70vh; overflow:auto;">
+        <table class="table table-bordered align-middle text-center table-sm">
+          <thead class="table-dark sticky-top">
             <tr>
               <th>#</th>
               <th>Student Name</th>
               <th>Roll</th>
-              <th>Class</th>
-              <th>Section</th>
-              <th>Status</th>
+              <?php foreach ($dates as $d): ?>
+                <th><?= date('d', strtotime($d)) ?></th>
+              <?php endforeach; ?>
+              <th>Total P</th>
+              <th>Total A</th>
+              <th>Total L</th>
+              <th>Total E</th>
             </tr>
           </thead>
           <tbody>
             <?php $i = 1; foreach ($students as $student): ?>
+              <?php
+                $p = $a = $l = $e = 0;
+              ?>
               <tr>
                 <td><?= $i++ ?></td>
                 <td class="text-start"><?= esc($student['student_name']) ?></td>
                 <td><?= esc($student['roll']) ?></td>
-                <td><?= esc($student['class']) ?></td>
-                <td><?= esc($student['section']) ?></td>
-                <td>
-                  <?php
-                    $status = $student['status'];
-                    $badgeClass = match($status) {
-                      'P' => 'bg-success',
-                      'A' => 'bg-danger',
-                      'Late In' => 'bg-warning text-dark',
-                      'Early Leave' => 'bg-info text-dark',
-                      default => 'bg-secondary'
-                    };
-                  ?>
-                  <span class="badge <?= $badgeClass ?> px-3 py-2"><?= esc($status) ?></span>
-                </td>
+
+                <?php foreach ($dates as $d): 
+                  $st = $student['days'][$d];
+                  if ($st == 'P') $p++;
+                  elseif ($st == 'A') $a++;
+                  elseif ($st == 'L') $l++;
+                  elseif ($st == 'E') $e++;
+                ?>
+                  <td>
+                    <?php
+                      $badgeClass = match($st) {
+                        'P' => 'bg-success text-white',
+                        'A' => 'bg-danger text-white',
+                        'L' => 'bg-warning text-dark',
+                        'E' => 'bg-info text-dark',
+                        default => 'bg-secondary text-white'
+                      };
+                    ?>
+                    <span class="badge <?= $badgeClass ?>"><?= esc($st) ?></span>
+                  </td>
+                <?php endforeach; ?>
+
+                <td><strong class="text-success"><?= $p ?></strong></td>
+                <td><strong class="text-danger"><?= $a ?></strong></td>
+                <td><strong class="text-warning"><?= $l ?></strong></td>
+                <td><strong class="text-info"><?= $e ?></strong></td>
               </tr>
             <?php endforeach; ?>
           </tbody>
         </table>
       </div>
     <?php else: ?>
-      <div class="alert alert-info text-center">No records found for the selected date or class.</div>
+      <div class="alert alert-info text-center">No students found for this month or class.</div>
     <?php endif; ?>
 
   </div>

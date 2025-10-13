@@ -300,75 +300,89 @@ class Home extends BaseController
 		]);
 	}
 
-public function attendance()
-{
-    $studentModel = new \App\Models\StudentModel();
-    $attendanceModel = new \App\Models\AttendanceModel();
+	public function attendance()
+	{
+		$studentModel = new \App\Models\StudentModel();
+		$attendanceModel = new \App\Models\AttendanceModel();
 
-    // Get filters
-    $class = $this->request->getGet('class');
-    $date = $this->request->getGet('date') ?? date('Y-m-d'); // default = today
+		// Get filters
+		$class = $this->request->getGet('class');
+		$month = $this->request->getGet('month') ?? date('Y-m'); // e.g. "2025-10"
 
-    // Base query for students
-    $builder = $studentModel->where('permission', 0);
-    if (!empty($class)) {
-        $builder->where('class', $class);
-    }
+		// Determine month range
+		$startDate = $month . '-01';
+		$endDate = date('Y-m-t', strtotime($startDate)); // last day of month
 
-    $students = $builder->orderBy('roll', 'ASC')->findAll();
-    $classes = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->findAll();
+		// Base student query
+		$builder = $studentModel->where('permission', 0);
+		if (!empty($class)) {
+			$builder->where('class', $class);
+		}
 
-    $attendanceData = [];
+		$students = $builder->orderBy('roll', 'ASC')->findAll();
+		$classes = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->findAll();
 
-    foreach ($students as $student) {
-        // Get all attendance entries for this student on selected date
-        $records = $attendanceModel
-            ->where('student_id', $student['id'])
-            ->where('DATE(created_at)', $date)
-            ->orderBy('created_at', 'ASC')
-            ->findAll();
+		// Prepare date list for the month
+		$dates = [];
+		$daysInMonth = date('t', strtotime($startDate));
+		for ($i = 1; $i <= $daysInMonth; $i++) {
+			$dates[] = date('Y-m-d', strtotime("$month-$i"));
+		}
 
-        $status = 'A'; // Default Absent
+		$attendanceData = [];
 
-        if (!empty($records)) {
-            $first = strtotime($records[0]['created_at']);
-            $last = strtotime(end($records)['created_at']);
+		foreach ($students as $student) {
+			$dailyStatus = [];
 
-            $timeIn = date('H:i', $first);
-            $timeOut = date('H:i', $last);
+			foreach ($dates as $d) {
+				$records = $attendanceModel
+					->where('student_id', $student['id'])
+					->where('DATE(created_at)', $d)
+					->orderBy('created_at', 'ASC')
+					->findAll();
 
-            if ($timeIn <= '10:00' && $timeOut >= '16:00') {
-                $status = 'P'; // Present
-            } elseif ($timeIn > '10:00' && $timeIn <= '11:00') {
-                $status = 'Late In';
-            } elseif ($timeOut < '16:00' && $timeOut >= '15:00') {
-                $status = 'Early Leave';
-            } elseif ($timeIn > '11:00' && $timeIn < '15:00') {
-                $status = 'Late In';
-            } else {
-                $status = 'P'; // fallback
-            }
-        }
+				$status = 'A'; // Default Absent
 
-        $attendanceData[] = [
-            'id' => $student['id'],
-            'student_name' => $student['student_name'],
-            'roll' => $student['roll'],
-            'class' => $student['class'],
-            'section' => $student['section'],
-            'status' => $status,
-        ];
-    }
+				if (!empty($records)) {
+					$first = strtotime($records[0]['created_at']);
+					$last = strtotime(end($records)['created_at']);
+					$timeIn = date('H:i', $first);
+					$timeOut = date('H:i', $last);
 
-    $data = [
-        'students' => $attendanceData,
-        'classes' => $classes,
-        'selectedClass' => $class,
-        'selectedDate' => $date,
-    ];
+					if ($timeIn <= '10:00' && $timeOut >= '16:00') {
+						$status = 'P'; // Present
+					} elseif ($timeIn > '10:00' && $timeIn <= '11:00') {
+						$status = 'L'; // Late In
+					} elseif ($timeOut < '16:00' && $timeOut >= '15:00') {
+						$status = 'E'; // Early Leave
+					} else {
+						$status = 'P';
+					}
+				}
 
-    return view('public/attendance_list', $data);
-}
+				$dailyStatus[$d] = $status;
+			}
+
+			$attendanceData[] = [
+				'id' => $student['id'],
+				'student_name' => $student['student_name'],
+				'roll' => $student['roll'],
+				'class' => $student['class'],
+				'section' => $student['section'],
+				'days' => $dailyStatus,
+			];
+		}
+
+		$data = [
+			'students' => $attendanceData,
+			'classes' => $classes,
+			'selectedClass' => $class,
+			'selectedMonth' => $month,
+			'dates' => $dates,
+		];
+
+		return view('public/attendance_list', $data);
+	}
 
 	public function notice()
 	{
