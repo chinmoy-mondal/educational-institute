@@ -125,7 +125,9 @@ class Home extends BaseController
 	public function student_stat()
 	{
 		$studentModel = new StudentModel();
-		$students = $studentModel->findAll();
+		$students = $studentModel
+			->where('permission', 0)  // only students with permission = 0
+			->findAll();
 
 		$classSummary = [];
 
@@ -180,6 +182,7 @@ class Home extends BaseController
 
 		$students = $studentModel
 			->where('id', $q)
+			->where('permission', 0)  // only students with permission = 0
 			->findAll();
 
 		return view('public/student_portal', [
@@ -195,7 +198,10 @@ class Home extends BaseController
 	public function idCard($id)
 	{
 		$studentModel = new StudentModel();
-		$student = $studentModel->find($id);
+		$student = $studentModel
+			->where('id', $id)
+			->where('permission', 0)  // only if permission = 0
+			->first();
 
 		if (!$student) {
 			echo "no result found";
@@ -249,7 +255,8 @@ class Home extends BaseController
 
 
 
-		$studentModel->where('class', $class);
+		$studentModel->where('class', $class)
+			->where('permission', 0); // only students with permission = 0
 
 		if (strtolower($section) === 'general') {
 			// Exclude any section containing "Vocational"
@@ -293,44 +300,44 @@ class Home extends BaseController
 		]);
 	}
 
-public function attendance()
-{
-    $studentModel = new \App\Models\StudentModel();
+	public function attendance()
+	{
+		$studentModel = new StudentModel();
 
-    // Get filter values from GET request
-    $class = $this->request->getGet('class');
-    $section = $this->request->getGet('section');
+		// Get filter values from GET request
+		$class = $this->request->getGet('class');
+		$section = $this->request->getGet('section');
 
-    $builder = $studentModel;
+		$builder = $studentModel;
 
-    if(!empty($class)) {
-        $builder = $builder->where('class', $class);
-    }
+		if (!empty($class)) {
+			$builder = $builder->where('class', $class);
+		}
 
-    if(!empty($section)) {
-        $builder = $builder->where('section', $section);
-    }
+		if (!empty($section)) {
+			$builder = $builder->where('section', $section);
+		}
 
-    // Fetch students ordered by class, section, roll
-    $students = $builder->orderBy('class', 'ASC')
-                        ->orderBy('section', 'ASC')
-                        ->orderBy('roll', 'ASC')
-                        ->findAll();
+		// Fetch students ordered by class, section, roll
+		$students = $builder->orderBy('class', 'ASC')
+			->orderBy('section', 'ASC')
+			->orderBy('roll', 'ASC')
+			->findAll();
 
-    // Fetch distinct classes and sections for the select options
-    $classes = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->findAll();
-    $sections = $studentModel->select('section')->distinct()->orderBy('section', 'ASC')->findAll();
+		// Fetch distinct classes and sections for the select options
+		$classes = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->findAll();
+		$sections = $studentModel->select('section')->distinct()->orderBy('section', 'ASC')->findAll();
 
-    $data = [
-        'students' => $students,
-        'classes' => $classes,
-        'sections' => $sections,
-        'selectedClass' => $class,
-        'selectedSection' => $section
-    ];
+		$data = [
+			'students' => $students,
+			'classes' => $classes,
+			'sections' => $sections,
+			'selectedClass' => $class,
+			'selectedSection' => $section
+		];
 
-    return view('public/attendance_list', $data);
-}
+		return view('public/attendance_list', $data);
+	}
 
 	public function notice()
 	{
