@@ -38,7 +38,7 @@
     <!-- Legend -->
     <div class="mb-3 text-center">
       <span class="badge bg-success">P = Present</span>
-      <span class="badge bg-secondary">A = Absent</span>
+      <span class="badge bg-secondary">A = Absent</span> 
       <span class="badge bg-warning text-dark">L = Late In</span>
       <span class="badge bg-info text-dark">E = Early Out</span>
       <span class="badge bg-primary">L/E = Late/Early</span>
