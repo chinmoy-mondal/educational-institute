@@ -1,7 +1,6 @@
 <?= $this->extend("layouts/base.php") ?>
 <?= $this->section("content") ?>
 
-<!-- Header -->
 <div class="fixed-header">
   <?= $this->include("layouts/base-structure/header") ?>
 </div>
@@ -9,103 +8,96 @@
 <div class="page-title text-center py-5 bg-light">
   <div class="container">
     <h2 class="fw-bold text-primary">Monthly Attendance Report</h2>
-    <p class="text-muted mb-0">Select month and class to view attendance summary</p>
+    <p class="text-muted mb-0">Select class and month to view full attendance</p>
   </div>
 </div>
 
 <section class="py-5">
   <div class="container">
-    <!-- Filter -->
-    <form method="get" class="row g-2 mb-4 justify-content-center">
+
+    <!-- Filter Form -->
+    <form method="get" class="row g-3 mb-4 justify-content-center">
       <div class="col-md-3">
         <select name="class" class="form-select">
-          <option value="">All Classes</option>
-          <?php foreach($classes as $c): ?>
+          <option value="">Select Class</option>
+          <?php foreach ($classes as $c): ?>
             <option value="<?= esc($c['class']) ?>" <?= ($selectedClass == $c['class']) ? 'selected' : '' ?>>
-              <?= esc($c['class']) ?>
+              Class <?= esc($c['class']) ?>
             </option>
           <?php endforeach; ?>
         </select>
       </div>
+
       <div class="col-md-3">
         <input type="month" name="month" class="form-control" value="<?= esc($selectedMonth) ?>">
       </div>
+
       <div class="col-md-2 d-grid">
         <button type="submit" class="btn btn-primary">Show</button>
       </div>
     </form>
 
-    <!-- Attendance Table -->
-    <div class="table-responsive shadow-sm">
-      <table class="table table-bordered text-center align-middle small">
-        <thead class="table-dark sticky-top">
-          <tr>
-            <th>Roll</th>
-            <th>Student Name</th>
-            <?php foreach($daysInMonth as $day): ?>
-              <th title="<?= esc($day['date']) ?>">
-                <?= esc($day['day']) ?><br><?= date('d', strtotime($day['date'])) ?>
-              </th>
-            <?php endforeach; ?>
-            <th>% Present</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php if(!empty($students)): ?>
-            <?php foreach($students as $student): ?>
+    <?php if (!empty($students)): ?>
+      <div class="table-responsive shadow-sm" style="max-height: 70vh; overflow:auto;">
+        <table class="table table-bordered align-middle text-center table-sm">
+          <thead class="table-dark sticky-top">
+            <tr>
+              <th>#</th>
+              <th>Student Name</th>
+              <th>Roll</th>
+              <?php foreach ($dates as $d): ?>
+                <th><?= date('d', strtotime($d)) ?></th>
+              <?php endforeach; ?>
+              <th>Total P</th>
+              <th>Total A</th>
+              <th>Total L</th>
+              <th>Total E</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php $i = 1; foreach ($students as $student): ?>
               <?php
-                $totalDays = count($daysInMonth);
-                $presentCount = 0;
+                $p = $a = $l = $e = 0;
               ?>
               <tr>
-                <td><?= esc($student['roll']) ?></td>
+                <td><?= $i++ ?></td>
                 <td class="text-start"><?= esc($student['student_name']) ?></td>
-                <?php foreach($daysInMonth as $day): ?>
-                  <?php
-                    $date = $day['date'];
-                    $attendance = $attendanceMap[$student['id']][$date] ?? null;
-                    $status = 'A';
-                    $tooltip = 'Absent';
+                <td><?= esc($student['roll']) ?></td>
 
-                    if ($attendance) {
-                        $inTime = date('H:i', strtotime($attendance['created_at']));
-                        $outTime = date('H:i', strtotime($attendance['updated_at'] ?? $attendance['created_at']));
-                        $tooltip = "In: {$inTime}, Out: {$outTime}";
-
-                        if ($inTime <= '10:00' && $outTime >= '16:00') {
-                            $status = 'P';
-                            $presentCount++;
-                        } elseif ($inTime > '10:00' && $outTime < '16:00') {
-                            $status = 'L/E';
-                        } elseif ($inTime > '10:00') {
-                            $status = 'L';
-                        } elseif ($outTime < '16:00') {
-                            $status = 'E';
-                        }
-                    }
-                  ?>
-                  <td title="<?= esc($tooltip) ?>" 
-                      class="<?php 
-                        if($status=='P') echo 'bg-success text-white'; 
-                        elseif($status=='A') echo 'bg-danger text-white';
-                        elseif($status=='L') echo 'bg-warning';
-                        elseif($status=='E') echo 'bg-info';
-                        else echo 'bg-secondary text-white';
-                      ?>">
-                    <?= esc($status) ?>
+                <?php foreach ($dates as $d): 
+                  $st = $student['days'][$d];
+                  if ($st == 'P') $p++;
+                  elseif ($st == 'A') $a++;
+                  elseif ($st == 'L') $l++;
+                  elseif ($st == 'E') $e++;
+                ?>
+                  <td>
+                    <?php
+                      $badgeClass = match($st) {
+                        'P' => 'bg-success text-white',
+                        'A' => 'bg-danger text-white',
+                        'L' => 'bg-warning text-dark',
+                        'E' => 'bg-info text-dark',
+                        default => 'bg-secondary text-white'
+                      };
+                    ?>
+                    <span class="badge <?= $badgeClass ?>"><?= esc($st) ?></span>
                   </td>
                 <?php endforeach; ?>
-                <td><strong><?= round(($presentCount / $totalDays) * 100) ?>%</strong></td>
+
+                <td><strong class="text-success"><?= $p ?></strong></td>
+                <td><strong class="text-danger"><?= $a ?></strong></td>
+                <td><strong class="text-warning"><?= $l ?></strong></td>
+                <td><strong class="text-info"><?= $e ?></strong></td>
               </tr>
             <?php endforeach; ?>
-          <?php else: ?>
-            <tr>
-              <td colspan="<?= count($daysInMonth) + 3 ?>" class="text-muted">No students found.</td>
-            </tr>
-          <?php endif; ?>
-        </tbody>
-      </table>
-    </div>
+          </tbody>
+        </table>
+      </div>
+    <?php else: ?>
+      <div class="alert alert-info text-center">No students found for this month or class.</div>
+    <?php endif; ?>
+
   </div>
 </section>
 
