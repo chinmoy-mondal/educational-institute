@@ -128,11 +128,11 @@
 
                   $badgeClass = match($status){
                       'P' => 'bg-success',
-                      'A' => 'bg-light bg-danger',
+                      'A' => 'bg-white text-dark',
                       'L' => 'bg-warning text-dark',
                       'E' => 'bg-info text-dark',
                       'L/E' => 'bg-primary',
-                      'H' => 'bg-secondary',
+                      'H' => 'bg-white text-dark',
                       default => 'bg-secondary'
                   };
                   ?>
