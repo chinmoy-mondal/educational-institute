@@ -25,7 +25,7 @@
           class="d-flex align-items-center flex-wrap gap-2 mb-3 ps-2">
 
         <!-- Class Selector -->
-        <div class="form-group mb-0 me-2">
+        <div class="form-group mb-0 me-2" style="margin-right: 12px;">
             <select name="class" id="class" class="form-select form-select-sm" style="height: 34px;">
                 <option value="">Select Class</option>
                 <?php for ($c = 6; $c <= 10; $c++): ?>
