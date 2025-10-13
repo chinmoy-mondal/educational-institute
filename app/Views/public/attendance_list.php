@@ -133,7 +133,7 @@
                       'E' => 'bg-info text-dark',
                       'L/E' => 'bg-primary',
                       'H' => 'bg-white text-dark',
-                      default => 'bg-secondary'
+                      default => 'bg-secondary' 
                   };
                   ?>
                   <td><span class="badge <?= $badgeClass ?>" title="<?= esc($tooltip) ?>"><?= esc($status) ?></span></td>
