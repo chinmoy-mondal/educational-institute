@@ -2042,10 +2042,18 @@ class Dashboard extends Controller
 		$selectedClass = $this->request->getPost('class') ?? '';
 		$selectedDate  = $this->request->getPost('date') ?? date('Y-m-d');
 
-		// Filter students by class
-		$students = $selectedClass
-			? $this->studentModel->where('class', $selectedClass)->findAll()
-			: $this->studentModel->findAll();
+		// Filter students by class and permission = 0
+		if ($selectedClass) {
+			$builder = $this->studentModel->where('class', $selectedClass);
+		} else {
+			$builder = $this->studentModel;
+		}
+
+		// Add permission filter
+		$builder = $builder->where('permission', 0);
+
+		// Get students
+		$students = $builder->findAll();
 
 		// Get attendance records for that date
 		$attendances = $this->attendanceModel
