@@ -20,11 +20,12 @@
         </div>
     <?php endif; ?>
 
-    <!-- Filter Form -->
-    <form method="post" action="<?= site_url('admin/attendance/calendar') ?>" class="d-flex align-items-center gap-2 mb-3 flex-wrap ps-2">
+    <!-- ✅ Filter Form -->
+    <form method="post" action="<?= site_url('admin/attendance/calendar') ?>"
+          class="d-flex align-items-center flex-wrap gap-2 mb-3 ps-2">
 
         <!-- Class Selector -->
-        <div class="form-group mb-0">
+        <div class="form-group mb-0 me-2">
             <select name="class" id="class" class="form-select form-select-sm" style="height: 34px;">
                 <option value="">Select Class</option>
                 <?php for ($c = 6; $c <= 10; $c++): ?>
@@ -34,23 +35,28 @@
         </div>
 
         <!-- Date Picker -->
-        <div class="form-group mb-0">
-            <input type="date" name="date" id="date" value="<?= $selectedDate ?? '' ?>" class="form-control form-control-sm" style="height: 34px;">
+        <div class="form-group mb-0 me-2">
+            <input type="date" name="date" id="date"
+                   value="<?= $selectedDate ?? '' ?>"
+                   class="form-control form-control-sm"
+                   style="height: 34px;">
         </div>
 
-        <!-- Submit Button -->
-        <div class="form-group mb-0">
+        <!-- Show Button -->
+        <div class="form-group mb-0 me-2">
             <button type="submit" class="btn btn-primary btn-sm" style="height: 34px;">
                 <i class="fas fa-calendar-alt me-1"></i> Show
             </button>
         </div>
 
-        <!-- ✅ New "Select All" Buttons -->
-        <div class="form-group mb-0 ms-2">
-            <button type="button" class="btn btn-success btn-sm" style="height: 34px;" onclick="setAllAttendance('P')">
+        <!-- ✅ All Present / All Absent Buttons -->
+        <div class="form-group mb-0 d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-success btn-sm" style="height: 34px;"
+                    onclick="setAllAttendance('P')">
                 <i class="fas fa-user-check me-1"></i> All Present
             </button>
-            <button type="button" class="btn btn-danger btn-sm ms-1" style="height: 34px;" onclick="setAllAttendance('A')">
+            <button type="button" class="btn btn-danger btn-sm" style="height: 34px;"
+                    onclick="setAllAttendance('A')">
                 <i class="fas fa-user-times me-1"></i> All Absent
             </button>
         </div>
@@ -103,7 +109,7 @@
 </div>
 
 <script>
-    // Toggle individual attendance button
+    // ✅ Toggle single student attendance
     function toggleAttendance(btn) {
         const input = btn.nextElementSibling;
         const current = btn.innerText.trim();
@@ -119,7 +125,7 @@
         input.value = btn.innerText;
     }
 
-    // ✅ Mark all as Present or Absent
+    // ✅ Set all attendance to Present or Absent
     function setAllAttendance(status) {
         document.querySelectorAll('.attendance-btn').forEach(btn => {
             const input = btn.nextElementSibling;
