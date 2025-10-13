@@ -300,68 +300,75 @@ class Home extends BaseController
 		]);
 	}
 
-	public function attendance()
-	{
-		$studentModel = new \App\Models\StudentModel();
-		$attendanceModel = new \App\Models\AttendanceModel();
+public function attendance()
+{
+    $studentModel = new \App\Models\StudentModel();
+    $attendanceModel = new \App\Models\AttendanceModel();
 
-		// Get selected class from GET
-		$class = $this->request->getGet('class');
+    // Get filters
+    $class = $this->request->getGet('class');
+    $date = $this->request->getGet('date') ?? date('Y-m-d'); // default = today
 
-		// Base student query
-		$builder = $studentModel->where('permission', 0);
-		if (!empty($class)) {
-			$builder->where('class', $class);
-		}
+    // Base query for students
+    $builder = $studentModel->where('permission', 0);
+    if (!empty($class)) {
+        $builder->where('class', $class);
+    }
 
-		// Get students
-		$students = $builder->orderBy('roll', 'ASC')->findAll();
+    $students = $builder->orderBy('roll', 'ASC')->findAll();
+    $classes = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->findAll();
 
-		// Fetch distinct class list
-		$classes = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->findAll();
+    $attendanceData = [];
 
-		// Count distinct attendance days (from created_at)
-		$totalDays = $attendanceModel
-			->distinct()
-			->select('DATE(created_at) as date')
-			->countAllResults();
+    foreach ($students as $student) {
+        // Get all attendance entries for this student on selected date
+        $records = $attendanceModel
+            ->where('student_id', $student['id'])
+            ->where('DATE(created_at)', $date)
+            ->orderBy('created_at', 'ASC')
+            ->findAll();
 
-		$attendanceData = [];
+        $status = 'A'; // Default Absent
 
-		foreach ($students as $student) {
-			// Count total present entries
-			$totalPresent = $attendanceModel
-				->where('student_id', $student['id'])
-				->like('remark', 'Present') // You can change 'Present' to your actual remark text
-				->countAllResults();
+        if (!empty($records)) {
+            $first = strtotime($records[0]['created_at']);
+            $last = strtotime(end($records)['created_at']);
 
-			// Count total attendance entries for the student
-			$totalRecords = $attendanceModel
-				->where('student_id', $student['id'])
-				->countAllResults();
+            $timeIn = date('H:i', $first);
+            $timeOut = date('H:i', $last);
 
-			$percentage = ($totalDays > 0) ? round(($totalPresent / $totalDays) * 100, 2) : 0;
+            if ($timeIn <= '10:00' && $timeOut >= '16:00') {
+                $status = 'P'; // Present
+            } elseif ($timeIn > '10:00' && $timeIn <= '11:00') {
+                $status = 'Late In';
+            } elseif ($timeOut < '16:00' && $timeOut >= '15:00') {
+                $status = 'Early Leave';
+            } elseif ($timeIn > '11:00' && $timeIn < '15:00') {
+                $status = 'Late In';
+            } else {
+                $status = 'P'; // fallback
+            }
+        }
 
-			$attendanceData[] = [
-				'id' => $student['id'],
-				'student_name' => $student['student_name'],
-				'roll' => $student['roll'],
-				'class' => $student['class'],
-				'section' => $student['section'],
-				'total_present' => $totalPresent,
-				'total_days' => $totalDays,
-				'percentage' => $percentage,
-			];
-		}
+        $attendanceData[] = [
+            'id' => $student['id'],
+            'student_name' => $student['student_name'],
+            'roll' => $student['roll'],
+            'class' => $student['class'],
+            'section' => $student['section'],
+            'status' => $status,
+        ];
+    }
 
-		$data = [
-			'students' => $attendanceData,
-			'classes' => $classes,
-			'selectedClass' => $class,
-		];
+    $data = [
+        'students' => $attendanceData,
+        'classes' => $classes,
+        'selectedClass' => $class,
+        'selectedDate' => $date,
+    ];
 
-		return view('public/attendance_list', $data);
-	}
+    return view('public/attendance_list', $data);
+}
 
 	public function notice()
 	{

@@ -7,17 +7,17 @@
 
 <div class="page-title text-center py-5 bg-light">
   <div class="container">
-    <h2 class="fw-bold text-primary">Class Attendance Overview</h2>
-    <p class="text-muted mb-0">Select a class to view student attendance percentage</p>
+    <h2 class="fw-bold text-primary">Daily Attendance</h2>
+    <p class="text-muted mb-0">Select class and date to view student attendance</p>
   </div>
 </div>
 
 <section class="py-5">
   <div class="container">
 
-    <!-- Class Filter -->
-    <form method="get" class="row g-2 mb-4 justify-content-center">
-      <div class="col-md-4">
+    <!-- Filter Form -->
+    <form method="get" class="row g-3 mb-4 justify-content-center">
+      <div class="col-md-3">
         <select name="class" class="form-select">
           <option value="">Select Class</option>
           <?php foreach ($classes as $c): ?>
@@ -27,11 +27,17 @@
           <?php endforeach; ?>
         </select>
       </div>
+
+      <div class="col-md-3">
+        <input type="date" name="date" class="form-control" value="<?= esc($selectedDate) ?>">
+      </div>
+
       <div class="col-md-2 d-grid">
-        <button type="submit" class="btn btn-primary">Search</button>
+        <button type="submit" class="btn btn-primary">Show</button>
       </div>
     </form>
 
+    <!-- Attendance Table -->
     <?php if (!empty($students)): ?>
       <div class="table-responsive shadow-sm">
         <table class="table table-bordered align-middle text-center">
@@ -42,9 +48,7 @@
               <th>Roll</th>
               <th>Class</th>
               <th>Section</th>
-              <th>Total Present</th>
-              <th>Total Days</th>
-              <th>Attendance %</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -55,17 +59,18 @@
                 <td><?= esc($student['roll']) ?></td>
                 <td><?= esc($student['class']) ?></td>
                 <td><?= esc($student['section']) ?></td>
-                <td><?= esc($student['total_present']) ?></td>
-                <td><?= esc($student['total_days']) ?></td>
                 <td>
-                  <div class="progress" style="height: 20px;">
-                    <div class="progress-bar 
-                        <?= ($student['percentage'] >= 75) ? 'bg-success' : (($student['percentage'] >= 50) ? 'bg-warning' : 'bg-danger') ?>"
-                        role="progressbar"
-                        style="width: <?= $student['percentage'] ?>%;">
-                        <?= $student['percentage'] ?>%
-                    </div>
-                  </div>
+                  <?php
+                    $status = $student['status'];
+                    $badgeClass = match($status) {
+                      'P' => 'bg-success',
+                      'A' => 'bg-danger',
+                      'Late In' => 'bg-warning text-dark',
+                      'Early Leave' => 'bg-info text-dark',
+                      default => 'bg-secondary'
+                    };
+                  ?>
+                  <span class="badge <?= $badgeClass ?> px-3 py-2"><?= esc($status) ?></span>
                 </td>
               </tr>
             <?php endforeach; ?>
@@ -73,8 +78,9 @@
         </table>
       </div>
     <?php else: ?>
-      <div class="alert alert-info text-center">No students found for the selected class.</div>
+      <div class="alert alert-info text-center">No records found for the selected date or class.</div>
     <?php endif; ?>
+
   </div>
 </section>
 
