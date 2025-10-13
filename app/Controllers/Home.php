@@ -302,40 +302,62 @@ class Home extends BaseController
 
 	public function attendance()
 	{
-		$studentModel = new StudentModel();
+		$studentModel = new \App\Models\StudentModel();
+		$attendanceModel = new \App\Models\AttendanceModel();
 
-		// Get filter values from GET request
+		// Get selected class from GET
 		$class = $this->request->getGet('class');
-		$section = $this->request->getGet('section');
 
-		$builder = $studentModel;
-		$builder->where('class', $class)
-			->where('permission', 0);
-
+		// Base student query
+		$builder = $studentModel->where('permission', 0);
 		if (!empty($class)) {
-			$builder = $builder->where('class', $class);
+			$builder->where('class', $class);
 		}
 
-		if (!empty($section)) {
-			$builder = $builder->where('section', $section);
-		}
+		// Get students
+		$students = $builder->orderBy('roll', 'ASC')->findAll();
 
-		// Fetch students ordered by class, section, roll
-		$students = $builder->orderBy('class', 'ASC')
-			->orderBy('section', 'ASC')
-			->orderBy('roll', 'ASC')
-			->findAll();
-
-		// Fetch distinct classes and sections for the select options
+		// Fetch distinct class list
 		$classes = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->findAll();
-		$sections = $studentModel->select('section')->distinct()->orderBy('section', 'ASC')->findAll();
+
+		// Count distinct attendance days (from created_at)
+		$totalDays = $attendanceModel
+			->distinct()
+			->select('DATE(created_at) as date')
+			->countAllResults();
+
+		$attendanceData = [];
+
+		foreach ($students as $student) {
+			// Count total present entries
+			$totalPresent = $attendanceModel
+				->where('student_id', $student['id'])
+				->like('remark', 'Present') // You can change 'Present' to your actual remark text
+				->countAllResults();
+
+			// Count total attendance entries for the student
+			$totalRecords = $attendanceModel
+				->where('student_id', $student['id'])
+				->countAllResults();
+
+			$percentage = ($totalDays > 0) ? round(($totalPresent / $totalDays) * 100, 2) : 0;
+
+			$attendanceData[] = [
+				'id' => $student['id'],
+				'student_name' => $student['student_name'],
+				'roll' => $student['roll'],
+				'class' => $student['class'],
+				'section' => $student['section'],
+				'total_present' => $totalPresent,
+				'total_days' => $totalDays,
+				'percentage' => $percentage,
+			];
+		}
 
 		$data = [
-			'students' => $students,
+			'students' => $attendanceData,
 			'classes' => $classes,
-			'sections' => $sections,
 			'selectedClass' => $class,
-			'selectedSection' => $section
 		];
 
 		return view('public/attendance_list', $data);
