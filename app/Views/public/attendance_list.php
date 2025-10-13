@@ -83,6 +83,13 @@
                       echo "<td><span class='badge bg-secondary' title='$tooltip'>$status</span></td>";
                       continue;
                   }
+                  // Holiday on Sat
+                  if($dayName === 'Sat'){
+                      $status = 'H';
+                      $tooltip = 'Holiday';
+                      echo "<td><span class='badge bg-secondary' title='$tooltip'>$status</span></td>";
+                      continue;
+                  }
 
                   $totalDays++;
                   $status = 'A';
