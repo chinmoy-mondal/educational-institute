@@ -309,6 +309,8 @@ class Home extends BaseController
 		$section = $this->request->getGet('section');
 
 		$builder = $studentModel;
+		$builder->where('class', $class)
+			->where('permission', 0);
 
 		if (!empty($class)) {
 			$builder = $builder->where('class', $class);
