@@ -45,6 +45,16 @@
             </button>
         </div>
 
+        <!-- ✅ New "Select All" Buttons -->
+        <div class="form-group mb-0 ms-2">
+            <button type="button" class="btn btn-success btn-sm" style="height: 34px;" onclick="setAllAttendance('P')">
+                <i class="fas fa-user-check me-1"></i> All Present
+            </button>
+            <button type="button" class="btn btn-danger btn-sm ms-1" style="height: 34px;" onclick="setAllAttendance('A')">
+                <i class="fas fa-user-times me-1"></i> All Absent
+            </button>
+        </div>
+
     </form>
 
     <?php if (!empty($students) && !empty($selectedDate) && !empty($selectedClass)): ?>
@@ -64,9 +74,6 @@
                 </thead>
                 <tbody>
                     <?php foreach ($students as $s):
-                        $studentAttendance = isset($attendanceMap[$s['id']]) && is_array($attendanceMap[$s['id']])
-                            ? $attendanceMap[$s['id']]
-                            : [];
                         $remarks = $attendanceMap[$s['id']] ?? [];
                         $remark = (in_array('A', $remarks) && in_array('L', $remarks)) ? 'P' : 'A';
                     ?>
@@ -76,7 +83,7 @@
                             <td class="text-start"><?= $s['student_name'] ?></td>
                             <td class="text-center">
                                 <button type="button"
-                                    class="btn btn-sm <?= $remark == 'P' ? 'btn-success' : 'btn-danger' ?>"
+                                    class="btn btn-sm <?= $remark == 'P' ? 'btn-success' : 'btn-danger' ?> attendance-btn"
                                     onclick="toggleAttendance(this)">
                                     <?= $remark ?>
                                 </button>
@@ -96,20 +103,36 @@
 </div>
 
 <script>
+    // Toggle individual attendance button
     function toggleAttendance(btn) {
-        const input = btn.nextElementSibling; // hidden input
-        let current = btn.innerText;
+        const input = btn.nextElementSibling;
+        const current = btn.innerText.trim();
 
-        // Toggle between P and A
         if (current === 'P') {
             btn.innerText = 'A';
-            btn.className = 'btn btn-sm btn-danger';
+            btn.className = 'btn btn-sm btn-danger attendance-btn';
         } else {
             btn.innerText = 'P';
-            btn.className = 'btn btn-sm btn-success';
+            btn.className = 'btn btn-sm btn-success attendance-btn';
         }
 
         input.value = btn.innerText;
+    }
+
+    // ✅ Mark all as Present or Absent
+    function setAllAttendance(status) {
+        document.querySelectorAll('.attendance-btn').forEach(btn => {
+            const input = btn.nextElementSibling;
+            btn.innerText = status;
+
+            if (status === 'P') {
+                btn.className = 'btn btn-sm btn-success attendance-btn';
+            } else {
+                btn.className = 'btn btn-sm btn-danger attendance-btn';
+            }
+
+            input.value = status;
+        });
     }
 </script>
 
