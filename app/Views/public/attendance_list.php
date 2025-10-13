@@ -80,14 +80,14 @@
                   if($dayName === 'Fri'){
                       $status = 'H';
                       $tooltip = 'Holiday';
-                      echo "<td><span class='badge' style='background:none; color:#6c757d;' title='$tooltip'>$status</span></td>";
+                      echo "<td><span class='badge bg-danger text-dark' title='$tooltip'>$status</span></td>";
                       continue;
                   }
                   // Holiday on Sat
                   if($dayName === 'Sat'){
                       $status = 'H';
                       $tooltip = 'Holiday';
-                      echo "<td><span class='badge' style='background:none; color:#6c757d;' title='$tooltip'>$status</span></td>";
+                      echo "<td><span class='badge bg-danger text-dark' title='$tooltip'>$status</span></td>";
                       continue;
                   }
 
