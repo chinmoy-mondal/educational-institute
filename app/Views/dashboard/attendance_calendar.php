@@ -22,7 +22,7 @@
 
     <!-- ✅ Filter Form -->
     <form method="post" action="<?= site_url('admin/attendance/calendar') ?>"
-          class="d-flex align-items-center flex-wrap gap-2 mb-3 ps-2">
+        class="d-flex align-items-center flex-wrap gap-2 mb-3 ps-2">
 
         <!-- Class Selector -->
         <div class="form-group mb-0 me-2" style="margin-right: 12px;">
@@ -35,28 +35,28 @@
         </div>
 
         <!-- Date Picker -->
-        <div class="form-group mb-0 me-2">
+        <div class="form-group mb-0 me-2" style="margin-right: 12px;">
             <input type="date" name="date" id="date"
-                   value="<?= $selectedDate ?? '' ?>"
-                   class="form-control form-control-sm"
-                   style="height: 34px;">
+                value="<?= $selectedDate ?? '' ?>"
+                class="form-control form-control-sm"
+                style="height: 34px;">
         </div>
 
         <!-- Show Button -->
-        <div class="form-group mb-0 me-2">
+        <div class="form-group mb-0 me-2" style="margin-right: 12px;">
             <button type="submit" class="btn btn-primary btn-sm" style="height: 34px;">
                 <i class="fas fa-calendar-alt me-1"></i> Show
             </button>
         </div>
-
-        <!-- ✅ All Present / All Absent Buttons -->
-        <div class="form-group mb-0 d-flex align-items-center gap-2">
+        <div class="form-group mb-0 me-2" style="margin-right: 12px;">
             <button type="button" class="btn btn-success btn-sm" style="height: 34px;"
-                    onclick="setAllAttendance('P')">
+                onclick="setAllAttendance('P')">
                 <i class="fas fa-user-check me-1"></i> All Present
             </button>
+        </div>
+        <div class="form-group mb-0 me-2" style="margin-right: 12px;">
             <button type="button" class="btn btn-danger btn-sm" style="height: 34px;"
-                    onclick="setAllAttendance('A')">
+                onclick="setAllAttendance('A')">
                 <i class="fas fa-user-times me-1"></i> All Absent
             </button>
         </div>
