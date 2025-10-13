@@ -19,7 +19,7 @@
       <div class="col-md-3">
         <select name="class" class="form-select">
           <option value="">All Classes</option>
-          <?php foreach($classes as $c): ?>
+          <?php foreach ($classes as $c): ?>
             <option value="<?= esc($c['class']) ?>" <?= ($selectedClass == $c['class']) ? 'selected' : '' ?>>
               <?= esc($c['class']) ?>
             </option>
@@ -50,65 +50,64 @@
           <tr>
             <th>Roll</th>
             <th>Name</th>
-            <?php foreach($daysInMonth as $day): ?>
+            <?php foreach ($daysInMonth as $day): ?>
               <th title="<?= esc($day['date']) ?>"><?= esc($day['day']) ?><br><?= date('d', strtotime($day['date'])) ?></th>
             <?php endforeach; ?>
             <th>% Present</th>
           </tr>
         </thead>
         <tbody>
-          <?php if(!empty($students)): ?>
-            <?php foreach($students as $student): ?>
+          <?php if (!empty($students)): ?>
+            <?php foreach ($students as $student): ?>
               <?php
-                $totalDays = 0;
-                $presentCount = 0;
+              $totalDays = 0;
+              $presentCount = 0;
               ?>
               <tr>
                 <td><?= esc($student['roll']) ?></td>
                 <td class="text-start"><?= esc($student['student_name']) ?></td>
-                <?php foreach($daysInMonth as $day): ?>
+                <?php foreach ($daysInMonth as $day): ?>
                   <?php
-                    $date = $day['date'];
-                    $dayName = $day['day'];
-                    $attendance = $attendanceMap[$student['id']][$date] ?? null;
+                  $date = $day['date'];
+                  $dayName = $day['day'];
+                  $attendance = $attendanceMap[$student['id']][$date] ?? null;
 
-                    // Skip Fridays as Holidays
-                    if ($dayName === 'Fri') {
-                        $status = 'H';
-                        $tooltip = 'Holiday';
-                        echo "<td><span class='badge bg-secondary' title='$tooltip'>$status</span></td>";
-                        continue;
+                  if ($dayName === 'Fri') {
+                    $status = 'H';
+                    $tooltip = 'Holiday';
+                    echo "<td><span class='badge bg-secondary' title='$tooltip'>$status</span></td>";
+                    continue;
+                  }
+
+                  $totalDays++;
+                  $status = 'A';
+                  $tooltip = 'Absent';
+
+                  if ($attendance) {
+                    $inTime  = date('H:i', strtotime($attendance['created_at']));
+                    $outTime = date('H:i', strtotime($attendance['updated_at'] ?? $attendance['created_at']));
+                    $tooltip = "In: $inTime, Out: $outTime";
+
+                    if ($inTime <= '10:00' && $outTime >= '16:00') {
+                      $status = 'P';
+                      $presentCount++;
+                    } elseif ($inTime > '10:00' && $outTime < '16:00') {
+                      $status = 'L/E';
+                    } elseif ($inTime > '10:00') {
+                      $status = 'L';
+                    } elseif ($outTime < '16:00') {
+                      $status = 'E';
                     }
+                  }
 
-                    $totalDays++;
-
-                    $status = 'A';
-                    $tooltip = 'Absent';
-                    if ($attendance) {
-                        $inTime = $attendance['in_time'] ?? date('H:i', strtotime($attendance['created_at']));
-                        $outTime = $attendance['out_time'] ?? date('H:i', strtotime($attendance['created_at']));
-                        $tooltip = "In: $inTime, Out: $outTime";
-
-                        if ($inTime <= '10:00' && $outTime >= '16:00') {
-                            $status = 'P';
-                            $presentCount++;
-                        } elseif ($inTime > '10:00' && $outTime < '16:00') {
-                            $status = 'L/E';
-                        } elseif ($inTime > '10:00') {
-                            $status = 'L';
-                        } elseif ($outTime < '16:00') {
-                            $status = 'E';
-                        }
-                    }
-
-                    $badgeClass = match($status) {
-                        'P' => 'bg-success',
-                        'A' => 'bg-danger',
-                        'L' => 'bg-warning text-dark',
-                        'E' => 'bg-info text-dark',
-                        'L/E' => 'bg-primary',
-                        default => 'bg-secondary'
-                    };
+                  $badgeClass = match ($status) {
+                    'P' => 'bg-success',
+                    'A' => 'bg-danger',
+                    'L' => 'bg-warning text-dark',
+                    'E' => 'bg-info text-dark',
+                    'L/E' => 'bg-primary',
+                    default => 'bg-secondary'
+                  };
                   ?>
                   <td><span class="badge <?= $badgeClass ?>" title="<?= esc($tooltip) ?>"><?= esc($status) ?></span></td>
                 <?php endforeach; ?>
