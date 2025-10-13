@@ -2144,8 +2144,8 @@ class Dashboard extends Controller
 
 					foreach ($existingRecords as $record) {
 						$this->attendanceModel->delete($record['id']);
-						$countDeleted++;
 					}
+					$countDeleted++;
 				}
 			}
 		}
