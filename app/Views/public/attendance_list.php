@@ -1,7 +1,6 @@
 <?= $this->extend("layouts/base.php") ?>
 <?= $this->section("content") ?>
 
-<!-- Header -->
 <div class="fixed-header">
   <?= $this->include("layouts/base-structure/header") ?>
 </div>
@@ -35,17 +34,24 @@
       </div>
     </form>
 
+    <!-- Legend -->
+    <div class="mb-3 text-center">
+      <span class="badge bg-success">P = Present</span>
+      <span class="badge bg-danger">A = Absent</span>
+      <span class="badge bg-warning text-dark">L = Late In</span>
+      <span class="badge bg-info text-dark">E = Early Out</span>
+      <span class="badge bg-secondary">H = Holiday</span>
+    </div>
+
     <!-- Attendance Table -->
     <div class="table-responsive shadow-sm">
-      <table class="table table-bordered text-center align-middle small">
+      <table class="table table-bordered align-middle text-center small">
         <thead class="table-dark sticky-top">
           <tr>
             <th>Roll</th>
-            <th>Student Name</th>
+            <th>Name</th>
             <?php foreach($daysInMonth as $day): ?>
-              <th title="<?= esc($day['date']) ?>">
-                <?= esc($day['day']) ?><br><?= date('d', strtotime($day['date'])) ?>
-              </th>
+              <th title="<?= esc($day['date']) ?>"><?= esc($day['day']) ?><br><?= date('d', strtotime($day['date'])) ?></th>
             <?php endforeach; ?>
             <th>% Present</th>
           </tr>
@@ -54,7 +60,7 @@
           <?php if(!empty($students)): ?>
             <?php foreach($students as $student): ?>
               <?php
-                $totalDays = count($daysInMonth);
+                $totalDays = 0;
                 $presentCount = 0;
               ?>
               <tr>
@@ -63,14 +69,25 @@
                 <?php foreach($daysInMonth as $day): ?>
                   <?php
                     $date = $day['date'];
+                    $dayName = $day['day'];
                     $attendance = $attendanceMap[$student['id']][$date] ?? null;
+
+                    // Skip Fridays as Holidays
+                    if ($dayName === 'Fri') {
+                        $status = 'H';
+                        $tooltip = 'Holiday';
+                        echo "<td><span class='badge bg-secondary' title='$tooltip'>$status</span></td>";
+                        continue;
+                    }
+
+                    $totalDays++;
+
                     $status = 'A';
                     $tooltip = 'Absent';
-
                     if ($attendance) {
-                        $inTime = date('H:i', strtotime($attendance['created_at']));
-                        $outTime = date('H:i', strtotime($attendance['updated_at'] ?? $attendance['created_at']));
-                        $tooltip = "In: {$inTime}, Out: {$outTime}";
+                        $inTime = $attendance['in_time'] ?? date('H:i', strtotime($attendance['created_at']));
+                        $outTime = $attendance['out_time'] ?? date('H:i', strtotime($attendance['created_at']));
+                        $tooltip = "In: $inTime, Out: $outTime";
 
                         if ($inTime <= '10:00' && $outTime >= '16:00') {
                             $status = 'P';
@@ -83,19 +100,19 @@
                             $status = 'E';
                         }
                     }
+
+                    $badgeClass = match($status) {
+                        'P' => 'bg-success',
+                        'A' => 'bg-danger',
+                        'L' => 'bg-warning text-dark',
+                        'E' => 'bg-info text-dark',
+                        'L/E' => 'bg-primary',
+                        default => 'bg-secondary'
+                    };
                   ?>
-                  <td title="<?= esc($tooltip) ?>" 
-                      class="<?php 
-                        if($status=='P') echo 'bg-success text-white'; 
-                        elseif($status=='A') echo 'bg-danger text-white';
-                        elseif($status=='L') echo 'bg-warning';
-                        elseif($status=='E') echo 'bg-info';
-                        else echo 'bg-secondary text-white';
-                      ?>">
-                    <?= esc($status) ?>
-                  </td>
+                  <td><span class="badge <?= $badgeClass ?>" title="<?= esc($tooltip) ?>"><?= esc($status) ?></span></td>
                 <?php endforeach; ?>
-                <td><strong><?= round(($presentCount / $totalDays) * 100) ?>%</strong></td>
+                <td><strong><?= $totalDays > 0 ? round(($presentCount / $totalDays) * 100) : 0 ?>%</strong></td>
               </tr>
             <?php endforeach; ?>
           <?php else: ?>

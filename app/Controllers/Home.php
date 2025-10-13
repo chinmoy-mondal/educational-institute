@@ -307,48 +307,43 @@ public function attendance()
     $studentModel = new \App\Models\StudentModel();
     $attendanceModel = new \App\Models\AttendanceModel();
 
-    // Get selected month (format: YYYY-MM)
+    // Month selection
     $month = $this->request->getGet('month') ?? date('Y-m');
+    $class = $this->request->getGet('class');
 
-    // Parse month range
     $startDate = date('Y-m-01', strtotime($month));
     $endDate = date('Y-m-t', strtotime($month));
 
-    // Get students (filtering optional)
-    $class = $this->request->getGet('class');
+    // Get students
     $builder = $studentModel->where('permission', 0);
-    if (!empty($class)) {
-        $builder->where('class', $class);
-    }
-
+    if (!empty($class)) $builder->where('class', $class);
     $students = $builder->orderBy('roll', 'ASC')->findAll();
 
-    // Fetch attendance records for the month
+    // Attendance records of month
     $attendanceData = $attendanceModel
-        ->select('student_id, created_at, remark')
+        ->select('student_id, in_time, out_time, created_at')
         ->where('DATE(created_at) >=', $startDate)
         ->where('DATE(created_at) <=', $endDate)
         ->findAll();
 
-    // Format attendance data [student_id][date] = remark
+    // Map attendance
     $attendanceMap = [];
     foreach ($attendanceData as $record) {
         $date = date('Y-m-d', strtotime($record['created_at']));
         $attendanceMap[$record['student_id']][$date] = $record;
     }
 
-    // Generate all days in the month
+    // Days of month
     $daysInMonth = [];
     $numDays = date('t', strtotime($month));
     for ($i = 1; $i <= $numDays; $i++) {
-        $dayDate = date('Y-m-', strtotime($month)) . str_pad($i, 2, '0', STR_PAD_LEFT);
+        $date = date('Y-m-', strtotime($month)) . str_pad($i, 2, '0', STR_PAD_LEFT);
         $daysInMonth[] = [
-            'date' => $dayDate,
-            'day' => date('D', strtotime($dayDate))
+            'date' => $date,
+            'day' => date('D', strtotime($date))
         ];
     }
 
-    // Class list for dropdown
     $classes = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->findAll();
 
     $data = [
