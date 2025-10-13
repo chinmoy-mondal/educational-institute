@@ -2082,14 +2082,15 @@ class Dashboard extends Controller
 	public function saveAttendance()
 	{
 		$attendance = $this->request->getPost('attendance');
-		$messages = []; // store dynamic messages
+
+		$countUpdated = 0;
+		$countDeleted = 0;
 
 		foreach ($attendance as $studentId => $dates) {
 			foreach ($dates as $date => $remark) {
 
 				if ($remark === 'P') {
-					// --- 1️⃣ Attend Record (10:00 AM) ---
-					$attendDateTime = $date . ' 10:00:00';
+					// --- Attend Record ---
 					$attendExists = $this->attendanceModel
 						->where('student_id', $studentId)
 						->where('remark', 'A')
@@ -2098,22 +2099,19 @@ class Dashboard extends Controller
 
 					if ($attendExists) {
 						$this->attendanceModel->update($attendExists['id'], [
-							'created_at' => $attendDateTime,
+							'created_at' => $date . ' 10:00:00',
 							'updated_at' => date('Y-m-d H:i:s')
 						]);
-						$messages[] = "Updated Attend for student ID {$studentId} on {$date}";
 					} else {
 						$this->attendanceModel->insert([
 							'student_id' => $studentId,
 							'remark'     => 'A',
-							'created_at' => $attendDateTime,
+							'created_at' => $date . ' 10:00:00',
 							'updated_at' => date('Y-m-d H:i:s')
 						]);
-						$messages[] = "Inserted Attend for student ID {$studentId} on {$date}";
 					}
 
-					// --- 2️⃣ Leave Record (4:00 PM) ---
-					$leaveDateTime = $date . ' 16:00:00';
+					// --- Leave Record ---
 					$leaveExists = $this->attendanceModel
 						->where('student_id', $studentId)
 						->where('remark', 'L')
@@ -2122,21 +2120,22 @@ class Dashboard extends Controller
 
 					if ($leaveExists) {
 						$this->attendanceModel->update($leaveExists['id'], [
-							'created_at' => $leaveDateTime,
+							'created_at' => $date . ' 16:00:00',
 							'updated_at' => date('Y-m-d H:i:s')
 						]);
-						$messages[] = "Updated Leave for student ID {$studentId} on {$date}";
 					} else {
 						$this->attendanceModel->insert([
 							'student_id' => $studentId,
 							'remark'     => 'L',
-							'created_at' => $leaveDateTime,
+							'created_at' => $date . ' 16:00:00',
 							'updated_at' => date('Y-m-d H:i:s')
 						]);
-						$messages[] = "Inserted Leave for student ID {$studentId} on {$date}";
 					}
+
+					$countUpdated++; // mark as updated
+
 				} elseif ($remark === 'A') {
-					// ✅ If student is Absent, remove any previous Attend/Leave records for that date
+					// Delete any existing Attend/Leave records
 					$existingRecords = $this->attendanceModel
 						->where('student_id', $studentId)
 						->whereIn('remark', ['A', 'L'])
@@ -2145,78 +2144,19 @@ class Dashboard extends Controller
 
 					foreach ($existingRecords as $record) {
 						$this->attendanceModel->delete($record['id']);
-						$messages[] = "Deleted {$record['remark']} for student ID {$studentId} on {$date}";
+						$countDeleted++;
 					}
 				}
 			}
 		}
 
-		// Combine messages into a single flash message
-		$flashMessage = !empty($messages) ? implode("<br>", $messages) : "No changes made.";
+		// Prepare dynamic message
+		$messages = [];
+		if ($countUpdated > 0) $messages[] = "Attendance updated for {$countUpdated} students";
+		if ($countDeleted > 0) $messages[] = "Attendance deleted for {$countDeleted} students";
+
+		$flashMessage = !empty($messages) ? implode(' | ', $messages) : "No changes made.";
 
 		return redirect()->back()->with('success', $flashMessage);
 	}
-	// public function saveAttendance()
-	// {
-	// 	$attendance = $this->request->getPost('attendance');
-
-	// 	foreach ($attendance as $studentId => $dates) {
-	// 		foreach ($dates as $date => $remark) {
-
-	// 			// Only process if student is Present (P)
-	// 			if ($remark === 'P') {
-
-	// 				// --- 1️⃣ Attend Record (10:00 AM) ---
-	// 				$attendDateTime = $date . ' 10:00:00';
-	// 				$attendExists = $this->attendanceModel
-	// 					->where('student_id', $studentId)
-	// 					->where('remark', 'A')
-	// 					->where('DATE(created_at)', $date)
-	// 					->first();
-
-	// 				if ($attendExists) {
-	// 					// Update existing record
-	// 					$this->attendanceModel->update($attendExists['id'], [
-	// 						'created_at' => $attendDateTime,
-	// 						'updated_at' => date('Y-m-d H:i:s')
-	// 					]);
-	// 				} else {
-	// 					// Insert new
-	// 					$this->attendanceModel->insert([
-	// 						'student_id' => $studentId,
-	// 						'remark'     => 'A', // Attend
-	// 						'created_at' => $attendDateTime,
-	// 						'updated_at' => date('Y-m-d H:i:s')
-	// 					]);
-	// 				}
-
-	// 				// --- 2️⃣ Leave Record (4:00 PM) ---
-	// 				$leaveDateTime = $date . ' 16:00:00';
-	// 				$leaveExists = $this->attendanceModel
-	// 					->where('student_id', $studentId)
-	// 					->where('remark', 'L')
-	// 					->where('DATE(created_at)', $date)
-	// 					->first();
-
-	// 				if ($leaveExists) {
-	// 					// Update existing record
-	// 					$this->attendanceModel->update($leaveExists['id'], [
-	// 						'created_at' => $leaveDateTime,
-	// 						'updated_at' => date('Y-m-d H:i:s')
-	// 					]);
-	// 				} else {
-	// 					// Insert new
-	// 					$this->attendanceModel->insert([
-	// 						'student_id' => $studentId,
-	// 						'remark'     => 'L', // Leave
-	// 						'created_at' => $leaveDateTime,
-	// 						'updated_at' => date('Y-m-d H:i:s')
-	// 					]);
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-
-	// 	return redirect()->back()->with('success', 'Attendance saved or updated successfully!');
-	// }
 }
