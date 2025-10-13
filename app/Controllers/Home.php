@@ -300,68 +300,68 @@ class Home extends BaseController
 		]);
 	}
 
-	public function attendance()
-	{
-		helper(['form', 'url']);
+public function attendance()
+{
+    helper(['form', 'url']);
 
-		$studentModel = new \App\Models\StudentModel();
-		$attendanceModel = new \App\Models\AttendanceModel();
+    $studentModel = new \App\Models\StudentModel();
+    $attendanceModel = new \App\Models\AttendanceModel();
 
-		// Get selected month (format: YYYY-MM)
-		$month = $this->request->getGet('month') ?? date('Y-m');
+    // Get selected month (format: YYYY-MM)
+    $month = $this->request->getGet('month') ?? date('Y-m');
 
-		// Parse month range
-		$startDate = date('Y-m-01', strtotime($month));
-		$endDate = date('Y-m-t', strtotime($month));
+    // Parse month range
+    $startDate = date('Y-m-01', strtotime($month));
+    $endDate = date('Y-m-t', strtotime($month));
 
-		// Get students (filtering optional)
-		$class = $this->request->getGet('class');
-		$builder = $studentModel->where('permission', 0);
-		if (!empty($class)) {
-			$builder->where('class', $class);
-		}
+    // Get students (filtering optional)
+    $class = $this->request->getGet('class');
+    $builder = $studentModel->where('permission', 0);
+    if (!empty($class)) {
+        $builder->where('class', $class);
+    }
 
-		$students = $builder->orderBy('roll', 'ASC')->findAll();
+    $students = $builder->orderBy('roll', 'ASC')->findAll();
 
-		// Fetch attendance records for the month
-		$attendanceData = $attendanceModel
-			->select('student_id, created_at, remark')
-			->where('DATE(created_at) >=', $startDate)
-			->where('DATE(created_at) <=', $endDate)
-			->findAll();
+    // Fetch attendance records for the month
+    $attendanceData = $attendanceModel
+        ->select('student_id, created_at, remark')
+        ->where('DATE(created_at) >=', $startDate)
+        ->where('DATE(created_at) <=', $endDate)
+        ->findAll();
 
-		// Format attendance data [student_id][date] = remark
-		$attendanceMap = [];
-		foreach ($attendanceData as $record) {
-			$date = date('Y-m-d', strtotime($record['created_at']));
-			$attendanceMap[$record['student_id']][$date] = $record;
-		}
+    // Format attendance data [student_id][date] = remark
+    $attendanceMap = [];
+    foreach ($attendanceData as $record) {
+        $date = date('Y-m-d', strtotime($record['created_at']));
+        $attendanceMap[$record['student_id']][$date] = $record;
+    }
 
-		// Generate all days in the month
-		$daysInMonth = [];
-		$numDays = date('t', strtotime($month));
-		for ($i = 1; $i <= $numDays; $i++) {
-			$dayDate = date('Y-m-', strtotime($month)) . str_pad($i, 2, '0', STR_PAD_LEFT);
-			$daysInMonth[] = [
-				'date' => $dayDate,
-				'day' => date('D', strtotime($dayDate))
-			];
-		}
+    // Generate all days in the month
+    $daysInMonth = [];
+    $numDays = date('t', strtotime($month));
+    for ($i = 1; $i <= $numDays; $i++) {
+        $dayDate = date('Y-m-', strtotime($month)) . str_pad($i, 2, '0', STR_PAD_LEFT);
+        $daysInMonth[] = [
+            'date' => $dayDate,
+            'day' => date('D', strtotime($dayDate))
+        ];
+    }
 
-		// Class list for dropdown
-		$classes = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->findAll();
+    // Class list for dropdown
+    $classes = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->findAll();
 
-		$data = [
-			'students' => $students,
-			'classes' => $classes,
-			'selectedClass' => $class,
-			'selectedMonth' => $month,
-			'daysInMonth' => $daysInMonth,
-			'attendanceMap' => $attendanceMap,
-		];
+    $data = [
+        'students' => $students,
+        'classes' => $classes,
+        'selectedClass' => $class,
+        'selectedMonth' => $month,
+        'daysInMonth' => $daysInMonth,
+        'attendanceMap' => $attendanceMap,
+    ];
 
-		return view('public/attendance_list', $data);
-	}
+    return view('public/attendance_list', $data);
+}
 
 	public function notice()
 	{
