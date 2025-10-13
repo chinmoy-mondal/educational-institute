@@ -302,83 +302,62 @@ class Home extends BaseController
 
 	public function attendance()
 	{
+		helper(['form', 'url']);
+
 		$studentModel = new \App\Models\StudentModel();
 		$attendanceModel = new \App\Models\AttendanceModel();
 
-		// Get filters
+		// Get selected month (format: YYYY-MM)
+		$month = $this->request->getGet('month') ?? date('Y-m');
+
+		// Parse month range
+		$startDate = date('Y-m-01', strtotime($month));
+		$endDate = date('Y-m-t', strtotime($month));
+
+		// Get students (filtering optional)
 		$class = $this->request->getGet('class');
-		$month = $this->request->getGet('month') ?? date('Y-m'); // e.g. "2025-10"
-
-		// Determine month range
-		$startDate = $month . '-01';
-		$endDate = date('Y-m-t', strtotime($startDate)); // last day of month
-
-		// Base student query
 		$builder = $studentModel->where('permission', 0);
 		if (!empty($class)) {
 			$builder->where('class', $class);
 		}
 
 		$students = $builder->orderBy('roll', 'ASC')->findAll();
-		$classes = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->findAll();
 
-		// Prepare date list for the month
-		$dates = [];
-		$daysInMonth = date('t', strtotime($startDate));
-		for ($i = 1; $i <= $daysInMonth; $i++) {
-			$dates[] = date('Y-m-d', strtotime("$month-$i"));
+		// Fetch attendance records for the month
+		$attendanceData = $attendanceModel
+			->select('student_id, created_at, remark')
+			->where('DATE(created_at) >=', $startDate)
+			->where('DATE(created_at) <=', $endDate)
+			->findAll();
+
+		// Format attendance data [student_id][date] = remark
+		$attendanceMap = [];
+		foreach ($attendanceData as $record) {
+			$date = date('Y-m-d', strtotime($record['created_at']));
+			$attendanceMap[$record['student_id']][$date] = $record;
 		}
 
-		$attendanceData = [];
-
-		foreach ($students as $student) {
-			$dailyStatus = [];
-
-			foreach ($dates as $d) {
-				$records = $attendanceModel
-					->where('student_id', $student['id'])
-					->where('DATE(created_at)', $d)
-					->orderBy('created_at', 'ASC')
-					->findAll();
-
-				$status = 'A'; // Default Absent
-
-				if (!empty($records)) {
-					$first = strtotime($records[0]['created_at']);
-					$last = strtotime(end($records)['created_at']);
-					$timeIn = date('H:i', $first);
-					$timeOut = date('H:i', $last);
-
-					if ($timeIn <= '10:00' && $timeOut >= '16:00') {
-						$status = 'P'; // Present
-					} elseif ($timeIn > '10:00' && $timeIn <= '11:00') {
-						$status = 'L'; // Late In
-					} elseif ($timeOut < '16:00' && $timeOut >= '15:00') {
-						$status = 'E'; // Early Leave
-					} else {
-						$status = 'P';
-					}
-				}
-
-				$dailyStatus[$d] = $status;
-			}
-
-			$attendanceData[] = [
-				'id' => $student['id'],
-				'student_name' => $student['student_name'],
-				'roll' => $student['roll'],
-				'class' => $student['class'],
-				'section' => $student['section'],
-				'days' => $dailyStatus,
+		// Generate all days in the month
+		$daysInMonth = [];
+		$numDays = date('t', strtotime($month));
+		for ($i = 1; $i <= $numDays; $i++) {
+			$dayDate = date('Y-m-', strtotime($month)) . str_pad($i, 2, '0', STR_PAD_LEFT);
+			$daysInMonth[] = [
+				'date' => $dayDate,
+				'day' => date('D', strtotime($dayDate))
 			];
 		}
 
+		// Class list for dropdown
+		$classes = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->findAll();
+
 		$data = [
-			'students' => $attendanceData,
+			'students' => $students,
 			'classes' => $classes,
 			'selectedClass' => $class,
 			'selectedMonth' => $month,
-			'dates' => $dates,
+			'daysInMonth' => $daysInMonth,
+			'attendanceMap' => $attendanceMap,
 		];
 
 		return view('public/attendance_list', $data);
