@@ -320,7 +320,11 @@ class Home extends BaseController
 			->findAll();
 
 		// Classes for dropdown
-		$classes = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->findAll();
+		$classes = $studentModel
+			->select('class')
+			->distinct()
+			->orderBy('CAST(class AS UNSIGNED)', 'ASC')
+			->findAll();
 
 		// Build days in month
 		$daysInMonth = [];
