@@ -316,7 +316,7 @@ class Home extends BaseController
 
 		$students = $builder->orderBy('class', 'ASC')
 			->orderBy('section', 'ASC')
-			->orderBy('roll', 'ASC')
+			->orderBy('CAST(roll AS UNSIGNED)',
 			->findAll();
 
 		// Classes for dropdown
