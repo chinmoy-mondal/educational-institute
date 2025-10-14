@@ -314,10 +314,12 @@ class Home extends BaseController
 			$builder->where('class', $selectedClass);
 		}
 
-		$students = $builder->orderBy('class', 'ASC')
-			->orderBy('section', 'ASC')
-			->orderBy('CAST(roll AS UNSIGNED)',
-			->findAll();
+	$students = $builder
+    ->orderBy('class', 'ASC')
+    ->orderBy('section', 'ASC')
+    ->orderBy('CAST(roll AS UNSIGNED)', 'ASC')
+    ->findAll();
+
 
 		// Classes for dropdown
 		$classes = $studentModel
