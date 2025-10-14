@@ -2,11 +2,11 @@
 
 <?= $this->section("content"); ?>
 
-     <!--  Fixed Wrapper for Navbar -->
-        <div class="fixed-header">
-            <?= $this->include("layouts/base-structure/header"); ?>
-        </div>
-        <div class="container content">
+<!--  Fixed Wrapper for Navbar -->
+<div class="fixed-header">
+    <?= $this->include("layouts/base-structure/header"); ?>
+</div>
+<div class="container content">
 
 
 
@@ -14,152 +14,122 @@
 
 
 
-<!--start-->
-<!-- Faculty & Staff Section -->
-<section class="faculty-staff py-5">
-    <div class="container">
-        <div class="text-center mb-4">
-            <h2 class="fw-bold">Meet Our Faculty & Staff</h2>
-            <p class="text-muted">Dedicated professionals committed to excellence in education.</p>
-        </div>
-
-        <div class="row">
-            <!-- Faculty Member 1 -->
-            <div class="col-md-4 mb-4">
-                <div class="card text-center shadow-sm border-0">
-                    <img src="<?= base_url('public/assets/img/ima1.jpg'); ?>" class="card-img-top faculty-img" alt="Faculty 1">
-                    <div class="card-body">
-                        <h5 class="fw-bold">Dr. John Doe</h5>
-                        <p class="text-muted">Principal</p>
-                        <p class="small">With over 20 years of experience in education, Dr. John is dedicated to shaping the future.</p>
-                    </div>
-                </div>
+    <!--start-->
+    <section class="faculty-staff py-5">
+        <div class="container">
+            <!-- Section Header -->
+            <div class="text-center mb-5">
+                <h2 class="fw-bold text-primary">Meet Our Faculty & Staff</h2>
+                <p class="text-muted fs-5">Dedicated professionals committed to excellence in education</p>
             </div>
 
-            <!-- Faculty Member 2 -->
-            <div class="col-md-4 mb-4">
-                <div class="card text-center shadow-sm border-0">
-                    <img src="<?= base_url('public/assets/img/ima1.jpg'); ?>" class="card-img-top faculty-img" alt="Faculty 2">
-                    <div class="card-body">
-                        <h5 class="fw-bold">Ms. Jane Smith</h5>
-                        <p class="text-muted">Vice Principal</p>
-                        <p class="small">Passionate about innovative teaching methods and student success.</p>
-                    </div>
-                </div>
-            </div>
+            <div class="row g-4">
+                <?php if (!empty($faculty)): ?>
+                    <?php foreach ($faculty as $member): ?>
+                        <div class="col-md-4">
+                            <a href="<?= base_url('/user-id?q=' . $member['id']) ?>" style="text-decoration: none;">
+                            <div class="card h-100 text-center border-0 shadow-sm faculty-card">
+                                <!-- Profile Image -->
+                                <div class="p-3">
+                                    <img src="<?= base_url($member['picture'] ?? 'public/assets/img/default.jpg'); ?>"
+                                        class="rounded-circle img-fluid faculty-img mb-3"
+                                        style="width:150px; height:150px; object-fit:cover; border:4px solid #f1f1f1;"
+                                        alt="<?= esc($member['name']); ?>">
+                                </div>
 
-            <!-- Faculty Member 3 -->
-            <div class="col-md-4 mb-4">
-                <div class="card text-center shadow-sm border-0">
-                    <img src="<?= base_url('public/assets/img/ima1.jpg'); ?>" class="card-img-top faculty-img" alt="Faculty 3">
-                    <div class="card-body">
-                        <h5 class="fw-bold">Mr. Alex Johnson</h5>
-                        <p class="text-muted">Head of Science Department</p>
-                        <p class="small">Bringing the wonders of science to life with hands-on learning.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <!-- Faculty Member 1 -->
-            <div class="col-md-4 mb-4">
-                <div class="card text-center shadow-sm border-0">
-                    <img src="<?= base_url('public/assets/img/ima1.jpg'); ?>" class="card-img-top faculty-img" alt="Faculty 1">
-                    <div class="card-body">
-                        <h5 class="fw-bold">Dr. John Doe</h5>
-                        <p class="text-muted">Principal</p>
-                        <p class="small">With over 20 years of experience in education, Dr. John is dedicated to shaping the future.</p>
-                    </div>
-                </div>
-            </div>
+                                <!-- Card Body -->
+                                <div class="card-body">
+                                    <h5 class="fw-bold mb-1"><?= esc($member['name']); ?></h5>
+                                    <p class="text-primary small mb-2"><?= esc(strtoupper($member['designation'])); ?></p>
+                                    <p class="text-primary small mb-2"><?= esc($member['subject']); ?></p>
+                                    <p class="text-muted small" style="text-align: justify;">
+                                        <?= esc($member['bio'], 'raw') ?>
+                                    </p>
+                                </div>
 
-            <!-- Faculty Member 2 -->
-            <div class="col-md-4 mb-4">
-                <div class="card text-center shadow-sm border-0">
-                    <img src="<?= base_url('public/assets/img/ima1.jpg'); ?>" class="card-img-top faculty-img" alt="Faculty 2">
-                    <div class="card-body">
-                        <h5 class="fw-bold">Ms. Jane Smith</h5>
-                        <p class="text-muted">Vice Principal</p>
-                        <p class="small">Passionate about innovative teaching methods and student success.</p>
-                    </div>
-                </div>
-            </div>
+                                <!-- Card Footer -->
+                                <div class="card-footer bg-white border-0 d-flex justify-content-center gap-2">
+                                    <!-- Email Button -->
+                                    <a href="mailto:<?= esc($member['email'] ?? ''); ?>" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-envelope"></i> Email
+                                    </a>
 
-            <!-- Faculty Member 3 -->
-            <div class="col-md-4 mb-4">
-                <div class="card text-center shadow-sm border-0">
-                    <img src="<?= base_url('public/assets/img/ima1.jpg'); ?>" class="card-img-top faculty-img" alt="Faculty 3">
-                    <div class="card-body">
-                        <h5 class="fw-bold">Mr. Alex Johnson</h5>
-                        <p class="text-muted">Head of Science Department</p>
-                        <p class="small">Bringing the wonders of science to life with hands-on learning.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <!-- Faculty Member 1 -->
-            <div class="col-md-4 mb-4">
-                <div class="card text-center shadow-sm border-0">
-                    <img src="<?= base_url('public/assets/img/ima1.jpg'); ?>" class="card-img-top faculty-img" alt="Faculty 1">
-                    <div class="card-body">
-                        <h5 class="fw-bold">Dr. John Doe</h5>
-                        <p class="text-muted">Principal</p>
-                        <p class="small">With over 20 years of experience in education, Dr. John is dedicated to shaping the future.</p>
-                    </div>
-                </div>
-            </div>
+                                    <!-- Call Button -->
+                                    <a href="tel:<?= esc($member['phone'] ?? ''); ?>" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-phone"></i> Call
+                                    </a>
 
-            <!-- Faculty Member 2 -->
-            <div class="col-md-4 mb-4">
-                <div class="card text-center shadow-sm border-0">
-                    <img src="<?= base_url('public/assets/img/ima1.jpg'); ?>" class="card-img-top faculty-img" alt="Faculty 2">
-                    <div class="card-body">
-                        <h5 class="fw-bold">Ms. Jane Smith</h5>
-                        <p class="text-muted">Vice Principal</p>
-                        <p class="small">Passionate about innovative teaching methods and student success.</p>
-                    </div>
-                </div>
-            </div>
+                                    <!-- Profile Button -->
+                                    <?php if (!empty($member['social_profile'])): ?>
+                                        <?php
+                                        $profile = $member['social_profile'];
+                                        $icon = 'fab fa-linkedin'; // default
+                                        $url  = '#';
 
-            <!-- Faculty Member 3 -->
-            <div class="col-md-4 mb-4">
-                <div class="card text-center shadow-sm border-0">
-                    <img src="<?= base_url('public/assets/img/ima1.jpg'); ?>" class="card-img-top faculty-img" alt="Faculty 3">
-                    <div class="card-body">
-                        <h5 class="fw-bold">Mr. Alex Johnson</h5>
-                        <p class="text-muted">Head of Science Department</p>
-                        <p class="small">Bringing the wonders of science to life with hands-on learning.</p>
-                    </div>
-                </div>
+                                        // Determine social type based on prefix
+                                        $prefix = substr($profile, 0, 2);
+                                        $link   = substr($profile, 2); // remove prefix
+                                        $link = str_replace(['f:', 'y:', 'l:'], '', $link);
+                                        $link = trim($link);
+
+                                        switch ($prefix) {
+                                            case 'f:':
+                                                $icon = 'fab fa-facebook';
+                                                $url  =  $link;
+                                                break;
+                                            case 'y:':
+                                                $icon = 'fab fa-youtube';
+                                                $url  =  $link;
+                                                break;
+                                            case 'l:':
+                                                $icon = 'fab fa-linkedin';
+                                                $url  =  $link;
+                                                break;
+                                        }
+                                        ?>
+                                        <a href="<?= esc($url) ?>" target="_blank" class="btn btn-outline-primary btn-sm">
+                                            <i class="<?= esc($icon) ?>"></i> Profile
+                                        </a>
+                                    <?php endif; ?>
+
+                                    <!-- Card Button -->
+                                    <a href="<?= base_url('teacher_idcard/' . $member['id']) ?>" target="_blank" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-id-card"></i> Card
+                                    </a>
+                                </div>
+                            </div>
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="text-center">No faculty members found.</p>
+                <?php endif; ?>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- Styles -->
-<style>
-    .faculty-staff {
-        background: linear-gradient(to right, #f8f9fa, #e9ecef);
-    }
+    <!-- Styles -->
+    <style>
+        .faculty-staff {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+        }
 
-    .faculty-img {
-        height: 250px;
-        object-fit: cover;
-        border-radius: 10px 10px 0 0;
-    }
+        .faculty-img {
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px 10px 0 0;
+        }
 
-    .card {
-        transition: transform 0.3s ease-in-out, box-shadow 0.3s;
-    }
+        .card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s;
+        }
 
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    }
-</style>
-<!--end-->
-
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+    <!--end-->
 
 
 
@@ -172,10 +142,10 @@
 
 
 
-        </div>
+
+</div>
 
 
-        <?= $this->include("layouts/base-structure/footer"); ?>
+<?= $this->include("layouts/base-structure/footer"); ?>
 
 <?= $this->endSection(); ?>
-  

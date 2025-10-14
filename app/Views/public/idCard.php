@@ -35,7 +35,7 @@
     border-radius: 6px;
   }
   .signature {
-    width: 100px;
+    width: 75px;
   }
 </style>
 
@@ -69,8 +69,12 @@
       <div class="text-center text-black mb-1">
         <h4 class="mb-1 fw-bold"><?= esc($student['student_name']) ?></h4>
         <p class="mb-0 fw-semibold">STUDENT</p>
-        <p class="mb-0 fw-semibold">ID NO: <?= esc($student['id']) ?></p>
-        <p class="mb-0">Blood Group: <?= esc($student['blood_group']) ?></p>
+        <p class="mb-0">
+          <i class="fas fa-id-card"></i> ID: <?= esc($student['id']) ?> 
+          <span class="mx-1"></span>
+          <i class="fas fa-tint"></i> <?= esc($student['blood_group']) ?>
+        </p>
+        <p class="mb-0"><i class="fas fa-phone me-2"></i><?= esc($student['phone']) ?></p>
       
       </div>
 
@@ -92,7 +96,7 @@
       <!-- QR Code -->
 	<div class="text-center mb-3">
 	    <img
-		src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=<?= urlencode('https://mulss.edu.bd/student?q=' . $student['id'] . '&class=&section=') ?>"
+		src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=<?= urlencode('https://mulss.edu.bd/student-id?q=' . $student['id']) ?>"
 		class="qr-img"
 		alt="Student QR"
 	    />

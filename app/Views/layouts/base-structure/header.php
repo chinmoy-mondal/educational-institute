@@ -44,13 +44,15 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="#">Curriculum</a></li>
                                     <li><a class="dropdown-item" href="<?= base_url('subjects'); ?>">Subjects</a></li>
-                                    <li><a class="dropdown-item" href="#">Exams & Results</a></li>
+                                    <li><a class="dropdown-item" href="<?= base_url('public-calendar'); ?>">Calendar</a></li>
                                 </ul>
                             </li>
+
+                            
             
                             <!-- Admissions -->
                             <li class="nav-item">
-                                <a class="nav-link" href="<?= base_url('public-calendar'); ?>">Calendar</a>
+                                <a class="nav-link" href="<?= base_url('notice'); ?>">Notice</a>
                             </li>
             
                             <!-- Students -->
@@ -58,14 +60,17 @@
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Students</a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="<?= base_url('student'); ?>">Student Portal</a></li>
-                                    <li><a class="dropdown-item" href="#">Clubs & Activities</a></li>
-                                    <li><a class="dropdown-item" href="#">Library</a></li>
+                                    <li><a class="dropdown-item" href="<?= base_url('student_stat'); ?>">Student Statistics</a></li>
+                                    <li><a class="dropdown-item" href="<?= base_url('attendance'); ?>">Attendance</a></li>
                                 </ul>
                             </li>
             
                             <!-- Events -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Events</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Exam</a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="<?= base_url('print-admit-form'); ?>">Exams & Results</a></li>
+                                </ul>
                             </li>
             
                             <!-- Contact -->

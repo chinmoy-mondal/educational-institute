@@ -2,7 +2,8 @@
 <?= $this->section('content') ?>
 
 <style>
-  th, td {
+  th,
+  td {
     vertical-align: middle !important;
     text-align: center !important;
     font-size: 10px;
@@ -12,28 +13,85 @@
     color: red;
     font-weight: bold;
   }
-@media print {
-  @page {
-    size: legal landscape;
-    margin: 0.5cm;
+
+  @media print {
+    @page {
+      size: legal landscape;
+      margin: 0.5cm;
+    }
+
+    body {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      font-size: 9px;
+      margin: 0;
+      padding: 0;
+    }
+
+    .no-print,
+    .btn,
+    script {
+      display: none !important;
+    }
+
+    .container-fluid,
+    .card {
+      margin: 0 !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .card-header {
+      background: #333 !important;
+      color: white !important;
+    }
+
+    table {
+      border-collapse: collapse !important;
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      font-size: 9px;
+      page-break-inside: avoid;
+    }
+
+    table th,
+    table td {
+      padding: 0 !important;
+      margin: 0 !important;
+      border: 1px solid #000 !important;
+      vertical-align: middle !important;
+      text-align: center !important;
+      line-height: 1 !important;
+    }
+
+    .rotate {
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      white-space: nowrap;
+      font-size: 8px;
+      line-height: 1;
+      margin: 0 auto;
+    }
   }
 
   body {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
-    font-size: 9px;
-    margin: 0;
-    padding: 0;
+    font-size: 10px;
   }
 
-  .no-print, .btn, script {
+  .no-print,
+  .btn,
+  script {
     display: none !important;
   }
 
-  .container-fluid, .card {
-    margin: 0 !important;
-    padding: 0 !important;
+  .card,
+  .container-fluid {
     box-shadow: none !important;
+    margin: 0;
+    padding: 0;
   }
 
   .card-header {
@@ -41,153 +99,107 @@
     color: white !important;
   }
 
-  table {
-    border-collapse: collapse !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    font-size: 9px;
-    page-break-inside: avoid;
-  }
-
-  table th, table td {
-    padding: 0 !important;
-    margin: 0 !important;
-    border: 1px solid #000 !important;
-    vertical-align: middle !important;
-    text-align: center !important;
-    line-height: 1 !important;
-  }
-
   .rotate {
     writing-mode: vertical-rl;
     transform: rotate(180deg);
     white-space: nowrap;
-    font-size: 8px;
+    font-size: 9px;
     line-height: 1;
-    margin: 0 auto;
-  }
-}
-
-    body {
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-      font-size: 10px;
-    }
-
-    .no-print, .btn, script {
-      display: none !important;
-    }
-
-    .card, .container-fluid {
-      box-shadow: none !important;
-      margin: 0;
-      padding: 0;
-    }
-
-    .card-header {
-      background: #333 !important;
-      color: white !important;
-    }
-.rotate {
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  white-space: nowrap;
-  font-size: 9px;
-  line-height: 1;
-  max-width: 20px;
-  margin: auto;
-}
-    table {
-      page-break-inside: avoid;
-    }
+    max-width: 20px;
+    margin: auto;
   }
 
-  th, td {
-  vertical-align: middle !important;
-  text-align: center !important;
-  font-size: 9px;
-  padding: 2px !important;
-  line-height: 1.1;
-}
+  table {
+    page-break-inside: avoid;
+  }
+
+
+  th,
+  td {
+    vertical-align: middle !important;
+    text-align: center !important;
+    font-size: 9px;
+    padding: 2px !important;
+    line-height: 1.1;
+  }
 </style>
 
 <?php
 function isSubjectFailed(string $class, string $subject, array $allSubjects, string $group = 'general'): bool
 {
-    if (!isset($allSubjects[$subject])) return false;
+  if (!isset($allSubjects[$subject])) return false;
 
-    $subjectData = $allSubjects[$subject];
-    $written = is_numeric($subjectData['written']) ? $subjectData['written'] : 0;
-    $mcq = is_numeric($subjectData['mcq']) ? $subjectData['mcq'] : 0;
-    $practical = is_numeric($subjectData['practical']) ? $subjectData['practical'] : 0;
+  $subjectData = $allSubjects[$subject];
+  $written = is_numeric($subjectData['written']) ? $subjectData['written'] : 0;
+  $mcq = is_numeric($subjectData['mcq']) ? $subjectData['mcq'] : 0;
+  $practical = is_numeric($subjectData['practical']) ? $subjectData['practical'] : 0;
 
-    // Classes 6-8 logic
-    if (in_array($class, ['6', '7', '8'])) {
-        if ($subject === 'ICT') return ($written + $mcq + $practical) < 17;
+  // Classes 6-8 logic
+  if (in_array($class, ['6', '7', '8'])) {
+    if ($subject === 'ICT') return ($written + $mcq + $practical) < 17;
 
-        if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
-            $b1 = $allSubjects['Bangla 1st Paper'] ?? ['written'=>0, 'mcq'=>0];
-            $b2 = $allSubjects['Bangla 2nd Paper'] ?? ['written'=>0, 'mcq'=>0];
-            return ($b1['written'] + $b1['mcq'] + $b2['written'] + $b2['mcq']) < 49;
-        }
-
-        if (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
-            $e1 = $allSubjects['English 1st Paper'] ?? ['written'=>0];
-            $e2 = $allSubjects['English 2nd Paper'] ?? ['written'=>0];
-            return ($e1['written'] + $e2['written']) < 49;
-        }
-
-        return ($written + $mcq + $practical) < 33;
+    if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
+      $b1 = $allSubjects['Bangla 1st Paper'] ?? ['written' => 0, 'mcq' => 0];
+      $b2 = $allSubjects['Bangla 2nd Paper'] ?? ['written' => 0, 'mcq' => 0];
+      return ($b1['written'] + $b1['mcq'] + $b2['written'] + $b2['mcq']) < 49;
     }
 
-    // Classes 9-10
-    if (in_array($class, ['9', '10'])) {
-        if ($group === 'vocational') {
-            // Vocational group thresholds
-            if (in_array($subject, ['Physics-1', 'Chemistry-1', 'Physics-2', 'Chemistry-2'])) {
-                return $written < 10;
-            }
-            return $written < 20;
-        }
-
-        // General group thresholds
-        if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
-            $b1 = $allSubjects['Bangla 1st Paper'] ?? ['written'=>0, 'mcq'=>0];
-            $b2 = $allSubjects['Bangla 2nd Paper'] ?? ['written'=>0, 'mcq'=>0];
-            return ($b1['written'] + $b2['written'] < 46) || ($b1['mcq'] + $b2['mcq'] < 20);
-        }
-
-        if (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
-            $e1 = $allSubjects['English 1st Paper'] ?? ['written'=>0];
-            $e2 = $allSubjects['English 2nd Paper'] ?? ['written'=>0];
-            return ($e1['written'] + $e2['written']) < 66;
-        }
-
-        if ($subject === 'ICT') return ($written + $mcq) < 8 || $practical < 9;
-
-        if (in_array($subject, ['Physics', 'Chemistry', 'Higher Math', 'Biology'])) {
-            return $written < 17 || $mcq < 8 || $practical < 8;
-        }
-
-        return $written < 23 || $mcq < 10;
+    if (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
+      $e1 = $allSubjects['English 1st Paper'] ?? ['written' => 0];
+      $e2 = $allSubjects['English 2nd Paper'] ?? ['written' => 0];
+      return ($e1['written'] + $e2['written']) < 49;
     }
 
-    return false;
+    return ($written + $mcq + $practical) < 33;
+  }
+
+  // Classes 9-10
+  if (in_array($class, ['9', '10'])) {
+    if ($group === 'vocational') {
+      // Vocational group thresholds
+      if (in_array($subject, ['Physics-1', 'Chemistry-1', 'Physics-2', 'Chemistry-2'])) {
+        return $written < 10;
+      }
+      return $written < 20;
+    }
+
+    // General group thresholds
+    if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
+      $b1 = $allSubjects['Bangla 1st Paper'] ?? ['written' => 0, 'mcq' => 0];
+      $b2 = $allSubjects['Bangla 2nd Paper'] ?? ['written' => 0, 'mcq' => 0];
+      return ($b1['written'] + $b2['written'] < 46) || ($b1['mcq'] + $b2['mcq'] < 20);
+    }
+
+    if (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
+      $e1 = $allSubjects['English 1st Paper'] ?? ['written' => 0];
+      $e2 = $allSubjects['English 2nd Paper'] ?? ['written' => 0];
+      return ($e1['written'] + $e2['written']) < 66;
+    }
+
+    if ($subject === 'ICT') return ($written + $mcq) < 8 || $practical < 9;
+
+    if (in_array($subject, ['Physics', 'Chemistry', 'Higher Math', 'Biology'])) {
+      return $written < 17 || $mcq < 8 || $practical < 8;
+    }
+
+    return $written < 23 || $mcq < 10;
+  }
+
+  return false;
 }
 
 // Build subject list from data
 $subjectList = [];
 if (isset($finalData) && is_array($finalData)) {
-    foreach ($finalData as $student) {
-        if (isset($student['results']) && is_array($student['results'])) {
-            foreach ($student['results'] as $res) {
-                if (!in_array($res['subject'], $subjectList)) {
-                    $subjectList[] = $res['subject'];
-                }
-            }
+  foreach ($finalData as $student) {
+    if (isset($student['results']) && is_array($student['results'])) {
+      foreach ($student['results'] as $res) {
+        if (!in_array($res['subject'], $subjectList)) {
+          $subjectList[] = $res['subject'];
         }
+      }
     }
+  }
 }
 ?>
 
@@ -213,29 +225,34 @@ if (isset($finalData) && is_array($finalData)) {
                 <th rowspan="2">Roll</th>
                 <th rowspan="2">Name</th>
                 <?php foreach ($subjectList as $subject): ?>
-                  <th colspan="4"><div class="rotate"><?= esc($subject) ?></div></th>
+                  <th colspan="4">
+                    <div class="rotate"><?= esc($subject) ?></div>
+                  </th>
                 <?php endforeach; ?>
                 <th rowspan="2">Total</th>
               </tr>
               <tr>
                 <?php foreach ($subjectList as $subject): ?>
-                  <th>W</th><th>MCQ</th><th>Prac</th><th>Total</th>
+                  <th>W</th>
+                  <th>MCQ</th>
+                  <th>Prac</th>
+                  <th>Total</th>
                 <?php endforeach; ?>
               </tr>
             </thead>
             <tbody>
               <?php foreach ($finalData as $student): ?>
                 <?php
-                  $subjectMap = [];
-                  foreach ($student['results'] as $res) {
-                    $subjectMap[$res['subject']] = $res;
-                  }
+                $subjectMap = [];
+                foreach ($student['results'] as $res) {
+                  $subjectMap[$res['subject']] = $res;
+                }
 
-                  $studentTotal = 0;
-                  $failCount = 0;
-                  $banglaFailCounted = false;
-                  $englishFailCounted = false;
-                  $group = $student['group'] ?? 'general';
+                $studentTotal = 0;
+                $failCount = 0;
+                $banglaFailCounted = false;
+                $englishFailCounted = false;
+                $group = $student['group'] ?? 'general';
                 ?>
                 <tr class="text-center">
                   <td><strong><?= esc($student['roll']) ?></strong></td>
@@ -243,58 +260,66 @@ if (isset($finalData) && is_array($finalData)) {
 
                   <?php foreach ($subjectList as $subject): ?>
                     <?php if (!isset($subjectMap[$subject])): ?>
-                      <td></td><td></td><td></td><td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
                     <?php else: ?>
                       <?php
-                        $res = $subjectMap[$subject];
-                        $written = $res['written'] ?? 0;
-                        $mcq = $res['mcq'] ?? 0;
-                        $practical = $res['practical'] ?? 0;
-                        $total = $res['total'] ?? 0;
+                      $res = $subjectMap[$subject];
+                      $written = $res['written'] ?? 0;
+                      $mcq = $res['mcq'] ?? 0;
+                      $practical = $res['practical'] ?? 0;
+                      $total = $res['total'] ?? 0;
 
-                        $studentTotal += is_numeric($total) ? $total : 0;
+                      $studentTotal += is_numeric($total) ? $total : 0;
 
-                        $isFail = isSubjectFailed($class, $subject, $subjectMap, $group);
+                      $isFail = isSubjectFailed($class, $subject, $subjectMap, $group);
 
-                        if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
-                          if (!$banglaFailCounted && $isFail) {
-                              $failCount++;
-                              $banglaFailCounted = true;
-                          }
-                        } elseif (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
-                          if (!$englishFailCounted && $isFail) {
-                              $failCount++;
-                              $englishFailCounted = true;
-                          }
-                        } else {
-                          if ($isFail) $failCount++;
+                      if (in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper'])) {
+                        if (!$banglaFailCounted && $isFail) {
+                          $failCount++;
+                          $banglaFailCounted = true;
                         }
-
-                        $writtenClass = $mcqClass = $practicalClass = '';
-
-                        if ($group === 'vocational') {
-                            // Vocational fail styling
-                            if (in_array($subject, ['Physics-1', 'Chemistry-1', 'Physics-2', 'Chemistry-2'])) {
-                                if ($written < 10) $writtenClass = 'text-danger fw-bold';
-                            } else {
-                                if ($written < 20) $writtenClass = 'text-danger fw-bold';
-                            }
-                            // MCQ and Practical classes can be added if needed
-                        } else {
-                            // General or classes 6-8 styling
-                            if ($subject === 'ICT' && in_array($class, ['6','7','8']) && ($written + $mcq + $practical) < 17) {
-                              $writtenClass = $mcqClass = $practicalClass = 'text-danger fw-bold';
-                            } elseif ($subject === 'ICT' && in_array($class, ['9','10']) && ($written + $mcq) < 8 && $practical < 9) {
-                              $writtenClass = $mcqClass = $practicalClass = 'text-danger fw-bold';
-                            } elseif (in_array($subject, ['Physics', 'Chemistry', 'Higher Math', 'Biology'])) {
-                              if ($written < 17) $writtenClass = 'text-danger fw-bold';
-                              if ($mcq < 8) $mcqClass = 'text-danger fw-bold';
-                              if ($practical < 8) $practicalClass = 'text-danger fw-bold';
-                            } elseif (!in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper', 'English 1st Paper', 'English 2nd Paper'])) {
-                              if ($written < 23) $writtenClass = 'text-danger fw-bold';
-                              if ($mcq < 10) $mcqClass = 'text-danger fw-bold';
-                            }
+                      } elseif (in_array($subject, ['English 1st Paper', 'English 2nd Paper'])) {
+                        if (!$englishFailCounted && $isFail) {
+                          $failCount++;
+                          $englishFailCounted = true;
                         }
+                      } else {
+                        if ($isFail) $failCount++;
+                      }
+
+                      $writtenClass = $mcqClass = $practicalClass = '';
+
+                      if ($group === 'vocational') {
+                        // Vocational fail styling
+                        if (in_array($subject, ['Physics-1', 'Chemistry-1', 'Physics-2', 'Chemistry-2'])) {
+                          if ($written < 10) $writtenClass = 'text-danger fw-bold';
+                        } else {
+                          if ($written < 20) $writtenClass = 'text-danger fw-bold';
+                        }
+                        // MCQ and Practical classes can be added if needed
+                      } else {
+                        // General or classes 6-8 styling
+                        if ($subject === 'ICT' && in_array($class, ['6', '7', '8']) && ($written + $mcq + $practical) < 17) {
+                          $writtenClass = $mcqClass = $practicalClass = 'text-danger fw-bold';
+                        } elseif ($subject === 'ICT' && in_array($class, ['9', '10'])) {
+                          if (($written + $mcq) < 8) {
+                            $writtenClass = $mcqClass = 'text-danger fw-bold';
+                          }
+                          if ($practical < 9) {
+                            $practicalClass = 'text-danger fw-bold';
+                          }
+                        } elseif (in_array($subject, ['Physics', 'Chemistry', 'Higher Math', 'Biology'])) {
+                          if ($written < 17) $writtenClass = 'text-danger fw-bold';
+                          if ($mcq < 8) $mcqClass = 'text-danger fw-bold';
+                          if ($practical < 8) $practicalClass = 'text-danger fw-bold';
+                        } elseif (!in_array($subject, ['Bangla 1st Paper', 'Bangla 2nd Paper', 'English 1st Paper', 'English 2nd Paper'])) {
+                          if ($written < 23) $writtenClass = 'text-danger fw-bold';
+                          if ($mcq < 10) $mcqClass = 'text-danger fw-bold';
+                        }
+                      }
                       ?>
                       <td class="<?= $writtenClass ?>"><?= $written ?></td>
                       <td class="<?= $mcqClass ?>"><?= $mcq ?></td>
@@ -317,52 +342,53 @@ if (isset($finalData) && is_array($finalData)) {
 </div>
 
 <script>
-function downloadCSV() {
-  const table = document.querySelector("table");
-  if (!table) return;
+  function downloadCSV() {
+    const table = document.querySelector("table");
+    if (!table) return;
 
-  const firstHeaderRow = table.querySelector("thead tr:first-child");
-  const headers = [];
-  headers.push("Roll", "Name");
+    const firstHeaderRow = table.querySelector("thead tr:first-child");
+    const headers = [];
+    headers.push("Roll", "Name");
 
-  for (let i = 2; i < firstHeaderRow.cells.length - 1; i++) {
-    const subject = firstHeaderRow.cells[i].innerText.trim();
-    headers.push(subject + " W", subject + " MCQ", subject + " Prac", subject + " Total");
-  }
-
-  headers.push("Total");
-  let csv = headers.map(h => `"${h.replace(/"/g, '""')}"`).join(",") + "\n";
-
-  const rows = table.querySelectorAll("tbody tr");
-  rows.forEach(row => {
-    const cells = row.querySelectorAll("td");
-    const data = [cells[0].innerText.trim(), cells[1].innerText.trim()];
-
-    const subjectCount = (cells.length - 3) / 4;
-    for (let i = 0; i < subjectCount; i++) {
-      const base = 2 + i * 4;
-      for (let j = 0; j < 4; j++) {
-        data.push(cells[base + j].innerText.trim());
-      }
+    for (let i = 2; i < firstHeaderRow.cells.length - 1; i++) {
+      const subject = firstHeaderRow.cells[i].innerText.trim();
+      headers.push(subject + " W", subject + " MCQ", subject + " Prac", subject + " Total");
     }
 
-    data.push(cells[cells.length - 1].innerText.trim());
-    csv += data.map(d => `"${d.replace(/"/g, '""')}"`).join(",") + "\n";
-  });
+    headers.push("Total");
+    let csv = headers.map(h => `"${h.replace(/"/g, '""')}"`).join(",") + "\n";
 
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "tabulation_sheet.csv";
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
+    const rows = table.querySelectorAll("tbody tr");
+    rows.forEach(row => {
+      const cells = row.querySelectorAll("td");
+      const data = [cells[0].innerText.trim(), cells[1].innerText.trim()];
 
-function printDiv() {
-  window.print();
-}
+      const subjectCount = (cells.length - 3) / 4;
+      for (let i = 0; i < subjectCount; i++) {
+        const base = 2 + i * 4;
+        for (let j = 0; j < 4; j++) {
+          data.push(cells[base + j].innerText.trim());
+        }
+      }
+
+      data.push(cells[cells.length - 1].innerText.trim());
+      csv += data.map(d => `"${d.replace(/"/g, '""')}"`).join(",") + "\n";
+    });
+
+    const blob = new Blob([csv], {
+      type: "text/csv;charset=utf-8;"
+    });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "tabulation_sheet.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function printDiv() {
+    window.print();
+  }
 </script>
 
 <?= $this->endSection() ?>
-

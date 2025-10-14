@@ -25,4 +25,10 @@ class ResultModel extends Model
 	    'publish',      // ✅ newly added
     ];
     public $timestamps = false; // because we handle created_at/updated_at manually
+
+    public function withSubject()
+    {
+        return $this->select('results.*, subjects.subject')
+                    ->join('subjects', 'subjects.id = results.subject_id');
+    }
 }

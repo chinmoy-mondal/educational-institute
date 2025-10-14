@@ -36,19 +36,29 @@
                         </p>
                     </div>
 
-                    <?php if (session()->getFlashdata('message')): ?>
-                        <div class="alert alert-success"><?= session()->getFlashdata('message') ?></div>
+                    <?php if (session()->getFlashdata('success')): ?>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <?= session()->getFlashdata('success') ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (session()->getFlashdata('error')): ?>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <?= session()->getFlashdata('error') ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
                     <?php endif; ?>
 
                     <form method="post" action="<?= site_url('results/submit') ?>" onsubmit="return validateTotals();">
                         <div class="mb-3 d-flex justify-content-between align-items-center flex-wrap">
                             <div>
-                                <label for="exam" class="me-2 fw-bold">Select Exam:</label>
-                                <select name="exam" id="exam" class="form-select d-inline-block w-auto" required>
-                                    <option value="half-yearly">Half Yearly Exam</option>
-                                    <option value="Final">Final Exam</option>
-                                    <option value="Class Test">Class Test</option>
-                                </select>
+                                <!-- Label showing the exam name -->
+                                <label class="fw-bold">Exam:</label>
+                                <span class="ms-2"><?= esc($exam_name) ?></span>
+
+                                <!-- Hidden input to submit exam_name -->
+                                <input type="hidden" name="exam" value="<?= esc($exam_name) ?>">
                             </div>
                         </div>
                         <input type="hidden" name="class" value="<?= esc($subject['class']) ?>">
