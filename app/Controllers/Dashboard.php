@@ -2085,9 +2085,17 @@ class Dashboard extends Controller
 
 		$countUpdated = 0;
 		$countDeleted = 0;
+		$holidayError = false; // track if any date is a holiday
 
 		foreach ($attendance as $studentId => $dates) {
 			foreach ($dates as $date => $remark) {
+
+				// 🔹 Check if date is Friday or Saturday
+				$dayName = date('D', strtotime($date));
+				if ($dayName === 'Fri' || $dayName === 'Sat') {
+					$holidayError = true;
+					continue; // skip saving attendance for this date
+				}
 
 				if ($remark === 'P') {
 					// --- Attend Record ---
@@ -2132,8 +2140,7 @@ class Dashboard extends Controller
 						]);
 					}
 
-					$countUpdated++; // mark as updated
-
+					$countUpdated++;
 				} elseif ($remark === 'A') {
 					// Delete any existing Attend/Leave records
 					$existingRecords = $this->attendanceModel
@@ -2145,18 +2152,23 @@ class Dashboard extends Controller
 					foreach ($existingRecords as $record) {
 						$this->attendanceModel->delete($record['id']);
 					}
+
 					$countDeleted++;
 				}
 			}
 		}
 
-		// Prepare dynamic message
+		// 🔹 Prepare message
 		$messages = [];
-		if ($countUpdated > 0) $messages[] = "Attendance updated for {$countUpdated} students";
-		if ($countDeleted > 0) $messages[] = "Attendance deleted for {$countDeleted} students";
+		if ($holidayError) $messages[] = "This day is a public holiday (Friday or Saturday). Attendance not saved.";
+		if ($countUpdated > 0) $messages[] = "Attendance updated for {$countUpdated} students.";
+		if ($countDeleted > 0) $messages[] = "Attendance deleted for {$countDeleted} students.";
 
 		$flashMessage = !empty($messages) ? implode(' | ', $messages) : "No changes made.";
 
-		return redirect()->back()->with('success', $flashMessage);
+		// 🔹 Choose message type
+		$alertType = $holidayError ? 'error' : 'success';
+
+		return redirect()->back()->with($alertType, $flashMessage);
 	}
 }
