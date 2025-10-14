@@ -2051,7 +2051,8 @@ class Dashboard extends Controller
 
 		// Add permission filter
 		$builder = $builder->where('permission', 0);
-        $builder = $builder->orderBy('roll', 'ASC');
+        $builder = $builder->orderBy('CAST(roll AS UNSIGNED)', 'ASC');
+
 		// Get students
 		$students = $builder->findAll();
 
