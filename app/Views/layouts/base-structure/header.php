@@ -61,8 +61,7 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="<?= base_url('student'); ?>">Student Portal</a></li>
                                     <li><a class="dropdown-item" href="<?= base_url('student_stat'); ?>">Student Statistics</a></li>
-                                    <li><a class="dropdown-item" href="#">Clubs & Activities</a></li>
-                                    <li><a class="dropdown-item" href="#">Library</a></li>
+                                    <li><a class="dropdown-item" href="<?= base_url('attendance'); ?>">Attendance</a></li>
                                 </ul>
                             </li>
             
