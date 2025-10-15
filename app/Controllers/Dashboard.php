@@ -82,7 +82,7 @@ class Dashboard extends Controller
 			[
 				'label'   => 'Accounts',
 				'url'     => base_url('admin/transactions'),
-				'icon'    => 'fas fa-coins',
+				'icon'    => 'fas fa-money-bill-wave',
 				'section' => 'accounts'
 			],
 			[
@@ -2210,7 +2210,7 @@ class Dashboard extends Controller
 		];
 
 		// Load available purposes (from fees table)
-		$data['purposes'] = $this->feesModel->findAll();
+		$this->data['purposes'] = $this->feesModel->findAll();
 
 		if ($this->request->getMethod() === 'post') {
 			$this->transactionModel->save([
@@ -2227,6 +2227,6 @@ class Dashboard extends Controller
 			return redirect()->to('dashboard/transactions')->with('success', 'Transaction added successfully.');
 		}
 
-		echo view('dashboard/transaction_add', $data);
+		echo view('dashboard/transaction_add', $this->data);
 	}
 }
