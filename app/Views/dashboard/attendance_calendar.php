@@ -34,20 +34,17 @@
             </select>
         </div>
 
-        <!-- ✅ Section Selector (Dynamic from DB) -->
-<div class="form-group mb-0 me-2" style="margin-right: 12px;">
-    <select name="section" id="section" class="form-select form-select-sm" style="height: 34px;">
-        <option value="">Select Section</option>
-        <?php if (!empty($sections)): ?>
-            <?php foreach ($sections as $sec): ?>
-                <option value="<?= esc($sec['section']) ?>"
-                    <?= ($selectedSection ?? '') == $sec['section'] ? 'selected' : '' ?>>
-                    <?= esc($sec['section']) ?>
-                </option>
-            <?php endforeach; ?>
-        <?php endif; ?>
-    </select>
-</div>
+        <!-- ✅ Class Selector -->
+        <div class="form-group mb-0 me-2">
+            <select name="class" id="class" class="form-select form-select-sm" style="height: 34px;">
+                <option value="">Select Class</option>
+                <?php for ($c = 6; $c <= 10; $c++): ?>
+                    <option value="<?= $c ?>" <?= ($selectedClass ?? '') == $c ? 'selected' : '' ?>>
+                        Class <?= $c ?>
+                    </option>
+                <?php endfor; ?>
+            </select>
+        </div>
 
         <!-- Date Picker -->
         <div class="form-group mb-0 me-2" style="margin-right: 12px;">
