@@ -2224,9 +2224,9 @@ class Dashboard extends Controller
 				'description'    => $this->request->getPost('description'),
 			]);
 
-			return redirect()->to('/admin/transactions')->with('success', 'Transaction added successfully.');
+			return redirect()->to('/dashboard/transactions')->with('success', 'Transaction added successfully.');
 		}
 
-		echo view('admin/transaction_add', $data);
+		echo view('dashboard/transaction_add', $data);
 	}
 }
