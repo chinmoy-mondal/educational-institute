@@ -2198,16 +2198,15 @@ class Dashboard extends Controller
 	public function addTransaction()
 	{
 		// Dashboard specific values
-		$this->data['title'] = 'Dashboard';
-		$this->data['activeSection'] = 'dashboard';
+		$this->data['title'] = 'Accounts';
+		$this->data['activeSection'] = 'accounts';
 
 		// Common navbar and sidebar for all views
 
 		$this->data['navbarItems'] = [
-			['label' => 'Dashboard', 'url' => base_url('dashboard')],
-			['label' => 'Calendar', 'url' => base_url('calendar')],
-			['label' => 'Result', 'url' => base_url('ad-result')],
-			['label' => 'Accounts', 'url' => base_url('accounts')],
+			['label' => 'Accounts', 'url' => base_url('dashboard')],
+			['label' => 'Statistics', 'url' => base_url('calendar')],
+			['label' => 'Graph', 'url' => base_url('ad-result')],
 		];
 
 		// Load available purposes (from fees table)
