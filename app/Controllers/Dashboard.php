@@ -12,6 +12,8 @@ use App\Models\CalendarModel;
 use App\Models\MarkingOpenModel;
 use App\Models\NoticeModel;
 use App\Models\AttendanceModel;
+use App\Models\FeesModel;
+use App\Models\TransactionModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Dashboard extends Controller
@@ -24,20 +26,24 @@ class Dashboard extends Controller
 	protected $noticeModel;
 	protected $markingModel;
 	protected $attendanceModel;
+	protected $feesModel;
+	protected $transactionModel;
 
 	protected $session;
 	protected $data;
 
 	public function __construct()
 	{
-		$this->userModel     = new UserModel();
-		$this->subjectModel  = new SubjectModel();
-		$this->studentModel  = new StudentModel();
-		$this->resultModel   = new ResultModel();
-		$this->calendarModel   = new CalendarModel();
-		$this->noticeModel   = new NoticeModel();
-		$this->markingModel = new MarkingOpenModel();
-		$this->attendanceModel = new AttendanceModel();
+		$this->userModel     	= new UserModel();
+		$this->subjectModel  	= new SubjectModel();
+		$this->studentModel  	= new StudentModel();
+		$this->resultModel   	= new ResultModel();
+		$this->calendarModel   	= new CalendarModel();
+		$this->noticeModel   	= new NoticeModel();
+		$this->markingModel 	= new MarkingOpenModel();
+		$this->attendanceModel 	= new AttendanceModel();
+		$this->feesModel 		= new FeesModel();
+		$this->transactionModel = new TransactionModel();
 
 
 		$this->session       = session();
@@ -72,6 +78,12 @@ class Dashboard extends Controller
 				'url' => base_url('admin/student'),
 				'icon' => 'fas fa-user-graduate',
 				'section' => 'student'
+			],
+			[
+				'label'   => 'Transactions',
+				'url'     => base_url('admin/transactions'),
+				'icon'    => 'fas fa-money-bill-wave',
+				'section' => 'accounts'
 			],
 			[
 				'label' => 'Attendance',
@@ -2028,66 +2040,66 @@ class Dashboard extends Controller
 		return redirect()->to('admin/notices')->with('success', 'Notice deleted successfully!');
 	}
 
-public function attendanceCalendar()
-{
-	$this->data['title'] = 'Attendance';
-	$this->data['activeSection'] = 'attendance';
-	$this->data['navbarItems'] = [
-		['label' => 'Attendance', 'url' => base_url('attendance')],
-	];
+	public function attendanceCalendar()
+	{
+		$this->data['title'] = 'Attendance';
+		$this->data['activeSection'] = 'attendance';
+		$this->data['navbarItems'] = [
+			['label' => 'Attendance', 'url' => base_url('attendance')],
+		];
 
-	helper(['form', 'url']);
+		helper(['form', 'url']);
 
-	// Get POST values
-	$selectedClass   = $this->request->getPost('class') ?? '';
-	$selectedSection = $this->request->getPost('section') ?? '';
-	$selectedDate    = $this->request->getPost('date') ?? date('Y-m-d');
+		// Get POST values
+		$selectedClass   = $this->request->getPost('class') ?? '';
+		$selectedSection = $this->request->getPost('section') ?? '';
+		$selectedDate    = $this->request->getPost('date') ?? date('Y-m-d');
 
-	// Base query
-	$builder = $this->studentModel->where('permission', 0);
+		// Base query
+		$builder = $this->studentModel->where('permission', 0);
 
-	// Filter by class
-	if ($selectedClass) {
-		$builder->where('class', $selectedClass);
-	}
-
-	// ✅ Section Filter
-	if (strtolower($selectedSection) === 'general') {
-		// Exclude any section containing "Vocational"
-		$builder->notLike('section', 'Vocational');
-	} elseif (strtolower($selectedSection) === 'vocational') {
-		// Include only sections containing "Vocational"
-		$builder->like('section', 'Vocational');
-	}
-
-	// Order and fetch
-	$students = $builder->orderBy('CAST(roll AS UNSIGNED)', 'ASC')->findAll();
-
-	// Get attendance for the selected date
-	$attendances = $this->attendanceModel
-		->select('student_id, remark, DATE(created_at) as date')
-		->where('created_at >=', $selectedDate . ' 00:00:00')
-		->where('created_at <=', $selectedDate . ' 23:59:59')
-		->findAll();
-
-	// Attendance mapping
-	$attendanceMap = [];
-	foreach ($attendances as $a) {
-		if (!isset($attendanceMap[$a['student_id']])) {
-			$attendanceMap[$a['student_id']] = [];
+		// Filter by class
+		if ($selectedClass) {
+			$builder->where('class', $selectedClass);
 		}
-		$attendanceMap[$a['student_id']][] = $a['remark'];
+
+		// ✅ Section Filter
+		if (strtolower($selectedSection) === 'general') {
+			// Exclude any section containing "Vocational"
+			$builder->notLike('section', 'Vocational');
+		} elseif (strtolower($selectedSection) === 'vocational') {
+			// Include only sections containing "Vocational"
+			$builder->like('section', 'Vocational');
+		}
+
+		// Order and fetch
+		$students = $builder->orderBy('CAST(roll AS UNSIGNED)', 'ASC')->findAll();
+
+		// Get attendance for the selected date
+		$attendances = $this->attendanceModel
+			->select('student_id, remark, DATE(created_at) as date')
+			->where('created_at >=', $selectedDate . ' 00:00:00')
+			->where('created_at <=', $selectedDate . ' 23:59:59')
+			->findAll();
+
+		// Attendance mapping
+		$attendanceMap = [];
+		foreach ($attendances as $a) {
+			if (!isset($attendanceMap[$a['student_id']])) {
+				$attendanceMap[$a['student_id']] = [];
+			}
+			$attendanceMap[$a['student_id']][] = $a['remark'];
+		}
+
+		// Pass data to view
+		$this->data['selectedClass']   = $selectedClass;
+		$this->data['selectedSection'] = $selectedSection;
+		$this->data['selectedDate']    = $selectedDate;
+		$this->data['students']        = $students;
+		$this->data['attendanceMap']   = $attendanceMap;
+
+		return view('dashboard/attendance_calendar', $this->data);
 	}
-
-	// Pass data to view
-	$this->data['selectedClass']   = $selectedClass;
-	$this->data['selectedSection'] = $selectedSection;
-	$this->data['selectedDate']    = $selectedDate;
-	$this->data['students']        = $students;
-	$this->data['attendanceMap']   = $attendanceMap;
-
-	return view('dashboard/attendance_calendar', $this->data);
-}
 
 
 	public function saveAttendance()
@@ -2181,5 +2193,41 @@ public function attendanceCalendar()
 		$alertType = $holidayError ? 'error' : 'success';
 
 		return redirect()->back()->with($alertType, $flashMessage);
+	}
+
+	public function addTransaction()
+	{
+		// Dashboard specific values
+		$this->data['title'] = 'Dashboard';
+		$this->data['activeSection'] = 'dashboard';
+
+		// Common navbar and sidebar for all views
+
+		$this->data['navbarItems'] = [
+			['label' => 'Dashboard', 'url' => base_url('dashboard')],
+			['label' => 'Calendar', 'url' => base_url('calendar')],
+			['label' => 'Result', 'url' => base_url('ad-result')],
+			['label' => 'Accounts', 'url' => base_url('accounts')],
+		];
+
+		// Load available purposes (from fees table)
+		$data['purposes'] = $this->feesModel->findAll();
+
+		if ($this->request->getMethod() === 'post') {
+			$this->transactionModel->save([
+				'transaction_id' => $this->request->getPost('transaction_id'),
+				'sender_id'      => $this->request->getPost('sender_id'),
+				'sender_name'    => $this->request->getPost('sender_name'),
+				'receiver_id'    => $this->request->getPost('receiver_id'),
+				'receiver_name'  => $this->request->getPost('receiver_name'),
+				'amount'         => $this->request->getPost('amount'),
+				'purpose'        => $this->request->getPost('purpose'),
+				'description'    => $this->request->getPost('description'),
+			]);
+
+			return redirect()->to('/admin/transactions')->with('success', 'Transaction added successfully.');
+		}
+
+		echo view('admin/transaction_add', $data);
 	}
 }

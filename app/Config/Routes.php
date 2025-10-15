@@ -129,6 +129,13 @@ $routes->get('admin/deleteNotice/(:num)', 'Dashboard::deleteNotice/$1');
 $routes->post('admin/updateNotice/(:num)', 'Dashboard::updateNotice/$1');
 
 
+// Transaction routes
+$routes->get('admin/transactions', 'Dashboard::transactions');          // List all transactions
+$routes->match(['get','post'], 'admin/transactions/add', 'Dashboard::addTransaction');  // Add transaction
+$routes->match(['get','post'], 'admin/transactions/edit/(:num)', 'Dashboard::editTransaction/$1'); // Edit transaction
+$routes->get('admin/transactions/delete/(:num)', 'Dashboard::deleteTransaction/$1');  // Delete transaction
+
+
 
 $routes->get('/user_permit/(:num)', 'Dashboard::user_permit/$1');
 $routes->get('/user_delete/(:num)', 'Dashboard::user_delete/$1');
