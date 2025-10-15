@@ -2072,6 +2072,14 @@ class Dashboard extends Controller
 			$attendanceMap[$a['student_id']][] = $a['remark']; // store both A and L if exist
 		}
 
+        $this->data['sections'] = $studentModel
+                ->select('DISTINCT(section)')
+                ->where('section !=', '') // skip empty ones
+                ->orderBy('section', 'ASC')
+                ->findAll();
+
+        $this->data['selectedSection'] = $this->request->getPost('section'); 
+		
 		$this->data['students'] = $students;
 		$this->data['selectedClass'] = $selectedClass;
 		$this->data['selectedDate'] = $selectedDate;
