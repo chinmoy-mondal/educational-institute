@@ -82,7 +82,7 @@ class Dashboard extends Controller
 			[
 				'label'   => 'Accounts',
 				'url'     => base_url('admin/transactions'),
-				'icon'    => 'fas fa-money-bill-wave',
+				'icon'    => 'fa-solid fa-sack-dollar',
 				'section' => 'accounts'
 			],
 			[
