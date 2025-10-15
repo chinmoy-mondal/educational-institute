@@ -80,9 +80,9 @@ class Dashboard extends Controller
 				'section' => 'student'
 			],
 			[
-				'label'   => 'Transactions',
+				'label'   => 'Accounts',
 				'url'     => base_url('admin/transactions'),
-				'icon'    => 'fas fa-money-bill-wave',
+				'icon'    => 'fas fa-coins',
 				'section' => 'accounts'
 			],
 			[
@@ -2195,7 +2195,7 @@ class Dashboard extends Controller
 		return redirect()->back()->with($alertType, $flashMessage);
 	}
 
-	public function addTransaction()
+	public function transactions()
 	{
 		// Dashboard specific values
 		$this->data['title'] = 'Accounts';
@@ -2224,7 +2224,7 @@ class Dashboard extends Controller
 				'description'    => $this->request->getPost('description'),
 			]);
 
-			return redirect()->to('/dashboard/transactions')->with('success', 'Transaction added successfully.');
+			return redirect()->to('dashboard/transactions')->with('success', 'Transaction added successfully.');
 		}
 
 		echo view('dashboard/transaction_add', $data);
