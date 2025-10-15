@@ -2030,74 +2030,63 @@ class Dashboard extends Controller
 
 public function attendanceCalendar()
 {
-    $this->data['title'] = 'Attendance';
-    $this->data['activeSection'] = 'attendance';
-    $this->data['navbarItems'] = [
-        ['label' => 'Attendance', 'url' => base_url('attendance')],
-    ];
+	$this->data['title'] = 'Attendance';
+	$this->data['activeSection'] = 'attendance';
+	$this->data['navbarItems'] = [
+		['label' => 'Attendance', 'url' => base_url('attendance')],
+	];
 
-    helper(['form', 'url']);
+	helper(['form', 'url']);
 
-    // ✅ Get POST values
-    $selectedClass   = $this->request->getPost('class') ?? '';
-    $selectedSection = $this->request->getPost('section') ?? '';
-    $selectedDate    = $this->request->getPost('date') ?? date('Y-m-d');
+	// Get POST values
+	$selectedClass   = $this->request->getPost('class') ?? '';
+	$selectedSection = $this->request->getPost('section') ?? '';
+	$selectedDate    = $this->request->getPost('date') ?? date('Y-m-d');
 
-    // ✅ Build student query
-    $builder = $this->studentModel;
+	// Base query
+	$builder = $this->studentModel->where('permission', 0);
 
-    if (!empty($selectedClass)) {
-        $builder->where('class', $selectedClass);
-    }
+	// Filter by class
+	if ($selectedClass) {
+		$builder->where('class', $selectedClass);
+	}
 
-    if (!empty($selectedSection)) {
-        // If user selected "General", avoid including Vocational ones
-        if (strtolower($selectedSection) === 'general') {
-            $builder->notLike('section', 'Vocational');
-        } else {
-            $builder->like('section', $selectedSection);
-        }
-    }
+	// ✅ Section Filter
+	if (strtolower($selectedSection) === 'general') {
+		// Exclude any section containing "Vocational"
+		$builder->notLike('section', 'Vocational');
+	} elseif (strtolower($selectedSection) === 'vocational') {
+		// Include only sections containing "Vocational"
+		$builder->like('section', 'Vocational');
+	}
 
-    // ✅ Filter only active students (permission = 0)
-    $builder->where('permission', 0);
-    $builder->orderBy('CAST(roll AS UNSIGNED)', 'ASC');
+	// Order and fetch
+	$students = $builder->orderBy('CAST(roll AS UNSIGNED)', 'ASC')->findAll();
 
-    // ✅ Get filtered students
-    $students = $builder->findAll();
+	// Get attendance for the selected date
+	$attendances = $this->attendanceModel
+		->select('student_id, remark, DATE(created_at) as date')
+		->where('created_at >=', $selectedDate . ' 00:00:00')
+		->where('created_at <=', $selectedDate . ' 23:59:59')
+		->findAll();
 
-    // ✅ Get attendance records for the selected date
-    $attendances = $this->attendanceModel
-        ->select('student_id, remark, DATE(created_at) as date')
-        ->where('created_at >=', $selectedDate . ' 00:00:00')
-        ->where('created_at <=', $selectedDate . ' 23:59:59')
-        ->findAll();
+	// Attendance mapping
+	$attendanceMap = [];
+	foreach ($attendances as $a) {
+		if (!isset($attendanceMap[$a['student_id']])) {
+			$attendanceMap[$a['student_id']] = [];
+		}
+		$attendanceMap[$a['student_id']][] = $a['remark'];
+	}
 
-    // ✅ Map attendance data
-    $attendanceMap = [];
-    foreach ($attendances as $a) {
-        if (!isset($attendanceMap[$a['student_id']])) {
-            $attendanceMap[$a['student_id']] = [];
-        }
-        $attendanceMap[$a['student_id']][] = $a['remark'];
-    }
+	// Pass data to view
+	$this->data['selectedClass']   = $selectedClass;
+	$this->data['selectedSection'] = $selectedSection;
+	$this->data['selectedDate']    = $selectedDate;
+	$this->data['students']        = $students;
+	$this->data['attendanceMap']   = $attendanceMap;
 
-    // ✅ Get distinct sections dynamically for dropdown
-    $sections = $this->studentModel
-        ->select('DISTINCT(section)')
-        ->where('section !=', '')
-        ->orderBy('section', 'ASC')
-        ->findAll();
-
-    // ✅ Send all data to view
-    $this->data['sections']        = $sections;
-    $this->data['students']        = $students;
-    $this->data['selectedClass']   = $selectedClass;
-    $this->data['selectedSection'] = $selectedSection;
-    $this->data['selectedDate']    = $selectedDate;
-    $this->data['attendanceMap']   = $attendanceMap;
-
-    return view('dashboard/attendance_calendar', $this->data);
+	return view('dashboard/attendance_calendar', $this->data);
 }
 
 
