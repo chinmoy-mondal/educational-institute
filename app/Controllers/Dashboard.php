@@ -2028,65 +2028,78 @@ class Dashboard extends Controller
 		return redirect()->to('admin/notices')->with('success', 'Notice deleted successfully!');
 	}
 
-	public function attendanceCalendar()
-	{
-		$this->data['title'] = 'Attendance';
-		$this->data['activeSection'] = 'attendance';
-		$this->data['navbarItems'] = [
-			['label' => 'Attendance', 'url' => base_url('attendance')],
-		];
+public function attendanceCalendar()
+{
+    $this->data['title'] = 'Attendance';
+    $this->data['activeSection'] = 'attendance';
+    $this->data['navbarItems'] = [
+        ['label' => 'Attendance', 'url' => base_url('attendance')],
+    ];
 
-		helper(['form', 'url']);
+    helper(['form', 'url']);
 
-		// Get POST values
-		$selectedClass = $this->request->getPost('class') ?? '';
-		$selectedDate  = $this->request->getPost('date') ?? date('Y-m-d');
+    // ✅ Get POST values
+    $selectedClass   = $this->request->getPost('class') ?? '';
+    $selectedSection = $this->request->getPost('section') ?? '';
+    $selectedDate    = $this->request->getPost('date') ?? date('Y-m-d');
 
-		// Filter students by class and permission = 0
-		if ($selectedClass) {
-			$builder = $this->studentModel->where('class', $selectedClass);
-		} else {
-			$builder = $this->studentModel;
-		}
+    // ✅ Build student query
+    $builder = $this->studentModel;
 
-		// Add permission filter
-		$builder = $builder->where('permission', 0);
-        $builder = $builder->orderBy('CAST(roll AS UNSIGNED)', 'ASC');
+    if (!empty($selectedClass)) {
+        $builder->where('class', $selectedClass);
+    }
 
-		// Get students
-		$students = $builder->findAll();
+    if (!empty($selectedSection)) {
+        // If user selected "General", avoid including Vocational ones
+        if (strtolower($selectedSection) === 'general') {
+            $builder->notLike('section', 'Vocational');
+        } else {
+            $builder->like('section', $selectedSection);
+        }
+    }
 
-		// Get attendance records for that date
-		$attendances = $this->attendanceModel
-			->select('student_id, remark, DATE(created_at) as date')
-			->where('created_at >=', $selectedDate . ' 00:00:00')
-			->where('created_at <=', $selectedDate . ' 23:59:59')
-			->findAll();
+    // ✅ Filter only active students (permission = 0)
+    $builder->where('permission', 0);
+    $builder->orderBy('CAST(roll AS UNSIGNED)', 'ASC');
 
-		// Map attendance data
-		$attendanceMap = [];
-		foreach ($attendances as $a) {
-			if (!isset($attendanceMap[$a['student_id']])) {
-				$attendanceMap[$a['student_id']] = [];
-			}
-			$attendanceMap[$a['student_id']][] = $a['remark']; // store both A and L if exist
-		}
+    // ✅ Get filtered students
+    $students = $builder->findAll();
 
-        $this->data['sections'] = $studentModel
-                ->select('DISTINCT(section)')
-                ->where('section !=', '') // skip empty ones
-                ->orderBy('section', 'ASC')
-                ->findAll();
+    // ✅ Get attendance records for the selected date
+    $attendances = $this->attendanceModel
+        ->select('student_id, remark, DATE(created_at) as date')
+        ->where('created_at >=', $selectedDate . ' 00:00:00')
+        ->where('created_at <=', $selectedDate . ' 23:59:59')
+        ->findAll();
 
-        $this->data['selectedSection'] = $this->request->getPost('section'); 
-		
-		$this->data['students'] = $students;
-		$this->data['selectedClass'] = $selectedClass;
-		$this->data['selectedDate'] = $selectedDate;
-		$this->data['attendanceMap'] = $attendanceMap;
+    // ✅ Map attendance data
+    $attendanceMap = [];
+    foreach ($attendances as $a) {
+        if (!isset($attendanceMap[$a['student_id']])) {
+            $attendanceMap[$a['student_id']] = [];
+        }
+        $attendanceMap[$a['student_id']][] = $a['remark'];
+    }
 
-		return view('dashboard/attendance_calendar', $this->data);
-	}
+    // ✅ Get distinct sections dynamically for dropdown
+    $sections = $this->studentModel
+        ->select('DISTINCT(section)')
+        ->where('section !=', '')
+        ->orderBy('section', 'ASC')
+        ->findAll();
+
+    // ✅ Send all data to view
+    $this->data['sections']        = $sections;
+    $this->data['students']        = $students;
+    $this->data['selectedClass']   = $selectedClass;
+    $this->data['selectedSection'] = $selectedSection;
+    $this->data['selectedDate']    = $selectedDate;
+    $this->data['attendanceMap']   = $attendanceMap;
+
+    return view('dashboard/attendance_calendar', $this->data);
+}
+
 
 	public function saveAttendance()
 	{
