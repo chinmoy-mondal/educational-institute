@@ -2211,24 +2211,6 @@ class Dashboard extends Controller
 			['label' => 'Graph', 'url' => base_url('ad-result')],
 		];
 
-		// Load available purposes (from fees table)
-		$this->data['purposes'] = $this->feesModel->findAll();
-
-		if ($this->request->getMethod() === 'post') {
-			$this->transactionModel->save([
-				'transaction_id' => $this->request->getPost('transaction_id'),
-				'sender_id'      => $this->request->getPost('sender_id'),
-				'sender_name'    => $this->request->getPost('sender_name'),
-				'receiver_id'    => $this->request->getPost('receiver_id'),
-				'receiver_name'  => $this->request->getPost('receiver_name'),
-				'amount'         => $this->request->getPost('amount'),
-				'purpose'        => $this->request->getPost('purpose'),
-				'description'    => $this->request->getPost('description'),
-			]);
-
-			return redirect()->to('dashboard/transactions')->with('success', 'Transaction added successfully.');
-		}
-
 		echo view('dashboard/transaction_add', $this->data);
 	}
 }

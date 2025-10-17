@@ -130,10 +130,7 @@ $routes->post('admin/updateNotice/(:num)', 'Dashboard::updateNotice/$1');
 
 
 // Transaction routes
-$routes->get('admin/transactions', 'Dashboard::transactions');          // List all transactions
-$routes->match(['get','post'], 'admin/transactions/add', 'Dashboard::addTransaction');  // Add transaction
-$routes->match(['get','post'], 'admin/transactions/edit/(:num)', 'Dashboard::editTransaction/$1'); // Edit transaction
-$routes->get('admin/transactions/delete/(:num)', 'Dashboard::deleteTransaction/$1');  // Delete transaction
+$routes->get('admin/transactions', 'Dashboard::transactions');
 
 
 
