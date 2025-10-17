@@ -2257,7 +2257,7 @@ class Dashboard extends Controller
 		];
 
 		// Load student payment data (example)
-		$this->data['students'] = $this->studentModel->orderBy('name', 'ASC')->findAll();
+		$this->data['students'] = $this->studentModel->orderBy('student_name', 'ASC')->findAll();
 
 		return view('dashboard/std_pay', $this->data);
 	}
