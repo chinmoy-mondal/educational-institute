@@ -4,8 +4,8 @@
 <div class="container-fluid py-4">
     <div class="row mb-4">
         <div class="col">
-            <h3 class="fw-bold text-primary mb-0">💰 Transaction Dashboard</h3>
-            <small class="text-muted">Overview of earnings and expenses</small>
+            <h3 class="fw-bold text-primary mb-0">💰 Overview of earnings and expenses</h3>
+            <small class="text-muted">Take a quick look at your transactions</small>
         </div>
     </div>
 
