@@ -23,7 +23,7 @@
                         <?php $i=1; foreach($students as $s): ?>
                             <tr>
                                 <td><?= $i++ ?></td>
-                                <td><?= esc($s['name']) ?></td>
+                                <td><?= esc($s['student_name']) ?></td>
                                 <td><?= esc($s['class']) ?></td>
                                 <td><?= esc($s['section']) ?></td>
                                 <td>
