@@ -10,6 +10,31 @@
                 </div>
                 <div class="card-body">
 
+                    <!-- ✅ Earnings & Cost Summary -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="card text-center border-success">
+                                <div class="card-body">
+                                    <h6 class="text-success">Total Earn</h6>
+                                    <h4 class="fw-bold text-success">
+                                        ৳ <?= number_format($totalEarn ?? 0, 2) ?>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card text-center border-danger">
+                                <div class="card-body">
+                                    <h6 class="text-danger">Total Cost</h6>
+                                    <h4 class="fw-bold text-danger">
+                                        ৳ <?= number_format($totalCost ?? 0, 2) ?>
+                                    </h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ✅ End Summary -->
+
                     <?php if(session()->getFlashdata('success')): ?>
                         <div class="alert alert-success">
                             <?= session()->getFlashdata('success') ?>

@@ -2197,11 +2197,9 @@ class Dashboard extends Controller
 
 	public function transactions()
 	{
-		// Dashboard specific values
+		// Dashboard setup
 		$this->data['title'] = 'Accounts';
 		$this->data['activeSection'] = 'accounts';
-
-		// Common navbar and sidebar for all views
 
 		$this->data['navbarItems'] = [
 			['label' => 'Accounts', 'url' => base_url('admin/transactions')],
@@ -2211,6 +2209,34 @@ class Dashboard extends Controller
 			['label' => 'Graph', 'url' => base_url('ad-result')],
 		];
 
+		// ✅ Load Transaction model
+		$transactionModel = new \App\Models\TransactionModel();
+
+		// ✅ Hardcoded purposes (if no separate table)
+		$this->data['purposes'] = [
+			['title' => 'Earn'],
+			['title' => 'Cost'],
+			['title' => 'Donation'],
+			['title' => 'Salary'],
+			['title' => 'Expense'],
+		];
+
+		// ✅ Calculate total earn and cost
+		$this->data['totalEarn'] = $transactionModel
+			->like('purpose', 'Earn')
+			->selectSum('amount')
+			->get()
+			->getRow()
+			->amount ?? 0;
+
+		$this->data['totalCost'] = $transactionModel
+			->like('purpose', 'Cost')
+			->selectSum('amount')
+			->get()
+			->getRow()
+			->amount ?? 0;
+
+		// ✅ Load the view
 		echo view('dashboard/transaction_add', $this->data);
 	}
 }
