@@ -2283,8 +2283,8 @@ class Dashboard extends Controller
 			->getResultArray();
 
 		// ✅ Dropdown options
-		$this->data['classes'] = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->get()->getResultArray();
-		$this->data['sections'] = $studentModel->select('section')->distinct()->orderBy('section', 'ASC')->get()->getResultArray();
+		$this->data['classes'] = $this->studentModel->select('class')->distinct()->orderBy('class', 'ASC')->get()->getResultArray();
+		$this->data['sections'] = $this->studentModel->select('section')->distinct()->orderBy('section', 'ASC')->get()->getResultArray();
 
 		// ✅ Pass search values to view
 		$this->data['search'] = $search;
