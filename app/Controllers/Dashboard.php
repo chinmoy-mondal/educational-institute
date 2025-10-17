@@ -2195,10 +2195,9 @@ class Dashboard extends Controller
 		return redirect()->back()->with($alertType, $flashMessage);
 	}
 
-	public function transactions()
+	public function transactionDashboard()
 	{
-		// Dashboard setup
-		$this->data['title'] = 'Accounts';
+		$this->data['title'] = 'Transaction Dashboard';
 		$this->data['activeSection'] = 'accounts';
 
 		$this->data['navbarItems'] = [
@@ -2209,19 +2208,14 @@ class Dashboard extends Controller
 			['label' => 'Graph', 'url' => base_url('ad-result')],
 		];
 
-		// ✅ Load Transaction model
 		$transactionModel = new \App\Models\TransactionModel();
 
-		// ✅ Hardcoded purposes (if no separate table)
-		$this->data['purposes'] = [
-			['title' => 'Earn'],
-			['title' => 'Cost'],
-			['title' => 'Donation'],
-			['title' => 'Salary'],
-			['title' => 'Expense'],
-		];
+		// ✅ Load all transactions (latest first)
+		$this->data['transactions'] = $transactionModel
+			->orderBy('created_at', 'DESC')
+			->findAll();
 
-		// ✅ Calculate total earn and cost
+		// ✅ Calculate summary
 		$this->data['totalEarn'] = $transactionModel
 			->like('purpose', 'Earn')
 			->selectSum('amount')
@@ -2236,7 +2230,6 @@ class Dashboard extends Controller
 			->getRow()
 			->amount ?? 0;
 
-		// ✅ Load the view
-		echo view('dashboard/transaction_add', $this->data);
+		echo view('dashboard/transaction_dashboard', $this->data);
 	}
 }
