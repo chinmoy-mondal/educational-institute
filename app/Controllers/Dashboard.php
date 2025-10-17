@@ -2256,8 +2256,33 @@ class Dashboard extends Controller
 			['label' => 'Graph', 'url' => base_url('ad-result')],
 		];
 
-		// Load student payment data (example)
-		$this->data['students'] = $this->studentModel->orderBy('student_name', 'ASC')->findAll();
+		$studentModel = new \App\Models\StudentModel();
+		$builder = $studentModel->builder();
+
+		// ✅ Single search input for roll, ID, or name
+		$search = $this->request->getGet('search');
+		if ($search) {
+			$builder->groupStart()
+				->like('roll', $search)
+				->orLike('id', $search)
+				->orLike('student_name', $search) // replace with your actual column
+				->groupEnd();
+		}
+
+		// ✅ Optional filters for class and section
+		$class = $this->request->getGet('class');
+		$section = $this->request->getGet('section');
+		if ($class) $builder->where('class', $class);
+		if ($section) $builder->where('section', $section);
+
+		$this->data['students'] = $builder
+			->orderBy('student_name', 'ASC') // replace with your column
+			->get()
+			->getResultArray();
+
+		// ✅ For class and section dropdowns
+		$this->data['classes'] = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->get()->getResultArray();
+		$this->data['sections'] = $studentModel->select('section')->distinct()->orderBy('section', 'ASC')->get()->getResultArray();
 
 		return view('dashboard/std_pay', $this->data);
 	}
