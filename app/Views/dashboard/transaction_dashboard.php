@@ -1,148 +1,182 @@
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
 
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-md-11">
-            <div class="card shadow border-0 rounded-3">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Transaction Dashboard</h5>
-                    <a href="<?= base_url('admin/add-transaction') ?>" class="btn btn-light btn-sm fw-bold">
-                        + Add Transaction
-                    </a>
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h3 class="fw-bold text-primary mb-0">💰 Transaction Dashboard</h3>
+            <small class="text-muted">Overview of earnings and expenses</small>
+        </div>
+    </div>
+
+    <!-- ✅ Summary Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 bg-success bg-opacity-10">
+                <div class="card-body text-center">
+                    <h6 class="text-success mb-2">Total Earn</h6>
+                    <h3 class="fw-bold text-success">৳ <?= number_format($totalEarn ?? 0, 2) ?></h3>
                 </div>
-                <div class="card-body">
-
-                    <!-- ✅ Earnings & Cost Summary -->
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <div class="card text-center border-success shadow-sm">
-                                <div class="card-body">
-                                    <h6 class="text-success">Total Earn</h6>
-                                    <h3 class="fw-bold text-success mb-0">
-                                        ৳ <?= number_format($totalEarn ?? 0, 2) ?>
-                                    </h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card text-center border-danger shadow-sm">
-                                <div class="card-body">
-                                    <h6 class="text-danger">Total Cost</h6>
-                                    <h3 class="fw-bold text-danger mb-0">
-                                        ৳ <?= number_format($totalCost ?? 0, 2) ?>
-                                    </h3>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ✅ End Summary -->
-
-                    <?php if(session()->getFlashdata('success')): ?>
-                        <div class="alert alert-success">
-                            <?= session()->getFlashdata('success') ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <!-- ✅ Chart Section -->
-                    <div class="card mb-4 border-0 shadow-sm">
-                        <div class="card-header bg-secondary text-white">
-                            <h6 class="mb-0">Earning vs Cost Graph</h6>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="earnCostChart" height="100"></canvas>
-                        </div>
-                    </div>
-                    <!-- ✅ End Chart -->
-
-                    <!-- ✅ Transaction Table -->
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover align-middle">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>#</th>
-                                    <th>Transaction ID</th>
-                                    <th>Sender</th>
-                                    <th>Receiver</th>
-                                    <th>Purpose</th>
-                                    <th>Amount (৳)</th>
-                                    <th>Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (!empty($transactions)): ?>
-                                    <?php $i = 1; foreach ($transactions as $t): ?>
-                                        <tr>
-                                            <td><?= $i++ ?></td>
-                                            <td><?= esc($t['transaction_id']) ?></td>
-                                            <td><?= esc($t['sender_name']) ?></td>
-                                            <td><?= esc($t['receiver_name']) ?></td>
-                                            <td>
-                                                <?php if (stripos($t['purpose'], 'earn') !== false): ?>
-                                                    <span class="badge bg-success"><?= esc($t['purpose']) ?></span>
-                                                <?php elseif (stripos($t['purpose'], 'cost') !== false): ?>
-                                                    <span class="badge bg-danger"><?= esc($t['purpose']) ?></span>
-                                                <?php else: ?>
-                                                    <span class="badge bg-secondary"><?= esc($t['purpose']) ?></span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td class="fw-bold">
-                                                <?= number_format($t['amount'], 2) ?>
-                                            </td>
-                                            <td><?= date('d M, Y', strtotime($t['created_at'])) ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="7" class="text-center text-muted">No transactions found</td>
-                                    </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- ✅ End Table -->
-
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 bg-danger bg-opacity-10">
+                <div class="card-body text-center">
+                    <h6 class="text-danger mb-2">Total Cost</h6>
+                    <h3 class="fw-bold text-danger">৳ <?= number_format($totalCost ?? 0, 2) ?></h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 bg-info bg-opacity-10">
+                <div class="card-body text-center">
+                    <h6 class="text-info mb-2">Net Balance</h6>
+                    <h3 class="fw-bold text-info">৳ <?= number_format(($totalEarn ?? 0) - ($totalCost ?? 0), 2) ?></h3>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- ✅ Charts Row -->
+    <div class="row g-4 mb-4">
+        <!-- Date-wise Chart -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0">Last 7 Days Report</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="dateChart" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Month-wise Chart -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0">Month-wise Report (<?= date('Y') ?>)</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="monthChart" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ✅ All Transactions Table -->
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h6 class="mb-0">All Transactions</h6>
+            <span class="badge bg-light text-dark"><?= count($transactions) ?> Records</span>
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-striped align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Transaction ID</th>
+                        <th>Sender</th>
+                        <th>Receiver</th>
+                        <th>Purpose</th>
+                        <th>Amount (৳)</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($transactions)): ?>
+                        <?php $i = 1; foreach ($transactions as $t): ?>
+                            <tr>
+                                <td><?= $i++ ?></td>
+                                <td><?= date('d M Y', strtotime($t['created_at'])) ?></td>
+                                <td><?= esc($t['transaction_id']) ?></td>
+                                <td><?= esc($t['sender_name']) ?></td>
+                                <td><?= esc($t['receiver_name']) ?></td>
+                                <td>
+                                    <?php if (stripos($t['purpose'], 'Earn') !== false): ?>
+                                        <span class="badge bg-success"><?= esc($t['purpose']) ?></span>
+                                    <?php else: ?>
+                                        <span class="badge bg-danger"><?= esc($t['purpose']) ?></span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="fw-bold <?= (stripos($t['purpose'], 'Earn') !== false) ? 'text-success' : 'text-danger' ?>">
+                                    <?= number_format($t['amount'], 2) ?>
+                                </td>
+                                <td><?= esc($t['description']) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="8" class="text-center text-muted">No transactions found.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
-<!-- ✅ Chart.js Script -->
+<!-- ✅ Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const ctx = document.getElementById('earnCostChart').getContext('2d');
-    const earnCostChart = new Chart(ctx, {
+    // Date-wise Chart
+    const dateCtx = document.getElementById('dateChart').getContext('2d');
+    new Chart(dateCtx, {
         type: 'bar',
         data: {
-            labels: ['Earn', 'Cost'],
-            datasets: [{
-                label: 'Amount (৳)',
-                data: [<?= $totalEarn ?? 0 ?>, <?= $totalCost ?? 0 ?>],
-                backgroundColor: ['#28a745', '#dc3545'],
-                borderColor: ['#218838', '#c82333'],
-                borderWidth: 2,
-                borderRadius: 8
-            }]
+            labels: <?= json_encode($dateLabels ?? []) ?>,
+            datasets: [
+                {
+                    label: 'Earn (৳)',
+                    data: <?= json_encode($dateEarns ?? []) ?>,
+                    backgroundColor: 'rgba(25, 135, 84, 0.7)',
+                    borderRadius: 6
+                },
+                {
+                    label: 'Cost (৳)',
+                    data: <?= json_encode($dateCosts ?? []) ?>,
+                    backgroundColor: 'rgba(220, 53, 69, 0.7)',
+                    borderRadius: 6
+                }
+            ]
         },
         options: {
             responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { stepSize: 100 }
+            plugins: { legend: { position: 'bottom' } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    // Month-wise Chart
+    const monthCtx = document.getElementById('monthChart').getContext('2d');
+    new Chart(monthCtx, {
+        type: 'line',
+        data: {
+            labels: <?= json_encode($monthLabels ?? []) ?>,
+            datasets: [
+                {
+                    label: 'Earn (৳)',
+                    data: <?= json_encode($monthEarns ?? []) ?>,
+                    borderColor: 'rgb(25, 135, 84)',
+                    backgroundColor: 'rgba(25, 135, 84, 0.2)',
+                    tension: 0.3,
+                    fill: true
+                },
+                {
+                    label: 'Cost (৳)',
+                    data: <?= json_encode($monthCosts ?? []) ?>,
+                    borderColor: 'rgb(220, 53, 69)',
+                    backgroundColor: 'rgba(220, 53, 69, 0.2)',
+                    tension: 0.3,
+                    fill: true
                 }
-            },
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return '৳ ' + context.formattedValue;
-                        }
-                    }
-                }
-            }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'bottom' } },
+            scales: { y: { beginAtZero: true } }
         }
     });
 </script>

@@ -2210,12 +2210,12 @@ class Dashboard extends Controller
 
 		$transactionModel = new \App\Models\TransactionModel();
 
-		// ✅ Load all transactions (latest first)
+		// ✅ All transactions (latest first)
 		$this->data['transactions'] = $transactionModel
 			->orderBy('created_at', 'DESC')
 			->findAll();
 
-		// ✅ Calculate summary totals (better syntax)
+		// ✅ Total Earn and Cost
 		$this->data['totalEarn'] = $transactionModel
 			->like('purpose', 'Earn', 'both')
 			->selectSum('amount')
@@ -2228,7 +2228,34 @@ class Dashboard extends Controller
 			->get()
 			->getRow('amount') ?? 0;
 
-		// ✅ Load the dashboard view
+		// ✅ Date-wise summary (last 7 days)
+		$dateSummary = $transactionModel
+			->select("DATE(created_at) as date,
+                  SUM(CASE WHEN purpose LIKE '%Earn%' THEN amount ELSE 0 END) as earn,
+                  SUM(CASE WHEN purpose LIKE '%Cost%' THEN amount ELSE 0 END) as cost")
+			->groupBy("DATE(created_at)")
+			->orderBy("DATE(created_at)", "ASC")
+			->where("created_at >=", date('Y-m-d', strtotime('-7 days')))
+			->findAll();
+
+		$this->data['dateLabels'] = array_column($dateSummary, 'date');
+		$this->data['dateEarns'] = array_column($dateSummary, 'earn');
+		$this->data['dateCosts'] = array_column($dateSummary, 'cost');
+
+		// ✅ Month-wise summary (current year)
+		$monthSummary = $transactionModel
+			->select("DATE_FORMAT(created_at, '%b') as month,
+                  SUM(CASE WHEN purpose LIKE '%Earn%' THEN amount ELSE 0 END) as earn,
+                  SUM(CASE WHEN purpose LIKE '%Cost%' THEN amount ELSE 0 END) as cost")
+			->groupBy("DATE_FORMAT(created_at, '%Y-%m')")
+			->orderBy("DATE_FORMAT(created_at, '%Y-%m')", "ASC")
+			->findAll();
+
+		$this->data['monthLabels'] = array_column($monthSummary, 'month');
+		$this->data['monthEarns'] = array_column($monthSummary, 'earn');
+		$this->data['monthCosts'] = array_column($monthSummary, 'cost');
+
+		// ✅ Render view
 		return view('dashboard/transaction_dashboard', $this->data);
 	}
 }
