@@ -19,7 +19,6 @@
                 <div class="col-md-4">
                     <div class="input-group">
                         <input type="text" name="search" class="form-control" placeholder="Roll, ID, or Name" value="<?= esc($search ?? '') ?>">
-                        <span class="input-group-text"><i class="fas fa-search"></i></span>
                     </div>
                 </div>
 
@@ -52,13 +51,6 @@
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="fas fa-filter"></i> Filter
                     </button>
-                </div>
-
-                <!-- Reset Button -->
-                <div class="col-md-2">
-                    <a href="<?= base_url('admin/std_pay') ?>" class="btn btn-outline-secondary w-100">
-                        <i class="fas fa-sync-alt"></i> Reset
-                    </a>
                 </div>
 
             </form>
