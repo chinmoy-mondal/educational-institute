@@ -8,21 +8,24 @@
     <small class="text-muted fst-italic">Take a quick look at student payment status</small>
 
     <!-- Search Card -->
-    <div class="card mb-3 shadow-sm">
+    <div class="card card-primary shadow-sm mb-3">
+        <div class="card-header">
+            <h3 class="card-title mb-0">Search Students</h3>
+        </div>
         <div class="card-body">
-            <form method="get" action="<?= base_url('admin/std_pay') ?>" class="row g-2 align-items-center">
+            <form method="get" action="<?= base_url('admin/std_pay') ?>" class="row g-3">
 
-                <!-- Roll / ID / Name Input -->
+                <!-- Roll / ID / Name -->
                 <div class="col-md-4">
                     <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-search"></i></span>
                         <input type="text" name="search" class="form-control" placeholder="Roll, ID, or Name" value="<?= esc($search ?? '') ?>">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
                     </div>
                 </div>
 
                 <!-- Class Select -->
                 <div class="col-md-2">
-                    <select name="class" class="form-select">
+                    <select name="class" class="form-control">
                         <option value="">Select Class</option>
                         <?php foreach ($classes as $c): ?>
                             <option value="<?= esc($c['class']) ?>" <?= ($selectedClass ?? '') == $c['class'] ? 'selected' : '' ?>>
@@ -34,7 +37,7 @@
 
                 <!-- Section Select -->
                 <div class="col-md-2">
-                    <select name="section" class="form-select">
+                    <select name="section" class="form-control">
                         <option value="">Select Section</option>
                         <?php foreach ($sections as $s): ?>
                             <option value="<?= esc($s['section']) ?>" <?= ($selectedSection ?? '') == $s['section'] ? 'selected' : '' ?>>
@@ -47,14 +50,14 @@
                 <!-- Submit Button -->
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-primary w-100">
-                        <i class="bi bi-funnel-fill"></i> Filter
+                        <i class="fas fa-filter"></i> Filter
                     </button>
                 </div>
 
                 <!-- Reset Button -->
                 <div class="col-md-2">
                     <a href="<?= base_url('admin/std_pay') ?>" class="btn btn-outline-secondary w-100">
-                        <i class="bi bi-arrow-counterclockwise"></i> Reset
+                        <i class="fas fa-sync-alt"></i> Reset
                     </a>
                 </div>
 
