@@ -2215,21 +2215,20 @@ class Dashboard extends Controller
 			->orderBy('created_at', 'DESC')
 			->findAll();
 
-		// ✅ Calculate summary
+		// ✅ Calculate summary totals (better syntax)
 		$this->data['totalEarn'] = $transactionModel
-			->like('purpose', 'Earn')
+			->like('purpose', 'Earn', 'both')
 			->selectSum('amount')
 			->get()
-			->getRow()
-			->amount ?? 0;
+			->getRow('amount') ?? 0;
 
 		$this->data['totalCost'] = $transactionModel
-			->like('purpose', 'Cost')
+			->like('purpose', 'Cost', 'both')
 			->selectSum('amount')
 			->get()
-			->getRow()
-			->amount ?? 0;
+			->getRow('amount') ?? 0;
 
-		echo view('dashboard/transaction_dashboard', $this->data);
+		// ✅ Load the dashboard view
+		return view('dashboard/transaction_dashboard', $this->data);
 	}
 }

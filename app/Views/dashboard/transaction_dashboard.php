@@ -44,6 +44,17 @@
                         </div>
                     <?php endif; ?>
 
+                    <!-- ✅ Chart Section -->
+                    <div class="card mb-4 border-0 shadow-sm">
+                        <div class="card-header bg-secondary text-white">
+                            <h6 class="mb-0">Earning vs Cost Graph</h6>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="earnCostChart" height="100"></canvas>
+                        </div>
+                    </div>
+                    <!-- ✅ End Chart -->
+
                     <!-- ✅ Transaction Table -->
                     <div class="table-responsive">
                         <table class="table table-striped table-hover align-middle">
@@ -96,5 +107,44 @@
         </div>
     </div>
 </div>
+
+<!-- ✅ Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('earnCostChart').getContext('2d');
+    const earnCostChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Earn', 'Cost'],
+            datasets: [{
+                label: 'Amount (৳)',
+                data: [<?= $totalEarn ?? 0 ?>, <?= $totalCost ?? 0 ?>],
+                backgroundColor: ['#28a745', '#dc3545'],
+                borderColor: ['#218838', '#c82333'],
+                borderWidth: 2,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 100 }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return '৳ ' + context.formattedValue;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
 
 <?= $this->endSection() ?>
