@@ -7,32 +7,34 @@
     <h3 class="fw-bold text-primary mb-0">💳 Student Payments</h3>
     <small class="text-muted fst-italic">Take a quick look at student payment status</small>
 
-    <!-- ✅ Search Form: place here, above the table -->
-    <div class="row mb-3">
+    <!-- ✅ Search Form -->
+    <div class="row mb-3 mt-3">
         <div class="col">
             <form method="get" action="<?= base_url('admin/std_pay') ?>" class="row g-2 align-items-center">
 
                 <!-- Single text input for roll, ID, or name -->
                 <div class="col-md-4">
-                    <input type="text" name="search" class="form-control" placeholder="Roll, ID, or Name" value="<?= esc($this->request->getGet('search')) ?>">
+                    <input type="text" name="search" class="form-control" placeholder="Roll, ID, or Name" value="<?= esc($search ?? '') ?>">
                 </div>
 
-                <!-- Select Inputs -->
+                <!-- Class select -->
                 <div class="col-md-2">
                     <select name="class" class="form-select">
                         <option value="">Select Class</option>
                         <?php foreach($classes as $c): ?>
-                            <option value="<?= esc($c['class']) ?>" <?= ($this->request->getGet('class') == $c['class']) ? 'selected' : '' ?>>
+                            <option value="<?= esc($c['class']) ?>" <?= ($selectedClass ?? '') == $c['class'] ? 'selected' : '' ?>>
                                 <?= esc($c['class']) ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
                 </div>
+
+                <!-- Section select -->
                 <div class="col-md-2">
                     <select name="section" class="form-select">
                         <option value="">Select Section</option>
                         <?php foreach($sections as $s): ?>
-                            <option value="<?= esc($s['section']) ?>" <?= ($this->request->getGet('section') == $s['section']) ? 'selected' : '' ?>>
+                            <option value="<?= esc($s['section']) ?>" <?= ($selectedSection ?? '') == $s['section'] ? 'selected' : '' ?>>
                                 <?= esc($s['section']) ?>
                             </option>
                         <?php endforeach; ?>
@@ -48,8 +50,8 @@
         </div>
     </div>
 
-    <!-- Student Table -->
-    <div class="card mt-3 shadow-sm">
+    <!-- ✅ Student Table -->
+    <div class="card shadow-sm">
         <div class="card-body table-responsive">
             <table class="table table-striped align-middle mb-0">
                 <thead class="table-dark">

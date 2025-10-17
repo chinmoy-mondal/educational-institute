@@ -2256,33 +2256,40 @@ class Dashboard extends Controller
 			['label' => 'Graph', 'url' => base_url('ad-result')],
 		];
 
-		$studentModel = new \App\Models\StudentModel();
-		$builder = $studentModel->builder();
+		$builder = $this->studentModel->builder();
 
-		// ✅ Single search input for roll, ID, or name
+		// ✅ Get search/filter values
 		$search = $this->request->getGet('search');
+		$class = $this->request->getGet('class');
+		$section = $this->request->getGet('section');
+
+		// ✅ Apply search (roll, ID, or name)
 		if ($search) {
 			$builder->groupStart()
 				->like('roll', $search)
 				->orLike('id', $search)
-				->orLike('student_name', $search) // replace with your actual column
+				->orLike('student_name', $search)
 				->groupEnd();
 		}
 
-		// ✅ Optional filters for class and section
-		$class = $this->request->getGet('class');
-		$section = $this->request->getGet('section');
+		// ✅ Apply class & section filters
 		if ($class) $builder->where('class', $class);
 		if ($section) $builder->where('section', $section);
 
+		// ✅ Get results
 		$this->data['students'] = $builder
-			->orderBy('student_name', 'ASC') // replace with your column
+			->orderBy('student_name', 'ASC')
 			->get()
 			->getResultArray();
 
-		// ✅ For class and section dropdowns
+		// ✅ Dropdown options
 		$this->data['classes'] = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->get()->getResultArray();
 		$this->data['sections'] = $studentModel->select('section')->distinct()->orderBy('section', 'ASC')->get()->getResultArray();
+
+		// ✅ Pass search values to view
+		$this->data['search'] = $search;
+		$this->data['selectedClass'] = $class;
+		$this->data['selectedSection'] = $section;
 
 		return view('dashboard/std_pay', $this->data);
 	}
