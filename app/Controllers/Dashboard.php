@@ -2204,7 +2204,9 @@ class Dashboard extends Controller
 		// Common navbar and sidebar for all views
 
 		$this->data['navbarItems'] = [
-			['label' => 'Accounts', 'url' => base_url('dashboard')],
+			['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+			['label' => 'Teacher', 'url' => base_url('dashboard')],
+			['label' => 'Students', 'url' => base_url('dashboard')],
 			['label' => 'Statistics', 'url' => base_url('calendar')],
 			['label' => 'Graph', 'url' => base_url('ad-result')],
 		];
