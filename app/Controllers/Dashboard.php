@@ -570,9 +570,6 @@ class Dashboard extends Controller
 
 	public function user_permit($id)
 	{
-		$userModel = new UserModel();
-
-
 		$permitBy = $this->session->get('user_id');
 
 		$updated = $this->userModel->update($id, [
@@ -604,7 +601,6 @@ class Dashboard extends Controller
 				->with('error', 'Failed to delete user.');
 		}
 	}
-
 
 	public function teacher_management()
 	{
@@ -1434,6 +1430,7 @@ class Dashboard extends Controller
 		// echo '</pre>';
 		return view('dashboard/mark_copy', $this->data);
 	}
+
 	private function getTabulationData(): array
 	{
 		// Use your actual data fetching logic here
@@ -1468,6 +1465,7 @@ class Dashboard extends Controller
 
 		return $finalData;
 	}
+
 	public function downloadCSV()
 	{
 		helper('text');
@@ -1838,6 +1836,7 @@ class Dashboard extends Controller
 
 		return view('dashboard/student_edit', $this->data);
 	}
+
 	public function updateStudent($id)
 	{
 		$this->studentModel = new StudentModel();
@@ -1952,7 +1951,6 @@ class Dashboard extends Controller
 	// Save new notice
 	public function saveNotice()
 	{
-
 		$data = [
 			'title'       => $this->request->getPost('title'),
 			'body'        => $this->request->getPost('body'),
@@ -2101,7 +2099,6 @@ class Dashboard extends Controller
 		return view('dashboard/attendance_calendar', $this->data);
 	}
 
-
 	public function saveAttendance()
 	{
 		$attendance = $this->request->getPost('attendance');
@@ -2203,7 +2200,7 @@ class Dashboard extends Controller
 		$this->data['navbarItems'] = [
 			['label' => 'Accounts', 'url' => base_url('admin/transactions')],
 			['label' => 'Teacher', 'url' => base_url('dashboard')],
-			['label' => 'Students', 'url' => base_url('dashboard')],
+			['label' => 'Students', 'url' => base_url('admin/std_pay')],
 			['label' => 'Statistics', 'url' => base_url('calendar')],
 			['label' => 'Graph', 'url' => base_url('ad-result')],
 		];
@@ -2244,5 +2241,24 @@ class Dashboard extends Controller
 		$this->data['monthCosts'] = array_map('floatval', array_column($monthData, 'cost'));
 
 		return view('dashboard/transaction_dashboard', $this->data);
+	}
+
+	public function std_pay()
+	{
+		$this->data['title'] = 'Student Payment';
+		$this->data['activeSection'] = 'payments';
+
+		$this->data['navbarItems'] = [
+			['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+			['label' => 'Teacher', 'url' => base_url('dashboard')],
+			['label' => 'Students', 'url' => base_url('dashboard')],
+			['label' => 'Statistics', 'url' => base_url('calendar')],
+			['label' => 'Graph', 'url' => base_url('ad-result')],
+		];
+
+		// Load student payment data (example)
+		$this->data['students'] = $this->studentModel->orderBy('name', 'ASC')->findAll();
+
+		return view('dashboard/std_pay', $this->data);
 	}
 }

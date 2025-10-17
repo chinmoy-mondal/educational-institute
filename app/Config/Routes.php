@@ -131,6 +131,7 @@ $routes->post('admin/updateNotice/(:num)', 'Dashboard::updateNotice/$1');
 
 // Transaction routes
 $routes->get('admin/transactions', 'Dashboard::transactionDashboard');
+$routes->get('admin/std_pay', 'Dashboard::std_pay');
 
 
 
