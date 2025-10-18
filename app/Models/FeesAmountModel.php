@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use CodeIgniter\Model;
@@ -8,6 +7,12 @@ class FeesAmountModel extends Model
 {
     protected $table = 'fees_amount';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['class', 'title_id', 'fees', 'created_at', 'updated_at'];
+    protected $allowedFields = [
+        'class',
+        'title_id',
+        'fees',
+        'created_at',
+        'updated_at'
+    ];
     protected $useTimestamps = true;
 }

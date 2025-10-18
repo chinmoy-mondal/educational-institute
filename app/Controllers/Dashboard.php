@@ -2340,14 +2340,12 @@ class Dashboard extends Controller
 			['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
 		];
 
-		$feesModel = new FeesModel();
-		$amountModel = new FeesAmountModel();
+		$feesModel = new \App\Models\FeesModel();
+		$amountModel = new \App\Models\FeesAmountModel();
 
 		$class = $this->request->getGet('class');
-
 		$this->data['classes'] = range(1, 10);
 		$this->data['selectedClass'] = $class;
-
 		$this->data['fees'] = $feesModel->findAll();
 
 		$existingAmounts = [];
@@ -2356,41 +2354,54 @@ class Dashboard extends Controller
 			foreach ($amounts as $a) {
 				$existingAmounts[$a['title_id']] = $a['fees'];
 			}
-		}
-		$this->data['existingAmounts'] = $existingAmounts;
 
+			// ✅ Get last updated time
+			$lastUpdated = $amountModel
+				->selectMax('updated_at')
+				->where('class', $class)
+				->get()
+				->getRow()
+				->updated_at ?? null;
+
+			$this->data['lastUpdated'] = $lastUpdated;
+		} else {
+			$this->data['lastUpdated'] = null;
+		}
+
+		$this->data['existingAmounts'] = $existingAmounts;
 		return view('dashboard/set_fees', $this->data);
 	}
 
+
 	public function save_fees()
-    {
-        $class = $this->request->getPost('class');
-        $fees = $this->request->getPost('fees'); // array: title_id => amount
+	{
+		$class = $this->request->getPost('class');
+		$feesData = $this->request->getPost('fees');
 
-        if (!$class || empty($fees)) {
-            return redirect()->back()->with('error', 'Please select a class and enter fees.');
-        }
+		if (!$class || empty($feesData)) {
+			return redirect()->back()->with('error', 'Please select a class and enter fees.');
+		}
 
-        $model = new FeesAmountModel();
+		$amountModel = new \App\Models\FeesAmountModel();
 
-        foreach ($fees as $title_id => $amount) {
-            $existing = $model->where('class', $class)
-                              ->where('title_id', $title_id)
-                              ->first();
+		foreach ($feesData as $title_id => $amount) {
+			if ($amount === '' || $amount === null) continue;
 
-            $data = [
-                'class' => $class,
-                'title_id' => $title_id,
-                'fees' => $amount ?: 0.00,
-            ];
+			$existing = $amountModel->where('class', $class)->where('title_id', $title_id)->first();
 
-            if ($existing) {
-                $model->update($existing['id'], $data);
-            } else {
-                $model->insert($data);
-            }
-        }
+			if ($existing) {
+				// ✅ Update existing record
+				$amountModel->update($existing['id'], ['fees' => $amount]);
+			} else {
+				// ✅ Insert new record
+				$amountModel->insert([
+					'class' => $class,
+					'title_id' => $title_id,
+					'fees' => $amount
+				]);
+			}
+		}
 
-        return redirect()->back()->with('success', 'Fees updated successfully!');
-    }
+		return redirect()->back()->with('success', 'Fees updated successfully!');
+	}
 }

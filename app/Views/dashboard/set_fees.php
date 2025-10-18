@@ -8,56 +8,54 @@
         </div>
 
         <div class="card-body">
-            <!-- ✅ Flash Messages -->
             <?php if (session()->getFlashdata('success')): ?>
                 <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
             <?php elseif (session()->getFlashdata('error')): ?>
                 <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
             <?php endif; ?>
 
-            <form action="<?= base_url('admin/save_fees') ?>" method="post" id="feesForm">
+            <form method="post" action="<?= base_url('admin/save_fees') ?>">
                 <?= csrf_field() ?>
 
-                <!-- ✅ Class Selector inside the same form -->
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Select Class:</label>
-                        <select name="class" id="classSelect" class="form-select" required onchange="reloadFees()">
-                            <option value="">-- Select Class --</option>
-                            <?php foreach ($classes as $cls): ?>
-                                <option value="<?= $cls ?>" <?= ($selectedClass == $cls ? 'selected' : '') ?>>
-                                    Class <?= $cls ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                <div class="d-flex align-items-center mb-3">
+                    <select name="class" class="form-select me-2" style="width:150px;" onchange="this.form.submit()">
+                        <option value="">Select Class</option>
+                        <?php foreach ($classes as $cls): ?>
+                            <option value="<?= $cls ?>" <?= ($selectedClass == $cls ? 'selected' : '') ?>>
+                                Class <?= $cls ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
 
-                    <?php if (!empty($lastUpdated)): ?>
-                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                            <span class="badge bg-info text-dark p-2">
-                                Last Updated: <?= esc(date('d M, Y h:i A', strtotime($lastUpdated))) ?>
-                            </span>
-                        </div>
-                    <?php endif; ?>
+                    <button type="submit" class="btn btn-success">Save</button>
                 </div>
 
-                <!-- ✅ Fees Table -->
                 <?php if ($selectedClass): ?>
+                    <input type="hidden" name="class" value="<?= esc($selectedClass) ?>">
+
                     <table class="table table-bordered align-middle">
                         <thead class="table-dark">
                             <tr>
-                                <th width="60">SL</th>
+                                <th style="width:60px;">SL</th>
                                 <th>Fee Title</th>
-                                <th width="200">Amount (৳)</th>
+                                <th style="width:180px;">Last Updated</th>
+                                <th style="width:200px;">Amount (৳)</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $i = 1; foreach ($fees as $f): ?>
+                            <?php $i = 1; ?>
+                            <?php foreach ($fees as $f): ?>
                                 <tr>
                                     <td><?= $i++ ?></td>
                                     <td><?= esc($f['title']) ?></td>
                                     <td>
-                                        <input type="number" step="0.01" name="fees[<?= $f['id'] ?>]"
+                                        <?= !empty($existingAmounts[$f['id'] . '_updated']) 
+                                            ? date('d M, Y h:i A', strtotime($existingAmounts[$f['id'] . '_updated'])) 
+                                            : '<span class="text-muted">—</span>' ?>
+                                    </td>
+                                    <td>
+                                        <input type="number" step="0.01"
+                                            name="fees[<?= $f['id'] ?>]"
                                             value="<?= esc($existingAmounts[$f['id']] ?? '') ?>"
                                             class="form-control fee-input"
                                             placeholder="Enter amount">
@@ -66,10 +64,6 @@
                             <?php endforeach; ?>
                         </tbody>
                     </table>
-
-                    <div class="text-end mt-3">
-                        <button type="submit" class="btn btn-success px-4">Save</button>
-                    </div>
                 <?php else: ?>
                     <p class="text-muted">Please select a class to set fees.</p>
                 <?php endif; ?>
@@ -78,29 +72,18 @@
     </div>
 </div>
 
-<!-- ✅ JavaScript for reload and arrow navigation -->
+<!-- Keyboard Navigation Script -->
 <script>
-function reloadFees() {
-    const cls = document.getElementById('classSelect').value;
-    if (cls) {
-        window.location.href = "<?= base_url('admin/set_fees') ?>?class=" + cls;
-    }
-}
-
-// ✅ Move between inputs using ↑ ↓ arrow keys
 document.addEventListener('DOMContentLoaded', () => {
     const inputs = document.querySelectorAll('.fee-input');
-
     inputs.forEach((input, index) => {
         input.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowDown') {
+            if (e.key === 'ArrowDown' && inputs[index + 1]) {
                 e.preventDefault();
-                const next = inputs[index + 1];
-                if (next) next.focus();
-            } else if (e.key === 'ArrowUp') {
+                inputs[index + 1].focus();
+            } else if (e.key === 'ArrowUp' && inputs[index - 1]) {
                 e.preventDefault();
-                const prev = inputs[index - 1];
-                if (prev) prev.focus();
+                inputs[index - 1].focus();
             }
         });
     });
