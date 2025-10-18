@@ -15,7 +15,7 @@
                 <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
             <?php endif; ?>
 
-            <form action="<?= base_url('admin/save_fees_amount') ?>" method="post" id="feesForm">
+            <form action="<?= base_url('admin/save_fees') ?>" method="post" id="feesForm">
                 <?= csrf_field() ?>
 
                 <!-- ✅ Class Selector inside the same form -->
