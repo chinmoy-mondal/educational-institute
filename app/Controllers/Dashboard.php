@@ -2391,6 +2391,6 @@ class Dashboard extends Controller
             }
         }
 
-        return redirect()->to('dashboard/set_fees?class=' . $class)->with('success', 'Fees updated successfully!');
+        return redirect()->back()->with('success', 'Fees updated successfully!');
     }
 }
