@@ -2339,15 +2339,15 @@ class Dashboard extends Controller
 			['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
 		];
 
-		$feesModel = new \App\Models\FeesModel();
-		$amountModel = new \App\Models\FeesAmountModel();
+		$feesModel = new FeesModel();
+		$amountModel = new FeesAmountModel();
 
 		$class = $this->request->getGet('class');
 
-		$data['classes'] = range(1, 10); // Classes 1–10
-		$data['selectedClass'] = $class;
+		$this->data['classes'] = range(1, 10);
+		$this->data['selectedClass'] = $class;
 
-		$data['fees'] = $feesModel->findAll();
+		$this->data['fees'] = $feesModel->findAll();
 
 		$existingAmounts = [];
 		if ($class) {
@@ -2356,9 +2356,9 @@ class Dashboard extends Controller
 				$existingAmounts[$a['title_id']] = $a['fees'];
 			}
 		}
-		$data['existingAmounts'] = $existingAmounts;
+		$this->data['existingAmounts'] = $existingAmounts;
 
-		return view('dashboard/set_fees', $data);
+		return view('dashboard/set_fees', $this->data);
 	}
 
 	public function save_fees()
