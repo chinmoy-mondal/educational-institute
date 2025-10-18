@@ -2199,10 +2199,10 @@ class Dashboard extends Controller
 
 		$this->data['navbarItems'] = [
 			['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-			['label' => 'Teacher', 'url' => base_url('dashboard')],
+			['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
 			['label' => 'Students', 'url' => base_url('admin/std_pay')],
-			['label' => 'Statistics', 'url' => base_url('calendar')],
-			['label' => 'Graph', 'url' => base_url('ad-result')],
+			['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+			['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
 		];
 
 
@@ -2243,6 +2243,22 @@ class Dashboard extends Controller
 		return view('dashboard/transaction_dashboard', $this->data);
 	}
 
+	public function tec_pay()
+	{
+		$this->data['title'] = 'Transaction Dashboard';
+		$this->data['activeSection'] = 'accounts';
+
+		$this->data['navbarItems'] = [
+			['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+			['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+			['label' => 'Students', 'url' => base_url('admin/std_pay')],
+			['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+			['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+		];
+
+		return view('dashboard/tec_pay', $this->data);
+	}
+
 	public function std_pay()
 	{
 		$this->data['title'] = 'Student Payment';
@@ -2250,10 +2266,10 @@ class Dashboard extends Controller
 
 		$this->data['navbarItems'] = [
 			['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-			['label' => 'Teacher', 'url' => base_url('dashboard')],
-			['label' => 'Students', 'url' => base_url('dashboard')],
-			['label' => 'Statistics', 'url' => base_url('calendar')],
-			['label' => 'Graph', 'url' => base_url('ad-result')],
+			['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+			['label' => 'Students', 'url' => base_url('admin/std_pay')],
+			['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+			['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
 		];
 
 		$builder = $this->studentModel->builder();
@@ -2292,5 +2308,37 @@ class Dashboard extends Controller
 		$this->data['selectedSection'] = $section;
 
 		return view('dashboard/std_pay', $this->data);
+	}
+
+	public function pay_stat() 
+	{		
+		$this->data['title'] = 'Transaction Dashboard';
+		$this->data['activeSection'] = 'accounts';
+
+		$this->data['navbarItems'] = [
+			['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+			['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+			['label' => 'Students', 'url' => base_url('admin/std_pay')],
+			['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+			['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+		];
+		
+		return view('dashboard/pay_stat', $this->data);
+	}
+
+	public function set_fees()
+	{		
+		$this->data['title'] = 'Transaction Dashboard';
+		$this->data['activeSection'] = 'accounts';
+
+		$this->data['navbarItems'] = [
+			['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+			['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+			['label' => 'Students', 'url' => base_url('admin/std_pay')],
+			['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+			['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+		];
+		
+		return view('dashboard/set_fees', $this->data);
 	}
 }
