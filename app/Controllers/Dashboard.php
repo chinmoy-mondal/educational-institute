@@ -2347,7 +2347,7 @@ class Dashboard extends Controller
 		}
 		$data['existingAmounts'] = $existingAmounts;
 
-		return view('admin/set_fees', $data);
+		return view('dashboard/set_fees', $data);
 	}
 
 	public function save_fees()
