@@ -2342,9 +2342,14 @@ class Dashboard extends Controller
 
 		$feesModel = new \App\Models\FeesModel();
 		$amountModel = new \App\Models\FeesAmountModel();
+		$studentModel = new \App\Models\StudentModel();
 
 		$class = $this->request->getGet('class');
-		$this->data['classes'] = range(1, 10);
+
+		// ✅ Fetch all classes from students table dynamically
+		$classes = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->findAll();
+		$this->data['classes'] = array_column($classes, 'class');
+
 		$this->data['selectedClass'] = $class;
 		$this->data['fees'] = $feesModel->findAll();
 
@@ -2374,8 +2379,12 @@ class Dashboard extends Controller
 		$feesData = $this->request->getPost('fees');
 		$unitsData = $this->request->getPost('units');
 
-		if (!$class || empty($feesData)) {
-			return redirect()->back()->with('error', 'Please select a class and enter fees.');
+		if (!$class) {
+			return redirect()->back()->with('error', 'Please select a class before saving.');
+		}
+
+		if (empty($feesData)) {
+			return redirect()->back()->with('error', 'No fee amounts to save.');
 		}
 
 		$amountModel = new \App\Models\FeesAmountModel();
@@ -2390,14 +2399,12 @@ class Dashboard extends Controller
 				->first();
 
 			if ($existing) {
-				// Update existing record
 				$amountModel->update($existing['id'], [
 					'fees' => $amount,
 					'unit' => $unit,
 					'updated_at' => date('Y-m-d H:i:s')
 				]);
 			} else {
-				// Insert new record
 				$amountModel->insert([
 					'class' => $class,
 					'title_id' => $title_id,

@@ -8,31 +8,28 @@
         </div>
 
         <div class="card-body">
-            <!-- Flash Messages -->
+
             <?php if (session()->getFlashdata('success')): ?>
                 <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
             <?php elseif (session()->getFlashdata('error')): ?>
                 <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
             <?php endif; ?>
 
-            <form action="<?= base_url('admin/save_fees') ?>" method="post">
-                <?= csrf_field() ?>
+            <!-- Select Class -->
+            <form method="get" action="<?= base_url('admin/set_fees') ?>" class="d-flex mb-3">
+                <select name="class" class="form-select me-2" style="width:150px;" onchange="this.form.submit()">
+                    <option value="">Select Class</option>
+                    <?php foreach ($classes as $cls): ?>
+                        <option value="<?= $cls ?>" <?= ($selectedClass == $cls ? 'selected' : '') ?>>
+                            Class <?= $cls ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </form>
 
-                <!-- Select Class -->
-                <div class="d-flex align-items-center mb-3">
-                    <select name="class" class="form-select me-2" style="width:150px;" onchange="this.form.submit()">
-                        <option value="">Select Class</option>
-                        <?php foreach ($classes as $cls): ?>
-                            <option value="<?= $cls ?>" <?= ($selectedClass == $cls ? 'selected' : '') ?>>
-                                Class <?= $cls ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-
-                    <button type="submit" class="btn btn-success">Save</button>
-                </div>
-
-                <?php if ($selectedClass): ?>
+            <?php if ($selectedClass): ?>
+                <form action="<?= base_url('admin/save_fees') ?>" method="post">
+                    <?= csrf_field() ?>
                     <input type="hidden" name="class" value="<?= esc($selectedClass) ?>">
 
                     <table class="table table-bordered align-middle">
@@ -77,15 +74,18 @@
                             <?php endforeach; ?>
                         </tbody>
                     </table>
-                <?php else: ?>
-                    <p class="text-muted">Please select a class to set fees.</p>
-                <?php endif; ?>
-            </form>
+
+                    <div class="text-end mt-2">
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </div>
+                </form>
+            <?php else: ?>
+                <p class="text-muted">Please select a class to set fees.</p>
+            <?php endif; ?>
         </div>
     </div>
 </div>
 
-<!-- Keyboard Navigation: Arrow Up/Down between fee inputs -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const inputs = document.querySelectorAll('.fee-input');
