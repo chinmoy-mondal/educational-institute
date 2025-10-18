@@ -2310,8 +2310,8 @@ class Dashboard extends Controller
 		return view('dashboard/std_pay', $this->data);
 	}
 
-	public function pay_stat() 
-	{		
+	public function pay_stat()
+	{
 		$this->data['title'] = 'Transaction Dashboard';
 		$this->data['activeSection'] = 'accounts';
 
@@ -2322,12 +2322,12 @@ class Dashboard extends Controller
 			['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
 			['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
 		];
-		
+
 		return view('dashboard/pay_stat', $this->data);
 	}
 
 	public function set_fees()
-	{		
+	{
 		$this->data['title'] = 'Transaction Dashboard';
 		$this->data['activeSection'] = 'accounts';
 
@@ -2338,7 +2338,26 @@ class Dashboard extends Controller
 			['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
 			['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
 		];
-		
+
+		$feesModel = new \App\Models\FeesModel();
+		$this->data['fees'] = $feesModel->orderBy('id', 'DESC')->findAll();
+
 		return view('dashboard/set_fees', $this->data);
+	}
+
+	public function save_fees()
+	{
+		$feesModel = new \App\Models\FeesModel();
+
+		$data = [
+			'title'       => $this->request->getPost('title'),
+			'total_fees'  => $this->request->getPost('total_fees'),
+		];
+
+		if ($feesModel->insert($data)) {
+			return redirect()->to('admin/set_fees')->with('success', 'Fees record added successfully!');
+		} else {
+			return redirect()->to('admin/set_fees')->with('error', 'Failed to add fees record.');
+		}
 	}
 }
