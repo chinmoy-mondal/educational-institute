@@ -2350,36 +2350,6 @@ class Dashboard extends Controller
 		return view('admin/set_fees', $data);
 	}
 
-	public function save_fees()
-	{
-		$class = $this->request->getPost('class');
-		$fees = $this->request->getPost('fees'); // array: title_id => amount
 
-		if (!$class || empty($fees)) {
-			return redirect()->back()->with('error', 'Please select a class and enter fees.');
-		}
-
-		$model = new \App\Models\FeesAmountModel();
-
-		foreach ($fees as $title_id => $amount) {
-			$existing = $model->where('class', $class)
-				->where('title_id', $title_id)
-				->first();
-
-			$data = [
-				'class' => $class,
-				'title_id' => $title_id,
-				'fees' => $amount ?: 0.00,
-			];
-
-			if ($existing) {
-				$model->update($existing['id'], $data);
-			} else {
-				$model->insert($data);
-			}
-		}
-
-		return redirect()->to('admin/set_fees?class=' . $class)->with('success', 'Fees updated successfully!');
-	}
 
 }
