@@ -3,32 +3,38 @@
 
 <div class="container mt-3">
     <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <div class="card-header bg-primary text-white">
             <h4 class="mb-0">Set Fees Amount</h4>
-            <form method="get" action="<?= base_url('admin/set_fees') ?>" class="d-flex align-items-center">
-                <select name="class" class="form-select me-2" onchange="this.form.submit()">
-                    <option value="">Select Class</option>
-                    <?php foreach ($classes as $cls): ?>
-                        <option value="<?= $cls ?>" <?= ($selectedClass == $cls ? 'selected' : '') ?>>
-                            Class <?= $cls ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </form>
         </div>
 
         <div class="card-body">
+            <!-- Flash Messages -->
             <?php if (session()->getFlashdata('success')): ?>
                 <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
             <?php elseif (session()->getFlashdata('error')): ?>
                 <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
             <?php endif; ?>
 
-            <?php if ($selectedClass): ?>
-                <form action="<?= base_url('admin/save_fees') ?>" method="post">
-                    <?= csrf_field() ?>
-                    <input type="hidden" name="class" value="<?= esc($selectedClass) ?>">
+            <form action="<?= base_url('admin/save_fees_amount') ?>" method="post" id="feesForm">
+                <?= csrf_field() ?>
 
+                <!-- ✅ Class Selector inside the same form -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Select Class:</label>
+                        <select name="class" id="classSelect" class="form-select" required onchange="reloadFees()">
+                            <option value="">-- Select Class --</option>
+                            <?php foreach ($classes as $cls): ?>
+                                <option value="<?= $cls ?>" <?= ($selectedClass == $cls ? 'selected' : '') ?>>
+                                    Class <?= $cls ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- ✅ Fees Table -->
+                <?php if ($selectedClass): ?>
                     <table class="table table-bordered align-middle">
                         <thead class="table-dark">
                             <tr>
@@ -53,12 +59,22 @@
                     <div class="text-end mt-3">
                         <button type="submit" class="btn btn-success">Save</button>
                     </div>
-                </form>
-            <?php else: ?>
-                <p class="text-muted">Please select a class to set fees.</p>
-            <?php endif; ?>
+                <?php else: ?>
+                    <p class="text-muted">Please select a class to view and set fees.</p>
+                <?php endif; ?>
+            </form>
         </div>
     </div>
 </div>
+
+<!-- ✅ Auto reload form when class changes -->
+<script>
+function reloadFees() {
+    const cls = document.getElementById('classSelect').value;
+    if (cls) {
+        window.location.href = "<?= base_url('admin/set_fees') ?>?class=" + cls;
+    }
+}
+</script>
 
 <?= $this->endSection() ?>
