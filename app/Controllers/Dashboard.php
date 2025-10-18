@@ -2347,7 +2347,11 @@ class Dashboard extends Controller
 		$class = $this->request->getGet('class');
 
 		// ✅ Fetch all classes from students table dynamically
-		$classes = $studentModel->select('class')->distinct()->orderBy('class', 'ASC')->findAll();
+		$classes = $studentModel
+			->select('class')
+			->distinct()
+			->orderBy('CAST(class AS UNSIGNED)', 'ASC') // Convert string to integer for sorting
+			->findAll();
 		$this->data['classes'] = array_column($classes, 'class');
 
 		$this->data['selectedClass'] = $class;

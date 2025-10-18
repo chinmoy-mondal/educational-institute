@@ -37,7 +37,7 @@
                             <tr>
                                 <th style="width:50px;">SL</th>
                                 <th>Fee Title</th>
-                                <th style="width:150px;">Last Update</th>
+                                <th style="width:200px;">Last Update</th>
                                 <th style="width:100px;">Unit</th>
                                 <th style="width:200px;">Amount (৳)</th>
                             </tr>
