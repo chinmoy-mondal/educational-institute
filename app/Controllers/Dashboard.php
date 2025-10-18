@@ -2349,15 +2349,22 @@ class Dashboard extends Controller
 		$this->data['fees'] = $feesModel->findAll();
 
 		$existingAmounts = [];
+		$existingUnits = [];
+		$existingUpdates = [];
+
 		if ($class) {
 			$amounts = $amountModel->where('class', $class)->findAll();
 			foreach ($amounts as $a) {
 				$existingAmounts[$a['title_id']] = $a['fees'];
-				$existingAmounts[$a['title_id'] . '_updated'] = $a['updated_at'];
+				$existingUnits[$a['title_id']] = $a['unit'];
+				$existingUpdates[$a['title_id']] = $a['updated_at'];
 			}
 		}
 
 		$this->data['existingAmounts'] = $existingAmounts;
+		$this->data['existingUnits'] = $existingUnits;
+		$this->data['existingUpdates'] = $existingUpdates;
+
 		return view('dashboard/set_fees', $this->data);
 	}
 
@@ -2365,6 +2372,7 @@ class Dashboard extends Controller
 	{
 		$class = $this->request->getPost('class');
 		$feesData = $this->request->getPost('fees');
+		$unitsData = $this->request->getPost('units');
 
 		if (!$class || empty($feesData)) {
 			return redirect()->back()->with('error', 'Please select a class and enter fees.');
@@ -2375,22 +2383,26 @@ class Dashboard extends Controller
 		foreach ($feesData as $title_id => $amount) {
 			if ($amount === '' || $amount === null) continue;
 
+			$unit = isset($unitsData[$title_id]) ? $unitsData[$title_id] : null;
+
 			$existing = $amountModel->where('class', $class)
 				->where('title_id', $title_id)
 				->first();
 
 			if ($existing) {
-				// ✅ Update existing record with updated_at timestamp
+				// Update existing record
 				$amountModel->update($existing['id'], [
 					'fees' => $amount,
+					'unit' => $unit,
 					'updated_at' => date('Y-m-d H:i:s')
 				]);
 			} else {
-				// ✅ Insert new record
+				// Insert new record
 				$amountModel->insert([
 					'class' => $class,
 					'title_id' => $title_id,
 					'fees' => $amount,
+					'unit' => $unit,
 					'created_at' => date('Y-m-d H:i:s'),
 					'updated_at' => date('Y-m-d H:i:s')
 				]);
