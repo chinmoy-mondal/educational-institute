@@ -2353,25 +2353,13 @@ class Dashboard extends Controller
 			$amounts = $amountModel->where('class', $class)->findAll();
 			foreach ($amounts as $a) {
 				$existingAmounts[$a['title_id']] = $a['fees'];
+				$existingAmounts[$a['title_id'] . '_updated'] = $a['updated_at'];
 			}
-
-			// ✅ Get last updated time
-			$lastUpdated = $amountModel
-				->selectMax('updated_at')
-				->where('class', $class)
-				->get()
-				->getRow()
-				->updated_at ?? null;
-
-			$this->data['lastUpdated'] = $lastUpdated;
-		} else {
-			$this->data['lastUpdated'] = null;
 		}
 
 		$this->data['existingAmounts'] = $existingAmounts;
 		return view('dashboard/set_fees', $this->data);
 	}
-
 
 	public function save_fees()
 	{
@@ -2387,17 +2375,24 @@ class Dashboard extends Controller
 		foreach ($feesData as $title_id => $amount) {
 			if ($amount === '' || $amount === null) continue;
 
-			$existing = $amountModel->where('class', $class)->where('title_id', $title_id)->first();
+			$existing = $amountModel->where('class', $class)
+				->where('title_id', $title_id)
+				->first();
 
 			if ($existing) {
-				// ✅ Update existing record
-				$amountModel->update($existing['id'], ['fees' => $amount]);
+				// ✅ Update existing record with updated_at timestamp
+				$amountModel->update($existing['id'], [
+					'fees' => $amount,
+					'updated_at' => date('Y-m-d H:i:s')
+				]);
 			} else {
 				// ✅ Insert new record
 				$amountModel->insert([
 					'class' => $class,
 					'title_id' => $title_id,
-					'fees' => $amount
+					'fees' => $amount,
+					'created_at' => date('Y-m-d H:i:s'),
+					'updated_at' => date('Y-m-d H:i:s')
 				]);
 			}
 		}

@@ -3,7 +3,7 @@
 
 <div class="container mt-3">
     <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <div class="card-header bg-primary text-white">
             <h4 class="mb-0">Set Fees Amount</h4>
         </div>
 
@@ -72,7 +72,7 @@
     </div>
 </div>
 
-<!-- Keyboard Navigation Script -->
+<!-- Keyboard Navigation -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const inputs = document.querySelectorAll('.fee-input');
