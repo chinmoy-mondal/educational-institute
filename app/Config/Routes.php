@@ -134,8 +134,8 @@ $routes->get('admin/transactions', 'Dashboard::transactionDashboard');
 $routes->get('admin/tec_pay', 'Dashboard::tec_pay');
 $routes->get('admin/std_pay', 'Dashboard::std_pay');
 $routes->get('admin/pay_stat', 'Dashboard::pay_stat');
-$routes->get('admin/set_fees', 'Admin::set_fees');
-$routes->post('admin/save_fees', 'Admin::save_fees');
+$routes->get('admin/set_fees', 'Dashboard::set_fees');
+$routes->post('admin/save_fees', 'Dashboard::save_fees');
 
 
 
