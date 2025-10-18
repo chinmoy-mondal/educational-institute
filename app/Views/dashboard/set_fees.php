@@ -3,7 +3,7 @@
 
 <div class="container-fluid mt-3">
     <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <h4 class="mb-0">Set Fees</h4>
         </div>
 
@@ -15,58 +15,38 @@
                 <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
             <?php endif; ?>
 
-            <!-- ✅ Add Fees Form -->
-            <form action="<?= base_url('admin/save_fees') ?>" method="post">
-                <?= csrf_field() ?>
-
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="title" class="form-label">Fees Title</label>
-                        <input type="text" name="title" id="title" class="form-control" placeholder="e.g., Admission Fees" required>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="total_fees" class="form-label">Total Fees (৳)</label>
-                        <input type="number" step="0.01" name="total_fees" id="total_fees" class="form-control" placeholder="e.g., 2000" required>
-                    </div>
-                </div>
-
-                <div class="text-end">
-                    <button type="submit" class="btn btn-success">Save</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- ✅ Existing Fees List -->
-    <div class="card mt-4 shadow-sm">
-        <div class="card-header bg-secondary text-white">
-            <h5 class="mb-0">Existing Fees Records</h5>
-        </div>
-        <div class="card-body">
+            <!-- ✅ Fees Table -->
             <?php if (!empty($fees)): ?>
-                <table class="table table-bordered table-striped">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>ID</th>
-                            <th>Title</th>
-                            <th>Total Fees (৳)</th>
-                            <th>Created At</th>
-                            <th>Updated At</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($fees as $f): ?>
+                <form action="<?= base_url('admin/update_fees') ?>" method="post">
+                    <?= csrf_field() ?>
+
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-dark">
                             <tr>
-                                <td><?= esc($f['id']) ?></td>
-                                <td><?= esc($f['title']) ?></td>
-                                <td><?= esc(number_format($f['total_fees'], 2)) ?></td>
-                                <td><?= esc($f['created_at'] ?? '-') ?></td>
-                                <td><?= esc($f['updated_at'] ?? '-') ?></td>
+                                <th style="width: 60px;">ID</th>
+                                <th>Title</th>
+                                <th style="width: 200px;">Fees (৳)</th>
+                                <th style="width: 120px;">Action</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($fees as $f): ?>
+                                <tr>
+                                    <td><?= esc($f['id']) ?></td>
+                                    <td><?= esc($f['title']) ?></td>
+                                    <td>
+                                        <input type="number" step="0.01" name="fees[<?= $f['id'] ?>]" 
+                                               value="<?= esc($f['total_fees']) ?>" class="form-control" required>
+                                    </td>
+                                    <td class="text-center">
+                                        <button type="submit" name="update_id" value="<?= $f['id'] ?>" 
+                                                class="btn btn-success btn-sm">Save</button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </form>
             <?php else: ?>
                 <p class="text-muted">No fees records found.</p>
             <?php endif; ?>
