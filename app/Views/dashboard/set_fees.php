@@ -3,8 +3,20 @@
 
 <div class="container mt-3">
     <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <h4 class="mb-0">Set Fees Amount</h4>
+
+            <!-- ✅ Separate GET form for class selection -->
+            <form method="get" action="<?= base_url('admin/set_fees') ?>" class="d-flex align-items-center">
+                <select name="class" class="form-select me-2" style="width:150px;" onchange="this.form.submit()">
+                    <option value="">Select Class</option>
+                    <?php foreach ($classes as $cls): ?>
+                        <option value="<?= $cls ?>" <?= ($selectedClass == $cls ? 'selected' : '') ?>>
+                            Class <?= $cls ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </form>
         </div>
 
         <div class="card-body">
@@ -14,24 +26,16 @@
                 <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
             <?php endif; ?>
 
-            <form method="post" action="<?= base_url('admin/save_fees') ?>">
-                <?= csrf_field() ?>
-
-                <div class="d-flex align-items-center mb-3">
-                    <select name="class" class="form-select me-2" style="width:150px;" onchange="this.form.submit()">
-                        <option value="">Select Class</option>
-                        <?php foreach ($classes as $cls): ?>
-                            <option value="<?= $cls ?>" <?= ($selectedClass == $cls ? 'selected' : '') ?>>
-                                Class <?= $cls ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-
-                    <button type="submit" class="btn btn-success">Save</button>
-                </div>
-
-                <?php if ($selectedClass): ?>
+            <?php if ($selectedClass): ?>
+                <!-- ✅ Separate POST form for saving fees -->
+                <form action="<?= base_url('admin/save_fees') ?>" method="post">
+                    <?= csrf_field() ?>
                     <input type="hidden" name="class" value="<?= esc($selectedClass) ?>">
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5>Class <?= esc($selectedClass) ?></h5>
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </div>
 
                     <table class="table table-bordered align-middle">
                         <thead class="table-dark">
@@ -49,8 +53,8 @@
                                     <td><?= $i++ ?></td>
                                     <td><?= esc($f['title']) ?></td>
                                     <td>
-                                        <?= !empty($existingAmounts[$f['id'] . '_updated']) 
-                                            ? date('d M, Y h:i A', strtotime($existingAmounts[$f['id'] . '_updated'])) 
+                                        <?= !empty($existingAmounts[$f['id'] . '_updated'])
+                                            ? date('d M, Y h:i A', strtotime($existingAmounts[$f['id'] . '_updated']))
                                             : '<span class="text-muted">—</span>' ?>
                                     </td>
                                     <td>
@@ -64,15 +68,15 @@
                             <?php endforeach; ?>
                         </tbody>
                     </table>
-                <?php else: ?>
-                    <p class="text-muted">Please select a class to set fees.</p>
-                <?php endif; ?>
-            </form>
+                </form>
+            <?php else: ?>
+                <p class="text-muted">Please select a class to set fees.</p>
+            <?php endif; ?>
         </div>
     </div>
 </div>
 
-<!-- Keyboard Navigation -->
+<!-- ✅ Keyboard Navigation -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const inputs = document.querySelectorAll('.fee-input');
