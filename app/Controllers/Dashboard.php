@@ -13,6 +13,7 @@ use App\Models\MarkingOpenModel;
 use App\Models\NoticeModel;
 use App\Models\AttendanceModel;
 use App\Models\FeesModel;
+use App\Models\FeesAmountModel;
 use App\Models\TransactionModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
@@ -2362,34 +2363,34 @@ class Dashboard extends Controller
 	}
 
 	public function save_fees()
-	{
-		$class = $this->request->getPost('class');
-		$fees = $this->request->getPost('fees'); // array: title_id => amount
+    {
+        $class = $this->request->getPost('class');
+        $fees = $this->request->getPost('fees'); // array: title_id => amount
 
-		if (!$class || empty($fees)) {
-			return redirect()->back()->with('error', 'Please select a class and enter fees.');
-		}
+        if (!$class || empty($fees)) {
+            return redirect()->back()->with('error', 'Please select a class and enter fees.');
+        }
 
-		$model = new \App\Models\FeesAmountModel();
+        $model = new FeesAmountModel();
 
-		foreach ($fees as $title_id => $amount) {
-			$existing = $model->where('class', $class)
-				->where('title_id', $title_id)
-				->first();
+        foreach ($fees as $title_id => $amount) {
+            $existing = $model->where('class', $class)
+                              ->where('title_id', $title_id)
+                              ->first();
 
-			$data = [
-				'class' => $class,
-				'title_id' => $title_id,
-				'fees' => $amount ?: 0.00,
-			];
+            $data = [
+                'class' => $class,
+                'title_id' => $title_id,
+                'fees' => $amount ?: 0.00,
+            ];
 
-			if ($existing) {
-				$model->update($existing['id'], $data);
-			} else {
-				$model->insert($data);
-			}
-		}
+            if ($existing) {
+                $model->update($existing['id'], $data);
+            } else {
+                $model->insert($data);
+            }
+        }
 
-		return redirect()->to('dashboard/set_fees?class=' . $class)->with('success', 'Fees updated successfully!');
-	}
+        return redirect()->to('dashboard/set_fees?class=' . $class)->with('success', 'Fees updated successfully!');
+    }
 }
