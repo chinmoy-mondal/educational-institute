@@ -2326,38 +2326,60 @@ class Dashboard extends Controller
 		return view('dashboard/pay_stat', $this->data);
 	}
 
-	public function set_fees()
+	public function save_fees()
 	{
-		$this->data['title'] = 'Transaction Dashboard';
-		$this->data['activeSection'] = 'accounts';
-
-		$this->data['navbarItems'] = [
-			['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-			['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-			['label' => 'Students', 'url' => base_url('admin/std_pay')],
-			['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-			['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
-		];
-
 		$feesModel = new \App\Models\FeesModel();
-		$this->data['fees'] = $feesModel->orderBy('id', 'DESC')->findAll();
+		$amountModel = new \App\Models\FeesAmountModel();
 
-		return view('dashboard/set_fees', $this->data);
+		$class = $this->request->getGet('class');
+
+		$data['classes'] = range(1, 10); // Classes 1–10
+		$data['selectedClass'] = $class;
+
+		$data['fees'] = $feesModel->findAll();
+
+		$existingAmounts = [];
+		if ($class) {
+			$amounts = $amountModel->where('class', $class)->findAll();
+			foreach ($amounts as $a) {
+				$existingAmounts[$a['title_id']] = $a['fees'];
+			}
+		}
+		$data['existingAmounts'] = $existingAmounts;
+
+		return view('admin/set_fees', $data);
 	}
 
 	public function save_fees()
 	{
-		$feesModel = new \App\Models\FeesModel();
+		$class = $this->request->getPost('class');
+		$fees = $this->request->getPost('fees'); // array: title_id => amount
 
-		$data = [
-			'title'       => $this->request->getPost('title'),
-			'total_fees'  => $this->request->getPost('total_fees'),
-		];
-
-		if ($feesModel->insert($data)) {
-			return redirect()->to('admin/set_fees')->with('success', 'Fees record added successfully!');
-		} else {
-			return redirect()->to('admin/set_fees')->with('error', 'Failed to add fees record.');
+		if (!$class || empty($fees)) {
+			return redirect()->back()->with('error', 'Please select a class and enter fees.');
 		}
+
+		$model = new \App\Models\FeesAmountModel();
+
+		foreach ($fees as $title_id => $amount) {
+			$existing = $model->where('class', $class)
+				->where('title_id', $title_id)
+				->first();
+
+			$data = [
+				'class' => $class,
+				'title_id' => $title_id,
+				'fees' => $amount ?: 0.00,
+			];
+
+			if ($existing) {
+				$model->update($existing['id'], $data);
+			} else {
+				$model->insert($data);
+			}
+		}
+
+		return redirect()->to('admin/set_fees?class=' . $class)->with('success', 'Fees updated successfully!');
 	}
+
 }
