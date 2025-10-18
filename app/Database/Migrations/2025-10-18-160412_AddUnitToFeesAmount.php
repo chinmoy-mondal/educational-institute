@@ -13,8 +13,8 @@ class AddUnitToFeesAmount extends Migration
                 'type'       => 'TINYINT',
                 'constraint' => 2,
                 'null'       => true,
-                'comment'    => 'Month unit (1–12)',
-                'after'      => 'fee_id', // position after fee_id
+                'after'      => 'title_id', // place it after title_id
+                'comment'    => 'Unit (1–12)',
             ],
         ];
 
