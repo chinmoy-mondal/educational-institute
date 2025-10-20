@@ -2328,54 +2328,61 @@ class Dashboard extends Controller
 	}
 
 	public function set_fees()
-	{
-		$this->data['title'] = 'Transaction Dashboard';
-		$this->data['activeSection'] = 'accounts';
+{
+    $this->data['title'] = 'Transaction Dashboard';
+    $this->data['activeSection'] = 'accounts';
 
-		$this->data['navbarItems'] = [
-			['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-			['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-			['label' => 'Students', 'url' => base_url('admin/std_pay')],
-			['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-			['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
-		];
+    $this->data['navbarItems'] = [
+        ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+        ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+        ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+        ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+        ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+    ];
 
-		$feesModel = new \App\Models\FeesModel();
-		$amountModel = new \App\Models\FeesAmountModel();
-		$studentModel = new \App\Models\StudentModel();
+    $feesModel = new \App\Models\FeesModel();
+    $amountModel = new \App\Models\FeesAmountModel();
+    $studentModel = new \App\Models\StudentModel();
 
-		$class = $this->request->getGet('class');
+    $class = $this->request->getGet('class');
 
-		// ✅ Fetch all classes from students table dynamically
-		$classes = $studentModel
-			->select('class')
-			->distinct()
-			->orderBy('CAST(class AS UNSIGNED)', 'ASC') // Convert string to integer for sorting
-			->findAll();
-		$this->data['classes'] = array_column($classes, 'class');
+    // ✅ Fetch all distinct classes from students table
+    $classes = $studentModel
+        ->select('class')
+        ->distinct()
+        ->orderBy('CAST(class AS UNSIGNED)', 'ASC')
+        ->findAll();
+    $this->data['classes'] = array_column($classes, 'class');
 
-		$this->data['selectedClass'] = $class;
-		$this->data['fees'] = $feesModel->findAll();
+    $this->data['selectedClass'] = $class;
+    $this->data['fees'] = $feesModel->findAll();
 
-		$existingAmounts = [];
-		$existingUnits = [];
-		$existingUpdates = [];
+    $existingAmounts = [];
+    $existingUnits = [];
+    $existingUpdates = [];
+    $totalAmount = 0; // ✅ initialize total
 
-		if ($class) {
-			$amounts = $amountModel->where('class', $class)->findAll();
-			foreach ($amounts as $a) {
-				$existingAmounts[$a['title_id']] = $a['fees'];
-				$existingUnits[$a['title_id']] = $a['unit'];
-				$existingUpdates[$a['title_id']] = $a['updated_at'];
-			}
-		}
+    if ($class) {
+        $amounts = $amountModel->where('class', $class)->findAll();
 
-		$this->data['existingAmounts'] = $existingAmounts;
-		$this->data['existingUnits'] = $existingUnits;
-		$this->data['existingUpdates'] = $existingUpdates;
+        foreach ($amounts as $a) {
+            $existingAmounts[$a['title_id']] = $a['fees'];
+            $existingUnits[$a['title_id']] = $a['unit'];
+            $existingUpdates[$a['title_id']] = $a['updated_at'];
 
-		return view('dashboard/set_fees', $this->data);
-	}
+            // ✅ accumulate total
+            $totalAmount += (float) $a['fees'];
+        }
+    }
+
+    $this->data['existingAmounts'] = $existingAmounts;
+    $this->data['existingUnits'] = $existingUnits;
+    $this->data['existingUpdates'] = $existingUpdates;
+    $this->data['totalAmount'] = $totalAmount; // ✅ pass total to view
+
+    return view('dashboard/set_fees', $this->data);
+}
+
 
 	public function save_fees()
 	{
