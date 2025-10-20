@@ -2327,7 +2327,7 @@ class Dashboard extends Controller
 		return view('dashboard/pay_stat', $this->data);
 	}
 
-	public function set_fees()
+public function set_fees()
 {
     $this->data['title'] = 'Transaction Dashboard';
     $this->data['activeSection'] = 'accounts';
@@ -2346,7 +2346,7 @@ class Dashboard extends Controller
 
     $class = $this->request->getGet('class');
 
-    // ✅ Fetch all distinct classes from students table
+    // ✅ Fetch distinct classes dynamically from students
     $classes = $studentModel
         ->select('class')
         ->distinct()
@@ -2360,28 +2360,31 @@ class Dashboard extends Controller
     $existingAmounts = [];
     $existingUnits = [];
     $existingUpdates = [];
-    $totalAmount = 0; // ✅ initialize total
+
+    $totalAmount = 0;
 
     if ($class) {
         $amounts = $amountModel->where('class', $class)->findAll();
-
         foreach ($amounts as $a) {
             $existingAmounts[$a['title_id']] = $a['fees'];
             $existingUnits[$a['title_id']] = $a['unit'];
             $existingUpdates[$a['title_id']] = $a['updated_at'];
 
-            // ✅ accumulate total
-            $totalAmount += (float) $a['fees'];
+            // ✅ Calculate total = Σ (unit * fees)
+            if (is_numeric($a['fees']) && is_numeric($a['unit'])) {
+                $totalAmount += $a['fees'] * $a['unit'];
+            }
         }
     }
 
     $this->data['existingAmounts'] = $existingAmounts;
     $this->data['existingUnits'] = $existingUnits;
     $this->data['existingUpdates'] = $existingUpdates;
-    $this->data['totalAmount'] = $totalAmount; // ✅ pass total to view
+    $this->data['totalAmount'] = $totalAmount;
 
     return view('dashboard/set_fees', $this->data);
 }
+
 
 
 	public function save_fees()
