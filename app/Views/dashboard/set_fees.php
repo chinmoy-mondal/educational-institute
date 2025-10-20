@@ -28,57 +28,73 @@
             </form>
 
             <?php if ($selectedClass): ?>
-                <form action="<?= base_url('admin/save_fees') ?>" method="post">
-                    <?= csrf_field() ?>
-                    <input type="hidden" name="class" value="<?= esc($selectedClass) ?>">
+                <form method="post" action="<?= base_url('admin/save_fees') ?>">
 
-                    <table class="table table-bordered align-middle">
-                        <thead class="table-dark">
-                            <tr>
-                                <th style="width:50px;">SL</th>
-                                <th>Fee Title</th>
-                                <th style="width:200px;">Last Update</th>
-                                <th style="width:100px;">Unit</th>
-                                <th style="width:200px;">Amount (৳)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php $sl = 1; ?>
-                            <?php foreach ($fees as $f): ?>
-                                <tr>
-                                    <td><?= $sl++ ?></td>
-                                    <td><?= esc($f['title']) ?></td>
-                                    <td>
-                                        <?= !empty($existingUpdates[$f['id']]) 
-                                            ? date('d M, Y h:i A', strtotime($existingUpdates[$f['id']])) 
-                                            : '<span class="text-muted">—</span>' ?>
-                                    </td>
-                                    <td>
-                                        <select name="units[<?= $f['id'] ?>]" class="form-select">
-                                            <option value="">Select</option>
-                                            <?php for ($i = 1; $i <= 12; $i++): ?>
-                                                <option value="<?= $i ?>"
-                                                    <?= isset($existingUnits[$f['id']]) && $existingUnits[$f['id']] == $i ? 'selected' : '' ?>>
-                                                    <?= $i ?>
-                                                </option>
-                                            <?php endfor; ?>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="number" step="0.01" name="fees[<?= $f['id'] ?>]"
-                                            value="<?= esc($existingAmounts[$f['id']] ?? '') ?>"
-                                            class="form-control fee-input"
-                                            placeholder="Enter amount">
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+    <!-- ✅ Class selector -->
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <select name="class" class="form-select" onchange="this.form.submit()">
+                <option value="">Select Class</option>
+                <?php foreach ($classes as $c): ?>
+                    <option value="<?= esc($c) ?>" <?= ($selectedClass == $c) ? 'selected' : '' ?>>
+                        <?= esc($c) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
 
-                    <div class="text-end mt-2">
-                        <button type="submit" class="btn btn-success">Save</button>
-                    </div>
-                </form>
+    <?php if (!empty($selectedClass)): ?>
+        <!-- ✅ Fees table -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Fee Title</th>
+                    <th>Amount</th>
+                    <th>Unit</th>
+                    <th>Last Updated</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($fees as $f): ?>
+                    <tr>
+                        <td><?= esc($f['title']) ?></td>
+                        <td>
+                            <input type="number" step="0.01" class="form-control"
+                                name="fees[<?= $f['id'] ?>]"
+                                value="<?= esc($existingAmounts[$f['id']] ?? '') ?>">
+                        </td>
+                        <td>
+                            <select name="units[<?= $f['id'] ?>]" class="form-select">
+                                <option value="">Select</option>
+                                <?php for ($i = 1; $i <= 12; $i++): ?>
+                                    <option value="<?= $i ?>"
+                                        <?= (isset($existingUnits[$f['id']]) && $existingUnits[$f['id']] == $i) ? 'selected' : '' ?>>
+                                        <?= $i ?>
+                                    </option>
+                                <?php endfor; ?>
+                            </select>
+                        </td>
+                        <td>
+                            <?= isset($existingUpdates[$f['id']]) ? date('d M Y', strtotime($existingUpdates[$f['id']])) : '-' ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+
+        <!-- ✅ Total Fees Section -->
+        <div class="alert alert-info mt-3">
+            <strong>Total Fees for Class <?= esc($selectedClass) ?>:</strong>
+            <?= number_format($totalAmount, 2) ?> ৳
+        </div>
+
+        <!-- ✅ Save Button -->
+        <button type="submit" class="btn btn-primary mt-2">Save</button>
+    <?php endif; ?>
+
+</form>
+
             <?php else: ?>
                 <p class="text-muted">Please select a class to set fees.</p>
             <?php endif; ?>
