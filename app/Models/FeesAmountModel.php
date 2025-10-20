@@ -10,6 +10,7 @@ class FeesAmountModel extends Model
     protected $allowedFields = [
         'class',
         'title_id',
+        'unit',
         'fees',
         'created_at',
         'updated_at'
