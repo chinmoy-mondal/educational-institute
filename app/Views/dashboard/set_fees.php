@@ -5,7 +5,7 @@
     <h4 class="mb-4">Student Fees Setup</h4>
 
     <!-- Select Class -->
-    <form method="get" action="<?= base_url('dashboard/std-pay') ?>" class="mb-4">
+    <form method="get" action="<?= base_url('admin/std_pay') ?>" class="mb-4">
         <div class="row g-2 align-items-center">
             <div class="col-md-4">
                 <select name="class" class="form-select" onchange="this.form.submit()">
