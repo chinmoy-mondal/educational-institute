@@ -2361,7 +2361,7 @@ public function set_fees()
     $existingUnits = [];
     $existingUpdates = [];
 
-    $totalAmount = 0;
+    $totalAmount = 0; 
 
     if ($class) {
         $amounts = $amountModel->where('class', $class)->findAll();
