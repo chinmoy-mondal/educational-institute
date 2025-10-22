@@ -8,14 +8,14 @@
     <form method="get" action="<?= base_url('admin/set_fees') ?>" class="mb-4">
         <div class="row g-2 align-items-center">
             <div class="col-md-4">
-                <select name="class" class="form-select" onchange="this.form.submit()">
-                    <option value="">Select Class</option>
-                    <?php for ($i = 1; $i <= 10; $i++): ?>
-                        <option value="<?= $i ?>" <?= ($selectedClass == $i) ? 'selected' : '' ?>>
-                            Class <?= $i ?>
-                        </option>
-                    <?php endfor; ?>
-                </select>
+<select name="class" class="form-select" onchange="this.form.submit()">
+    <option value="">Select Class</option>
+    <?php foreach ($classes as $classOption): ?>
+        <option value="<?= esc($classOption) ?>" <?= ($selectedClass == $classOption) ? 'selected' : '' ?>>
+            Class <?= esc($classOption) ?>
+        </option>
+    <?php endforeach; ?>
+</select>
             </div>
         </div>
     </form>
