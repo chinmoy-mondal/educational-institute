@@ -2355,7 +2355,7 @@ public function set_fees()
     $this->data['classes'] = array_column($classes, 'class');
 
     $this->data['selectedClass'] = $class;
-    $this->data['title'] = $feesModel->findAll();
+    $this->data['titles'] = $feesModel->findAll();
 
     $existingAmounts = [];
     $existingUnits = [];
