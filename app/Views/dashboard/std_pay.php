@@ -90,8 +90,7 @@
                             <?php
 
                             $total = $classFees[$s['class']] ?? 0;
-                            $total = $senderDeposits[$s['id']] ?? 0;
-                            $paid  = $s['amount_paid'] ?? 0;
+                            $paid = $senderDeposits[$s['id']] ?? 0;
                             $due   = $total - $paid;
                             ?>
                             <tr>
