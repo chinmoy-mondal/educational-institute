@@ -85,11 +85,12 @@
                 </thead>
                 <tbody>
                     <?php if (!empty($students)): ?>
-                        <?php $i = 1; foreach ($students as $s): ?>
-                            <?php 
+                        <?php $i = 1;
+                        foreach ($students as $s): ?>
+                            <?php
                                 $total = $s['total_amount'] ?? 0;
-                                $paid  = $s['amount_paid'] ?? 0;
-                                $due   = $total - $paid;
+                            $paid  = $s['amount_paid'] ?? 0;
+                            $due   = $total - $paid;
                             ?>
                             <tr>
                                 <td><?= $i++ ?></td>
@@ -98,7 +99,13 @@
                                 <td><?= esc($s['student_name']) ?></td>
                                 <td><?= esc($s['class']) ?></td>
                                 <td><?= esc($s['section']) ?></td>
-                                <td>৳ <?= number_format($total, 2) ?></td>
+                                <td>
+                                <?php
+                        $total = $classFees[$student['class']] ?? 0;
+                            echo '৳ ' . number_format($total, 2);
+                            ?>    
+
+                                </td>
                                 <td>৳ <?= number_format($paid, 2) ?></td>
                                 <td>৳ <?= number_format($due, 2) ?></td>
                                 <td>
