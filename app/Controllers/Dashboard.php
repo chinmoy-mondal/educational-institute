@@ -2332,6 +2332,22 @@ class Dashboard extends Controller
 
         $this->data['classFees'] = $classFees; // ✅ pass to view
 
+        // Load total deposit money per sender
+        $this->data['fees_deposit'] = $this->transactionModel
+            ->select('sender_id, sender_name, SUM(amount) AS total_deposit')
+            ->groupBy('sender_id, sender_name')
+            ->orderBy('sender_name', 'ASC')
+            ->get()
+            ->getResultArray();
+
+        // Convert fees_deposit into an easy-to-lookup array: [sender_id => total_deposit]
+        $senderDeposits = [];
+        foreach ($this->data['fees_deposit'] as $row) {
+            $senderDeposits[$row['sender_id']] = $row['total_deposit'];
+        }
+
+        $this->data['senderDeposits'] = $senderDeposits; // ✅ pass to view
+
         // ✅ Dropdown options
         $this->data['classes'] = $this->studentModel->select('class')->distinct()->orderBy('class', 'ASC')->get()->getResultArray();
         $this->data['sections'] = $this->studentModel->select('section')->distinct()->orderBy('section', 'ASC')->get()->getResultArray();

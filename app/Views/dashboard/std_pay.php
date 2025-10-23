@@ -88,7 +88,9 @@
                         <?php $i = 1;
                         foreach ($students as $s): ?>
                             <?php
-                                $total = $s['total_amount'] ?? 0;
+
+                            $total = $classFees[$s['class']] ?? 0;
+                            $total = $senderDeposits[$s['id']] ?? 0;
                             $paid  = $s['amount_paid'] ?? 0;
                             $due   = $total - $paid;
                             ?>
@@ -99,12 +101,7 @@
                                 <td><?= esc($s['student_name']) ?></td>
                                 <td><?= esc($s['class']) ?></td>
                                 <td><?= esc($s['section']) ?></td>
-                                <td>
-                                    <?php
-                        $total = $classFees[$s['class']] ?? 0;
-                            echo '৳ ' . number_format($total, 2);
-                            ?> 
-                                </td>
+                                <td>৳ <?= number_format($total, 2);?></td>
                                 <td>৳ <?= number_format($paid, 2) ?></td>
                                 <td>৳ <?= number_format($due, 2) ?></td>
                                 <td>
