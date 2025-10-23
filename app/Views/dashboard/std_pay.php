@@ -100,11 +100,10 @@
                                 <td><?= esc($s['class']) ?></td>
                                 <td><?= esc($s['section']) ?></td>
                                 <td>
-                                <?php
-                        $total = $classFees[$student['class']] ?? 0;
+                                    <?php
+                        $total = $classFees[$students['class']] ?? 0;
                             echo '৳ ' . number_format($total, 2);
-                            ?>    
-
+                            ?> 
                                 </td>
                                 <td>৳ <?= number_format($paid, 2) ?></td>
                                 <td>৳ <?= number_format($due, 2) ?></td>
