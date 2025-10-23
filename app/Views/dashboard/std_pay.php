@@ -101,7 +101,7 @@
                                 <td><?= esc($s['section']) ?></td>
                                 <td>
                                     <?php
-                        $total = $classFees[$students['class']] ?? 0;
+                        $total = $classFees[$s['class']] ?? 0;
                             echo '৳ ' . number_format($total, 2);
                             ?> 
                                 </td>
