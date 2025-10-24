@@ -2389,14 +2389,11 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        $feesModel = new \App\Models\FeesModel();
-        $amountModel = new \App\Models\FeesAmountModel();
-        $studentModel = new \App\Models\StudentModel();
 
         $class = $this->request->getGet('class');
 
         // ✅ Fetch distinct classes dynamically from students
-        $classes = $studentModel
+        $classes = $this->studentModel
             ->select('class')
             ->distinct()
             ->orderBy('CAST(class AS UNSIGNED)', 'ASC')
@@ -2404,7 +2401,7 @@ class Dashboard extends Controller
         $this->data['classes'] = array_column($classes, 'class');
 
         $this->data['selectedClass'] = $class;
-        $this->data['titles'] = $feesModel->findAll();
+        $this->data['titles'] = $this->feesModel->findAll();
 
         $existingAmounts = [];
         $existingUnits = [];
@@ -2413,7 +2410,7 @@ class Dashboard extends Controller
         $totalAmount = 0;
 
         if ($class) {
-            $amounts = $amountModel->where('class', $class)->findAll();
+            $amounts = $this->feesAmountModel->where('class', $class)->findAll();
             foreach ($amounts as $a) {
                 $existingAmounts[$a['title_id']] = $a['fees'];
                 $existingUnits[$a['title_id']] = $a['unit'];
@@ -2433,8 +2430,6 @@ class Dashboard extends Controller
 
         return view('dashboard/set_fees', $this->data);
     }
-
-
 
     public function save_fees()
     {
@@ -2459,7 +2454,7 @@ class Dashboard extends Controller
 
             $unit = isset($unitsData[$title_id]) ? $unitsData[$title_id] : null;
 
-            $existing = $amountModel->where('class', $class)
+            $existing = $this->feesAmountModel->where('class', $class)
                 ->where('title_id', $title_id)
                 ->first();
 
@@ -2482,5 +2477,83 @@ class Dashboard extends Controller
         }
 
         return redirect()->back()->with('success', 'Fees updated successfully!');
+    }
+
+    public function payStudentRequest($id)
+    {
+        $this->data['title'] = 'Student Payment';
+        $this->data['activeSection'] = 'accounts';
+
+        $this->data['navbarItems'] = [
+            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+        ];
+
+        $studentModel = new \App\Models\StudentModel();
+        $feesModel = new \App\Models\FeesModel();
+        $feesAmountModel = new \App\Models\FeesAmountModel();
+        $userModel = new \App\Models\UserModel();
+
+        // 🧍 Student Info
+        $student = $studentModel->find($id);
+        if (!$student) {
+            return redirect()->back()->with('error', 'Student not found.');
+        }
+
+        // 🎓 Class-based fees
+        $fees = $feesModel->findAll();
+        $classFees = $feesAmountModel
+            ->where('class', $student['class'])
+            ->findAll();
+
+        // 🧾 Map fees amounts
+        $feeAmounts = [];
+        foreach ($classFees as $f) {
+            $feeAmounts[$f['fee_id']] = $f['amount'];
+        }
+
+        $this->data['student'] = $student;
+        $this->data['fees'] = $fees;
+        $this->data['feeAmounts'] = $feeAmounts;
+        $this->data['receiver'] = $userModel->where('role', 'admin')->first(); // default receiver = admin
+
+        return view('dashboard/payStudentRequest', $this->data);
+    }
+
+    public function submitStudentPayment()
+    {
+        $transactionModel = new \App\Models\TransactionModel();
+        $studentModel = new \App\Models\StudentModel();
+        $userModel = new \App\Models\UserModel();
+
+        $studentId = $this->request->getPost('student_id');
+        $receiverId = $this->request->getPost('receiver_id');
+        $amount = $this->request->getPost('amount');
+        $feeTitle = $this->request->getPost('fee_title');
+
+        $student = $studentModel->find($studentId);
+        $receiver = $userModel->find($receiverId);
+
+        if (!$student || !$receiver) {
+            return redirect()->back()->with('error', 'Invalid student or receiver.');
+        }
+
+        // 💳 Save transaction
+        $transactionModel->insert([
+            'transaction_id' => uniqid('TXN'),
+            'sender_id'      => $student['id'],
+            'sender_name'    => $student['name'],
+            'receiver_id'    => $receiver['id'],
+            'receiver_name'  => $receiver['name'],
+            'amount'         => $amount,
+            'title'          => $feeTitle,
+            'status'         => 'pending', // default
+            'created_at'     => date('Y-m-d H:i:s'),
+        ]);
+
+        return redirect()->to(base_url('admin/std_pay'))->with('success', 'Payment request submitted successfully!');
     }
 }

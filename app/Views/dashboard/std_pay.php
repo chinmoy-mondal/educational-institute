@@ -105,7 +105,7 @@
                                 <td>৳ <?= number_format($due, 2) ?></td>
                                 <td>
                                     <?php if ($due > 0): ?>
-                                        <a href="<?= base_url('admin/pay_student/' . $s['id']) ?>" class="btn btn-sm btn-primary">
+                                        <a href="<?= base_url('admin/pay_student_request/' . $s['id']) ?>" class="btn btn-sm btn-primary">
                                             <i class="fas fa-money-bill-wave"></i> Pay
                                         </a>
                                     <?php else: ?>
