@@ -60,17 +60,17 @@ class CreateTransactionsTable extends Migration
             'status' => [
                 'type'       => 'TINYINT',
                 'constraint' => 1,
-                'default'    => 0, // default pending
+                'default'    => 0,
             ],
             'created_at' => [
-                'type'    => 'DATETIME',
-                'null'    => false,
+                'type'    => 'TIMESTAMP',
                 'default' => 'CURRENT_TIMESTAMP',
+                'null'    => false,
             ],
             'updated_at' => [
-                'type'      => 'DATETIME',
-                'null'      => false,
+                'type'      => 'TIMESTAMP',
                 'default'   => 'CURRENT_TIMESTAMP',
+                'null'      => false,
                 'on update' => 'CURRENT_TIMESTAMP',
             ],
         ]);
