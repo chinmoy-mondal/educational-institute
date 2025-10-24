@@ -39,23 +39,23 @@
 
     <!-- ✅ Charts Row -->
     <div class="row g-4 mb-4">
-        <!-- Date-wise Chart -->
+        <!-- Left: Current Month Chart -->
         <div class="col-md-6">
             <div class="card shadow-sm border-0 rounded-3">
                 <div class="card-header bg-primary text-white">
-                    <h6 class="mb-0">Last 7 Days Report</h6>
+                    <h6 class="mb-0">Current Month Report (<?= date('F Y') ?>)</h6>
                 </div>
                 <div class="card-body">
-                    <canvas id="dateChart" height="150"></canvas>
+                    <canvas id="dailyChart" height="150"></canvas>
                 </div>
             </div>
         </div>
 
-        <!-- Month-wise Chart -->
+        <!-- Right: Yearly Chart -->
         <div class="col-md-6">
             <div class="card shadow-sm border-0 rounded-3">
                 <div class="card-header bg-primary text-white">
-                    <h6 class="mb-0">Month-wise Report (<?= date('Y') ?>)</h6>
+                    <h6 class="mb-0">Yearly Summary (<?= date('Y') ?>)</h6>
                 </div>
                 <div class="card-body">
                     <canvas id="monthChart" height="150"></canvas>
@@ -120,22 +120,22 @@
 <!-- ✅ Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Date-wise Chart
-    const dateCtx = document.getElementById('dateChart').getContext('2d');
-    new Chart(dateCtx, {
+    // ✅ Daily Chart (Current Month)
+    const dailyCtx = document.getElementById('dailyChart').getContext('2d');
+    new Chart(dailyCtx, {
         type: 'bar',
         data: {
-            labels: <?= json_encode($dateLabels ?? []) ?>,
+            labels: <?= json_encode($dailyLabels ?? []) ?>,
             datasets: [
                 {
                     label: 'Earn (৳)',
-                    data: <?= json_encode($dateEarns ?? []) ?>,
+                    data: <?= json_encode($dailyEarns ?? []) ?>,
                     backgroundColor: 'rgba(25, 135, 84, 0.7)',
                     borderRadius: 6
                 },
                 {
                     label: 'Cost (৳)',
-                    data: <?= json_encode($dateCosts ?? []) ?>,
+                    data: <?= json_encode($dailyCosts ?? []) ?>,
                     backgroundColor: 'rgba(220, 53, 69, 0.7)',
                     borderRadius: 6
                 }
@@ -144,11 +144,14 @@
         options: {
             responsive: true,
             plugins: { legend: { position: 'bottom' } },
-            scales: { y: { beginAtZero: true } }
+            scales: {
+                x: { title: { display: true, text: 'Date' } },
+                y: { beginAtZero: true, title: { display: true, text: 'Amount (৳)' } }
+            }
         }
     });
 
-    // Month-wise Chart
+    // ✅ Month-wise Chart (Full Year)
     const monthCtx = document.getElementById('monthChart').getContext('2d');
     new Chart(monthCtx, {
         type: 'line',
@@ -176,7 +179,10 @@
         options: {
             responsive: true,
             plugins: { legend: { position: 'bottom' } },
-            scales: { y: { beginAtZero: true } }
+            scales: {
+                x: { title: { display: true, text: 'Month' } },
+                y: { beginAtZero: true, title: { display: true, text: 'Amount (৳)' } }
+            }
         }
     });
 </script>

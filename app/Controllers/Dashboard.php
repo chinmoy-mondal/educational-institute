@@ -2206,7 +2206,6 @@ class Dashboard extends Controller
 
 public function transactionDashboard()
 {
-    // ✅ Page setup
     $this->data['title'] = 'Transaction Dashboard';
     $this->data['activeSection'] = 'accounts';
     $this->data['navbarItems'] = [
@@ -2217,44 +2216,39 @@ public function transactionDashboard()
         ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
     ];
 
-    // ✅ Load all transactions (latest first)
     $this->data['transactions'] = $this->transactionModel->orderBy('created_at', 'DESC')->findAll();
 
     // ✅ Totals
-    $totalEarnRow = $this->transactionModel
-        ->where('status', 0) // Earn
-        ->selectSum('amount')
-        ->get()
-        ->getRowArray();
-    $totalCostRow = $this->transactionModel
-        ->where('status', 1) // Cost
-        ->selectSum('amount')
-        ->get()
-        ->getRowArray();
+    $totalEarnRow = $this->transactionModel->where('status', 0)->selectSum('amount')->get()->getRowArray();
+    $totalCostRow = $this->transactionModel->where('status', 1)->selectSum('amount')->get()->getRowArray();
 
     $this->data['totalEarn'] = $totalEarnRow['amount'] ?? 0;
     $this->data['totalCost'] = $totalCostRow['amount'] ?? 0;
 
-    // ✅ Last 7 days: date-wise earn and cost
     $builder = db_connect()->table('transactions');
-    $dateData = $builder
+
+    // ✅ Current month (daily earn vs cost)
+    $monthStart = date('Y-m-01');
+    $monthEnd = date('Y-m-t');
+    $currentMonthData = $builder
         ->select("
             DATE(created_at) as date,
             SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) as earn,
             SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) as cost
         ")
-        ->where('created_at >=', date('Y-m-d', strtotime('-6 days')))
+        ->where('created_at >=', $monthStart)
+        ->where('created_at <=', $monthEnd)
         ->groupBy('DATE(created_at)')
-        ->orderBy('date', 'ASC')
+        ->orderBy('DATE(created_at)', 'ASC')
         ->get()
         ->getResultArray();
 
-    $this->data['dateLabels'] = array_column($dateData, 'date');
-    $this->data['dateEarns'] = array_map('floatval', array_column($dateData, 'earn'));
-    $this->data['dateCosts'] = array_map('floatval', array_column($dateData, 'cost'));
+    $this->data['dailyLabels'] = array_column($currentMonthData, 'date');
+    $this->data['dailyEarns'] = array_map('floatval', array_column($currentMonthData, 'earn'));
+    $this->data['dailyCosts'] = array_map('floatval', array_column($currentMonthData, 'cost'));
 
-    // ✅ Month-wise (current year)
-    $monthData = $builder
+    // ✅ 12-month summary (month-wise)
+    $yearData = $builder
         ->select("
             MONTH(created_at) as month,
             SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) as earn,
@@ -2262,13 +2256,13 @@ public function transactionDashboard()
         ")
         ->where('YEAR(created_at)', date('Y'))
         ->groupBy('MONTH(created_at)')
-        ->orderBy('month', 'ASC')
+        ->orderBy('MONTH(created_at)', 'ASC')
         ->get()
         ->getResultArray();
 
-    $this->data['monthLabels'] = array_map(fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)), $monthData);
-    $this->data['monthEarns'] = array_map('floatval', array_column($monthData, 'earn'));
-    $this->data['monthCosts'] = array_map('floatval', array_column($monthData, 'cost'));
+    $this->data['monthLabels'] = array_map(fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)), $yearData);
+    $this->data['monthEarns'] = array_map('floatval', array_column($yearData, 'earn'));
+    $this->data['monthCosts'] = array_map('floatval', array_column($yearData, 'cost'));
 
     return view('dashboard/transaction_dashboard', $this->data);
 }
