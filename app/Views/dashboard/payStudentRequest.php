@@ -38,25 +38,31 @@
                                 <th>Fee Title</th>
                                 <th>Max Amount (৳)</th>
                                 <th>Pay Amount (৳)</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
-<tbody> 
-    <?php $sl = 1; ?>
-    <?php foreach ($fees as $f):
-        $max = $feeAmounts[$f['id']] ?? 0;
-        ?>
-        <tr>
-            <td><?= $sl++ ?></td>
-            <td><?= esc($f['title']) ?></td>
-            <td><?= $max ? number_format($max, 2) : '-' ?></td>
-            <td>
-                <input type="hidden" name="fee_id[]" value="<?= esc($f['id']) ?>">
-                <input type="number" step="0.01" name="amount[]" class="form-control form-control-sm"
-                    placeholder="Enter amount" max="<?= $max ?>">
-            </td>
-        </tr>
-    <?php endforeach; ?>
-</tbody>
+                        <tbody> 
+                            <?php $sl = 1; ?>
+                            <?php foreach ($fees as $f):
+                                $max = $feeAmounts[$f['id']] ?? 0;
+                                ?>
+                                <tr>
+                                    <td><?= $sl++ ?></td>
+                                    <td><?= esc($f['title']) ?></td>
+                                    <td><?= $max ? number_format($max, 2) : '-' ?></td>
+                                    <td>
+                                        <input type="hidden" name="fee_id[]" value="<?= esc($f['id']) ?>">
+                                        <input type="number" step="0.01" name="amount[]" class="form-control form-control-sm"
+                                            placeholder="Enter amount" max="<?= $max ?>">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <a href="" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-money-bill-wave"></i> Pay
+                                        </a>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
                     </table>
                 </div>
 
