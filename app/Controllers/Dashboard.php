@@ -2532,17 +2532,18 @@ class Dashboard extends Controller
 
     public function submitStudentPayment()
     {
-        $transactionModel = new \App\Models\TransactionModel();
-        $studentModel = new \App\Models\StudentModel();
-        $userModel = new \App\Models\UserModel();
-        $feesModel = new \App\Models\FeesModel();
+        $transactionModel   = new \App\Models\TransactionModel();
+        $studentModel       = new \App\Models\StudentModel();
+        $userModel          = new \App\Models\UserModel();
+        $feesModel          = new \App\Models\FeesModel();
+        $feesAmountModel    = new \App\Models\FeesAmountModel();
 
         $studentId  = $this->request->getPost('student_id');
         $receiverId = $this->request->getPost('receiver_id');
         $amounts    = $this->request->getPost('amount');
         $feeIds     = $this->request->getPost('fee_id');
 
-        $student = $studentModel->find($studentId);
+        $student  = $studentModel->find($studentId);
         $receiver = $userModel->find($receiverId);
 
         if (!$student || !$receiver) {
@@ -2553,27 +2554,68 @@ class Dashboard extends Controller
             return redirect()->back()->with('error', 'No payment data provided.');
         }
 
+        $successCount = 0;
+        $errorMessages = [];
+
         foreach ($feeIds as $index => $feeId) {
             $amount = $amounts[$index] ?? 0;
-
-            if ($amount > 0) {
-                $fee = $feesModel->find($feeId);
-                $transactionModel->insert([
-                    'transaction_id' => uniqid('TXN'),
-                    'sender_id'      => $student['id'],
-                    'sender_name'    => $student['student_name'],
-                    'receiver_id'    => $receiver['id'],
-                    'receiver_name'  => $receiver['name'],
-                    'amount'         => $amount,
-                    'purpose'        => $fee['title'] ?? 'Unknown Fee',
-                    'description'    => 'Educational fees payment request',
-                    'status'         => 0,
-                    'created_at'     => date('Y-m-d H:i:s'),
-                ]);
+            if ($amount <= 0) {
+                continue;
             }
+
+            // Get maximum allowed for this fee for the student's class
+            $feeMax = $feesAmountModel
+                        ->where('class', $student['class'])
+                        ->where('title_id', $feeId)
+                        ->first();
+            $maxAmount = $feeMax['fees'] ?? 0;
+
+            // Calculate total already paid by this student for this fee
+            $totalPaid = $transactionModel
+                            ->where('sender_id', $student['id'])
+                            ->where('purpose', $feesModel->find($feeId)['title'])
+                            ->select('SUM(amount) as paid')
+                            ->first();
+            $paidAmount = $totalPaid['paid'] ?? 0;
+
+            if ($paidAmount >= $maxAmount) {
+                $feeTitle = $feesModel->find($feeId)['title'] ?? 'Unknown Fee';
+                $errorMessages[] = "Sorry, maximum payment for '{$feeTitle}' already received.";
+                continue;
+            }
+
+            // Prevent overpayment
+            if ($paidAmount + $amount > $maxAmount) {
+                $amount = $maxAmount - $paidAmount;
+            }
+
+            $fee = $feesModel->find($feeId);
+
+            $transactionModel->insert([
+                'transaction_id' => uniqid('TXN'),
+                'sender_id'      => $student['id'],
+                'sender_name'    => $student['student_name'],
+                'receiver_id'    => $receiver['id'],
+                'receiver_name'  => $receiver['name'],
+                'amount'         => $amount,
+                'purpose'        => $fee['title'] ?? 'Unknown Fee',
+                'description'    => 'Educational fees payment request',
+                'status'         => 0,
+                'created_at'     => date('Y-m-d H:i:s'),
+            ]);
+
+            $successCount++;
+        }
+
+        $message = '';
+        if ($successCount) {
+            $message .= "$successCount payment request(s) submitted successfully. ";
+        }
+        if (!empty($errorMessages)) {
+            $message .= implode(' ', $errorMessages);
         }
 
         return redirect()->to(base_url('admin/std_pay'))
-            ->with('success', 'Payment requests submitted successfully!');
+                         ->with('success', $message);
     }
 }
