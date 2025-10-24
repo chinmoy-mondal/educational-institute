@@ -2610,46 +2610,50 @@ class Dashboard extends Controller
         return redirect()->to(base_url('admin/std_pay'));
     }
 
-    public function studentPaymentHistory($studentId)
-    {
-        $transactionModel = new TransactionModel();
-        $db = \Config\Database::connect();
+    // public function studentPaymentHistory($studentId)
+    // {
+    //     $transactionModel = new TransactionModel();
+    //     $db = \Config\Database::connect();
 
-        // ✅ Page setup (for navbar & active section)
-        $this->data['title'] = 'Student Payment';
-        $this->data['activeSection'] = 'accounts';
-        $this->data['navbarItems'] = [
-            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
-            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
-        ];
+    //     // ✅ Page setup (for navbar & active section)
+    //     $this->data['title'] = 'Student Payment';
+    //     $this->data['activeSection'] = 'accounts';
+    //     $this->data['navbarItems'] = [
+    //         ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+    //         ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+    //         ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+    //         ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+    //         ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+    //     ];
 
-        // ✅ Fetch student info
-        $student = $db->table('students')
-            ->where('id', $studentId)
-            ->get()
-            ->getRowArray();
+    //     // ✅ Fetch student info
+    //     $student = $db->table('students')
+    //         ->where('id', $studentId)
+    //         ->get()
+    //         ->getRowArray();
 
-        if (!$student) {
-            return redirect()->back()->with('error', 'Student not found.');
-        }
+    //     if (!$student) {
+    //         return redirect()->back()->with('error', 'Student not found.');
+    //     }
 
-        // ✅ Fetch all transactions for this student
-        $payments = $transactionModel
-            ->where('sender_id', $studentId)
-            ->orderBy('created_at', 'DESC')
-            ->findAll();
+    //     // ✅ Fetch all transactions for this student
+    //     $payments = $transactionModel
+    //         ->where('sender_id', $studentId)
+    //         ->orderBy('created_at', 'DESC')
+    //         ->findAll();
 
-        // ✅ Calculate total paid
-        $totalPaid = array_sum(array_column($payments, 'amount'));
+    //     // ✅ Calculate total paid
+    //     $totalPaid = array_sum(array_column($payments, 'amount'));
 
-        // ✅ Pass data to view
-        $this->data['student']   = $student;
-        $this->data['payments']  = $payments;
-        $this->data['totalPaid'] = $totalPaid;
+    //     // ✅ Pass data to view
+    //     $this->data['student']   = $student;
+    //     $this->data['payments']  = $payments;
+    //     $this->data['totalPaid'] = $totalPaid;
 
-        return view('dashboard/student_payment_history', $this->data);
-    }
+    //     return view('dashboard/student_payment_history', $this->data);
+    // }
+    public function studentPaymentHistory($id)
+{
+    echo "Route working! Student ID: " . $id;
+}
 }
