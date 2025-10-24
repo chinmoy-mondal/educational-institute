@@ -6,12 +6,7 @@
     <!-- Page Heading -->
     <h3 class="fw-bold text-primary mb-4">💰 Student Payment History</h3>
 
-    <!-- Back Button -->
-    <div class="mb-3">
-        <a href="<?= base_url('admin/std_pay') ?>" class="btn btn-primary btn-sm">
-            <i class="fas fa-arrow-left"></i> Back
-        </a>
-    </div>
+    
 
     <!-- Flash Messages -->
     <?php if (session()->getFlashdata('success')): ?>
