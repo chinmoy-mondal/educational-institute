@@ -2599,7 +2599,6 @@ class Dashboard extends Controller
                 'purpose'        => $feeTitle,
                 'description'    => 'Educational fees payment request',
                 'status'         => 0,
-                'created_at'     => date('Y-m-d H:i:s'),
             ]);
 
             $successCount++;
