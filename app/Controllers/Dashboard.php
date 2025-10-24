@@ -2204,56 +2204,74 @@ class Dashboard extends Controller
         return redirect()->back()->with($alertType, $flashMessage);
     }
 
-    public function transactionDashboard()
-    {
-        $this->data['title'] = 'Transaction Dashboard';
-        $this->data['activeSection'] = 'accounts';
+public function transactionDashboard()
+{
+    // ✅ Page setup
+    $this->data['title'] = 'Transaction Dashboard';
+    $this->data['activeSection'] = 'accounts';
+    $this->data['navbarItems'] = [
+        ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+        ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+        ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+        ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+        ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+    ];
 
-        $this->data['navbarItems'] = [
-            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
-            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
-        ];
+    // ✅ Load all transactions (latest first)
+    $this->data['transactions'] = $this->transactionModel->orderBy('created_at', 'DESC')->findAll();
 
+    // ✅ Totals
+    $totalEarnRow = $this->transactionModel
+        ->where('status', 0) // Earn
+        ->selectSum('amount')
+        ->get()
+        ->getRowArray();
+    $totalCostRow = $this->transactionModel
+        ->where('status', 1) // Cost
+        ->selectSum('amount')
+        ->get()
+        ->getRowArray();
 
-        // ✅ Load all transactions
-        $this->data['transactions'] = $this->transactionModel->orderBy('created_at', 'DESC')->findAll();
+    $this->data['totalEarn'] = $totalEarnRow['amount'] ?? 0;
+    $this->data['totalCost'] = $totalCostRow['amount'] ?? 0;
 
-        // ✅ Totals
-        $this->data['totalEarn'] = $this->transactionModel->like('purpose', 'Earn')->selectSum('amount')->get()->getRow('amount') ?? 0;
-        $this->data['totalCost'] = $this->transactionModel->like('purpose', 'Cost')->selectSum('amount')->get()->getRow('amount') ?? 0;
+    // ✅ Last 7 days: date-wise earn and cost
+    $builder = db_connect()->table('transactions');
+    $dateData = $builder
+        ->select("
+            DATE(created_at) as date,
+            SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) as earn,
+            SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) as cost
+        ")
+        ->where('created_at >=', date('Y-m-d', strtotime('-6 days')))
+        ->groupBy('DATE(created_at)')
+        ->orderBy('date', 'ASC')
+        ->get()
+        ->getResultArray();
 
-        // ✅ Date-wise (last 7 days)
-        $builder = db_connect()->table('transactions');
-        $dateData = $builder->select("DATE(created_at) as date,
-        SUM(CASE WHEN purpose LIKE '%Earn%' THEN amount ELSE 0 END) as earn,
-        SUM(CASE WHEN purpose LIKE '%Cost%' THEN amount ELSE 0 END) as cost")
-            ->where('created_at >=', date('Y-m-d', strtotime('-6 days')))
-            ->groupBy('DATE(created_at)')
-            ->orderBy('date', 'ASC')
-            ->get()->getResultArray();
+    $this->data['dateLabels'] = array_column($dateData, 'date');
+    $this->data['dateEarns'] = array_map('floatval', array_column($dateData, 'earn'));
+    $this->data['dateCosts'] = array_map('floatval', array_column($dateData, 'cost'));
 
-        $this->data['dateLabels'] = array_column($dateData, 'date');
-        $this->data['dateEarns'] = array_map('floatval', array_column($dateData, 'earn'));
-        $this->data['dateCosts'] = array_map('floatval', array_column($dateData, 'cost'));
+    // ✅ Month-wise (current year)
+    $monthData = $builder
+        ->select("
+            MONTH(created_at) as month,
+            SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) as earn,
+            SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) as cost
+        ")
+        ->where('YEAR(created_at)', date('Y'))
+        ->groupBy('MONTH(created_at)')
+        ->orderBy('month', 'ASC')
+        ->get()
+        ->getResultArray();
 
-        // ✅ Month-wise (current year)
-        $monthData = $builder->select("MONTH(created_at) as month,
-        SUM(CASE WHEN purpose LIKE '%Earn%' THEN amount ELSE 0 END) as earn,
-        SUM(CASE WHEN purpose LIKE '%Cost%' THEN amount ELSE 0 END) as cost")
-            ->where('YEAR(created_at)', date('Y'))
-            ->groupBy('MONTH(created_at)')
-            ->orderBy('month', 'ASC')
-            ->get()->getResultArray();
+    $this->data['monthLabels'] = array_map(fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)), $monthData);
+    $this->data['monthEarns'] = array_map('floatval', array_column($monthData, 'earn'));
+    $this->data['monthCosts'] = array_map('floatval', array_column($monthData, 'cost'));
 
-        $this->data['monthLabels'] = array_map(fn ($m) => date('M', mktime(0, 0, 0, $m['month'], 10)), $monthData);
-        $this->data['monthEarns'] = array_map('floatval', array_column($monthData, 'earn'));
-        $this->data['monthCosts'] = array_map('floatval', array_column($monthData, 'cost'));
-
-        return view('dashboard/transaction_dashboard', $this->data);
-    }
+    return view('dashboard/transaction_dashboard', $this->data);
+}
 
     public function tec_pay()
     {

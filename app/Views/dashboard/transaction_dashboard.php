@@ -72,14 +72,14 @@
         </div>
         <div class="card-body table-responsive">
             <table class="table table-striped align-middle mb-0">
-                <thead class="table-dark">
+                <thead class="table-dark text-center">
                     <tr>
                         <th>#</th>
                         <th>Date</th>
                         <th>Transaction ID</th>
                         <th>Sender</th>
                         <th>Receiver</th>
-                        <th>Purpose</th>
+                        <th>Type</th>
                         <th>Amount (৳)</th>
                         <th>Description</th>
                     </tr>
@@ -94,13 +94,13 @@
                                 <td><?= esc($t['sender_name']) ?></td>
                                 <td><?= esc($t['receiver_name']) ?></td>
                                 <td>
-                                    <?php if (stripos($t['purpose'], 'Earn') !== false): ?>
-                                        <span class="badge bg-success"><?= esc($t['purpose']) ?></span>
+                                    <?php if ($t['status'] == 0): ?>
+                                        <span class="badge bg-success">Earn</span>
                                     <?php else: ?>
-                                        <span class="badge bg-danger"><?= esc($t['purpose']) ?></span>
+                                        <span class="badge bg-danger">Cost</span>
                                     <?php endif; ?>
                                 </td>
-                                <td class="fw-bold <?= (stripos($t['purpose'], 'Earn') !== false) ? 'text-success' : 'text-danger' ?>">
+                                <td class="fw-bold <?= $t['status'] == 0 ? 'text-success' : 'text-danger' ?>">
                                     <?= number_format($t['amount'], 2) ?>
                                 </td>
                                 <td><?= esc($t['description']) ?></td>

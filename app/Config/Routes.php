@@ -111,9 +111,6 @@ $routes->post('admin/students/edit-photo/(:num)', 'Dashboard::updateStudentPhoto
 $routes->post('admin/students/forth/(:num)', 'Dashboard::forthsub/$1');
 $routes->get('admin/stAssaginSubView', 'Dashboard::stAssaginSubView');
 $routes->post('admin/assignStudentsSubjects', 'Dashboard::assignStudentsSubjects');
-$routes->get('admin/pay_student_request/(:num)', 'Dashboard::payStudentRequest/$1');
-$routes->post('admin/submitStudentPayment', 'Dashboard::submitStudentPayment');
-$routes->get('admin/studentPaymentHistory/(:num)', 'Dashboard::studentPaymentHistory/$1');
 
 $routes->group('admin', function ($routes) {
     $routes->get('student/create', 'Dashboard::createStudentForm');
@@ -139,6 +136,9 @@ $routes->get('admin/std_pay', 'Dashboard::std_pay');
 $routes->get('admin/pay_stat', 'Dashboard::pay_stat');
 $routes->get('admin/set_fees', 'Dashboard::set_fees');
 $routes->post('admin/save_fees', 'Dashboard::save_fees');
+$routes->get('admin/pay_student_request/(:num)', 'Dashboard::payStudentRequest/$1');
+$routes->post('admin/submitStudentPayment', 'Dashboard::submitStudentPayment');
+$routes->get('admin/studentPaymentHistory/(:num)', 'Dashboard::studentPaymentHistory/$1');
 
 
 
