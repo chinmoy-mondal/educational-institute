@@ -2532,19 +2532,13 @@ class Dashboard extends Controller
 
     public function submitStudentPayment()
     {
-        $transactionModel   = new \App\Models\TransactionModel();
-        $studentModel       = new \App\Models\StudentModel();
-        $userModel          = new \App\Models\UserModel();
-        $feesModel          = new \App\Models\FeesModel();
-        $feesAmountModel    = new \App\Models\FeesAmountModel();
-
         $studentId  = $this->request->getPost('student_id');
         $receiverId = $this->request->getPost('receiver_id');
         $amounts    = $this->request->getPost('amount');
         $feeIds     = $this->request->getPost('fee_id');
 
-        $student  = $studentModel->find($studentId);
-        $receiver = $userModel->find($receiverId);
+        $student  = $this->studentModel->find($studentId);
+        $receiver = $this->userModel->find($receiverId);
 
         if (!$student || !$receiver) {
             return redirect()->back()->with('error', 'Invalid student or receiver.');
@@ -2564,15 +2558,15 @@ class Dashboard extends Controller
             }
 
             // Get maximum allowed for this fee for the student's class
-            $feeMax = $feesAmountModel
+            $feeMax = $this->feesAmountModel
                         ->where('class', $student['class'])
                         ->where('title_id', $feeId)
                         ->first();
             $maxAmount = $feeMax['fees'] ?? 0;
 
             // Calculate total already paid by this student for this fee
-            $feeTitle = $feesModel->find($feeId)['title'] ?? 'Unknown Fee';
-            $totalPaid = $transactionModel
+            $feeTitle = $this->feesModel->find($feeId)['title'] ?? 'Unknown Fee';
+            $totalPaid = $this->transactionModel
                             ->where('sender_id', $student['id'])
                             ->where('purpose', $feeTitle)
                             ->select('SUM(amount) as paid')
@@ -2589,7 +2583,7 @@ class Dashboard extends Controller
                 $amount = $maxAmount - $paidAmount;
             }
 
-            $transactionModel->insert([
+            $this->transactionModel->insert([
                 'transaction_id' => uniqid('TXN'),
                 'sender_id'      => $student['id'],
                 'sender_name'    => $student['student_name'],
@@ -2614,5 +2608,48 @@ class Dashboard extends Controller
         }
 
         return redirect()->to(base_url('admin/std_pay'));
+    }
+
+    public function studentPaymentHistory($studentId)
+    {
+        $transactionModel = new TransactionModel();
+        $db = \Config\Database::connect();
+
+        // ✅ Page setup (for navbar & active section)
+        $this->data['title'] = 'Student Payment';
+        $this->data['activeSection'] = 'accounts';
+        $this->data['navbarItems'] = [
+            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+        ];
+
+        // ✅ Fetch student info
+        $student = $db->table('students')
+            ->where('id', $studentId)
+            ->get()
+            ->getRowArray();
+
+        if (!$student) {
+            return redirect()->back()->with('error', 'Student not found.');
+        }
+
+        // ✅ Fetch all transactions for this student
+        $payments = $transactionModel
+            ->where('sender_id', $studentId)
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
+
+        // ✅ Calculate total paid
+        $totalPaid = array_sum(array_column($payments, 'amount'));
+
+        // ✅ Pass data to view
+        $this->data['student']   = $student;
+        $this->data['payments']  = $payments;
+        $this->data['totalPaid'] = $totalPaid;
+
+        return view('admin/student_payment_history', $this->data);
     }
 }

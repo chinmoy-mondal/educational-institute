@@ -113,6 +113,7 @@ $routes->get('admin/stAssaginSubView', 'Dashboard::stAssaginSubView');
 $routes->post('admin/assignStudentsSubjects', 'Dashboard::assignStudentsSubjects');
 $routes->get('admin/pay_student_request/(:num)', 'Dashboard::payStudentRequest/$1');
 $routes->post('admin/submitStudentPayment', 'Dashboard::submitStudentPayment');
+$routes->get('admin/studentPaymentHistory/(:num)', 'AdminController::studentPaymentHistory/$1');
 
 $routes->group('admin', function ($routes) {
     $routes->get('student/create', 'Dashboard::createStudentForm');
