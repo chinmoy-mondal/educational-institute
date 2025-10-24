@@ -18,7 +18,7 @@
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <label class="form-label">Student Name</label>
-                        <input type="text" class="form-control" value="<?= esc($student['name']) ?>" readonly>
+                        <input type="text" class="form-control" value="<?= esc($student['student_name']) ?>" readonly>
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">Class</label>
@@ -51,10 +51,10 @@
                                     <td><?= esc($f['title']) ?></td>
                                     <td><?= $max ? number_format($max, 2) : '-' ?></td>
                                     <td>
-                                        <input type="number" step="0.01" name="amounts[<?= $f['id'] ?>]" class="form-control form-control-sm" placeholder="Enter amount" max="<?= $max ?>">
+                                        <input type="number" step="0.01" name="amount" class="form-control form-control-sm" placeholder="Enter amount" max="<?= $max ?>">
                                     </td>
-                                    <td>
-                                        <input type="radio" name="fee_title" value="<?= esc($f['title']) ?>">
+                                    <td class="text-center">
+                                        <input type="radio" name="fee_title" value="<?= esc($f['title']) ?>" required>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
