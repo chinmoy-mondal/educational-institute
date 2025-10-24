@@ -94,7 +94,7 @@
                         <th>Total Amount</th>
                         <th>Amount Paid</th>
                         <th>Due Amount</th>
-                        <th>Action</th>
+                        <th width="180">Action</th>
                     </tr>
                 </thead>
                 <tbody>
