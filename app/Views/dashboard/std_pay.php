@@ -83,7 +83,7 @@
     <div class="card shadow-sm">
         <div class="card-body table-responsive">
             <table class="table table-striped align-middle mb-0 table-hover">
-                <thead class="table-dark">
+                <thead class="table-dark text-center">
                     <tr>
                         <th>#</th>
                         <th>Roll</th>
