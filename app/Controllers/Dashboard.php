@@ -2567,7 +2567,7 @@ class Dashboard extends Controller
                     'amount'         => $amount,
                     'purpose'        => $fee['title'] ?? 'Unknown Fee',
                     'description'    => 'Educational fees payment request',
-                    'status'         => 1,
+                    'status'         => 0,
                     'created_at'     => date('Y-m-d H:i:s'),
                 ]);
             }

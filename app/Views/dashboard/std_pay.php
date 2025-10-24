@@ -5,7 +5,19 @@
 
     <!-- Page Heading -->
     <h3 class="fw-bold text-primary mb-0">💰 Student Payments</h3>
-    <small class="text-muted fst-italic">Take a quick look at student payment status</small>
+    <br><br>
+        <!-- ✅ Flash Messages -->
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="alert alert-success">
+            <?= session()->getFlashdata('success') ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (session()->getFlashdata('error')): ?>
+        <div class="alert alert-danger">
+            <?= session()->getFlashdata('error') ?>
+        </div>
+    <?php endif; ?>
 
     <!-- Search Card -->
     <div class="card card-primary shadow-sm mb-3">
