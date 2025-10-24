@@ -9,31 +9,46 @@
         </div>
     </div>
 
- <!-- ✅ Summary Cards -->
+<!-- ✅ Summary Cards -->
 <div class="row g-3 mb-4">
+    <!-- 💰 Total Earn -->
     <div class="col-md-4">
         <div class="card shadow-sm border-0 bg-success bg-opacity-10">
             <div class="card-body text-center">
-                <h6 style="color:#0a6c3d;" class="mb-2">Total Earn</h6>
-                <h3 style="color:#057a45;" class="fw-bold">৳ <?= number_format($totalEarn ?? 0, 2) ?></h3>
+                <h6 class="text-white text-uppercase fw-semibold mb-2">
+                    <i class="fas fa-arrow-up me-1"></i> Total Earn
+                </h6>
+                <h2 class="fw-bold text-white mb-0">
+                    ৳ <?= number_format($totalEarn ?? 0, 2) ?>
+                </h2>
             </div>
         </div>
     </div>
 
+    <!-- 💸 Total Cost -->
     <div class="col-md-4">
         <div class="card shadow-sm border-0 bg-danger bg-opacity-10">
             <div class="card-body text-center">
-                <h6 style="color:#a50000;" class="mb-2">Total Cost</h6>
-                <h3 style="color:#c82333;" class="fw-bold">৳ <?= number_format($totalCost ?? 0, 2) ?></h3>
+                <h6 class="text-white text-uppercase fw-semibold mb-2">
+                    <i class="fas fa-arrow-down me-1"></i> Total Cost
+                </h6>
+                <h2 class="fw-bold text-white mb-0">
+                    ৳ <?= number_format($totalCost ?? 0, 2) ?>
+                </h2>
             </div>
         </div>
     </div>
 
+    <!-- ⚖️ Net Balance -->
     <div class="col-md-4">
         <div class="card shadow-sm border-0 bg-info bg-opacity-10">
             <div class="card-body text-center">
-                <h6 style="color:#045276;" class="mb-2">Net Balance</h6>
-                <h3 style="color:#0275d8;" class="fw-bold">৳ <?= number_format(($totalEarn ?? 0) - ($totalCost ?? 0), 2) ?></h3>
+                <h6 class="text-info text-white fw-semibold mb-2">
+                    <i class="fas fa-balance-scale me-1"></i> Net Balance
+                </h6>
+                <h2 class="fw-bold text-white mb-0">
+                    ৳ <?= number_format(($totalEarn ?? 0) - ($totalCost ?? 0), 2) ?>
+                </h2>
             </div>
         </div>
     </div>
