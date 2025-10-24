@@ -9,33 +9,35 @@
         </div>
     </div>
 
-    <!-- ✅ Summary Cards -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 bg-success bg-opacity-10">
-                <div class="card-body text-center">
-                    <h6 class="text-success mb-2">Total Earn</h6>
-                    <h3 class="fw-bold text-success">৳ <?= number_format($totalEarn ?? 0, 2) ?></h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 bg-danger bg-opacity-10">
-                <div class="card-body text-center">
-                    <h6 class="text-danger mb-2">Total Cost</h6>
-                    <h3 class="fw-bold text-danger">৳ <?= number_format($totalCost ?? 0, 2) ?></h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card shadow-sm border-0 bg-info bg-opacity-10">
-                <div class="card-body text-center">
-                    <h6 class="text-info mb-2">Net Balance</h6>
-                    <h3 class="fw-bold text-info">৳ <?= number_format(($totalEarn ?? 0) - ($totalCost ?? 0), 2) ?></h3>
-                </div>
+ <!-- ✅ Summary Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 bg-success bg-opacity-10">
+            <div class="card-body text-center">
+                <h6 style="color:#0a6c3d;" class="mb-2">Total Earn</h6>
+                <h3 style="color:#057a45;" class="fw-bold">৳ <?= number_format($totalEarn ?? 0, 2) ?></h3>
             </div>
         </div>
     </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 bg-danger bg-opacity-10">
+            <div class="card-body text-center">
+                <h6 style="color:#a50000;" class="mb-2">Total Cost</h6>
+                <h3 style="color:#c82333;" class="fw-bold">৳ <?= number_format($totalCost ?? 0, 2) ?></h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 bg-info bg-opacity-10">
+            <div class="card-body text-center">
+                <h6 style="color:#045276;" class="mb-2">Net Balance</h6>
+                <h3 style="color:#0275d8;" class="fw-bold">৳ <?= number_format(($totalEarn ?? 0) - ($totalCost ?? 0), 2) ?></h3>
+            </div>
+        </div>
+    </div>
+</div>
 
     <!-- ✅ Charts Row -->
     <div class="row g-4 mb-4">
