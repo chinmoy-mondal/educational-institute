@@ -2650,6 +2650,6 @@ class Dashboard extends Controller
         $this->data['payments']  = $payments;
         $this->data['totalPaid'] = $totalPaid;
 
-        return view('admin/student_payment_history', $this->data);
+        return view('dashboard/student_payment_history', $this->data);
     }
 }
