@@ -2492,33 +2492,38 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
+        // ✅ Load models
         $studentModel = new \App\Models\StudentModel();
         $feesModel = new \App\Models\FeesModel();
         $feesAmountModel = new \App\Models\FeesAmountModel();
         $userModel = new \App\Models\UserModel();
 
-        // 🧍 Student Info
+        // 🧍 Get student info
         $student = $studentModel->find($id);
         if (!$student) {
             return redirect()->back()->with('error', 'Student not found.');
         }
 
-        // 🎓 Class-based fees
+        // 🎓 Get all fees titles
         $fees = $feesModel->findAll();
-        $classFees = $feesAmountModel
-            ->where('class', $student['class'])
-            ->findAll();
 
-        // 🧾 Map fees amounts
+        // 💰 Get class-wise fee amounts
+        $classFees = $feesAmountModel->where('class', $student['class'])->findAll();
+
+        // 🧾 Map fee amounts properly using title_id
         $feeAmounts = [];
         foreach ($classFees as $f) {
-            $feeAmounts[$f['fee_id']] = $f['amount'];
+            $feeAmounts[$f['title_id']] = $f['fees'];
         }
 
+        // 👨‍🏫 Receiver (default admin)
+        $receiver = $userModel->where('role', 'admin')->first();
+
+        // 📦 Prepare data for view
         $this->data['student'] = $student;
         $this->data['fees'] = $fees;
         $this->data['feeAmounts'] = $feeAmounts;
-        $this->data['receiver'] = $userModel->where('role', 'admin')->first(); // default receiver = admin
+        $this->data['receiver'] = $receiver;
 
         return view('dashboard/payStudentRequest', $this->data);
     }
@@ -2529,10 +2534,10 @@ class Dashboard extends Controller
         $studentModel = new \App\Models\StudentModel();
         $userModel = new \App\Models\UserModel();
 
-        $studentId = $this->request->getPost('student_id');
+        $studentId  = $this->request->getPost('student_id');
         $receiverId = $this->request->getPost('receiver_id');
-        $amount = $this->request->getPost('amount');
-        $feeTitle = $this->request->getPost('fee_title');
+        $amount     = $this->request->getPost('amount');
+        $purpose    = $this->request->getPost('fee_title'); // from radio select
 
         $student = $studentModel->find($studentId);
         $receiver = $userModel->find($receiverId);
@@ -2541,19 +2546,20 @@ class Dashboard extends Controller
             return redirect()->back()->with('error', 'Invalid student or receiver.');
         }
 
-        // 💳 Save transaction
         $transactionModel->insert([
             'transaction_id' => uniqid('TXN'),
             'sender_id'      => $student['id'],
-            'sender_name'    => $student['name'],
+            'sender_name'    => $student['student_name'],
             'receiver_id'    => $receiver['id'],
             'receiver_name'  => $receiver['name'],
             'amount'         => $amount,
-            'title'          => $feeTitle,
-            'status'         => 'pending', // default
+            'purpose'        => $purpose,
+            'description'    => 'Educational fees payment request',
+            'status'         => 'pending',
             'created_at'     => date('Y-m-d H:i:s'),
         ]);
 
-        return redirect()->to(base_url('admin/std_pay'))->with('success', 'Payment request submitted successfully!');
+        return redirect()->to(base_url('admin/std_pay'))
+            ->with('success', 'Payment request submitted successfully!');
     }
 }
