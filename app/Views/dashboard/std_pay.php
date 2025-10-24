@@ -126,6 +126,12 @@
                                         <span class="badge bg-success">Paid</span>
                                     <?php endif; ?>
                                 </td>
+                                <td>                                    
+                                    <a href="<?= base_url('admin/studentPaymentHistory/' . esc($s['id'])) ?>" class="btn btn-sm btn-info">
+                                        <i class="fas fa-history"></i> History
+                                    </a>
+                                </td>
+
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>

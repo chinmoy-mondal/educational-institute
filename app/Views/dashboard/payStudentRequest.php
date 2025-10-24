@@ -38,7 +38,6 @@
                                 <th>Fee Title</th>
                                 <th>Max Amount (৳)</th>
                                 <th>Pay Amount (৳)</th>
-                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody> 
@@ -55,11 +54,6 @@
                                         <input type="number" step="0.01" name="amount[]" class="form-control form-control-sm"
                                             placeholder="Enter amount" max="<?= $max ?>">
                                     </td>
-                                </tr>
-                                <tr>
-                                    <a href="" class="btn btn-sm btn-primary">
-                                            <i class="fas fa-money-bill-wave"></i> Pay
-                                        </a>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
