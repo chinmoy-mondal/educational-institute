@@ -2492,6 +2492,7 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
+
         // ✅ Load models
         $studentModel = new \App\Models\StudentModel();
         $feesModel = new \App\Models\FeesModel();
@@ -2517,7 +2518,8 @@ class Dashboard extends Controller
         }
 
         // 👨‍🏫 Receiver (default admin)
-        $receiver = $userModel->where('role', 'admin')->first();
+        $userId = $this->session->get('user_id');
+        $receiver = $userModel->find($userId);
 
         // 📦 Prepare data for view
         $this->data['student'] = $student;
