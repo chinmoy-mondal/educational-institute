@@ -2612,8 +2612,6 @@ class Dashboard extends Controller
 
     public function studentPaymentHistory($studentId)
     {
-        $transactionModel = new TransactionModel();
-        $db = \Config\Database::connect();
 
         // ✅ Page setup (for navbar & active section)
         $this->data['title'] = 'Student Payment';
@@ -2626,18 +2624,12 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        // ✅ Fetch student info
-        $student = $db->table('students')
-            ->where('id', $studentId)
-            ->get()
-            ->getRowArray();
-
-        if (!$student) {
-            return redirect()->back()->with('error', 'Student not found.');
+       $student = $this->studentModel->find($studentId);
+       if (!$student) {
+        return redirect()->back()->with('error', 'Student not found.');
         }
-
         // ✅ Fetch all transactions for this student
-        $payments = $transactionModel
+        $payments = $this->transactionModel
             ->where('sender_id', $studentId)
             ->orderBy('created_at', 'DESC')
             ->findAll();
