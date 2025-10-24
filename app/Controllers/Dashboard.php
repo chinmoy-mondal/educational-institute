@@ -2571,15 +2571,15 @@ class Dashboard extends Controller
             $maxAmount = $feeMax['fees'] ?? 0;
 
             // Calculate total already paid by this student for this fee
+            $feeTitle = $feesModel->find($feeId)['title'] ?? 'Unknown Fee';
             $totalPaid = $transactionModel
                             ->where('sender_id', $student['id'])
-                            ->where('purpose', $feesModel->find($feeId)['title'])
+                            ->where('purpose', $feeTitle)
                             ->select('SUM(amount) as paid')
                             ->first();
             $paidAmount = $totalPaid['paid'] ?? 0;
 
             if ($paidAmount >= $maxAmount) {
-                $feeTitle = $feesModel->find($feeId)['title'] ?? 'Unknown Fee';
                 $errorMessages[] = "Sorry, maximum payment for '{$feeTitle}' already received.";
                 continue;
             }
@@ -2589,8 +2589,6 @@ class Dashboard extends Controller
                 $amount = $maxAmount - $paidAmount;
             }
 
-            $fee = $feesModel->find($feeId);
-
             $transactionModel->insert([
                 'transaction_id' => uniqid('TXN'),
                 'sender_id'      => $student['id'],
@@ -2598,7 +2596,7 @@ class Dashboard extends Controller
                 'receiver_id'    => $receiver['id'],
                 'receiver_name'  => $receiver['name'],
                 'amount'         => $amount,
-                'purpose'        => $fee['title'] ?? 'Unknown Fee',
+                'purpose'        => $feeTitle,
                 'description'    => 'Educational fees payment request',
                 'status'         => 0,
                 'created_at'     => date('Y-m-d H:i:s'),
@@ -2607,15 +2605,15 @@ class Dashboard extends Controller
             $successCount++;
         }
 
-        $message = '';
-        if ($successCount) {
-            $message .= "$successCount payment request(s) submitted successfully. ";
-        }
-        if (!empty($errorMessages)) {
-            $message .= implode(' ', $errorMessages);
+        // Send messages separately
+        if ($successCount > 0) {
+            session()->setFlashdata('success', "$successCount payment request(s) submitted successfully.");
         }
 
-        return redirect()->to(base_url('admin/std_pay'))
-                         ->with('success', $message);
+        if (!empty($errorMessages)) {
+            session()->setFlashdata('error', implode(' ', $errorMessages));
+        }
+
+        return redirect()->to(base_url('admin/std_pay'));
     }
 }
