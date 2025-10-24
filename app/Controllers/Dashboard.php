@@ -2494,22 +2494,22 @@ class Dashboard extends Controller
 
 
         // ✅ Load models
-        $studentModel = new \App\Models\StudentModel();
-        $feesModel = new \App\Models\FeesModel();
-        $feesAmountModel = new \App\Models\FeesAmountModel();
-        $userModel = new \App\Models\UserModel();
+        // $studentModel = new \App\Models\StudentModel();
+        // $feesModel = new \App\Models\FeesModel();
+        // $feesAmountModel = new \App\Models\FeesAmountModel();
+        // $userModel = new \App\Models\UserModel();
 
         // 🧍 Get student info
-        $student = $studentModel->find($id);
+        $student = $this->studentModel->find($id);
         if (!$student) {
             return redirect()->back()->with('error', 'Student not found.');
         }
 
         // 🎓 Get all fees titles
-        $fees = $feesModel->findAll();
+        $fees = $this->feesModel->findAll();
 
         // 💰 Get class-wise fee amounts
-        $classFees = $feesAmountModel->where('class', $student['class'])->findAll();
+        $classFees = $this->feesAmountModel->where('class', $student['class'])->findAll();
 
         // 🧾 Map fee amounts properly using title_id
         $feeAmounts = [];
@@ -2519,7 +2519,7 @@ class Dashboard extends Controller
 
         // 👨‍🏫 Receiver (default admin)
         $userId = $this->session->get('user_id');
-        $receiver = $userModel->find($userId);
+        $receiver = $this->userModel->find($userId);
 
         // 📦 Prepare data for view
         $this->data['student'] = $student;
@@ -2535,11 +2535,12 @@ class Dashboard extends Controller
         $transactionModel = new \App\Models\TransactionModel();
         $studentModel = new \App\Models\StudentModel();
         $userModel = new \App\Models\UserModel();
+        $feesModel = new \App\Models\FeesModel();
 
         $studentId  = $this->request->getPost('student_id');
         $receiverId = $this->request->getPost('receiver_id');
-        $amount     = $this->request->getPost('amount');
-        $purpose    = $this->request->getPost('fee_title'); // from radio select
+        $amounts    = $this->request->getPost('amount');
+        $feeIds     = $this->request->getPost('fee_id');
 
         $student = $studentModel->find($studentId);
         $receiver = $userModel->find($receiverId);
@@ -2548,20 +2549,31 @@ class Dashboard extends Controller
             return redirect()->back()->with('error', 'Invalid student or receiver.');
         }
 
-        $transactionModel->insert([
-            'transaction_id' => uniqid('TXN'),
-            'sender_id'      => $student['id'],
-            'sender_name'    => $student['student_name'],
-            'receiver_id'    => $receiver['id'],
-            'receiver_name'  => $receiver['name'],
-            'amount'         => $amount,
-            'purpose'        => $purpose,
-            'description'    => 'Educational fees payment request',
-            'status'         => 'pending',
-            'created_at'     => date('Y-m-d H:i:s'),
-        ]);
+        if (empty($amounts) || empty($feeIds)) {
+            return redirect()->back()->with('error', 'No payment data provided.');
+        }
+
+        foreach ($feeIds as $index => $feeId) {
+            $amount = $amounts[$index] ?? 0;
+
+            if ($amount > 0) {
+                $fee = $feesModel->find($feeId);
+                $transactionModel->insert([
+                    'transaction_id' => uniqid('TXN'),
+                    'sender_id'      => $student['id'],
+                    'sender_name'    => $student['student_name'],
+                    'receiver_id'    => $receiver['id'],
+                    'receiver_name'  => $receiver['name'],
+                    'amount'         => $amount,
+                    'purpose'        => $fee['title'] ?? 'Unknown Fee',
+                    'description'    => 'Educational fees payment request',
+                    'status'         => 0,
+                    'created_at'     => date('Y-m-d H:i:s'),
+                ]);
+            }
+        }
 
         return redirect()->to(base_url('admin/std_pay'))
-            ->with('success', 'Payment request submitted successfully!');
+            ->with('success', 'Payment requests submitted successfully!');
     }
 }
