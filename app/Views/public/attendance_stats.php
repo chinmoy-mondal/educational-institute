@@ -60,17 +60,21 @@
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const days = <?= json_encode(array_map(fn($d) => date('d', strtotime($d)), $days)) ?>;
+    const days = <?= json_encode($days) ?>; // full dates e.g., 2025-10-01
     const boysPresent = <?= json_encode(array_column($stats, 'boys_present')) ?>;
     const girlsPresent = <?= json_encode(array_column($stats, 'girls_present')) ?>;
     const totalPresent = <?= json_encode(array_column($stats, 'total_present')) ?>;
-    const totalAbsent = <?= json_encode(array_column($stats, 'total_absent')) ?>;
 
-    // Boys vs Girls
+    // Calculate percentage
+    const boysPercent = boysPresent.map((b, i) => (b / totalPresent[i] * 100).toFixed(1));
+    const girlsPercent = girlsPresent.map((g, i) => (g / totalPresent[i] * 100).toFixed(1));
+    const totalPercent = totalPresent.map((t, i) => (t / t * 100).toFixed(1)); // always 100% for total present
+
+    // Boys vs Girls Line Chart
     new Chart(document.getElementById('genderChart'), {
         type: 'line',
         data: {
-            labels: days,
+            labels: days.map(d => new Date(d).getDate()), // show day number on X-axis
             datasets: [{
                     label: 'Boys Present',
                     data: boysPresent,
@@ -96,38 +100,32 @@
             plugins: {
                 legend: {
                     position: 'bottom'
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-
-    // Total Present vs Absent
-    new Chart(document.getElementById('totalChart'), {
-        type: 'bar',
-        data: {
-            labels: days,
-            datasets: [{
-                    label: 'Present',
-                    data: totalPresent,
-                    backgroundColor: 'rgba(40,167,69,0.7)'
                 },
-                {
-                    label: 'Absent',
-                    data: totalAbsent,
-                    backgroundColor: 'rgba(220,53,69,0.7)'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom'
+                tooltip: {
+                    callbacks: {
+                        title: function(context) {
+                            const idx = context[0].dataIndex;
+                            const date = days[idx];
+                            const dayName = new Date(date).toLocaleDateString('en-US', {
+                                weekday: 'short'
+                            });
+                            return `${date} (${dayName})`;
+                        },
+                        label: function(context) {
+                            const idx = context.dataIndex;
+                            const b = boysPresent[idx];
+                            const g = girlsPresent[idx];
+                            const t = totalPresent[idx];
+                            const bPerc = ((b / t) * 100).toFixed(1);
+                            const gPerc = ((g / t) * 100).toFixed(1);
+                            const tPerc = 100;
+                            return [
+                                `Total Present: ${t} (${tPerc}%)`,
+                                `Boys: ${b} (${bPerc}%)`,
+                                `Girls: ${g} (${gPerc}%)`
+                            ];
+                        }
+                    }
                 }
             },
             scales: {
