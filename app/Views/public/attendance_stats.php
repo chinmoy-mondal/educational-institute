@@ -133,7 +133,7 @@
             }
         }
     });
-</script>>
+</script>
 
 <?= $this->include('layouts/base-structure/footer') ?>
 <?= $this->endSection() ?>
