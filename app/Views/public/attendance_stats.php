@@ -65,7 +65,7 @@
     const girlsPresent = <?= json_encode(array_column($stats, 'girls_present')) ?>;
     const totalPresent = <?= json_encode(array_column($stats, 'total_present')) ?>;
 
-    const totalStudents = <?= count($students) ?>; // total students in the class
+    const totalStudents = <?= count($students ?? []) ?>; // total students in the class safely
 
     // Boys vs Girls Line Chart with percentage based on total students
     new Chart(document.getElementById('genderChart'), {
@@ -110,12 +110,12 @@
                         },
                         label: function(context) {
                             const idx = context.dataIndex;
-                            const b = boysPresent[idx];
-                            const g = girlsPresent[idx];
-                            const t = totalPresent[idx];
-                            const bPerc = ((b / totalStudents) * 100).toFixed(1);
-                            const gPerc = ((g / totalStudents) * 100).toFixed(1);
-                            const tPerc = ((t / totalStudents) * 100).toFixed(1);
+                            const b = boysPresent[idx] || 0;
+                            const g = girlsPresent[idx] || 0;
+                            const t = totalPresent[idx] || 0;
+                            const bPerc = totalStudents ? ((b / totalStudents) * 100).toFixed(1) : 0;
+                            const gPerc = totalStudents ? ((g / totalStudents) * 100).toFixed(1) : 0;
+                            const tPerc = totalStudents ? ((t / totalStudents) * 100).toFixed(1) : 0;
                             return [
                                 `Total Present: ${t} (${tPerc}%)`,
                                 `Boys: ${b} (${bPerc}%)`,
@@ -127,12 +127,13 @@
             },
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    max: totalStudents // show full scale
                 }
             }
         }
     });
-</script>
+</script>>
 
 <?= $this->include('layouts/base-structure/footer') ?>
 <?= $this->endSection() ?>
