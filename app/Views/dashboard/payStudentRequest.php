@@ -43,7 +43,7 @@
                         <tbody>
                             <?php $sl = 1; ?>
                             <?php foreach ($fees as $f):
-                                $max = $feeAmounts[$f['id']] ?? 0;
+                                $max = $feeUnit[$f['id']] * $feeAmounts[$f['id']] ?? 0;
                             ?>
                                 <tr>
                                     <td><?= $sl++ ?></td>

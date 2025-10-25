@@ -2527,6 +2527,7 @@ class Dashboard extends Controller
         $feeAmounts = [];
         foreach ($classFees as $f) {
             $feeAmounts[$f['title_id']] = $f['fees'];
+            $feeUnit[$f['title_id']] = $f['unit'];
         }
 
         // 👨‍🏫 Receiver (default admin)
@@ -2537,6 +2538,7 @@ class Dashboard extends Controller
         $this->data['student'] = $student;
         $this->data['fees'] = $fees;
         $this->data['feeAmounts'] = $feeAmounts;
+        $this->data['feeUnit'] = $feeUnit;
         $this->data['receiver'] = $receiver;
 
         return view('dashboard/payStudentRequest', $this->data);
