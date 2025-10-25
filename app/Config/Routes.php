@@ -33,6 +33,7 @@ $routes->get('courses', 'Home::courses');
 $routes->get('contact', 'Home::contact');
 $routes->get('apply', 'Home::apply');
 $routes->get('subjects', 'Home::subjects');
+$routes->get('attendanceStats', 'Home::attendanceStats');
 $routes->get('course-details/(:num)', 'Home::courseDetails/$1');
 $routes->get('activity-details/(:num)', 'Home::activityDetails/$1');
 
@@ -150,7 +151,7 @@ $routes->get('public-calendar', 'PublicCalendar::index');
 $routes->get('public-calendar/events', 'PublicCalendar::events');
 
 
-$routes->match(['get','post'], 'admin/attendance/calendar', 'Dashboard::attendanceCalendar');
+$routes->match(['get', 'post'], 'admin/attendance/calendar', 'Dashboard::attendanceCalendar');
 $routes->post('admin/attendance/save', 'Dashboard::saveAttendance');
 
 $routes->set404Override(function () {
