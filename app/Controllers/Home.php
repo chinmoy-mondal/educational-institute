@@ -314,11 +314,11 @@ class Home extends BaseController
 			$builder->where('class', $selectedClass);
 		}
 
-	$students = $builder
-    ->orderBy('class', 'ASC')
-    ->orderBy('section', 'ASC')
-    ->orderBy('CAST(roll AS UNSIGNED)', 'ASC')
-    ->findAll();
+		$students = $builder
+			->orderBy('class', 'ASC')
+			->orderBy('section', 'ASC')
+			->orderBy('CAST(roll AS UNSIGNED)', 'ASC')
+			->findAll();
 
 
 		// Classes for dropdown
@@ -390,5 +390,126 @@ class Home extends BaseController
 		$data['title'] = 'School Notices';
 
 		return view('public/notice', $data);
+	}
+
+	public function attendanceStats()
+	{
+		$studentModel = new \App\Models\StudentModel();
+		$attendanceModel = new \App\Models\AttendanceModel();
+
+		// Filters
+		$selectedClass = $this->request->getGet('class');
+		$selectedMonth = $this->request->getGet('month') ?? date('Y-m');
+
+		// Get days of the selected month
+		$numDays = date('t', strtotime($selectedMonth . '-01'));
+		$days = [];
+		for ($d = 1; $d <= $numDays; $d++) {
+			$days[] = $selectedMonth . '-' . sprintf("%02d", $d);
+		}
+
+		// Fetch students (filtered by class if provided)
+		$studentQuery = $studentModel->where('permission', 0);
+		if ($selectedClass) {
+			$studentQuery->where('class', $selectedClass);
+		}
+		$students = $studentQuery->findAll();
+
+		// If no students found, show blank data
+		if (empty($students)) {
+			$data = [
+				'selectedClass' => $selectedClass,
+				'selectedMonth' => $selectedMonth,
+				'classes' => $studentModel->select('class')->distinct()->orderBy('CAST(class AS UNSIGNED)', 'ASC')->findAll(),
+				'days' => $days,
+				'stats' => []
+			];
+			return view('public/attendance_stats', $data);
+		}
+
+		// Separate student IDs by gender
+		$boyIds = [];
+		$girlIds = [];
+		foreach ($students as $s) {
+			$gender = strtolower(trim($s['gender'] ?? ''));
+			if ($gender === 'female' || $gender === 'girl') {
+				$girlIds[] = $s['id'];
+			} else {
+				$boyIds[] = $s['id'];
+			}
+		}
+
+		// Get all attendance records in the month
+		$attendanceData = $attendanceModel
+			->where('created_at >=', $selectedMonth . '-01 00:00:00')
+			->where('created_at <=', $selectedMonth . '-' . $numDays . ' 23:59:59')
+			->findAll();
+
+		// Map attendance per student/date
+		$attendanceMap = [];
+		foreach ($attendanceData as $row) {
+			$sid = $row['student_id'];
+			$date = date('Y-m-d', strtotime($row['created_at']));
+			$attendanceMap[$sid][$date][] = $row['remark'];
+		}
+
+		// Initialize stats array
+		$stats = [];
+		foreach ($days as $date) {
+			$stats[$date] = [
+				'boys_present' => 0,
+				'girls_present' => 0,
+				'boys_absent' => 0,
+				'girls_absent' => 0,
+				'total_present' => 0,
+				'total_absent' => 0,
+			];
+		}
+
+		// Count daily stats
+		foreach ($days as $date) {
+			foreach ($students as $stu) {
+				$id = $stu['id'];
+				$gender = strtolower(trim($stu['gender'] ?? 'male'));
+				$attendance = $attendanceMap[$id][$date] ?? [];
+
+				$isPresent = false;
+				foreach ($attendance as $remark) {
+					if (in_array($remark, ['P', 'L', 'E', 'L/E'])) { // Present or partial presence
+						$isPresent = true;
+						break;
+					}
+				}
+
+				if ($isPresent) {
+					if ($gender === 'female' || $gender === 'girl') {
+						$stats[$date]['girls_present']++;
+					} else {
+						$stats[$date]['boys_present']++;
+					}
+					$stats[$date]['total_present']++;
+				} else {
+					if ($gender === 'female' || $gender === 'girl') {
+						$stats[$date]['girls_absent']++;
+					} else {
+						$stats[$date]['boys_absent']++;
+					}
+					$stats[$date]['total_absent']++;
+				}
+			}
+		}
+
+		// Class list for dropdown
+		$classes = $studentModel->select('class')->distinct()->orderBy('CAST(class AS UNSIGNED)', 'ASC')->findAll();
+
+		$data = [
+			'selectedClass' => $selectedClass,
+			'selectedMonth' => $selectedMonth,
+			'classes' => $classes,
+			'days' => $days,
+			'stats' => $stats,
+		];
+
+		return view('public/attendance_stats', $data);
 	}
 }

@@ -34,6 +34,15 @@
             </select>
         </div>
 
+<!-- ✅ Section Selector (Fixed Options) -->
+<div class="form-group mb-0 me-2">
+    <select name="section" id="section" class="form-select form-select-sm" style="height: 34px;">
+        <option value="">Select Section</option>
+        <option value="General" <?= ($selectedSection ?? '') === 'General' ? 'selected' : '' ?>>General</option>
+        <option value="Vocational" <?= ($selectedSection ?? '') === 'Vocational' ? 'selected' : '' ?>>Vocational</option>
+    </select>
+</div>
+        
         <!-- Date Picker -->
         <div class="form-group mb-0 me-2" style="margin-right: 12px;">
             <input type="date" name="date" id="date"

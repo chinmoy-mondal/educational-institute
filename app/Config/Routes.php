@@ -33,6 +33,7 @@ $routes->get('courses', 'Home::courses');
 $routes->get('contact', 'Home::contact');
 $routes->get('apply', 'Home::apply');
 $routes->get('subjects', 'Home::subjects');
+$routes->get('attendanceStats', 'Home::attendanceStats');
 $routes->get('course-details/(:num)', 'Home::courseDetails/$1');
 $routes->get('activity-details/(:num)', 'Home::activityDetails/$1');
 
@@ -129,6 +130,18 @@ $routes->get('admin/deleteNotice/(:num)', 'Dashboard::deleteNotice/$1');
 $routes->post('admin/updateNotice/(:num)', 'Dashboard::updateNotice/$1');
 
 
+// Transaction routes
+$routes->get('admin/transactions', 'Dashboard::transactionDashboard');
+$routes->get('admin/tec_pay', 'Dashboard::tec_pay');
+$routes->get('admin/std_pay', 'Dashboard::std_pay');
+$routes->get('admin/pay_stat', 'Dashboard::pay_stat');
+$routes->get('admin/set_fees', 'Dashboard::set_fees');
+$routes->post('admin/save_fees', 'Dashboard::save_fees');
+$routes->get('admin/pay_student_request/(:num)', 'Dashboard::payStudentRequest/$1');
+$routes->post('admin/submitStudentPayment', 'Dashboard::submitStudentPayment');
+$routes->get('admin/studentPaymentHistory/(:num)', 'Dashboard::studentPaymentHistory/$1');
+
+
 
 $routes->get('/user_permit/(:num)', 'Dashboard::user_permit/$1');
 $routes->get('/user_delete/(:num)', 'Dashboard::user_delete/$1');
@@ -138,7 +151,7 @@ $routes->get('public-calendar', 'PublicCalendar::index');
 $routes->get('public-calendar/events', 'PublicCalendar::events');
 
 
-$routes->match(['get','post'], 'admin/attendance/calendar', 'Dashboard::attendanceCalendar');
+$routes->match(['get', 'post'], 'admin/attendance/calendar', 'Dashboard::attendanceCalendar');
 $routes->post('admin/attendance/save', 'Dashboard::saveAttendance');
 
 $routes->set404Override(function () {
