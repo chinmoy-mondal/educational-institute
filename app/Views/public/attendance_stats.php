@@ -60,18 +60,20 @@
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    const days = <?= json_encode($days) ?>; // full dates e.g., 2025-10-01
+    const daysFull = <?= json_encode($days) ?>; // full dates YYYY-MM-DD
     const boysPresent = <?= json_encode(array_column($stats, 'boys_present')) ?>;
     const girlsPresent = <?= json_encode(array_column($stats, 'girls_present')) ?>;
     const totalPresent = <?= json_encode(array_column($stats, 'total_present')) ?>;
+    const totalAbsent = <?= json_encode(array_column($stats, 'total_absent')) ?>;
 
-    const totalStudents = <?= count($students ?? []) ?>; // total students in the class safely
+    // Calculate total students for each day
+    const totalStudents = boysPresent.map((b, i) => b + girlsPresent[i] + totalAbsent[i]);
 
-    // Boys vs Girls Line Chart with percentage based on total students
+    // Boys vs Girls line chart
     new Chart(document.getElementById('genderChart'), {
         type: 'line',
         data: {
-            labels: days.map(d => new Date(d).getDate()), // show day number on X-axis
+            labels: daysFull.map(d => new Date(d).getDate()), // day number on X-axis
             datasets: [{
                     label: 'Boys Present',
                     data: boysPresent,
@@ -102,7 +104,7 @@
                     callbacks: {
                         title: function(context) {
                             const idx = context[0].dataIndex;
-                            const date = days[idx];
+                            const date = daysFull[idx];
                             const dayName = new Date(date).toLocaleDateString('en-US', {
                                 weekday: 'short'
                             });
@@ -110,12 +112,13 @@
                         },
                         label: function(context) {
                             const idx = context.dataIndex;
-                            const b = boysPresent[idx] || 0;
-                            const g = girlsPresent[idx] || 0;
-                            const t = totalPresent[idx] || 0;
-                            const bPerc = totalStudents ? ((b / totalStudents) * 100).toFixed(1) : 0;
-                            const gPerc = totalStudents ? ((g / totalStudents) * 100).toFixed(1) : 0;
-                            const tPerc = totalStudents ? ((t / totalStudents) * 100).toFixed(1) : 0;
+                            const b = boysPresent[idx];
+                            const g = girlsPresent[idx];
+                            const t = totalPresent[idx];
+                            const total = totalStudents[idx];
+                            const bPerc = total ? ((b / total) * 100).toFixed(1) : 0;
+                            const gPerc = total ? ((g / total) * 100).toFixed(1) : 0;
+                            const tPerc = total ? ((t / total) * 100).toFixed(1) : 0;
                             return [
                                 `Total Present: ${t} (${tPerc}%)`,
                                 `Boys: ${b} (${bPerc}%)`,
@@ -127,8 +130,56 @@
             },
             scales: {
                 y: {
-                    beginAtZero: true,
-                    max: totalStudents // show full scale
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Total Present vs Absent bar chart
+    new Chart(document.getElementById('totalChart'), {
+        type: 'bar',
+        data: {
+            labels: daysFull.map(d => new Date(d).getDate()),
+            datasets: [{
+                    label: 'Present',
+                    data: totalPresent,
+                    backgroundColor: 'rgba(40,167,69,0.7)'
+                },
+                {
+                    label: 'Absent',
+                    data: totalAbsent,
+                    backgroundColor: 'rgba(220,53,69,0.7)'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const idx = context.dataIndex;
+                            const present = totalPresent[idx];
+                            const absent = totalAbsent[idx];
+                            const total = totalStudents[idx];
+                            const presentPerc = total ? ((present / total) * 100).toFixed(1) : 0;
+                            const absentPerc = total ? ((absent / total) * 100).toFixed(1) : 0;
+                            return [
+                                `Present: ${present} (${presentPerc}%)`,
+                                `Absent: ${absent} (${absentPerc}%)`,
+                                `Total Students: ${total}`
+                            ];
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
             }
         }
