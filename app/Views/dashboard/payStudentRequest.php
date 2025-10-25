@@ -50,7 +50,9 @@
                                 <tr>
                                     <td><?= $sl++ ?></td>
                                     <td><?= esc($f['title']) ?></td>
-                                    <td><?= $max ? number_format($max, 2) : '-' ?></td>
+                                    <td>
+                                        <?= $unit && $amount ? $unit . ' × ' . $amount : '-' ?>
+                                    </td>
                                     <td>
                                         <input type="hidden" name="fee_id[]" value="<?= esc($f['id']) ?>">
                                         <input type="number" step="0.01" name="amount[]" class="form-control form-control-sm"
