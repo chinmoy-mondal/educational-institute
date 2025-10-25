@@ -8,14 +8,14 @@
 <div class="page-title text-center py-5 bg-light">
     <div class="container">
         <h2 class="fw-bold text-primary">📊 Attendance Statistics</h2>
-        <p class="text-muted mb-0">Class-wise and gender-based attendance summary</p>
+        <p class="text-muted mb-0">Class & Month-wise presence trends by gender</p>
     </div>
 </div>
 
 <section class="py-5">
     <div class="container">
 
-        <!-- Filter -->
+        <!-- Filter Form -->
         <form method="get" class="row g-2 mb-4 justify-content-center">
             <div class="col-md-3">
                 <select name="class" class="form-select">
@@ -36,69 +36,37 @@
         </form>
 
         <?php if (!empty($stats)): ?>
+            <!-- Charts -->
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
-                    <h5 class="fw-bold text-secondary text-center mb-3">Daily Present — Boys vs Girls</h5>
+                    <h5 class="fw-bold text-center text-secondary mb-3">Daily Present Count (Boys vs Girls)</h5>
                     <canvas id="genderChart" height="100"></canvas>
                 </div>
             </div>
 
-            <div class="card shadow-sm mb-4">
+            <div class="card shadow-sm">
                 <div class="card-body">
-                    <h5 class="fw-bold text-secondary text-center mb-3">Total Present vs Absent (All Students)</h5>
+                    <h5 class="fw-bold text-center text-secondary mb-3">Total Attendance (Present vs Absent)</h5>
                     <canvas id="totalChart" height="100"></canvas>
                 </div>
             </div>
-
-            <div class="table-responsive mt-5">
-                <table class="table table-bordered text-center align-middle small">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Date</th>
-                            <th>Total Students</th>
-                            <th>Boys Present</th>
-                            <th>Girls Present</th>
-                            <th>Total Present</th>
-                            <th>Total Absent</th>
-                            <th>% Attendance</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($stats as $date => $row): ?>
-                            <?php
-                            $percent = $row['total_students'] > 0
-                                ? round(($row['total_present'] / $row['total_students']) * 100, 1)
-                                : 0;
-                            ?>
-                            <tr>
-                                <td><?= esc(date('d M, Y', strtotime($date))) ?></td>
-                                <td><?= esc($row['total_students']) ?></td>
-                                <td class="text-success fw-bold"><?= esc($row['boys_present']) ?></td>
-                                <td class="text-danger fw-bold"><?= esc($row['girls_present']) ?></td>
-                                <td><?= esc($row['total_present']) ?></td>
-                                <td><?= esc($row['absent_total']) ?></td>
-                                <td><?= esc($percent) ?>%</td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
         <?php else: ?>
-            <p class="text-center text-muted">No attendance data found for this selection.</p>
+            <div class="alert alert-warning text-center">No attendance data found for the selected class/month.</div>
         <?php endif; ?>
 
     </div>
 </section>
 
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const days = <?= json_encode(array_map(fn($d) => date('d', strtotime($d)), $days)) ?>;
     const boysPresent = <?= json_encode(array_column($stats, 'boys_present')) ?>;
     const girlsPresent = <?= json_encode(array_column($stats, 'girls_present')) ?>;
     const totalPresent = <?= json_encode(array_column($stats, 'total_present')) ?>;
-    const totalAbsent = <?= json_encode(array_column($stats, 'absent_total')) ?>;
+    const totalAbsent = <?= json_encode(array_column($stats, 'total_absent')) ?>;
 
-    // Chart 1: Boys vs Girls Present
+    // Boys vs Girls
     new Chart(document.getElementById('genderChart'), {
         type: 'line',
         data: {
@@ -106,21 +74,25 @@
             datasets: [{
                     label: 'Boys Present',
                     data: boysPresent,
-                    borderColor: 'blue',
-                    backgroundColor: 'rgba(0,0,255,0.2)',
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0,123,255,0.2)',
                     fill: true
                 },
                 {
                     label: 'Girls Present',
                     data: girlsPresent,
-                    borderColor: 'deeppink',
-                    backgroundColor: 'rgba(255,105,180,0.2)',
+                    borderColor: '#e83e8c',
+                    backgroundColor: 'rgba(232,62,140,0.2)',
                     fill: true
                 }
             ]
         },
         options: {
             responsive: true,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
             plugins: {
                 legend: {
                     position: 'bottom'
@@ -134,7 +106,7 @@
         }
     });
 
-    // Chart 2: Total Present vs Absent
+    // Total Present vs Absent
     new Chart(document.getElementById('totalChart'), {
         type: 'bar',
         data: {

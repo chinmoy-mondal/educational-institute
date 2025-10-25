@@ -401,74 +401,105 @@ class Home extends BaseController
 		$selectedClass = $this->request->getGet('class');
 		$selectedMonth = $this->request->getGet('month') ?? date('Y-m');
 
-		// Get students (filtered by class if provided)
-		$studentQuery = $studentModel->where('permission', 0);
-		if ($selectedClass) {
-			$studentQuery->where('class', $selectedClass);
-		}
-		$students = $studentQuery->findAll();
-
-		// Separate by gender
-		$boys = array_filter($students, fn($s) => strtolower($s['gender']) === 'male');
-		$girls = array_filter($students, fn($s) => strtolower($s['gender']) === 'female');
-		$totalBoys = count($boys);
-		$totalGirls = count($girls);
-		$totalStudents = count($students);
-
-		// Date range of selected month
+		// Get days of the selected month
 		$numDays = date('t', strtotime($selectedMonth . '-01'));
 		$days = [];
 		for ($d = 1; $d <= $numDays; $d++) {
 			$days[] = $selectedMonth . '-' . sprintf("%02d", $d);
 		}
 
-		// Fetch attendance for month
+		// Fetch students (filtered by class if provided)
+		$studentQuery = $studentModel->where('permission', 0);
+		if ($selectedClass) {
+			$studentQuery->where('class', $selectedClass);
+		}
+		$students = $studentQuery->findAll();
+
+		// If no students found, show blank data
+		if (empty($students)) {
+			$data = [
+				'selectedClass' => $selectedClass,
+				'selectedMonth' => $selectedMonth,
+				'classes' => $studentModel->select('class')->distinct()->orderBy('CAST(class AS UNSIGNED)', 'ASC')->findAll(),
+				'days' => $days,
+				'stats' => []
+			];
+			return view('public/attendance_stats', $data);
+		}
+
+		// Separate student IDs by gender
+		$boyIds = [];
+		$girlIds = [];
+		foreach ($students as $s) {
+			$gender = strtolower(trim($s['gender'] ?? ''));
+			if ($gender === 'female' || $gender === 'girl') {
+				$girlIds[] = $s['id'];
+			} else {
+				$boyIds[] = $s['id'];
+			}
+		}
+
+		// Get all attendance records in the month
 		$attendanceData = $attendanceModel
-			->select('student_id, remark, created_at')
 			->where('created_at >=', $selectedMonth . '-01 00:00:00')
 			->where('created_at <=', $selectedMonth . '-' . $numDays . ' 23:59:59')
 			->findAll();
 
-		// Map attendance
+		// Map attendance per student/date
 		$attendanceMap = [];
-		foreach ($attendanceData as $a) {
-			$date = date('Y-m-d', strtotime($a['created_at']));
-			$attendanceMap[$a['student_id']][$date] = $a['remark'];
+		foreach ($attendanceData as $row) {
+			$sid = $row['student_id'];
+			$date = date('Y-m-d', strtotime($row['created_at']));
+			$attendanceMap[$sid][$date][] = $row['remark'];
 		}
 
-		// Prepare daily stats
+		// Initialize stats array
 		$stats = [];
 		foreach ($days as $date) {
-			$boysPresent = 0;
-			$girlsPresent = 0;
-
-			foreach ($students as $stu) {
-				$id = $stu['id'];
-				$isPresent = isset($attendanceMap[$id][$date]) && in_array($attendanceMap[$id][$date], ['A', 'P', 'L', 'E', 'L/E']);
-				if ($isPresent) {
-					if (strtolower($stu['gender']) === 'female') {
-						$girlsPresent++;
-					} else {
-						$boysPresent++;
-					}
-				}
-			}
-
-			$totalPresent = $boysPresent + $girlsPresent;
-			$totalAbsent = $totalStudents - $totalPresent;
-
 			$stats[$date] = [
-				'boys_present' => $boysPresent,
-				'girls_present' => $girlsPresent,
-				'total_present' => $totalPresent,
-				'total_absent' => $totalAbsent,
-				'boys_percent' => $totalBoys > 0 ? round(($boysPresent / $totalBoys) * 100, 1) : 0,
-				'girls_percent' => $totalGirls > 0 ? round(($girlsPresent / $totalGirls) * 100, 1) : 0,
-				'total_percent' => $totalStudents > 0 ? round(($totalPresent / $totalStudents) * 100, 1) : 0,
+				'boys_present' => 0,
+				'girls_present' => 0,
+				'boys_absent' => 0,
+				'girls_absent' => 0,
+				'total_present' => 0,
+				'total_absent' => 0,
 			];
 		}
 
-		// Classes for dropdown
+		// Count daily stats
+		foreach ($days as $date) {
+			foreach ($students as $stu) {
+				$id = $stu['id'];
+				$gender = strtolower(trim($stu['gender'] ?? 'male'));
+				$attendance = $attendanceMap[$id][$date] ?? [];
+
+				$isPresent = false;
+				foreach ($attendance as $remark) {
+					if (in_array($remark, ['P', 'L', 'E', 'L/E'])) { // Present or partial presence
+						$isPresent = true;
+						break;
+					}
+				}
+
+				if ($isPresent) {
+					if ($gender === 'female' || $gender === 'girl') {
+						$stats[$date]['girls_present']++;
+					} else {
+						$stats[$date]['boys_present']++;
+					}
+					$stats[$date]['total_present']++;
+				} else {
+					if ($gender === 'female' || $gender === 'girl') {
+						$stats[$date]['girls_absent']++;
+					} else {
+						$stats[$date]['boys_absent']++;
+					}
+					$stats[$date]['total_absent']++;
+				}
+			}
+		}
+
+		// Class list for dropdown
 		$classes = $studentModel->select('class')->distinct()->orderBy('CAST(class AS UNSIGNED)', 'ASC')->findAll();
 
 		$data = [
@@ -477,9 +508,6 @@ class Home extends BaseController
 			'classes' => $classes,
 			'days' => $days,
 			'stats' => $stats,
-			'totalBoys' => $totalBoys,
-			'totalGirls' => $totalGirls,
-			'totalStudents' => $totalStudents
 		];
 
 		return view('public/attendance_stats', $data);
