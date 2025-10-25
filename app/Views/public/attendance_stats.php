@@ -65,12 +65,9 @@
     const girlsPresent = <?= json_encode(array_column($stats, 'girls_present')) ?>;
     const totalPresent = <?= json_encode(array_column($stats, 'total_present')) ?>;
 
-    // Calculate percentage
-    const boysPercent = boysPresent.map((b, i) => (b / totalPresent[i] * 100).toFixed(1));
-    const girlsPercent = girlsPresent.map((g, i) => (g / totalPresent[i] * 100).toFixed(1));
-    const totalPercent = totalPresent.map((t, i) => (t / t * 100).toFixed(1)); // always 100% for total present
+    const totalStudents = <?= count($students) ?>; // total students in the class
 
-    // Boys vs Girls Line Chart
+    // Boys vs Girls Line Chart with percentage based on total students
     new Chart(document.getElementById('genderChart'), {
         type: 'line',
         data: {
@@ -116,9 +113,9 @@
                             const b = boysPresent[idx];
                             const g = girlsPresent[idx];
                             const t = totalPresent[idx];
-                            const bPerc = ((b / t) * 100).toFixed(1);
-                            const gPerc = ((g / t) * 100).toFixed(1);
-                            const tPerc = 100;
+                            const bPerc = ((b / totalStudents) * 100).toFixed(1);
+                            const gPerc = ((g / totalStudents) * 100).toFixed(1);
+                            const tPerc = ((t / totalStudents) * 100).toFixed(1);
                             return [
                                 `Total Present: ${t} (${tPerc}%)`,
                                 `Boys: ${b} (${bPerc}%)`,
