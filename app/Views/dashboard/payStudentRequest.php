@@ -40,11 +40,11 @@
                                 <th>Pay Amount (৳)</th>
                             </tr>
                         </thead>
-                        <tbody> 
+                        <tbody>
                             <?php $sl = 1; ?>
                             <?php foreach ($fees as $f):
                                 $max = $feeAmounts[$f['id']] ?? 0;
-                                ?>
+                            ?>
                                 <tr>
                                     <td><?= $sl++ ?></td>
                                     <td><?= esc($f['title']) ?></td>

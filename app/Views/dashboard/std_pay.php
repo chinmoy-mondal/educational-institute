@@ -6,20 +6,20 @@
     <!-- Page Heading -->
     <h3 class="fw-bold text-primary mb-0">💰 Student Payments</h3>
     <br><br>
-        <!-- ✅ Flash Messages -->
- <?php if (session()->getFlashdata('success')): ?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <?= session()->getFlashdata('success') ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-<?php endif; ?>
+    <!-- ✅ Flash Messages -->
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <?= session()->getFlashdata('success') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
 
-<?php if (session()->getFlashdata('error')): ?>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <?= session()->getFlashdata('error') ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-<?php endif; ?>
+    <?php if (session()->getFlashdata('error')): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <?= session()->getFlashdata('error') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endif; ?>
 
     <!-- Search Card -->
     <div class="card card-primary shadow-sm mb-3">
@@ -114,7 +114,7 @@
                                 <td><?= esc($s['student_name']) ?></td>
                                 <td><?= esc($s['class']) ?></td>
                                 <td><?= esc($s['section']) ?></td>
-                                <td>৳ <?= number_format($total, 2);?></td>
+                                <td>৳ <?= number_format($total, 2); ?></td>
                                 <td>৳ <?= number_format($paid, 2) ?></td>
                                 <td>৳ <?= number_format($due, 2) ?></td>
                                 <td>
@@ -125,7 +125,7 @@
                                     <?php else: ?>
                                         <span class="badge bg-success">Paid</span>
                                     <?php endif; ?>
-                                      <a href="<?= base_url('admin/studentPaymentHistory/' . esc($s['id'])) ?>" class="btn btn-sm btn-info">
+                                    <a href="<?= base_url('admin/studentPaymentHistory/' . esc($s['id'])) ?>" class="btn btn-sm btn-info">
                                         <i class="fas fa-history"></i> History
                                     </a>
                                 </td>

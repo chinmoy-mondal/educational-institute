@@ -35,16 +35,16 @@ class Dashboard extends Controller
 
     public function __construct()
     {
-        $this->userModel     	= new UserModel();
-        $this->subjectModel  	= new SubjectModel();
-        $this->studentModel  	= new StudentModel();
-        $this->resultModel   	= new ResultModel();
-        $this->calendarModel   	= new CalendarModel();
-        $this->noticeModel   	= new NoticeModel();
-        $this->markingModel 	= new MarkingOpenModel();
-        $this->attendanceModel 	= new AttendanceModel();
-        $this->feesModel 		= new FeesModel();
-        $this->feesAmountModel 	= new FeesAmountModel();
+        $this->userModel         = new UserModel();
+        $this->subjectModel      = new SubjectModel();
+        $this->studentModel      = new StudentModel();
+        $this->resultModel       = new ResultModel();
+        $this->calendarModel       = new CalendarModel();
+        $this->noticeModel       = new NoticeModel();
+        $this->markingModel     = new MarkingOpenModel();
+        $this->attendanceModel     = new AttendanceModel();
+        $this->feesModel         = new FeesModel();
+        $this->feesAmountModel     = new FeesAmountModel();
         $this->transactionModel = new TransactionModel();
 
 
@@ -290,13 +290,13 @@ class Dashboard extends Controller
             'phone'          => $this->request->getPost('phone'),
             'email'          => $this->request->getPost('email'),
             'social_profile' => $socialProfile,
-            'index_number' 	=> $this->request->getPost('index_number'),
-            'dob'			=> $this->request->getPost('dob'),
-            'joining_date'	=> $this->request->getPost('joining_date'),
-            'mpo_date'		=> $this->request->getPost('mpo_date'),
-            'religion'		=> $this->request->getPost('religion'),
-            'blood_group'	=> $this->request->getPost('blood_group'),
-            'bio'      		=> $this->request->getPost('bio'),
+            'index_number'     => $this->request->getPost('index_number'),
+            'dob'            => $this->request->getPost('dob'),
+            'joining_date'    => $this->request->getPost('joining_date'),
+            'mpo_date'        => $this->request->getPost('mpo_date'),
+            'religion'        => $this->request->getPost('religion'),
+            'blood_group'    => $this->request->getPost('blood_group'),
+            'bio'              => $this->request->getPost('bio'),
         ];
 
         $photo = $this->request->getFile('photo');
@@ -576,7 +576,7 @@ class Dashboard extends Controller
 
         $updated = $this->userModel->update($id, [
             'account_status' => 1,
-            'permit_by'	=> $permitBy,
+            'permit_by'    => $permitBy,
         ]);
 
         if ($updated) {
@@ -1272,7 +1272,7 @@ class Dashboard extends Controller
         $exam_name  = $this->request->getPost('exam_name');
 
         $subject = $this->subjectModel->find($subjectId);
-        $users	= $this->userModel->find($userId);
+        $users    = $this->userModel->find($userId);
 
         $class = $subject['class'];
 
@@ -2204,68 +2204,68 @@ class Dashboard extends Controller
         return redirect()->back()->with($alertType, $flashMessage);
     }
 
-public function transactionDashboard()
-{
-    $this->data['title'] = 'Transaction Dashboard';
-    $this->data['activeSection'] = 'accounts';
-    $this->data['navbarItems'] = [
-        ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-        ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-        ['label' => 'Students', 'url' => base_url('admin/std_pay')],
-        ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-        ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
-    ];
+    public function transactionDashboard()
+    {
+        $this->data['title'] = 'Transaction Dashboard';
+        $this->data['activeSection'] = 'accounts';
+        $this->data['navbarItems'] = [
+            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+        ];
 
-    $this->data['transactions'] = $this->transactionModel->orderBy('created_at', 'DESC')->findAll();
+        $this->data['transactions'] = $this->transactionModel->orderBy('created_at', 'DESC')->findAll();
 
-    // ✅ Totals
-    $totalEarnRow = $this->transactionModel->where('status', 0)->selectSum('amount')->get()->getRowArray();
-    $totalCostRow = $this->transactionModel->where('status', 1)->selectSum('amount')->get()->getRowArray();
+        // ✅ Totals
+        $totalEarnRow = $this->transactionModel->where('status', 0)->selectSum('amount')->get()->getRowArray();
+        $totalCostRow = $this->transactionModel->where('status', 1)->selectSum('amount')->get()->getRowArray();
 
-    $this->data['totalEarn'] = $totalEarnRow['amount'] ?? 0;
-    $this->data['totalCost'] = $totalCostRow['amount'] ?? 0;
+        $this->data['totalEarn'] = $totalEarnRow['amount'] ?? 0;
+        $this->data['totalCost'] = $totalCostRow['amount'] ?? 0;
 
-    $builder = db_connect()->table('transactions');
+        $builder = db_connect()->table('transactions');
 
-    // ✅ Current month (daily earn vs cost)
-    $monthStart = date('Y-m-01');
-    $monthEnd = date('Y-m-t');
-    $currentMonthData = $builder
-        ->select("
+        // ✅ Current month (daily earn vs cost)
+        $monthStart = date('Y-m-01');
+        $monthEnd = date('Y-m-t');
+        $currentMonthData = $builder
+            ->select("
             DATE(created_at) as date,
             SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) as earn,
             SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) as cost
         ")
-        ->where('created_at >=', $monthStart)
-        ->where('created_at <=', $monthEnd)
-        ->groupBy('DATE(created_at)')
-        ->orderBy('DATE(created_at)', 'ASC')
-        ->get()
-        ->getResultArray();
+            ->where('created_at >=', $monthStart)
+            ->where('created_at <=', $monthEnd)
+            ->groupBy('DATE(created_at)')
+            ->orderBy('DATE(created_at)', 'ASC')
+            ->get()
+            ->getResultArray();
 
-    $this->data['dailyLabels'] = array_column($currentMonthData, 'date');
-    $this->data['dailyEarns'] = array_map('floatval', array_column($currentMonthData, 'earn'));
-    $this->data['dailyCosts'] = array_map('floatval', array_column($currentMonthData, 'cost'));
+        $this->data['dailyLabels'] = array_column($currentMonthData, 'date');
+        $this->data['dailyEarns'] = array_map('floatval', array_column($currentMonthData, 'earn'));
+        $this->data['dailyCosts'] = array_map('floatval', array_column($currentMonthData, 'cost'));
 
-    // ✅ 12-month summary (month-wise)
-    $yearData = $builder
-        ->select("
+        // ✅ 12-month summary (month-wise)
+        $yearData = $builder
+            ->select("
             MONTH(created_at) as month,
             SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) as earn,
             SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) as cost
         ")
-        ->where('YEAR(created_at)', date('Y'))
-        ->groupBy('MONTH(created_at)')
-        ->orderBy('MONTH(created_at)', 'ASC')
-        ->get()
-        ->getResultArray();
+            ->where('YEAR(created_at)', date('Y'))
+            ->groupBy('MONTH(created_at)')
+            ->orderBy('MONTH(created_at)', 'ASC')
+            ->get()
+            ->getResultArray();
 
-    $this->data['monthLabels'] = array_map(fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)), $yearData);
-    $this->data['monthEarns'] = array_map('floatval', array_column($yearData, 'earn'));
-    $this->data['monthCosts'] = array_map('floatval', array_column($yearData, 'cost'));
+        $this->data['monthLabels'] = array_map(fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)), $yearData);
+        $this->data['monthEarns'] = array_map('floatval', array_column($yearData, 'earn'));
+        $this->data['monthCosts'] = array_map('floatval', array_column($yearData, 'cost'));
 
-    return view('dashboard/transaction_dashboard', $this->data);
-}
+        return view('dashboard/transaction_dashboard', $this->data);
+    }
 
     public function tec_pay()
     {
@@ -2571,18 +2571,18 @@ public function transactionDashboard()
 
             // Get maximum allowed for this fee for the student's class
             $feeMax = $this->feesAmountModel
-                        ->where('class', $student['class'])
-                        ->where('title_id', $feeId)
-                        ->first();
-            $maxAmount = $feeMax['fees'] ?? 0;
+                ->where('class', $student['class'])
+                ->where('title_id', $feeId)
+                ->first();
+            $maxAmount = $feeMax['unit'] * $feeMax['fees'] ?? 0;
 
             // Calculate total already paid by this student for this fee
             $feeTitle = $this->feesModel->find($feeId)['title'] ?? 'Unknown Fee';
             $totalPaid = $this->transactionModel
-                            ->where('sender_id', $student['id'])
-                            ->where('purpose', $feeTitle)
-                            ->select('SUM(amount) as paid')
-                            ->first();
+                ->where('sender_id', $student['id'])
+                ->where('purpose', $feeTitle)
+                ->select('SUM(amount) as paid')
+                ->first();
             $paidAmount = $totalPaid['paid'] ?? 0;
 
             if ($paidAmount >= $maxAmount) {
@@ -2636,9 +2636,9 @@ public function transactionDashboard()
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-       $student = $this->studentModel->find($studentId);
-       if (!$student) {
-        return redirect()->back()->with('error', 'Student not found.');
+        $student = $this->studentModel->find($studentId);
+        if (!$student) {
+            return redirect()->back()->with('error', 'Student not found.');
         }
         // ✅ Fetch all transactions for this student
         $payments = $this->transactionModel
@@ -2656,5 +2656,4 @@ public function transactionDashboard()
 
         return view('dashboard/student_payment_history', $this->data);
     }
- 
 }
