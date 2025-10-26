@@ -44,12 +44,6 @@
                 </div>
             </div>
 
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="fw-bold text-center text-secondary mb-3">Total Attendance (Present vs Absent)</h5>
-                    <canvas id="totalChart" height="100"></canvas>
-                </div>
-            </div>
         <?php else: ?>
             <div class="alert alert-warning text-center">No attendance data found for the selected class/month.</div>
         <?php endif; ?>
