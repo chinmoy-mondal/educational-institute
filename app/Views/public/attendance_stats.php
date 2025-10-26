@@ -61,32 +61,35 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const daysFull = <?= json_encode($days) ?>; // full dates YYYY-MM-DD
+    const className = <?= json_encode($selectedClass ?? '') ?>; // pass selected class if available
     const boysPresent = <?= json_encode(array_column($stats, 'boys_present')) ?>;
     const girlsPresent = <?= json_encode(array_column($stats, 'girls_present')) ?>;
     const totalPresent = <?= json_encode(array_column($stats, 'total_present')) ?>;
     const totalAbsent = <?= json_encode(array_column($stats, 'total_absent')) ?>;
 
-    // Calculate total students for each day
+    // Calculate total students per day
     const totalStudents = boysPresent.map((b, i) => b + girlsPresent[i] + totalAbsent[i]);
 
-    // Boys vs Girls line chart
+    // === Boys vs Girls Line Chart ===
     new Chart(document.getElementById('genderChart'), {
         type: 'line',
         data: {
-            labels: daysFull.map(d => new Date(d).getDate()), // day number on X-axis
+            labels: daysFull.map(d => new Date(d).getDate()), // show only day numbers on X-axis
             datasets: [{
                     label: 'Boys Present',
                     data: boysPresent,
                     borderColor: '#007bff',
                     backgroundColor: 'rgba(0,123,255,0.2)',
-                    fill: true
+                    fill: true,
+                    tension: 0.3
                 },
                 {
                     label: 'Girls Present',
                     data: girlsPresent,
                     borderColor: '#e83e8c',
                     backgroundColor: 'rgba(232,62,140,0.2)',
-                    fill: true
+                    fill: true,
+                    tension: 0.3
                 }
             ]
         },
@@ -101,77 +104,37 @@
                     position: 'bottom'
                 },
                 tooltip: {
+                    usePointStyle: true,
                     callbacks: {
                         title: function(context) {
                             const idx = context[0].dataIndex;
                             const date = daysFull[idx];
                             const dayName = new Date(date).toLocaleDateString('en-US', {
-                                weekday: 'short'
+                                weekday: 'long'
                             });
-                            return `${date} (${dayName})`;
+                            return `📅 ${date} (${dayName})`;
                         },
-                        label: function(context) {
-                            const idx = context.dataIndex;
+                        label: function() {
+                            return '';
+                        }, // Disable default labels
+                        afterBody: function(context) {
+                            const idx = context[0].dataIndex;
                             const b = boysPresent[idx];
                             const g = girlsPresent[idx];
                             const t = totalPresent[idx];
                             const total = totalStudents[idx];
+
+                            // Percentages
+                            const totalPerc = total ? ((t / total) * 100).toFixed(1) : 0;
                             const bPerc = total ? ((b / total) * 100).toFixed(1) : 0;
                             const gPerc = total ? ((g / total) * 100).toFixed(1) : 0;
-                            const tPerc = total ? ((t / total) * 100).toFixed(1) : 0;
-                            return [
-                                `Total Present: ${t} (${tPerc}%)`,
-                                `Boys: ${b} (${bPerc}%)`,
-                                `Girls: ${g} (${gPerc}%)`
-                            ];
-                        }
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
 
-    // Total Present vs Absent bar chart
-    new Chart(document.getElementById('totalChart'), {
-        type: 'bar',
-        data: {
-            labels: daysFull.map(d => new Date(d).getDate()),
-            datasets: [{
-                    label: 'Present',
-                    data: totalPresent,
-                    backgroundColor: 'rgba(40,167,69,0.7)'
-                },
-                {
-                    label: 'Absent',
-                    data: totalAbsent,
-                    backgroundColor: 'rgba(220,53,69,0.7)'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const idx = context.dataIndex;
-                            const present = totalPresent[idx];
-                            const absent = totalAbsent[idx];
-                            const total = totalStudents[idx];
-                            const presentPerc = total ? ((present / total) * 100).toFixed(1) : 0;
-                            const absentPerc = total ? ((absent / total) * 100).toFixed(1) : 0;
                             return [
-                                `Present: ${present} (${presentPerc}%)`,
-                                `Absent: ${absent} (${absentPerc}%)`,
-                                `Total Students: ${total}`
+                                `🏫 Class: ${className || 'N/A'}`,
+                                `👥 Total Students: ${total}`,
+                                `✅ Total Present: ${t} (${totalPerc}%)`,
+                                `👦 Boys Present: ${b} (${bPerc}%)`,
+                                `👧 Girls Present: ${g} (${gPerc}%)`
                             ];
                         }
                     }
@@ -179,7 +142,17 @@
             },
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Number of Students'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Day of Month'
+                    }
                 }
             }
         }
