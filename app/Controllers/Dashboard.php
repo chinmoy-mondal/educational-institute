@@ -165,7 +165,7 @@ class Dashboard extends Controller
         // ✅ Total Income (status = 1 means approved or received)
         $totalIncome = $this->transactionModel
             ->selectSum('amount')
-            ->where('status', 1)
+            ->where('status', 0)
             ->get()
             ->getRow()
             ->amount ?? 0;
@@ -173,7 +173,7 @@ class Dashboard extends Controller
         // ✅ Total Cost (status = 0 means pending or expense)
         $totalCost = $this->transactionModel
             ->selectSum('amount')
-            ->where('status', 0)
+            ->where('status', 1)
             ->get()
             ->getRow()
             ->amount ?? 0;
