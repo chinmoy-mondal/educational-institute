@@ -175,7 +175,7 @@ class Dashboard extends Controller
             ->where('type', 'cost') // optional if you track expense separately
             ->get()
             ->getRow()
-            ->amount ?? 0;
+            ->amount ?? 0; // for cost
 
         return view('dashboard/index', $this->data);
     }
