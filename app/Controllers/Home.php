@@ -331,8 +331,6 @@ class Home extends BaseController
 
 		// ✅ Fetch filtered students
 		$students = $builder
-			->orderBy('class', 'ASC')
-			->orderBy('section', 'ASC')
 			->orderBy('CAST(roll AS UNSIGNED)', 'ASC')
 			->findAll();
 
