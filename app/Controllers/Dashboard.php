@@ -162,20 +162,25 @@ class Dashboard extends Controller
         // Count teachers safely
         $this->data['givenSubjects'] = count($given_subjects);
         $this->data['totalSubjects'] = count($total_subjects);
-        $this->data['total_income'] = $this->transactionModel
+        // ✅ Total Income (status = 1 means approved or received)
+        $totalIncome = $this->transactionModel
             ->selectSum('amount')
-            ->where('status', 0)
-            ->where('type', 'income') // optional if you track income/cost separately
+            ->where('status', 1)
             ->get()
             ->getRow()
             ->amount ?? 0;
-        $this->data['total_cost'] = $this->transactionModel
+
+        // ✅ Total Cost (status = 0 means pending or expense)
+        $totalCost = $this->transactionModel
             ->selectSum('amount')
             ->where('status', 0)
-            ->where('type', 'cost') // optional if you track expense separately
             ->get()
             ->getRow()
-            ->amount ?? 0; // for cost
+            ->amount ?? 0;
+
+        // ✅ Assign to $this->data for the view
+        $this->data['total_income'] = (float) $totalIncome;
+        $this->data['total_cost']   = (float) $totalCost;
 
         return view('dashboard/index', $this->data);
     }
