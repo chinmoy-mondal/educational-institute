@@ -124,7 +124,7 @@
                             const gPerc = total ? ((g / total) * 100).toFixed(1) : 0;
 
                             return [
-                                `🏫 Class: ${className || 'N/A'}`,
+                                `🏫 Class: ${className || 'All Class'}`,
                                 `👥 Total Students: ${total}`,
                                 `✅ Total Present: ${t} (${totalPerc}%)`,
                                 `👦 Boys Present: ${b} (${bPerc}%)`,
