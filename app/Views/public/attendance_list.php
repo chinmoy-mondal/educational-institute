@@ -17,6 +17,7 @@
 
     <!-- Filter Form -->
     <form method="get" class="row g-2 mb-4 justify-content-center">
+      <!-- Class selection -->
       <div class="col-md-3">
         <select name="class" class="form-select">
           <option value="">All Classes</option>
@@ -27,9 +28,22 @@
           <?php endforeach; ?>
         </select>
       </div>
+
+      <!-- Month selection -->
       <div class="col-md-3">
         <input type="month" name="month" class="form-control" value="<?= esc($selectedMonth) ?>">
       </div>
+
+      <!-- Type selection (General / Vocational) -->
+      <div class="col-md-3">
+        <select name="type" class="form-select">
+          <option value="">All Types</option>
+          <option value="General" <?= ($selectedType == 'General') ? 'selected' : '' ?>>General</option>
+          <option value="Vocational" <?= ($selectedType == 'Vocational') ? 'selected' : '' ?>>Vocational</option>
+        </select>
+      </div>
+
+      <!-- Submit button -->
       <div class="col-md-2 d-grid">
         <button type="submit" class="btn btn-primary">Show</button>
       </div>
