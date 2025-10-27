@@ -306,21 +306,21 @@ class Home extends BaseController
 		$attendanceModel = new \App\Models\AttendanceModel();
 
 		// ✅ GET filters
-		$selectedClass = $this->request->getGet('class');
-		$selectedMonth = $this->request->getGet('month') ?? date('Y-m');
-		$selectedType  = $this->request->getGet('type'); // <-- new filter for General/Vocational
+		$selectedClass   = $this->request->getGet('class');
+		$selectedMonth   = $this->request->getGet('month') ?? date('Y-m');
+		$selectedSection = $this->request->getGet('section'); // <-- renamed for clarity
 
 		// ✅ Base query: only active students (permission = 0)
 		$builder = $studentModel->where('permission', 0);
 
-		// Filter by class (if selected)
+		// ✅ Filter by class (if selected)
 		if (!empty($selectedClass)) {
 			$builder->where('class', $selectedClass);
 		}
 
-		// ✅ Filter by type (General / Vocational)
-		if (!empty($selectedType)) {
-			$builder->where('type', $selectedType); // assumes your students table has a `type` column
+		// ✅ Filter by section (General / Vocational)
+		if (!empty($selectedSection)) {
+			$builder->where('section', $selectedSection); // <-- changed from 'type' to 'section'
 		}
 
 		// ✅ Fetch filtered students
@@ -344,7 +344,7 @@ class Home extends BaseController
 			$date = date('Y-m-d', strtotime($selectedMonth . '-' . sprintf("%02d", $d)));
 			$daysInMonth[] = [
 				'date' => $date,
-				'day'  => date('D', strtotime($date)) // short day name
+				'day'  => date('D', strtotime($date))
 			];
 		}
 
@@ -376,13 +376,13 @@ class Home extends BaseController
 
 		// ✅ Pass everything to the view
 		$data = [
-			'students'       => $students,
-			'classes'        => $classes,
-			'selectedClass'  => $selectedClass,
-			'selectedMonth'  => $selectedMonth,
-			'selectedType'   => $selectedType, // <-- include for view dropdown persistence
-			'daysInMonth'    => $daysInMonth,
-			'attendanceMap'  => $attendanceMap
+			'students'        => $students,
+			'classes'         => $classes,
+			'selectedClass'   => $selectedClass,
+			'selectedMonth'   => $selectedMonth,
+			'selectedSection' => $selectedSection, // <-- renamed variable
+			'daysInMonth'     => $daysInMonth,
+			'attendanceMap'   => $attendanceMap
 		];
 
 		return view('public/attendance_list', $data);
