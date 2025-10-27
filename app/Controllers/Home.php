@@ -320,7 +320,13 @@ class Home extends BaseController
 
 		// ✅ Filter by section (General / Vocational)
 		if (!empty($selectedSection)) {
-			$builder->where('section', $selectedSection); // <-- changed from 'type' to 'section'
+			if (strtolower($selectedSection) === 'vocational') {
+				// Show all where section includes the word "Vocational"
+				$builder->like('section', 'Vocational');
+			} else {
+				// Show all where section does NOT include "Vocational"
+				$builder->notLike('section', 'Vocational');
+			}
 		}
 
 		// ✅ Fetch filtered students
