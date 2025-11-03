@@ -1,16 +1,11 @@
-<!-- chinmoy is testing calendar page only -->
-
 <?= $this->extend("layouts/base.php") ?>
 <?= $this->section("content"); ?>
 
-<!-- Fixed Wrapper for Navbar -->
 <div class="fixed-header">
     <?= $this->include("layouts/base-structure/header"); ?>
 </div>
 
-<div class="container content"> <!-- offset for fixed navbar -->
-
-    <!-- Start: Calendar Section -->
+<div class="container content mt-5 pt-5">
     <section class="calendar-section py-5 bg-white">
         <div class="container">
             <div class="text-center mb-4">
@@ -24,16 +19,13 @@
             </div>
         </div>
     </section>
-
 </div>
 
 <?= $this->include("layouts/base-structure/footer"); ?>
 
-<!-- FullCalendar CSS & JS -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
-<!-- Event Details Modal -->
 <div class="modal fade" id="eventModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-3 shadow">
@@ -47,61 +39,48 @@
                 <p><strong>Category:</strong> <span id="modal-category"></span></p>
                 <p><strong>Class:</strong> <span id="modal-class"></span></p>
                 <p><strong>Subject:</strong> <span id="modal-subject"></span></p>
-                <p><strong>Date:</strong> <span id="modal-date"></span></p>
-                <p><strong>Start Time:</strong> <span id="modal-start"></span></p>
-                <p><strong>End Time:</strong> <span id="modal-end"></span></p>
+                <p><strong>Start:</strong> <span id="modal-start"></span></p>
+                <p><strong>End:</strong> <span id="modal-end"></span></p>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Calendar Init -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const calendarEl = document.getElementById('calendar');
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            height: 650,
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,listMonth'
-            },
-            events: '/calendar/events', // JSON feed
-            eventDidMount: function(info) {
-                // style: left color ribbon
-                info.el.style.borderLeft = "5px solid " + (info.event.backgroundColor || "#0d6efd");
-                info.el.style.backgroundColor = "#2984e0ff";
-            },
-            eventClick: function(info) {
-                const event = info.event;
+document.addEventListener('DOMContentLoaded', function() {
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        height: 650,
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,listMonth'
+        },
+        events: '<?= base_url('calendar/events') ?>',
+        eventDidMount: function(info) {
+            info.el.style.borderLeft = "5px solid " + (info.event.backgroundColor || "#0d6efd");
+            info.el.style.backgroundColor = info.event.backgroundColor || "#cfe2ff";
+        },
+        eventClick: function(info) {
+            const event = info.event;
+            document.getElementById("modal-title").innerText = event.title || "";
+            document.getElementById("modal-desc").innerText = event.extendedProps.description || "";
+            document.getElementById("modal-category").innerText = event.extendedProps.category || "";
+            document.getElementById("modal-class").innerText = event.extendedProps.class || "";
+            document.getElementById("modal-subject").innerText = event.extendedProps.subject || "";
 
-                document.getElementById("modal-title").innerText = event.title || "";
-                document.getElementById("modal-desc").innerText = event.extendedProps.description || "";
-                document.getElementById("modal-category").innerText = event.extendedProps.category || "";
-                document.getElementById("modal-class").innerText = event.extendedProps.class || "";
-                document.getElementById("modal-subject").innerText = event.extendedProps.subject || "";
+            const start = event.start ? event.start.toLocaleString() : '';
+            const end = event.end ? event.end.toLocaleString() : '';
 
-                const startDate = event.start ? event.start.toLocaleDateString() : '';
-                const startTime = event.start ? event.start.toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                }) : '';
-                const endDate = event.end ? event.end.toLocaleDateString() : '';
-                const endTime = event.end ? event.end.toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                }) : '';
+            document.getElementById("modal-start").innerText = start;
+            document.getElementById("modal-end").innerText = end;
 
-                document.getElementById("modal-start").innerText = startDate + " " + startTime;
-                document.getElementById("modal-end").innerText = endDate + " " + endTime;
-
-                new bootstrap.Modal(document.getElementById('eventModal')).show();
-            }
-        });
-
-        calendar.render();
+            new bootstrap.Modal(document.getElementById('eventModal')).show();
+        }
     });
+    calendar.render();
+});
 </script>
 
 <?= $this->endSection(); ?>
