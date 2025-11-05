@@ -28,11 +28,11 @@ class PublicCalendar extends Controller
                 'end'   => $end,
                 'color' => $event['color'],
                 'extendedProps' => [
-                    'description' => $event['description'],
-                    'category'    => $event['category'],
-                    'subcategory' => $event['subcategory'],
-                    'event_class' => $event['class'], // renamed to avoid JS conflict
-                    'subject'     => $event['subject'],
+                    'description' => $event['description'] ?? '',
+                    'category'    => $event['category'] ?? '',
+                    'subcategory' => $event['subcategory'] ?? '',
+                    'event_class' => $event['class'] ?? '', // JS-safe alias
+                    'subject'     => $event['subject'] ?? '',
                 ]
             ];
         }, $events);
