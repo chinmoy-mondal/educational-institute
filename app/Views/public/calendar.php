@@ -27,6 +27,29 @@
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
+<!-- Custom Calendar Styling -->
+<style>
+    /* White text inside calendar events */
+    .fc-event,
+    .fc-event-title,
+    .fc-event-time {
+        color: #fff !important;
+    }
+
+    /* Add rounded corners & soft shadow */
+    .fc-event {
+        border-radius: 6px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        padding: 2px 4px;
+        font-weight: 500;
+    }
+
+    /* Optional: highlight today's date */
+    .fc-day-today {
+        background-color: #eaf4ff !important;
+    }
+</style>
+
 <!-- Event Modal -->
 <div class="modal fade" id="eventModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
@@ -62,8 +85,9 @@
             },
             events: '<?= base_url('public-calendar/events') ?>',
             eventDidMount: function(info) {
+                // Apply border and background
                 info.el.style.borderLeft = "5px solid " + (info.event.backgroundColor || "#0d6efd");
-                info.el.style.backgroundColor = info.event.backgroundColor || "#cfe2ff";
+                info.el.style.backgroundColor = info.event.backgroundColor || "#0d6efd";
             },
             eventClick: function(info) {
                 const event = info.event;
