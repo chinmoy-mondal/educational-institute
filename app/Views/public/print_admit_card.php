@@ -51,7 +51,7 @@
                             <option value="">-- Select Exam --</option>
                             <option value="Pre-Test Exam">Pre-Test Exam</option>
                             <option value="Second Term">Second Term</option>
-                            <option value="Final Exam">Final</option>
+                            <option value="Annual Exam">Annual Exam</option>
                             <option value="Test Exam">Test Exam</option>
                         </select>
                     </div>

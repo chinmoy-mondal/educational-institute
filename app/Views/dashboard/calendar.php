@@ -51,7 +51,7 @@
             <select name="subcategory" class="form-control">
               <option value="">Select Sub Category</option>
               <option value="Half Yearly Exam">Half Yearly Exam</option>
-              <option value="Final Exam">Final Exam</option>
+              <option value="Annual Exam">Annual Exam</option>
               <option value="Pre-Test Exam">Pre-Test Exam</option>
               <option value="Test Exam">Test Exam</option>
             </select>
@@ -228,20 +228,20 @@
           // Dates and times
           if (e.start) {
             const start = new Date(e.start);
-            $('#edit-start-date').val(start.toISOString().slice(0,10));
-            $('#edit-start-time').val(start.toTimeString().slice(0,5));
+            $('#edit-start-date').val(start.toISOString().slice(0, 10));
+            $('#edit-start-time').val(start.toTimeString().slice(0, 5));
           }
           if (e.end) {
             const end = new Date(e.end);
-            $('#edit-end-date').val(end.toISOString().slice(0,10));
-            $('#edit-end-time').val(end.toTimeString().slice(0,5));
+            $('#edit-end-date').val(end.toISOString().slice(0, 10));
+            $('#edit-end-time').val(end.toTimeString().slice(0, 5));
           }
 
           // Show modal
           const editModal = new bootstrap.Modal(document.getElementById('editEventModal'));
           editModal.show();
 
-        } catch(err) {
+        } catch (err) {
           console.error('Event click error:', err);
         }
       }
@@ -249,7 +249,7 @@
 
     calendar.render();
 
-    function showAlert(msg, type='success') {
+    function showAlert(msg, type = 'success') {
       const wrapper = document.createElement('div');
       wrapper.innerHTML = `
         <div class="alert alert-${type} alert-dismissible fade show" role="alert">
@@ -267,16 +267,19 @@
       fd.set('start_time', $(this).find('input[name="start_time"]').val());
       fd.set('end_time', $(this).find('input[name="end_time"]').val());
 
-      fetch('/calendar/add', { method:'POST', body: fd })
-      .then(res => res.json())
-      .then(r => {
-        if (r.status === 'success') {
-          $('#addEventModal').modal('hide');
-          this.reset();
-          calendar.refetchEvents();
-          showAlert('Event added successfully!');
-        } else showAlert('Failed to add event','danger');
-      }).catch(()=>showAlert('Something went wrong','danger'));
+      fetch('/calendar/add', {
+          method: 'POST',
+          body: fd
+        })
+        .then(res => res.json())
+        .then(r => {
+          if (r.status === 'success') {
+            $('#addEventModal').modal('hide');
+            this.reset();
+            calendar.refetchEvents();
+            showAlert('Event added successfully!');
+          } else showAlert('Failed to add event', 'danger');
+        }).catch(() => showAlert('Something went wrong', 'danger'));
     });
 
     // Update Event
@@ -288,15 +291,18 @@
       fd.set('start_date', $('#edit-start-date').val());
       fd.set('end_date', $('#edit-end-date').val());
 
-      fetch('/calendar/update', { method:'POST', body: fd })
-      .then(res => res.json())
-      .then(r => {
-        if (r.status === 'success') {
-          $('#editEventModal').modal('hide');
-          calendar.refetchEvents();
-          showAlert('Event updated successfully!');
-        } else showAlert('Failed to update event','danger');
-      }).catch(()=>showAlert('Something went wrong','danger'));
+      fetch('/calendar/update', {
+          method: 'POST',
+          body: fd
+        })
+        .then(res => res.json())
+        .then(r => {
+          if (r.status === 'success') {
+            $('#editEventModal').modal('hide');
+            calendar.refetchEvents();
+            showAlert('Event updated successfully!');
+          } else showAlert('Failed to update event', 'danger');
+        }).catch(() => showAlert('Something went wrong', 'danger'));
     });
 
     // Delete Event
@@ -305,29 +311,34 @@
       const csrfName = '<?= csrf_token() ?>';
       const csrfHash = '<?= csrf_hash() ?>';
       fetch('/calendar/delete', {
-        method: 'POST',
-        headers: {'Content-Type':'application/x-www-form-urlencoded'},
-        body: new URLSearchParams({id,[csrfName]:csrfHash})
-      })
-      .then(res=>res.json())
-      .then(r=>{
-        if(r.status==='success'){
-          $('#editEventModal').modal('hide');
-          calendar.refetchEvents();
-          showAlert('Event deleted successfully!');
-        } else showAlert('Failed to delete event','danger');
-      }).catch(()=>showAlert('Something went wrong','danger'));
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: new URLSearchParams({
+            id,
+            [csrfName]: csrfHash
+          })
+        })
+        .then(res => res.json())
+        .then(r => {
+          if (r.status === 'success') {
+            $('#editEventModal').modal('hide');
+            calendar.refetchEvents();
+            showAlert('Event deleted successfully!');
+          } else showAlert('Failed to delete event', 'danger');
+        }).catch(() => showAlert('Something went wrong', 'danger'));
     });
 
     // Filter subjects on add/edit
-    function filterSubjects(classId, subjId){
+    function filterSubjects(classId, subjId) {
       const val = document.getElementById(classId).value;
-      document.querySelectorAll(`#${subjId} option`).forEach(opt=>{
-        opt.style.display = (opt.value=="" || opt.dataset.class==val) ? '' : 'none';
+      document.querySelectorAll(`#${subjId} option`).forEach(opt => {
+        opt.style.display = (opt.value == "" || opt.dataset.class == val) ? '' : 'none';
       });
     }
-    $('#add-class').on('change',()=>filterSubjects('add-class','add-subject'));
-    $('#edit-class').on('change',()=>filterSubjects('edit-class','edit-subject'));
+    $('#add-class').on('change', () => filterSubjects('add-class', 'add-subject'));
+    $('#edit-class').on('change', () => filterSubjects('edit-class', 'edit-subject'));
   });
 </script>
 
