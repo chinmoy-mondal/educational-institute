@@ -37,6 +37,7 @@
                 <p><strong>Title:</strong> <span id="modal-title"></span></p>
                 <p><strong>Description:</strong> <span id="modal-desc"></span></p>
                 <p><strong>Category:</strong> <span id="modal-category"></span></p>
+                <p><strong>Subcategory:</strong> <span id="modal-subcategory"></span></p>
                 <p><strong>Class:</strong> <span id="modal-class"></span></p>
                 <p><strong>Subject:</strong> <span id="modal-subject"></span></p>
                 <p><strong>Start:</strong> <span id="modal-start"></span></p>
@@ -47,40 +48,41 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const calendarEl = document.getElementById('calendar');
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        height: 650,
-        headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,listMonth'
-        },
-        events: '<?= base_url('calendar/events') ?>',
-        eventDidMount: function(info) {
-            info.el.style.borderLeft = "5px solid " + (info.event.backgroundColor || "#0d6efd");
-            info.el.style.backgroundColor = info.event.backgroundColor || "#cfe2ff";
-        },
-        eventClick: function(info) {
-            const event = info.event;
-            document.getElementById("modal-title").innerText = event.title || "";
-            document.getElementById("modal-desc").innerText = event.extendedProps.description || "";
-            document.getElementById("modal-category").innerText = event.extendedProps.category || "";
-            document.getElementById("modal-class").innerText = event.extendedProps.class || "";
-            document.getElementById("modal-subject").innerText = event.extendedProps.subject || "";
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('calendar');
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            height: 650,
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,listMonth'
+            },
+            events: '<?= base_url('calendar/events') ?>',
+            eventDidMount: function(info) {
+                info.el.style.borderLeft = "5px solid " + (info.event.backgroundColor || "#0d6efd");
+                info.el.style.backgroundColor = info.event.backgroundColor || "#cfe2ff";
+            },
+            eventClick: function(info) {
+                const event = info.event;
+                document.getElementById("modal-title").innerText = event.title || "";
+                document.getElementById("modal-desc").innerText = event.extendedProps.description || "";
+                document.getElementById("modal-category").innerText = event.extendedProps.category || "";
+                document.getElementById("modal-subcategory").innerText = event.extendedProps.subcategory || "";
+                document.getElementById("modal-class").innerText = event.extendedProps.event_class || "";
+                document.getElementById("modal-subject").innerText = event.extendedProps.subject || "";
 
-            const start = event.start ? event.start.toLocaleString() : '';
-            const end = event.end ? event.end.toLocaleString() : '';
+                const start = event.start ? event.start.toLocaleString() : '';
+                const end = event.end ? event.end.toLocaleString() : '';
 
-            document.getElementById("modal-start").innerText = start;
-            document.getElementById("modal-end").innerText = end;
+                document.getElementById("modal-start").innerText = start;
+                document.getElementById("modal-end").innerText = end;
 
-            new bootstrap.Modal(document.getElementById('eventModal')).show();
-        }
+                new bootstrap.Modal(document.getElementById('eventModal')).show();
+            }
+        });
+        calendar.render();
     });
-    calendar.render();
-});
 </script>
 
 <?= $this->endSection(); ?>

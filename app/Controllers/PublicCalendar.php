@@ -31,7 +31,7 @@ class PublicCalendar extends Controller
                     'description' => $event['description'],
                     'category'    => $event['category'],
                     'subcategory' => $event['subcategory'],
-                    'class'       => $event['class'],
+                    'event_class' => $event['class'], // changed here
                     'subject'     => $event['subject'],
                 ]
             ];
