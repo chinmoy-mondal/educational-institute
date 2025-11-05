@@ -23,9 +23,11 @@
 
 <?= $this->include("layouts/base-structure/footer"); ?>
 
+<!-- FullCalendar -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
+<!-- Event Modal -->
 <div class="modal fade" id="eventModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-3 shadow">
@@ -48,41 +50,44 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const calendarEl = document.getElementById('calendar');
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            height: 650,
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,listMonth'
-            },
-            events: '<?= base_url('calendar/events') ?>',
-            eventDidMount: function(info) {
-                info.el.style.borderLeft = "5px solid " + (info.event.backgroundColor || "#0d6efd");
-                info.el.style.backgroundColor = info.event.backgroundColor || "#cfe2ff";
-            },
-            eventClick: function(info) {
-                const event = info.event;
-                document.getElementById("modal-title").innerText = event.title || "";
-                document.getElementById("modal-desc").innerText = event.extendedProps.description || "";
-                document.getElementById("modal-category").innerText = event.extendedProps.category || "";
-                document.getElementById("modal-subcategory").innerText = event.extendedProps.subcategory || "";
-                document.getElementById("modal-class").innerText = event.extendedProps.event_class || "";
-                document.getElementById("modal-subject").innerText = event.extendedProps.subject || "";
+document.addEventListener('DOMContentLoaded', function() {
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        height: 650,
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,listMonth'
+        },
+        events: '<?= base_url('calendar/events') ?>',
+        eventDidMount: function(info) {
+            info.el.style.borderLeft = "5px solid " + (info.event.backgroundColor || "#0d6efd");
+            info.el.style.backgroundColor = info.event.backgroundColor || "#cfe2ff";
+        },
+        eventClick: function(info) {
+            const event = info.event;
 
-                const start = event.start ? event.start.toLocaleString() : '';
-                const end = event.end ? event.end.toLocaleString() : '';
+            // Fill modal details
+            document.getElementById("modal-title").innerText = event.title || "";
+            document.getElementById("modal-desc").innerText = event.extendedProps.description || "";
+            document.getElementById("modal-category").innerText = event.extendedProps.category || "";
+            document.getElementById("modal-subcategory").innerText = event.extendedProps.subcategory || "";
+            document.getElementById("modal-class").innerText = event.extendedProps.event_class || "";
+            document.getElementById("modal-subject").innerText = event.extendedProps.subject || "";
 
-                document.getElementById("modal-start").innerText = start;
-                document.getElementById("modal-end").innerText = end;
+            const start = event.start ? event.start.toLocaleString() : '';
+            const end = event.end ? event.end.toLocaleString() : '';
 
-                new bootstrap.Modal(document.getElementById('eventModal')).show();
-            }
-        });
-        calendar.render();
+            document.getElementById("modal-start").innerText = start;
+            document.getElementById("modal-end").innerText = end;
+
+            // Show the modal
+            new bootstrap.Modal(document.getElementById('eventModal')).show();
+        }
     });
+    calendar.render();
+});
 </script>
 
 <?= $this->endSection(); ?>
