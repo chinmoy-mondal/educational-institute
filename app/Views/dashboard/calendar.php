@@ -200,9 +200,12 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+    // ---------- Calendar ----------
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
       height: 600,
       headerToolbar: {
@@ -213,28 +216,60 @@
       events: '/calendar/events',
       eventClick: function(info) {
         const e = info.event;
-        $('#edit-id').val(e.id);
-        $('#edit-title').val(e.title);
-        $('#edit-description').val(e.extendedProps.description || '');
-        $('#edit-color').val(e.backgroundColor || '#007bff');
-        $('#edit-category').val(e.extendedProps.category || '').trigger('change');
-        $('#edit-subcategory').val(e.extendedProps.subcategory || '');
-        $('#edit-class').val(e.extendedProps.class || '');
-        $('#edit-subject').val(e.extendedProps.subject || '');
+        // fill edit form
+        setValue('#edit-id', e.id || '');
+        setValue('#edit-title', e.title || '');
+        setValue('#edit-description', (e.extendedProps && e.extendedProps.description) || '');
+        setValue('#edit-color', e.backgroundColor || '#007bff');
+        setValue('#edit-category', (e.extendedProps && e.extendedProps.category) || '');
+        // trigger change to populate subcategory/class visibility (we trigger manually below)
+        setValue('#edit-subcategory', (e.extendedProps && e.extendedProps.subcategory) || '');
+        setValue('#edit-class', (e.extendedProps && e.extendedProps.class) || '');
+        setValue('#edit-subject', (e.extendedProps && e.extendedProps.subject) || '');
+
         if (e.start) {
-          $('#edit-start-date').val(new Date(e.start).toISOString().slice(0, 10));
-          $('#edit-start-time').val(new Date(e.start).toTimeString().slice(0, 5));
+          const s = new Date(e.start);
+          setValue('#edit-start-date', s.toISOString().slice(0, 10));
+          setValue('#edit-start-time', s.toTimeString().slice(0, 5));
         }
         if (e.end) {
-          $('#edit-end-date').val(new Date(e.end).toISOString().slice(0, 10));
-          $('#edit-end-time').val(new Date(e.end).toTimeString().slice(0, 5));
+          const en = new Date(e.end);
+          setValue('#edit-end-date', en.toISOString().slice(0, 10));
+          setValue('#edit-end-time', en.toTimeString().slice(0, 5));
         }
-        new bootstrap.Modal('#editEventModal').show();
+
+        // show modal (Bootstrap 5)
+        const editModalEl = document.getElementById('editEventModal');
+        const editModal = new bootstrap.Modal(editModalEl);
+        editModal.show();
+
+        // ensure UI adjustments for category (if you have category-dependent hiding)
+        handleCategoryChange(document.getElementById('edit-category').value, 'edit');
       }
     });
     calendar.render();
 
-    // dynamic subcategory list
+    // helper
+    function setValue(selector, value) {
+      const el = document.querySelector(selector);
+      if (!el) return;
+      el.value = value;
+    }
+
+    // ---------- alerts ----------
+    function showAlert(msg, type = 'success') {
+      const placeholder = document.getElementById('alert-placeholder');
+      const div = document.createElement('div');
+      div.className = `alert alert-${type} alert-dismissible fade show`;
+      div.role = 'alert';
+      div.innerHTML = `${msg} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+      placeholder.appendChild(div);
+      setTimeout(() => {
+        if (div) div.remove();
+      }, 3500);
+    }
+
+    // ---------- subcategory & class/subject toggles ----------
     const subOptions = {
       Exam: ['Half Yearly Exam', 'Annual Exam', 'Pre-Test Exam', 'Test Exam'],
       Holiday: ['Independence Day', 'Victory Day', 'Pohela Boishakh', 'Eid-ul-Fitr', 'Eid-ul-Adha', 'Christmas Day'],
@@ -242,107 +277,225 @@
       Vacation: ['Summer Vacation', 'Winter Vacation']
     };
 
-    function updateSubcategory(category, subSelectId) {
-      const subSelect = document.getElementById(subSelectId);
-      subSelect.innerHTML = '<option value="">Select Sub Category</option>';
-      if (subOptions[category]) {
-        subOptions[category].forEach(s => {
+    function updateSubcategoryOptions(category, selectId) {
+      const sel = document.getElementById(selectId);
+      if (!sel) return;
+      sel.innerHTML = '<option value="">Select Sub Category</option>';
+      const arr = subOptions[category];
+      if (arr && arr.length) {
+        arr.forEach(v => {
           const opt = document.createElement('option');
-          opt.value = s;
-          opt.textContent = s;
-          subSelect.appendChild(opt);
+          opt.value = v;
+          opt.textContent = v;
+          sel.appendChild(opt);
         });
       }
     }
 
-    // Hide/Show class/subject fields based on category
-    function toggleClassSubject(category, prefix) {
-      const classGroup = document.getElementById(`${prefix}-class-group`);
-      const subjectGroup = document.getElementById(`${prefix}-subject-group`);
-      if (category === 'Holiday') {
-        classGroup.style.display = 'none';
-        subjectGroup.style.display = 'none';
-      } else {
-        classGroup.style.display = '';
-        subjectGroup.style.display = '';
+    function handleCategoryChange(category, prefix) {
+      // hide class/subject for holidays
+      const classGroup = document.getElementById(prefix + '-class-group');
+      const subjGroup = document.getElementById(prefix + '-subject-group');
+      if (classGroup && subjGroup) {
+        if (category === 'Holiday') {
+          classGroup.style.display = 'none';
+          subjGroup.style.display = 'none';
+        } else {
+          classGroup.style.display = '';
+          subjGroup.style.display = '';
+        }
+      }
+      updateSubcategoryOptions(category, prefix + '-subcategory');
+    }
+
+    // wire category selects
+    const addCat = document.getElementById('add-category');
+    const editCat = document.getElementById('edit-category');
+    if (addCat) addCat.addEventListener('change', function() {
+      handleCategoryChange(this.value, 'add');
+    });
+    if (editCat) editCat.addEventListener('change', function() {
+      handleCategoryChange(this.value, 'edit');
+    });
+
+    // subject filtering by class (works if <option data-class="6"> exists)
+    function filterSubjectOptions(classSelectorId, subjectSelectorId) {
+      const classEl = document.getElementById(classSelectorId);
+      const subjEl = document.getElementById(subjectSelectorId);
+      if (!classEl || !subjEl) return;
+      const classVal = classEl.value;
+      Array.from(subjEl.options).forEach(opt => {
+        if (!opt.value) {
+          opt.style.display = '';
+          return;
+        } // keep empty option visible
+        const dataClass = opt.dataset.class || '';
+        opt.style.display = (dataClass === '' || dataClass == classVal) ? '' : 'none';
+      });
+    }
+    const addClassEl = document.getElementById('add-class');
+    const editClassEl = document.getElementById('edit-class');
+    if (addClassEl) addClassEl.addEventListener('change', () => filterSubjectOptions('add-class', 'add-subject'));
+    if (editClassEl) editClassEl.addEventListener('change', () => filterSubjectOptions('edit-class', 'edit-subject'));
+
+    // ---------- utility: robust fetch wrapper that logs responses ----------
+    async function fetchJson(url, options = {}) {
+      console.debug('Fetch request', url, options);
+      // default: include credentials for same-origin (helps with cookie-based CSRF)
+      options.credentials = options.credentials || 'same-origin';
+      // Accept JSON
+      options.headers = options.headers || {};
+      if (!options.headers['Accept']) options.headers['Accept'] = 'application/json';
+
+      const res = await fetch(url, options);
+      const text = await res.text();
+      // try parse JSON, otherwise return raw text
+      try {
+        const json = JSON.parse(text);
+        console.debug('Fetch response JSON', json);
+        return {
+          ok: res.ok,
+          status: res.status,
+          data: json,
+          raw: text
+        };
+      } catch (err) {
+        console.warn('Server returned non-JSON response:', text);
+        return {
+          ok: res.ok,
+          status: res.status,
+          data: null,
+          raw: text
+        };
       }
     }
 
-    $('#add-category').on('change', function() {
-      updateSubcategory(this.value, 'add-subcategory');
-      toggleClassSubject(this.value, 'add');
-    });
-    $('#edit-category').on('change', function() {
-      updateSubcategory(this.value, 'edit-subcategory');
-      toggleClassSubject(this.value, 'edit');
-    });
-
-    function showAlert(msg, type = 'success') {
-      const wrapper = document.createElement('div');
-      wrapper.innerHTML = `
-      <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-        ${msg}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      </div>`;
-      document.getElementById('alert-placeholder').append(wrapper);
-      setTimeout(() => wrapper.remove(), 3000);
-    }
-
-    // add event
-    $('#eventForm').on('submit', function(e) {
-      e.preventDefault();
-      fetch('/calendar/add', {
-          method: 'POST',
-          body: new FormData(this)
-        })
-        .then(res => res.json()).then(r => {
-          if (r.status === 'success') {
-            bootstrap.Modal.getInstance(document.getElementById('addEventModal')).hide();
+    // ---------- Add Event (plain JS) ----------
+    const eventForm = document.getElementById('eventForm');
+    if (eventForm) {
+      eventForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const btn = this.querySelector('button[type="submit"]');
+        if (btn) {
+          btn.disabled = true;
+        }
+        const fd = new FormData(this);
+        // ensure times/dates are present set earlier in form or by UI
+        try {
+          const result = await fetchJson('/calendar/add', {
+            method: 'POST',
+            body: fd
+          });
+          console.debug('Add result', result);
+          if (result.data && result.data.status === 'success') {
+            // close modal and reset
+            const modalEl = document.getElementById('addEventModal');
+            bootstrap.Modal.getInstance(modalEl)?.hide();
             this.reset();
             calendar.refetchEvents();
-            showAlert('Event added successfully!');
-          } else showAlert('Failed to add event', 'danger');
-        }).catch(() => showAlert('Error occurred', 'danger'));
-    });
+            showAlert('Event added successfully!', 'success');
+          } else {
+            // if server returned JSON with message(s), show it
+            const msg = (result.data && (result.data.message || JSON.stringify(result.data))) || ('Server error: ' + result.raw);
+            showAlert('Failed to add event: ' + msg, 'danger');
+          }
+        } catch (err) {
+          console.error('Add event exception', err);
+          showAlert('Network/Exception when adding event. See console for details.', 'danger');
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+          }
+        }
+      });
+    }
 
-    // edit event
-    $('#editEventForm').on('submit', function(e) {
-      e.preventDefault();
-      fetch('/calendar/update', {
-          method: 'POST',
-          body: new FormData(this)
-        })
-        .then(res => res.json()).then(r => {
-          if (r.status === 'success') {
-            bootstrap.Modal.getInstance(document.getElementById('editEventModal')).hide();
+    // ---------- Edit Event (plain JS) ----------
+    const editForm = document.getElementById('editEventForm');
+    if (editForm) {
+      editForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const btn = this.querySelector('button[type="submit"]');
+        if (btn) btn.disabled = true;
+        const fd = new FormData(this);
+        try {
+          const result = await fetchJson('/calendar/update', {
+            method: 'POST',
+            body: fd
+          });
+          console.debug('Update result', result);
+          if (result.data && result.data.status === 'success') {
+            const modalEl = document.getElementById('editEventModal');
+            bootstrap.Modal.getInstance(modalEl)?.hide();
             calendar.refetchEvents();
-            showAlert('Event updated successfully!');
-          } else showAlert('Failed to update', 'danger');
-        }).catch(() => showAlert('Error occurred', 'danger'));
-    });
+            showAlert('Event updated successfully!', 'success');
+          } else {
+            const msg = (result.data && (result.data.message || JSON.stringify(result.data))) || ('Server error: ' + result.raw);
+            showAlert('Failed to update event: ' + msg, 'danger');
+          }
+        } catch (err) {
+          console.error('Update event exception', err);
+          showAlert('Network/Exception when updating event. See console for details.', 'danger');
+        } finally {
+          if (btn) btn.disabled = false;
+        }
+      });
+    }
 
-    // delete event
-    $('#deleteEvent').on('click', function() {
-      const id = $('#edit-id').val();
-      const csrfName = '<?= csrf_token() ?>';
-      const csrfHash = '<?= csrf_hash() ?>';
-      fetch('/calendar/delete', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: new URLSearchParams({
-          id,
-          [csrfName]: csrfHash
-        })
-      }).then(res => res.json()).then(r => {
-        if (r.status === 'success') {
-          bootstrap.Modal.getInstance(document.getElementById('editEventModal')).hide();
-          calendar.refetchEvents();
-          showAlert('Event deleted successfully!');
-        } else showAlert('Failed to delete', 'danger');
-      }).catch(() => showAlert('Error occurred', 'danger'));
-    });
+    // ---------- Delete Event (plain JS) ----------
+    const deleteBtn = document.getElementById('deleteEvent');
+    if (deleteBtn) {
+      deleteBtn.addEventListener('click', async function() {
+        const id = document.getElementById('edit-id').value;
+        if (!id) {
+          showAlert('No event id selected', 'danger');
+          return;
+        }
+        // find CSRF token field name and value from the edit form
+        const editFormEl = document.getElementById('editEventForm');
+        const csrfInput = editFormEl.querySelector('input[name^="<?= csrf_token() ?>"], input[name^="__"]') || null;
+        // NOTE: If your token name is dynamic, we fallback to reading all inputs that look like CSRF token
+        // Build URLSearchParams to include CSRF safely
+        const params = new URLSearchParams();
+        params.append('id', id);
+        // If the page included CSRF <input name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>">
+        // it will also be present in the formData when using FormData. But building URLSearchParams manually:
+        try {
+          // try to collect CSRF inputs from form
+          Array.from(editFormEl.querySelectorAll('input[type="hidden"]')).forEach(i => {
+            if (i.name && i.value) params.append(i.name, i.value);
+          });
+        } catch (err) {
+          console.warn('csrf gather err', err);
+        }
+
+        try {
+          const result = await fetchJson('/calendar/delete', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: params.toString()
+          });
+          console.debug('Delete result', result);
+          if (result.data && result.data.status === 'success') {
+            const modalEl = document.getElementById('editEventModal');
+            bootstrap.Modal.getInstance(modalEl)?.hide();
+            calendar.refetchEvents();
+            showAlert('Event deleted successfully!', 'success');
+          } else {
+            const msg = (result.data && (result.data.message || JSON.stringify(result.data))) || ('Server error: ' + result.raw);
+            showAlert('Failed to delete event: ' + msg, 'danger');
+          }
+        } catch (err) {
+          console.error('Delete exception', err);
+          showAlert('Network/Exception when deleting event. See console for details.', 'danger');
+        }
+      });
+    }
+
+    // ---------- Helpful dev tip visible on console ----------
+    console.info('Calendar script initialized. If add/update still fails: open DevTools → Network and Console. Look for the /calendar/add or /calendar/update request and server response (status + body).');
   });
 </script>
 
