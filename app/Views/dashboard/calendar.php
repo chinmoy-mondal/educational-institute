@@ -323,7 +323,9 @@
           body: fd
         });
         if (result.data?.status === 'success') {
-          bootstrap.Modal.getInstance(document.getElementById('addEventModal'))?.hide();
+          const modalEl = document.getElementById('addEventModal');
+          const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+          modal.hide();
           this.reset();
           calendar.refetchEvents();
           showAlert('Event added successfully!', 'success');
@@ -350,7 +352,9 @@
           body: fd
         });
         if (result.data?.status === 'success') {
-          $('#editEventModal').modal('hide');
+          const modalEl = document.getElementById('editEventModal');
+          const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+          modal.hide();
           calendar.refetchEvents();
           showAlert('Event updated successfully!', 'success');
         } else {
@@ -383,7 +387,9 @@
           body: params.toString()
         });
         if (result.data?.status === 'success') {
-          $('#editEventModal').modal('hide');
+          const modalEl = document.getElementById('editEventModal');
+          const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+          modal.hide();
           calendar.refetchEvents();
           showAlert('Event deleted successfully!', 'success');
         } else showAlert('Failed to delete: ' + (result.data?.message || result.raw), 'danger');
