@@ -384,7 +384,6 @@ class Dashboard extends Controller
 
     public function events()
     {
-
         $events = $this->calendarModel->findAll();
 
         $data = array_map(function ($event) {
@@ -401,7 +400,11 @@ class Dashboard extends Controller
                 'end'         => $endDate,
                 'color'       => $event['color'],
                 'description' => $event['description'],
-                'allDay'      => true // important for date-only events
+                'category'    => $event['category'],     // ✅ added
+                'subcategory' => $event['subcategory'],  // ✅ added
+                'class'       => $event['class'],        // ✅ added
+                'subject'     => $event['subject'],      // ✅ added
+                'allDay'      => true
             ];
         }, $events);
 
