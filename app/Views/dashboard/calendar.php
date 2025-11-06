@@ -7,12 +7,11 @@
       <div class="card shadow border-0 rounded-3">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
           <h5 class="mb-0">Event Calendar</h5>
-          <button class="btn btn-light btn-sm" data-toggle="modal" data-target="#addEventModal">
+          <button class="btn btn-light btn-sm" data-bs-toggle="modal" data-bs-target="#addEventModal">
             <i class="fas fa-plus"></i> Add Event
           </button>
         </div>
         <div class="card-body">
-          <!-- Alert placeholder -->
           <div id="alert-placeholder"></div>
           <div id="calendar"></div>
         </div>
@@ -22,24 +21,29 @@
 </div>
 
 <!-- Add Event Modal -->
-<div class="modal fade" id="addEventModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="addEventModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <form id="eventForm">
         <input type="hidden" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>">
         <div class="modal-header">
           <h5 class="modal-title">Add New Event</h5>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <div class="form-group"><label>Title</label>
+          <div class="form-group mb-3">
+            <label>Title</label>
             <input type="text" name="title" class="form-control" required>
           </div>
-          <div class="form-group"><label>Description</label>
+
+          <div class="form-group mb-3">
+            <label>Description</label>
             <textarea name="description" class="form-control"></textarea>
           </div>
-          <div class="form-group"><label>Category</label>
-            <select name="category" class="form-control" required>
+
+          <div class="form-group mb-3">
+            <label>Category</label>
+            <select name="category" id="add-category" class="form-control" required>
               <option value="">Select Category</option>
               <option value="Exam">Exam</option>
               <option value="Notice">Notice</option>
@@ -47,16 +51,16 @@
               <option value="Vacation">Vacation</option>
             </select>
           </div>
-          <div class="form-group"><label>Sub Category</label>
-            <select name="subcategory" class="form-control">
+
+          <div class="form-group mb-3">
+            <label>Sub Category</label>
+            <select name="subcategory" id="add-subcategory" class="form-control">
               <option value="">Select Sub Category</option>
-              <option value="Half Yearly Exam">Half Yearly Exam</option>
-              <option value="Annual Exam">Annual Exam</option>
-              <option value="Pre-Test Exam">Pre-Test Exam</option>
-              <option value="Test Exam">Test Exam</option>
             </select>
           </div>
-          <div class="form-group"><label>Class</label>
+
+          <div class="form-group mb-3" id="add-class-group">
+            <label>Class</label>
             <select name="class" id="add-class" class="form-control">
               <option value="">Select Class</option>
               <option value="6">Class 6</option>
@@ -66,7 +70,9 @@
               <option value="10">Class 10</option>
             </select>
           </div>
-          <div class="form-group"><label>Subject</label>
+
+          <div class="form-group mb-3" id="add-subject-group">
+            <label>Subject</label>
             <select name="subject" id="add-subject" class="form-control">
               <option value="">Select Subject</option>
               <?php foreach ($subjects as $subject): ?>
@@ -76,21 +82,27 @@
               <?php endforeach; ?>
             </select>
           </div>
-          <div class="form-group"><label>Start Date & Time</label>
+
+          <div class="form-group mb-3">
+            <label>Start Date & Time</label>
             <input type="date" name="start_date" class="form-control mb-2" required>
             <input type="time" name="start_time" class="form-control" required>
           </div>
-          <div class="form-group"><label>End Date & Time</label>
+
+          <div class="form-group mb-3">
+            <label>End Date & Time</label>
             <input type="date" name="end_date" class="form-control mb-2" required>
             <input type="time" name="end_time" class="form-control" required>
           </div>
-          <div class="form-group"><label>Color</label>
+
+          <div class="form-group mb-3">
+            <label>Color</label>
             <input type="color" name="color" class="form-control" value="#007bff">
           </div>
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary">Save</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         </div>
       </form>
     </div>
@@ -98,24 +110,29 @@
 </div>
 
 <!-- Edit Event Modal -->
-<div class="modal fade" id="editEventModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="editEventModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <form id="editEventForm">
         <input type="hidden" name="id" id="edit-id">
         <input type="hidden" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>">
         <div class="modal-header">
           <h5 class="modal-title">Edit Event</h5>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
-          <div class="form-group"><label>Title</label>
+          <div class="form-group mb-3">
+            <label>Title</label>
             <input type="text" name="title" id="edit-title" class="form-control" required>
           </div>
-          <div class="form-group"><label>Description</label>
+
+          <div class="form-group mb-3">
+            <label>Description</label>
             <textarea name="description" id="edit-description" class="form-control"></textarea>
           </div>
-          <div class="form-group"><label>Category</label>
+
+          <div class="form-group mb-3">
+            <label>Category</label>
             <select name="category" id="edit-category" class="form-control" required>
               <option value="">Select Category</option>
               <option value="Exam">Exam</option>
@@ -124,16 +141,16 @@
               <option value="Vacation">Vacation</option>
             </select>
           </div>
-          <div class="form-group"><label>Sub Category</label>
+
+          <div class="form-group mb-3">
+            <label>Sub Category</label>
             <select name="subcategory" id="edit-subcategory" class="form-control">
               <option value="">Select Sub Category</option>
-              <option value="Half Yearly Exam">Half Yearly Exam</option>
-              <option value="Final Exam">Final Exam</option>
-              <option value="Pre-Test Exam">Pre-Test Exam</option>
-              <option value="Test Exam">Test Exam</option>
             </select>
           </div>
-          <div class="form-group"><label>Class</label>
+
+          <div class="form-group mb-3" id="edit-class-group">
+            <label>Class</label>
             <select name="class" id="edit-class" class="form-control">
               <option value="">Select Class</option>
               <option value="6">Class 6</option>
@@ -143,7 +160,9 @@
               <option value="10">Class 10</option>
             </select>
           </div>
-          <div class="form-group"><label>Subject</label>
+
+          <div class="form-group mb-3" id="edit-subject-group">
+            <label>Subject</label>
             <select name="subject" id="edit-subject" class="form-control">
               <option value="">Select Subject</option>
               <?php foreach ($subjects as $subject): ?>
@@ -154,16 +173,20 @@
             </select>
           </div>
 
-          <div class="form-group"><label>Start Date & Time</label>
+          <div class="form-group mb-3">
+            <label>Start Date & Time</label>
             <input type="date" name="start_date" id="edit-start-date" class="form-control mb-2" required>
             <input type="time" name="start_time" id="edit-start-time" class="form-control" required>
           </div>
-          <div class="form-group"><label>End Date & Time</label>
+
+          <div class="form-group mb-3">
+            <label>End Date & Time</label>
             <input type="date" name="end_date" id="edit-end-date" class="form-control mb-2" required>
             <input type="time" name="end_time" id="edit-end-time" class="form-control" required>
           </div>
 
-          <div class="form-group"><label>Color</label>
+          <div class="form-group mb-3">
+            <label>Color</label>
             <input type="color" name="color" id="edit-color" class="form-control">
           </div>
         </div>
@@ -176,12 +199,10 @@
   </div>
 </div>
 
-<!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const calendarEl = document.getElementById('calendar');
-    const calendar = new FullCalendar.Calendar(calendarEl, {
+    const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
       initialView: 'dayGridMonth',
       height: 600,
       headerToolbar: {
@@ -190,155 +211,138 @@
         right: 'dayGridMonth,timeGridWeek'
       },
       events: '/calendar/events',
-
       eventClick: function(info) {
         const e = info.event;
-        try {
-          // Text inputs
-          $('#edit-id').val(e.id || '');
-          $('#edit-title').val(e.title || '');
-          $('#edit-description').val(e.extendedProps.description || '');
-          $('#edit-color').val(e.backgroundColor || '#007bff');
-
-          // Selects: helper to set value
-          function setSelectValue(selectId, value) {
-            const select = document.getElementById(selectId);
-            let optionExists = Array.from(select.options).some(opt => opt.value == value);
-            if (!optionExists && value) {
-              const opt = document.createElement('option');
-              opt.value = value;
-              opt.text = value;
-              select.add(opt);
-            }
-            select.value = value || '';
-          }
-
-          setSelectValue('edit-category', e.extendedProps.category);
-          setSelectValue('edit-subcategory', e.extendedProps.subcategory);
-          setSelectValue('edit-class', e.extendedProps.class);
-
-          // Filter subjects based on class and set value
-          const classVal = e.extendedProps.class || '';
-          $('#edit-subject option').each(function() {
-            const show = $(this).val() === "" || $(this).data('class') == classVal;
-            $(this).toggle(show);
-          });
-          setSelectValue('edit-subject', e.extendedProps.subject);
-
-          // Dates and times
-          if (e.start) {
-            const start = new Date(e.start);
-            $('#edit-start-date').val(start.toISOString().slice(0, 10));
-            $('#edit-start-time').val(start.toTimeString().slice(0, 5));
-          }
-          if (e.end) {
-            const end = new Date(e.end);
-            $('#edit-end-date').val(end.toISOString().slice(0, 10));
-            $('#edit-end-time').val(end.toTimeString().slice(0, 5));
-          }
-
-          // Show modal
-          const editModal = new bootstrap.Modal(document.getElementById('editEventModal'));
-          editModal.show();
-
-        } catch (err) {
-          console.error('Event click error:', err);
+        $('#edit-id').val(e.id);
+        $('#edit-title').val(e.title);
+        $('#edit-description').val(e.extendedProps.description || '');
+        $('#edit-color').val(e.backgroundColor || '#007bff');
+        $('#edit-category').val(e.extendedProps.category || '').trigger('change');
+        $('#edit-subcategory').val(e.extendedProps.subcategory || '');
+        $('#edit-class').val(e.extendedProps.class || '');
+        $('#edit-subject').val(e.extendedProps.subject || '');
+        if (e.start) {
+          $('#edit-start-date').val(new Date(e.start).toISOString().slice(0, 10));
+          $('#edit-start-time').val(new Date(e.start).toTimeString().slice(0, 5));
         }
+        if (e.end) {
+          $('#edit-end-date').val(new Date(e.end).toISOString().slice(0, 10));
+          $('#edit-end-time').val(new Date(e.end).toTimeString().slice(0, 5));
+        }
+        new bootstrap.Modal('#editEventModal').show();
       }
     });
-
     calendar.render();
+
+    // dynamic subcategory list
+    const subOptions = {
+      Exam: ['Half Yearly Exam', 'Annual Exam', 'Pre-Test Exam', 'Test Exam'],
+      Holiday: ['Independence Day', 'Victory Day', 'Pohela Boishakh', 'Eid-ul-Fitr', 'Eid-ul-Adha', 'Christmas Day'],
+      Notice: ['General Notice', 'Exam Notice', 'Holiday Notice'],
+      Vacation: ['Summer Vacation', 'Winter Vacation']
+    };
+
+    function updateSubcategory(category, subSelectId) {
+      const subSelect = document.getElementById(subSelectId);
+      subSelect.innerHTML = '<option value="">Select Sub Category</option>';
+      if (subOptions[category]) {
+        subOptions[category].forEach(s => {
+          const opt = document.createElement('option');
+          opt.value = s;
+          opt.textContent = s;
+          subSelect.appendChild(opt);
+        });
+      }
+    }
+
+    // Hide/Show class/subject fields based on category
+    function toggleClassSubject(category, prefix) {
+      const classGroup = document.getElementById(`${prefix}-class-group`);
+      const subjectGroup = document.getElementById(`${prefix}-subject-group`);
+      if (category === 'Holiday') {
+        classGroup.style.display = 'none';
+        subjectGroup.style.display = 'none';
+      } else {
+        classGroup.style.display = '';
+        subjectGroup.style.display = '';
+      }
+    }
+
+    $('#add-category').on('change', function() {
+      updateSubcategory(this.value, 'add-subcategory');
+      toggleClassSubject(this.value, 'add');
+    });
+    $('#edit-category').on('change', function() {
+      updateSubcategory(this.value, 'edit-subcategory');
+      toggleClassSubject(this.value, 'edit');
+    });
 
     function showAlert(msg, type = 'success') {
       const wrapper = document.createElement('div');
       wrapper.innerHTML = `
-        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-          ${msg}
-          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>`;
+      <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+        ${msg}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>`;
       document.getElementById('alert-placeholder').append(wrapper);
       setTimeout(() => wrapper.remove(), 3000);
     }
 
-    // Add Event
+    // add event
     $('#eventForm').on('submit', function(e) {
       e.preventDefault();
-      const fd = new FormData(this);
-      fd.set('start_time', $(this).find('input[name="start_time"]').val());
-      fd.set('end_time', $(this).find('input[name="end_time"]').val());
-
       fetch('/calendar/add', {
           method: 'POST',
-          body: fd
+          body: new FormData(this)
         })
-        .then(res => res.json())
-        .then(r => {
+        .then(res => res.json()).then(r => {
           if (r.status === 'success') {
-            $('#addEventModal').modal('hide');
+            bootstrap.Modal.getInstance(document.getElementById('addEventModal')).hide();
             this.reset();
             calendar.refetchEvents();
             showAlert('Event added successfully!');
           } else showAlert('Failed to add event', 'danger');
-        }).catch(() => showAlert('Something went wrong', 'danger'));
+        }).catch(() => showAlert('Error occurred', 'danger'));
     });
 
-    // Update Event
+    // edit event
     $('#editEventForm').on('submit', function(e) {
       e.preventDefault();
-      const fd = new FormData(this);
-      fd.set('start_time', $('#edit-start-time').val());
-      fd.set('end_time', $('#edit-end-time').val());
-      fd.set('start_date', $('#edit-start-date').val());
-      fd.set('end_date', $('#edit-end-date').val());
-
       fetch('/calendar/update', {
           method: 'POST',
-          body: fd
+          body: new FormData(this)
         })
-        .then(res => res.json())
-        .then(r => {
+        .then(res => res.json()).then(r => {
           if (r.status === 'success') {
-            $('#editEventModal').modal('hide');
+            bootstrap.Modal.getInstance(document.getElementById('editEventModal')).hide();
             calendar.refetchEvents();
             showAlert('Event updated successfully!');
-          } else showAlert('Failed to update event', 'danger');
-        }).catch(() => showAlert('Something went wrong', 'danger'));
+          } else showAlert('Failed to update', 'danger');
+        }).catch(() => showAlert('Error occurred', 'danger'));
     });
 
-    // Delete Event
+    // delete event
     $('#deleteEvent').on('click', function() {
       const id = $('#edit-id').val();
       const csrfName = '<?= csrf_token() ?>';
       const csrfHash = '<?= csrf_hash() ?>';
       fetch('/calendar/delete', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({
-            id,
-            [csrfName]: csrfHash
-          })
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          id,
+          [csrfName]: csrfHash
         })
-        .then(res => res.json())
-        .then(r => {
-          if (r.status === 'success') {
-            $('#editEventModal').modal('hide');
-            calendar.refetchEvents();
-            showAlert('Event deleted successfully!');
-          } else showAlert('Failed to delete event', 'danger');
-        }).catch(() => showAlert('Something went wrong', 'danger'));
+      }).then(res => res.json()).then(r => {
+        if (r.status === 'success') {
+          bootstrap.Modal.getInstance(document.getElementById('editEventModal')).hide();
+          calendar.refetchEvents();
+          showAlert('Event deleted successfully!');
+        } else showAlert('Failed to delete', 'danger');
+      }).catch(() => showAlert('Error occurred', 'danger'));
     });
-
-    // Filter subjects on add/edit
-    function filterSubjects(classId, subjId) {
-      const val = document.getElementById(classId).value;
-      document.querySelectorAll(`#${subjId} option`).forEach(opt => {
-        opt.style.display = (opt.value == "" || opt.dataset.class == val) ? '' : 'none';
-      });
-    }
-    $('#add-class').on('change', () => filterSubjects('add-class', 'add-subject'));
-    $('#edit-class').on('change', () => filterSubjects('edit-class', 'edit-subject'));
   });
 </script>
 
