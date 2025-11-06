@@ -201,11 +201,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // ---------- Calendar ----------
     const calendarEl = document.getElementById('calendar');
-
     const calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
       height: 600,
@@ -215,113 +214,288 @@
         right: 'dayGridMonth,timeGridWeek'
       },
       events: '/calendar/events',
-
       eventClick: function(info) {
         const e = info.event;
-        document.getElementById('edit-id').value = e.id;
-        document.getElementById('edit-title').value = e.title || '';
-        document.getElementById('edit-description').value = e.extendedProps.description || '';
-        document.getElementById('edit-color').value = e.backgroundColor || '#007bff';
-        document.getElementById('edit-category').value = e.extendedProps.category || '';
-        document.getElementById('edit-subcategory').value = e.extendedProps.subcategory || '';
-        document.getElementById('edit-class').value = e.extendedProps.class || '';
-        document.getElementById('edit-subject').value = e.extendedProps.subject || '';
+        // fill edit form
+        setValue('#edit-id', e.id || '');
+        setValue('#edit-title', e.title || '');
+        setValue('#edit-description', (e.extendedProps && e.extendedProps.description) || '');
+        setValue('#edit-color', e.backgroundColor || '#007bff');
+        setValue('#edit-category', (e.extendedProps && e.extendedProps.category) || '');
+        // trigger change to populate subcategory/class visibility (we trigger manually below)
+        setValue('#edit-subcategory', (e.extendedProps && e.extendedProps.subcategory) || '');
+        setValue('#edit-class', (e.extendedProps && e.extendedProps.class) || '');
+        setValue('#edit-subject', (e.extendedProps && e.extendedProps.subject) || '');
 
         if (e.start) {
           const s = new Date(e.start);
-          document.getElementById('edit-start-date').value = s.toISOString().slice(0, 10);
-          document.getElementById('edit-start-time').value = s.toTimeString().slice(0, 5);
+          setValue('#edit-start-date', s.toISOString().slice(0, 10));
+          setValue('#edit-start-time', s.toTimeString().slice(0, 5));
         }
         if (e.end) {
           const en = new Date(e.end);
-          document.getElementById('edit-end-date').value = en.toISOString().slice(0, 10);
-          document.getElementById('edit-end-time').value = en.toTimeString().slice(0, 5);
+          setValue('#edit-end-date', en.toISOString().slice(0, 10));
+          setValue('#edit-end-time', en.toTimeString().slice(0, 5));
         }
 
-        new bootstrap.Modal(document.getElementById('editEventModal')).show();
+        // show modal (Bootstrap 5)
+        const editModalEl = document.getElementById('editEventModal');
+        const editModal = new bootstrap.Modal(editModalEl);
+        editModal.show();
+
+        // ensure UI adjustments for category (if you have category-dependent hiding)
+        handleCategoryChange(document.getElementById('edit-category').value, 'edit');
       }
     });
-
     calendar.render();
 
-    // 🔹 Helper to show alerts
+    // helper
+    function setValue(selector, value) {
+      const el = document.querySelector(selector);
+      if (!el) return;
+      el.value = value;
+    }
+
+    // ---------- alerts ----------
     function showAlert(msg, type = 'success') {
+      const placeholder = document.getElementById('alert-placeholder');
       const div = document.createElement('div');
       div.className = `alert alert-${type} alert-dismissible fade show`;
       div.role = 'alert';
-      div.innerHTML = `${msg} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
-      document.getElementById('alert-placeholder').appendChild(div);
-      setTimeout(() => div.remove(), 3500);
+      div.innerHTML = `${msg} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
+      placeholder.appendChild(div);
+      setTimeout(() => {
+        if (div) div.remove();
+      }, 3500);
     }
 
-    // 🔹 Helper: send form via AJAX
-    async function sendForm(formId, url, modalId, successMsg) {
-      const form = document.getElementById(formId);
-      const btn = form.querySelector('button[type="submit"]');
-      btn.disabled = true;
+    // ---------- subcategory & class/subject toggles ----------
+    const subOptions = {
+      Exam: ['Half Yearly Exam', 'Annual Exam', 'Pre-Test Exam', 'Test Exam'],
+      Holiday: ['Independence Day', 'Victory Day', 'Pohela Boishakh', 'Eid-ul-Fitr', 'Eid-ul-Adha', 'Christmas Day'],
+      Notice: ['General Notice', 'Exam Notice', 'Holiday Notice'],
+      Vacation: ['Summer Vacation', 'Winter Vacation']
+    };
 
-      try {
-        const fd = new FormData(form);
-        const res = await fetch(url, {
-          method: 'POST',
-          body: fd
+    function updateSubcategoryOptions(category, selectId) {
+      const sel = document.getElementById(selectId);
+      if (!sel) return;
+      sel.innerHTML = '<option value="">Select Sub Category</option>';
+      const arr = subOptions[category];
+      if (arr && arr.length) {
+        arr.forEach(v => {
+          const opt = document.createElement('option');
+          opt.value = v;
+          opt.textContent = v;
+          sel.appendChild(opt);
         });
-        const data = await res.json();
-
-        if (data.status === 'success') {
-          // ✅ Close popup modal automatically
-          const modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
-          if (modal) modal.hide();
-
-          form.reset();
-          calendar.refetchEvents();
-          showAlert(successMsg, 'success');
-        } else {
-          showAlert(data.message || 'Failed. Check form or server.', 'danger');
-        }
-      } catch (err) {
-        console.error('Error:', err);
-        showAlert('Error submitting form. See console.', 'danger');
-      } finally {
-        btn.disabled = false;
       }
     }
 
-    // 🔹 Add event
-    document.getElementById('eventForm')?.addEventListener('submit', e => {
-      e.preventDefault();
-      sendForm('eventForm', '/calendar/add', 'addEventModal', 'Event added successfully!');
-    });
-
-    // 🔹 Update event
-    document.getElementById('editEventForm')?.addEventListener('submit', e => {
-      e.preventDefault();
-      sendForm('editEventForm', '/calendar/update', 'editEventModal', 'Event updated successfully!');
-    });
-
-    // 🔹 Delete event
-    document.getElementById('deleteEvent')?.addEventListener('click', async () => {
-      const id = document.getElementById('edit-id').value;
-      if (!id) return showAlert('No event selected.', 'danger');
-
-      const fd = new FormData();
-      fd.append('id', id);
-
-      const res = await fetch('/calendar/delete', {
-        method: 'POST',
-        body: fd
-      });
-      const data = await res.json();
-
-      if (data.status === 'success') {
-        const modal = bootstrap.Modal.getInstance(document.getElementById('editEventModal'));
-        if (modal) modal.hide();
-        calendar.refetchEvents();
-        showAlert('Event deleted successfully!', 'success');
-      } else {
-        showAlert('Delete failed.', 'danger');
+    function handleCategoryChange(category, prefix) {
+      // hide class/subject for holidays
+      const classGroup = document.getElementById(prefix + '-class-group');
+      const subjGroup = document.getElementById(prefix + '-subject-group');
+      if (classGroup && subjGroup) {
+        if (category === 'Holiday') {
+          classGroup.style.display = 'none';
+          subjGroup.style.display = 'none';
+        } else {
+          classGroup.style.display = '';
+          subjGroup.style.display = '';
+        }
       }
+      updateSubcategoryOptions(category, prefix + '-subcategory');
+    }
+
+    // wire category selects
+    const addCat = document.getElementById('add-category');
+    const editCat = document.getElementById('edit-category');
+    if (addCat) addCat.addEventListener('change', function() {
+      handleCategoryChange(this.value, 'add');
     });
+    if (editCat) editCat.addEventListener('change', function() {
+      handleCategoryChange(this.value, 'edit');
+    });
+
+    // subject filtering by class (works if <option data-class="6"> exists)
+    function filterSubjectOptions(classSelectorId, subjectSelectorId) {
+      const classEl = document.getElementById(classSelectorId);
+      const subjEl = document.getElementById(subjectSelectorId);
+      if (!classEl || !subjEl) return;
+      const classVal = classEl.value;
+      Array.from(subjEl.options).forEach(opt => {
+        if (!opt.value) {
+          opt.style.display = '';
+          return;
+        } // keep empty option visible
+        const dataClass = opt.dataset.class || '';
+        opt.style.display = (dataClass === '' || dataClass == classVal) ? '' : 'none';
+      });
+    }
+    const addClassEl = document.getElementById('add-class');
+    const editClassEl = document.getElementById('edit-class');
+    if (addClassEl) addClassEl.addEventListener('change', () => filterSubjectOptions('add-class', 'add-subject'));
+    if (editClassEl) editClassEl.addEventListener('change', () => filterSubjectOptions('edit-class', 'edit-subject'));
+
+    // ---------- utility: robust fetch wrapper that logs responses ----------
+    async function fetchJson(url, options = {}) {
+      console.debug('Fetch request', url, options);
+      // default: include credentials for same-origin (helps with cookie-based CSRF)
+      options.credentials = options.credentials || 'same-origin';
+      // Accept JSON
+      options.headers = options.headers || {};
+      if (!options.headers['Accept']) options.headers['Accept'] = 'application/json';
+
+      const res = await fetch(url, options);
+      const text = await res.text();
+      // try parse JSON, otherwise return raw text
+      try {
+        const json = JSON.parse(text);
+        console.debug('Fetch response JSON', json);
+        return {
+          ok: res.ok,
+          status: res.status,
+          data: json,
+          raw: text
+        };
+      } catch (err) {
+        console.warn('Server returned non-JSON response:', text);
+        return {
+          ok: res.ok,
+          status: res.status,
+          data: null,
+          raw: text
+        };
+      }
+    }
+
+    // ---------- Add Event (plain JS) ----------
+    const eventForm = document.getElementById('eventForm');
+    if (eventForm) {
+      eventForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const btn = this.querySelector('button[type="submit"]');
+        if (btn) {
+          btn.disabled = true;
+        }
+        const fd = new FormData(this);
+        // ensure times/dates are present set earlier in form or by UI
+        try {
+          const result = await fetchJson('/calendar/add', {
+            method: 'POST',
+            body: fd
+          });
+          console.debug('Add result', result);
+          if (result.data && result.data.status === 'success') {
+            // close modal and reset
+            const modalEl = document.getElementById('addEventModal');
+            bootstrap.Modal.getInstance(modalEl)?.hide();
+            this.reset();
+            calendar.refetchEvents();
+            showAlert('Event added successfully!', 'success');
+          } else {
+            // if server returned JSON with message(s), show it
+            const msg = (result.data && (result.data.message || JSON.stringify(result.data))) || ('Server error: ' + result.raw);
+            showAlert('Failed to add event: ' + msg, 'danger');
+          }
+        } catch (err) {
+          console.error('Add event exception', err);
+          showAlert('Network/Exception when adding event. See console for details.', 'danger');
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+          }
+        }
+      });
+    }
+
+    // ---------- Edit Event (plain JS) ----------
+    const editForm = document.getElementById('editEventForm');
+    if (editForm) {
+      editForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const btn = this.querySelector('button[type="submit"]');
+        if (btn) btn.disabled = true;
+        const fd = new FormData(this);
+        try {
+          const result = await fetchJson('/calendar/update', {
+            method: 'POST',
+            body: fd
+          });
+          console.debug('Update result', result);
+          if (result.data && result.data.status === 'success') {
+            const modalEl = document.getElementById('editEventModal');
+            bootstrap.Modal.getInstance(modalEl)?.hide();
+            calendar.refetchEvents();
+            showAlert('Event updated successfully!', 'success');
+          } else {
+            const msg = (result.data && (result.data.message || JSON.stringify(result.data))) || ('Server error: ' + result.raw);
+            showAlert('Failed to update event: ' + msg, 'danger');
+          }
+        } catch (err) {
+          console.error('Update event exception', err);
+          showAlert('Network/Exception when updating event. See console for details.', 'danger');
+        } finally {
+          if (btn) btn.disabled = false;
+        }
+      });
+    }
+
+    // ---------- Delete Event (plain JS) ----------
+    const deleteBtn = document.getElementById('deleteEvent');
+    if (deleteBtn) {
+      deleteBtn.addEventListener('click', async function() {
+        const id = document.getElementById('edit-id').value;
+        if (!id) {
+          showAlert('No event id selected', 'danger');
+          return;
+        }
+        // find CSRF token field name and value from the edit form
+        const editFormEl = document.getElementById('editEventForm');
+        const csrfInput = editFormEl.querySelector('input[name^="<?= csrf_token() ?>"], input[name^="__"]') || null;
+        // NOTE: If your token name is dynamic, we fallback to reading all inputs that look like CSRF token
+        // Build URLSearchParams to include CSRF safely
+        const params = new URLSearchParams();
+        params.append('id', id);
+        // If the page included CSRF <input name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>">
+        // it will also be present in the formData when using FormData. But building URLSearchParams manually:
+        try {
+          // try to collect CSRF inputs from form
+          Array.from(editFormEl.querySelectorAll('input[type="hidden"]')).forEach(i => {
+            if (i.name && i.value) params.append(i.name, i.value);
+          });
+        } catch (err) {
+          console.warn('csrf gather err', err);
+        }
+
+        try {
+          const result = await fetchJson('/calendar/delete', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: params.toString()
+          });
+          console.debug('Delete result', result);
+          if (result.data && result.data.status === 'success') {
+            const modalEl = document.getElementById('editEventModal');
+            bootstrap.Modal.getInstance(modalEl)?.hide();
+            calendar.refetchEvents();
+            showAlert('Event deleted successfully!', 'success');
+          } else {
+            const msg = (result.data && (result.data.message || JSON.stringify(result.data))) || ('Server error: ' + result.raw);
+            showAlert('Failed to delete event: ' + msg, 'danger');
+          }
+        } catch (err) {
+          console.error('Delete exception', err);
+          showAlert('Network/Exception when deleting event. See console for details.', 'danger');
+        }
+      });
+    }
+
+    // ---------- Helpful dev tip visible on console ----------
+    console.info('Calendar script initialized. If add/update still fails: open DevTools → Network and Console. Look for the /calendar/add or /calendar/update request and server response (status + body).');
   });
 </script>
 
