@@ -350,7 +350,7 @@
           body: fd
         });
         if (result.data?.status === 'success') {
-          bootstrap.Modal.getInstance(document.getElementById('editEventModal'))?.hide();
+          $('#editEventModal').modal('hide');
           calendar.refetchEvents();
           showAlert('Event updated successfully!', 'success');
         } else {
@@ -383,7 +383,7 @@
           body: params.toString()
         });
         if (result.data?.status === 'success') {
-          bootstrap.Modal.getInstance(document.getElementById('editEventModal'))?.hide();
+          $('#editEventModal').modal('hide');
           calendar.refetchEvents();
           showAlert('Event deleted successfully!', 'success');
         } else showAlert('Failed to delete: ' + (result.data?.message || result.raw), 'danger');
