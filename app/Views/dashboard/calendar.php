@@ -190,6 +190,7 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // ---------- Calendar ----------
     const calendarEl = document.getElementById('calendar');
     const calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: 'dayGridMonth',
@@ -204,12 +205,12 @@
         const e = info.event;
         setValue('#edit-id', e.id || '');
         setValue('#edit-title', e.title || '');
-        setValue('#edit-description', e.extendedProps?.description || '');
+        setValue('#edit-description', (e.extendedProps && e.extendedProps.description) || '');
         setValue('#edit-color', e.backgroundColor || '#007bff');
-        setValue('#edit-category', e.extendedProps?.category || '');
-        setValue('#edit-subcategory', e.extendedProps?.subcategory || '');
-        setValue('#edit-class', e.extendedProps?.class || '');
-        setValue('#edit-subject', e.extendedProps?.subject || '');
+        setValue('#edit-category', (e.extendedProps && e.extendedProps.category) || '');
+        setValue('#edit-subcategory', (e.extendedProps && e.extendedProps.subcategory) || '');
+        setValue('#edit-class', (e.extendedProps && e.extendedProps.class) || '');
+        setValue('#edit-subject', (e.extendedProps && e.extendedProps.subject) || '');
         if (e.start) {
           const s = new Date(e.start);
           setValue('#edit-start-date', s.toISOString().slice(0, 10));
@@ -221,7 +222,8 @@
           setValue('#edit-end-time', en.toTimeString().slice(0, 5));
         }
         const editModalEl = document.getElementById('editEventModal');
-        bootstrap.Modal.getOrCreateInstance(editModalEl).show();
+        const editModal = new bootstrap.Modal(editModalEl);
+        editModal.show();
         handleCategoryChange(document.getElementById('edit-category').value, 'edit');
       }
     });
@@ -229,7 +231,8 @@
 
     function setValue(selector, value) {
       const el = document.querySelector(selector);
-      if (el) el.value = value;
+      if (!el) return;
+      el.value = value;
     }
 
     function showAlert(msg, type = 'success') {
@@ -242,6 +245,7 @@
       setTimeout(() => div.remove(), 3500);
     }
 
+    // Subcategory options
     const subOptions = {
       Exam: ['Half Yearly Exam', 'Annual Exam', 'Pre-Test Exam', 'Test Exam'],
       Holiday: ['Independence Day', 'Victory Day', 'Pohela Boishakh', 'Eid-ul-Fitr', 'Eid-ul-Adha', 'Christmas Day'],
@@ -251,6 +255,7 @@
 
     function updateSubcategoryOptions(category, selectId) {
       const sel = document.getElementById(selectId);
+      if (!sel) return;
       sel.innerHTML = '<option value="">Select Sub Category</option>';
       const arr = subOptions[category];
       if (arr) arr.forEach(v => sel.appendChild(new Option(v, v)));
@@ -319,7 +324,8 @@
         });
         if (result.data?.status === 'success') {
           const modalEl = document.getElementById('addEventModal');
-          bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+          const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+          modal.hide();
           this.reset();
           calendar.refetchEvents();
           showAlert('Event added successfully!', 'success');
@@ -347,7 +353,8 @@
         });
         if (result.data?.status === 'success') {
           const modalEl = document.getElementById('editEventModal');
-          bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+          const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+          modal.hide();
           calendar.refetchEvents();
           showAlert('Event updated successfully!', 'success');
         } else {
@@ -364,7 +371,10 @@
     // ---------- Delete Event ----------
     document.getElementById('deleteEvent')?.addEventListener('click', async function() {
       const id = document.getElementById('edit-id').value;
-      if (!id) return showAlert('No event id selected', 'danger');
+      if (!id) {
+        showAlert('No event id selected', 'danger');
+        return;
+      }
       const params = new URLSearchParams();
       params.append('id', id);
       Array.from(document.getElementById('editEventForm').querySelectorAll('input[type="hidden"]')).forEach(i => i.name && i.value && params.append(i.name, i.value));
@@ -378,7 +388,8 @@
         });
         if (result.data?.status === 'success') {
           const modalEl = document.getElementById('editEventModal');
-          bootstrap.Modal.getOrCreateInstance(modalEl).hide();
+          const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+          modal.hide();
           calendar.refetchEvents();
           showAlert('Event deleted successfully!', 'success');
         } else showAlert('Failed to delete: ' + (result.data?.message || result.raw), 'danger');
