@@ -188,7 +188,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
-<script>
+<!-- <script>
   document.addEventListener('DOMContentLoaded', function() {
     // ---------- Calendar ----------
     const calendarEl = document.getElementById('calendar');
@@ -396,6 +396,191 @@
       } catch (err) {
         showAlert('Network error. See console.', 'danger');
         console.error(err);
+      }
+    });
+  });
+</script> -->
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const calendarEl = document.getElementById('calendar');
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      height: 600,
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek'
+      },
+      events: '/calendar/events',
+      eventClick: function(info) {
+        const e = info.event;
+        setValue('#edit-id', e.id || '');
+        setValue('#edit-title', e.title || '');
+        setValue('#edit-description', e.extendedProps?.description || '');
+        setValue('#edit-color', e.backgroundColor || '#007bff');
+        setValue('#edit-category', e.extendedProps?.category || '');
+        setValue('#edit-subcategory', e.extendedProps?.subcategory || '');
+        setValue('#edit-class', e.extendedProps?.class || '');
+        setValue('#edit-subject', e.extendedProps?.subject || '');
+        if (e.start) {
+          const s = new Date(e.start);
+          setValue('#edit-start-date', s.toISOString().slice(0, 10));
+          setValue('#edit-start-time', s.toTimeString().slice(0, 5));
+        }
+        if (e.end) {
+          const en = new Date(e.end);
+          setValue('#edit-end-date', en.toISOString().slice(0, 10));
+          setValue('#edit-end-time', en.toTimeString().slice(0, 5));
+        }
+        const editModal = new bootstrap.Modal(document.getElementById('editEventModal'));
+        editModal.show();
+        handleCategoryChange(document.getElementById('edit-category').value, 'edit');
+      }
+    });
+    calendar.render();
+
+    function setValue(sel, val) {
+      const el = document.querySelector(sel);
+      if (el) el.value = val;
+    }
+
+    function showAlert(msg, type = 'success') {
+      const placeholder = document.getElementById('alert-placeholder');
+      const div = document.createElement('div');
+      div.className = `alert alert-${type} alert-dismissible fade show`;
+      div.role = 'alert';
+      div.innerHTML = `${msg} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+      placeholder.appendChild(div);
+      setTimeout(() => div.remove(), 3500);
+    }
+
+    const subOptions = {
+      Exam: ['Half Yearly Exam', 'Annual Exam', 'Pre-Test Exam', 'Test Exam'],
+      Holiday: ['Independence Day', 'Victory Day', 'Pohela Boishakh', 'Eid-ul-Fitr', 'Eid-ul-Adha', 'Christmas Day'],
+      Notice: ['General Notice', 'Exam Notice', 'Holiday Notice'],
+      Vacation: ['Summer Vacation', 'Winter Vacation']
+    };
+
+    function updateSubcategoryOptions(category, selectId) {
+      const sel = document.getElementById(selectId);
+      sel.innerHTML = '<option value="">Select Sub Category</option>';
+      const arr = subOptions[category];
+      if (arr) arr.forEach(v => sel.appendChild(new Option(v, v)));
+    }
+
+    function handleCategoryChange(category, prefix) {
+      const classGroup = document.getElementById(prefix + '-class-group');
+      const subjGroup = document.getElementById(prefix + '-subject-group');
+      if (category === 'Holiday') {
+        classGroup.style.display = 'none';
+        subjGroup.style.display = 'none';
+      } else {
+        classGroup.style.display = '';
+        subjGroup.style.display = '';
+      }
+      updateSubcategoryOptions(category, prefix + '-subcategory');
+    }
+
+    document.getElementById('add-category')?.addEventListener('change', e => handleCategoryChange(e.target.value, 'add'));
+    document.getElementById('edit-category')?.addEventListener('change', e => handleCategoryChange(e.target.value, 'edit'));
+
+    function filterSubjectOptions(classSelectorId, subjectSelectorId) {
+      const classVal = document.getElementById(classSelectorId).value;
+      const subjEl = document.getElementById(subjectSelectorId);
+      Array.from(subjEl.options).forEach(opt => {
+        opt.style.display = (!opt.value || !opt.dataset.class || opt.dataset.class == classVal) ? '' : 'none';
+      });
+    }
+
+    document.getElementById('add-class')?.addEventListener('change', () => filterSubjectOptions('add-class', 'add-subject'));
+    document.getElementById('edit-class')?.addEventListener('change', () => filterSubjectOptions('edit-class', 'edit-subject'));
+
+    async function fetchJson(url, options = {}) {
+      options.credentials = 'same-origin';
+      options.headers = {
+        Accept: 'application/json',
+        ...(options.headers || {})
+      };
+      const res = await fetch(url, options);
+      const text = await res.text();
+      try {
+        return {
+          ok: res.ok,
+          data: JSON.parse(text)
+        };
+      } catch {
+        return {
+          ok: res.ok,
+          data: null
+        };
+      }
+    }
+
+    // Add Event
+    document.getElementById('eventForm')?.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = this.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      const fd = new FormData(this);
+      const result = await fetchJson('/calendar/add', {
+        method: 'POST',
+        body: fd
+      });
+      if (result.data?.status === 'success') {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('addEventModal'));
+        if (modal) modal.hide();
+        this.reset();
+        calendar.refetchEvents();
+        showAlert('Event added successfully!');
+      } else {
+        showAlert('Failed to add event', 'danger');
+      }
+      btn.disabled = false;
+    });
+
+    // Update Event
+    document.getElementById('editEventForm')?.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const btn = this.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      const fd = new FormData(this);
+      const result = await fetchJson('/calendar/update', {
+        method: 'POST',
+        body: fd
+      });
+      if (result.data?.status === 'success') {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('editEventModal'));
+        if (modal) modal.hide();
+        calendar.refetchEvents();
+        showAlert('Event updated successfully!');
+      } else {
+        showAlert('Failed to update event', 'danger');
+      }
+      btn.disabled = false;
+    });
+
+    // Delete Event
+    document.getElementById('deleteEvent')?.addEventListener('click', async function() {
+      const id = document.getElementById('edit-id').value;
+      if (!id) return showAlert('No event selected', 'danger');
+      const params = new URLSearchParams();
+      params.append('id', id);
+      Array.from(document.querySelectorAll('#editEventForm input[type="hidden"]')).forEach(i => i.name && params.append(i.name, i.value));
+      const result = await fetchJson('/calendar/delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: params.toString()
+      });
+      if (result.data?.status === 'success') {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('editEventModal'));
+        if (modal) modal.hide();
+        calendar.refetchEvents();
+        showAlert('Event deleted successfully!');
+      } else {
+        showAlert('Failed to delete event', 'danger');
       }
     });
   });
