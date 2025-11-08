@@ -147,6 +147,33 @@
   </div>
 </section>
 
+<!-- CSS for aligned delete button -->
+<style>
+  #selectedSubjectsList li {
+    display: flex;
+    justify-content: space-between;
+    /* subject left, delete right */
+    align-items: center;
+    padding: 5px 10px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 2px;
+    list-style: decimal;
+    /* keeps numbering */
+  }
+
+  #selectedSubjectsList li button {
+    flex: 0 0 auto;
+    /* fixed width */
+    width: 25px;
+    height: 25px;
+    line-height: 20px;
+    text-align: center;
+    padding: 0;
+    font-size: 16px;
+    border-radius: 50%;
+  }
+</style>
+
 <!-- JavaScript for dynamic behavior -->
 <script>
   const subjectsLookup = {};
@@ -158,7 +185,6 @@
     const hidden = document.getElementById('subjectIds');
     const list = document.getElementById('selectedSubjectsList');
 
-    // Function to update hidden input
     function updateHidden() {
       const ids = Array.from(list.querySelectorAll('li')).map(li => li.dataset.sid);
       hidden.value = ids.join(',');
@@ -182,17 +208,21 @@
         assignSub.split(',').forEach(id => {
           if (subjectsLookup[id]) {
             const li = document.createElement('li');
-            li.textContent = subjectsLookup[id];
             li.dataset.sid = id;
+
+            const span = document.createElement('span');
+            span.textContent = subjectsLookup[id];
+
             const delBtn = document.createElement('button');
             delBtn.type = 'button';
             delBtn.textContent = '×';
-            delBtn.style.marginLeft = '10px';
             delBtn.className = 'btn btn-sm btn-danger';
             delBtn.onclick = () => {
               li.remove();
               updateHidden();
             };
+
+            li.appendChild(span);
             li.appendChild(delBtn);
             list.appendChild(li);
           }
@@ -210,25 +240,29 @@
       if (!addBtn) return;
 
       e.preventDefault();
-
       const sid = addBtn.dataset.sid;
       const sname = addBtn.dataset.sname;
 
       if (!Array.from(list.querySelectorAll('li')).some(li => li.dataset.sid === sid)) {
         const li = document.createElement('li');
-        li.textContent = sname;
         li.dataset.sid = sid;
+
+        const span = document.createElement('span');
+        span.textContent = sname;
+
         const delBtn = document.createElement('button');
         delBtn.type = 'button';
         delBtn.textContent = '×';
-        delBtn.style.marginLeft = '10px';
         delBtn.className = 'btn btn-sm btn-danger';
         delBtn.onclick = () => {
           li.remove();
           updateHidden();
         };
+
+        li.appendChild(span);
         li.appendChild(delBtn);
         list.appendChild(li);
+
         updateHidden();
       }
     });
