@@ -679,7 +679,7 @@ class Dashboard extends Controller
 
 
         echo "<pre>";
-        print_r(subjects);
+        print_r($subjects);
         echo "</pre>";
 
         return view('dashboard/teacher_management', $this->data);
