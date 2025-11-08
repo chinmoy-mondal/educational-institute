@@ -99,7 +99,13 @@
               <dd class="col-sm-9"><?= esc($user['email']) ?></dd>
 
               <dt class="col-sm-3"><i class="fas fa-book-reader mr-2"></i>Assigned Subject</dt>
-              <dd class="col-sm-9"><?= esc($user['assagin_sub']) ?></dd>
+              <dd class="col-sm-9">
+                <ol>
+                  <?php foreach ($user['assagin_sub_list'] as $subName): ?>
+                    <li><?= esc($subName) ?></li>
+                  <?php endforeach; ?>
+                </ol>
+              </dd>
 
               <dt class="col-sm-3"><i class="fas fa-user-check mr-2"></i>Account Status</dt>
               <dd class="col-sm-9"><?= esc($user['account_status']) ?></dd>

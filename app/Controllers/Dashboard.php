@@ -206,6 +206,23 @@ class Dashboard extends Controller
             throw new \CodeIgniter\Exceptions\PageNotFoundException("Teacher not found");
         }
 
+        // Convert assigned subject IDs to subject names as an array
+        $assignedSubjects = [];
+        if (!empty($teacher['assagin_sub'])) {
+            $subjectModel = new \App\Models\SubjectModel();
+
+            // Handle multiple subjects (comma-separated IDs)
+            $subjectIds = explode(',', $teacher['assagin_sub']);
+
+            foreach ($subjectIds as $subId) {
+                $sub = $subjectModel->where('id', trim($subId))->first();
+                if ($sub) {
+                    $assignedSubjects[] = $sub['subject'];
+                }
+            }
+        }
+
+        $teacher['assagin_sub_list'] = $assignedSubjects; // store as array
         $this->data['user'] = $teacher;
 
         return view('dashboard/profile', $this->data);
@@ -230,10 +247,28 @@ class Dashboard extends Controller
             throw new \CodeIgniter\Exceptions\PageNotFoundException("Teacher not found");
         }
 
+        // Convert assigned subject IDs to subject names as an array
+        $assignedSubjects = [];
+        if (!empty($teacher['assagin_sub'])) {
+            $subjectModel = new \App\Models\SubjectModel();
+
+            // Handle multiple subjects (comma-separated IDs)
+            $subjectIds = explode(',', $teacher['assagin_sub']);
+
+            foreach ($subjectIds as $subId) {
+                $sub = $subjectModel->where('id', trim($subId))->first();
+                if ($sub) {
+                    $assignedSubjects[] = $sub['subject'];
+                }
+            }
+        }
+
+        $teacher['assagin_sub_list'] = $assignedSubjects; // store as array
         $this->data['user'] = $teacher;
 
         return view('dashboard/profile', $this->data);
     }
+
     public function restrict($id)
     {
         if (!$this->session->get('isLoggedIn')) {
