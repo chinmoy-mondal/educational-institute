@@ -84,10 +84,35 @@
                 right: 'dayGridMonth,timeGridWeek,listMonth'
             },
             events: '<?= base_url('public-calendar/events') ?>',
+            eventContent: function(arg) {
+                // Custom render for event content
+                const titleEl = document.createElement('div');
+                titleEl.innerHTML = `<strong>${arg.event.title}</strong>`;
+
+                const category = arg.event.extendedProps.category || '';
+                const eventClass = arg.event.extendedProps.event_class || '';
+
+                // Optional: only show if available
+                let details = '';
+                if (category || eventClass) {
+                    details = `<small style="font-size: 11px; opacity: 0.9;">${category}${category && eventClass ? ' • ' : ''}${eventClass}</small>`;
+                }
+
+                const detailEl = document.createElement('div');
+                detailEl.innerHTML = details;
+
+                return {
+                    domNodes: [titleEl, detailEl]
+                };
+            },
             eventDidMount: function(info) {
-                // Apply border and background
+                // Style each event box
                 info.el.style.borderLeft = "5px solid " + (info.event.backgroundColor || "#0d6efd");
                 info.el.style.backgroundColor = info.event.backgroundColor || "#0d6efd";
+                info.el.style.color = "#fff";
+                info.el.style.borderRadius = "6px";
+                info.el.style.padding = "2px 4px";
+                info.el.style.boxShadow = "0 2px 5px rgba(0,0,0,0.15)";
             },
             eventClick: function(info) {
                 const event = info.event;

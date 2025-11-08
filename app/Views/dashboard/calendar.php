@@ -544,28 +544,19 @@
       e.preventDefault();
       const btn = this.querySelector('button[type="submit"]');
       btn.disabled = true;
-
       const fd = new FormData(this);
       const result = await fetchJson('/calendar/update', {
         method: 'POST',
         body: fd
       });
-
       if (result.data?.status === 'success') {
-        // Hide the modal
-        const modalEl = document.getElementById('editEventModal');
-        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-        modal.hide();
-
-        // Refetch events in the calendar
+        const modal = bootstrap.Modal.getInstance(document.getElementById('editEventModal'));
+        if (modal) modal.hide();
         calendar.refetchEvents();
-
-        // Show success alert
         showAlert('Event updated successfully!');
       } else {
         showAlert('Failed to update event', 'danger');
       }
-
       btn.disabled = false;
     });
 
