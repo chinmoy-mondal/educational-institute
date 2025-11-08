@@ -25,10 +25,11 @@ class PublicCalendar extends Controller
             $start = $event['start_date'] . (!empty($event['start_time']) ? 'T' . $event['start_time'] : '');
             $end   = $event['end_date'] . (!empty($event['end_time']) ? 'T' . $event['end_time'] : '');
 
-            // ✅ Fetch subject name if ID exists
+            // ✅ Directly fetch subject name from the database
             $subjectName = '';
             if (!empty($event['subject'])) {
-                $subjectName = $subjectModel->getSubjectName($event['subject']);
+                $subject = $subjectModel->where('id', $event['subject'])->first();
+                $subjectName = $subject['subject'] ?? '';
             }
 
             return [
@@ -41,8 +42,8 @@ class PublicCalendar extends Controller
                     'description' => $event['description'] ?? '',
                     'category'    => $event['category'] ?? '',
                     'subcategory' => $event['subcategory'] ?? '',
-                    'event_class' => $event['class'] ?? '', // JS-safe alias
-                    'subject'     => $subjectName ?? '',   // ✅ Now shows subject name
+                    'event_class' => $event['class'] ?? '',
+                    'subject'     => $subjectName, // ✅ show subject name directly
                 ]
             ];
         }, $events);
