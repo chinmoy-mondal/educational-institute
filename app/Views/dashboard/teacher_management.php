@@ -149,21 +149,15 @@
 
 <!-- CSS for aligned delete button -->
 <style>
-  #selectedSubjectsList li {
+  #selectedSubjectsList li div {
     display: flex;
     justify-content: space-between;
     /* subject left, delete right */
     align-items: center;
-    padding: 5px 10px;
-    border-bottom: 1px solid #ddd;
-    margin-bottom: 2px;
-    list-style: decimal;
-    /* keeps numbering */
   }
 
   #selectedSubjectsList li button {
     flex: 0 0 auto;
-    /* fixed width */
     width: 25px;
     height: 25px;
     line-height: 20px;
@@ -197,7 +191,7 @@
 
       const teacherId = btn.dataset.id;
       const teacherName = btn.dataset.name;
-      const assignSub = btn.dataset.assign_sub; // e.g., "2,4,3"
+      const assignSub = btn.dataset.assign_sub;
 
       document.getElementById('teacherId').value = teacherId;
       document.getElementById('teacherName').value = teacherName;
@@ -210,6 +204,7 @@
             const li = document.createElement('li');
             li.dataset.sid = id;
 
+            const innerDiv = document.createElement('div');
             const span = document.createElement('span');
             span.textContent = subjectsLookup[id];
 
@@ -222,8 +217,9 @@
               updateHidden();
             };
 
-            li.appendChild(span);
-            li.appendChild(delBtn);
+            innerDiv.appendChild(span);
+            innerDiv.appendChild(delBtn);
+            li.appendChild(innerDiv);
             list.appendChild(li);
           }
         });
@@ -247,6 +243,7 @@
         const li = document.createElement('li');
         li.dataset.sid = sid;
 
+        const innerDiv = document.createElement('div');
         const span = document.createElement('span');
         span.textContent = sname;
 
@@ -259,8 +256,9 @@
           updateHidden();
         };
 
-        li.appendChild(span);
-        li.appendChild(delBtn);
+        innerDiv.appendChild(span);
+        innerDiv.appendChild(delBtn);
+        li.appendChild(innerDiv);
         list.appendChild(li);
 
         updateHidden();
