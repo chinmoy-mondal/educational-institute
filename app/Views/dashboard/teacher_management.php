@@ -36,7 +36,6 @@
                       <td><?= esc($user['subject']) ?></td>
                       <td class="text-center">
                         <div class="d-flex justify-content-center align-items-center">
-
                           <div style="margin-right:5px;">
                             <a href="#" class="btn btn-sm btn-info edit-btn"
                               data-id="<?= $user['id'] ?>"
@@ -48,7 +47,6 @@
                               <i class="fas fa-edit"></i>
                             </a>
                           </div>
-
                           <div style="margin-right:5px;">
                             <a href="<?= site_url('profile_id/' . $user['id']) ?>"
                               class="btn btn-sm btn-primary"
@@ -56,7 +54,6 @@
                               <i class="fas fa-user"></i>
                             </a>
                           </div>
-
                           <div>
                             <a href="<?= site_url('assignSubject/' . $user['id']) ?>"
                               class="btn btn-sm btn-success"
@@ -64,7 +61,6 @@
                               <i class="fas fa-file-alt"></i>
                             </a>
                           </div>
-
                         </div>
                       </td>
                     </tr>
@@ -153,13 +149,21 @@
 
 <!-- JavaScript for dynamic behavior -->
 <script>
-  // Create a lookup object for subjects
   const subjectsLookup = {};
   <?php foreach ($subjects as $sub): ?>
     subjectsLookup['<?= $sub['id'] ?>'] = '<?= esc($sub['subject']) ?> (<?= esc($sub['class']) ?> - <?= esc($sub['section']) ?>)';
   <?php endforeach; ?>
 
   document.addEventListener('DOMContentLoaded', () => {
+    const hidden = document.getElementById('subjectIds');
+    const list = document.getElementById('selectedSubjectsList');
+
+    // Function to update hidden input
+    function updateHidden() {
+      const ids = Array.from(list.querySelectorAll('li')).map(li => li.dataset.sid);
+      hidden.value = ids.join(',');
+    }
+
     // Edit teacher button
     document.querySelector('#teacherTable').addEventListener('click', e => {
       const btn = e.target.closest('.edit-btn');
@@ -172,23 +176,30 @@
       document.getElementById('teacherId').value = teacherId;
       document.getElementById('teacherName').value = teacherName;
 
-      const hidden = document.getElementById('subjectIds');
-      const list = document.getElementById('selectedSubjectsList');
-
-      hidden.value = assignSub || '';
       list.innerHTML = '';
 
-      // Populate assigned subjects in the list
       if (assignSub) {
         assignSub.split(',').forEach(id => {
           if (subjectsLookup[id]) {
             const li = document.createElement('li');
             li.textContent = subjectsLookup[id];
+            li.dataset.sid = id;
+            const delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.textContent = '×';
+            delBtn.style.marginLeft = '10px';
+            delBtn.className = 'btn btn-sm btn-danger';
+            delBtn.onclick = () => {
+              li.remove();
+              updateHidden();
+            };
+            li.appendChild(delBtn);
             list.appendChild(li);
           }
         });
       }
 
+      updateHidden();
       document.getElementById('editForm').style.display = 'block';
       document.getElementById('placeholderMsg').style.display = 'none';
     });
@@ -202,15 +213,23 @@
 
       const sid = addBtn.dataset.sid;
       const sname = addBtn.dataset.sname;
-      const hidden = document.getElementById('subjectIds');
-      let ids = hidden.value ? hidden.value.split(',') : [];
 
-      if (!ids.includes(sid)) {
-        ids.push(sid);
-        hidden.value = ids.join(',');
+      if (!Array.from(list.querySelectorAll('li')).some(li => li.dataset.sid === sid)) {
         const li = document.createElement('li');
         li.textContent = sname;
-        document.getElementById('selectedSubjectsList').appendChild(li);
+        li.dataset.sid = sid;
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.textContent = '×';
+        delBtn.style.marginLeft = '10px';
+        delBtn.className = 'btn btn-sm btn-danger';
+        delBtn.onclick = () => {
+          li.remove();
+          updateHidden();
+        };
+        li.appendChild(delBtn);
+        list.appendChild(li);
+        updateHidden();
       }
     });
 
