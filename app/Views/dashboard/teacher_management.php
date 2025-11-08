@@ -41,7 +41,7 @@
                               data-id="<?= $user['id'] ?>"
                               data-name="<?= esc($user['name']) ?>"
                               data-subject="<?= esc($user['subject']) ?>"
-                              data-assign_sub="<?= esc($user['assign_sub']) ?>"
+                              data-assign_sub="<?= esc($user['assign_sub'] ?? '') ?>"
                               data-photo="<?= !empty($user['photo'])
                                             ? base_url($user['photo'])
                                             : base_url('public/assets/img/default.png') ?>">
