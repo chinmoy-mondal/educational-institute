@@ -661,11 +661,38 @@ class Dashboard extends Controller
 
     public function teacher_management()
     {
+        // Fetch all subjects
         $subjects = $this->subjectModel->orderBy('id')->findAll();
+
+        // Fetch all active teachers
         $users = $this->userModel
+            ->select('id, name, subject, assign_sub, photo')
             ->where('account_status !=', 0)
             ->orderBy('position', 'ASC')
             ->findAll();
+
+        // Map subject IDs to names for display
+        $subjectMap = [];
+        foreach ($subjects as $sub) {
+            $subjectMap[$sub['id']] = $sub['subject'] . " ({$sub['class']} - {$sub['section']})";
+        }
+
+        // Convert assign_sub IDs to names
+        foreach ($users as &$user) {
+            if (!empty($user['assign_sub'])) {
+                $ids = explode(',', $user['assign_sub']);
+                $names = [];
+                foreach ($ids as $id) {
+                    $id = trim($id);
+                    if (isset($subjectMap[$id])) {
+                        $names[] = $subjectMap[$id];
+                    }
+                }
+                $user['assign_sub_names'] = implode(', ', $names);
+            } else {
+                $user['assign_sub_names'] = '';
+            }
+        }
 
         $this->data['title'] = 'Teacher Management';
         $this->data['activeSection'] = 'teacher';
