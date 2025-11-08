@@ -661,37 +661,36 @@ class Dashboard extends Controller
 
     public function teacher_management()
     {
-        // Fetch all subjects
         $subjects = $this->subjectModel->orderBy('id')->findAll();
 
-        // Fetch all active teachers
         $users = $this->userModel
-            ->select('id, name, subject, assign_sub, photo')
+            ->select('id, name, subject, photo') // remove assign_sub
             ->where('account_status !=', 0)
             ->orderBy('position', 'ASC')
             ->findAll();
 
-        // Map subject IDs to names for display
+        // Build a map of subject names
         $subjectMap = [];
         foreach ($subjects as $sub) {
             $subjectMap[$sub['id']] = $sub['subject'] . " ({$sub['class']} - {$sub['section']})";
         }
 
-        // Convert assign_sub IDs to names
+        // Fetch assigned subjects from pivot table (example: teacher_subjects)
+        $db = \Config\Database::connect();
         foreach ($users as &$user) {
-            if (!empty($user['assign_sub'])) {
-                $ids = explode(',', $user['assign_sub']);
-                $names = [];
-                foreach ($ids as $id) {
-                    $id = trim($id);
-                    if (isset($subjectMap[$id])) {
-                        $names[] = $subjectMap[$id];
-                    }
+            $builder = $db->table('teacher_subjects')->select('subject_id')->where('teacher_id', $user['id']);
+            $assigned = $builder->get()->getResultArray();
+
+            $ids = [];
+            $names = [];
+            foreach ($assigned as $a) {
+                $ids[] = $a['subject_id'];
+                if (isset($subjectMap[$a['subject_id']])) {
+                    $names[] = $subjectMap[$a['subject_id']];
                 }
-                $user['assign_sub_names'] = implode(', ', $names);
-            } else {
-                $user['assign_sub_names'] = '';
             }
+            $user['assign_sub'] = implode(',', $ids);
+            $user['assign_sub_names'] = implode(', ', $names);
         }
 
         $this->data['title'] = 'Teacher Management';
@@ -700,6 +699,7 @@ class Dashboard extends Controller
             ['label' => 'Teacher List', 'url' => base_url('teacher_management')],
             ['label' => 'Marking Action', 'url' => base_url('marking_open')],
         ];
+
         $this->data['users'] = $users;
         $this->data['subjects'] = $subjects;
 
