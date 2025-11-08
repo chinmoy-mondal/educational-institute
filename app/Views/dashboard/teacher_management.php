@@ -31,7 +31,6 @@
                                       : base_url('public/assets/img/default.png') ?>"
                             width="50" height="50" class="rounded-circle">
                         </a>
-
                       </td>
                       <td><?= esc($user['name']) ?></td>
                       <td><?= esc($user['subject']) ?></td>
@@ -42,7 +41,7 @@
                             <a href="#" class="btn btn-sm btn-info edit-btn"
                               data-id="<?= $user['id'] ?>"
                               data-name="<?= esc($user['name']) ?>"
-                              data-subject="<?= esc($user['subject']) ?>"
+                              data-assign_sub="<?= $user['assign_sub'] ?>"
                               data-photo="<?= !empty($user['photo'])
                                             ? base_url($user['photo'])
                                             : base_url('public/assets/img/default.png') ?>">
@@ -152,21 +151,49 @@
   </div>
 </section>
 
-<!-- JavaScript for dynamic behavior (unchanged) -->
+<!-- JavaScript for dynamic behavior -->
 <script>
+  // Create a lookup object for subjects
+  const subjectsLookup = {};
+  <?php foreach ($subjects as $sub): ?>
+    subjectsLookup['<?= $sub['id'] ?>'] = '<?= esc($sub['subject']) ?> (<?= esc($sub['class']) ?> - <?= esc($sub['section']) ?>)';
+  <?php endforeach; ?>
+
   document.addEventListener('DOMContentLoaded', () => {
+    // Edit teacher button
     document.querySelector('#teacherTable').addEventListener('click', e => {
       const btn = e.target.closest('.edit-btn');
       if (!btn) return;
 
-      document.getElementById('teacherId').value = btn.dataset.id;
-      document.getElementById('teacherName').value = btn.dataset.name;
-      document.getElementById('subjectIds').value = '';
-      document.getElementById('selectedSubjectsList').innerHTML = '';
+      const teacherId = btn.dataset.id;
+      const teacherName = btn.dataset.name;
+      const assignSub = btn.dataset.assign_sub; // e.g., "2,4,3"
+
+      document.getElementById('teacherId').value = teacherId;
+      document.getElementById('teacherName').value = teacherName;
+
+      const hidden = document.getElementById('subjectIds');
+      const list = document.getElementById('selectedSubjectsList');
+
+      hidden.value = assignSub || '';
+      list.innerHTML = '';
+
+      // Populate assigned subjects in the list
+      if (assignSub) {
+        assignSub.split(',').forEach(id => {
+          if (subjectsLookup[id]) {
+            const li = document.createElement('li');
+            li.textContent = subjectsLookup[id];
+            list.appendChild(li);
+          }
+        });
+      }
+
       document.getElementById('editForm').style.display = 'block';
       document.getElementById('placeholderMsg').style.display = 'none';
     });
 
+    // Add subject from subject list
     document.querySelector('.card-info').addEventListener('click', e => {
       const addBtn = e.target.closest('.add-subject');
       if (!addBtn) return;
