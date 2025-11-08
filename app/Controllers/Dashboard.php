@@ -664,7 +664,7 @@ class Dashboard extends Controller
         $subjects = $this->subjectModel->orderBy('id')->findAll();
 
         $users = $this->userModel
-            ->select('id, name, subject, photo') // remove assign_sub
+            ->select('id, name, subject, picture') // remove assign_sub
             ->where('account_status !=', 0)
             ->orderBy('position', 'ASC')
             ->findAll();
