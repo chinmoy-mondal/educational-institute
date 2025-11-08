@@ -31,13 +31,11 @@
                                       : base_url('public/assets/img/default.png') ?>"
                             width="50" height="50" class="rounded-circle">
                         </a>
-
                       </td>
                       <td><?= esc($user['name']) ?></td>
                       <td><?= esc($user['subject']) ?></td>
                       <td class="text-center">
                         <div class="d-flex justify-content-center align-items-center">
-
                           <div style="margin-right:5px;">
                             <a href="#" class="btn btn-sm btn-info edit-btn"
                               data-id="<?= $user['id'] ?>"
@@ -53,20 +51,17 @@
 
                           <div style="margin-right:5px;">
                             <a href="<?= site_url('profile_id/' . $user['id']) ?>"
-                              class="btn btn-sm btn-primary"
-                              title="View Profile">
+                              class="btn btn-sm btn-primary" title="View Profile">
                               <i class="fas fa-user"></i>
                             </a>
                           </div>
 
                           <div>
                             <a href="<?= site_url('assignSubject/' . $user['id']) ?>"
-                              class="btn btn-sm btn-success"
-                              title="Exam">
+                              class="btn btn-sm btn-success" title="Exam">
                               <i class="fas fa-file-alt"></i>
                             </a>
                           </div>
-
                         </div>
                       </td>
                     </tr>
@@ -110,7 +105,7 @@
           </div>
         </div>
 
-        <!-- Subject List Card (below edit form) -->
+        <!-- Subject List Card -->
         <div class="card card-info card-outline shadow mt-3">
           <div class="card-header">
             <h3 class="card-title mb-0"><i class="fas fa-book"></i> Subject List</h3>
@@ -153,22 +148,31 @@
   </div>
 </section>
 
-<!-- JavaScript for dynamic behavior (unchanged) -->
+<!-- JavaScript -->
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+
     // --- When Edit button clicked ---
     document.querySelector('#teacherTable').addEventListener('click', e => {
       const btn = e.target.closest('.edit-btn');
       if (!btn) return;
 
-      // Fill form fields
-      document.getElementById('teacherId').value = btn.dataset.id;
-      document.getElementById('teacherName').value = btn.dataset.name;
-
+      const id = btn.dataset.id;
+      const name = btn.dataset.name;
       const assignSub = btn.dataset.assign_sub || '';
+
+      document.getElementById('teacherId').value = id;
+      document.getElementById('teacherName').value = name;
       const hidden = document.getElementById('subjectIds');
       const list = document.getElementById('selectedSubjectsList');
-      list.innerHTML = ''; // Clear previous subjects
+      list.innerHTML = '';
+
+      // Reset all add buttons
+      document.querySelectorAll('.add-subject').forEach(b => {
+        b.classList.remove('disabled');
+        const icon = b.querySelector('i');
+        if (icon) icon.classList.replace('fa-check', 'fa-plus');
+      });
 
       if (assignSub.trim() !== '') {
         const ids = assignSub.split(',').map(s => s.trim()).filter(Boolean);
@@ -178,6 +182,13 @@
           const subRow = document.querySelector(`.add-subject[data-sid="${id}"]`);
           const sname = subRow ? subRow.dataset.sname : `Subject ID: ${id}`;
           addSubjectToList(id, sname);
+
+          // Disable added subject button
+          if (subRow) {
+            subRow.classList.add('disabled');
+            const icon = subRow.querySelector('i');
+            if (icon) icon.classList.replace('fa-plus', 'fa-check');
+          }
         });
       } else {
         hidden.value = '';
@@ -193,7 +204,6 @@
       if (!addBtn) return;
 
       e.preventDefault();
-
       const sid = addBtn.dataset.sid;
       const sname = addBtn.dataset.sname;
       const hidden = document.getElementById('subjectIds');
@@ -203,20 +213,24 @@
         ids.push(sid);
         hidden.value = ids.join(',');
         addSubjectToList(sid, sname);
+
+        // Disable add button
+        addBtn.classList.add('disabled');
+        addBtn.querySelector('i').classList.replace('fa-plus', 'fa-check');
       }
     });
 
-    // --- Helper function: Add subject item with delete button ---
+    // --- Helper: Add subject item with delete button ---
     function addSubjectToList(id, name) {
       const list = document.getElementById('selectedSubjectsList');
       const li = document.createElement('li');
       li.classList.add('d-flex', 'justify-content-between', 'align-items-center', 'mb-1');
       li.innerHTML = `
-      <span>${name}</span>
-      <button class="btn btn-sm btn-danger remove-subject" data-sid="${id}">
-        <i class="fas fa-times"></i>
-      </button>
-    `;
+        <span>${name}</span>
+        <button class="btn btn-sm btn-danger remove-subject" data-sid="${id}">
+          <i class="fas fa-times"></i>
+        </button>
+      `;
       list.appendChild(li);
     }
 
@@ -232,10 +246,18 @@
       ids = ids.filter(id => id !== sid);
       hidden.value = ids.join(',');
 
+      // Re-enable Add button
+      const addBtn = document.querySelector(`.add-subject[data-sid="${sid}"]`);
+      if (addBtn) {
+        addBtn.classList.remove('disabled');
+        const icon = addBtn.querySelector('i');
+        if (icon) icon.classList.replace('fa-check', 'fa-plus');
+      }
+
       removeBtn.closest('li').remove();
     });
 
-    // Initially hide edit form
+    // Hide edit form initially
     document.getElementById('editForm').style.display = 'none';
   });
 </script>

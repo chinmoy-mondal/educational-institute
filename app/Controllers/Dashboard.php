@@ -662,12 +662,11 @@ class Dashboard extends Controller
     public function teacher_management()
     {
         $subjects = $this->subjectModel->orderBy('id')->findAll();
-        $users    = $this->userModel
+        $users = $this->userModel
             ->where('account_status !=', 0)
             ->orderBy('position', 'ASC')
             ->findAll();
 
-        // Use $this->data which already has navbarItems, sidebarItems
         $this->data['title'] = 'Teacher Management';
         $this->data['activeSection'] = 'teacher';
         $this->data['navbarItems'] = [
