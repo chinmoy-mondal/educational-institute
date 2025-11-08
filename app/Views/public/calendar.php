@@ -95,7 +95,7 @@
                 // Optional: only show if available
                 let details = '';
                 if (category || eventClass) {
-                    details = ` <small style="font-size: 11px; opacity: 0.9;">${category}${category && eventClass ? ' • ' : ''}${eventClass}</small>`;
+                    details = `<small style="font-size: 11px; opacity: 0.9;"> ${category} ${category && eventClass ? ' • ' : ''} ${eventClass}</small>`;
                 }
 
                 const detailEl = document.createElement('div');
