@@ -4,8 +4,7 @@
 <section class="content">
   <div class="container-fluid">
     <div class="row">
-
-      <!-- LEFT COLUMN: Teacher List -->
+      <!-- LEFT COLUMN: Teacher Table -->
       <div class="col-md-6">
         <div class="card card-primary card-outline shadow">
           <div class="card-header d-flex justify-content-between align-items-center">
@@ -27,33 +26,46 @@
                     <tr>
                       <td class="text-center">
                         <a href="<?= base_url('profile_id/' . $user['id']) ?>">
-                          <img src="<?= !empty($user['photo']) ? base_url($user['photo']) : base_url('public/assets/img/default.png') ?>" width="50" height="50" class="rounded-circle">
+                          <img src="<?= !empty($user['picture'])
+                                      ? $user['picture']
+                                      : base_url('public/assets/img/default.png') ?>"
+                            width="50" height="50" class="rounded-circle">
                         </a>
+
                       </td>
                       <td><?= esc($user['name']) ?></td>
-                      <td><?= esc($user['assign_sub_names']) ?></td>
+                      <td><?= esc($user['subject']) ?></td>
                       <td class="text-center">
                         <div class="d-flex justify-content-center align-items-center">
+
                           <div style="margin-right:5px;">
                             <a href="#" class="btn btn-sm btn-info edit-btn"
                               data-id="<?= $user['id'] ?>"
                               data-name="<?= esc($user['name']) ?>"
                               data-subject="<?= esc($user['subject']) ?>"
-                              data-assign_sub="<?= esc($user['assign_sub'] ?? '') ?>"
-                              data-photo="<?= !empty($user['photo']) ? base_url($user['photo']) : base_url('public/assets/img/default.png') ?>">
+                              data-photo="<?= !empty($user['photo'])
+                                            ? base_url($user['photo'])
+                                            : base_url('public/assets/img/default.png') ?>">
                               <i class="fas fa-edit"></i>
                             </a>
                           </div>
+
                           <div style="margin-right:5px;">
-                            <a href="<?= site_url('profile_id/' . $user['id']) ?>" class="btn btn-sm btn-primary" title="View Profile">
+                            <a href="<?= site_url('profile_id/' . $user['id']) ?>"
+                              class="btn btn-sm btn-primary"
+                              title="View Profile">
                               <i class="fas fa-user"></i>
                             </a>
                           </div>
+
                           <div>
-                            <a href="<?= site_url('assignSubject/' . $user['id']) ?>" class="btn btn-sm btn-success" title="Exam">
+                            <a href="<?= site_url('assignSubject/' . $user['id']) ?>"
+                              class="btn btn-sm btn-success"
+                              title="Exam">
                               <i class="fas fa-file-alt"></i>
                             </a>
                           </div>
+
                         </div>
                       </td>
                     </tr>
@@ -65,9 +77,8 @@
         </div>
       </div>
 
-      <!-- RIGHT COLUMN: Edit Form + Subject List -->
+      <!-- RIGHT COLUMN: Edit + Subject List -->
       <div class="col-md-6">
-
         <!-- Edit Teacher Card -->
         <div class="card card-success card-outline shadow">
           <div class="card-header">
@@ -98,7 +109,7 @@
           </div>
         </div>
 
-        <!-- Subject List Card -->
+        <!-- Subject List Card (below edit form) -->
         <div class="card card-info card-outline shadow mt-3">
           <div class="card-header">
             <h3 class="card-title mb-0"><i class="fas fa-book"></i> Subject List</h3>
@@ -136,94 +147,48 @@
             </div>
           </div>
         </div>
-
-      </div>
-    </div>
+      </div> <!-- /col-md-6 -->
+    </div> <!-- /row -->
   </div>
 </section>
 
+<!-- JavaScript for dynamic behavior (unchanged) -->
 <script>
-document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('#teacherTable').addEventListener('click', e => {
+      const btn = e.target.closest('.edit-btn');
+      if (!btn) return;
 
-  // --- When Edit button clicked ---
-  document.querySelector('#teacherTable').addEventListener('click', e => {
-    const btn = e.target.closest('.edit-btn');
-    if (!btn) return;
+      document.getElementById('teacherId').value = btn.dataset.id;
+      document.getElementById('teacherName').value = btn.dataset.name;
+      document.getElementById('subjectIds').value = '';
+      document.getElementById('selectedSubjectsList').innerHTML = '';
+      document.getElementById('editForm').style.display = 'block';
+      document.getElementById('placeholderMsg').style.display = 'none';
+    });
 
-    const teacherId = document.getElementById('teacherId');
-    const teacherName = document.getElementById('teacherName');
-    const hidden = document.getElementById('subjectIds');
-    const list = document.getElementById('selectedSubjectsList');
+    document.querySelector('.card-info').addEventListener('click', e => {
+      const addBtn = e.target.closest('.add-subject');
+      if (!addBtn) return;
 
-    teacherId.value = btn.dataset.id;
-    teacherName.value = btn.dataset.name;
-    list.innerHTML = '';
+      e.preventDefault();
 
-    const assignSub = btn.dataset.assign_sub || '';
-    hidden.value = assignSub;
+      const sid = addBtn.dataset.sid;
+      const sname = addBtn.dataset.sname;
+      const hidden = document.getElementById('subjectIds');
+      let ids = hidden.value ? hidden.value.split(',') : [];
 
-    if (assignSub.trim() !== '') {
-      const ids = assignSub.split(',').map(s => s.trim()).filter(Boolean);
-      ids.forEach(id => {
-        const subRow = document.querySelector(`.add-subject[data-sid="${id}"]`);
-        const sname = subRow ? subRow.dataset.sname : `Subject ID: ${id}`;
-        addSubjectToList(id, sname);
-      });
-    }
+      if (!ids.includes(sid)) {
+        ids.push(sid);
+        hidden.value = ids.join(',');
+        const li = document.createElement('li');
+        li.textContent = sname;
+        document.getElementById('selectedSubjectsList').appendChild(li);
+      }
+    });
 
-    document.getElementById('editForm').style.display = 'block';
-    document.getElementById('placeholderMsg').style.display = 'none';
+    document.getElementById('editForm').style.display = 'none';
   });
-
-  // --- Add Subject button ---
-  document.querySelector('.card-info').addEventListener('click', e => {
-    const addBtn = e.target.closest('.add-subject');
-    if (!addBtn) return;
-
-    e.preventDefault();
-    const sid = addBtn.dataset.sid;
-    const sname = addBtn.dataset.sname;
-    const hidden = document.getElementById('subjectIds');
-    let ids = hidden.value ? hidden.value.split(',') : [];
-
-    if (!ids.includes(sid)) {
-      ids.push(sid);
-      hidden.value = ids.join(',');
-      addSubjectToList(sid, sname);
-    }
-  });
-
-  // --- Remove subject button ---
-  document.getElementById('selectedSubjectsList').addEventListener('click', e => {
-    const removeBtn = e.target.closest('.remove-subject');
-    if (!removeBtn) return;
-
-    const sid = removeBtn.dataset.sid;
-    const hidden = document.getElementById('subjectIds');
-    let ids = hidden.value ? hidden.value.split(',') : [];
-    ids = ids.filter(id => id !== sid);
-    hidden.value = ids.join(',');
-    removeBtn.closest('li').remove();
-  });
-
-  // --- Helper function ---
-  function addSubjectToList(id, name) {
-    const list = document.getElementById('selectedSubjectsList');
-    const li = document.createElement('li');
-    li.classList.add('d-flex', 'justify-content-between', 'align-items-center', 'mb-1');
-    li.innerHTML = `
-      <span>${name}</span>
-      <button class="btn btn-sm btn-danger remove-subject" data-sid="${id}">
-        <i class="fas fa-times"></i>
-      </button>
-    `;
-    list.appendChild(li);
-  }
-
-  // Initially hide edit form
-  document.getElementById('editForm').style.display = 'none';
-
-});
 </script>
 
 <?= $this->endSection() ?>

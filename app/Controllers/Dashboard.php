@@ -662,44 +662,18 @@ class Dashboard extends Controller
     public function teacher_management()
     {
         $subjects = $this->subjectModel->orderBy('id')->findAll();
-
-        $users = $this->userModel
-            ->select('id, name, subject, picture') // remove assign_sub
+        $users    = $this->userModel
             ->where('account_status !=', 0)
             ->orderBy('position', 'ASC')
             ->findAll();
 
-        // Build a map of subject names
-        $subjectMap = [];
-        foreach ($subjects as $sub) {
-            $subjectMap[$sub['id']] = $sub['subject'] . " ({$sub['class']} - {$sub['section']})";
-        }
-
-        // Fetch assigned subjects from pivot table (example: teacher_subjects)
-        $db = \Config\Database::connect();
-        foreach ($users as &$user) {
-            $builder = $db->table('teacher_subjects')->select('subject_id')->where('teacher_id', $user['id']);
-            $assigned = $builder->get()->getResultArray();
-
-            $ids = [];
-            $names = [];
-            foreach ($assigned as $a) {
-                $ids[] = $a['subject_id'];
-                if (isset($subjectMap[$a['subject_id']])) {
-                    $names[] = $subjectMap[$a['subject_id']];
-                }
-            }
-            $user['assign_sub'] = implode(',', $ids);
-            $user['assign_sub_names'] = implode(', ', $names);
-        }
-
+        // Use $this->data which already has navbarItems, sidebarItems
         $this->data['title'] = 'Teacher Management';
         $this->data['activeSection'] = 'teacher';
         $this->data['navbarItems'] = [
             ['label' => 'Teacher List', 'url' => base_url('teacher_management')],
             ['label' => 'Marking Action', 'url' => base_url('marking_open')],
         ];
-
         $this->data['users'] = $users;
         $this->data['subjects'] = $subjects;
 
