@@ -41,7 +41,7 @@
                             <a href="#" class="btn btn-sm btn-info edit-btn"
                               data-id="<?= $user['id'] ?>"
                               data-name="<?= esc($user['name']) ?>"
-                              data-assign_sub="<?= $user['assign_sub'] ?>"
+                              data-assign_sub="<?= $user['assagin_sub'] ?>"
                               data-photo="<?= !empty($user['photo'])
                                             ? base_url($user['photo'])
                                             : base_url('public/assets/img/default.png') ?>">
