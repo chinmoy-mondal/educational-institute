@@ -43,6 +43,7 @@
                               data-id="<?= $user['id'] ?>"
                               data-name="<?= esc($user['name']) ?>"
                               data-subject="<?= esc($user['subject']) ?>"
+                              data-assign_sub="<?= esc($user['assign_sub']) ?>"
                               data-photo="<?= !empty($user['photo'])
                                             ? base_url($user['photo'])
                                             : base_url('public/assets/img/default.png') ?>">
@@ -155,18 +156,38 @@
 <!-- JavaScript for dynamic behavior (unchanged) -->
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    // --- When Edit button clicked ---
     document.querySelector('#teacherTable').addEventListener('click', e => {
       const btn = e.target.closest('.edit-btn');
       if (!btn) return;
 
+      // Fill form fields
       document.getElementById('teacherId').value = btn.dataset.id;
       document.getElementById('teacherName').value = btn.dataset.name;
-      document.getElementById('subjectIds').value = '';
-      document.getElementById('selectedSubjectsList').innerHTML = '';
+
+      const assignSub = btn.dataset.assign_sub || '';
+      const hidden = document.getElementById('subjectIds');
+      const list = document.getElementById('selectedSubjectsList');
+      list.innerHTML = ''; // Clear previous subjects
+
+      if (assignSub.trim() !== '') {
+        const ids = assignSub.split(',').map(s => s.trim()).filter(Boolean);
+        hidden.value = ids.join(',');
+
+        ids.forEach(id => {
+          const subRow = document.querySelector(`.add-subject[data-sid="${id}"]`);
+          const sname = subRow ? subRow.dataset.sname : `Subject ID: ${id}`;
+          addSubjectToList(id, sname);
+        });
+      } else {
+        hidden.value = '';
+      }
+
       document.getElementById('editForm').style.display = 'block';
       document.getElementById('placeholderMsg').style.display = 'none';
     });
 
+    // --- When Add Subject button clicked ---
     document.querySelector('.card-info').addEventListener('click', e => {
       const addBtn = e.target.closest('.add-subject');
       if (!addBtn) return;
@@ -181,12 +202,40 @@
       if (!ids.includes(sid)) {
         ids.push(sid);
         hidden.value = ids.join(',');
-        const li = document.createElement('li');
-        li.textContent = sname;
-        document.getElementById('selectedSubjectsList').appendChild(li);
+        addSubjectToList(sid, sname);
       }
     });
 
+    // --- Helper function: Add subject item with delete button ---
+    function addSubjectToList(id, name) {
+      const list = document.getElementById('selectedSubjectsList');
+      const li = document.createElement('li');
+      li.classList.add('d-flex', 'justify-content-between', 'align-items-center', 'mb-1');
+      li.innerHTML = `
+      <span>${name}</span>
+      <button class="btn btn-sm btn-danger remove-subject" data-sid="${id}">
+        <i class="fas fa-times"></i>
+      </button>
+    `;
+      list.appendChild(li);
+    }
+
+    // --- When ❌ button clicked: remove subject ---
+    document.getElementById('selectedSubjectsList').addEventListener('click', e => {
+      const removeBtn = e.target.closest('.remove-subject');
+      if (!removeBtn) return;
+
+      const sid = removeBtn.dataset.sid;
+      const hidden = document.getElementById('subjectIds');
+      let ids = hidden.value ? hidden.value.split(',') : [];
+
+      ids = ids.filter(id => id !== sid);
+      hidden.value = ids.join(',');
+
+      removeBtn.closest('li').remove();
+    });
+
+    // Initially hide edit form
     document.getElementById('editForm').style.display = 'none';
   });
 </script>
