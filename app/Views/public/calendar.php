@@ -88,7 +88,6 @@
             // 👇 New part: show category + subcategory + class below title
             eventContent: function(arg) {
                 const titleEl = document.createElement('div');
-                titleEl.innerHTML = `<strong>${arg.event.title}</strong>`;
 
                 const category = arg.event.extendedProps.category || '';
                 const subcategory = arg.event.extendedProps.subcategory || '';
