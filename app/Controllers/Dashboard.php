@@ -677,6 +677,11 @@ class Dashboard extends Controller
         $this->data['users'] = $users;
         $this->data['subjects'] = $subjects;
 
+
+        echo "<pre>";
+        print_r(subjects);
+        echo "</pre>";
+
         return view('dashboard/teacher_management', $this->data);
     }
 
