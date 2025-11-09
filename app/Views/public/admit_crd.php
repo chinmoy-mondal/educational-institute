@@ -75,7 +75,34 @@
         .footer-note {
             font-size: 11px;
             margin-top: 6px;
-            text-align: center;
+            text-align: left;
+        }
+
+        .instructions {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .instruction-left {
+            flex: 0 0 30%;
+            text-align: left;
+        }
+
+        .instruction-left h5 {
+            margin: 0;
+            font-size: 13px;
+            text-decoration: underline;
+        }
+
+        .instruction-right {
+            flex: 1;
+        }
+
+        .instruction-right ol {
+            margin: 0;
+            padding-left: 18px;
         }
 
         .sign {
@@ -191,6 +218,7 @@
 
                         <!-- Footer Note -->
                         <div class="footer-note">
+                            <div class="instructions">
                                 <div class="instruction-left">
                                     <h5>পরীক্ষার নির্দেশাবলী:</h5>
                                 </div>
@@ -200,6 +228,7 @@
                                         <li>পরীক্ষা কেন্দ্রে অবশ্যই মূল প্রবেশপত্র সংগে নিয়ে আসতে হব।</li>
                                     </ol>
                                 </div>
+                            </div>
                         </div>
 
                         <!-- Signatures -->
