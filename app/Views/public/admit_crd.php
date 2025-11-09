@@ -192,7 +192,6 @@
                         <!-- Footer Note -->
                         <div class="footer-note">
                             <div style="width: 80%; margin: 0 auto; text-align: left;">
-                                <p style="text-align: left;">পরীক্ষার নির্দেশাবলী:</p>
                                 <ol>
                                     <li>পরীক্ষার দিন নির্ধারিত সময়ের ৩০ মিনিট পূর্বে কেন্দ্রে উপস্থিত থাকতে হবে।</li>
                                     <li>পরীক্ষা কেন্দ্রে অবশ্যই মূল প্রবেশপত্র সংগে নিয়ে আসতে হব।</li>
