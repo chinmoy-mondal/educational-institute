@@ -24,11 +24,11 @@
         .page {
             width: 210mm;
             height: 303mm;
-            padding: 1mm 12mm;
+            padding: 3mm 12mm;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            gap: 1mm;
+            gap: 3mm;
             page-break-after: always;
         }
 
