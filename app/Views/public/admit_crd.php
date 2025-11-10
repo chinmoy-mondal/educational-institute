@@ -23,14 +23,12 @@
 
         .page {
             width: 210mm;
-            height: 297mm;
-            /* A4 */
-            padding: 12mm 12mm;
+            height: 303mm;
+            padding: 1mm 12mm;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            gap: 6mm;
-            /* space between 2 cards */
+            gap: 1mm;
             page-break-after: always;
         }
 
