@@ -2,57 +2,55 @@
 <?= $this->section('content') ?>
 
 <div class="container-fluid">
+    <h3 class="mb-4">Teacher Earnings Dashboard</h3>
 
-    <h3 class="mb-4">Teacher Payment Dashboard</h3>
+    <div class="row">
+        <?php if(!empty($teachers)): ?>
+            <?php foreach($teachers as $t): ?>
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                    <div class="card card-widget widget-user shadow-sm">
+                        <!-- Header / Background -->
+                        <div class="widget-user-header bg-info">
+                            <h5 class="widget-user-username"><?= esc($t['name']) ?></h5>
+                            <h6 class="widget-user-desc"><?= esc($t['designation']) ?> - <?= esc($t['subject']) ?></h6>
+                        </div>
 
-    <!-- Teacher List with Total Earned -->
-    <div class="card">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Teachers Earnings</h5>
-        </div>
-        <div class="card-body p-0">
-            <table class="table table-bordered table-striped mb-0">
-                <thead class="table-dark">
-                    <tr>
-                        <th>#</th>
-                        <th>Name</th>
-                        <th>Designation</th>
-                        <th>Subject</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th>Status</th>
-                        <th>Total Earned</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($teachers)): ?>
-                        <?php $i = 1;
-                        foreach ($teachers as $t): ?>
-                            <tr>
-                                <td><?= $i++ ?></td>
-                                <td><?= esc($t['name']) ?></td>
-                                <td><?= esc($t['designation']) ?></td>
-                                <td><?= esc($t['subject']) ?></td>
-                                <td><?= esc($t['phone']) ?></td>
-                                <td><?= esc($t['email']) ?></td>
-                                <td>
-                                    <?= $t['account_status'] == 1
-                                        ? '<span class="badge bg-success">Active</span>'
-                                        : '<span class="badge bg-danger">Inactive</span>' ?>
-                                </td>
-                                <td><?= number_format($t['total_earned'], 2) ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="8" class="text-center">No teachers found</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
+                        <!-- Profile Image -->
+                        <div class="widget-user-image">
+                            <img class="img-circle elevation-2" 
+                                 src="<?= $t['picture'] ? base_url('uploads/'.$t['picture']) : base_url('assets/img/default-user.png') ?>" 
+                                 alt="Teacher Image">
+                        </div>
+
+                        <div class="card-footer">
+                            <div class="row text-center">
+                                <div class="col-6 border-right">
+                                    <h6>Total Earned</h6>
+                                    <p class="mb-0">$<?= number_format($t['total_earned'], 2) ?></p>
+                                </div>
+                                <div class="col-6">
+                                    <h6>Status</h6>
+                                    <span class="badge <?= $t['account_status']==1 ? 'bg-success' : 'bg-danger' ?>">
+                                        <?= $t['account_status']==1 ? 'Active' : 'Inactive' ?>
+                                    </span>
+                                </div>
+                            </div>
+                            <form method="post" action="<?= base_url('admin/reset_amount/'.$t['id']) ?>" class="mt-3">
+                                <?= csrf_field() ?>
+                                <button type="submit" class="btn btn-danger btn-block">
+                                    Reset Amount
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="col-12 text-center">
+                <p>No teachers found</p>
+            </div>
+        <?php endif; ?>
     </div>
-
 </div>
 
 <?= $this->endSection() ?>

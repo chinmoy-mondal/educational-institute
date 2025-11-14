@@ -2324,7 +2324,7 @@ class Dashboard extends Controller
 
     public function tec_pay()
     {
-        $this->data['title'] = 'Transaction Dashboard';
+        $this->data['title'] = 'Teacher Earnings';
         $this->data['activeSection'] = 'accounts';
 
         $this->data['navbarItems'] = [
@@ -2338,6 +2338,7 @@ class Dashboard extends Controller
         // Load all active teachers
         $teachers = $this->userModel
             ->where('account_status !=', 0)
+            ->where('role', 'teacher')
             ->findAll();
 
         // Calculate total earned for each teacher
@@ -2345,7 +2346,7 @@ class Dashboard extends Controller
             $t['total_earned'] = $this->transactionModel
                 ->selectSum('amount')
                 ->where('receiver_id', $t['id'])
-                ->where('status', 1) // only completed payments
+                ->where('status', 1) // completed payments
                 ->first()['amount'] ?? 0;
         }
 
@@ -2353,6 +2354,16 @@ class Dashboard extends Controller
 
         return view('dashboard/tec_pay', $this->data);
     }
+    public function reset_amount($teacher_id)
+{
+    // Reset (delete) completed transactions for this teacher
+    $this->transactionModel
+        ->where('receiver_id', $teacher_id)
+        ->where('status', 1)
+        ->delete();
+
+    return redirect()->back()->with('success', 'Teacher amount reset successfully.');
+}
 
     public function std_pay()
     {
