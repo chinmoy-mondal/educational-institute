@@ -2329,7 +2329,6 @@ class Dashboard extends Controller
 
         $teachers = $this->userModel
             ->where('account_status !=', 0)
-            ->where('role', 'teacher')
             ->findAll();
 
         foreach ($teachers as &$t) {
@@ -2356,13 +2355,15 @@ class Dashboard extends Controller
 
     public function reset_amount($teacher_id)
     {
-        // Reset (delete) completed transactions for this teacher
+        // Update all unpaid earn transactions for this teacher to mark as paid
         $this->transactionModel
             ->where('receiver_id', $teacher_id)
-            ->where('status', 1)
-            ->delete();
+            ->where('status', 0)      // only earn
+            ->where('activity', 0)    // only not paid
+            ->set(['activity' => 1])
+            ->update();
 
-        return redirect()->back()->with('success', 'Teacher amount reset successfully.');
+        return redirect()->back()->with('success', 'Teacher earnings marked as paid.');
     }
 
     public function std_pay()
