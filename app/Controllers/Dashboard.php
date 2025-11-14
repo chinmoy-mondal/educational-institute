@@ -2327,26 +2327,25 @@ class Dashboard extends Controller
         $this->data['title'] = 'Teacher Earnings';
         $this->data['activeSection'] = 'accounts';
 
-        $this->data['navbarItems'] = [
-            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
-            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
-        ];
-
-        // Load all active teachers
         $teachers = $this->userModel
             ->where('account_status !=', 0)
             ->where('role', 'teacher')
             ->findAll();
 
-        // Calculate total earned for each teacher
         foreach ($teachers as &$t) {
+            // Sum only "earn" transactions (status=0) for this teacher
             $t['total_earned'] = $this->transactionModel
                 ->selectSum('amount')
                 ->where('receiver_id', $t['id'])
-                ->where('status', 1)
+                ->where('status', 0)      // only earn
+                ->first()['amount'] ?? 0;
+
+            // Optional: sum only unpaid
+            $t['unpaid'] = $this->transactionModel
+                ->selectSum('amount')
+                ->where('receiver_id', $t['id'])
+                ->where('status', 0)
+                ->where('activity', 0)   // not paid
                 ->first()['amount'] ?? 0;
         }
 
