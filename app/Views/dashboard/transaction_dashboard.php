@@ -9,50 +9,50 @@
         </div>
     </div>
 
-<!-- ✅ Summary Cards -->
-<div class="row g-3 mb-4">
-    <!-- 💰 Total Earn -->
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0 bg-success bg-opacity-10">
-            <div class="card-body text-center">
-                <h6 class="text-white text-uppercase fw-semibold mb-2">
-                    <i class="fas fa-arrow-up me-1"></i> Total Earn
-                </h6>
-                <h2 class="fw-bold text-white mb-0">
-                    ৳ <?= number_format($totalEarn ?? 0, 2) ?>
-                </h2>
+    <!-- ✅ Summary Cards -->
+    <div class="row g-3 mb-4">
+        <!-- 💰 Total Earn -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 bg-success bg-opacity-10">
+                <div class="card-body text-center">
+                    <h6 class="text-white text-uppercase fw-semibold mb-2">
+                        <i class="fas fa-arrow-up me-1"></i> Total Earn
+                    </h6>
+                    <h2 class="fw-bold text-white mb-0">
+                        ৳ <?= number_format($totalEarn ?? 0, 2) ?>
+                    </h2>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- 💸 Total Cost -->
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0 bg-danger bg-opacity-10">
-            <div class="card-body text-center">
-                <h6 class="text-white text-uppercase fw-semibold mb-2">
-                    <i class="fas fa-arrow-down me-1"></i> Total Cost
-                </h6>
-                <h2 class="fw-bold text-white mb-0">
-                    ৳ <?= number_format($totalCost ?? 0, 2) ?>
-                </h2>
+        <!-- 💸 Total Cost -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 bg-danger bg-opacity-10">
+                <div class="card-body text-center">
+                    <h6 class="text-white text-uppercase fw-semibold mb-2">
+                        <i class="fas fa-arrow-down me-1"></i> Total Cost
+                    </h6>
+                    <h2 class="fw-bold text-white mb-0">
+                        ৳ <?= number_format($totalCost ?? 0, 2) ?>
+                    </h2>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- ⚖️ Net Balance -->
-    <div class="col-md-4">
-        <div class="card shadow-sm border-0 bg-info bg-opacity-10">
-            <div class="card-body text-center">
-                <h6 class="text-info text-white fw-semibold mb-2">
-                    <i class="fas fa-balance-scale me-1"></i> Net Balance
-                </h6>
-                <h2 class="fw-bold text-white mb-0">
-                    ৳ <?= number_format(($totalEarn ?? 0) - ($totalCost ?? 0), 2) ?>
-                </h2>
+        <!-- ⚖️ Net Balance -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 bg-info bg-opacity-10">
+                <div class="card-body text-center">
+                    <h6 class="text-info text-white fw-semibold mb-2">
+                        <i class="fas fa-balance-scale me-1"></i> Net Balance
+                    </h6>
+                    <h2 class="fw-bold text-white mb-0">
+                        ৳ <?= number_format(($totalEarn ?? 0) - ($totalCost ?? 0), 2) ?>
+                    </h2>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <!-- ✅ Charts Row -->
     <div class="row g-4 mb-4">
@@ -103,7 +103,8 @@
                 </thead>
                 <tbody>
                     <?php if (!empty($transactions)): ?>
-                        <?php $i = 1; foreach ($transactions as $t): ?>
+                        <?php $i = 1;
+                        foreach ($transactions as $t): ?>
                             <tr>
                                 <td><?= $i++ ?></td>
                                 <td><?= date('d M Y', strtotime($t['created_at'])) ?></td>
@@ -143,8 +144,7 @@
         type: 'bar',
         data: {
             labels: <?= json_encode($dailyLabels ?? []) ?>,
-            datasets: [
-                {
+            datasets: [{
                     label: 'Earn (৳)',
                     data: <?= json_encode($dailyEarns ?? []) ?>,
                     backgroundColor: 'rgba(25, 135, 84, 0.7)',
@@ -160,10 +160,38 @@
         },
         options: {
             responsive: true,
-            plugins: { legend: { position: 'bottom' } },
+
+            // ⭐ Enable hover tooltip without clicking
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                tooltip: {
+                    enabled: true,
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+
             scales: {
-                x: { title: { display: true, text: 'Date' } },
-                y: { beginAtZero: true, title: { display: true, text: 'Amount (৳)' } }
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Amount (৳)'
+                    }
+                }
             }
         }
     });
@@ -174,8 +202,7 @@
         type: 'line',
         data: {
             labels: <?= json_encode($monthLabels ?? []) ?>,
-            datasets: [
-                {
+            datasets: [{
                     label: 'Earn (৳)',
                     data: <?= json_encode($monthEarns ?? []) ?>,
                     borderColor: 'rgb(25, 135, 84)',
@@ -195,13 +222,48 @@
         },
         options: {
             responsive: true,
-            plugins: { legend: { position: 'bottom' } },
+
+            // ⭐ Enable hover tooltip without clicking
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                tooltip: {
+                    enabled: true,
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+
             scales: {
-                x: { title: { display: true, text: 'Month' } },
-                y: { beginAtZero: true, title: { display: true, text: 'Amount (৳)' } }
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Month'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Amount (৳)'
+                    }
+                }
             }
         }
     });
 </script>
+
+<style>
+    /* ⭐ Ensure card body doesn’t block hover events */
+    .card-body canvas {
+        pointer-events: auto !important;
+    }
+</style>
 
 <?= $this->endSection() ?>
