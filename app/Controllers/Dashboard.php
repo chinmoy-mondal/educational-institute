@@ -2273,7 +2273,7 @@ class Dashboard extends Controller
 
         $this->data['transactions'] = $this->transactionModel->orderBy('created_at', 'DESC')->findAll();
 
-        // ✅ Totals
+        // Totals
         $totalEarnRow = $this->transactionModel->where('status', 0)->selectSum('amount')->get()->getRowArray();
         $totalCostRow = $this->transactionModel->where('status', 1)->selectSum('amount')->get()->getRowArray();
 
@@ -2282,9 +2282,10 @@ class Dashboard extends Controller
 
         $builder = db_connect()->table('transactions');
 
-        // ✅ Current month (daily earn vs cost)
+        // Daily earn vs cost
         $monthStart = date('Y-m-01');
         $monthEnd = date('Y-m-t');
+
         $currentMonthData = $builder
             ->select("
             DATE(created_at) as date,
@@ -2302,7 +2303,7 @@ class Dashboard extends Controller
         $this->data['dailyEarns'] = array_map('floatval', array_column($currentMonthData, 'earn'));
         $this->data['dailyCosts'] = array_map('floatval', array_column($currentMonthData, 'cost'));
 
-        // ✅ 12-month summary (month-wise)
+        // 12-month summary
         $yearData = $builder
             ->select("
             MONTH(created_at) as month,
