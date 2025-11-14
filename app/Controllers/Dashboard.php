@@ -2337,6 +2337,7 @@ class Dashboard extends Controller
                 ->selectSum('amount')
                 ->where('receiver_id', $t['id'])
                 ->where('status', 0)      // only earn
+                ->where('activity', 0)   // not paid
                 ->first()['amount'] ?? 0;
 
             // Optional: sum only unpaid
