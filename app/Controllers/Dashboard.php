@@ -2335,6 +2335,10 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
+        $this->data['users'] = $this->userModel
+            ->where('account_status !=', 0)
+            ->findAll();
+        $this->data['transaction'] = $this->transactionModel->findAll();
         return view('dashboard/tec_pay', $this->data);
     }
 
