@@ -16,22 +16,26 @@
                     <tr>
                         <th>#</th>
                         <th>Name</th>
-                        <th>Mobile</th>
-                        <th>Role</th>
+                        <th>Designation</th>
+                        <th>Subject</th>
+                        <th>Phone</th>
+                        <th>Email</th>
                         <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (!empty($users)): ?>
+                    <?php if (!empty($teachers)): ?>
                         <?php $i = 1;
-                        foreach ($users as $user): ?>
+                        foreach ($teachers as $t): ?>
                             <tr>
                                 <td><?= $i++ ?></td>
-                                <td><?= esc($user['name']) ?></td>
-                                <td><?= esc($user['mobile']) ?></td>
-                                <td><?= esc($user['role']) ?></td>
+                                <td><?= esc($t['name']) ?></td>
+                                <td><?= esc($t['designation']) ?></td>
+                                <td><?= esc($t['subject']) ?></td>
+                                <td><?= esc($t['phone']) ?></td>
+                                <td><?= esc($t['email']) ?></td>
                                 <td>
-                                    <?= $user['account_status'] == 1
+                                    <?= $t['account_status'] == 1
                                         ? '<span class="badge bg-success">Active</span>'
                                         : '<span class="badge bg-danger">Inactive</span>' ?>
                                 </td>
@@ -39,7 +43,7 @@
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="5" class="text-center">No teachers found</td>
+                            <td colspan="7" class="text-center">No teachers found</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -50,34 +54,44 @@
     <!-- Transaction Records -->
     <div class="card">
         <div class="card-header bg-success text-white">
-            <h5 class="mb-0">All Teacher Transactions</h5>
+            <h5 class="mb-0">All Transactions</h5>
         </div>
         <div class="card-body p-0">
             <table class="table table-bordered table-striped mb-0">
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
-                        <th>Teacher ID</th>
+                        <th>Transaction ID</th>
+                        <th>Sender</th>
+                        <th>Receiver</th>
                         <th>Amount</th>
-                        <th>Type</th>
+                        <th>Purpose</th>
+                        <th>Status</th>
                         <th>Date</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (!empty($transaction)): ?>
+                    <?php if (!empty($transactions)): ?>
                         <?php $i = 1;
-                        foreach ($transaction as $t): ?>
+                        foreach ($transactions as $tr): ?>
                             <tr>
                                 <td><?= $i++ ?></td>
-                                <td><?= esc($t['user_id']) ?></td>
-                                <td><?= esc($t['amount']) ?></td>
-                                <td><?= esc($t['type']) ?></td>
-                                <td><?= date('d M Y', strtotime($t['created_at'])) ?></td>
+                                <td><?= esc($tr['transaction_id']) ?></td>
+                                <td><?= esc($tr['sender_name']) ?></td>
+                                <td><?= esc($tr['receiver_name']) ?></td>
+                                <td><?= esc($tr['amount']) ?></td>
+                                <td><?= esc($tr['purpose']) ?></td>
+                                <td>
+                                    <?= $tr['status'] == 1
+                                        ? '<span class="badge bg-success">Completed</span>'
+                                        : '<span class="badge bg-warning">Pending</span>' ?>
+                                </td>
+                                <td><?= date('d M Y', strtotime($tr['created_at'])) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="5" class="text-center">No transactions found</td>
+                            <td colspan="8" class="text-center">No transactions found</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
