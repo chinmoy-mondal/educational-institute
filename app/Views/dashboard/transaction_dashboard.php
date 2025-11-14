@@ -54,10 +54,23 @@
         </div>
     </div>
 
-    <!-- ✅ Charts Row -->
+    <!-- ✅ Today + Month + Year Charts Row -->
     <div class="row g-4 mb-4">
-        <!-- Left: Current Month Chart -->
-        <div class="col-md-6">
+
+        <!-- ⭐ TODAY REPORT -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0">Today's Report (<?= date('d M Y') ?>)</h6>
+                </div>
+                <div class="card-body">
+                    <canvas id="todayChart" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- ⭐ CURRENT MONTH -->
+        <div class="col-md-4">
             <div class="card shadow-sm border-0 rounded-3">
                 <div class="card-header bg-primary text-white">
                     <h6 class="mb-0">Current Month Report (<?= date('F Y') ?>)</h6>
@@ -68,8 +81,8 @@
             </div>
         </div>
 
-        <!-- Right: Yearly Chart -->
-        <div class="col-md-6">
+        <!-- ⭐ YEARLY -->
+        <div class="col-md-4">
             <div class="card shadow-sm border-0 rounded-3">
                 <div class="card-header bg-primary text-white">
                     <h6 class="mb-0">Yearly Summary (<?= date('Y') ?>)</h6>
@@ -79,6 +92,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <!-- ✅ All Transactions Table -->
@@ -135,10 +149,68 @@
     </div>
 </div>
 
-<!-- ✅ Chart.js -->
+<!-- ✅ Chart.js + Tooltip Fix -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // ✅ Daily Chart (Current Month)
+    /* -----------------------------------------------------------
+   ⭐ TODAY'S GRAPH
+----------------------------------------------------------- */
+    const todayCtx = document.getElementById('todayChart').getContext('2d');
+    new Chart(todayCtx, {
+        type: 'bar',
+        data: {
+            labels: <?= json_encode($todayLabels ?? []) ?>,
+            datasets: [{
+                    label: 'Earn (৳)',
+                    data: <?= json_encode($todayEarns ?? []) ?>,
+                    backgroundColor: 'rgba(25, 135, 84, 0.7)',
+                    borderRadius: 6
+                },
+                {
+                    label: 'Cost (৳)',
+                    data: <?= json_encode($todayCosts ?? []) ?>,
+                    backgroundColor: 'rgba(220, 53, 69, 0.7)',
+                    borderRadius: 6
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                tooltip: {
+                    enabled: true,
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Time (Hours)'
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Amount (৳)'
+                    }
+                }
+            }
+        }
+    });
+
+    /* -----------------------------------------------------------
+       ⭐ CURRENT MONTH GRAPH
+    ----------------------------------------------------------- */
     const dailyCtx = document.getElementById('dailyChart').getContext('2d');
     new Chart(dailyCtx, {
         type: 'bar',
@@ -160,13 +232,10 @@
         },
         options: {
             responsive: true,
-
-            // ⭐ Enable hover tooltip without clicking
             interaction: {
                 mode: 'index',
                 intersect: false
             },
-
             plugins: {
                 legend: {
                     position: 'bottom'
@@ -177,7 +246,6 @@
                     intersect: false
                 }
             },
-
             scales: {
                 x: {
                     title: {
@@ -196,7 +264,9 @@
         }
     });
 
-    // ✅ Month-wise Chart (Full Year)
+    /* -----------------------------------------------------------
+       ⭐ YEARLY GRAPH
+    ----------------------------------------------------------- */
     const monthCtx = document.getElementById('monthChart').getContext('2d');
     new Chart(monthCtx, {
         type: 'line',
@@ -222,13 +292,10 @@
         },
         options: {
             responsive: true,
-
-            // ⭐ Enable hover tooltip without clicking
             interaction: {
                 mode: 'index',
                 intersect: false
             },
-
             plugins: {
                 legend: {
                     position: 'bottom'
@@ -239,7 +306,6 @@
                     intersect: false
                 }
             },
-
             scales: {
                 x: {
                     title: {
@@ -260,7 +326,6 @@
 </script>
 
 <style>
-    /* ⭐ Ensure card body doesn’t block hover events */
     .card-body canvas {
         pointer-events: auto !important;
     }
