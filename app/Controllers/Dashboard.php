@@ -2335,10 +2335,22 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        $this->data['users'] = $this->userModel
+        // Load all active teachers
+        $teachers = $this->userModel
             ->where('account_status !=', 0)
             ->findAll();
-        $this->data['transaction'] = $this->transactionModel->findAll();
+
+        // Calculate total earned for each teacher
+        foreach ($teachers as &$t) {
+            $t['total_earned'] = $this->transactionModel
+                ->selectSum('amount')
+                ->where('receiver_id', $t['id'])
+                ->where('status', 1) // only completed payments
+                ->first()['amount'] ?? 0;
+        }
+
+        $this->data['teachers'] = $teachers;
+
         return view('dashboard/tec_pay', $this->data);
     }
 
