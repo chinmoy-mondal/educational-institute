@@ -2324,6 +2324,14 @@ class Dashboard extends Controller
 
     public function tec_pay()
     {
+        $this->data['navbarItems'] = [
+            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+        ];
+
         $this->data['title'] = 'Teacher Earnings';
         $this->data['activeSection'] = 'accounts';
 
