@@ -11,9 +11,6 @@
                     <div class="card shadow-sm">
                         <div class="card-body p-2">
                             <h6 class="card-title mb-1"><?= esc($t['name']) ?></h6>
-                            <p class="text-muted mb-1" style="font-size: 0.75rem;">
-                                <?= esc($t['designation']) ?> - <?= esc($t['subject']) ?>
-                            </p>
                             <p class="mb-2" style="font-size: 0.85rem;">
                                 <strong>Total:</strong> $<?= number_format($t['total_earned'], 2) ?>
                             </p>
