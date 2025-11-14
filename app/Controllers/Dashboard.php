@@ -2327,8 +2327,10 @@ class Dashboard extends Controller
         $this->data['title'] = 'Teacher Earnings';
         $this->data['activeSection'] = 'accounts';
 
+        // Fetch teachers sorted by position
         $teachers = $this->userModel
             ->where('account_status !=', 0)
+            ->orderBy('position', 'ASC') // sort by position ascending
             ->findAll();
 
         foreach ($teachers as &$t) {
@@ -2337,10 +2339,10 @@ class Dashboard extends Controller
                 ->selectSum('amount')
                 ->where('receiver_id', $t['id'])
                 ->where('status', 0)      // only earn
-                ->where('activity', 0)   // not paid
+                ->where('activity', 0)    // not paid
                 ->first()['amount'] ?? 0;
 
-            // Optional: sum only unpaid
+            // Optional: sum only unpaid (same as total_earned if same filter)
             $t['unpaid'] = $this->transactionModel
                 ->selectSum('amount')
                 ->where('receiver_id', $t['id'])
