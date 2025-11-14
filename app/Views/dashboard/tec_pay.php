@@ -5,22 +5,22 @@
     <h3 class="mb-4">Teacher Earnings Dashboard</h3>
 
     <div class="row">
-        <?php if(!empty($teachers)): ?>
-            <?php foreach($teachers as $t): ?>
-                <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
+        <?php if (!empty($teachers)): ?>
+            <?php foreach ($teachers as $t): ?>
+                <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
                     <div class="card shadow-sm">
-                        <div class="card-body p-3">
+                        <div class="card-body p-2">
                             <h6 class="card-title mb-1"><?= esc($t['name']) ?></h6>
-                            <p class="text-muted mb-2" style="font-size: 0.85rem;">
+                            <p class="text-muted mb-1" style="font-size: 0.75rem;">
                                 <?= esc($t['designation']) ?> - <?= esc($t['subject']) ?>
                             </p>
-                            <p class="mb-2">
-                                <strong>Total Earned:</strong> $<?= number_format($t['total_earned'], 2) ?>
+                            <p class="mb-2" style="font-size: 0.85rem;">
+                                <strong>Total:</strong> $<?= number_format($t['total_earned'], 2) ?>
                             </p>
-                            <form method="post" action="<?= base_url('admin/reset_amount/'.$t['id']) ?>">
+                            <form method="post" action="<?= base_url('admin/reset_amount/' . $t['id']) ?>">
                                 <?= csrf_field() ?>
                                 <button type="submit" class="btn btn-sm btn-danger btn-block">
-                                    Reset Amount
+                                    Reset
                                 </button>
                             </form>
                         </div>
