@@ -2282,7 +2282,34 @@ class Dashboard extends Controller
 
         $builder = db_connect()->table('transactions');
 
-        // Daily earn vs cost
+
+        /* -------------------------------------------------------
+       ⭐ TODAY REPORT — HOURLY EARN VS COST
+    ------------------------------------------------------- */
+        $today = date('Y-m-d');
+
+        $todayData = $builder
+            ->select("
+            HOUR(created_at) as hour,
+            SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) as earn,
+            SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) as cost
+        ")
+            ->where('DATE(created_at)', $today)
+            ->groupBy('HOUR(created_at)')
+            ->orderBy('HOUR(created_at)', 'ASC')
+            ->get()
+            ->getResultArray();
+
+        // Hour labels (e.g., 0,1,2...)
+        $this->data['todayLabels'] = array_map(fn($d) => $d['hour'] . ":00", $todayData);
+        $this->data['todayEarns'] = array_map('floatval', array_column($todayData, 'earn'));
+        $this->data['todayCosts'] = array_map('floatval', array_column($todayData, 'cost'));
+
+
+
+        /* -------------------------------------------------------
+       ⭐ CURRENT MONTH DAILY REPORT
+    ------------------------------------------------------- */
         $monthStart = date('Y-m-01');
         $monthEnd = date('Y-m-t');
 
@@ -2303,7 +2330,10 @@ class Dashboard extends Controller
         $this->data['dailyEarns'] = array_map('floatval', array_column($currentMonthData, 'earn'));
         $this->data['dailyCosts'] = array_map('floatval', array_column($currentMonthData, 'cost'));
 
-        // 12-month summary
+
+        /* -------------------------------------------------------
+       ⭐ YEARLY MONTHLY SUMMARY
+    ------------------------------------------------------- */
         $yearData = $builder
             ->select("
             MONTH(created_at) as month,
@@ -2316,7 +2346,11 @@ class Dashboard extends Controller
             ->get()
             ->getResultArray();
 
-        $this->data['monthLabels'] = array_map(fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)), $yearData);
+        $this->data['monthLabels'] = array_map(
+            fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)),
+            $yearData
+        );
+
         $this->data['monthEarns'] = array_map('floatval', array_column($yearData, 'earn'));
         $this->data['monthCosts'] = array_map('floatval', array_column($yearData, 'cost'));
 
