@@ -24,20 +24,21 @@ class CreateUsersTable extends Migration
             'permit_by'      => ['type' => 'BIGINT', 'constraint' => 20, 'unsigned' => true, 'null' => true],
             'religion'       => ['type' => 'VARCHAR', 'constraint' => 100, 'null' => true],
             'blood_group'    => ['type' => 'VARCHAR', 'constraint' => 10, 'null' => true],
-            'mpo_date'       => ['type' => 'DATE', 'null' => true],        // NEW
-            'bio'            => ['type' => 'TEXT', 'null' => true],        // NEW
-            'position'       => ['type' => 'INT', 'constraint' => 11, 'null' => true], // NEW
-            'profile'        => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true], // NEW
-            'created_at'     => ['type' => 'DATETIME', 'null' => true],
-            'updated_at'     => ['type' => 'DATETIME', 'null' => true],
+            'position'       => ['type' => 'INT', 'constraint' => 11, 'null' => true],
+            'bio'            => ['type' => 'TEXT', 'null' => true],
+            'mpo_date'       => ['type' => 'DATE', 'null' => true],
+            'index_number'   => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => true], // NEW
+            'social_profile' => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
+            'created_at'     => ['type' => 'DATETIME', 'null' => false],
+            'updated_at'     => ['type' => 'DATETIME', 'null' => false],
         ]);
 
-        $this->forge->addKey('id', true);
-        $this->forge->createTable('users', true);
+        $this->forge->addKey('id', true); // Primary key
+        $this->forge->createTable('users');
     }
 
     public function down()
     {
-        $this->forge->dropTable('users', true);
+        $this->forge->dropTable('users');
     }
 }
