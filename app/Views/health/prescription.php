@@ -336,9 +336,9 @@
                 ruleInput.style.display = "none !important";
 
                 // hide print-only spans again
-                item.querySelector(".dose-text").classList.add("d-none");
-                item.querySelector(".duration-text").classList.add("d-none");
-                item.querySelector(".rule-text").classList.add("d-none");
+                // item.querySelector(".dose-text").classList.add("d-none");
+                // item.querySelector(".duration-text").classList.add("d-none");
+                // item.querySelector(".rule-text").classList.add("d-none");
             });
         });
     </script>
