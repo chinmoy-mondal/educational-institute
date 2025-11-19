@@ -236,6 +236,7 @@
                             ${durations}
                         </select>
 
+                        <!-- DEFAULT: HIDDEN spans, never show on screen, only on print -->
                         <span class="dose-text d-none ms-2">0 + 0 + 0</span>
                         <span class="duration-text d-none ms-2">0 day</span>
                     </div>
@@ -266,27 +267,12 @@
             const drug = document.getElementById("drug-" + id);
             if (!drug) return;
 
+            // dose / duration inputs
             const doseSelects = drug.querySelectorAll(".dose-select");
             const durationSelect = drug.querySelector(".duration-select");
 
-            const doseVals = Array.from(doseSelects).map(s => s.value);
-
-            const spanDose = drug.querySelector(".dose-text");
-            const spanDur = drug.querySelector(".duration-text");
-
-            // Update Dose text
-            const cleanDose = doseVals.join(" + ");
-            spanDose.innerText = cleanDose;
-            if (cleanDose !== "0 + 0 + 0") spanDose.classList.remove("d-none");
-
-            // Update Duration
-            if (durationSelect.value) {
-                spanDur.innerText = durationSelect.value;
-                spanDur.classList.remove("d-none");
-            } else {
-                spanDur.innerText = "0 day";
-                spanDur.classList.add("d-none");
-            }
+            // Only update **internal state** if needed, DO NOT show spans
+            // span stays hidden until printing
         }
 
         // enter on left inputs to push to lists
@@ -309,59 +295,29 @@
         // BEFORE PRINT: prepare everything to be visible as text
         // -----------------------------
         window.addEventListener("beforeprint", function() {
-            // Patient info: copy to spans and hide inputs
-            const nameInput = document.getElementById("nameInput");
-            const ageInput = document.getElementById("ageInput");
-            const dateInput = document.getElementById("dateInput");
-
-            const nameText = document.getElementById("nameText");
-            const ageText = document.getElementById("ageText");
-            const dateText = document.getElementById("dateText");
-
-            if (nameInput && nameText) {
-                nameText.innerText = nameInput.value || "";
-                nameInput.classList.add("d-none");
-                nameText.classList.remove("d-none");
-            }
-            if (ageInput && ageText) {
-                ageText.innerText = ageInput.value || "";
-                ageInput.classList.add("d-none");
-                ageText.classList.remove("d-none");
-            }
-            if (dateInput && dateText) {
-                // You can format date here if you want. For now keep ISO value.
-                dateText.innerText = dateInput.value || "";
-                dateInput.classList.add("d-none");
-                dateText.classList.remove("d-none");
-            }
-
-            // For each drug: ensure dose/duration text and rule text are set and show them;
-            // hide rule input element so print shows span (CSS also hides inputs on print, but we hide to be safe)
             document.querySelectorAll(".drug-item").forEach(item => {
-
                 // Dose
                 const doseSelects = item.querySelectorAll(".dose-select");
                 const doseSpan = item.querySelector(".dose-text");
-                const doseVals = Array.from(doseSelects).map(s => s.value).join(" + ");
+                const doseVals = Array.from(doseSelects).map(s => s.value || "0").join(" + ");
                 doseSpan.innerText = doseVals;
-                doseSpan.classList.remove("d-none");
 
-                doseSelects.forEach(s => s.style.display = "none");
+                doseSelects.forEach(s => s.style.display = "none"); // hide selects for print
+                doseSpan.classList.remove("d-none"); // show span
 
                 // Duration
-                const dur = item.querySelector(".duration-select");
+                const durSelect = item.querySelector(".duration-select");
                 const durSpan = item.querySelector(".duration-text");
-                durSpan.innerText = dur.value || "0 day";
+                durSpan.innerText = durSelect.value || "0 day";
+                durSelect.style.display = "none"; // hide select for print
                 durSpan.classList.remove("d-none");
-                dur.style.display = "none";
 
                 // Rule
                 const ruleInput = item.querySelector(".rule-input");
                 const ruleSpan = item.querySelector(".rule-text");
-
                 ruleSpan.innerText = ruleInput.value || "";
+                ruleInput.style.display = "none"; // hide input
                 ruleSpan.classList.remove("d-none");
-                ruleInput.style.display = "none";
             });
         });
 
@@ -369,45 +325,20 @@
         // AFTER PRINT: restore editable UI
         // -----------------------------
         window.addEventListener("afterprint", function() {
-            // Restore patient inputs
-            const nameInput = document.getElementById("nameInput");
-            const ageInput = document.getElementById("ageInput");
-            const dateInput = document.getElementById("dateInput");
-            const nameText = document.getElementById("nameText");
-            const ageText = document.getElementById("ageText");
-            const dateText = document.getElementById("dateText");
-
-            if (nameInput && nameText) {
-                nameInput.classList.remove("d-none");
-                nameText.classList.add("d-none");
-            }
-            if (ageInput && ageText) {
-                ageInput.classList.remove("d-none");
-                ageText.classList.add("d-none");
-            }
-            if (dateInput && dateText) {
-                dateInput.classList.remove("d-none");
-                dateText.classList.add("d-none");
-            }
-
-            // Restore rule inputs and hide spans again
             document.querySelectorAll(".drug-item").forEach(item => {
-                const ruleInput = item.querySelector(".rule-input");
-                const ruleSpan = item.querySelector(".rule-text");
-                const doseSpan = item.querySelector(".dose-text");
-                const durSpan = item.querySelector(".duration-text");
+                // restore selects and inputs
                 const doseSelects = item.querySelectorAll(".dose-select");
                 const durSelect = item.querySelector(".duration-select");
+                const ruleInput = item.querySelector(".rule-input");
 
-                // restore input fields
-                ruleInput.style.display = "";
                 doseSelects.forEach(s => s.style.display = "");
                 durSelect.style.display = "";
+                ruleInput.style.display = "";
 
-                // hide spans after print
-                ruleSpan.classList.add("d-none");
-                doseSpan.classList.add("d-none");
-                durSpan.classList.add("d-none");
+                // hide print-only spans again
+                item.querySelector(".dose-text").classList.add("d-none");
+                item.querySelector(".duration-text").classList.add("d-none");
+                item.querySelector(".rule-text").classList.add("d-none");
             });
         });
 
