@@ -339,8 +339,8 @@
                 const ruleInput = item.querySelector(".rule-input");
                 const ruleSpan = item.querySelector(".rule-text");
                 if (ruleInput && ruleSpan) {
-                    ruleSpan.innerText = ruleInput.value.trim();
-                    ruleSpan.classList.toggle("d-none", !ruleInput.value.trim());
+                    ruleSpan.innerText = ruleInput.value.trim(); // can be empty
+                    ruleSpan.classList.remove("d-none"); // always show span for printing
                     ruleInput.style.display = "none";
                 }
             });
