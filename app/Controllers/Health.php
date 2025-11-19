@@ -6,20 +6,11 @@ use App\Models\DrugsModel;
 
 class Health extends BaseController
 {
-    public function prescriptionForm()
+    public function prescription()
     {
-        $drugs = (new DrugsModel())->orderBy('drug_name', 'ASC')->findAll();
+        $drugModel = new DrugsModel();
+        $data['drugs'] = $drugModel->findAll();
 
-        return view('health/prescription', [
-            'drugs' => $drugs
-        ]);
-    }
-
-    public function savePrescription()
-    {
-        // TEMP — print submitted data (you can save later)
-        echo "<pre>";
-        print_r($this->request->getPost());
-        echo "</pre>";
+        return view('health/prescription', $data);
     }
 }
