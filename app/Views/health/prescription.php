@@ -260,7 +260,6 @@
                     e.preventDefault();
                     const val = this.value.trim();
                     if (!val) return;
-                    const type = this.dataset.type;
                     let list = this.nextElementSibling;
                     const li = document.createElement("li");
                     li.innerText = val;
@@ -270,28 +269,28 @@
             });
         });
 
-        // Before print: copy all relevant input/select values to spans
+        // Before print: copy all input/select values to spans
         window.addEventListener("beforeprint", function() {
             // Name, Age, Date
             document.querySelectorAll(".container input.form-control, .container input[type=date]").forEach(input => {
                 const span = input.nextElementSibling;
-                if (span) span.innerText = input.value;
+                span.innerText = input.value;
             });
 
-            // CC, PE, Advice lists: convert input values
+            // CC, PE, Advice lists
             document.querySelectorAll(".line-input").forEach(input => {
-                const nextList = input.nextElementSibling;
-                Array.from(nextList.children).forEach(li => li.style.display = "list-item");
+                const list = input.nextElementSibling;
+                Array.from(list.children).forEach(li => li.style.display = "list-item");
             });
 
-            // Rule fields
+            // Rules
             document.querySelectorAll(".rule-input").forEach(input => {
                 const span = input.nextElementSibling;
                 span.innerText = input.value;
                 span.classList.remove("d-none");
             });
 
-            // Drug fields: dose and duration
+            // Dose & Duration
             document.querySelectorAll(".drug-item").forEach(drug => {
                 const doses = Array.from(drug.querySelectorAll(".dose-select")).map(s => s.value);
                 const duration = drug.querySelector(".duration-select").value;
