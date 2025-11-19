@@ -19,7 +19,6 @@
         .small-text {
             font-size: 12px;
             color: #555;
-            margin-top: -5px;
         }
 
         .rx-box {
@@ -74,7 +73,7 @@
                     <small>Specialist in ...</small>
                 </div>
                 <div class="text-end">
-                    <h5 class="m-0">Your Hospital / Chamber</h5>
+                    <h5 class="m-0">Hospital / Chamber</h5>
                     <small>Address line 1</small><br>
                     <small>Phone: 01XXXXXXXX</small>
                 </div>
@@ -90,7 +89,6 @@
             </div>
 
             <div class="row">
-
                 <!-- LEFT -->
                 <div class="col-md-6">
                     <div class="left-box">
@@ -118,10 +116,8 @@
 
                         <!-- Drug List -->
                         <div id="drugList"></div>
-
                     </div>
                 </div>
-
             </div>
 
             <div class="text-center mt-4 no-print">
@@ -166,25 +162,24 @@
             },
         ];
 
+        // Search drugs
         document.getElementById("searchBox").addEventListener("keyup", function() {
-            let keyword = this.value.toLowerCase();
-            let resultBox = document.getElementById("searchResults");
+            const keyword = this.value.toLowerCase();
+            const resultBox = document.getElementById("searchResults");
 
-            if (keyword.length < 1) {
+            if (!keyword) {
                 resultBox.style.display = "none";
                 return;
             }
 
-            let filtered = drugs.filter(d =>
+            const filtered = drugs.filter(d =>
                 d.name.toLowerCase().includes(keyword) ||
-                d.company.toLowerCase().includes(keyword) ||
                 d.type.toLowerCase().includes(keyword) ||
-                d.group.toLowerCase().includes(keyword)
+                d.group.toLowerCase().includes(keyword) ||
+                d.company.toLowerCase().includes(keyword)
             );
 
-            resultBox.innerHTML = "";
-            filtered.forEach(d => {
-                resultBox.innerHTML += `
+            resultBox.innerHTML = filtered.map(d => `
                 <div class="d-flex justify-content-between border-bottom py-1">
                     <div>
                         <b>${d.name}</b>  
@@ -192,15 +187,15 @@
                         <small class="small-text">${d.company} | ${d.group}</small>
                     </div>
                     <button class="btn btn-sm btn-success" onclick='addDrug(${JSON.stringify(d)})'>Add</button>
-                </div>`;
-            });
+                </div>
+            `).join("");
 
             resultBox.style.display = "block";
         });
 
         function addDrug(d) {
-            let box = document.getElementById("drugList");
-            let id = Date.now();
+            const box = document.getElementById("drugList");
+            const id = Date.now();
 
             box.innerHTML += `
             <div class="drug-item" id="drug-${id}">
@@ -209,24 +204,21 @@
 
                 <div class="mt-1">
                     Dose:
-                    <input class="dose-input form-control form-control-sm d-inline-block" style="width:200px;"
-                           oninput="updateText(${id})">
+                    <input class="dose-input form-control form-control-sm d-inline-block" style="width:200px;" oninput="updateDrug(${id})">
                     <span class="dose-text d-none"></span>
                 </div>
 
                 <div class="mt-1">
                     Duration:
-                    <select multiple class="duration-select form-select form-select-sm d-inline-block" style="width:250px;"
-                            onchange="updateText(${id})">
-                        <option value='1 day'>1 day</option>
-                        <option value='3 days'>3 days</option>
-                        <option value='5 days'>5 days</option>
-                        <option value='7 days'>7 days</option>
-                        <option value='10 days'>10 days</option>
-                        <option value='Custom'>Custom (choose date below)</option>
+                    <select multiple class="duration-select form-select form-select-sm d-inline-block" style="width:250px;" onchange="updateDrug(${id})">
+                        <option value="1 day">1 day</option>
+                        <option value="3 days">3 days</option>
+                        <option value="5 days">5 days</option>
+                        <option value="7 days">7 days</option>
+                        <option value="10 days">10 days</option>
+                        <option value="Custom">Custom Date</option>
                     </select>
-                    <input type="date" class="duration-date form-control form-control-sm d-inline-block mt-1" style="width:150px; display:none;"
-                           onchange="updateText(${id})">
+                    <input type="date" class="duration-date form-control form-control-sm d-inline-block mt-1" style="width:150px; display:none;" onchange="updateDrug(${id})">
                     <span class="duration-text d-none"></span>
                 </div>
 
@@ -234,49 +226,46 @@
             </div>`;
         }
 
-        function updateText(id) {
-            let drug = document.getElementById("drug-" + id);
+        function updateDrug(id) {
+            const drug = document.getElementById("drug-" + id);
+            const doseInput = drug.querySelector(".dose-input");
+            const durationSelect = drug.querySelector(".duration-select");
+            const durationDate = drug.querySelector(".duration-date");
 
-            let doseInput = drug.querySelector(".dose-input");
-            let durationSelect = drug.querySelector(".duration-select");
-            let durationDate = drug.querySelector(".duration-date");
-
-            // Handle custom date visibility
+            // Show/hide custom date
             if ([...durationSelect.selectedOptions].some(o => o.value === "Custom")) {
                 durationDate.style.display = "inline-block";
             } else {
                 durationDate.style.display = "none";
+                durationDate.value = "";
             }
 
-            // Show text if both dose and duration selected
-            let doseVal = doseInput.value.trim();
-            let durationVals = [...durationSelect.selectedOptions].map(o => o.value);
-            if (durationDate.style.display === "inline-block" && durationDate.value) {
-                durationVals.push(durationDate.value);
-            }
+            const doseVal = doseInput.value.trim();
+            let durations = [...durationSelect.selectedOptions].map(o => o.value).filter(v => v !== "Custom");
+            if (durationDate.value) durations.push(durationDate.value);
 
-            if (doseVal && durationVals.length > 0) {
+            // Show text if both dose and duration exist
+            if (doseVal && durations.length > 0) {
                 doseInput.classList.add("d-none");
                 drug.querySelector(".dose-text").innerText = doseVal;
                 drug.querySelector(".dose-text").classList.remove("d-none");
 
                 durationSelect.classList.add("d-none");
                 durationDate.classList.add("d-none");
-                drug.querySelector(".duration-text").innerText = durationVals.join(", ");
+                drug.querySelector(".duration-text").innerText = durations.join(", ");
                 drug.querySelector(".duration-text").classList.remove("d-none");
             } else {
                 doseInput.classList.remove("d-none");
                 drug.querySelector(".dose-text").classList.add("d-none");
 
                 durationSelect.classList.remove("d-none");
-                if (durationSelect.selectedOptions.length > 0 && durationSelect.selectedOptions[0].value === "Custom") {
+                if ([...durationSelect.selectedOptions].some(o => o.value === "Custom") && !durationDate.value) {
                     durationDate.style.display = "inline-block";
                 }
                 drug.querySelector(".duration-text").classList.add("d-none");
             }
         }
     </script>
-
 </body>
 
 </html>
