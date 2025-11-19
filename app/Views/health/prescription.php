@@ -56,7 +56,6 @@
                 display: none !important;
             }
 
-            /* hide Dose label and all selects */
             .dose-label,
             .dose-select,
             .duration-select,
@@ -64,7 +63,6 @@
                 display: none !important;
             }
 
-            /* show text spans */
             .dose-text,
             .duration-text,
             .rule-text,
@@ -162,7 +160,6 @@
     </div>
 
     <script>
-        // server-provided JSON string variable (from your controller)
         let drugs = <?= $drugs_json ?> || [];
 
         const doseOptions = [0, 0.5, 1, 1.5, 2, 3];
@@ -187,14 +184,12 @@
                 searchResults.style.display = "none";
                 return;
             }
-
             const filtered = (drugs || []).filter(d =>
                 (d.drug_name || "").toLowerCase().includes(keyword) ||
                 (d.drug_type || "").toLowerCase().includes(keyword) ||
                 (d.group_name || "").toLowerCase().includes(keyword) ||
                 (d.company || "").toLowerCase().includes(keyword)
             );
-
             searchResults.innerHTML = filtered.length ? filtered.map(d => `
                 <div class="d-flex justify-content-between border-bottom py-1">
                     <div>
@@ -241,7 +236,6 @@
                         </select>
 
                         <span class="dose-text d-none ms-2"></span>
-                        <span class="duration-text d-none ms-2"></span>
                     </div>
 
                     <div class="mt-1 d-flex align-items-center">
@@ -269,31 +263,14 @@
 
             const doseSelects = drug.querySelectorAll(".dose-select");
             const durationSelect = drug.querySelector(".duration-select");
+            const doseSpan = drug.querySelector(".dose-text");
 
-            const doseVals = Array.from(doseSelects).map(s => s.value).filter(v => v && v == "0");
+            const doseVals = Array.from(doseSelects).map(s => s.value || "0");
             const durationVal = durationSelect ? durationSelect.value : "";
 
-            const spanDose = drug.querySelector(".dose-text");
-            const spanDur = drug.querySelector(".duration-text");
-
-            if (spanDose) {
-                if (doseVals.length) {
-                    spanDose.innerText = doseVals.join(" + ");
-                    spanDose.classList.remove("d-none");
-                } else {
-                    spanDose.innerText = "";
-                    spanDose.classList.add("d-none");
-                }
-            }
-
-            if (spanDur) {
-                if (durationVal) {
-                    spanDur.innerText = durationVal;
-                    spanDur.classList.remove("d-none");
-                } else {
-                    spanDur.innerText = "";
-                    spanDur.classList.add("d-none");
-                }
+            if (doseSpan) {
+                doseSpan.innerText = doseVals.join(" + ") + (durationVal ? " ------ " + durationVal : "");
+                doseSpan.classList.remove("d-none");
             }
         }
 
@@ -313,7 +290,6 @@
         });
 
         window.addEventListener("beforeprint", function() {
-            // Patient info
             ["name", "age", "date"].forEach(field => {
                 const input = document.getElementById(field + "Input");
                 const span = document.getElementById(field + "Text");
@@ -324,31 +300,30 @@
                 }
             });
 
-            // Drugs
             document.querySelectorAll(".drug-item").forEach(item => {
-                // doses
-                const doseSelects = item.querySelectorAll(".dose-select");
-                const doseSpan = item.querySelector(".dose-text");
-                const doseVals = Array.from(doseSelects).map(s => s.value).filter(v => v && v !== "0");
-                if (doseSpan) {
-                    doseSpan.innerText = doseVals.join(" / ");
-                    doseSpan.classList.toggle("d-none", doseVals.length === 0);
-                }
+                    const doseSelects = item.querySelectorAll(".dose-select");
+                    const durationSelect = item.querySelector(".duration-select");
+                    const doseSpan = item.querySelector(".dose-text");
+                    const doseVals = Array.from(doseSelects).map(s => s.value || "0");
+                    const durationVal = durationSelect ? durationSelect.value : "";
 
-                // duration
-                const durSelect = item.querySelector(".duration-select");
-                const durSpan = item.querySelector(".duration-text");
-                if (durSpan) {
-                    durSpan.innerText = durSelect ? durSelect.value : "";
-                    durSpan.classList.toggle("d-none", !durSelect || !durSelect.value);
-                }
+                    if (doseSpan) {
+                        doseSpan.innerText = doseVals.join(" + ") + (durationVal ? " ------ " + durationVal : "");
+                        doseSpan.classList.remove("d-none");
+                    }
+
+                    // Hide selects and label
+                    item.querySelectorAll(".dose-select").forEach(s => s.style.display = "none");
+                    const label = item.querySelector(".dose-label");
+                    if (label) label.style.display = "none";
+                    if (durationSelect) durationSelect.style.display = "none");
 
                 // rule
                 const ruleInput = item.querySelector(".rule-input");
                 const ruleSpan = item.querySelector(".rule-text");
                 if (ruleInput && ruleSpan) {
                     ruleSpan.innerText = ruleInput.value.trim();
-                    ruleSpan.classList.toggle("d-none", !ruleInput.value.trim());
+                    ruleSpan.classList.remove("d-none");
                     ruleInput.style.display = "none";
                 }
             });
@@ -366,18 +341,19 @@
 
             document.querySelectorAll(".drug-item").forEach(item => {
                 const doseSelects = item.querySelectorAll(".dose-select");
-                const durSelect = item.querySelector(".duration-select");
+                const durationSelect = item.querySelector(".duration-select");
                 const doseSpan = item.querySelector(".dose-text");
-                const durSpan = item.querySelector(".duration-text");
                 const ruleInput = item.querySelector(".rule-input");
                 const ruleSpan = item.querySelector(".rule-text");
 
-                doseSelects.forEach(s => s.classList.remove("d-none"));
-                if (durSelect) durSelect.classList.remove("d-none");
+                doseSelects.forEach(s => s.style.display = "inline-block");
+                if (durationSelect) durationSelect.style.display = "inline-block";
                 if (doseSpan) doseSpan.classList.add("d-none");
-                if (durSpan) durSpan.classList.add("d-none");
                 if (ruleInput) ruleInput.classList.remove("d-none");
                 if (ruleSpan) ruleSpan.classList.add("d-none");
+
+                const label = item.querySelector(".dose-label");
+                if (label) label.style.display = "inline";
             });
         });
     </script>
