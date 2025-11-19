@@ -402,17 +402,35 @@
                 dateText.classList.add("d-none");
             }
 
-            // Restore rule inputs and hide spans again
+
+            // Drugs: hide selects, show spans
             document.querySelectorAll(".drug-item").forEach(item => {
-                const ruleInput = item.querySelector(".rule-input");
-                const ruleSpan = item.querySelector(".rule-text");
-                if (ruleInput) ruleInput.style.display = ""; // reset
-                if (ruleSpan) ruleSpan.classList.add("d-none");
-                // also hide dose/duration spans (they are shown only for print)
+                const doseSelects = item.querySelectorAll(".dose-select");
+                const durationSelect = item.querySelector(".duration-select");
                 const doseSpan = item.querySelector(".dose-text");
                 const durSpan = item.querySelector(".duration-text");
-                if (doseSpan) doseSpan.classList.add("d-none");
-                if (durSpan) durSpan.classList.add("d-none");
+
+                // Build span text from selects if not empty
+                if (doseSelects.length) {
+                    const doseVals = Array.from(doseSelects).map(s => s.value || "0").join(" + ");
+                    doseSpan.innerText = doseVals;
+                    doseSpan.classList.remove("d-none");
+                    doseSelects.forEach(s => s.classList.add("d-none")); // hide selects
+                }
+                if (durationSelect) {
+                    durSpan.innerText = durationSelect.value || "0 day";
+                    durSpan.classList.remove("d-none");
+                    durationSelect.classList.add("d-none");
+                }
+
+                // Hide rule input and show rule span
+                const ruleInput = item.querySelector(".rule-input");
+                const ruleSpan = item.querySelector(".rule-text");
+                if (ruleInput && ruleSpan) {
+                    ruleSpan.innerText = ruleInput.value;
+                    ruleInput.classList.add("d-none");
+                    ruleSpan.classList.remove("d-none");
+                }
             });
         });
 
