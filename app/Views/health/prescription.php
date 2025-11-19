@@ -88,10 +88,27 @@
             <hr>
 
             <!-- Patient Info -->
+            <!-- Patient Info -->
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <div><b>Name:</b> <input class="form-control form-control-sm d-inline-block print-text" style="width:200px;"></div>
-                <div><b>Age:</b> <input class="form-control form-control-sm d-inline-block print-text" style="width:100px;"></div>
-                <div><b>Date:</b> <input type="date" class="form-control form-control-sm d-inline-block print-text" style="width:150px;"></div>
+
+                <div>
+                    <b>Name:</b>
+                    <input id="nameInput" class="form-control form-control-sm d-inline-block" style="width:200px;">
+                    <span id="nameText" class="d-none"></span>
+                </div>
+
+                <div>
+                    <b>Age:</b>
+                    <input id="ageInput" class="form-control form-control-sm d-inline-block" style="width:100px;">
+                    <span id="ageText" class="d-none"></span>
+                </div>
+
+                <div>
+                    <b>Date:</b>
+                    <input id="dateInput" type="date" class="form-control form-control-sm d-inline-block" style="width:150px;">
+                    <span id="dateText" class="d-none"></span>
+                </div>
+
             </div>
 
             <div class="row">
@@ -138,8 +155,19 @@
 
     <script>
         let drugs = <?= $drugs_json ?>; // From controller JSON
-        const doseOptions = [0.5, 1, 1.5, 2, 3];
-        const durationOptions = ["1 day", "3 days", "5 days", "7 days", "10 days"];
+        const doseOptions = [0, 0.5, 1, 1.5, 2, 3];
+        const durationOptions = [
+            "Continue",
+
+            "1 day", "2 days", "3 days", "4 days", "5 days", "6 days", "7 days",
+            "8 days", "9 days", "10 days", "11 days", "12 days", "13 days", "14 days",
+            "15 days", "16 days", "17 days", "18 days", "19 days", "20 days", "21 days",
+            "22 days", "23 days", "24 days", "25 days", "26 days", "27 days", "28 days",
+            "29 days", "30 days", "31 days",
+
+            "1 month", "2 months", "3 months", "4 months", "5 months", "6 months",
+            "7 months", "8 months", "9 months", "10 months", "11 months", "12 months"
+        ];
 
         // Search drugs
         document.getElementById("searchBox").addEventListener("keyup", function() {
@@ -266,6 +294,45 @@
                     this.value = "";
                 }
             });
+        });
+
+        // Convert Name, Age, Date to text when printing
+        window.addEventListener("beforeprint", function() {
+
+            const nameInput = document.getElementById("nameInput");
+            const ageInput = document.getElementById("ageInput");
+            const dateInput = document.getElementById("dateInput");
+
+            const nameText = document.getElementById("nameText");
+            const ageText = document.getElementById("ageText");
+            const dateText = document.getElementById("dateText");
+
+            nameText.innerText = nameInput.value;
+            ageText.innerText = ageInput.value;
+
+            if (dateInput.value) {
+                dateText.innerText = dateInput.value;
+            }
+
+            // Hide input, show text
+            nameInput.classList.add("d-none");
+            ageInput.classList.add("d-none");
+            dateInput.classList.add("d-none");
+
+            nameText.classList.remove("d-none");
+            ageText.classList.remove("d-none");
+            dateText.classList.remove("d-none");
+        });
+
+        // Bring inputs back after printing
+        window.addEventListener("afterprint", function() {
+            document.getElementById("nameInput").classList.remove("d-none");
+            document.getElementById("ageInput").classList.remove("d-none");
+            document.getElementById("dateInput").classList.remove("d-none");
+
+            document.getElementById("nameText").classList.add("d-none");
+            document.getElementById("ageText").classList.add("d-none");
+            document.getElementById("dateText").classList.add("d-none");
         });
     </script>
 </body>
