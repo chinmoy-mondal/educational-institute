@@ -50,12 +50,14 @@
 
         @media print {
 
+            /* hide real form controls during print */
             input,
             select,
             button {
                 display: none !important;
             }
 
+            /* ensure these spans show in print */
             .dose-text,
             .duration-text,
             .rule-text,
@@ -88,25 +90,24 @@
             <hr>
 
             <!-- Patient Info -->
-            <!-- Patient Info -->
             <div class="d-flex justify-content-between align-items-center mb-3">
 
                 <div>
                     <b>Name:</b>
                     <input id="nameInput" class="form-control form-control-sm d-inline-block" style="width:200px;">
-                    <span id="nameText" class="d-none"></span>
+                    <span id="nameText" class="d-none print-text"></span>
                 </div>
 
                 <div>
                     <b>Age:</b>
                     <input id="ageInput" class="form-control form-control-sm d-inline-block" style="width:100px;">
-                    <span id="ageText" class="d-none"></span>
+                    <span id="ageText" class="d-none print-text"></span>
                 </div>
 
                 <div>
                     <b>Date:</b>
                     <input id="dateInput" type="date" class="form-control form-control-sm d-inline-block" style="width:150px;">
-                    <span id="dateText" class="d-none"></span>
+                    <span id="dateText" class="d-none print-text"></span>
                 </div>
 
             </div>
@@ -154,151 +155,168 @@
     </div>
 
     <script>
-        let drugs = <?= $drugs_json ?>; // From controller JSON
+        // server-provided JSON string variable (from your controller)
+        let drugs = <?= $drugs_json ?> || [];
+
         const doseOptions = [0, 0.5, 1, 1.5, 2, 3];
         const durationOptions = [
             "Continue",
-
             "1 day", "2 days", "3 days", "4 days", "5 days", "6 days", "7 days",
             "8 days", "9 days", "10 days", "11 days", "12 days", "13 days", "14 days",
             "15 days", "16 days", "17 days", "18 days", "19 days", "20 days", "21 days",
             "22 days", "23 days", "24 days", "25 days", "26 days", "27 days", "28 days",
             "29 days", "30 days", "31 days",
-
             "1 month", "2 months", "3 months", "4 months", "5 months", "6 months",
             "7 months", "8 months", "9 months", "10 months", "11 months", "12 months"
         ];
 
-        // Search drugs
-        document.getElementById("searchBox").addEventListener("keyup", function() {
-            const keyword = this.value.toLowerCase();
-            const resultBox = document.getElementById("searchResults");
+        // simple search UI (uses client-side drugs array)
+        const searchBox = document.getElementById("searchBox");
+        const searchResults = document.getElementById("searchResults");
+        const drugList = document.getElementById("drugList");
+
+        searchBox && searchBox.addEventListener("keyup", function() {
+            const keyword = this.value.trim().toLowerCase();
             if (!keyword) {
-                resultBox.style.display = "none";
+                searchResults.style.display = "none";
                 return;
             }
 
-            const filtered = drugs.filter(d =>
-                d.drug_name.toLowerCase().includes(keyword) ||
-                d.drug_type.toLowerCase().includes(keyword) ||
-                d.group_name.toLowerCase().includes(keyword) ||
-                d.company.toLowerCase().includes(keyword)
+            const filtered = (drugs || []).filter(d =>
+                (d.drug_name || "").toLowerCase().includes(keyword) ||
+                (d.drug_type || "").toLowerCase().includes(keyword) ||
+                (d.group_name || "").toLowerCase().includes(keyword) ||
+                (d.company || "").toLowerCase().includes(keyword)
             );
 
-            resultBox.innerHTML = filtered.map(d => `
-        <div class="d-flex justify-content-between border-bottom py-1">
-            <div>
-                <b>${d.drug_name}</b>  
-                <small class="text-muted">(${d.drug_type})</small><br>
-                <small class="small-text">${d.company} | ${d.group_name}</small>
-            </div>
-            <button class="btn btn-sm btn-success" onclick='addDrug(${JSON.stringify(d)})'>Add</button>
-        </div>
-    `).join("");
-            resultBox.style.display = "block";
+            searchResults.innerHTML = filtered.length ? filtered.map(d => `
+                <div class="d-flex justify-content-between border-bottom py-1">
+                    <div>
+                        <b>${escapeHtml(d.drug_name)}</b>
+                        <small class="text-muted">(${escapeHtml(d.drug_type)})</small><br>
+                        <small class="small-text">${escapeHtml(d.company)} | ${escapeHtml(d.group_name)}</small>
+                    </div>
+                    <button class="btn btn-sm btn-success" onclick='addDrug(${JSON.stringify(d)})'>Add</button>
+                </div>
+            `).join('') : '<div class="text-muted">No results found</div>';
+
+            searchResults.style.display = "block";
         });
 
-        // Add drug
-        function addDrug(d) {
-            const box = document.getElementById("drugList");
-            const id = Date.now();
-
-            box.innerHTML += `
-    <div class="drug-item" id="drug-${id}">
-        <b>${d.drug_type}. ${d.drug_name}</b> — ${d.quantity} ${d.unit_type || ''}
-        <div class="small-text">${d.group_name} | ${d.company}</div>
-
-        <div class="mt-1 d-flex align-items-center">
-            <span class="me-2">Dose:</span>
-            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;" onchange="updateDrug(${id})">${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}</select>
-            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;" onchange="updateDrug(${id})">${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}</select>
-            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;" onchange="updateDrug(${id})">${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}</select>
-
-            <select class="duration-select form-select form-select-sm d-inline-block mx-2" style="width:120px;" onchange="updateDrug(${id})">
-                <option value="">Duration</option>
-                ${durationOptions.map(d => `<option value="${d}">${d}</option>`).join('')}
-            </select>
-
-            <span class="dose-text d-none ms-2"></span>
-            <span class="duration-text d-none ms-2"></span>
-        </div>
-
-        <div class="mt-1 d-flex align-items-center">
-            <b>Rule:</b>
-            <input type="text" class="form-control form-control-sm ms-2 w-50 rule-input" placeholder="Enter rule" onkeydown="handleRuleEnter(event, ${id})">
-            <span class="rule-text d-none ms-2"></span>
-        </div>
-    </div>`;
-
-            // Clear search
-            document.getElementById("searchBox").value = "";
-            document.getElementById("searchResults").style.display = "none";
+        // helper to avoid accidental HTML injection when rendering names
+        function escapeHtml(str) {
+            if (!str && str !== 0) return "";
+            return String(str)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#39;');
         }
 
-        // Update drug (dose/duration)
+        // add drug block
+        function addDrug(d) {
+            const id = Date.now();
+            const doses = doseOptions.map(v => `<option value="${v}">${v}</option>`).join('');
+            const durations = durationOptions.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
+
+            drugList.insertAdjacentHTML('beforeend', `
+                <div class="drug-item" id="drug-${id}">
+                    <b>${escapeHtml(d.drug_type)}. ${escapeHtml(d.drug_name)}</b> — ${escapeHtml(d.quantity || "")} ${escapeHtml(d.unit_type || "")}
+                    <div class="small-text">${escapeHtml(d.group_name || "")} | ${escapeHtml(d.company || "")}</div>
+
+                    <div class="mt-1 d-flex align-items-center">
+                        <span class="me-2">Dose:</span>
+                        <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;" onchange="updateDrug(${id})">${doses}</select>
+                        <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;" onchange="updateDrug(${id})">${doses}</select>
+                        <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;" onchange="updateDrug(${id})">${doses}</select>
+
+                        <select class="duration-select form-select form-select-sm d-inline-block mx-2" style="width:140px;" onchange="updateDrug(${id})">
+                            <option value="">Duration</option>
+                            ${durations}
+                        </select>
+
+                        <span class="dose-text d-none ms-2"></span>
+                        <span class="duration-text d-none ms-2"></span>
+                    </div>
+
+                    <div class="mt-1 d-flex align-items-center">
+                        <b>Rule:</b>
+                        <input type="text" class="form-control form-control-sm ms-2 w-50 rule-input" placeholder="Enter rule">
+                        <span class="rule-text d-none ms-2"></span>
+                    </div>
+                </div>
+            `);
+
+            // hide results + clear search box
+            if (searchBox) searchBox.value = "";
+            if (searchResults) searchResults.style.display = "none";
+
+            // attach live-sync listener for the new rule-input so it updates span immediately
+            const drugEl = document.getElementById(`drug-${id}`);
+            const ruleInput = drugEl.querySelector('.rule-input');
+            const ruleSpan = drugEl.querySelector('.rule-text');
+            ruleInput.addEventListener('input', () => {
+                ruleSpan.innerText = ruleInput.value;
+            });
+        }
+
+        // update dose/duration spans for a drug block
         function updateDrug(id) {
             const drug = document.getElementById("drug-" + id);
+            if (!drug) return;
+
             const doseSelects = drug.querySelectorAll(".dose-select");
             const durationSelect = drug.querySelector(".duration-select");
 
-            const doseVals = Array.from(doseSelects).map(s => s.value).filter(v => v);
-            const durationVal = durationSelect.value;
+            const doseVals = Array.from(doseSelects).map(s => s.value).filter(v => v && v !== "0");
+            const durationVal = durationSelect ? durationSelect.value : "";
 
             const spanDose = drug.querySelector(".dose-text");
             const spanDur = drug.querySelector(".duration-text");
 
-            if (doseVals.length === doseSelects.length && durationVal) {
-                spanDose.innerText = doseVals.join(" / ");
-                spanDose.classList.remove("d-none");
-                spanDur.innerText = durationVal;
-                spanDur.classList.remove("d-none");
-            } else {
-                spanDose.classList.add("d-none");
-                spanDur.classList.add("d-none");
+            if (spanDose) {
+                if (doseVals.length) {
+                    spanDose.innerText = doseVals.join(" / ");
+                    spanDose.classList.remove("d-none");
+                } else {
+                    spanDose.innerText = "";
+                    spanDose.classList.add("d-none");
+                }
+            }
+
+            if (spanDur) {
+                if (durationVal) {
+                    spanDur.innerText = durationVal;
+                    spanDur.classList.remove("d-none");
+                } else {
+                    spanDur.innerText = "";
+                    spanDur.classList.add("d-none");
+                }
             }
         }
 
-        // Rule input enter
-        function handleRuleEnter(e, id) {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                const input = e.target;
-                const text = input.value.trim();
-                if (!text) return;
-                const span = document.getElementById("drug-" + id).querySelector(".rule-text");
-                span.innerText = text;
-                span.classList.remove("d-none");
-            }
-        }
-
-        // C/C, P/E, Advice Enter to list
+        // enter on left inputs to push to lists
         document.querySelectorAll(".line-input").forEach(input => {
             input.addEventListener("keydown", function(e) {
                 if (e.key === "Enter") {
                     e.preventDefault();
                     const val = this.value.trim();
                     if (!val) return;
-                    const type = this.dataset.type; // ul or ol
-                    let list;
-                    if (type === "ul") {
-                        list = this.nextElementSibling;
-                        const li = document.createElement("li");
-                        li.innerText = val;
-                        list.appendChild(li);
-                    } else if (type === "ol") {
-                        list = this.nextElementSibling;
-                        const li = document.createElement("li");
-                        li.innerText = val;
-                        list.appendChild(li);
-                    }
+                    const list = this.nextElementSibling;
+                    const li = document.createElement("li");
+                    li.innerText = val;
+                    list.appendChild(li);
                     this.value = "";
                 }
             });
         });
 
-        // Convert Name, Age, Date to text when printing
+        // -----------------------------
+        // BEFORE PRINT: prepare everything to be visible as text
+        // -----------------------------
         window.addEventListener("beforeprint", function() {
-
+            // Patient info: copy to spans and hide inputs
             const nameInput = document.getElementById("nameInput");
             const ageInput = document.getElementById("ageInput");
             const dateInput = document.getElementById("dateInput");
@@ -307,33 +325,100 @@
             const ageText = document.getElementById("ageText");
             const dateText = document.getElementById("dateText");
 
-            nameText.innerText = nameInput.value;
-            ageText.innerText = ageInput.value;
-
-            if (dateInput.value) {
-                dateText.innerText = dateInput.value;
+            if (nameInput && nameText) {
+                nameText.innerText = nameInput.value || "";
+                nameInput.classList.add("d-none");
+                nameText.classList.remove("d-none");
+            }
+            if (ageInput && ageText) {
+                ageText.innerText = ageInput.value || "";
+                ageInput.classList.add("d-none");
+                ageText.classList.remove("d-none");
+            }
+            if (dateInput && dateText) {
+                // You can format date here if you want. For now keep ISO value.
+                dateText.innerText = dateInput.value || "";
+                dateInput.classList.add("d-none");
+                dateText.classList.remove("d-none");
             }
 
-            // Hide input, show text
-            nameInput.classList.add("d-none");
-            ageInput.classList.add("d-none");
-            dateInput.classList.add("d-none");
+            // For each drug: ensure dose/duration text and rule text are set and show them;
+            // hide rule input element so print shows span (CSS also hides inputs on print, but we hide to be safe)
+            document.querySelectorAll(".drug-item").forEach(item => {
+                // doses
+                const doseSelects = item.querySelectorAll(".dose-select");
+                const doseVals = Array.from(doseSelects).map(s => s.value).filter(v => v && v !== "0");
+                const doseSpan = item.querySelector(".dose-text");
+                if (doseSpan) {
+                    doseSpan.innerText = doseVals.length ? doseVals.join(" / ") : "";
+                    if (doseVals.length) doseSpan.classList.remove("d-none");
+                    else doseSpan.classList.add("d-none");
+                }
 
-            nameText.classList.remove("d-none");
-            ageText.classList.remove("d-none");
-            dateText.classList.remove("d-none");
+                // duration
+                const dur = item.querySelector(".duration-select");
+                const durSpan = item.querySelector(".duration-text");
+                if (durSpan) {
+                    durSpan.innerText = dur ? (dur.value || "") : "";
+                    if (dur && dur.value) durSpan.classList.remove("d-none");
+                    else durSpan.classList.add("d-none");
+                }
+
+                // rule
+                const ruleInput = item.querySelector(".rule-input");
+                const ruleSpan = item.querySelector(".rule-text");
+                if (ruleSpan && ruleInput) {
+                    ruleSpan.innerText = ruleInput.value.trim() || "";
+                    if (ruleInput.value.trim()) ruleSpan.classList.remove("d-none");
+                    else ruleSpan.classList.add("d-none");
+                    // ensure input hidden during print preview
+                    ruleInput.style.display = "none";
+                }
+            });
         });
 
-        // Bring inputs back after printing
+        // -----------------------------
+        // AFTER PRINT: restore editable UI
+        // -----------------------------
         window.addEventListener("afterprint", function() {
-            document.getElementById("nameInput").classList.remove("d-none");
-            document.getElementById("ageInput").classList.remove("d-none");
-            document.getElementById("dateInput").classList.remove("d-none");
+            // Restore patient inputs
+            const nameInput = document.getElementById("nameInput");
+            const ageInput = document.getElementById("ageInput");
+            const dateInput = document.getElementById("dateInput");
+            const nameText = document.getElementById("nameText");
+            const ageText = document.getElementById("ageText");
+            const dateText = document.getElementById("dateText");
 
-            document.getElementById("nameText").classList.add("d-none");
-            document.getElementById("ageText").classList.add("d-none");
-            document.getElementById("dateText").classList.add("d-none");
+            if (nameInput && nameText) {
+                nameInput.classList.remove("d-none");
+                nameText.classList.add("d-none");
+            }
+            if (ageInput && ageText) {
+                ageInput.classList.remove("d-none");
+                ageText.classList.add("d-none");
+            }
+            if (dateInput && dateText) {
+                dateInput.classList.remove("d-none");
+                dateText.classList.add("d-none");
+            }
+
+            // Restore rule inputs and hide spans again
+            document.querySelectorAll(".drug-item").forEach(item => {
+                const ruleInput = item.querySelector(".rule-input");
+                const ruleSpan = item.querySelector(".rule-text");
+                if (ruleInput) ruleInput.style.display = ""; // reset
+                if (ruleSpan) ruleSpan.classList.add("d-none");
+                // also hide dose/duration spans (they are shown only for print)
+                const doseSpan = item.querySelector(".dose-text");
+                const durSpan = item.querySelector(".duration-text");
+                if (doseSpan) doseSpan.classList.add("d-none");
+                if (durSpan) durSpan.classList.add("d-none");
+            });
         });
+
+        // Note: For debugging in the console you can manually trigger:
+        // window.dispatchEvent(new Event('beforeprint'));
+        // window.dispatchEvent(new Event('afterprint'));
     </script>
 </body>
 
