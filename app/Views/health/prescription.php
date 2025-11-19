@@ -41,11 +41,8 @@
             margin-bottom: 8px;
         }
 
-        .editable-text {
-            cursor: pointer;
-            border-bottom: 1px dashed #aaa;
-            padding: 2px;
-            display: inline-block;
+        .line-input {
+            margin-bottom: 5px;
         }
 
         @media print {
@@ -108,11 +105,11 @@
                 <div class="col-md-4">
                     <div class="left-box">
                         <h6><b>C/C :</b></h6>
-                        <input class="form-control mb-2 line-input" type="text" data-type="ul">
+                        <input class="form-control line-input" type="text" data-type="ul">
                         <ul class="list-cc"></ul>
 
                         <h6><b>P/E :</b></h6>
-                        <input class="form-control mb-2 line-input" type="text" data-type="ul">
+                        <input class="form-control line-input" type="text" data-type="ul">
                         <ul class="list-pe"></ul>
 
                         <h6><b>Advice :</b></h6>
@@ -146,7 +143,7 @@
     </div>
 
     <script>
-        let drugs = [{
+        const drugs = [{
                 drug_name: "Napa 500",
                 drug_type: "Tablet",
                 quantity: "10 pcs",
@@ -297,7 +294,10 @@
             });
             document.querySelectorAll(".dose-select").forEach(sel => {
                 const span = sel.parentElement.querySelector(".dose-text");
-                if (span) span.innerText = Array.from(sel.parentElement.querySelectorAll(".dose-select")).map(s => s.value).join(" / ");
+                if (span) {
+                    const doses = Array.from(sel.parentElement.querySelectorAll(".dose-select")).map(s => s.value);
+                    span.innerText = doses.join(" / ");
+                }
             });
             document.querySelectorAll(".duration-select").forEach(sel => {
                 const span = sel.parentElement.querySelector(".duration-text");
