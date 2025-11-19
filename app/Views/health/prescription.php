@@ -300,17 +300,21 @@
 
         }
 
-        // Add this JS function (keep your existing line-input keydown logic for desktop)
         function addLine(btn) {
-            const input = btn.previousElementSibling; // get input before the button
+            const input = btn.previousElementSibling; // input before the button
             const val = input.value.trim();
             if (!val) return;
 
-            const list = input.nextElementSibling; // the ul/ol after input
+            // Find the next UL or OL
+            let list = input.nextElementSibling;
+            while (list && !['UL', 'OL'].includes(list.tagName)) {
+                list = list.nextElementSibling;
+            }
+            if (!list) return;
+
             const li = document.createElement("li");
             li.innerText = val;
             list.appendChild(li);
-
             input.value = "";
         }
 
