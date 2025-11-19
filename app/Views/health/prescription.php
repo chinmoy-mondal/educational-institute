@@ -143,155 +143,126 @@
     </div>
 
     <script>
-        const drugs = [{
-                drug_name: "Napa 500",
-                drug_type: "Tablet",
-                quantity: "10 pcs",
-                group_name: "Paracetamol",
-                company: "Beximco"
-            },
-            {
-                drug_name: "Omep 20",
-                drug_type: "Capsule",
-                quantity: "14 pcs",
-                group_name: "Omeprazole",
-                company: "Incepta"
-            },
-            {
-                drug_name: "Histacin",
-                drug_type: "Syrup",
-                quantity: "100 ml",
-                group_name: "Antihistamine",
-                company: "ACME"
-            },
-            {
-                drug_name: "Ace Plus",
-                drug_type: "Tablet",
-                quantity: "10 pcs",
-                group_name: "Paracetamol+Caffeine",
-                company: "Eskayef"
-            },
-        ];
-
+        // =======================
+        // CONFIG OPTIONS
+        // =======================
         const doseOptions = [0.5, 1, 1.5, 2, 3];
         const durationOptions = ["1 day", "3 days", "5 days", "7 days", "10 days"];
 
-        // Drug Search
-        document.getElementById("searchBox").addEventListener("keyup", function() {
-            const keyword = this.value.toLowerCase();
-            const resultBox = document.getElementById("searchResults");
-            if (!keyword) {
-                resultBox.style.display = "none";
-                return;
-            }
+        // =======================
+        // SEARCH BOX
+        // =======================
+        const searchBox = document.getElementById('searchBox');
+        const searchResults = document.getElementById('searchResults');
+        const drugList = document.getElementById('drugList');
 
-            const filtered = drugs.filter(d =>
+        searchBox.addEventListener('input', function() {
+            const keyword = this.value.trim().toLowerCase();
+            if (!keyword) return searchResults.style.display = 'none';
+
+            // Backend should provide 'window.drugs'
+            const filtered = (window.drugs || []).filter(d =>
                 d.drug_name.toLowerCase().includes(keyword) ||
                 d.drug_type.toLowerCase().includes(keyword) ||
                 d.group_name.toLowerCase().includes(keyword) ||
                 d.company.toLowerCase().includes(keyword)
             );
 
-            resultBox.innerHTML = filtered.map(d => `
-        <div class="d-flex justify-content-between border-bottom py-1">
-            <div>
-                <b>${d.drug_name}</b>  
-                <small class="text-muted">(${d.drug_type})</small><br>
-                <small class="small-text">${d.company} | ${d.group_name}</small>
-            </div>
-            <button class="btn btn-sm btn-success" onclick='addDrug(${JSON.stringify(d)})'>Add</button>
-        </div>
-    `).join("");
-            resultBox.style.display = "block";
+            searchResults.innerHTML = filtered.length > 0 ? filtered.map(d => `
+                <div class="d-flex justify-content-between border-bottom py-1">
+                    <div>
+                        <b>${d.drug_name}</b>
+                        <small class="text-muted">(${d.drug_type})</small><br>
+                        <small class="small-text">${d.company} | ${d.group_name}</small>
+                    </div>
+                    <button class="btn btn-sm btn-success" onclick='addDrug(${JSON.stringify(d)})'>Add</button>
+                </div>
+            `).join('') : '<div class="text-muted">No results found</div>';
+
+            searchResults.style.display = 'block';
         });
 
-        // Add Drug
+        // =======================
+        // ADD DRUG
+        // =======================
         function addDrug(d) {
-            const box = document.getElementById("drugList");
             const id = Date.now();
+            const doses = doseOptions.map(v => `<option value="${v}">${v}</option>`).join('');
+            const durations = durationOptions.map(v => `<option value="${v}">${v}</option>`).join('');
 
-            box.innerHTML += `
-    <div class="drug-item" id="drug-${id}">
-        <b>${d.drug_type}. ${d.drug_name}</b> — ${d.quantity}
-        <div class="small-text">${d.group_name} | ${d.company}</div>
+            drugList.insertAdjacentHTML('beforeend', `
+                <div class="drug-item" id="drug-${id}">
+                    <b>${d.drug_type}. ${d.drug_name}</b> — ${d.quantity}
+                    <div class="small-text">${d.group_name} | ${d.company}</div>
 
-        <div class="mt-1 d-flex align-items-center">
-            <span class="me-2">Dose:</span>
-            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;">
-                ${doseOptions.map(v => `<option value="${v}">${v}</option>`).join('')}
-            </select>
-            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;">
-                ${doseOptions.map(v => `<option value="${v}">${v}</option>`).join('')}
-            </select>
-            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;">
-                ${doseOptions.map(v => `<option value="${v}">${v}</option>`).join('')}
-            </select>
+                    <div class="mt-1 d-flex align-items-center">
+                        <span class="me-2">Dose:</span>
+                        <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;">${doses}</select>
+                        <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;">${doses}</select>
+                        <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;">${doses}</select>
 
-            <select class="duration-select form-select form-select-sm d-inline-block mx-2" style="width:120px;">
-                <option value="">Duration</option>
-                ${durationOptions.map(d => `<option value="${d}">${d}</option>`).join('')}
-            </select>
+                        <select class="duration-select form-select form-select-sm d-inline-block mx-2" style="width:120px;">
+                            <option value="">Duration</option>
+                            ${durations}
+                        </select>
 
-            <span class="dose-text d-none ms-2"></span>
-            <span class="duration-text d-none ms-2"></span>
-        </div>
+                        <span class="dose-text d-none ms-2"></span>
+                        <span class="duration-text d-none ms-2"></span>
+                    </div>
 
-        <div class="mt-1 d-flex align-items-center">
-            <b>Rule:</b>
-            <input type="text" class="form-control form-control-sm ms-2 w-50 rule-input">
-            <span class="rule-text d-none ms-2"></span>
-        </div>
-    </div>`;
+                    <div class="mt-1 d-flex align-items-center">
+                        <b>Rule:</b>
+                        <input type="text" class="form-control form-control-sm ms-2 w-50 rule-input">
+                        <span class="rule-text d-none ms-2"></span>
+                    </div>
+                </div>
+            `);
 
-            // Clear search
-            document.getElementById("searchBox").value = "";
-            document.getElementById("searchResults").style.display = "none";
+            searchBox.value = '';
+            searchResults.style.display = 'none';
         }
 
-        // Enter to add C/C, P/E, Advice
-        document.querySelectorAll(".line-input").forEach(input => {
-            input.addEventListener("keydown", function(e) {
-                if (e.key === "Enter") {
+        // =======================
+        // C/C, P/E, Advice ENTER
+        // =======================
+        document.querySelectorAll('.line-input').forEach(input => {
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
                     e.preventDefault();
                     const val = this.value.trim();
                     if (!val) return;
-                    const type = this.dataset.type;
-                    let list = this.nextElementSibling;
-                    const li = document.createElement("li");
+                    const list = this.nextElementSibling;
+                    const li = document.createElement(list.tagName.toLowerCase() === 'ul' ? 'li' : 'li');
                     li.innerText = val;
                     list.appendChild(li);
-                    this.value = "";
+                    this.value = '';
                 }
             });
         });
 
-        // Before print: copy all relevant input/select values to spans
-        window.addEventListener("beforeprint", function() {
-            // Name, Age, Date
+        // =======================
+        // BEFORE PRINT
+        // =======================
+        window.addEventListener('beforeprint', function() {
+            // Patient info
             document.querySelectorAll(".container input.form-control, .container input[type=date]").forEach(input => {
                 const span = input.nextElementSibling;
                 if (span) span.innerText = input.value;
             });
 
-            // Rule fields
-            document.querySelectorAll(".rule-input").forEach(input => {
-                const span = input.nextElementSibling;
-                if (span) span.innerText = input.value;
-            });
-
-            // Drug fields: dose and duration
+            // Drug dose, duration, rule
             document.querySelectorAll(".drug-item").forEach(drug => {
                 const doses = Array.from(drug.querySelectorAll(".dose-select")).map(s => s.value);
+                drug.querySelector(".dose-text").innerText = doses.join(" / ");
+                drug.querySelector(".dose-text").classList.remove("d-none");
+
                 const duration = drug.querySelector(".duration-select").value;
+                drug.querySelector(".duration-text").innerText = duration;
+                drug.querySelector(".duration-text").classList.remove("d-none");
 
-                const doseText = drug.querySelector(".dose-text");
-                const durText = drug.querySelector(".duration-text");
-
-                doseText.innerText = doses.join(" / ");
-                durText.innerText = duration;
-
-                doseText.classList.remove("d-none");
-                durText.classList.remove("d-none");
+                const rule = drug.querySelector(".rule-input").value;
+                drug.querySelector(".rule-text").innerText = rule;
+                drug.querySelector(".rule-text").classList.remove("d-none");
             });
         });
     </script>
