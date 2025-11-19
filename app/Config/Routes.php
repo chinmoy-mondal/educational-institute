@@ -155,8 +155,7 @@ $routes->get('public-calendar/events', 'PublicCalendar::events');
 $routes->match(['get', 'post'], 'admin/attendance/calendar', 'Dashboard::attendanceCalendar');
 $routes->post('admin/attendance/save', 'Dashboard::saveAttendance');
 
-$routes->get('health/prescription', 'Health::prescriptionForm');
-$routes->post('health/prescription/save', 'Health::savePrescription');
+$routes->get('prescription', 'Health::prescription');
 
 $routes->set404Override(function () {
     $controller = new \App\Controllers\ErrorController();
