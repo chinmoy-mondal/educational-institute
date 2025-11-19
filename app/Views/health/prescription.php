@@ -1,172 +1,179 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+    <meta charset="UTF-8">
     <title>Digital Prescription</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         body {
-            background: #f2f6fc;
-            font-family: "Segoe UI", sans-serif;
+            background: #e8f5e9;
+            font-family: "SolaimanLipi", sans-serif;
             padding: 20px;
         }
 
-        .prescription-box {
+        .pad-container {
+            width: 850px;
             margin: auto;
             background: white;
-            width: 1000px;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid #dcdcdc;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
         }
 
-        .header {
+        /* Header style */
+        .pad-header {
+            background: #f3eacb;
+            padding: 20px;
+            border-bottom: 3px solid #c5a66a;
             text-align: center;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
         }
 
-        .header .name {
-            font-size: 28px;
-            font-weight: 700;
-        }
-
-        .header .degree {
-            font-size: 14px;
-        }
-
-        .columns {
-            display: flex;
-            gap: 30px;
-        }
-
-        .left-column {
-            flex: 1;
-        }
-
-        .right-column {
-            flex: 1;
-            background: #f9f9f9;
-            padding: 15px;
-            border-radius: 10px;
-        }
-
-        .section-title {
-            font-weight: 600;
-            margin-top: 15px;
-            margin-bottom: 5px;
-            border-left: 4px solid #007bff;
-            padding-left: 8px;
-        }
-
-        input,
-        textarea,
-        select {
-            width: 100%;
-            padding: 7px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-        }
-
-        .rx-symbol {
-            font-size: 50px;
+        .pad-header h2 {
+            color: #b30000;
             font-weight: bold;
-            color: #007bff;
+            margin-bottom: 5px;
+        }
+
+        .pad-header h4 {
+            font-size: 18px;
+            font-weight: bold;
+            color: #b30000;
+        }
+
+        .pad-header small {
+            font-size: 13px;
+            color: #444;
+        }
+
+        /* Columns */
+        .left-box {
+            background: linear-gradient(to bottom, #dfffe4, #c3f2cd);
+            min-height: 600px;
+            padding: 15px;
+            border-right: 2px solid #ddd;
+        }
+
+        .right-box {
+            background: white;
+            min-height: 600px;
+            padding: 15px;
+            background-image: url('https://i.imgur.com/Zq8YQbK.png');
+            /* Stethoscope watermark */
+            background-size: 250px;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.95;
+        }
+
+        .rx {
+            font-size: 48px;
+            font-weight: 900;
+            color: #cc0000;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            background: #b7e7bc;
+            padding: 10px;
             text-align: center;
+            font-size: 14px;
+            border-top: 2px solid #9ccd9c;
         }
 
         .drug-box {
             padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #dcdcdc;
             background: #fafafa;
+            border-left: 4px solid green;
+            border-radius: 6px;
             margin-bottom: 10px;
         }
 
-        button {
-            padding: 10px 20px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 5px;
-        }
-
-        .footer-note {
-            font-size: 13px;
-            color: #777;
-            text-align: center;
-            margin-top: 20px;
+        textarea {
+            resize: none;
         }
     </style>
 </head>
 
 <body>
-    <div class="prescription-box">
 
-        <div class="header">
-            <div class="name">Dr. John Doe</div>
-            <div class="degree">MBBS, FCPS (Medicine)</div>
-            <div class="degree">Consultant - General Physician</div>
+    <div class="pad-container">
+
+        <!-- HEADER -->
+        <div class="pad-header">
+            <h2>ডাঃ মোছাঃ মিনা</h2>
+            <small>এম বি বি এস (ঢাকা মেডিকেল কলেজ)</small><br>
+            <small>এম সি পি এস (মেডিসিন)</small><br>
+            <small>মেডিসিন, ডায়াবেটিস, থাইরয়েড, কার্ডিওলজি বিশেষজ্ঞ</small><br>
+            <small>রংপুর হাসপাতাল, বি এস এস রোড</small>
+
+            <hr>
+
+            <h4>DR. MST. RIMA</h4>
+            <small>MBBS (DMC), FCPS (Medicine)</small><br>
+            <small>Consultant – Internal Medicine, Endocrinology</small><br>
             <small>Reg No: 123456</small>
         </div>
 
-        <div class="columns">
-            <!-- LEFT SIDE: Patient info + CC + PE + Advice -->
-            <div class="left-column">
-                <div>
-                    <label>Patient Name</label>
-                    <input type="text">
+        <!-- BODY -->
+        <div class="row g-0">
 
-                    <label>Age</label>
-                    <input type="text">
+            <!-- LEFT COLUMN -->
+            <div class="col-4 left-box">
+                <label class="fw-bold">নাম</label>
+                <input type="text" class="form-control mb-2">
 
-                    <label>Date</label>
-                    <input type="date">
-                </div>
+                <label class="fw-bold">বয়স</label>
+                <input type="text" class="form-control mb-2">
 
-                <div class="section-title">Chief Complaint (C/C)</div>
-                <textarea rows="3"></textarea>
+                <label class="fw-bold">তারিখ</label>
+                <input type="date" class="form-control mb-3">
 
-                <div class="section-title">On Examination (P/E)</div>
-                <textarea rows="3"></textarea>
+                <label class="fw-bold">C/C (Chief Complaint)</label>
+                <textarea rows="4" class="form-control mb-3"></textarea>
 
-                <div class="section-title">Advice</div>
-                <textarea rows="3"></textarea>
+                <label class="fw-bold">P/E (On Examination)</label>
+                <textarea rows="4" class="form-control mb-3"></textarea>
+
+                <label class="fw-bold">Advice</label>
+                <textarea rows="4" class="form-control mb-3"></textarea>
             </div>
 
-            <!-- RIGHT SIDE: RX / Medicines -->
-            <div class="right-column">
-                <div class="rx-symbol">℞</div>
-                <h3 style="text-align:center; margin-top:5px;">Prescription</h3>
+            <!-- RIGHT COLUMN -->
+            <div class="col-8 right-box">
+
+                <div class="rx">℞</div>
 
                 <div id="drug-list">
+
                     <div class="drug-box">
-                        <label>Medicine</label>
-                        <select>
+                        <label class="fw-bold">Medicine</label>
+                        <select class="form-select mb-2">
                             <option value="">Select Drug</option>
                             <?php foreach ($drugs as $d): ?>
                                 <option><?= $d['drug_name'] ?> (<?= $d['quantity'] ?> <?= $d['unit_type'] ?>)</option>
                             <?php endforeach; ?>
                         </select>
 
-                        <label>Dose</label>
-                        <input type="text" placeholder="1+0+1">
+                        <label class="fw-bold">Dose</label>
+                        <input type="text" class="form-control mb-2" placeholder="1+0+1">
 
-                        <label>Duration</label>
-                        <input type="text" placeholder="5 days">
+                        <label class="fw-bold">Duration</label>
+                        <input type="text" class="form-control mb-2" placeholder="5 days">
                     </div>
+
                 </div>
 
-                <button onclick="addDrug()">+ Add Drug</button>
+                <button onclick="addDrug()" class="btn btn-success mt-1">+ Add More Medicine</button>
+
             </div>
         </div>
 
-        <div class="footer-note">
-            ** This is a computer-generated prescription. Signature not required. **
+        <!-- FOOTER -->
+        <div class="footer">
+            তারিখ/ফলোআপঃ _______________________
         </div>
 
     </div>
@@ -174,21 +181,22 @@
     <script>
         function addDrug() {
             let html = `
-        <div class="drug-box">
-            <label>Medicine</label>
-            <select>
-                <option value="">Select Drug</option>
-                <?php foreach ($drugs as $d): ?>
-                    <option><?= $d['drug_name'] ?> (<?= $d['quantity'] ?> <?= $d['unit_type'] ?>)</option>
-                <?php endforeach; ?>
-            </select>
+            <div class="drug-box">
+                <label class="fw-bold">Medicine</label>
+                <select class="form-select mb-2">
+                    <option value="">Select Drug</option>
+                    <?php foreach ($drugs as $d): ?>
+                        <option><?= $d['drug_name'] ?> (<?= $d['quantity'] ?> <?= $d['unit_type'] ?>)</option>
+                    <?php endforeach; ?>
+                </select>
 
-            <label>Dose</label>
-            <input type="text" placeholder="1+0+1">
+                <label class="fw-bold">Dose</label>
+                <input type="text" class="form-control mb-2" placeholder="1+0+1">
 
-            <label>Duration</label>
-            <input type="text" placeholder="5 days">
-        </div>`;
+                <label class="fw-bold">Duration</label>
+                <input type="text" class="form-control mb-2" placeholder="5 days">
+            </div>
+            `;
             document.getElementById('drug-list').insertAdjacentHTML('beforeend', html);
         }
     </script>
