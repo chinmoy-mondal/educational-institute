@@ -53,10 +53,24 @@
                 display: none !important;
             }
 
+            .print-text,
             .dose-text,
             .duration-text,
             .rule-text,
-            .print-text {
+            .list-cc li,
+            .list-pe li,
+            .list-advice li {
+                display: inline !important;
+            }
+
+            .list-cc,
+            .list-pe,
+            .list-advice {
+                padding-left: 0;
+                margin-bottom: 0;
+            }
+
+            .drug-item .small-text {
                 display: inline !important;
             }
         }
@@ -193,15 +207,15 @@
             );
 
             resultBox.innerHTML = filtered.map(d => `
-        <div class="d-flex justify-content-between border-bottom py-1">
-            <div>
-                <b>${d.drug_name}</b>  
-                <small class="text-muted">(${d.drug_type})</small><br>
-                <small class="small-text">${d.company} | ${d.group_name}</small>
-            </div>
-            <button class="btn btn-sm btn-success" onclick='addDrug(${JSON.stringify(d)})'>Add</button>
-        </div>
-    `).join("");
+                <div class="d-flex justify-content-between border-bottom py-1">
+                    <div>
+                        <b>${d.drug_name}</b>  
+                        <small class="text-muted">(${d.drug_type})</small><br>
+                        <small class="small-text">${d.company} | ${d.group_name}</small>
+                    </div>
+                    <button class="btn btn-sm btn-success" onclick='addDrug(${JSON.stringify(d)})'>Add</button>
+                </div>
+            `).join("");
             resultBox.style.display = "block";
         });
 
@@ -211,39 +225,30 @@
             const id = Date.now();
 
             box.innerHTML += `
-    <div class="drug-item" id="drug-${id}">
-        <b>${d.drug_type}. ${d.drug_name}</b> — ${d.quantity}
-        <div class="small-text">${d.group_name} | ${d.company}</div>
+                <div class="drug-item" id="drug-${id}">
+                    <b>${d.drug_type}. ${d.drug_name}</b> — ${d.quantity}
+                    <div class="small-text">${d.group_name} | ${d.company}</div>
 
-        <div class="mt-1 d-flex align-items-center">
-            <span class="me-2">Dose:</span>
-            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;">
-                ${doseOptions.map(v => `<option value="${v}">${v}</option>`).join('')}
-            </select>
-            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;">
-                ${doseOptions.map(v => `<option value="${v}">${v}</option>`).join('')}
-            </select>
-            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;">
-                ${doseOptions.map(v => `<option value="${v}">${v}</option>`).join('')}
-            </select>
+                    <div class="mt-1 d-flex align-items-center">
+                        <span class="me-2">Dose:</span>
+                        ${doseOptions.map(v => `<select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;"><option value="${v}">${v}</option></select>`).join('')}
+                        <select class="duration-select form-select form-select-sm d-inline-block mx-2" style="width:120px;">
+                            <option value="">Duration</option>
+                            ${durationOptions.map(d => `<option value="${d}">${d}</option>`).join('')}
+                        </select>
 
-            <select class="duration-select form-select form-select-sm d-inline-block mx-2" style="width:120px;">
-                <option value="">Duration</option>
-                ${durationOptions.map(d => `<option value="${d}">${d}</option>`).join('')}
-            </select>
+                        <span class="dose-text d-none ms-2"></span>
+                        <span class="duration-text d-none ms-2"></span>
+                    </div>
 
-            <span class="dose-text d-none ms-2"></span>
-            <span class="duration-text d-none ms-2"></span>
-        </div>
+                    <div class="mt-1 d-flex align-items-center">
+                        <b>Rule:</b>
+                        <input type="text" class="form-control form-control-sm ms-2 w-50 rule-input">
+                        <span class="rule-text d-none ms-2"></span>
+                    </div>
+                </div>
+            `;
 
-        <div class="mt-1 d-flex align-items-center">
-            <b>Rule:</b>
-            <input type="text" class="form-control form-control-sm ms-2 w-50 rule-input">
-            <span class="rule-text d-none ms-2"></span>
-        </div>
-    </div>`;
-
-            // Clear search
             document.getElementById("searchBox").value = "";
             document.getElementById("searchResults").style.display = "none";
         }
@@ -273,10 +278,17 @@
                 if (span) span.innerText = input.value;
             });
 
+            // CC, PE, Advice lists: convert input values
+            document.querySelectorAll(".line-input").forEach(input => {
+                const nextList = input.nextElementSibling;
+                Array.from(nextList.children).forEach(li => li.style.display = "list-item");
+            });
+
             // Rule fields
             document.querySelectorAll(".rule-input").forEach(input => {
                 const span = input.nextElementSibling;
-                if (span) span.innerText = input.value;
+                span.innerText = input.value;
+                span.classList.remove("d-none");
             });
 
             // Drug fields: dose and duration
