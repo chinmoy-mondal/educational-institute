@@ -3,109 +3,116 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Prescription Pad</title>
+    <title>Digital Prescription</title>
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
         body {
             background: #e8f5e9;
-            font-family: "SolaimanLipi", sans-serif;
             padding: 20px;
+            font-family: "Segoe UI", sans-serif;
         }
 
         .pad-container {
             width: 900px;
             margin: auto;
             background: white;
-            border: 1px solid #c9c9c9;
-            box-shadow: 0 0 14px rgba(0, 0, 0, 0.12);
+            border-radius: 8px;
+            padding: 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
         }
 
-        /* HEADER */
         .pad-header {
-            background: #f6ebcd;
-            padding: 20px 30px;
-            border-bottom: 3px solid #c5a66a;
+            background: #f7e9c0;
+            padding: 20px;
+            border-bottom: 2px solid #7b1fa2;
         }
 
-        .header-left {
-            width: 50%;
+        .doctor-left {
+            width: 55%;
             float: left;
         }
 
-        .header-right {
-            width: 50%;
+        .doctor-right {
+            width: 45%;
             float: right;
             text-align: right;
         }
 
-        .header-left h2,
-        .header-right h2 {
-            font-weight: bold;
-            color: #b30000;
-            margin-bottom: 5px;
+        .clear {
+            clear: both;
         }
 
-        /* PATIENT NAV BAR */
-        .patient-nav {
-            background: #def7e5;
-            padding: 10px 20px;
-            border-bottom: 2px solid #b5deb8;
+        .section-left {
+            padding: 15px;
+            width: 45%;
+            min-height: 450px;
+            background: #e2f7e1;
+        }
+
+        .section-right {
+            padding: 15px;
+            width: 55%;
+            border-left: 2px solid #ccc;
+            min-height: 450px;
+        }
+
+        .flex-box {
             display: flex;
-            gap: 20px;
-            align-items: center;
+            width: 100%;
         }
 
-        .patient-nav label {
+        .rx-symbol {
+            font-size: 55px;
             font-weight: bold;
-            margin-right: 5px;
+            color: #7b1fa2;
         }
 
-        /* BODY */
-        .left-box {
-            background: linear-gradient(to bottom, #dfffe4, #c3f2cd);
-            min-height: 600px;
-            padding: 15px;
-            border-right: 2px solid #ddd;
+        .drug-item {
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #888;
         }
 
-        .right-box {
-            background: white;
-            min-height: 600px;
-            padding: 15px;
-            background-size: 220px;
-            background-repeat: no-repeat;
-            background-position: center;
-            opacity: 0.98;
+        .drug-type {
+            font-weight: 700;
         }
 
-        .rx {
-            font-size: 48px;
-            font-weight: 900;
-            color: #cc0000;
-            margin-bottom: 10px;
+        .group-name {
+            font-size: 11px;
+            color: #777;
         }
 
-        /* DRUG CONTAINER */
-        .drug-box {
-            padding: 10px;
-            background: #f9f9f9;
-            border-left: 4px solid green;
-            border-radius: 6px;
-            margin-bottom: 10px;
-        }
+        /* Print Style */
+        @media print {
 
-        .footer {
-            background: #b7e7bc;
-            padding: 10px;
-            text-align: center;
-            border-top: 2px solid #9ccd9c;
-        }
+            input,
+            textarea {
+                border: none !important;
+                outline: none !important;
+            }
 
-        textarea {
-            resize: none;
+            button,
+            .search-box {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+            }
+
+            .pad-container {
+                box-shadow: none;
+                width: 100%;
+                margin: 0;
+            }
+
+            .section-left,
+            .section-right {
+                min-height: 400px;
+            }
         }
     </style>
 </head>
@@ -115,131 +122,132 @@
     <div class="pad-container">
 
         <!-- HEADER -->
-        <div class="pad-header clearfix">
-            <!-- LEFT -->
-            <div class="header-left">
-                <h2>ডাঃ মোছাঃ মিনা</h2>
-                <small>এম বি বি এস (ঢাকা মেডিকেল কলেজ)</small><br>
-                <small>এম সি পি এস (মেডিসিন)</small><br>
-                <small>মেডিসিন, ডায়াবেটিস, কার্ডিওলজি বিশেষজ্ঞ</small><br>
-                <small>রংপুর হাসপাতাল, বি এস এস রোড</small>
+        <div class="pad-header">
+            <div class="doctor-left">
+                <h3 class="text-danger fw-bold">ডাঃ মোছাঃ রিমা</h3>
+                <div>MBBS (RMC)</div>
+                <div>MCPS (Internal Medicine)</div>
+                <div>FCPS (Medicine)</div>
+                <div>Consultant - Medicine</div>
+                <div class="mt-2">Rangpur Medical College Hospital</div>
             </div>
 
-            <!-- RIGHT -->
-            <div class="header-right">
-                <h2>DR. MST. RIMA</h2>
-                <small>MBBS (DMC), FCPS (Medicine)</small><br>
-                <small>Consultant – Internal Medicine</small><br>
-                <small>Reg No: 123456</small>
+            <div class="doctor-right">
+                <div><b>Reg No:</b> 12345</div>
+                <div><b>Chamber:</b> Modern Diagnostic Center</div>
+                <div><b>Time:</b> 4 PM – 9 PM</div>
             </div>
+
+            <div class="clear"></div>
+
+            <hr>
+
+            <!-- Patient Info -->
+            <div class="d-flex">
+                <div class="me-3">
+                    <label>নামঃ</label>
+                    <input type="text" class="form-control form-control-sm">
+                </div>
+
+                <div class="me-3">
+                    <label>বয়সঃ</label>
+                    <input type="text" class="form-control form-control-sm">
+                </div>
+
+                <div>
+                    <label>তারিখঃ</label>
+                    <input type="date" class="form-control form-control-sm">
+                </div>
+            </div>
+
         </div>
 
-        <!-- PATIENT NAV BAR -->
-        <div class="patient-nav">
-            <div>
-                <label>নাম:</label>
-                <input type="text" class="form-control form-control-sm" style="width:180px;">
-            </div>
+        <div class="flex-box">
 
-            <div>
-                <label>বয়স:</label>
-                <input type="text" class="form-control form-control-sm" style="width:100px;">
-            </div>
-
-            <div>
-                <label>তারিখ:</label>
-                <input type="date" class="form-control form-control-sm" style="width:150px;">
-            </div>
-        </div>
-
-        <!-- BODY -->
-        <div class="row g-0">
-
-            <!-- LEFT COLUMN -->
-            <div class="col-4 left-box">
-                <label class="fw-bold">C/C</label>
+            <!-- LEFT SIDE (C/C, P/E, Advice) -->
+            <div class="section-left">
+                <b>C/C (Chief Complain)</b>
                 <textarea rows="4" class="form-control mb-3"></textarea>
 
-                <label class="fw-bold">P/E</label>
+                <b>P/E (On Examination)</b>
                 <textarea rows="4" class="form-control mb-3"></textarea>
 
-                <label class="fw-bold">Advice</label>
-                <textarea rows="4" class="form-control mb-3"></textarea>
+                <b>Advice</b>
+                <textarea rows="4" class="form-control"></textarea>
             </div>
 
-            <!-- RIGHT COLUMN -->
-            <div class="col-8 right-box">
-                <div class="rx">℞</div>
+            <!-- RIGHT SIDE (Prescription) -->
+            <div class="section-right">
 
-                <!-- SEARCH BOX -->
-                <input type="text" id="searchDrug" class="form-control mb-3" placeholder="Search medicine...">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="rx-symbol">℞</div>
 
-                <div id="drug-list">
-                    <!-- Default drug row -->
-                    <div class="drug-box">
-                        <label class="fw-bold">Medicine</label>
-                        <select class="form-select drug-select mb-2">
-                            <option value="">Select Drug</option>
-                            <?php foreach ($drugs as $d): ?>
-                                <option><?= $d['drug_name'] ?> (<?= $d['quantity'] ?> <?= $d['unit_type'] ?>)</option>
-                            <?php endforeach; ?>
-                        </select>
-
-                        <label class="fw-bold">Dose</label>
-                        <input type="text" class="form-control mb-2" placeholder="1+0+1">
-
-                        <label class="fw-bold">Duration</label>
-                        <input type="text" class="form-control mb-2" placeholder="5 days">
+                    <div class="search-box">
+                        <input id="searchDrug" type="text" class="form-control" placeholder="Search drug...">
+                        <div id="searchResults" class="list-group mt-1"></div>
                     </div>
                 </div>
 
-                <button onclick="addDrug()" class="btn btn-success mt-1">+ Add Another Medicine</button>
-            </div>
-        </div>
+                <div id="drugList"></div>
 
-        <!-- FOOTER -->
-        <div class="footer">
-            Follow-up date: ______________________
+            </div>
+
         </div>
 
     </div>
 
-
-    <!-- JS SCRIPT -->
     <script>
-        // Add new medicine box
-        function addDrug() {
-            let html = `
-        <div class="drug-box">
-            <label class="fw-bold">Medicine</label>
-            <select class="form-select drug-select mb-2">
-                <option value="">Select Drug</option>
-                <?php foreach ($drugs as $d): ?>
-                    <option><?= $d['drug_name'] ?> (<?= $d['quantity'] ?> <?= $d['unit_type'] ?>)</option>
-                <?php endforeach; ?>
-            </select>
+        let drugs = <?php echo json_encode($drugs); ?>;
+        let count = 1;
 
-            <label class="fw-bold">Dose</label>
-            <input type="text" class="form-control mb-2" placeholder="1+0+1">
+        document.getElementById("searchDrug").addEventListener("keyup", function() {
+            let keyword = this.value.toLowerCase();
+            let resultsDiv = document.getElementById("searchResults");
+            resultsDiv.innerHTML = "";
 
-            <label class="fw-bold">Duration</label>
-            <input type="text" class="form-control mb-2" placeholder="5 days">
-        </div>`;
-            document.getElementById('drug-list').insertAdjacentHTML('beforeend', html);
-        }
+            if (keyword.length < 1) return;
 
-        // Search drug (live)
-        document.getElementById('searchDrug').addEventListener('keyup', function() {
-            let filter = this.value.toLowerCase();
-            let selects = document.querySelectorAll('.drug-select');
+            drugs.forEach(d => {
+                if (d.drug_name.toLowerCase().includes(keyword)) {
 
-            selects.forEach(function(sel) {
-                for (let i = 0; i < sel.options.length; i++) {
-                    let txt = sel.options[i].text.toLowerCase();
-                    sel.options[i].style.display = txt.includes(filter) ? "" : "none";
+                    resultsDiv.innerHTML += `
+                        <div class="list-group-item d-flex justify-content-between">
+                            <div>
+                                <b>${d.drug_name}</b> (${d.quantity} ${d.unit_type})
+                                <br><small>${d.group_name}</small>
+                            </div>
+                            <button class="btn btn-sm btn-success" onclick='addDrug(${JSON.stringify(d)})'>Add</button>
+                        </div>`;
                 }
             });
         });
+
+        function addDrug(d) {
+            let html = `
+                <div class="drug-item">
+                    <div><b>${count}. ${d.drug_type}. ${d.drug_name} ${d.quantity}${d.unit_type}</b></div>
+                    <div class="group-name">${d.group_name}</div>
+
+                    <div class="d-flex mt-1">
+                        <div class="me-2">
+                            Dose:
+                            <input type="text" class="form-control form-control-sm" placeholder="1+1+1">
+                        </div>
+
+                        <div>
+                            Duration:
+                            <input type="text" class="form-control form-control-sm" placeholder="5 days">
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById("drugList").insertAdjacentHTML("beforeend", html);
+            count++;
+
+            document.getElementById("searchDrug").value = "";
+            document.getElementById("searchResults").innerHTML = "";
+        }
     </script>
 
 </body>
