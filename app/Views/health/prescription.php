@@ -339,7 +339,7 @@
                 const durSelect = item.querySelector(".duration-select");
                 const durSpan = item.querySelector(".duration-text");
                 if (durSpan) {
-                    durSpan.innerText = durSelect ? durSelect.value : "";
+                    durSpan.innerText = durSelect ? "  .......  " + durSelect.value : "";
                     durSpan.classList.toggle("d-none", false); // always show if printing
                 }
 
