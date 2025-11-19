@@ -1,15 +1,20 @@
 <?php
-namespace App\Controllers;
+namespace App\Models;
 
-use App\Models\DrugsModel;
+use CodeIgniter\Model;
 
-class Health extends BaseController
+class DrugsModel extends Model
 {
-    public function prescription()
-    {
-        $drugModel = new DrugsModel();
-        $data['drugs'] = $drugModel->findAll();
+    protected $table = 'drugs';
+    protected $primaryKey = 'id';
 
-        return view('health/prescription', $data);
-    }
+    protected $allowedFields = [
+        'company',
+        'drug_name',
+        'drug_type',
+        'group_name',
+        'price',
+        'quantity',
+        'unit_type'
+    ];
 }
