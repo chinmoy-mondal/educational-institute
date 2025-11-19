@@ -270,7 +270,7 @@
             const doseSelects = drug.querySelectorAll(".dose-select");
             const durationSelect = drug.querySelector(".duration-select");
 
-            const doseVals = Array.from(doseSelects).map(s => s.value).filter(v => v && v !== "0");
+            const doseVals = Array.from(doseSelects).map(s => s.value).filter(v => v && v == "0");
             const durationVal = durationSelect ? durationSelect.value : "";
 
             const spanDose = drug.querySelector(".dose-text");
