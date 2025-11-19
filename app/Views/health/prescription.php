@@ -329,10 +329,10 @@
                 // doses
                 const doseSelects = item.querySelectorAll(".dose-select");
                 const doseSpan = item.querySelector(".dose-text");
-                const doseVals = Array.from(doseSelects).map(s => s.value).filter(v => v && v !== "0");
                 if (doseSpan) {
-                    doseSpan.innerText = doseVals.join(" / ");
-                    doseSpan.classList.toggle("d-none", doseVals.length === 0);
+                    const doseVals = Array.from(doseSelects).map(s => s.value || 0);
+                    doseSpan.innerText = doseVals.join(" + "); // e.g., 1 + 0 + 1
+                    doseSpan.classList.toggle("d-none", false); // always show if printing
                 }
 
                 // duration
@@ -340,7 +340,7 @@
                 const durSpan = item.querySelector(".duration-text");
                 if (durSpan) {
                     durSpan.innerText = durSelect ? durSelect.value : "";
-                    durSpan.classList.toggle("d-none", !durSelect || !durSelect.value);
+                    durSpan.classList.toggle("d-none", false); // always show if printing
                 }
 
                 // rule
