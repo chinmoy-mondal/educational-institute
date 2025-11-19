@@ -276,25 +276,7 @@
             const spanDose = drug.querySelector(".dose-text");
             const spanDur = drug.querySelector(".duration-text");
 
-            if (spanDose) {
-                if (doseVals.length) {
-                    spanDose.innerText = doseVals.join(" + ");
-                    spanDose.classList.remove("d-none");
-                } else {
-                    spanDose.innerText = "";
-                    spanDose.classList.add("d-none");
-                }
-            }
 
-            if (spanDur) {
-                if (durationVal) {
-                    spanDur.innerText = durationVal;
-                    spanDur.classList.remove("d-none");
-                } else {
-                    spanDur.innerText = "";
-                    spanDur.classList.add("d-none");
-                }
-            }
         }
 
         document.querySelectorAll(".line-input").forEach(input => {
