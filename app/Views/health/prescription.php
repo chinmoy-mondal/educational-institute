@@ -3,6 +3,7 @@
 
 <head>
     <title>Prescription</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -48,21 +49,6 @@
             display: inline-block;
         }
 
-        /* hide Add button on desktop (width >= 769px) */
-        @media (min-width: 769px) {
-            .add-btn-phone {
-                display: none !important;
-            }
-        }
-
-        /* show Add button on mobile (width < 769px) */
-        @media (max-width: 768px) {
-            .add-btn-phone {
-                display: inline-block;
-                margin-top: 4px;
-            }
-        }
-
         @media print {
 
             input,
@@ -71,7 +57,6 @@
                 display: none !important;
             }
 
-            /* hide Dose label and all selects */
             .dose-label,
             .dose-select,
             .duration-select,
@@ -79,12 +64,26 @@
                 display: none !important;
             }
 
-            /* show text spans */
             .dose-text,
             .duration-text,
             .rule-text,
             .print-text {
                 display: inline !important;
+            }
+        }
+
+        /* Mobile-specific: show Add button */
+        @media (max-width: 768px) {
+            .add-btn-phone {
+                display: inline-block;
+                margin-top: 4px;
+            }
+        }
+
+        /* Desktop: hide Add button */
+        @media (min-width: 769px) {
+            .add-btn-phone {
+                display: none !important;
             }
         }
     </style>
