@@ -48,6 +48,14 @@
             display: inline-block;
         }
 
+        /* Add this to your existing <style> */
+        @media (max-width: 768px) {
+            .add-btn-phone {
+                display: inline-block;
+                margin-top: 4px;
+            }
+        }
+
         @media print {
 
             input,
@@ -120,19 +128,22 @@
             </div>
 
             <div class="row">
-                <!-- LEFT: 4 columns -->
+                <!-- LEFT BOX: C/C, P/E, Advice -->
                 <div class="col-md-4">
                     <div class="left-box">
                         <h6><b>C/C :</b></h6>
-                        <input class="form-control mb-2 line-input" type="text" data-type="ul">
+                        <input class="form-control mb-1 line-input" type="text" data-type="ul">
+                        <button type="button" class="btn btn-sm btn-primary add-btn-phone" onclick="addLine(this)">Add</button>
                         <ul class="list-cc"></ul>
 
                         <h6><b>P/E :</b></h6>
-                        <input class="form-control mb-2 line-input" type="text" data-type="ul">
+                        <input class="form-control mb-1 line-input" type="text" data-type="ul">
+                        <button type="button" class="btn btn-sm btn-primary add-btn-phone" onclick="addLine(this)">Add</button>
                         <ul class="list-pe"></ul>
 
                         <h6><b>Advice :</b></h6>
-                        <input class="form-control line-input" type="text" data-type="ol">
+                        <input class="form-control mb-1 line-input" type="text" data-type="ol">
+                        <button type="button" class="btn btn-sm btn-primary add-btn-phone" onclick="addLine(this)">Add</button>
                         <ol class="list-advice"></ol>
                     </div>
                 </div>
@@ -289,13 +300,28 @@
 
         }
 
+        // Add this JS function (keep your existing line-input keydown logic for desktop)
+        function addLine(btn) {
+            const input = btn.previousElementSibling; // get input before the button
+            const val = input.value.trim();
+            if (!val) return;
+
+            const list = input.nextElementSibling; // the ul/ol after input
+            const li = document.createElement("li");
+            li.innerText = val;
+            list.appendChild(li);
+
+            input.value = "";
+        }
+
+        // Optional: keep your Enter / '*' key logic for desktop
         document.querySelectorAll(".line-input").forEach(input => {
             input.addEventListener("keydown", function(e) {
                 if (e.key === "Enter" || e.key === "*") {
                     e.preventDefault();
                     const val = this.value.trim();
                     if (!val) return;
-                    const list = this.nextElementSibling;
+                    const list = this.nextElementSibling.nextElementSibling; // skip Add button
                     const li = document.createElement("li");
                     li.innerText = val;
                     list.appendChild(li);
