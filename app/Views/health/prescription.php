@@ -325,22 +325,51 @@
         // AFTER PRINT: restore editable UI
         // -----------------------------
         window.addEventListener("afterprint", function() {
+            // Restore patient inputs
+            const nameInput = document.getElementById("nameInput");
+            const ageInput = document.getElementById("ageInput");
+            const dateInput = document.getElementById("dateInput");
+            const nameText = document.getElementById("nameText");
+            const ageText = document.getElementById("ageText");
+            const dateText = document.getElementById("dateText");
+
+            if (nameInput && nameText) {
+                nameInput.classList.remove("d-none");
+                nameText.classList.add("d-none");
+            }
+            if (ageInput && ageText) {
+                ageInput.classList.remove("d-none");
+                ageText.classList.add("d-none");
+            }
+            if (dateInput && dateText) {
+                dateInput.classList.remove("d-none");
+                dateText.classList.add("d-none");
+            }
+
+            // Restore rule inputs and hide spans again
             document.querySelectorAll(".drug-item").forEach(item => {
-                // restore selects and inputs
+                const ruleInput = item.querySelector(".rule-input");
+                const ruleSpan = item.querySelector(".rule-text");
+                const doseSpan = item.querySelector(".dose-text");
+                const durSpan = item.querySelector(".duration-text");
                 const doseSelects = item.querySelectorAll(".dose-select");
                 const durSelect = item.querySelector(".duration-select");
-                const ruleInput = item.querySelector(".rule-input");
 
-                doseSelects.forEach(s => s.style.display = "none !important");
-                durSelect.style.display = "none !important";
-                ruleInput.style.display = "none !important";
+                // restore input fields
+                ruleInput.classList.remove("d-none");
+                doseSelects.forEach(s => s.classList.remove("d-none"));
+                durSelect.classList.remove("d-none");
 
-                // hide print-only spans again
-                item.querySelector(".dose-text").classList.add("d-none");
-                item.querySelector(".duration-text").classList.add("d-none");
-                item.querySelector(".rule-text").classList.add("d-none");
+                // hide spans after print
+                ruleSpan.classList.add("d-none");
+                doseSpan.classList.add("d-none");
+                durSpan.classList.add("d-none");
             });
         });
+
+        // Note: For debugging in the console you can manually trigger:
+        // window.dispatchEvent(new Event('beforeprint'));
+        // window.dispatchEvent(new Event('afterprint'));
     </script>
 </body>
 
