@@ -48,7 +48,14 @@
             display: inline-block;
         }
 
-        /* Add this to your existing <style> */
+        /* hide Add button on desktop (width >= 769px) */
+        @media (min-width: 769px) {
+            .add-btn-phone {
+                display: none !important;
+            }
+        }
+
+        /* show Add button on mobile (width < 769px) */
         @media (max-width: 768px) {
             .add-btn-phone {
                 display: inline-block;
