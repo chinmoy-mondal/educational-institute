@@ -53,7 +53,8 @@
             }
 
             .dose-text,
-            .duration-text {
+            .duration-text,
+            .rule-text {
                 display: inline !important;
             }
         }
@@ -128,7 +129,7 @@
     </div>
 
     <script>
-        let drugs = <?= $drugs_json ?>; // From controller
+        let drugs = <?= $drugs_json ?>; // Pass all drugs from controller as JSON
 
         const doseOptions = [0.5, 1, 1.5, 2, 3];
         const durationOptions = ["1 day", "3 days", "5 days", "7 days", "10 days"];
@@ -172,22 +173,23 @@
 
         <div class="mt-1 d-flex align-items-center">
             <span class="me-2">Dose:</span>
-            ${doseOptions.map(_ => `
-                <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;" onchange="updateDrug(${id})">
-                    <option value="">-</option>
-                    ${doseOptions.map(v => `<option value="${v}">${v}</option>`).join('')}
-                </select>
-            `).join('')}
-            
+            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;" onchange="updateDrug(${id})">${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}</select>
+            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;" onchange="updateDrug(${id})">${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}</select>
+            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;" onchange="updateDrug(${id})">${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}</select>
+
             <select class="duration-select form-select form-select-sm d-inline-block mx-2" style="width:120px;" onchange="updateDrug(${id})">
                 <option value="">Duration</option>
                 ${durationOptions.map(d => `<option value="${d}">${d}</option>`).join('')}
             </select>
+
             <span class="dose-text d-none ms-2"></span>
             <span class="duration-text d-none ms-2"></span>
         </div>
 
-        <div class="mt-1"><b>Rule:</b> ${d.rule || ''}</div>
+        <div class="mt-1 d-flex align-items-center">
+            <b>Rule:</b>
+            <input type="text" class="form-control form-control-sm ms-2 w-50" placeholder="Enter rule">
+        </div>
     </div>`;
         }
 
