@@ -331,14 +331,19 @@
                 const durSelect = item.querySelector(".duration-select");
                 const ruleInput = item.querySelector(".rule-input");
 
-                doseSelects.forEach(s => s.style.display = "none !important");
-                durSelect.style.display = "none !important";
-                ruleInput.style.display = "none !important";
+                // Remove d-none to show inputs again
+                doseSelects.forEach(s => s.classList.remove("d-none"));
+                durSelect.classList.remove("d-none");
+                ruleInput.classList.remove("d-none");
 
-                // hide print-only spans again
-                // item.querySelector(".dose-text").classList.add("d-none");
-                // item.querySelector(".duration-text").classList.add("d-none");
-                // item.querySelector(".rule-text").classList.add("d-none");
+                // Hide print-only spans again
+                const doseSpan = item.querySelector(".dose-text");
+                const durSpan = item.querySelector(".duration-text");
+                const ruleSpan = item.querySelector(".rule-text");
+
+                if (doseSpan) doseSpan.classList.add("d-none");
+                if (durSpan) durSpan.classList.add("d-none");
+                if (ruleSpan) ruleSpan.classList.add("d-none");
             });
         });
     </script>
