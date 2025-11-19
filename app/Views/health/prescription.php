@@ -331,9 +331,9 @@
                 const durSelect = item.querySelector(".duration-select");
                 const ruleInput = item.querySelector(".rule-input");
 
-                doseSelects.forEach(s => s.style.display = "");
-                durSelect.style.display = "";
-                ruleInput.style.display = "";
+                doseSelects.forEach(s => s.style.display = "none !important");
+                durSelect.style.display = "none !important";
+                ruleInput.style.display = "none !important";
 
                 // hide print-only spans again
                 item.querySelector(".dose-text").classList.add("d-none");
@@ -341,10 +341,6 @@
                 item.querySelector(".rule-text").classList.add("d-none");
             });
         });
-
-        // Note: For debugging in the console you can manually trigger:
-        // window.dispatchEvent(new Event('beforeprint'));
-        // window.dispatchEvent(new Event('afterprint'));
     </script>
 </body>
 
