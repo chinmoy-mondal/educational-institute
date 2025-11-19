@@ -48,6 +48,11 @@
             display: inline-block;
         }
 
+        .add-btn-phone {
+            display: none;
+            margin-top: 4px;
+        }
+
         @media print {
 
             input,
@@ -56,7 +61,6 @@
                 display: none !important;
             }
 
-            /* hide Dose label and all selects */
             .dose-label,
             .dose-select,
             .duration-select,
@@ -64,12 +68,19 @@
                 display: none !important;
             }
 
-            /* show text spans */
             .dose-text,
             .duration-text,
             .rule-text,
             .print-text {
                 display: inline !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            /* Show add button on mobile */
+            .add-btn-phone {
+                display: inline-block;
             }
         }
     </style>
@@ -124,15 +135,18 @@
                 <div class="col-md-4">
                     <div class="left-box">
                         <h6><b>C/C :</b></h6>
-                        <input class="form-control mb-2 line-input" type="text" data-type="ul">
+                        <input class="form-control mb-1 line-input" type="text" data-type="ul">
+                        <button type="button" class="btn btn-sm btn-primary add-btn-phone" onclick="addLine(this)">Add</button>
                         <ul class="list-cc"></ul>
 
                         <h6><b>P/E :</b></h6>
-                        <input class="form-control mb-2 line-input" type="text" data-type="ul">
+                        <input class="form-control mb-1 line-input" type="text" data-type="ul">
+                        <button type="button" class="btn btn-sm btn-primary add-btn-phone" onclick="addLine(this)">Add</button>
                         <ul class="list-pe"></ul>
 
                         <h6><b>Advice :</b></h6>
-                        <input class="form-control line-input" type="text" data-type="ol">
+                        <input class="form-control mb-1 line-input" type="text" data-type="ol">
+                        <button type="button" class="btn btn-sm btn-primary add-btn-phone" onclick="addLine(this)">Add</button>
                         <ol class="list-advice"></ol>
                     </div>
                 </div>
@@ -162,10 +176,9 @@
     </div>
 
     <script>
-        // server-provided JSON string variable (from your controller)
         let drugs = <?= $drugs_json ?> || [];
 
-        // Set today's date automatically
+        // Auto-set date
         const dateInput = document.getElementById("dateInput");
         if (dateInput) {
             const today = new Date();
@@ -177,8 +190,7 @@
 
         const doseOptions = [0, 0.5, 1, 1.5, 2, 3];
         const durationOptions = [
-            "Continue",
-            "1 day", "2 days", "3 days", "4 days", "5 days", "6 days", "7 days",
+            "Continue", "1 day", "2 days", "3 days", "4 days", "5 days", "6 days", "7 days",
             "8 days", "9 days", "10 days", "11 days", "12 days", "13 days", "14 days",
             "15 days", "16 days", "17 days", "18 days", "19 days", "20 days", "21 days",
             "22 days", "23 days", "24 days", "25 days", "26 days", "27 days", "28 days",
@@ -229,6 +241,33 @@
                 .replaceAll("'", '&#39;');
         }
 
+        function addLine(btn) {
+            const input = btn.previousElementSibling;
+            const list = input.nextElementSibling;
+            const val = input.value.trim();
+            if (!val) return;
+            const li = document.createElement("li");
+            li.innerText = val;
+            list.appendChild(li);
+            input.value = "";
+        }
+
+        // Enter key functionality for desktop
+        document.querySelectorAll(".line-input").forEach(input => {
+            input.addEventListener("keydown", function(e) {
+                if (e.key === "Enter" && window.innerWidth > 768) {
+                    e.preventDefault();
+                    const val = this.value.trim();
+                    if (!val) return;
+                    const list = this.nextElementSibling.nextElementSibling;
+                    const li = document.createElement("li");
+                    li.innerText = val;
+                    list.appendChild(li);
+                    this.value = "";
+                }
+            });
+        });
+
         function addDrug(d) {
             const id = Date.now();
             const doses = doseOptions.map(v => `<option value="${v}">${v}</option>`).join('');
@@ -261,117 +300,7 @@
                     </div>
                 </div>
             `);
-
-            if (searchBox) searchBox.value = "";
-            if (searchResults) searchResults.style.display = "none";
-
-            const drugEl = document.getElementById(`drug-${id}`);
-            const ruleInput = drugEl.querySelector('.rule-input');
-            const ruleSpan = drugEl.querySelector('.rule-text');
-            ruleInput.addEventListener('input', () => {
-                ruleSpan.innerText = ruleInput.value;
-            });
         }
-
-        function updateDrug(id) {
-            const drug = document.getElementById("drug-" + id);
-            if (!drug) return;
-
-            const doseSelects = drug.querySelectorAll(".dose-select");
-            const durationSelect = drug.querySelector(".duration-select");
-
-            const doseVals = Array.from(doseSelects).map(s => s.value).filter(v => v && v == "0");
-            const durationVal = durationSelect ? durationSelect.value : "";
-
-            const spanDose = drug.querySelector(".dose-text");
-            const spanDur = drug.querySelector(".duration-text");
-
-
-        }
-
-        document.querySelectorAll(".line-input").forEach(input => {
-            input.addEventListener("keydown", function(e) {
-                if (e.key === "Enter") {
-                    e.preventDefault();
-                    const val = this.value.trim();
-                    if (!val) return;
-                    const list = this.nextElementSibling;
-                    const li = document.createElement("li");
-                    li.innerText = val;
-                    list.appendChild(li);
-                    this.value = "";
-                }
-            });
-        });
-
-        window.addEventListener("beforeprint", function() {
-            // Patient info
-            ["name", "age", "date"].forEach(field => {
-                const input = document.getElementById(field + "Input");
-                const span = document.getElementById(field + "Text");
-                if (input && span) {
-                    span.innerText = input.value;
-                    input.classList.add("d-none");
-                    span.classList.remove("d-none");
-                }
-            });
-
-            // Drugs
-            document.querySelectorAll(".drug-item").forEach(item => {
-                // doses
-                const doseSelects = item.querySelectorAll(".dose-select");
-                const doseSpan = item.querySelector(".dose-text");
-                if (doseSpan) {
-                    const doseVals = Array.from(doseSelects).map(s => s.value || 0);
-                    doseSpan.innerText = doseVals.join(" + "); // e.g., 1 + 0 + 1
-                    doseSpan.classList.toggle("d-none", false); // always show if printing
-                }
-
-                // duration
-                const durSelect = item.querySelector(".duration-select");
-                const durSpan = item.querySelector(".duration-text");
-                if (durSpan) {
-                    durSpan.innerText = durSelect ? "  .......  " + durSelect.value : "";
-                    durSpan.classList.toggle("d-none", false); // always show if printing
-                }
-
-                // rule
-                const ruleInput = item.querySelector(".rule-input");
-                const ruleSpan = item.querySelector(".rule-text");
-                if (ruleInput && ruleSpan) {
-                    ruleSpan.innerText = ruleInput.value.trim();
-                    ruleSpan.classList.toggle("d-none", !ruleInput.value.trim());
-                    ruleInput.style.display = "none";
-                }
-            });
-        });
-
-        window.addEventListener("afterprint", function() {
-            ["name", "age", "date"].forEach(field => {
-                const input = document.getElementById(field + "Input");
-                const span = document.getElementById(field + "Text");
-                if (input && span) {
-                    input.classList.remove("d-none");
-                    span.classList.add("d-none");
-                }
-            });
-
-            document.querySelectorAll(".drug-item").forEach(item => {
-                const doseSelects = item.querySelectorAll(".dose-select");
-                const durSelect = item.querySelector(".duration-select");
-                const doseSpan = item.querySelector(".dose-text");
-                const durSpan = item.querySelector(".duration-text");
-                const ruleInput = item.querySelector(".rule-input");
-                const ruleSpan = item.querySelector(".rule-text");
-
-                doseSelects.forEach(s => s.classList.remove("d-none"));
-                if (durSelect) durSelect.classList.remove("d-none");
-                if (doseSpan) doseSpan.classList.add("d-none");
-                if (durSpan) durSpan.classList.add("d-none");
-                if (ruleInput) ruleInput.style.display = ""; // restore default display
-                if (ruleSpan) ruleSpan.classList.add("d-none");
-            });
-        });
     </script>
 </body>
 
