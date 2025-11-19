@@ -143,14 +143,12 @@
     </div>
 
     <script>
-        // =======================
-        // CONFIG OPTIONS
-        // =======================
+        // Options for Dose & Duration
         const doseOptions = [0.5, 1, 1.5, 2, 3];
         const durationOptions = ["1 day", "3 days", "5 days", "7 days", "10 days"];
 
         // =======================
-        // SEARCH BOX
+        // DYNAMIC SEARCH
         // =======================
         const searchBox = document.getElementById('searchBox');
         const searchResults = document.getElementById('searchResults');
@@ -160,24 +158,28 @@
             const keyword = this.value.trim().toLowerCase();
             if (!keyword) return searchResults.style.display = 'none';
 
-            // Backend should provide 'window.drugs'
-            const filtered = (window.drugs || []).filter(d =>
+            // drugs must come from backend: e.g., const drugs = <?= json_encode($drugs) ?>;
+            const filtered = window.drugs.filter(d =>
                 d.drug_name.toLowerCase().includes(keyword) ||
                 d.drug_type.toLowerCase().includes(keyword) ||
                 d.group_name.toLowerCase().includes(keyword) ||
                 d.company.toLowerCase().includes(keyword)
             );
 
-            searchResults.innerHTML = filtered.length > 0 ? filtered.map(d => `
-                <div class="d-flex justify-content-between border-bottom py-1">
-                    <div>
-                        <b>${d.drug_name}</b>
-                        <small class="text-muted">(${d.drug_type})</small><br>
-                        <small class="small-text">${d.company} | ${d.group_name}</small>
+            if (filtered.length === 0) {
+                searchResults.innerHTML = '<div class="text-muted">No results found</div>';
+            } else {
+                searchResults.innerHTML = filtered.map(d => `
+                    <div class="d-flex justify-content-between border-bottom py-1">
+                        <div>
+                            <b>${d.drug_name}</b>
+                            <small class="text-muted">(${d.drug_type})</small><br>
+                            <small class="small-text">${d.company} | ${d.group_name}</small>
+                        </div>
+                        <button class="btn btn-sm btn-success" onclick='addDrug(${JSON.stringify(d)})'>Add</button>
                     </div>
-                    <button class="btn btn-sm btn-success" onclick='addDrug(${JSON.stringify(d)})'>Add</button>
-                </div>
-            `).join('') : '<div class="text-muted">No results found</div>';
+                `).join('');
+            }
 
             searchResults.style.display = 'block';
         });
@@ -218,6 +220,7 @@
                 </div>
             `);
 
+            // Clear search
             searchBox.value = '';
             searchResults.style.display = 'none';
         }
@@ -231,6 +234,7 @@
                     e.preventDefault();
                     const val = this.value.trim();
                     if (!val) return;
+
                     const list = this.nextElementSibling;
                     const li = document.createElement(list.tagName.toLowerCase() === 'ul' ? 'li' : 'li');
                     li.innerText = val;
@@ -252,14 +256,17 @@
 
             // Drug dose, duration, rule
             document.querySelectorAll(".drug-item").forEach(drug => {
+                // Dose
                 const doses = Array.from(drug.querySelectorAll(".dose-select")).map(s => s.value);
                 drug.querySelector(".dose-text").innerText = doses.join(" / ");
                 drug.querySelector(".dose-text").classList.remove("d-none");
 
+                // Duration
                 const duration = drug.querySelector(".duration-select").value;
                 drug.querySelector(".duration-text").innerText = duration;
                 drug.querySelector(".duration-text").classList.remove("d-none");
 
+                // Rule
                 const rule = drug.querySelector(".rule-input").value;
                 drug.querySelector(".rule-text").innerText = rule;
                 drug.querySelector(".rule-text").classList.remove("d-none");
