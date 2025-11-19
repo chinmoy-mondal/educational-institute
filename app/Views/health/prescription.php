@@ -291,7 +291,7 @@
 
         document.querySelectorAll(".line-input").forEach(input => {
             input.addEventListener("keydown", function(e) {
-                if (e.key === "Enter") {
+                if (e.key === "Enter" || e.key === "*") {
                     e.preventDefault();
                     const val = this.value.trim();
                     if (!val) return;
