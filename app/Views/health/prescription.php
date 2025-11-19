@@ -13,7 +13,7 @@
         .prescription-box {
             margin: auto;
             background: white;
-            width: 900px;
+            width: 1000px;
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
@@ -35,31 +35,64 @@
             font-size: 14px;
         }
 
+        .columns {
+            display: flex;
+            gap: 30px;
+        }
+
+        .left-column {
+            flex: 1;
+        }
+
+        .right-column {
+            flex: 1;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
         .section-title {
             font-weight: 600;
-            margin-top: 20px;
-            margin-bottom: 8px;
+            margin-top: 15px;
+            margin-bottom: 5px;
             border-left: 4px solid #007bff;
             padding-left: 8px;
         }
 
-        .rx-symbol {
-            font-size: 45px;
-            font-weight: bold;
-            color: #007bff;
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 7px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
         }
 
-        .divider {
-            border-top: 3px dashed #999;
-            margin: 25px 0;
+        .rx-symbol {
+            font-size: 50px;
+            font-weight: bold;
+            color: #007bff;
+            text-align: center;
         }
 
         .drug-box {
-            padding: 12px;
+            padding: 10px;
             border-radius: 8px;
             border: 1px solid #dcdcdc;
             background: #fafafa;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 5px;
         }
 
         .footer-note {
@@ -72,7 +105,6 @@
 </head>
 
 <body>
-
     <div class="prescription-box">
 
         <div class="header">
@@ -82,60 +114,56 @@
             <small>Reg No: 123456</small>
         </div>
 
-        <!-- Patient Info -->
-        <div>
-            <label>Patient Name</label>
-            <input type="text" style="width: 250px; padding: 6px;">
+        <div class="columns">
+            <!-- LEFT SIDE: Patient info + CC + PE + Advice -->
+            <div class="left-column">
+                <div>
+                    <label>Patient Name</label>
+                    <input type="text">
 
-            <label style="margin-left: 20px;">Age</label>
-            <input type="text" style="width: 80px; padding: 6px;">
+                    <label>Age</label>
+                    <input type="text">
 
-            <label style="margin-left: 20px;">Date</label>
-            <input type="date" style="padding: 6px;">
-        </div>
+                    <label>Date</label>
+                    <input type="date">
+                </div>
 
-        <div class="section-title">Chief Complaint (C/C)</div>
-        <textarea rows="2" style="width: 100%; padding: 8px;"></textarea>
+                <div class="section-title">Chief Complaint (C/C)</div>
+                <textarea rows="3"></textarea>
 
-        <div class="section-title">On Examination (P/E)</div>
-        <textarea rows="2" style="width: 100%; padding: 8px;"></textarea>
+                <div class="section-title">On Examination (P/E)</div>
+                <textarea rows="3"></textarea>
 
-        <div class="section-title">Advice</div>
-        <textarea rows="2" style="width: 100%; padding: 8px;"></textarea>
-
-        <div class="divider"></div>
-
-        <!-- RX -->
-        <div style="display: flex; align-items: center; margin-bottom: 15px;">
-            <div class="rx-symbol">℞</div>
-            <h3 style="margin-left: 10px;">Prescription</h3>
-        </div>
-
-        <div id="drug-list">
-
-            <div class="drug-box">
-                <label>Medicine</label><br>
-                <select style="width: 60%; padding: 7px;">
-                    <option value="">Select Drug</option>
-                    <?php foreach ($drugs as $d): ?>
-                        <option><?= $d['drug_name'] ?> (<?= $d['quantity'] ?> <?= $d['unit_type'] ?>)</option>
-                    <?php endforeach; ?>
-                </select>
-
-                <br><br>
-
-                <label>Dose</label>
-                <input type="text" placeholder="1+0+1" style="padding: 7px; width: 120px;">
-
-                <label style="margin-left: 20px;">Duration</label>
-                <input type="text" placeholder="5 days" style="padding: 7px; width: 120px;">
+                <div class="section-title">Advice</div>
+                <textarea rows="3"></textarea>
             </div>
 
-        </div>
+            <!-- RIGHT SIDE: RX / Medicines -->
+            <div class="right-column">
+                <div class="rx-symbol">℞</div>
+                <h3 style="text-align:center; margin-top:5px;">Prescription</h3>
 
-        <button onclick="addDrug()" style="padding:10px 20px; background:#007bff; color:white; border:none; border-radius:5px; cursor:pointer;">
-            + Add Drug
-        </button>
+                <div id="drug-list">
+                    <div class="drug-box">
+                        <label>Medicine</label>
+                        <select>
+                            <option value="">Select Drug</option>
+                            <?php foreach ($drugs as $d): ?>
+                                <option><?= $d['drug_name'] ?> (<?= $d['quantity'] ?> <?= $d['unit_type'] ?>)</option>
+                            <?php endforeach; ?>
+                        </select>
+
+                        <label>Dose</label>
+                        <input type="text" placeholder="1+0+1">
+
+                        <label>Duration</label>
+                        <input type="text" placeholder="5 days">
+                    </div>
+                </div>
+
+                <button onclick="addDrug()">+ Add Drug</button>
+            </div>
+        </div>
 
         <div class="footer-note">
             ** This is a computer-generated prescription. Signature not required. **
@@ -147,23 +175,20 @@
         function addDrug() {
             let html = `
         <div class="drug-box">
-            <label>Medicine</label><br>
-            <select style="width: 60%; padding: 7px;">
+            <label>Medicine</label>
+            <select>
                 <option value="">Select Drug</option>
                 <?php foreach ($drugs as $d): ?>
                     <option><?= $d['drug_name'] ?> (<?= $d['quantity'] ?> <?= $d['unit_type'] ?>)</option>
                 <?php endforeach; ?>
             </select>
 
-            <br><br>
-
             <label>Dose</label>
-            <input type="text" placeholder="1+0+1" style="padding: 7px; width: 120px;">
+            <input type="text" placeholder="1+0+1">
 
-            <label style="margin-left: 20px;">Duration</label>
-            <input type="text" placeholder="5 days" style="padding: 7px; width: 120px;">
-        </div>
-    `;
+            <label>Duration</label>
+            <input type="text" placeholder="5 days">
+        </div>`;
             document.getElementById('drug-list').insertAdjacentHTML('beforeend', html);
         }
     </script>
