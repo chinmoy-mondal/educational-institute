@@ -14,4 +14,14 @@ class Health extends BaseController
 
         return view('health/prescription', $data);
     }
+
+    public function searchDrugs()
+    {
+        $keyword = $this->request->getGet('q');
+
+        $model = new DrugsModel();
+        $drugs = $model->like('drug_name', $keyword)->findAll(20); // return only 20
+
+        return $this->response->setJSON($drugs);
+    }
 }

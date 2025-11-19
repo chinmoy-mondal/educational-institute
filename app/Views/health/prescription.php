@@ -196,59 +196,69 @@
 
     </div>
 
-    <script>
-        let drugs = <?php echo json_encode($drugs); ?>;
-        let count = 1;
+<script>
+let count = 1;
 
-        document.getElementById("searchDrug").addEventListener("keyup", function() {
-            let keyword = this.value.toLowerCase();
-            let resultsDiv = document.getElementById("searchResults");
+document.getElementById("searchDrug").addEventListener("keyup", function () {
+
+    let keyword = this.value.trim();
+    let resultsDiv = document.getElementById("searchResults");
+    resultsDiv.innerHTML = "";
+
+    if (keyword.length < 1) return;
+
+    fetch(`/search-drugs?q=` + keyword)
+        .then(res => res.json())
+        .then(list => {
+
             resultsDiv.innerHTML = "";
 
-            if (keyword.length < 1) return;
+            list.forEach(d => {
 
-            drugs.forEach(d => {
-                if (d.drug_name.toLowerCase().includes(keyword)) {
-
-                    resultsDiv.innerHTML += `
-                        <div class="list-group-item d-flex justify-content-between">
-                            <div>
-                                <b>${d.drug_name}</b> (${d.quantity} ${d.unit_type})
-                                <br><small>${d.group_name}</small>
-                            </div>
-                            <button class="btn btn-sm btn-success" onclick='addDrug(${JSON.stringify(d)})'>Add</button>
-                        </div>`;
-                }
+                resultsDiv.innerHTML += `
+                    <div class="list-group-item d-flex justify-content-between">
+                        <div>
+                            <b>${d.drug_name}</b> (${d.quantity} ${d.unit_type})
+                            <br><small>${d.group_name}</small>
+                        </div>
+                        <button class="btn btn-sm btn-success"
+                             onclick='addDrug(${JSON.stringify(d)})'>
+                             Add
+                        </button>
+                    </div>`;
             });
         });
+});
 
-        function addDrug(d) {
-            let html = `
-                <div class="drug-item">
-                    <div><b>${count}. ${d.drug_type}. ${d.drug_name} ${d.quantity}${d.unit_type}</b></div>
-                    <div class="group-name">${d.group_name}</div>
+function addDrug(d) {
 
-                    <div class="d-flex mt-1">
-                        <div class="me-2">
-                            Dose:
-                            <input type="text" class="form-control form-control-sm" placeholder="1+1+1">
-                        </div>
+    let html = `
+        <div class="drug-item">
+            <div><b>${count}. ${d.drug_type}. ${d.drug_name} ${d.quantity}${d.unit_type}</b></div>
+            <div class="group-name">${d.group_name}</div>
 
-                        <div>
-                            Duration:
-                            <input type="text" class="form-control form-control-sm" placeholder="5 days">
-                        </div>
-                    </div>
+            <div class="d-flex mt-1">
+                <div class="me-2">
+                    Dose:
+                    <input type="text" class="form-control form-control-sm" placeholder="1+1+1">
                 </div>
-            `;
 
-            document.getElementById("drugList").insertAdjacentHTML("beforeend", html);
-            count++;
+                <div>
+                    Duration:
+                    <input type="text" class="form-control form-control-sm" placeholder="5 days">
+                </div>
+            </div>
+        </div>
+    `;
 
-            document.getElementById("searchDrug").value = "";
-            document.getElementById("searchResults").innerHTML = "";
-        }
-    </script>
+    document.getElementById("drugList").insertAdjacentHTML("beforeend", html);
+
+    count++;
+
+    document.getElementById("searchDrug").value = "";
+    document.getElementById("searchResults").innerHTML = "";
+}
+</script>
 
 </body>
 
