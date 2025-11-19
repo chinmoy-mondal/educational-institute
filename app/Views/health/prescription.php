@@ -278,7 +278,7 @@
 
             if (spanDose) {
                 if (doseVals.length) {
-                    spanDose.innerText = doseVals.join(" / ");
+                    spanDose.innerText = doseVals.join(" + ");
                     spanDose.classList.remove("d-none");
                 } else {
                     spanDose.innerText = "";
