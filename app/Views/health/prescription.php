@@ -176,6 +176,7 @@
         const doseOptions = [0.5, 1, 1.5, 2, 3];
         const durationOptions = ["1 day", "3 days", "5 days", "7 days", "10 days"];
 
+        // Drug Search
         document.getElementById("searchBox").addEventListener("keyup", function() {
             const keyword = this.value.toLowerCase();
             const resultBox = document.getElementById("searchResults");
@@ -204,6 +205,7 @@
             resultBox.style.display = "block";
         });
 
+        // Add Drug
         function addDrug(d) {
             const box = document.getElementById("drugList");
             const id = Date.now();
@@ -216,13 +218,13 @@
         <div class="mt-1 d-flex align-items-center">
             <span class="me-2">Dose:</span>
             <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;">
-                ${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}
+                ${doseOptions.map(v => `<option value="${v}">${v}</option>`).join('')}
             </select>
             <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;">
-                ${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}
+                ${doseOptions.map(v => `<option value="${v}">${v}</option>`).join('')}
             </select>
             <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;">
-                ${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}
+                ${doseOptions.map(v => `<option value="${v}">${v}</option>`).join('')}
             </select>
 
             <select class="duration-select form-select form-select-sm d-inline-block mx-2" style="width:120px;">
@@ -241,6 +243,7 @@
         </div>
     </div>`;
 
+            // Clear search
             document.getElementById("searchBox").value = "";
             document.getElementById("searchResults").style.display = "none";
         }
@@ -262,18 +265,21 @@
             });
         });
 
-        // Before print: copy input/select values to spans
+        // Before print: copy all relevant input/select values to spans
         window.addEventListener("beforeprint", function() {
-            document.querySelectorAll("input[type=text], input[type=date]").forEach(input => {
+            // Name, Age, Date
+            document.querySelectorAll(".container input.form-control, .container input[type=date]").forEach(input => {
                 const span = input.nextElementSibling;
                 if (span) span.innerText = input.value;
             });
 
+            // Rule fields
             document.querySelectorAll(".rule-input").forEach(input => {
                 const span = input.nextElementSibling;
                 if (span) span.innerText = input.value;
             });
 
+            // Drug fields: dose and duration
             document.querySelectorAll(".drug-item").forEach(drug => {
                 const doses = Array.from(drug.querySelectorAll(".dose-select")).map(s => s.value);
                 const duration = drug.querySelector(".duration-select").value;
@@ -289,6 +295,7 @@
             });
         });
     </script>
+
 </body>
 
 </html>
