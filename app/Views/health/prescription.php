@@ -236,8 +236,8 @@
                             ${durations}
                         </select>
 
-                        <span class="dose-text d-none ms-2"></span>
-                        <span class="duration-text d-none ms-2"></span>
+                        <span class="dose-text d-none ms-2">0 + 0 + 0</span>
+                        <span class="duration-text d-none ms-2">0 day</span>
                     </div>
 
                     <div class="mt-1 d-flex align-items-center">
@@ -269,30 +269,23 @@
             const doseSelects = drug.querySelectorAll(".dose-select");
             const durationSelect = drug.querySelector(".duration-select");
 
-            const doseVals = Array.from(doseSelects).map(s => s.value).filter(v => v && v !== "0");
-            const durationVal = durationSelect ? durationSelect.value : "";
+            const doseVals = Array.from(doseSelects).map(s => s.value);
 
             const spanDose = drug.querySelector(".dose-text");
             const spanDur = drug.querySelector(".duration-text");
 
-            if (spanDose) {
-                if (doseVals.length) {
-                    spanDose.innerText = doseVals.join(" / ");
-                    spanDose.classList.remove("d-none");
-                } else {
-                    spanDose.innerText = "";
-                    spanDose.classList.add("d-none");
-                }
-            }
+            // Update Dose text
+            const cleanDose = doseVals.join(" + ");
+            spanDose.innerText = cleanDose;
+            if (cleanDose !== "0 + 0 + 0") spanDose.classList.remove("d-none");
 
-            if (spanDur) {
-                if (durationVal) {
-                    spanDur.innerText = durationVal;
-                    spanDur.classList.remove("d-none");
-                } else {
-                    spanDur.innerText = "";
-                    spanDur.classList.add("d-none");
-                }
+            // Update Duration
+            if (durationSelect.value) {
+                spanDur.innerText = durationSelect.value;
+                spanDur.classList.remove("d-none");
+            } else {
+                spanDur.innerText = "0 day";
+                spanDur.classList.add("d-none");
             }
         }
 
@@ -345,35 +338,30 @@
             // For each drug: ensure dose/duration text and rule text are set and show them;
             // hide rule input element so print shows span (CSS also hides inputs on print, but we hide to be safe)
             document.querySelectorAll(".drug-item").forEach(item => {
-                // doses
-                const doseSelects = item.querySelectorAll(".dose-select");
-                const doseVals = Array.from(doseSelects).map(s => s.value).filter(v => v && v !== "0");
-                const doseSpan = item.querySelector(".dose-text");
-                if (doseSpan) {
-                    doseSpan.innerText = doseVals.length ? doseVals.join(" / ") : "";
-                    if (doseVals.length) doseSpan.classList.remove("d-none");
-                    else doseSpan.classList.add("d-none");
-                }
 
-                // duration
+                // Dose
+                const doseSelects = item.querySelectorAll(".dose-select");
+                const doseSpan = item.querySelector(".dose-text");
+                const doseVals = Array.from(doseSelects).map(s => s.value).join(" + ");
+                doseSpan.innerText = doseVals;
+                doseSpan.classList.remove("d-none");
+
+                doseSelects.forEach(s => s.style.display = "none");
+
+                // Duration
                 const dur = item.querySelector(".duration-select");
                 const durSpan = item.querySelector(".duration-text");
-                if (durSpan) {
-                    durSpan.innerText = dur ? (dur.value || "") : "";
-                    if (dur && dur.value) durSpan.classList.remove("d-none");
-                    else durSpan.classList.add("d-none");
-                }
+                durSpan.innerText = dur.value || "0 day";
+                durSpan.classList.remove("d-none");
+                dur.style.display = "none";
 
-                // rule
+                // Rule
                 const ruleInput = item.querySelector(".rule-input");
                 const ruleSpan = item.querySelector(".rule-text");
-                if (ruleSpan && ruleInput) {
-                    ruleSpan.innerText = ruleInput.value.trim() || "";
-                    if (ruleInput.value.trim()) ruleSpan.classList.remove("d-none");
-                    else ruleSpan.classList.add("d-none");
-                    // ensure input hidden during print preview
-                    ruleInput.style.display = "none";
-                }
+
+                ruleSpan.innerText = ruleInput.value || "";
+                ruleSpan.classList.remove("d-none");
+                ruleInput.style.display = "none";
             });
         });
 
@@ -406,13 +394,20 @@
             document.querySelectorAll(".drug-item").forEach(item => {
                 const ruleInput = item.querySelector(".rule-input");
                 const ruleSpan = item.querySelector(".rule-text");
-                if (ruleInput) ruleInput.style.display = ""; // reset
-                if (ruleSpan) ruleSpan.classList.add("d-none");
-                // also hide dose/duration spans (they are shown only for print)
                 const doseSpan = item.querySelector(".dose-text");
                 const durSpan = item.querySelector(".duration-text");
-                if (doseSpan) doseSpan.classList.add("d-none");
-                if (durSpan) durSpan.classList.add("d-none");
+                const doseSelects = item.querySelectorAll(".dose-select");
+                const durSelect = item.querySelector(".duration-select");
+
+                // restore input fields
+                ruleInput.style.display = "";
+                doseSelects.forEach(s => s.style.display = "");
+                durSelect.style.display = "";
+
+                // hide spans after print
+                ruleSpan.classList.add("d-none");
+                doseSpan.classList.add("d-none");
+                durSpan.classList.add("d-none");
             });
         });
 
