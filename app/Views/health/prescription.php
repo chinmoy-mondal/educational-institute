@@ -4,7 +4,6 @@
 <head>
     <title>Prescription</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
         body {
             background: #f7f7f7;
@@ -49,7 +48,8 @@
             }
 
             input,
-            button {
+            button,
+            select {
                 display: none !important;
             }
 
@@ -132,38 +132,40 @@
     </div>
 
     <script>
-        // Updated drug list with company
         const drugs = [{
                 type: "Tablet",
                 name: "Napa 500",
                 qty: "10 pcs",
                 group: "Paracetamol",
-                company: "Beximco"
+                company: "Beximco",
+                rule: "Take after meals"
             },
             {
                 type: "Capsule",
                 name: "Omep 20",
                 qty: "14 pcs",
                 group: "Omeprazole",
-                company: "Incepta"
+                company: "Incepta",
+                rule: "Take before breakfast"
             },
             {
                 type: "Syrup",
                 name: "Histacin",
                 qty: "100 ml",
                 group: "Antihistamine",
-                company: "ACME"
+                company: "ACME",
+                rule: "Shake well before use"
             },
             {
                 type: "Tablet",
                 name: "Ace Plus",
                 qty: "10 pcs",
                 group: "Paracetamol+Caffeine",
-                company: "Eskayef"
+                company: "Eskayef",
+                rule: "Avoid if hypertensive"
             },
         ];
 
-        // search
         document.getElementById("searchBox").addEventListener("keyup", function() {
             let keyword = this.value.toLowerCase();
             let resultBox = document.getElementById("searchResults");
@@ -176,21 +178,21 @@
             let filtered = drugs.filter(d =>
                 d.name.toLowerCase().includes(keyword) ||
                 d.company.toLowerCase().includes(keyword) ||
-                d.type.toLowerCase().includes(keyword)
+                d.type.toLowerCase().includes(keyword) ||
+                d.group.toLowerCase().includes(keyword)
             );
 
             resultBox.innerHTML = "";
-
             filtered.forEach(d => {
                 resultBox.innerHTML += `
-            <div class="d-flex justify-content-between border-bottom py-1">
-                <div>
-                    <b>${d.name}</b>  
-                    <small class="text-muted">(${d.type})</small><br>
-                    <small class="small-text">${d.company}</small>
-                </div>
-                <button class="btn btn-sm btn-success" onclick='addDrug(${JSON.stringify(d)})'>Add</button>
-            </div>`;
+                <div class="d-flex justify-content-between border-bottom py-1">
+                    <div>
+                        <b>${d.name}</b>  
+                        <small class="text-muted">(${d.type})</small><br>
+                        <small class="small-text">${d.company} | ${d.group}</small>
+                    </div>
+                    <button class="btn btn-sm btn-success" onclick='addDrug(${JSON.stringify(d)})'>Add</button>
+                </div>`;
             });
 
             resultBox.style.display = "block";
@@ -201,34 +203,77 @@
             let id = Date.now();
 
             box.innerHTML += `
-        <div class="drug-item" id="drug-${id}">
-            <b>${d.type}. ${d.name}</b> — ${d.qty}
-            <div class="small-text">${d.group} | ${d.company}</div>
+            <div class="drug-item" id="drug-${id}">
+                <b>${d.type}. ${d.name}</b> — ${d.qty}
+                <div class="small-text">${d.group} | ${d.company}</div>
 
-            <div class="mt-1">
-                Dose:
-                <input class="dose-input form-control form-control-sm d-inline-block" style="width:200px;"
-                       oninput="updateText(${id})">
-                <span class="dose-text d-none"></span>
-            </div>
+                <div class="mt-1">
+                    Dose:
+                    <input class="dose-input form-control form-control-sm d-inline-block" style="width:200px;"
+                           oninput="updateText(${id})">
+                    <span class="dose-text d-none"></span>
+                </div>
 
-            <div class="mt-1">
-                Duration:
-                <input class="duration-input form-control form-control-sm d-inline-block" style="width:150px;"
-                       oninput="updateText(${id})">
-                <span class="duration-text d-none"></span>
-            </div>
-        </div>`;
+                <div class="mt-1">
+                    Duration:
+                    <select multiple class="duration-select form-select form-select-sm d-inline-block" style="width:250px;"
+                            onchange="updateText(${id})">
+                        <option value='1 day'>1 day</option>
+                        <option value='3 days'>3 days</option>
+                        <option value='5 days'>5 days</option>
+                        <option value='7 days'>7 days</option>
+                        <option value='10 days'>10 days</option>
+                        <option value='Custom'>Custom (choose date below)</option>
+                    </select>
+                    <input type="date" class="duration-date form-control form-control-sm d-inline-block mt-1" style="width:150px; display:none;"
+                           onchange="updateText(${id})">
+                    <span class="duration-text d-none"></span>
+                </div>
+
+                <div class="mt-1"><b>Rule:</b> ${d.rule}</div>
+            </div>`;
         }
 
         function updateText(id) {
             let drug = document.getElementById("drug-" + id);
 
-            drug.querySelector(".dose-text").innerText =
-                drug.querySelector(".dose-input").value;
+            let doseInput = drug.querySelector(".dose-input");
+            let durationSelect = drug.querySelector(".duration-select");
+            let durationDate = drug.querySelector(".duration-date");
 
-            drug.querySelector(".duration-text").innerText =
-                drug.querySelector(".duration-input").value;
+            // Handle custom date visibility
+            if ([...durationSelect.selectedOptions].some(o => o.value === "Custom")) {
+                durationDate.style.display = "inline-block";
+            } else {
+                durationDate.style.display = "none";
+            }
+
+            // Show text if both dose and duration selected
+            let doseVal = doseInput.value.trim();
+            let durationVals = [...durationSelect.selectedOptions].map(o => o.value);
+            if (durationDate.style.display === "inline-block" && durationDate.value) {
+                durationVals.push(durationDate.value);
+            }
+
+            if (doseVal && durationVals.length > 0) {
+                doseInput.classList.add("d-none");
+                drug.querySelector(".dose-text").innerText = doseVal;
+                drug.querySelector(".dose-text").classList.remove("d-none");
+
+                durationSelect.classList.add("d-none");
+                durationDate.classList.add("d-none");
+                drug.querySelector(".duration-text").innerText = durationVals.join(", ");
+                drug.querySelector(".duration-text").classList.remove("d-none");
+            } else {
+                doseInput.classList.remove("d-none");
+                drug.querySelector(".dose-text").classList.add("d-none");
+
+                durationSelect.classList.remove("d-none");
+                if (durationSelect.selectedOptions.length > 0 && durationSelect.selectedOptions[0].value === "Custom") {
+                    durationDate.style.display = "inline-block";
+                }
+                drug.querySelector(".duration-text").classList.add("d-none");
+            }
         }
     </script>
 
