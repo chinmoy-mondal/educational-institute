@@ -41,6 +41,13 @@
             margin-bottom: 8px;
         }
 
+        .editable-text {
+            cursor: pointer;
+            border-bottom: 1px dashed #aaa;
+            padding: 2px;
+            display: inline-block;
+        }
+
         @media print {
             .no-print {
                 display: none !important;
@@ -94,13 +101,13 @@
                 <div class="col-md-4">
                     <div class="left-box">
                         <h6><b>C/C :</b></h6>
-                        <textarea class="form-control mb-2" rows="2"></textarea>
+                        <input class="form-control mb-2 editable-line" type="text">
 
                         <h6><b>P/E :</b></h6>
-                        <textarea class="form-control mb-2" rows="2"></textarea>
+                        <input class="form-control mb-2 editable-line" type="text">
 
                         <h6><b>Advice :</b></h6>
-                        <textarea class="form-control" rows="4"></textarea>
+                        <input class="form-control editable-line" type="text">
                     </div>
                 </div>
 
@@ -129,11 +136,11 @@
     </div>
 
     <script>
-        let drugs = <?= $drugs_json ?>; // Pass all drugs from controller as JSON
-
+        let drugs = <?= $drugs_json ?>; // From controller JSON
         const doseOptions = [0.5, 1, 1.5, 2, 3];
         const durationOptions = ["1 day", "3 days", "5 days", "7 days", "10 days"];
 
+        // Search drugs
         document.getElementById("searchBox").addEventListener("keyup", function() {
             const keyword = this.value.toLowerCase();
             const resultBox = document.getElementById("searchResults");
@@ -162,6 +169,7 @@
             resultBox.style.display = "block";
         });
 
+        // Add drug
         function addDrug(d) {
             const box = document.getElementById("drugList");
             const id = Date.now();
@@ -188,11 +196,17 @@
 
         <div class="mt-1 d-flex align-items-center">
             <b>Rule:</b>
-            <input type="text" class="form-control form-control-sm ms-2 w-50" placeholder="Enter rule">
+            <input type="text" class="form-control form-control-sm ms-2 w-50 rule-input" placeholder="Enter rule" onkeydown="handleRuleEnter(event, ${id})">
+            <span class="rule-text d-none ms-2"></span>
         </div>
     </div>`;
+
+            // Clear search
+            document.getElementById("searchBox").value = "";
+            document.getElementById("searchResults").style.display = "none";
         }
 
+        // Update drug (dose/duration)
         function updateDrug(id) {
             const drug = document.getElementById("drug-" + id);
             const doseSelects = drug.querySelectorAll(".dose-select");
@@ -217,6 +231,48 @@
                 drug.querySelector(".duration-text").classList.add("d-none");
             }
         }
+
+        // Rule input enter
+        function handleRuleEnter(e, id) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                const input = e.target;
+                const text = input.value.trim();
+                if (!text) return;
+                const span = document.getElementById("drug-" + id).querySelector(".rule-text");
+                input.classList.add("d-none");
+                span.innerText = text;
+                span.classList.remove("d-none");
+            }
+        }
+
+        // Editable line to list (C/C, P/E, Advice)
+        document.querySelectorAll(".editable-line").forEach(input => {
+            input.addEventListener("keydown", function(e) {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    const val = this.value.trim();
+                    if (!val) return;
+                    const ul = document.createElement("ul");
+                    ul.className = "mb-2 editable-text";
+                    const li = document.createElement("li");
+                    li.innerText = val;
+                    ul.appendChild(li);
+                    this.parentNode.replaceChild(ul, this);
+
+                    // Click on UL to edit again
+                    ul.addEventListener("click", function() {
+                        const newInput = document.createElement("input");
+                        newInput.type = "text";
+                        newInput.className = "form-control editable-line mb-2";
+                        newInput.value = li.innerText;
+                        this.parentNode.replaceChild(newInput, this);
+                        newInput.focus();
+                        newInput.addEventListener("keydown", arguments.callee);
+                    });
+                }
+            });
+        });
     </script>
 
 </body>
