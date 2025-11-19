@@ -147,7 +147,6 @@
                 drug_name: "Napa 500",
                 drug_type: "Tablet",
                 quantity: "10 pcs",
-                unit_type: "",
                 group_name: "Paracetamol",
                 company: "Beximco"
             },
@@ -155,7 +154,6 @@
                 drug_name: "Omep 20",
                 drug_type: "Capsule",
                 quantity: "14 pcs",
-                unit_type: "",
                 group_name: "Omeprazole",
                 company: "Incepta"
             },
@@ -163,7 +161,6 @@
                 drug_name: "Histacin",
                 drug_type: "Syrup",
                 quantity: "100 ml",
-                unit_type: "",
                 group_name: "Antihistamine",
                 company: "ACME"
             },
@@ -171,7 +168,6 @@
                 drug_name: "Ace Plus",
                 drug_type: "Tablet",
                 quantity: "10 pcs",
-                unit_type: "",
                 group_name: "Paracetamol+Caffeine",
                 company: "Eskayef"
             },
@@ -214,16 +210,22 @@
 
             box.innerHTML += `
     <div class="drug-item" id="drug-${id}">
-        <b>${d.drug_type}. ${d.drug_name}</b> — ${d.quantity} ${d.unit_type || ''}
+        <b>${d.drug_type}. ${d.drug_name}</b> — ${d.quantity}
         <div class="small-text">${d.group_name} | ${d.company}</div>
 
         <div class="mt-1 d-flex align-items-center">
             <span class="me-2">Dose:</span>
-            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;" onchange="updateDrug(${id})">${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}</select>
-            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;" onchange="updateDrug(${id})">${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}</select>
-            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;" onchange="updateDrug(${id})">${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}</select>
+            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;">
+                ${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}
+            </select>
+            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;">
+                ${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}
+            </select>
+            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;">
+                ${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}
+            </select>
 
-            <select class="duration-select form-select form-select-sm d-inline-block mx-2" style="width:120px;" onchange="updateDrug(${id})">
+            <select class="duration-select form-select form-select-sm d-inline-block mx-2" style="width:120px;">
                 <option value="">Duration</option>
                 ${durationOptions.map(d => `<option value="${d}">${d}</option>`).join('')}
             </select>
@@ -234,35 +236,13 @@
 
         <div class="mt-1 d-flex align-items-center">
             <b>Rule:</b>
-            <input type="text" class="form-control form-control-sm ms-2 w-50 rule-input" placeholder="Enter rule">
+            <input type="text" class="form-control form-control-sm ms-2 w-50 rule-input">
             <span class="rule-text d-none ms-2"></span>
         </div>
     </div>`;
 
             document.getElementById("searchBox").value = "";
             document.getElementById("searchResults").style.display = "none";
-        }
-
-        function updateDrug(id) {
-            const drug = document.getElementById("drug-" + id);
-            const doseSelects = drug.querySelectorAll(".dose-select");
-            const durationSelect = drug.querySelector(".duration-select");
-
-            const doseVals = Array.from(doseSelects).map(s => s.value).filter(v => v);
-            const durationVal = durationSelect.value;
-
-            const spanDose = drug.querySelector(".dose-text");
-            const spanDur = drug.querySelector(".duration-text");
-
-            if (doseVals.length === doseSelects.length && durationVal) {
-                spanDose.innerText = doseVals.join(" / ");
-                spanDose.classList.remove("d-none");
-                spanDur.innerText = durationVal;
-                spanDur.classList.remove("d-none");
-            } else {
-                spanDose.classList.add("d-none");
-                spanDur.classList.add("d-none");
-            }
         }
 
         // Enter to add C/C, P/E, Advice
@@ -282,26 +262,30 @@
             });
         });
 
-        // Before print copy input values to spans
+        // Before print: copy input/select values to spans
         window.addEventListener("beforeprint", function() {
             document.querySelectorAll("input[type=text], input[type=date]").forEach(input => {
                 const span = input.nextElementSibling;
                 if (span) span.innerText = input.value;
             });
+
             document.querySelectorAll(".rule-input").forEach(input => {
                 const span = input.nextElementSibling;
                 if (span) span.innerText = input.value;
             });
-            document.querySelectorAll(".dose-select").forEach(sel => {
-                const span = sel.parentElement.querySelector(".dose-text");
-                if (span) {
-                    const doses = Array.from(sel.parentElement.querySelectorAll(".dose-select")).map(s => s.value);
-                    span.innerText = doses.join(" / ");
-                }
-            });
-            document.querySelectorAll(".duration-select").forEach(sel => {
-                const span = sel.parentElement.querySelector(".duration-text");
-                if (span) span.innerText = sel.value;
+
+            document.querySelectorAll(".drug-item").forEach(drug => {
+                const doses = Array.from(drug.querySelectorAll(".dose-select")).map(s => s.value);
+                const duration = drug.querySelector(".duration-select").value;
+
+                const doseText = drug.querySelector(".dose-text");
+                const durText = drug.querySelector(".duration-text");
+
+                doseText.innerText = doses.join(" / ");
+                durText.innerText = duration;
+
+                doseText.classList.remove("d-none");
+                durText.classList.remove("d-none");
             });
         });
     </script>
