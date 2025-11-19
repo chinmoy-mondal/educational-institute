@@ -49,19 +49,17 @@
         }
 
         @media print {
-            .no-print {
-                display: none !important;
-            }
 
-            select,
             input,
+            select,
             button {
                 display: none !important;
             }
 
             .dose-text,
             .duration-text,
-            .rule-text {
+            .rule-text,
+            .print-text {
                 display: inline !important;
             }
         }
@@ -91,9 +89,9 @@
 
             <!-- Patient Info -->
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <div><b>Name:</b> <input class="form-control form-control-sm d-inline-block" style="width:200px;"></div>
-                <div><b>Age:</b> <input class="form-control form-control-sm d-inline-block" style="width:100px;"></div>
-                <div><b>Date:</b> <input type="date" class="form-control form-control-sm d-inline-block" style="width:150px;"></div>
+                <div><b>Name:</b> <input class="form-control form-control-sm d-inline-block print-text" style="width:200px;"></div>
+                <div><b>Age:</b> <input class="form-control form-control-sm d-inline-block print-text" style="width:100px;"></div>
+                <div><b>Date:</b> <input type="date" class="form-control form-control-sm d-inline-block print-text" style="width:150px;"></div>
             </div>
 
             <div class="row">
@@ -101,13 +99,16 @@
                 <div class="col-md-4">
                     <div class="left-box">
                         <h6><b>C/C :</b></h6>
-                        <input class="form-control mb-2 editable-line" type="text">
+                        <input class="form-control mb-2 line-input" type="text" data-type="ul">
+                        <ul class="list-cc"></ul>
 
                         <h6><b>P/E :</b></h6>
-                        <input class="form-control mb-2 editable-line" type="text">
+                        <input class="form-control mb-2 line-input" type="text" data-type="ul">
+                        <ul class="list-pe"></ul>
 
                         <h6><b>Advice :</b></h6>
-                        <input class="form-control editable-line" type="text">
+                        <input class="form-control line-input" type="text" data-type="ol">
+                        <ol class="list-advice"></ol>
                     </div>
                 </div>
 
@@ -215,20 +216,17 @@
             const doseVals = Array.from(doseSelects).map(s => s.value).filter(v => v);
             const durationVal = durationSelect.value;
 
+            const spanDose = drug.querySelector(".dose-text");
+            const spanDur = drug.querySelector(".duration-text");
+
             if (doseVals.length === doseSelects.length && durationVal) {
-                doseSelects.forEach(s => s.classList.add("d-none"));
-                drug.querySelector(".dose-text").innerText = doseVals.join(" / ");
-                drug.querySelector(".dose-text").classList.remove("d-none");
-
-                durationSelect.classList.add("d-none");
-                drug.querySelector(".duration-text").innerText = durationVal;
-                drug.querySelector(".duration-text").classList.remove("d-none");
+                spanDose.innerText = doseVals.join(" / ");
+                spanDose.classList.remove("d-none");
+                spanDur.innerText = durationVal;
+                spanDur.classList.remove("d-none");
             } else {
-                doseSelects.forEach(s => s.classList.remove("d-none"));
-                drug.querySelector(".dose-text").classList.add("d-none");
-
-                durationSelect.classList.remove("d-none");
-                drug.querySelector(".duration-text").classList.add("d-none");
+                spanDose.classList.add("d-none");
+                spanDur.classList.add("d-none");
             }
         }
 
@@ -240,41 +238,36 @@
                 const text = input.value.trim();
                 if (!text) return;
                 const span = document.getElementById("drug-" + id).querySelector(".rule-text");
-                input.classList.add("d-none");
                 span.innerText = text;
                 span.classList.remove("d-none");
             }
         }
 
-        // Editable line to list (C/C, P/E, Advice)
-        document.querySelectorAll(".editable-line").forEach(input => {
+        // C/C, P/E, Advice Enter to list
+        document.querySelectorAll(".line-input").forEach(input => {
             input.addEventListener("keydown", function(e) {
                 if (e.key === "Enter") {
                     e.preventDefault();
                     const val = this.value.trim();
                     if (!val) return;
-                    const ul = document.createElement("ul");
-                    ul.className = "mb-2 editable-text";
-                    const li = document.createElement("li");
-                    li.innerText = val;
-                    ul.appendChild(li);
-                    this.parentNode.replaceChild(ul, this);
-
-                    // Click on UL to edit again
-                    ul.addEventListener("click", function() {
-                        const newInput = document.createElement("input");
-                        newInput.type = "text";
-                        newInput.className = "form-control editable-line mb-2";
-                        newInput.value = li.innerText;
-                        this.parentNode.replaceChild(newInput, this);
-                        newInput.focus();
-                        newInput.addEventListener("keydown", arguments.callee);
-                    });
+                    const type = this.dataset.type; // ul or ol
+                    let list;
+                    if (type === "ul") {
+                        list = this.nextElementSibling;
+                        const li = document.createElement("li");
+                        li.innerText = val;
+                        list.appendChild(li);
+                    } else if (type === "ol") {
+                        list = this.nextElementSibling;
+                        const li = document.createElement("li");
+                        li.innerText = val;
+                        list.appendChild(li);
+                    }
+                    this.value = "";
                 }
             });
         });
     </script>
-
 </body>
 
 </html>
