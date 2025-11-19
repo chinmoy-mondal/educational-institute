@@ -91,7 +91,7 @@
 
             <div class="row">
 
-                <!-- LEFT SIDE -->
+                <!-- LEFT -->
                 <div class="col-md-6">
                     <div class="left-box">
                         <h6><b>C/C :</b></h6>
@@ -105,22 +105,23 @@
                     </div>
                 </div>
 
-                <!-- RIGHT SIDE RX -->
+                <!-- RIGHT -->
                 <div class="col-md-6">
                     <div class="rx-box">
                         <h4 class="mb-3"><b>Rx</b></h4>
 
-                        <!-- Drug Search -->
+                        <!-- Search -->
                         <div class="no-print mb-3">
                             <input id="searchBox" class="form-control" placeholder="Search drug...">
                             <div id="searchResults" class="border p-2 mt-1" style="display:none; background:#fff;"></div>
                         </div>
 
-                        <!-- Added Drugs List -->
+                        <!-- Drug List -->
                         <div id="drugList"></div>
 
                     </div>
                 </div>
+
             </div>
 
             <div class="text-center mt-4 no-print">
@@ -131,33 +132,38 @@
     </div>
 
     <script>
-        // SAMPLE DRUG DATA (you can add more)
+        // Updated drug list with company
         const drugs = [{
                 type: "Tablet",
                 name: "Napa 500",
                 qty: "10 pcs",
-                group: "Paracetamol"
+                group: "Paracetamol",
+                company: "Beximco"
             },
             {
                 type: "Capsule",
                 name: "Omep 20",
                 qty: "14 pcs",
-                group: "Omeprazole"
+                group: "Omeprazole",
+                company: "Incepta"
             },
             {
                 type: "Syrup",
                 name: "Histacin",
                 qty: "100 ml",
-                group: "Antihistamine"
+                group: "Antihistamine",
+                company: "ACME"
             },
             {
                 type: "Tablet",
                 name: "Ace Plus",
                 qty: "10 pcs",
-                group: "Paracetamol+Caffeine"
-            }
+                group: "Paracetamol+Caffeine",
+                company: "Eskayef"
+            },
         ];
 
+        // search
         document.getElementById("searchBox").addEventListener("keyup", function() {
             let keyword = this.value.toLowerCase();
             let resultBox = document.getElementById("searchResults");
@@ -167,13 +173,22 @@
                 return;
             }
 
-            let filtered = drugs.filter(d => d.name.toLowerCase().includes(keyword));
+            let filtered = drugs.filter(d =>
+                d.name.toLowerCase().includes(keyword) ||
+                d.company.toLowerCase().includes(keyword) ||
+                d.type.toLowerCase().includes(keyword)
+            );
 
             resultBox.innerHTML = "";
+
             filtered.forEach(d => {
                 resultBox.innerHTML += `
             <div class="d-flex justify-content-between border-bottom py-1">
-                <div><b>${d.name}</b> <small class="text-muted">(${d.type})</small></div>
+                <div>
+                    <b>${d.name}</b>  
+                    <small class="text-muted">(${d.type})</small><br>
+                    <small class="small-text">${d.company}</small>
+                </div>
                 <button class="btn btn-sm btn-success" onclick='addDrug(${JSON.stringify(d)})'>Add</button>
             </div>`;
             });
@@ -183,22 +198,22 @@
 
         function addDrug(d) {
             let box = document.getElementById("drugList");
-
             let id = Date.now();
+
             box.innerHTML += `
         <div class="drug-item" id="drug-${id}">
             <b>${d.type}. ${d.name}</b> — ${d.qty}
-            <div class="small-text">${d.group}</div>
+            <div class="small-text">${d.group} | ${d.company}</div>
 
             <div class="mt-1">
-                Dose: 
+                Dose:
                 <input class="dose-input form-control form-control-sm d-inline-block" style="width:200px;"
                        oninput="updateText(${id})">
                 <span class="dose-text d-none"></span>
             </div>
 
             <div class="mt-1">
-                Duration: 
+                Duration:
                 <input class="duration-input form-control form-control-sm d-inline-block" style="width:150px;"
                        oninput="updateText(${id})">
                 <span class="duration-text d-none"></span>
@@ -209,11 +224,11 @@
         function updateText(id) {
             let drug = document.getElementById("drug-" + id);
 
-            let doseInput = drug.querySelector(".dose-input");
-            let durationInput = drug.querySelector(".duration-input");
+            drug.querySelector(".dose-text").innerText =
+                drug.querySelector(".dose-input").value;
 
-            drug.querySelector(".dose-text").innerText = doseInput.value;
-            drug.querySelector(".duration-text").innerText = durationInput.value;
+            drug.querySelector(".duration-text").innerText =
+                drug.querySelector(".duration-input").value;
         }
     </script>
 
