@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use App\Models\DrugsModel;
@@ -11,6 +12,7 @@ class Health extends BaseController
 
         $data['drugs'] = $drugModel->findAll();
 
-        return view('health/prescription', $data);
+        // return view('health/prescription', $data);
+        echo "hello";
     }
 }
