@@ -111,26 +111,30 @@
             <hr>
 
             <!-- Patient Info -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-
-                <div>
-                    <b>Name:</b>
-                    <input id="nameInput" class="form-control form-control-sm d-inline-block" style="width:200px;">
-                    <span id="nameText" class="d-none print-text"></span>
+            <div class="row g-2 mb-3 align-items-center">
+                <div class="col-12 col-sm-4">
+                    <div class="d-flex flex-column flex-sm-row align-items-sm-center">
+                        <b class="me-2">Name:</b>
+                        <input id="nameInput" class="form-control form-control-sm flex-grow-1 w-100 w-sm-auto" placeholder="Enter name">
+                        <span id="nameText" class="d-none print-text ms-2"></span>
+                    </div>
                 </div>
 
-                <div>
-                    <b>Age:</b>
-                    <input id="ageInput" class="form-control form-control-sm d-inline-block" style="width:100px;">
-                    <span id="ageText" class="d-none print-text"></span>
+                <div class="col-12 col-sm-4">
+                    <div class="d-flex flex-column flex-sm-row align-items-sm-center">
+                        <b class="me-2">Age:</b>
+                        <input id="ageInput" class="form-control form-control-sm flex-grow-1 w-100 w-sm-auto" placeholder="Age">
+                        <span id="ageText" class="d-none print-text ms-2"></span>
+                    </div>
                 </div>
 
-                <div>
-                    <b>Date:</b>
-                    <input id="dateInput" type="date" class="form-control form-control-sm d-inline-block" style="width:150px;">
-                    <span id="dateText" class="d-none print-text"></span>
+                <div class="col-12 col-sm-4">
+                    <div class="d-flex flex-column flex-sm-row align-items-sm-center">
+                        <b class="me-2">Date:</b>
+                        <input id="dateInput" type="date" class="form-control form-control-sm flex-grow-1 w-100 w-sm-auto">
+                        <span id="dateText" class="d-none print-text ms-2"></span>
+                    </div>
                 </div>
-
             </div>
 
             <div class="row">
