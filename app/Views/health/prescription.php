@@ -339,8 +339,8 @@
                 const ruleInput = item.querySelector(".rule-input");
                 const ruleSpan = item.querySelector(".rule-text");
                 if (ruleInput && ruleSpan) {
-                    ruleSpan.innerText = ruleInput.value.trim(); // can be empty
-                    ruleSpan.classList.remove("d-none"); // always show span for printing
+                    ruleSpan.innerText = ruleInput.value.trim();
+                    ruleSpan.classList.toggle("d-none", !ruleInput.value.trim());
                     ruleInput.style.display = "none";
                 }
             });
@@ -368,7 +368,7 @@
                 if (durSelect) durSelect.classList.remove("d-none");
                 if (doseSpan) doseSpan.classList.add("d-none");
                 if (durSpan) durSpan.classList.add("d-none");
-                if (ruleInput) ruleInput.classList.remove("d-none");
+                if (ruleInput) ruleInput.style.display = ""; // restore default display
                 if (ruleSpan) ruleSpan.classList.add("d-none");
             });
         });
