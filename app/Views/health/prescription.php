@@ -41,8 +41,11 @@
             margin-bottom: 8px;
         }
 
-        .line-input {
-            margin-bottom: 5px;
+        .editable-text {
+            cursor: pointer;
+            border-bottom: 1px dashed #aaa;
+            padding: 2px;
+            display: inline-block;
         }
 
         @media print {
@@ -86,30 +89,21 @@
 
             <!-- Patient Info -->
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <div><b>Name:</b>
-                    <input class="form-control form-control-sm d-inline-block" style="width:200px;">
-                    <span class="print-text"></span>
-                </div>
-                <div><b>Age:</b>
-                    <input class="form-control form-control-sm d-inline-block" style="width:100px;">
-                    <span class="print-text"></span>
-                </div>
-                <div><b>Date:</b>
-                    <input type="date" class="form-control form-control-sm d-inline-block" style="width:150px;">
-                    <span class="print-text"></span>
-                </div>
+                <div><b>Name:</b> <input class="form-control form-control-sm d-inline-block print-text" style="width:200px;"></div>
+                <div><b>Age:</b> <input class="form-control form-control-sm d-inline-block print-text" style="width:100px;"></div>
+                <div><b>Date:</b> <input type="date" class="form-control form-control-sm d-inline-block print-text" style="width:150px;"></div>
             </div>
 
             <div class="row">
-                <!-- LEFT -->
+                <!-- LEFT: 4 columns -->
                 <div class="col-md-4">
                     <div class="left-box">
                         <h6><b>C/C :</b></h6>
-                        <input class="form-control line-input" type="text" data-type="ul">
+                        <input class="form-control mb-2 line-input" type="text" data-type="ul">
                         <ul class="list-cc"></ul>
 
                         <h6><b>P/E :</b></h6>
-                        <input class="form-control line-input" type="text" data-type="ul">
+                        <input class="form-control mb-2 line-input" type="text" data-type="ul">
                         <ul class="list-pe"></ul>
 
                         <h6><b>Advice :</b></h6>
@@ -118,7 +112,7 @@
                     </div>
                 </div>
 
-                <!-- RIGHT -->
+                <!-- RIGHT: 8 columns -->
                 <div class="col-md-8">
                     <div class="rx-box">
                         <h4 class="mb-3"><b>Rx</b></h4>
@@ -143,39 +137,11 @@
     </div>
 
     <script>
-        const drugs = [{
-                drug_name: "Napa 500",
-                drug_type: "Tablet",
-                quantity: "10 pcs",
-                group_name: "Paracetamol",
-                company: "Beximco"
-            },
-            {
-                drug_name: "Omep 20",
-                drug_type: "Capsule",
-                quantity: "14 pcs",
-                group_name: "Omeprazole",
-                company: "Incepta"
-            },
-            {
-                drug_name: "Histacin",
-                drug_type: "Syrup",
-                quantity: "100 ml",
-                group_name: "Antihistamine",
-                company: "ACME"
-            },
-            {
-                drug_name: "Ace Plus",
-                drug_type: "Tablet",
-                quantity: "10 pcs",
-                group_name: "Paracetamol+Caffeine",
-                company: "Eskayef"
-            },
-        ];
-
+        let drugs = <?= $drugs_json ?>; // From controller JSON
         const doseOptions = [0.5, 1, 1.5, 2, 3];
         const durationOptions = ["1 day", "3 days", "5 days", "7 days", "10 days"];
 
+        // Search drugs
         document.getElementById("searchBox").addEventListener("keyup", function() {
             const keyword = this.value.toLowerCase();
             const resultBox = document.getElementById("searchResults");
@@ -204,28 +170,23 @@
             resultBox.style.display = "block";
         });
 
+        // Add drug
         function addDrug(d) {
             const box = document.getElementById("drugList");
             const id = Date.now();
 
             box.innerHTML += `
     <div class="drug-item" id="drug-${id}">
-        <b>${d.drug_type}. ${d.drug_name}</b> — ${d.quantity}
+        <b>${d.drug_type}. ${d.drug_name}</b> — ${d.quantity} ${d.unit_type || ''}
         <div class="small-text">${d.group_name} | ${d.company}</div>
 
         <div class="mt-1 d-flex align-items-center">
             <span class="me-2">Dose:</span>
-            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;">
-                ${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}
-            </select>
-            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;">
-                ${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}
-            </select>
-            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;">
-                ${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}
-            </select>
+            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;" onchange="updateDrug(${id})">${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}</select>
+            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;" onchange="updateDrug(${id})">${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}</select>
+            <select class="dose-select form-select form-select-sm d-inline-block mx-1" style="width:70px;" onchange="updateDrug(${id})">${doseOptions.map(v=>`<option value="${v}">${v}</option>`).join('')}</select>
 
-            <select class="duration-select form-select form-select-sm d-inline-block mx-2" style="width:120px;">
+            <select class="duration-select form-select form-select-sm d-inline-block mx-2" style="width:120px;" onchange="updateDrug(${id})">
                 <option value="">Duration</option>
                 ${durationOptions.map(d => `<option value="${d}">${d}</option>`).join('')}
             </select>
@@ -236,56 +197,74 @@
 
         <div class="mt-1 d-flex align-items-center">
             <b>Rule:</b>
-            <input type="text" class="form-control form-control-sm ms-2 w-50 rule-input">
+            <input type="text" class="form-control form-control-sm ms-2 w-50 rule-input" placeholder="Enter rule" onkeydown="handleRuleEnter(event, ${id})">
             <span class="rule-text d-none ms-2"></span>
         </div>
     </div>`;
 
+            // Clear search
             document.getElementById("searchBox").value = "";
             document.getElementById("searchResults").style.display = "none";
         }
 
-        // Enter to add C/C, P/E, Advice
+        // Update drug (dose/duration)
+        function updateDrug(id) {
+            const drug = document.getElementById("drug-" + id);
+            const doseSelects = drug.querySelectorAll(".dose-select");
+            const durationSelect = drug.querySelector(".duration-select");
+
+            const doseVals = Array.from(doseSelects).map(s => s.value).filter(v => v);
+            const durationVal = durationSelect.value;
+
+            const spanDose = drug.querySelector(".dose-text");
+            const spanDur = drug.querySelector(".duration-text");
+
+            if (doseVals.length === doseSelects.length && durationVal) {
+                spanDose.innerText = doseVals.join(" / ");
+                spanDose.classList.remove("d-none");
+                spanDur.innerText = durationVal;
+                spanDur.classList.remove("d-none");
+            } else {
+                spanDose.classList.add("d-none");
+                spanDur.classList.add("d-none");
+            }
+        }
+
+        // Rule input enter
+        function handleRuleEnter(e, id) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                const input = e.target;
+                const text = input.value.trim();
+                if (!text) return;
+                const span = document.getElementById("drug-" + id).querySelector(".rule-text");
+                span.innerText = text;
+                span.classList.remove("d-none");
+            }
+        }
+
+        // C/C, P/E, Advice Enter to list
         document.querySelectorAll(".line-input").forEach(input => {
             input.addEventListener("keydown", function(e) {
                 if (e.key === "Enter") {
                     e.preventDefault();
                     const val = this.value.trim();
                     if (!val) return;
-                    const type = this.dataset.type;
-                    let list = this.nextElementSibling;
-                    const li = document.createElement("li");
-                    li.innerText = val;
-                    list.appendChild(li);
+                    const type = this.dataset.type; // ul or ol
+                    let list;
+                    if (type === "ul") {
+                        list = this.nextElementSibling;
+                        const li = document.createElement("li");
+                        li.innerText = val;
+                        list.appendChild(li);
+                    } else if (type === "ol") {
+                        list = this.nextElementSibling;
+                        const li = document.createElement("li");
+                        li.innerText = val;
+                        list.appendChild(li);
+                    }
                     this.value = "";
                 }
-            });
-        });
-
-        // Before print: copy input/select values to spans
-        window.addEventListener("beforeprint", function() {
-            document.querySelectorAll("input[type=text], input[type=date]").forEach(input => {
-                const span = input.nextElementSibling;
-                if (span) span.innerText = input.value;
-            });
-
-            document.querySelectorAll(".rule-input").forEach(input => {
-                const span = input.nextElementSibling;
-                if (span) span.innerText = input.value;
-            });
-
-            document.querySelectorAll(".drug-item").forEach(drug => {
-                const doses = Array.from(drug.querySelectorAll(".dose-select")).map(s => s.value);
-                const duration = drug.querySelector(".duration-select").value;
-
-                const doseText = drug.querySelector(".dose-text");
-                const durText = drug.querySelector(".duration-text");
-
-                doseText.innerText = doses.join(" / ");
-                durText.innerText = duration;
-
-                doseText.classList.remove("d-none");
-                durText.classList.remove("d-none");
             });
         });
     </script>
