@@ -15,7 +15,7 @@
 <!--  Second Line: Logo, Institute Name & Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark  bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="<?= base_url(''); ?>"><img src="<?= base_url('public/assets/img/logo.jpg'); ?>">Demo Secondary School</a>
+        <a class="navbar-brand" href="<?= base_url(''); ?>"><img src="<?= base_url('public/assets/img/logo.jpg'); ?>">Jhenaidah Public School & Collage</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
