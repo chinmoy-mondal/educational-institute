@@ -2,8 +2,8 @@
 <div class="top-bar">
     <div class="container d-flex justify-content-between">
         <div>
-            <i class="fas fa-phone"></i> <a href="tel:+8801309115832">+phone number </a>
-            <i class="fas fa-envelope"></i> <a href="mailto:info@example.com">email@gmail.com</a>
+            <i class="fas fa-phone"></i> <a href="tel:+8801309115832">+88 01886007142</a>
+            <i class="fas fa-envelope"></i> <a href="mailto:info@example.com">jpsc2023hafiz@gmail.com</a>
         </div>
         <div>
             <a href="#"><i class="fab fa-facebook"></i></a>
