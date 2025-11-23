@@ -158,6 +158,8 @@ $routes->post('admin/attendance/save', 'Dashboard::saveAttendance');
 $routes->get('prescription', 'Health::prescription');
 $routes->get('search-drugs', 'Health::searchDrugs');
 
+$routes->post('save-drug', 'Health::save');
+
 $routes->set404Override(function () {
     $controller = new \App\Controllers\ErrorController();
     return $controller->show404();
