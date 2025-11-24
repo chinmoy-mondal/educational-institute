@@ -10,6 +10,14 @@
             background: #f7f7f7;
         }
 
+        .price-tag {
+            background-color: green;
+            color: red;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 0.85em;
+        }
+
         .prescription-card {
             background: white;
             padding: 25px;
@@ -282,9 +290,12 @@
             searchResults.innerHTML = filtered.length ? filtered.map(d => `
                 <div class="d-flex justify-content-between border-bottom py-1">
                     <div  onclick='addDrug(${JSON.stringify(d)})'>
+                        <small class="text-muted">${escapeHtml(d.drug_type)}. </small>
                         <b>${escapeHtml(d.drug_name)}</b>
                         <small class="text-muted"> - ${escapeHtml(d.quantity)} </small>
-                        <small class="text-muted">(${escapeHtml(d.drug_type)})</small><br>
+                        <small class="price-tag">
+                            (${escapeHtml(d.price)}/${escapeHtml(d.unit_type)})
+                        </small><br>
                         <small class="small-text">${escapeHtml(d.company)} | ${escapeHtml(d.group_name)}</small>
                     </div>
                     <button class="btn btn-sm btn-success" onclick='addDrug(${JSON.stringify(d)})'>Add</button>
