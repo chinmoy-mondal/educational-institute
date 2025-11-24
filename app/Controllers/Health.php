@@ -57,9 +57,9 @@ class Health extends BaseController
         $drugs = $model
             ->groupStart()
             ->like('drug_name', $keyword, 'after')
-            ->orLike('group_name', $keyword)
+            ->orLike('group_name', $keyword, 'after')
             ->groupEnd()
-            ->findAll();
+            ->findAll(10);
 
         return $this->response->setJSON($drugs);
     }
