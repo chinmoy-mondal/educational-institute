@@ -21,7 +21,7 @@ class Health extends BaseController
             ->orLike('drug_type', $keyword)
             ->orLike('group_name', $keyword)
             ->orLike('company', $keyword)
-            ->findAll(20);
+            ->findAll();
         return $this->response->setJSON($drugs);
     }
 }
