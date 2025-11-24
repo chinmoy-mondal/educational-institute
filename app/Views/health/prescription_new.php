@@ -3,6 +3,57 @@
 
 <head>
     <title>Drug Search</title>
+    <style>
+        /* Pagination wrapper */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 0;
+            margin: 0;
+        }
+
+        /* List items */
+        .pagination li {
+            list-style: none;
+        }
+
+        /* Normal page links */
+        .pagination a,
+        .pagination span {
+            display: block;
+            padding: 6px 14px;
+            color: #0d6efd;
+            text-decoration: none;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: 0.2s;
+            background: white;
+        }
+
+        /* Hover effect */
+        .pagination a:hover {
+            background: #e9ecef;
+        }
+
+        /* Active page */
+        .pagination .active a,
+        .pagination .active span {
+            background: #0d6efd !important;
+            color: white !important;
+            border-color: #0d6efd !important;
+        }
+
+        /* Disable First/Prev when page=1 */
+        .pagination .disabled a,
+        .pagination .disabled span {
+            color: #6c757d !important;
+            background: #f8f9fa;
+            border-color: #dee2e6;
+        }
+    </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
