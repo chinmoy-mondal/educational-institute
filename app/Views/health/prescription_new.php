@@ -77,9 +77,7 @@
 
     <!-- Pagination Links -->
     <div class="d-flex justify-content-center mt-3">
-        <nav>
-            <?= $pager->links('default', 'bootstrap_full') ?>
-        </nav>
+        <?= $pager->links('default', 'bs_full') ?>
     </div>
 
 </body>
