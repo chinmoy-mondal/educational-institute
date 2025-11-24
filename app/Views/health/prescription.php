@@ -285,8 +285,8 @@
                         <small class="text-muted">${escapeHtml(d.drug_type)}. </small>
                         <b>${escapeHtml(d.drug_name)}</b>
                         <small class="text-muted"> - ${escapeHtml(d.quantity)} </small>
-                        <small class="text-success text-danger">
-                            (${escapeHtml(d.price)}/${escapeHtml(d.unit_type)})
+                        <small class="text-danger fw-bold">
+                            ${escapeHtml(d.price)} / ${escapeHtml(d.unit_type)}
                         </small><br>
                         <small class="small-text">${escapeHtml(d.company)} | ${escapeHtml(d.group_name)}</small>
                     </div>
