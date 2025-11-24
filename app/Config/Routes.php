@@ -156,7 +156,7 @@ $routes->match(['get', 'post'], 'admin/attendance/calendar', 'Dashboard::attenda
 $routes->post('admin/attendance/save', 'Dashboard::saveAttendance');
 
 $routes->get('drug', 'Health::drugs');
-$routes->get('prescription', 'Health::prescriptio∂n');
+$routes->get('prescription', 'Health::prescription');
 $routes->get('search-drugs', 'Health::searchDrugs');
 
 
