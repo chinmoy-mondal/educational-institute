@@ -24,14 +24,4 @@ class Health extends BaseController
             ->findAll(20);
         return $this->response->setJSON($drugs);
     }
-
-    public function save()
-    {
-        $data = $this->request->getJSON(true);
-
-        $model = new DrugsModel();
-        $model->insert($data);
-
-        return $this->response->setJSON(["status" => "success"]);
-    }
 }

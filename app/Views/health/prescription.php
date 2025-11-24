@@ -328,21 +328,40 @@
             input.value = "";
         }
 
-        // Optional: keep your Enter / '*' key logic for desktop
+        // Mobile + Desktop Enter support for C/C, P/E, Advice
         document.querySelectorAll(".line-input").forEach(input => {
+
+            // Desktop Enter
             input.addEventListener("keydown", function(e) {
-                if (e.key === "Enter" || e.key === "*") {
+                if (e.key === "Enter") {
                     e.preventDefault();
-                    const val = this.value.trim();
-                    if (!val) return;
-                    const list = this.nextElementSibling.nextElementSibling; // skip Add button
-                    const li = document.createElement("li");
-                    li.innerText = val;
-                    list.appendChild(li);
-                    this.value = "";
+                    addListItem(this);
+                }
+            });
+
+            // Mobile Enter (newline inserted secretly)
+            input.addEventListener("input", function() {
+                if (this.value.includes("\n")) {
+                    this.value = this.value.replace("\n", "");
+                    addListItem(this);
                 }
             });
         });
+
+        // Add to UL/OL
+        function addListItem(input) {
+            const val = input.value.trim();
+            if (!val) return;
+
+            // UL or OL after Add button
+            let list = input.nextElementSibling.nextElementSibling;
+
+            const li = document.createElement("li");
+            li.innerText = val;
+            list.appendChild(li);
+
+            input.value = "";
+        }
 
         window.addEventListener("beforeprint", function() {
             // Patient info
