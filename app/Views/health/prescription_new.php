@@ -4,54 +4,64 @@
 <head>
     <title>Drug Search</title>
     <style>
-        /* Pagination wrapper */
+        /* Pagination Wrapper */
         .pagination {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 6px;
-            padding: 10px 0;
+            gap: 8px;
+            padding: 12px 0;
             margin: 0;
         }
 
-        /* List items */
+        /* Each item */
         .pagination li {
             list-style: none;
         }
 
-        /* Normal page links */
+        /* Links */
         .pagination a,
         .pagination span {
             display: block;
-            padding: 6px 14px;
-            color: #0d6efd;
-            text-decoration: none;
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
+            padding: 8px 16px;
             font-size: 15px;
-            transition: 0.2s;
-            background: white;
+            font-weight: 500;
+            text-decoration: none;
+            color: #0d6efd;
+            border: 1px solid #d0d7de;
+            background: #ffffff;
+            border-radius: 50px;
+            /* pill shape */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: all 0.25s ease;
         }
 
-        /* Hover effect */
+        /* Hover */
         .pagination a:hover {
-            background: #e9ecef;
+            background: #e7f0ff;
+            border-color: #bcd1ff;
+            transform: translateY(-2px);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
         }
 
-        /* Active page */
+        /* Active Page */
         .pagination .active a,
         .pagination .active span {
             background: #0d6efd !important;
             color: white !important;
             border-color: #0d6efd !important;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.18);
+            transform: translateY(-2px);
         }
 
-        /* Disable First/Prev when page=1 */
-        .pagination .disabled a,
-        .pagination .disabled span {
-            color: #6c757d !important;
-            background: #f8f9fa;
-            border-color: #dee2e6;
+        /* Disabled (optional) */
+        .pagination .disabled span,
+        .pagination .disabled a {
+            background: #f1f1f1;
+            color: #999;
+            border-color: #ddd;
+            box-shadow: none;
+            cursor: not-allowed;
         }
     </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
