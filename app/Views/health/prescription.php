@@ -10,14 +10,6 @@
             background: #f7f7f7;
         }
 
-        .price-tag {
-            background-color: green;
-            color: red;
-            padding: 2px 4px;
-            border-radius: 3px;
-            font-size: 0.85em;
-        }
-
         .prescription-card {
             background: white;
             padding: 25px;
@@ -293,7 +285,7 @@
                         <small class="text-muted">${escapeHtml(d.drug_type)}. </small>
                         <b>${escapeHtml(d.drug_name)}</b>
                         <small class="text-muted"> - ${escapeHtml(d.quantity)} </small>
-                        <small class="price-tag">
+                        <small class="text-success text-danger">
                             (${escapeHtml(d.price)}/${escapeHtml(d.unit_type)})
                         </small><br>
                         <small class="small-text">${escapeHtml(d.company)} | ${escapeHtml(d.group_name)}</small>
