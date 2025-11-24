@@ -281,9 +281,10 @@
 
             searchResults.innerHTML = filtered.length ? filtered.map(d => `
                 <div class="d-flex justify-content-between border-bottom py-1">
-                    <div>
+                    <div  onclick='addDrug(${JSON.stringify(d)})'>
                         <b>${escapeHtml(d.drug_name)}</b>
-                        <small class="text-muted">(${escapeHtml(d.drug_type)})</small><small class="text-muted">(${escapeHtml(d.quantity)})</small><br>
+                        <small class="text-muted"> - ${escapeHtml(d.quantity)} </small>
+                        <small class="text-muted">(${escapeHtml(d.drug_type)})</small><br>
                         <small class="small-text">${escapeHtml(d.company)} | ${escapeHtml(d.group_name)}</small>
                     </div>
                     <button class="btn btn-sm btn-success" onclick='addDrug(${JSON.stringify(d)})'>Add</button>
