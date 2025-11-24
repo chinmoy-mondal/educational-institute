@@ -283,6 +283,7 @@ class Home extends BaseController
 				->whereIn('subject', $subjectIds)
 				->where('subcategory', $exam_name)
 				->where('YEAR(start_date)', $year)   // extract year from start_date
+				->orderBy('start_date', 'ASC')       // sort ascending (earliest first)
 				->findAll();
 
 			// Combine into one array
