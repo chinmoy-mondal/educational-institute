@@ -18,12 +18,10 @@ class Health extends BaseController
         if (!empty($search)) {
             $drugModel
                 ->groupStart()
-                ->like('drug_name', $search)
-                ->orLike('company', $search)
-                ->orLike('drug_type', $search)
-                ->orLike('group_name', $search)
+                ->like('drug_name', $search, 'after')
+                ->orLike('group_name', $search, 'after')
                 ->groupEnd()
-                ->limit(20)
+                ->limit(10)
                 ->find();
         }
 
@@ -61,7 +59,7 @@ class Health extends BaseController
             ->like('drug_name', $keyword, 'after')
             ->orLike('group_name', $keyword)
             ->groupEnd()
-            ->findAll(20);
+            ->findAll();
 
         return $this->response->setJSON($drugs);
     }
