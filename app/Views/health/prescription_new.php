@@ -9,9 +9,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 8px;
-            padding: 12px 0;
+            gap: 6px;
             margin: 0;
+            padding: 0;
         }
 
         /* Each item */
@@ -19,49 +19,35 @@
             list-style: none;
         }
 
-        /* Links */
+        /* Links and numbers */
         .pagination a,
         .pagination span {
             display: block;
-            padding: 8px 16px;
-            font-size: 15px;
+            padding: 4px 10px;
+            /* Very compact */
+            font-size: 14px;
             font-weight: 500;
             text-decoration: none;
             color: #0d6efd;
             border: 1px solid #d0d7de;
             background: #ffffff;
-            border-radius: 50px;
-            /* pill shape */
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-            transition: all 0.25s ease;
+            border-radius: 4px;
+            /* small rounded */
+            transition: 0.2s ease;
         }
 
         /* Hover */
         .pagination a:hover {
             background: #e7f0ff;
             border-color: #bcd1ff;
-            transform: translateY(-2px);
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
         }
 
         /* Active Page */
         .pagination .active a,
         .pagination .active span {
             background: #0d6efd !important;
-            color: white !important;
+            color: #ffffff !important;
             border-color: #0d6efd !important;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.18);
-            transform: translateY(-2px);
-        }
-
-        /* Disabled (optional) */
-        .pagination .disabled span,
-        .pagination .disabled a {
-            background: #f1f1f1;
-            color: #999;
-            border-color: #ddd;
-            box-shadow: none;
-            cursor: not-allowed;
         }
     </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
