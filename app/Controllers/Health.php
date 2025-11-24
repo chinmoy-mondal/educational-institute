@@ -6,15 +6,18 @@ use App\Models\DrugsModel;
 
 class Health extends BaseController
 {
-
-    public function prescription()
+    // ---------------------------
+    // DRUG LIST WITH PAGINATION
+    // ---------------------------
+    public function drugs()
     {
         $drugModel = new DrugsModel();
 
         $search = $this->request->getGet('q');
 
-        if ($search) {
-            $drugModel->groupStart()
+        if (!empty($search)) {
+            $drugModel
+                ->groupStart()
                 ->like('drug_name', $search)
                 ->orLike('company', $search)
                 ->orLike('drug_type', $search)
@@ -23,37 +26,43 @@ class Health extends BaseController
         }
 
         $data = [
-            'drugs'   => $drugModel->paginate(20), // 20 items per page
-            'pager'   => $drugModel->pager,
-            'search'  => $search
+            'drugs'  => $drugModel->paginate(20),     // 20 items per page
+            'pager'  => $drugModel->pager,
+            'search' => $search
         ];
 
         return view('health/prescription_new', $data);
     }
 
+    // ---------------------------
+    // OLD JSON-BASED PRESCRIPTION
+    // ---------------------------
+    public function prescription()
+    {
+        $drugModel = new DrugsModel();
+        $data['drugs_json'] = json_encode($drugModel->findAll());
 
+        return view('health/prescription', $data);
+    }
 
+    // ---------------------------
+    // AJAX SEARCH API (not used in paginate version)
+    // ---------------------------
+    public function searchDrugs()
+    {
+        $keyword = $this->request->getGet('q');
 
+        $model = new DrugsModel();
 
+        $drugs = $model
+            ->groupStart()
+            ->like('drug_name', $keyword)
+            ->orLike('drug_type', $keyword)
+            ->orLike('group_name', $keyword)
+            ->orLike('company', $keyword)
+            ->groupEnd()
+            ->findAll();
 
-
-
-    // public function prescription()
-    // {
-    //     $drugModel = new DrugsModel();
-    //     $data['drugs_json'] = json_encode($drugModel->findAll());
-    //     return view('health/prescription', $data);
-    // }
-
-    // public function searchDrugs()
-    // {
-    //     $keyword = $this->request->getGet('q');
-    //     $model = new DrugsModel();
-    //     $drugs = $model->like('drug_name', $keyword)
-    //         ->orLike('drug_type', $keyword)
-    //         ->orLike('group_name', $keyword)
-    //         ->orLike('company', $keyword)
-    //         ->findAll();
-    //     return $this->response->setJSON($drugs);
-    // }
+        return $this->response->setJSON($drugs);
+    }
 }
