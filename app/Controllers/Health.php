@@ -22,7 +22,9 @@ class Health extends BaseController
                 ->orLike('company', $search)
                 ->orLike('drug_type', $search)
                 ->orLike('group_name', $search)
-                ->groupEnd();
+                ->groupEnd()
+                ->limit(20)
+                ->find();
         }
 
         $data = [
