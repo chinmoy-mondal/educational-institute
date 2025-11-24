@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Drug Search</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -12,7 +13,7 @@
     <!-- Search Form -->
     <form method="get" class="mb-3">
         <input type="text" name="q" class="form-control" placeholder="Search drugs..."
-               value="<?= esc($search) ?>">
+            value="<?= esc($search) ?>">
         <button class="btn btn-primary mt-2">Search</button>
     </form>
 
@@ -20,6 +21,7 @@
     <table class="table table-bordered table-striped">
         <thead>
             <tr>
+                <th>SL</th>
                 <th>Company</th>
                 <th>Drug Type</th>
                 <th>Drug Name</th>
@@ -32,12 +34,14 @@
         <tbody>
             <?php if (count($drugs) == 0): ?>
                 <tr>
-                    <td colspan="6" class="text-center text-danger">No drugs found</td>
+                    <td colspan="7" class="text-center text-danger">No drugs found</td>
                 </tr>
             <?php endif; ?>
 
+            <?php $i = 1; ?>
             <?php foreach ($drugs as $d): ?>
                 <tr>
+                    <td><?= $i++ ?></td>
                     <td><?= esc($d['company']) ?></td>
                     <td><?= esc($d['drug_type']) ?></td>
                     <td><?= esc($d['drug_name']) ?></td>
@@ -50,4 +54,5 @@
     </table>
 
 </body>
+
 </html>
