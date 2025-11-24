@@ -11,24 +11,24 @@ class Health extends BaseController
     {
         $drugModel = new DrugsModel();
 
-        // Get search keyword from GET parameter
-        $keyword = $this->request->getGet('search');
+        // Get search text (if typed)
+        $search = $this->request->getGet('q');
 
-        if ($keyword) {
-            $drugs = $drugModel
-                ->like('drug_name', $keyword)
-                ->orLike('drug_type', $keyword)
-                ->orLike('company', $keyword)
-                ->orLike('group_name', $keyword)
-                ->findAll();
-        } else {
-            $drugs = $drugModel->findAll();
+        if ($search) {
+            // Search by drug name OR type OR company OR group
+            $drugModel
+                ->groupStart()
+                ->like('drug_name', $search)
+                ->orLike('drug_type', $search)
+                ->orLike('company', $search)
+                ->orLike('group_name', $search)
+                ->groupEnd();
         }
 
-        $data['drugs'] = $drugs;
-        $data['search'] = $keyword;
+        $data['drugs'] = $drugModel->findAll();
+        $data['search'] = $search;
 
-        return view('health/prescription_new', $data);
+        return view('health/prescription_table', $data);
     }
 
 
