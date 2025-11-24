@@ -142,7 +142,8 @@
                 <div class="col-md-4">
                     <div class="left-box">
                         <h6><b>C/C :</b></h6>
-                        <input class="form-control mb-1 line-input" type="text" data-type="ul">
+                        <input type="text" class="form-control line-input"
+                            enterkeyhint="enter" inputmode="text">
                         <button type="button" class="btn btn-sm btn-primary add-btn-phone" onclick="addLine(this)">Add</button>
                         <ul class="list-cc"></ul>
 
