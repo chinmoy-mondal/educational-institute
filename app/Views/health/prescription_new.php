@@ -64,6 +64,11 @@
         <button class="btn btn-primary mt-2">Search</button>
     </form>
 
+    <!-- Pagination Links -->
+    <div class="d-flex justify-content-center">
+        <?= $pager->links() ?>
+    </div>
+
     <!-- Drug Table -->
     <table class="table table-bordered table-striped">
         <thead>
@@ -106,10 +111,7 @@
         </tbody>
     </table>
 
-    <!-- Pagination Links -->
-    <div class="d-flex justify-content-center">
-        <?= $pager->links() ?>
-    </div>
+
 
 </body>
 
