@@ -3,22 +3,6 @@
 
 <head>
     <title>Drug Search</title>
-    <style>
-        .pagination .page-link {
-            border-radius: 6px !important;
-            margin: 0 3px;
-        }
-
-        .pagination .page-item.active .page-link {
-            background-color: #0d6efd !important;
-            border-color: #0d6efd !important;
-            color: #fff !important;
-        }
-
-        .pagination .page-link:hover {
-            background-color: #e9ecef;
-        }
-    </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -76,8 +60,8 @@
     </table>
 
     <!-- Pagination Links -->
-    <div class="d-flex justify-content-center mt-3">
-        <?= $pager->links('default', 'bs_full') ?>
+    <div class="d-flex justify-content-center">
+        <?= $pager->links() ?>
     </div>
 
 </body>
