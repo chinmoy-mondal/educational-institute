@@ -56,10 +56,8 @@ class Health extends BaseController
 
         $drugs = $model
             ->groupStart()
-            ->like('drug_name', $keyword)
-            ->orLike('drug_type', $keyword)
+            ->like('drug_name', $keyword, 'after')
             ->orLike('group_name', $keyword)
-            ->orLike('company', $keyword)
             ->groupEnd()
             ->findAll();
 
