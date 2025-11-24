@@ -275,14 +275,15 @@
                 (d.drug_name || "").toLowerCase().includes(keyword) ||
                 (d.drug_type || "").toLowerCase().includes(keyword) ||
                 (d.group_name || "").toLowerCase().includes(keyword) ||
-                (d.company || "").toLowerCase().includes(keyword)
+                (d.company || "").toLowerCase().includes(keyword) ||
+                (d.quantity || "").toLowerCase().includes(keyword)
             );
 
             searchResults.innerHTML = filtered.length ? filtered.map(d => `
                 <div class="d-flex justify-content-between border-bottom py-1">
                     <div>
                         <b>${escapeHtml(d.drug_name)}</b>
-                        <small class="text-muted">(${escapeHtml(d.drug_type)})</small><br>
+                        <small class="text-muted">(${escapeHtml(d.drug_type)})</small><small class="text-muted">(${escapeHtml(d.quantity)})</small><br>
                         <small class="small-text">${escapeHtml(d.company)} | ${escapeHtml(d.group_name)}</small>
                     </div>
                     <button class="btn btn-sm btn-success" onclick='addDrug(${JSON.stringify(d)})'>Add</button>
