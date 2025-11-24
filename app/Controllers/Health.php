@@ -28,7 +28,7 @@ class Health extends BaseController
         $data['drugs'] = $drugModel->findAll();
         $data['search'] = $search;
 
-        return view('health/prescription_table', $data);
+        return view('health/prescription_new', $data);
     }
 
 
