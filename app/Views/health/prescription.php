@@ -72,18 +72,17 @@
             }
         }
 
-        /* Mobile-specific: show Add button */
+        /* MOBILE → HIDE Add button */
         @media (max-width: 768px) {
             .add-btn-phone {
-                display: inline-block;
-                margin-top: 4px;
+                display: none !important;
             }
         }
 
-        /* Desktop: hide Add button */
+        /* DESKTOP → SHOW Add button */
         @media (min-width: 769px) {
             .add-btn-phone {
-                display: none !important;
+                display: inline-block !important;
             }
         }
     </style>
@@ -148,12 +147,14 @@
                         <ul class="list-cc"></ul>
 
                         <h6><b>P/E :</b></h6>
-                        <input class="form-control mb-1 line-input" type="text" data-type="ul">
+                        <input type="text" class="form-control line-input"
+                            enterkeyhint="enter" inputmode="text">
                         <button type="button" class="btn btn-sm btn-primary add-btn-phone" onclick="addLine(this)">Add</button>
                         <ul class="list-pe"></ul>
 
                         <h6><b>Advice :</b></h6>
-                        <input class="form-control mb-1 line-input" type="text" data-type="ol">
+                        <input type="text" class="form-control line-input"
+                            enterkeyhint="enter" inputmode="text">
                         <button type="button" class="btn btn-sm btn-primary add-btn-phone" onclick="addLine(this)">Add</button>
                         <ol class="list-advice"></ol>
                     </div>
