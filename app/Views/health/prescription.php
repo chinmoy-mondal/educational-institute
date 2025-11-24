@@ -64,7 +64,7 @@
                 max-width: 100% !important;
             }
 
-            /* Fix patient info row for print */
+            /* Fix patient info row (Name, Age, Date) */
             .row.g-2.mb-3.align-items-center {
                 display: flex !important;
                 flex-wrap: nowrap !important;
@@ -89,22 +89,46 @@
                 display: inline !important;
             }
 
-            /* Force A4 */
+            /* Force A4 page size */
             @page {
                 size: A4;
                 margin: 15mm;
             }
 
-            /* Left and right boxes side by side */
+            /* Left and right boxes side by side (Rx & C/C, P/E, Advice) */
+            .row>.col-md-4,
+            .row>.col-md-8 {
+                float: left !important;
+                display: block !important;
+            }
+
+            .row>.col-md-4 {
+                width: 38% !important;
+                margin-right: 2% !important;
+            }
+
+            .row>.col-md-8 {
+                width: 60% !important;
+            }
+
+            .row::after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+
             .left-box {
-                float: left;
-                width: 38%;
-                margin-right: 2%;
+                background: #fefefe !important;
+                padding: 15px !important;
+                border-radius: 10px;
+                min-height: 420px;
             }
 
             .rx-box {
-                float: left;
-                width: 60%;
+                background: #f0f8ff !important;
+                padding: 15px !important;
+                border-radius: 10px;
+                min-height: 420px;
             }
 
             .drug-item {
