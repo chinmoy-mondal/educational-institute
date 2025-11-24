@@ -1,7 +1,24 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Drug Search</title>
+    <style>
+        .pagination .page-link {
+            border-radius: 6px !important;
+            margin: 0 3px;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #0d6efd !important;
+            border-color: #0d6efd !important;
+            color: #fff !important;
+        }
+
+        .pagination .page-link:hover {
+            background-color: #e9ecef;
+        }
+    </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
@@ -12,7 +29,7 @@
     <!-- Search Form -->
     <form method="get" class="mb-3">
         <input type="text" name="q" class="form-control"
-               placeholder="Search drugs..." value="<?= esc($search) ?>">
+            placeholder="Search drugs..." value="<?= esc($search) ?>">
         <button class="btn btn-primary mt-2">Search</button>
     </form>
 
@@ -38,10 +55,10 @@
             <?php endif; ?>
 
             <!-- Serial number across pages -->
-            <?php 
-                $page  = $pager->getCurrentPage();      // current page
-                $perPage = $pager->getPerPage();        // per-page count
-                $i = ($page - 1) * $perPage + 1;         // starting SL number
+            <?php
+            $page  = $pager->getCurrentPage();      // current page
+            $perPage = $pager->getPerPage();        // per-page count
+            $i = ($page - 1) * $perPage + 1;         // starting SL number
             ?>
 
             <?php foreach ($drugs as $d): ?>
@@ -59,9 +76,12 @@
     </table>
 
     <!-- Pagination Links -->
-    <div class="d-flex justify-content-center">
-        <?= $pager->links() ?>
+    <div class="d-flex justify-content-center mt-3">
+        <nav>
+            <?= $pager->links('default', 'bootstrap_full') ?>
+        </nav>
     </div>
 
 </body>
+
 </html>
