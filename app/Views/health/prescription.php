@@ -49,39 +49,53 @@
             display: inline-block;
         }
 
-        /* PRINT SHOULD BE FIXED A4 — NOT RESPONSIVE */
         @media print {
-
-            /* Force exact A4 sheet size */
-            @page {
-                size: A4;
-                margin: 15mm;
-                /* nice margins */
-            }
-
             body {
                 background: white !important;
                 -webkit-print-color-adjust: exact !important;
                 color-adjust: exact !important;
                 print-color-adjust: exact !important;
+                font-size: 12pt;
             }
 
-            /* Disable responsiveness while printing */
             .container,
             .prescription-card {
                 width: 100% !important;
                 max-width: 100% !important;
             }
 
-            /* Force A4 structure */
-            .row,
-            .col-md-4,
-            .col-md-8 {
-                display: block !important;
-                width: 100% !important;
+            /* Fix patient info row for print */
+            .row.g-2.mb-3.align-items-center {
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                justify-content: space-between !important;
             }
 
-            /* Keep boxes side-by-side only in print */
+            .row.g-2.mb-3.align-items-center>div {
+                flex: 0 0 32% !important;
+                max-width: 32% !important;
+            }
+
+            input,
+            select,
+            button {
+                display: none !important;
+            }
+
+            .dose-text,
+            .duration-text,
+            .rule-text,
+            .print-text {
+                display: inline !important;
+            }
+
+            /* Force A4 */
+            @page {
+                size: A4;
+                margin: 15mm;
+            }
+
+            /* Left and right boxes side by side */
             .left-box {
                 float: left;
                 width: 38%;
@@ -93,14 +107,11 @@
                 width: 60%;
             }
 
-            /* Ensure color appearance (no fading) */
-            .prescription-card,
-            .left-box,
-            .rx-box,
             .drug-item {
-                background: white !important;
-                box-shadow: none !important;
-                -webkit-print-color-adjust: exact !important;
+                background: #f0f8ff !important;
+                /* keep color in print */
+                padding: 5px 10px;
+                border-bottom: 1px dashed #ccc;
             }
         }
     </style>
