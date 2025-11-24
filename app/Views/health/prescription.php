@@ -103,20 +103,6 @@
                 -webkit-print-color-adjust: exact !important;
             }
         }
-
-        /* MOBILE → HIDE Add button */
-        @media (max-width: 768px) {
-            .add-btn-phone {
-                display: none !important;
-            }
-        }
-
-        /* DESKTOP → SHOW Add button */
-        @media (min-width: 769px) {
-            .add-btn-phone {
-                display: inline-block !important;
-            }
-        }
     </style>
 </head>
 
