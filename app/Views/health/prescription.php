@@ -49,26 +49,58 @@
             display: inline-block;
         }
 
+        /* PRINT SHOULD BE FIXED A4 — NOT RESPONSIVE */
         @media print {
 
-            input,
-            select,
-            button {
-                display: none !important;
+            /* Force exact A4 sheet size */
+            @page {
+                size: A4;
+                margin: 15mm;
+                /* nice margins */
             }
 
-            .dose-label,
-            .dose-select,
-            .duration-select,
-            .no-print {
-                display: none !important;
+            body {
+                background: white !important;
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
 
-            .dose-text,
-            .duration-text,
-            .rule-text,
-            .print-text {
-                display: inline !important;
+            /* Disable responsiveness while printing */
+            .container,
+            .prescription-card {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            /* Force A4 structure */
+            .row,
+            .col-md-4,
+            .col-md-8 {
+                display: block !important;
+                width: 100% !important;
+            }
+
+            /* Keep boxes side-by-side only in print */
+            .left-box {
+                float: left;
+                width: 38%;
+                margin-right: 2%;
+            }
+
+            .rx-box {
+                float: left;
+                width: 60%;
+            }
+
+            /* Ensure color appearance (no fading) */
+            .prescription-card,
+            .left-box,
+            .rx-box,
+            .drug-item {
+                background: white !important;
+                box-shadow: none !important;
+                -webkit-print-color-adjust: exact !important;
             }
         }
 
@@ -143,19 +175,16 @@
                         <h6><b>C/C :</b></h6>
                         <input type="text" class="form-control line-input"
                             enterkeyhint="enter" inputmode="text">
-                        <button type="button" class="btn btn-sm btn-primary add-btn-phone" onclick="addLine(this)">Add</button>
                         <ul class="list-cc"></ul>
 
                         <h6><b>P/E :</b></h6>
                         <input type="text" class="form-control line-input"
                             enterkeyhint="enter" inputmode="text">
-                        <button type="button" class="btn btn-sm btn-primary add-btn-phone" onclick="addLine(this)">Add</button>
                         <ul class="list-pe"></ul>
 
                         <h6><b>Advice :</b></h6>
                         <input type="text" class="form-control line-input"
                             enterkeyhint="enter" inputmode="text">
-                        <button type="button" class="btn btn-sm btn-primary add-btn-phone" onclick="addLine(this)">Add</button>
                         <ol class="list-advice"></ol>
                     </div>
                 </div>
