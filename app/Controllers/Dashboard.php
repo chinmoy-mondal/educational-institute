@@ -2277,14 +2277,13 @@ class Dashboard extends Controller
         $perPage = 20; // number of records per page
         $page = (int) ($this->request->getGet('page') ?? 1);
 
-        // // Fetch paginated transactions
+        // Fetch paginated transactions
         $transactions = $this->transactionModel
-            ->findAll();
+            ->orderBy('created_at', 'DESC')
+            ->paginate($perPage, 'default', $page);
 
-        $this->data['transactions'] = count($transactions);
-        $this->data['pager'] = $this->transactionModel
-        ->orderBy('created_at', 'DESC')                            
-        ->pager; // send pager to view
+        $this->data['transactions'] = $transactions;
+        $this->data['pager'] = $this->transactionModel->pager; // send pager to view
 
         // Totals (earn & cost)
         $totalEarnRow = $this->transactionModel->where('status', 0)->selectSum('amount')->get()->getRowArray();
