@@ -104,14 +104,15 @@
             <span class="badge bg-light text-dark"><?= count($transactions) ?> Records</span>
         </div>
 
-        <!-- ✅ Pagination -->
-        <?php if (!empty($pager)): ?>
-            <div class="mb-3 d-flex justify-content-center">
-                <?= $pager->links() ?>
-            </div>
-        <?php endif; ?>
-
         <div class="card-body table-responsive">
+
+            <!-- ✅ Pagination ABOVE the table -->
+            <?php if (!empty($pager)): ?>
+                <div class="mb-3 d-flex justify-content-center">
+                    <?= $pager->links('default', 'bootstrap') ?>
+                </div>
+            <?php endif; ?>
+
             <table class="table table-striped align-middle mb-0">
                 <thead class="table-dark text-center">
                     <tr>
@@ -127,8 +128,8 @@
                 </thead>
                 <tbody>
                     <?php if (!empty($transactions)): ?>
-                        <?php $i = 1;
-                        foreach ($transactions as $t): ?>
+                        <?php $i = ($pager->getCurrentPage() - 1) * $pager->getPerPage() + 1; ?>
+                        <?php foreach ($transactions as $t): ?>
                             <tr>
                                 <td><?= $i++ ?></td>
                                 <td><?= date('d M Y', strtotime($t['created_at'])) ?></td>
@@ -155,6 +156,7 @@
                     <?php endif; ?>
                 </tbody>
             </table>
+
         </div>
     </div>
 </div>
