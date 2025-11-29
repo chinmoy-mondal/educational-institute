@@ -176,26 +176,42 @@
 
     <!-- Pagination -->
     <style>
+        /* Pagination wrapper styling */
         .pagination {
-            margin: 0;
+            margin: 0 0 20px 0;
+            /* add bottom margin so it doesn't overlap table */
+            position: relative;
+            /* bring above table if needed */
+            z-index: 50;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            /* center pagination */
+            list-style: none;
+            padding-left: 0;
         }
 
+        /* Pagination links */
         .pagination li a {
             color: #333;
             padding: 6px 12px;
             border-radius: 4px;
             border: 1px solid #ddd;
             margin: 0 2px;
-            transition: 0.2s;
             background: #fff;
             text-decoration: none !important;
+            transition: background 0.2s, color 0.2s;
         }
 
-        .pagination li a:hover {
+        /* Hover and focus states */
+        .pagination li a:hover,
+        .pagination li a:focus {
             background: #f1f1f1;
-            text-decoration: none;
+            text-decoration: none !important;
+            color: #000;
         }
 
+        /* Active page */
         .pagination li.active a {
             background: #0d6efd;
             color: #fff !important;
@@ -203,8 +219,14 @@
             pointer-events: none;
         }
 
+        /* Smaller font for icons or text inside <span> */
         .pagination li a span {
             font-size: 14px;
+        }
+
+        /* Fix for table-responsive hiding pagination */
+        .table-responsive {
+            overflow: visible !important;
         }
     </style>
 </head>
