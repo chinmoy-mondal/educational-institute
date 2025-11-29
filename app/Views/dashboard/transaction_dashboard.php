@@ -95,12 +95,7 @@
 
     </div>
 
-    <!-- ✅ Pagination -->
-    <?php if (!empty($pager)): ?>
-        <div class="mb-3 d-flex justify-content-center">
-            <?= $pager->links() ?>
-        </div>
-    <?php endif; ?>
+
 
     <!-- ✅ All Transactions Table -->
     <div class="card shadow-sm border-0">
@@ -108,6 +103,14 @@
             <h6 class="mb-0">All Transactions</h6>
             <span class="badge bg-light text-dark"><?= count($transactions) ?> Records</span>
         </div>
+
+        <!-- ✅ Pagination -->
+        <?php if (!empty($pager)): ?>
+            <div class="mb-3 d-flex justify-content-center">
+                <?= $pager->links() ?>
+            </div>
+        <?php endif; ?>
+
         <div class="card-body table-responsive">
             <table class="table table-striped align-middle mb-0">
                 <thead class="table-dark text-center">
