@@ -128,7 +128,7 @@
                 </thead>
                 <tbody>
                     <?php if (!empty($transactions)): ?>
-                        <?php $i = 1; ?>
+                        <?php $i = ($pager->getCurrentPage() - 1) * $pager->getPerPage() + 1; ?>
                         <?php foreach ($transactions as $t): ?>
                             <tr>
                                 <td><?= $i++ ?></td>
