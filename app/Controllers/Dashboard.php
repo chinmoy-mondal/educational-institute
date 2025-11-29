@@ -2282,7 +2282,9 @@ class Dashboard extends Controller
             ->findAll();
 
         $this->data['transactions'] = count($transactions);
-        $this->data['pager'] = $this->transactionModel->pager; // send pager to view
+        $this->data['pager'] = $this->transactionModel
+        ->orderBy('created_at', 'DESC')                            
+        ->pager; // send pager to view
 
         // Totals (earn & cost)
         $totalEarnRow = $this->transactionModel->where('status', 0)->selectSum('amount')->get()->getRowArray();
