@@ -104,6 +104,12 @@
             <span class="badge bg-light text-dark"><?= count($transactions) ?> Records</span>
         </div>
 
+        <!-- ✅ Pagination ABOVE the table -->
+        <?php if (!empty($pager)): ?>
+            <div class="mb-3 d-flex justify-content-center">
+                <?= $pager->links('default', 'bootstrap') ?>
+            </div>
+        <?php endif; ?>
         <div class="card-body table-responsive">
 
             <!-- ✅ Pagination ABOVE the table -->
