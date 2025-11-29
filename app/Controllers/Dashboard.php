@@ -2278,11 +2278,10 @@ class Dashboard extends Controller
         $page = (int) ($this->request->getGet('page') ?? 1);
 
         // // Fetch paginated transactions
-        // $transactions = $this->transactionModel
-        //     ->orderBy('created_at', 'DESC')
-        //     ->paginate($perPage, 'default', $page);
+        $transactions = $this->transactionModel
+            ->findAll();
 
-        $this->data['transactions'] = $transactions;
+        $this->data['transactions'] = count($transactions);
         $this->data['pager'] = $this->transactionModel->pager; // send pager to view
 
         // Totals (earn & cost)
