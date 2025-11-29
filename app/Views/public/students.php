@@ -40,9 +40,6 @@
         </div>
     </form>
 
-    <!-- ───────────── pager links ───────────── -->
-    <?= $pager->links() ?>
-
     <!-- ───────────── table ───────────── -->
     <div class="table-responsive">
         <table class="table table-bordered align-middle text-center">
@@ -79,7 +76,8 @@
         </table>
     </div>
 
-
+    <!-- ───────────── pager links ───────────── -->
+    <?= $pager->links() ?>
 
 </div>
 <?= $this->endSection() ?>

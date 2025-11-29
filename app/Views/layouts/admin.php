@@ -17,8 +17,13 @@
 
   <!-- Pagination -->
   <style>
+    /* Extra wrapper fix so pagination stays above table */
     .pagination {
-      margin: 0;
+      margin: 0 0 20px 0;
+      /* bottom space so it's not covered */
+      position: relative;
+      /* bring it above table */
+      z-index: 10;
     }
 
     .pagination li a {
@@ -34,7 +39,7 @@
 
     .pagination li a:hover {
       background: #f1f1f1;
-      text-decoration: none;
+      text-decoration: none !important;
     }
 
     .pagination li.active a {
@@ -46,6 +51,11 @@
 
     .pagination li a span {
       font-size: 14px;
+    }
+
+    /* IMPORTANT: Prevent table from hiding pagination */
+    .table-responsive {
+      overflow: visible !important;
     }
   </style>
 </head>
