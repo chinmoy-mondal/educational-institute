@@ -2277,10 +2277,10 @@ class Dashboard extends Controller
         $perPage = 20; // number of records per page
         $page = (int) ($this->request->getGet('page') ?? 1);
 
-        // Fetch paginated transactions (latest first)
+        // Fetch paginated transactions, newest first
         $transactions = $this->transactionModel
-            ->orderBy('created_at', 'DESC') // newest first
-            ->paginate($perPage, 'default', $page);
+            ->orderBy('created_at', 'DESC') // latest first
+            ->findAll(); // get all rows, ignore pager if you don't need pagination
 
         $this->data['transactions'] = $transactions;
         $this->data['pager'] = $this->transactionModel->pager;

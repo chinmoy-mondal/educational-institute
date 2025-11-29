@@ -128,10 +128,10 @@
                 </thead>
                 <tbody>
                     <?php if (!empty($transactions)): ?>
-                        <?php $i = ($pager->getTotal() ?? count($transactions)) - (($pager->getCurrentPage() - 1) * $pager->getPerPage()); ?>
+                        <?php $i = 1; ?>
                         <?php foreach ($transactions as $t): ?>
                             <tr>
-                                <td><?= $i-- ?></td>
+                                <td><?= $i++ ?></td>
                                 <td><?= date('d M Y', strtotime($t['created_at'])) ?></td>
                                 <td><?= esc($t['transaction_id']) ?></td>
                                 <td><?= esc($t['sender_name']) ?></td>
