@@ -112,10 +112,10 @@
         <?php endif; ?>
         <div class="card-body table-responsive">
 
-            <!-- ✅ Pagination ABOVE the table -->
+            <!-- ✅ Pagination -->
             <?php if (!empty($pager)): ?>
-                <div class="mb-3 d-flex justify-content-center">
-                    <?= $pager->links('default', 'bootstrap') ?>
+                <div class="mb-3 d-flex">
+                    <?= $pager->links() ?>
                 </div>
             <?php endif; ?>
 
