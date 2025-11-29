@@ -108,6 +108,13 @@
 			</div>
 		</div>
 
+		<!-- Pagination -->
+		<?php if (!empty($pager)): ?>
+			<div class="mt-3">
+				<?= $pager->only(['q', 'class', 'section'])->links('bootstrap') ?>
+			</div>
+		<?php endif ?>
+
 		<!-- Student Table -->
 		<?php if (!empty($students)): ?>
 			<div class="card">
@@ -158,12 +165,7 @@
 			<div class="alert alert-info">No students found.</div>
 		<?php endif ?>
 
-		<!-- Pagination -->
-		<?php if (!empty($pager)): ?>
-			<div class="mt-3">
-				<?= $pager->only(['q', 'class', 'section'])->links('bootstrap') ?>
-			</div>
-		<?php endif ?>
+
 
 	</div>
 </div>

@@ -29,6 +29,7 @@
       margin: 0 2px;
       transition: 0.2s;
       background: #fff;
+      text-decoration: none !important;
     }
 
     .pagination li a:hover {
