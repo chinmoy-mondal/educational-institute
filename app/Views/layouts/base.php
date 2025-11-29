@@ -185,8 +185,6 @@
             z-index: 50;
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
-            /* center pagination */
             list-style: none;
             padding-left: 0;
         }
