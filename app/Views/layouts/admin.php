@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title><?= esc($title ?? 'School Admin Dashboard') ?></title>
@@ -13,34 +14,67 @@
 
   <!-- Optional: Select2 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
+  <style>
+    .pagination {
+      margin: 0;
+    }
+
+    .pagination li a {
+      color: #333;
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      margin: 0 2px;
+      transition: 0.2s;
+      background: #fff;
+    }
+
+    .pagination li a:hover {
+      background: #f1f1f1;
+      text-decoration: none;
+    }
+
+    .pagination li.active a {
+      background: #0d6efd;
+      color: #fff !important;
+      border-color: #0d6efd;
+      pointer-events: none;
+    }
+
+    .pagination li a span {
+      font-size: 14px;
+    }
+  </style>
 </head>
+
 <body class="hold-transition sidebar-mini">
 
-<div class="wrapper">
+  <div class="wrapper">
 
-  <!-- Navbar -->
-  <?= $this->include('layouts/admin-structure/navbar') ?>
+    <!-- Navbar -->
+    <?= $this->include('layouts/admin-structure/navbar') ?>
 
-  <!-- Sidebar -->
-  <?= $this->include('layouts/admin-structure/sidebar') ?>
+    <!-- Sidebar -->
+    <?= $this->include('layouts/admin-structure/sidebar') ?>
 
-  <!-- Main Content -->
-  <div class="content-wrapper">
-    <?= $this->renderSection('content') ?>
+    <!-- Main Content -->
+    <div class="content-wrapper">
+      <?= $this->renderSection('content') ?>
+    </div>
+
   </div>
 
-</div>
+  <!-- ✅ Scripts (jQuery first, only once) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- ✅ Scripts (jQuery first, only once) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Bootstrap Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Bootstrap Bundle -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- AdminLTE -->
-<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+  <!-- AdminLTE -->
+  <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
 
 
 </body>
+
 </html>
