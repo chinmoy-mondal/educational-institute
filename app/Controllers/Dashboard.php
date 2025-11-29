@@ -2271,9 +2271,21 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        $this->data['transactions'] = $this->transactionModel->orderBy('created_at', 'DESC')->findAll();
+        // -----------------------------
+        // Pagination settings
+        // -----------------------------
+        $perPage = 20; // number of records per page
+        $page = (int) ($this->request->getGet('page') ?? 1);
 
-        // Totals
+        // Fetch paginated transactions
+        $transactions = $this->transactionModel
+            ->orderBy('created_at', 'DESC')
+            ->paginate($perPage, 'default', $page);
+
+        $this->data['transactions'] = $transactions;
+        $this->data['pager'] = $this->transactionModel->pager; // send pager to view
+
+        // Totals (earn & cost)
         $totalEarnRow = $this->transactionModel->where('status', 0)->selectSum('amount')->get()->getRowArray();
         $totalCostRow = $this->transactionModel->where('status', 1)->selectSum('amount')->get()->getRowArray();
 
@@ -2282,10 +2294,9 @@ class Dashboard extends Controller
 
         $builder = db_connect()->table('transactions');
 
-
         /* -------------------------------------------------------
        ⭐ TODAY REPORT — HOURLY EARN VS COST
-    ------------------------------------------------------- */
+        ------------------------------------------------------- */
         $today = date('Y-m-d');
 
         $todayData = $builder
@@ -2300,16 +2311,13 @@ class Dashboard extends Controller
             ->get()
             ->getResultArray();
 
-        // Hour labels (e.g., 0,1,2...)
         $this->data['todayLabels'] = array_map(fn($d) => $d['hour'] . ":00", $todayData);
         $this->data['todayEarns'] = array_map('floatval', array_column($todayData, 'earn'));
         $this->data['todayCosts'] = array_map('floatval', array_column($todayData, 'cost'));
 
-
-
         /* -------------------------------------------------------
        ⭐ CURRENT MONTH DAILY REPORT
-    ------------------------------------------------------- */
+     ------------------------------------------------------- */
         $monthStart = date('Y-m-01');
         $monthEnd = date('Y-m-t');
 
@@ -2330,10 +2338,9 @@ class Dashboard extends Controller
         $this->data['dailyEarns'] = array_map('floatval', array_column($currentMonthData, 'earn'));
         $this->data['dailyCosts'] = array_map('floatval', array_column($currentMonthData, 'cost'));
 
-
         /* -------------------------------------------------------
        ⭐ YEARLY MONTHLY SUMMARY
-    ------------------------------------------------------- */
+        ------------------------------------------------------- */
         $yearData = $builder
             ->select("
             MONTH(created_at) as month,

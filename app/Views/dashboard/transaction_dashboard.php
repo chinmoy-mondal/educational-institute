@@ -95,6 +95,13 @@
 
     </div>
 
+    <!-- ✅ Pagination -->
+    <?php if (!empty($pager)): ?>
+        <div class="mb-3 d-flex justify-content-center">
+            <?= $pager->links() ?>
+        </div>
+    <?php endif; ?>
+
     <!-- ✅ All Transactions Table -->
     <div class="card shadow-sm border-0">
         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
