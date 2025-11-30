@@ -146,7 +146,7 @@
                                 <td class="fw-bold <?= $t['status'] == 0 ? 'text-success' : 'text-danger' ?>">
                                     <?= number_format($t['amount'], 2) ?>
                                 </td>
-                                <td><?= esc($t['description']) ?></td>
+                                <td><?= esc($t['purpose']) ?><br><?= esc($t['description']) ?></td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
