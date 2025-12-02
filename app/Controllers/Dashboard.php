@@ -114,15 +114,8 @@ class Dashboard extends Controller
             [
                 'label' => 'Welcome Message',
                 'url' => base_url('admin/welcome-message'),
-                'icon' => 'fas fa-handshake',
-                'section' => 'welcome_message'
-            ],
-
-            [
-                'label' => 'Principal Message',
-                'url' => base_url('admin/principal-message'),
                 'icon' => 'fas fa-user-tie',
-                'section' => 'principal_message'
+                'section' => 'welcome_message'
             ],
         ];
     }
@@ -2810,13 +2803,17 @@ class Dashboard extends Controller
 
     public function welcome_message()
     {
-        $this->data['title'] = 'Notice List';
-        $this->data['activeSection'] = 'notice';
+        $this->data['title'] = 'Welcome Message';
+        $this->data['activeSection'] = 'welcome_message';
+
+        // Navbar items
         $this->data['navbarItems'] = [
-            ['label' => 'Notice List', 'url' => current_url()],
-            ['label' => 'Add Notice', 'url' => base_url('admin/noticeForm')],
+            ['label' => 'Welcome Message', 'url' => base_url('admin/welcome-message')],
         ];
-        $this->data['notices'] = $this->noticeModel->orderBy('id', 'DESC')->findAll();
-        return view('dashboard/notice_list', $this->data);
+
+        // Load existing message (optional)
+        $this->data['welcome'] = $this->welcomeModel->first();
+
+        return view('dashboard/welcome_message_form', $this->data);
     }
 }

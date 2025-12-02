@@ -155,6 +155,9 @@ $routes->get('public-calendar/events', 'PublicCalendar::events');
 $routes->match(['get', 'post'], 'admin/attendance/calendar', 'Dashboard::attendanceCalendar');
 $routes->post('admin/attendance/save', 'Dashboard::saveAttendance');
 
+$routes->post('admin/welcome-message', 'Dashboard::welcome_message');
+
+
 $routes->get('drug', 'Health::drugs');
 $routes->get('prescription', 'Health::prescription');
 $routes->get('search-drugs', 'Health::searchDrugs');
