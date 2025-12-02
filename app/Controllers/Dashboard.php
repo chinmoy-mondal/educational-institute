@@ -14,6 +14,7 @@ use App\Models\AttendanceModel;
 use App\Models\FeesModel;
 use App\Models\FeesAmountModel;
 use App\Models\TransactionModel;
+use App\Models\WelcomeModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Dashboard extends Controller
@@ -29,23 +30,25 @@ class Dashboard extends Controller
     protected $feesModel;
     protected $feesAmountModel;
     protected $transactionModel;
+    protected $welcomeModel;
 
     protected $session;
     protected $data;
 
     public function __construct()
     {
-        $this->userModel         = new UserModel();
-        $this->subjectModel      = new SubjectModel();
-        $this->studentModel      = new StudentModel();
-        $this->resultModel       = new ResultModel();
-        $this->calendarModel       = new CalendarModel();
-        $this->noticeModel       = new NoticeModel();
+        $this->userModel        = new UserModel();
+        $this->subjectModel     = new SubjectModel();
+        $this->studentModel     = new StudentModel();
+        $this->resultModel      = new ResultModel();
+        $this->calendarModel    = new CalendarModel();
+        $this->noticeModel      = new NoticeModel();
         $this->markingModel     = new MarkingOpenModel();
-        $this->attendanceModel     = new AttendanceModel();
-        $this->feesModel         = new FeesModel();
-        $this->feesAmountModel     = new FeesAmountModel();
+        $this->attendanceModel  = new AttendanceModel();
+        $this->feesModel        = new FeesModel();
+        $this->feesAmountModel  = new FeesAmountModel();
         $this->transactionModel = new TransactionModel();
+        $this->welcomeModel     = new WelcomeModel();
 
 
         $this->session       = session();
