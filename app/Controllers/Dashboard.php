@@ -111,6 +111,19 @@ class Dashboard extends Controller
                 'icon' => 'fas fa-chart-bar',
                 'section' => 'result'
             ],
+            [
+                'label' => 'Welcome Message',
+                'url' => base_url('admin/welcome-message'),
+                'icon' => 'fas fa-handshake',
+                'section' => 'welcome_message'
+            ],
+
+            [
+                'label' => 'Principal Message',
+                'url' => base_url('admin/principal-message'),
+                'icon' => 'fas fa-user-tie',
+                'section' => 'principal_message'
+            ],
         ];
     }
 
@@ -2793,5 +2806,17 @@ class Dashboard extends Controller
         $this->data['totalPaid'] = $totalPaid;
 
         return view('dashboard/student_payment_history', $this->data);
+    }
+
+    public function welcome_message()
+    {
+        $this->data['title'] = 'Notice List';
+        $this->data['activeSection'] = 'notice';
+        $this->data['navbarItems'] = [
+            ['label' => 'Notice List', 'url' => current_url()],
+            ['label' => 'Add Notice', 'url' => base_url('admin/noticeForm')],
+        ];
+        $this->data['notices'] = $this->noticeModel->orderBy('id', 'DESC')->findAll();
+        return view('dashboard/notice_list', $this->data);
     }
 }
