@@ -2816,7 +2816,7 @@ class Dashboard extends Controller
 
         // Load existing message (optional)
         $this->data['welcome'] = $this->welcomeModel->first();
-
+        // change 
         return view('dashboard/welcome_message_form', $this->data);
     }
 }
