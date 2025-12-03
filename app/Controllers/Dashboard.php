@@ -14,7 +14,6 @@ use App\Models\AttendanceModel;
 use App\Models\FeesModel;
 use App\Models\FeesAmountModel;
 use App\Models\TransactionModel;
-use App\Models\WelcomeModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Dashboard extends Controller
@@ -48,7 +47,6 @@ class Dashboard extends Controller
         $this->feesModel        = new FeesModel();
         $this->feesAmountModel  = new FeesAmountModel();
         $this->transactionModel = new TransactionModel();
-        $this->welcomeModel     = new WelcomeModel();
 
 
         $this->session       = session();
@@ -2804,19 +2802,4 @@ class Dashboard extends Controller
         return view('dashboard/student_payment_history', $this->data);
     }
 
-    public function welcome_message()
-    {
-        $this->data['title'] = 'Welcome Message';
-        $this->data['activeSection'] = 'welcome_message';
-
-        // Navbar items
-        $this->data['navbarItems'] = [
-            ['label' => 'Welcome Message', 'url' => base_url('admin/welcome-message')],
-        ];
-
-        // Load existing message (optional)
-        $this->data['welcome'] = $this->welcomeModel->first();
-        // change 
-        return view('dashboard/welcome_message_form', $this->data);
-    }
 }
