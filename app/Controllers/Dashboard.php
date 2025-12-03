@@ -158,7 +158,7 @@ class Dashboard extends Controller
                 ->findAll();
 
             $total_subjects = $this->calendarModel
-                ->where('subcategory', $examNames)
+                ->where('subcategory', (string)$examNames)
                 ->where('category', 'Exam')
                 ->findAll();
         } else {
@@ -2801,5 +2801,4 @@ class Dashboard extends Controller
 
         return view('dashboard/student_payment_history', $this->data);
     }
-
 }
