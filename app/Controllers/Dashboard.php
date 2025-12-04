@@ -551,7 +551,7 @@ class Dashboard extends Controller
             $examNames = array_column($openExams, 'exam_name');
 
             $total_subjects = $this->calendarModel
-                ->where('subcategory', $examNames)
+                ->whereIn('subcategory', $examNames)
                 ->where('category', 'Exam')
                 ->findAll();
 
