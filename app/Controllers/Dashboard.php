@@ -552,7 +552,7 @@ class Dashboard extends Controller
 
             // Get all events/subjects
             $builder = $this->calendarModel->db->table('events e');
-            $builder->select('e.class, e.subcategory, s.subject, s.id AS subject_id');
+            $builder->select('e.class, YEAR(e.start_date) AS year, e.subcategory, s.subject, s.id AS subject_id');
             $builder->join('subjects s', 'e.subject = s.id');
             $builder->whereIn('e.subcategory', $examNames);
             $builder->where('YEAR(e.start_date)', $currentYear);
