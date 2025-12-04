@@ -598,7 +598,7 @@ class Dashboard extends Controller
                             if ($teacher['user_id'] === null) continue;
 
                             // Query results table for each teacher, subject, class, year, exam
-                            $results = $this->resultsModel
+                            $results = $this->resultModel
                                 ->where('teacher_id', $teacher['user_id'])
                                 ->where('subject_id', $subId)
                                 ->where('class', $event['class'])
