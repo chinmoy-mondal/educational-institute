@@ -540,9 +540,9 @@ class Dashboard extends Controller
             ['label' => 'Marking Action', 'url' => base_url('marking_open')],
         ];
 
-        $openExams = $this->markingModel
-            ->where('status', 'open')
-            ->findAll();
+        $openExams = $this->markingModel->where('status', 'open')->findAll();
+
+        $joint_data = [];
 
         if (!empty($openExams)) {
             $examNames = array_column($openExams, 'exam_name');
@@ -562,7 +562,7 @@ class Dashboard extends Controller
                 $subjectIds = array_column($calendarSubjects, 'subject_id');
 
                 // Get all teachers for these subjects
-                $builder = $this->userModel->select('id AS user_id, name, subject, phone, position, assagin_sub');
+                $builder = $this->userModel->select('id AS user_id, name, subject, phone, position, assagin_sub, picture');
                 $builder->groupStart();
                 foreach ($subjectIds as $subjectId) {
                     $builder->orWhere("FIND_IN_SET($subjectId, assagin_sub) >", 0, false);
@@ -584,20 +584,18 @@ class Dashboard extends Controller
                     }
                 }
 
-                // Merge teachers and add student counts
-                foreach ($calendarSubjects as &$event) {
+                // Merge teachers and calculate progress
+                foreach ($calendarSubjects as $event) {
                     $subId = $event['subject_id'];
-                    $event['teachers'] = $teachersBySubject[$subId] ?? [['user_id' => null, 'name' => 'No user']];
+                    $teachersList = $teachersBySubject[$subId] ?? [['user_id' => null, 'name' => 'No user', 'phone' => '', 'picture' => '']];
 
-                    // Initialize total student and marked student
-                    $event['total_students'] = 0;
-                    $event['marked_students'] = 0;
-
-                    if (!empty($event['teachers'])) {
-                        foreach ($event['teachers'] as $teacher) {
-                            if ($teacher['user_id'] === null) continue;
-
-                            // Query results table for each teacher, subject, class, year, exam
+                    foreach ($teachersList as $teacher) {
+                        // Count total students & marks entered
+                        if ($teacher['user_id'] === null) {
+                            $marks_entered = 0;
+                            $total_rows = 0;
+                            $progress = 0;
+                        } else {
                             $results = $this->resultModel
                                 ->where('teacher_id', $teacher['user_id'])
                                 ->where('subject_id', $subId)
@@ -606,19 +604,25 @@ class Dashboard extends Controller
                                 ->whereIn('exam', $examNames)
                                 ->findAll();
 
-                            $event['total_students'] += count($results);
-                            $event['marked_students'] += count(array_filter($results, function ($r) {
-                                return !is_null($r['total']); // total is not null
-                            }));
+                            $total_rows = count($results);
+                            $marks_entered = count(array_filter($results, fn($r) => !is_null($r['total'])));
+                            $progress = $total_rows > 0 ? round(($marks_entered / $total_rows) * 100) : 0;
                         }
+
+                        $joint_data[] = [
+                            'subject' => $event,
+                            'teacher' => $teacher,
+                            'total_rows' => $total_rows,
+                            'marks_entered' => $marks_entered,
+                            'progress' => $progress,
+                        ];
                     }
                 }
-
-                echo "<pre>";
-                print_r($calendarSubjects);
-                echo "</pre>";
             }
         }
+
+        $this->data['joint_data'] = $joint_data;
+        return view('dashboard/mark_given_teacher_list', $this->data);
     }
 
     public function updatePosition($id)

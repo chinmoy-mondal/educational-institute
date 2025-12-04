@@ -24,15 +24,15 @@
             </thead>
             <tbody>
               <?php $serial = 1; ?>
-              <?php if(!empty($joint_data)): ?>
-                <?php foreach($joint_data as $entry): ?>
+              <?php if (!empty($joint_data)): ?>
+                <?php foreach ($joint_data as $entry): ?>
                   <tr class="text-center">
                     <td><?= $serial++ ?></td>
                     <td><?= esc($entry['subject']['class']) ?></td>
                     <td><?= esc($entry['subject']['subject']) ?></td>
                     <td>
                       <img src="<?= !empty($entry['teacher']['picture']) ? $entry['teacher']['picture'] : base_url('public/assets/img/default.png') ?>"
-                           width="50" height="50" class="rounded-circle">
+                        width="50" height="50" class="rounded-circle">
                     </td>
                     <td class="text-start"><?= esc($entry['teacher']['name']) ?></td>
                     <td>
@@ -43,13 +43,13 @@
                       </div>
                     </td>
                     <td>
-                      <a href="<?= site_url('profile_id/' . $entry['teacher']['id']) ?>" class="btn btn-sm btn-info me-1" title="View Profile">
+                      <a href="<?= site_url('profile_id/' . $entry['teacher']['user_id']) ?>" class="btn btn-sm btn-info me-1" title="View Profile">
                         <i class="fas fa-user"></i>
                       </a>
                       <a href="tel:<?= esc($entry['teacher']['phone'] ?? '') ?>" class="btn btn-sm btn-success me-1" title="Call Teacher">
                         <i class="fas fa-phone"></i>
                       </a>
-                      <a href="<?= site_url('teacher_result/' . $entry['teacher']['id']) ?>" class="btn btn-sm btn-warning" title="View Results">
+                      <a href="<?= site_url('teacher_result/' . $entry['teacher']['user_id']) ?>" class="btn btn-sm btn-warning" title="View Results">
                         <i class="fas fa-chart-bar"></i>
                       </a>
                     </td>
