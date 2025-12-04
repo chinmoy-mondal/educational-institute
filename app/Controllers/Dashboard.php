@@ -532,69 +532,92 @@ class Dashboard extends Controller
 
     public function teachers_mark_given()
     {
-
         $this->data['title'] = 'Teacher Management';
         $this->data['activeSection'] = 'teacher';
 
-        // Common navbar and sidebar for all views
         $this->data['navbarItems'] = [
             ['label' => 'Teacher List', 'url' => base_url('teacher_management')],
             ['label' => 'Marking Action', 'url' => base_url('marking_open')],
         ];
 
+        // 1️⃣ Get all open exams
         $openExams = $this->markingModel
             ->where('status', 'open')
             ->findAll();
 
-        if (!empty($openExams)) {
-            // Extract exam names
-            $examNames = array_column($openExams, 'exam_name');
+        if (empty($openExams)) {
+            $this->data['teachers'] = [];
+            return view('dashboard/mark_given_teacher_list', $this->data);
+        }
 
-            $total_subjects = $this->calendarModel
-                ->whereIn('subcategory', $examNames)
-                ->where('category', 'Exam')
+        // Extract exam names
+        $examNames = array_column($openExams, 'exam_name');
+
+        // 2️⃣ Calendar entries for those exams
+        $calendars = $this->calendarModel
+            ->whereIn('subcategory', $examNames)
+            ->where('category', 'Exam')
+            ->findAll();
+
+        // 3️⃣ Prepare final teacher-based data
+        $teachers = [];
+
+        foreach ($calendars as $cal) {
+
+            $subjectId = $cal['subject'];
+            $examName  = $cal['subcategory'];
+            $year      = date('Y', strtotime($cal['start_date']));
+
+            // Subject info
+            $subject = $this->subjectModel->find($subjectId);
+
+            // Teachers assigned to this subject
+            $assignedTeachers = $this->userModel
+                ->like('assagin_sub', $subjectId)
                 ->findAll();
 
-            $finalData = [];
+            foreach ($assignedTeachers as $t) {
 
-            foreach ($total_subjects as $calendar) {
+                $teacherId = $t['id'];
 
-                $subjectId = $calendar['subject']; // adjust if object: $calendar->subject
-                $examName  = $calendar['subcategory'];
-                $year      = date('Y', strtotime($calendar['start_date']));
+                // If the teacher is not added yet, initialize
+                if (!isset($teachers[$teacherId])) {
+                    $teachers[$teacherId] = [
+                        'teacher'  => $t,
+                        'subjects' => []
+                    ];
+                }
 
-                // 1️⃣ Subject info
-                $subjectInfo = $this->subjectModel->find($subjectId);
-
-                // 2️⃣ Users assigned to this subject
-                $users = $this->userModel
-                    ->like('assagin_sub', $subjectId) // matches if subjectId exists in assign_sub string
-                    ->findAll();
-
-                // 3️⃣ Results for this subject, exam, and year
+                // 4️⃣ Count results
                 $results = $this->resultModel
                     ->where('subject_id', $subjectId)
                     ->where('exam', $examName)
                     ->where('year', $year)
                     ->findAll();
 
-                // Combine
-                $finalData[] = [
-                    'calendar' => $calendar,
-                    'subject'  => $subjectInfo,
-                    'users'    => $users,
-                    'results'  => $results
+                $totalStudents = count($results);
+                $totalMarksEntered = array_sum(array_column($results, 'total'));
+
+                $fullMark = $subject['full_mark'] ?? 100;
+                $maxPossible = $totalStudents * $fullMark;
+
+                $percentage = ($maxPossible > 0)
+                    ? round(($totalMarksEntered / $maxPossible) * 100)
+                    : 0;
+
+                // Add subject to this teacher
+                $teachers[$teacherId]['subjects'][] = [
+                    'subject_name' => $subject['subject'],
+                    'class'        => $subject['class'],
+                    'exam'         => $examName,
+                    'total_students' => $totalStudents,
+                    'marks_entered'  => $totalMarksEntered,
+                    'progress'       => $percentage,
                 ];
             }
-        } else {
-            $finalData = [];
         }
 
-        $this->data['joint_data'] = $finalData;
-
-        // echo "<pre>";
-        // print_r($finalData);
-        // echo "</pre>";
+        $this->data['teachers'] = $teachers;
 
         return view('dashboard/mark_given_teacher_list', $this->data);
     }
