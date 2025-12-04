@@ -558,6 +558,10 @@ class Dashboard extends Controller
                 ->where('YEAR(start_date)', $currentYear) // filter current year
                 ->findAll();
 
+            echo "<pre>";
+            print_r($calendarSubjects);
+            echo "</pre>";
+
             foreach ($calendarSubjects as $cal) {
                 $subjectId = $cal['subject'];
                 $examName  = $cal['subcategory'];
