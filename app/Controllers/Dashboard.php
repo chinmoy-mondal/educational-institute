@@ -587,7 +587,7 @@ class Dashboard extends Controller
                 // Merge teachers and calculate progress
                 foreach ($calendarSubjects as $event) {
                     $subId = $event['subject_id'];
-                    $teachersList = $teachersBySubject[$subId] ?? [['user_id' => null, 'name' => 'No user', 'phone' => '', 'picture' => '']];
+                    $teachersList = $teachersBySubject[$subId] ?? [['user_id' => null, 'name' => 'No teacher assign', 'phone' => '', 'picture' => '']];
 
                     foreach ($teachersList as $teacher) {
                         // Count total students & marks entered
@@ -620,9 +620,11 @@ class Dashboard extends Controller
                 }
             }
         }
-
-        $this->data['joint_data'] = $joint_data;
-        return view('dashboard/mark_given_teacher_list', $this->data);
+        echo "<pre>";
+        print_r($joint_data);
+        echo "</pre>";
+        // $this->data['joint_data'] = $joint_data;
+        // return view('dashboard/mark_given_teacher_list', $this->data);
     }
 
     public function updatePosition($id)
