@@ -55,8 +55,10 @@
                                                     value="<?= esc($exam['exam_name']) ?>"
                                                     id="exam_<?= esc($exam['exam_name']) ?>"
                                                     <?= ($exam['status'] === 'open') ? 'checked' : '' ?>>
-                                                <label class="form-check-label" for="exam_<?= esc($exam['exam_name']) ?>">
-                                                    <?= esc($exam['exam_name']) ?>
+                                                <label class="form-check-label d-flex justify-content-between align-items-center" for="exam_<?= esc($exam['exam_name']) ?>">
+                                                    <span class="exam-name" style="display:inline-block; width: 150px;">
+                                                        <?= esc($exam['exam_name']) ?>
+                                                    </span>
                                                     <span class="badge <?= ($exam['status'] === 'open') ? 'bg-success' : 'bg-secondary' ?>">
                                                         <?= ucfirst($exam['status']) ?>
                                                     </span>
