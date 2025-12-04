@@ -549,9 +549,13 @@ class Dashboard extends Controller
         if (!empty($openExams)) {
             $examNames = array_column($openExams, 'exam_name');
 
+
+            $currentYear = date('Y');
+
             $calendarSubjects = $this->calendarModel
                 ->whereIn('subcategory', $examNames)
                 ->where('category', 'Exam')
+                ->where('YEAR(start_date)', $currentYear) // filter current year
                 ->findAll();
 
             foreach ($calendarSubjects as $cal) {
