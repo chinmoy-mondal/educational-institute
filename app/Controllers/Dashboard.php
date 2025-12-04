@@ -754,9 +754,7 @@ class Dashboard extends Controller
         ];
 
 
-        $calendarModel = new CalendarModel();
-
-        $examNames = $calendarModel
+        $examNames = $this->calendarModel
             ->select('subcategory')
             ->distinct()
             ->orderBy('subcategory', 'ASC')
