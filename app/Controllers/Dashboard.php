@@ -541,28 +541,28 @@ class Dashboard extends Controller
             ['label' => 'Marking Action', 'url' => base_url('marking_open')],
         ];
 
-        // 1️⃣ Get open exams
+        // 1️⃣ Open exams
         $openExams = $this->markingModel
             ->where('status', 'open')
             ->findAll();
 
         if (empty($openExams)) {
-            $this->data['teachers'] = [];
+            $this->data['joint_data'] = [];
             return view('dashboard/mark_given_teacher_list', $this->data);
         }
 
-        // Extract exam names
         $examNames = array_column($openExams, 'exam_name');
 
-        // 2️⃣ Get calendar exam entries
-        $calendars = $this->calendarModel
+        // 2️⃣ Calendar subjects for open exams
+        $calendarSubjects = $this->calendarModel
             ->whereIn('subcategory', $examNames)
             ->where('category', 'Exam')
             ->findAll();
 
-        $teachers = [];
+        $joint_data = [];
 
-        foreach ($calendars as $cal) {
+        foreach ($calendarSubjects as $cal) {
+
             $subjectId = $cal['subject'];
             $examName  = $cal['subcategory'];
             $year      = date('Y', strtotime($cal['start_date']));
@@ -570,52 +570,38 @@ class Dashboard extends Controller
             // Subject info
             $subject = $this->subjectModel->find($subjectId);
 
-            // Teachers assigned
-            $assignedTeachers = $this->userModel
+            // Assigned teachers
+            $teachers = $this->userModel
                 ->like('assagin_sub', $subjectId)
                 ->findAll();
 
-            foreach ($assignedTeachers as $t) {
+            // Results
+            $results = $this->resultModel
+                ->where('subject_id', $subjectId)
+                ->where('exam', $examName)
+                ->where('year', $year)
+                ->findAll();
 
-                $teacherId = $t['id'];
+            $totalStudents = count($results);
+            $sumMarks = array_sum(array_column($results, 'total'));
 
-                if (!isset($teachers[$teacherId])) {
-                    $teachers[$teacherId] = [
-                        'teacher'  => $t,
-                        'subjects' => []
-                    ];
-                }
+            $fullMark = $subject['full_mark'] ?? 100;
+            $maxPossible = $totalStudents * $fullMark;
 
-                // 3️⃣ Count results
-                $results = $this->resultModel
-                    ->where('subject_id', $subjectId)
-                    ->where('exam', $examName)
-                    ->where('year', $year)
-                    ->findAll();
+            $progress = ($maxPossible > 0)
+                ? round(($sumMarks / $maxPossible) * 100)
+                : 0;
 
-                $totalStudents = count($results);
-                $totalMarksEntered = array_sum(array_column($results, 'total'));
-
-                $fullMark = $subject['full_mark'] ?? 100;
-                $maxPossible = $totalStudents * $fullMark;
-
-                $progress = ($maxPossible > 0)
-                    ? round(($totalMarksEntered / $maxPossible) * 100)
-                    : 0;
-
-                // Add subject to teacher
-                $teachers[$teacherId]['subjects'][] = [
-                    'subject_name' => $subject['subject'],
-                    'class'        => $subject['class'],
-                    'exam'         => $examName,
-                    'total_students' => $totalStudents,
-                    'marks_entered'  => $totalMarksEntered,
-                    'progress'       => $progress
-                ];
-            }
+            $joint_data[] = [
+                'calendar' => $cal,
+                'subject'  => $subject,
+                'users'    => $teachers,
+                'results'  => $results,
+                'progress' => $progress
+            ];
         }
 
-        $this->data['teachers'] = $teachers;
+        $this->data['joint_data'] = $joint_data;
 
         return view('dashboard/mark_given_teacher_list', $this->data);
     }
