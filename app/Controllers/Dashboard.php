@@ -550,6 +550,7 @@ class Dashboard extends Controller
             $examNames = array_column($openExams, 'exam_name');
             $currentYear = date('Y');
 
+            // Get all events/subjects
             $builder = $this->calendarModel->db->table('events e');
             $builder->select('e.class, e.subcategory, s.subject, s.id AS subject_id');
             $builder->join('subjects s', 'e.subject = s.id');
@@ -559,29 +560,42 @@ class Dashboard extends Controller
 
             $calendarSubjects = $builder->get()->getResultArray();
 
-            // echo "<pre>";
-            // print_r($calendarSubjects);
-            // echo "</pre>";
-        }
+            if (!empty($calendarSubjects)) {
+                $subjectIds = array_column($calendarSubjects, 'subject_id');
 
-        if (!empty($calendarSubjects)) {
-            $subjectIds = array_column($calendarSubjects, 'subject_id');
+                // Get all teachers for these subjects
+                $builder = $this->userModel->select('id AS user_id, name, subject, phone, position, assagin_sub');
+                $builder->groupStart();
+                foreach ($subjectIds as $subjectId) {
+                    $builder->orWhere("FIND_IN_SET($subjectId, assagin_sub) >", 0, false);
+                }
+                $builder->groupEnd();
 
-            $builder = $this->userModel; // use the model directly
-            $builder = $builder->select('id AS user_id, name, subject, phone, position, assagin_sub');
+                $teachers = $builder->findAll();
 
-            // Group OR conditions for FIND_IN_SET
-            $builder->groupStart();
-            foreach ($subjectIds as $subjectId) {
-                $builder->orWhere("FIND_IN_SET($subjectId, assagin_sub) >", 0, false);
+                // Map teachers to subjects
+                $teachersBySubject = [];
+                foreach ($teachers as $teacher) {
+                    $assignedSubjects = explode(',', $teacher['assagin_sub']);
+                    foreach ($assignedSubjects as $subId) {
+                        $subId = trim($subId);
+                        if (!isset($teachersBySubject[$subId])) {
+                            $teachersBySubject[$subId] = [];
+                        }
+                        $teachersBySubject[$subId][] = $teacher;
+                    }
+                }
+
+                // Merge teachers into calendarSubjects
+                foreach ($calendarSubjects as &$event) {
+                    $subId = $event['subject_id'];
+                    $event['teachers'] = $teachersBySubject[$subId] ?? [['user_id' => null, 'name' => 'No user']];
+                }
+
+                echo "<pre>";
+                print_r($calendarSubjects);
+                echo "</pre>";
             }
-            $builder->groupEnd();
-
-            $teachers = $builder->findAll();
-
-            echo "<pre>";
-            print_r($teachers);
-            echo "</pre>";
         }
 
         // $this->data['joint_data'] = $joint_data;
