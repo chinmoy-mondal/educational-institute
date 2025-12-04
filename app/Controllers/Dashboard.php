@@ -559,8 +559,28 @@ class Dashboard extends Controller
 
             $calendarSubjects = $builder->get()->getResultArray();
 
+            // echo "<pre>";
+            // print_r($calendarSubjects);
+            // echo "</pre>";
+        }
+
+        if (!empty($calendarSubjects)) {
+            $teachersBySubject = [];
+
+            foreach ($calendarSubjects as $event) {
+                $subjectId = $event['subject_id'];
+
+                $users = $this->db->table('users')
+                    ->select('id AS user_id, name, position, assagin_sub')
+                    ->like('assagin_sub', $subjectId) // alternative to FIND_IN_SET
+                    ->get()
+                    ->getResultArray();
+
+                $teachersBySubject[$subjectId] = $users;
+            }
+
             echo "<pre>";
-            print_r($calendarSubjects);
+            print_r($teachersBySubject);
             echo "</pre>";
         }
 
