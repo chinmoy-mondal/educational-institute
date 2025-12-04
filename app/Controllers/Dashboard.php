@@ -568,7 +568,7 @@ class Dashboard extends Controller
             $subjectIds = array_column($calendarSubjects, 'subject_id');
 
             $builder = $this->userModel; // use the model directly
-            $builder = $builder->select('id AS user_id, name, position, assagin_sub');
+            $builder = $builder->select('id AS user_id, name, subject, phone, position, assagin_sub');
 
             // Group OR conditions for FIND_IN_SET
             $builder->groupStart();
