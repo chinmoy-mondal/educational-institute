@@ -544,71 +544,28 @@ class Dashboard extends Controller
             ->where('status', 'open')
             ->findAll();
 
-        echo "<pre>";
-        print_r($openExams);
-        echo "</pre>";
-
         $joint_data = [];
 
         if (!empty($openExams)) {
             $examNames = array_column($openExams, 'exam_name');
 
-
             $currentYear = date('Y');
 
             $calendarSubjects = $this->calendarModel
-                ->select('subject, MAX(id) as id, MAX(title) as title, MAX(description) as description, MAX(start_date) as start_date, MAX(end_date) as end_date, MAX(color) as color, MAX(class) as class, MAX(category) as category, MAX(subcategory) as subcategory, MAX(start_time) as start_time, MAX(end_time) as end_time')
-                ->whereIn('subcategory', $examNames)
+                ->select('class, subcategory, subject')
+                ->whereIn('subcategory', $examNames)       // filter by open exams
                 ->where('category', 'Exam')
-                ->where('YEAR(start_date)', $currentYear) // filter current year
-                ->groupBy('subject') // ensures only unique subjects
+                ->where('YEAR(start_date)', $currentYear)  // filter current year
+                ->orderBy('CAST(class AS UNSIGNED)', 'ASC') // sort class numerically
                 ->findAll();
 
-
-            foreach ($calendarSubjects as $cal) {
-                $subjectId = $cal['subject'];
-                $examName  = $cal['subcategory'];
-                $year      = date('Y', strtotime($cal['start_date']));
-
-                $subject = $this->subjectModel->find($subjectId);
-
-                if (!$subject) continue;
-
-                $assignedTeachers = $this->userModel
-                    ->like('assagin_sub', $subjectId)
-                    ->findAll();
-
-                $results = $this->resultModel
-                    ->where('subject_id', $subjectId)
-                    ->where('exam', $examName)
-                    ->where('year', $year)
-                    ->findAll();
-
-                // Prepare per teacher stats
-                foreach ($assignedTeachers as $t) {
-                    $tid = $t['id'];
-                    $teacherResults = array_filter($results, fn($r) => ($r['teacher_id'] ?? 0) == $tid);
-
-                    $totalRows = count($teacherResults);
-                    $marksEntered = count(array_filter($teacherResults, fn($r) => isset($r['total']) && $r['total'] !== null && $r['total'] !== ''));
-
-                    $progress = $totalRows > 0 ? round(($marksEntered / $totalRows) * 100) : 0;
-
-                    $joint_data[] = [
-                        'teacher' => $t,
-                        'subject' => $subject,
-                        'calendar' => $cal,
-                        'exam' => $examName,
-                        'total_rows' => $totalRows,
-                        'marks_entered' => $marksEntered,
-                        'progress' => $progress,
-                    ];
-                }
-            }
+            echo "<pre>";
+            print_r($calendarSubjects);
+            echo "</pre>";
         }
 
-        $this->data['joint_data'] = $joint_data;
-        return view('dashboard/mark_given_teacher_list', $this->data);
+        // $this->data['joint_data'] = $joint_data;
+        // return view('dashboard/mark_given_teacher_list', $this->data);
     }
 
     public function updatePosition($id)
