@@ -620,11 +620,11 @@ class Dashboard extends Controller
                 }
             }
         }
-        echo "<pre>";
-        print_r($joint_data);
-        echo "</pre>";
-        // $this->data['joint_data'] = $joint_data;
-        // return view('dashboard/mark_given_teacher_list', $this->data);
+        // echo "<pre>";
+        // print_r($joint_data);
+        // echo "</pre>";
+        $this->data['joint_data'] = $joint_data;
+        return view('dashboard/mark_given_teacher_list', $this->data);
     }
 
     public function updatePosition($id)
