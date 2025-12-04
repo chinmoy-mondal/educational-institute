@@ -615,6 +615,7 @@ class Dashboard extends Controller
                             'total_rows' => $total_rows,
                             'marks_entered' => $marks_entered,
                             'progress' => $progress,
+                            'exam'          => $event['subcategory'],
                         ];
                     }
                 }

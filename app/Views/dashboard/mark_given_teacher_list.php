@@ -16,6 +16,7 @@
                 <th>S/N</th>
                 <th>Class</th>
                 <th>Subject</th>
+                <th>Exam</th>
                 <th>Photo</th>
                 <th>Name</th>
                 <th>Progress</th>
@@ -30,6 +31,7 @@
                     <td><?= $serial++ ?></td>
                     <td><?= esc($entry['subject']['class']) ?></td>
                     <td><?= esc($entry['subject']['subject']) ?></td>
+                    <td><?= esc($entry['exam']) ?></td>
                     <td>
                       <img src="<?= !empty($entry['teacher']['picture']) ? $entry['teacher']['picture'] : base_url('public/assets/img/default.png') ?>"
                         width="50" height="50" class="rounded-circle">
