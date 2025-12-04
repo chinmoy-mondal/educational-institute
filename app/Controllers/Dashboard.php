@@ -544,8 +544,6 @@ class Dashboard extends Controller
             ->where('status', 'open')
             ->findAll();
 
-        $joint_data = [];
-
         if (!empty($openExams)) {
             $examNames = array_column($openExams, 'exam_name');
             $currentYear = date('Y');
@@ -586,10 +584,34 @@ class Dashboard extends Controller
                     }
                 }
 
-                // Merge teachers into calendarSubjects
+                // Merge teachers and add student counts
                 foreach ($calendarSubjects as &$event) {
                     $subId = $event['subject_id'];
                     $event['teachers'] = $teachersBySubject[$subId] ?? [['user_id' => null, 'name' => 'No user']];
+
+                    // Initialize total student and marked student
+                    $event['total_students'] = 0;
+                    $event['marked_students'] = 0;
+
+                    if (!empty($event['teachers'])) {
+                        foreach ($event['teachers'] as $teacher) {
+                            if ($teacher['user_id'] === null) continue;
+
+                            // Query results table for each teacher, subject, class, year, exam
+                            $results = $this->resultsModel
+                                ->where('teacher_id', $teacher['user_id'])
+                                ->where('subject_id', $subId)
+                                ->where('class', $event['class'])
+                                ->where('year', $event['year'])
+                                ->whereIn('exam', $examNames)
+                                ->findAll();
+
+                            $event['total_students'] += count($results);
+                            $event['marked_students'] += count(array_filter($results, function ($r) {
+                                return !is_null($r['total']); // total is not null
+                            }));
+                        }
+                    }
                 }
 
                 echo "<pre>";
@@ -597,9 +619,6 @@ class Dashboard extends Controller
                 echo "</pre>";
             }
         }
-
-        // $this->data['joint_data'] = $joint_data;
-        // return view('dashboard/mark_given_teacher_list', $this->data);
     }
 
     public function updatePosition($id)
