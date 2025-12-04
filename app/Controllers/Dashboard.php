@@ -544,6 +544,10 @@ class Dashboard extends Controller
             ->where('status', 'open')
             ->findAll();
 
+        echo "<pre>";
+        print_r($openExams);
+        echo "</pre>";
+
         $joint_data = [];
 
         if (!empty($openExams)) {
@@ -560,9 +564,6 @@ class Dashboard extends Controller
                 ->groupBy('subject') // ensures only unique subjects
                 ->findAll();
 
-            echo "<pre>";
-            print_r($calendarSubjects);
-            echo "</pre>";
 
             foreach ($calendarSubjects as $cal) {
                 $subjectId = $cal['subject'];
