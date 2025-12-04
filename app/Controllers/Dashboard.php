@@ -565,22 +565,22 @@ class Dashboard extends Controller
         }
 
         if (!empty($calendarSubjects)) {
-            $teachersBySubject = [];
+            $subjectIds = array_column($calendarSubjects, 'subject_id');
 
-            foreach ($calendarSubjects as $event) {
-                $subjectId = $event['subject_id'];
+            $builder = $this->userModel; // use the model directly
+            $builder = $builder->select('id AS user_id, name, position, assagin_sub');
 
-                $users = $this->db->table('users')
-                    ->select('id AS user_id, name, position, assagin_sub')
-                    ->like('assagin_sub', $subjectId) // alternative to FIND_IN_SET
-                    ->get()
-                    ->getResultArray();
-
-                $teachersBySubject[$subjectId] = $users;
+            // Group OR conditions for FIND_IN_SET
+            $builder->groupStart();
+            foreach ($subjectIds as $subjectId) {
+                $builder->orWhere("FIND_IN_SET($subjectId, assagin_sub) >", 0, false);
             }
+            $builder->groupEnd();
+
+            $teachers = $builder->findAll();
 
             echo "<pre>";
-            print_r($teachersBySubject);
+            print_r($teachers);
             echo "</pre>";
         }
 
