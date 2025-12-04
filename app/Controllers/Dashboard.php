@@ -553,9 +553,11 @@ class Dashboard extends Controller
             $currentYear = date('Y');
 
             $calendarSubjects = $this->calendarModel
+                ->select('subject, MAX(id) as id, MAX(title) as title, MAX(description) as description, MAX(start_date) as start_date, MAX(end_date) as end_date, MAX(color) as color, MAX(class) as class, MAX(category) as category, MAX(subcategory) as subcategory, MAX(start_time) as start_time, MAX(end_time) as end_time')
                 ->whereIn('subcategory', $examNames)
                 ->where('category', 'Exam')
                 ->where('YEAR(start_date)', $currentYear) // filter current year
+                ->groupBy('subject') // ensures only unique subjects
                 ->findAll();
 
             echo "<pre>";
