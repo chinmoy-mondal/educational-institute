@@ -540,84 +540,63 @@ class Dashboard extends Controller
             ['label' => 'Marking Action', 'url' => base_url('marking_open')],
         ];
 
-        // 1) Get open exams
         $openExams = $this->markingModel
             ->where('status', 'open')
             ->findAll();
 
-        if (empty($openExams)) {
-            $this->data['joint_data'] = [];
-            return view('dashboard/mark_given_teacher_list', $this->data);
-        }
-
-        $examNames = array_column($openExams, 'exam_name');
-
-        // 2) Get calendar subjects for those exams
-        $calendarSubjects = $this->calendarModel
-            ->whereIn('subcategory', $examNames)
-            ->where('category', 'Exam')
-            ->findAll();
-
         $joint_data = [];
 
-        foreach ($calendarSubjects as $cal) {
-            $subjectId = $cal['subject'];
-            $examName  = $cal['subcategory'];
-            $year      = date('Y', strtotime($cal['start_date']));
+        if (!empty($openExams)) {
+            $examNames = array_column($openExams, 'exam_name');
 
-            // Subject info
-            $subject = $this->subjectModel->find($subjectId) ?: [
-                'subject'   => '-',
-                'class'     => '-',
-                'full_mark' => 100
-            ];
-
-            // Teachers assigned to this subject
-            $teachers = $this->userModel
-                ->like('assagin_sub', $subjectId)
+            $calendarSubjects = $this->calendarModel
+                ->whereIn('subcategory', $examNames)
+                ->where('category', 'Exam')
                 ->findAll();
 
-            // All results for this subject/exam/year
-            $results = $this->resultModel
-                ->where('subject_id', $subjectId)
-                ->where('exam', $examName)
-                ->where('year', $year)
-                ->findAll();
+            foreach ($calendarSubjects as $cal) {
+                $subjectId = $cal['subject'];
+                $examName  = $cal['subcategory'];
+                $year      = date('Y', strtotime($cal['start_date']));
 
-            // Compute per teacher progress
-            $teacherProgress = [];
-            foreach ($teachers as $t) {
-                $tid = $t['id'];
-                $teacherProgress[$tid] = [
-                    'rows' => 0,
-                    'marks_given' => 0
-                ];
-            }
+                $subject = $this->subjectModel->find($subjectId);
 
-            foreach ($results as $r) {
-                $tid = $r['teacher_id'] ?? null;
-                if ($tid === null) continue;
+                if (!$subject) continue;
 
-                if (!isset($teacherProgress[$tid])) {
-                    $teacherProgress[$tid] = ['rows' => 0, 'marks_given' => 0];
+                $assignedTeachers = $this->userModel
+                    ->like('assagin_sub', $subjectId)
+                    ->findAll();
+
+                $results = $this->resultModel
+                    ->where('subject_id', $subjectId)
+                    ->where('exam', $examName)
+                    ->where('year', $year)
+                    ->findAll();
+
+                // Prepare per teacher stats
+                foreach ($assignedTeachers as $t) {
+                    $tid = $t['id'];
+                    $teacherResults = array_filter($results, fn($r) => ($r['teacher_id'] ?? 0) == $tid);
+
+                    $totalRows = count($teacherResults);
+                    $marksEntered = count(array_filter($teacherResults, fn($r) => isset($r['total']) && $r['total'] !== null && $r['total'] !== ''));
+
+                    $progress = $totalRows > 0 ? round(($marksEntered / $totalRows) * 100) : 0;
+
+                    $joint_data[] = [
+                        'teacher' => $t,
+                        'subject' => $subject,
+                        'calendar' => $cal,
+                        'exam' => $examName,
+                        'total_rows' => $totalRows,
+                        'marks_entered' => $marksEntered,
+                        'progress' => $progress,
+                    ];
                 }
-
-                $teacherProgress[$tid]['rows']++;
-                if (isset($r['total']) && $r['total'] !== '' && $r['total'] !== null) {
-                    $teacherProgress[$tid]['marks_given']++;
-                }
             }
-
-            $joint_data[] = [
-                'calendar'  => $cal,
-                'subject'   => $subject,
-                'teachers'  => $teachers,
-                'teacherProgress' => $teacherProgress,
-            ];
         }
 
         $this->data['joint_data'] = $joint_data;
-
         return view('dashboard/mark_given_teacher_list', $this->data);
     }
 
