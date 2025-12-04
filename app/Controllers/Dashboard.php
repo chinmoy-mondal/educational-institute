@@ -535,12 +535,13 @@ class Dashboard extends Controller
         $this->data['title'] = 'Teacher Management';
         $this->data['activeSection'] = 'teacher';
 
+        // Navbar
         $this->data['navbarItems'] = [
             ['label' => 'Teacher List', 'url' => base_url('teacher_management')],
             ['label' => 'Marking Action', 'url' => base_url('marking_open')],
         ];
 
-        // 1️⃣ Get all open exams
+        // 1️⃣ Get open exams
         $openExams = $this->markingModel
             ->where('status', 'open')
             ->findAll();
@@ -553,17 +554,15 @@ class Dashboard extends Controller
         // Extract exam names
         $examNames = array_column($openExams, 'exam_name');
 
-        // 2️⃣ Calendar entries for those exams
+        // 2️⃣ Get calendar exam entries
         $calendars = $this->calendarModel
             ->whereIn('subcategory', $examNames)
             ->where('category', 'Exam')
             ->findAll();
 
-        // 3️⃣ Prepare final teacher-based data
         $teachers = [];
 
         foreach ($calendars as $cal) {
-
             $subjectId = $cal['subject'];
             $examName  = $cal['subcategory'];
             $year      = date('Y', strtotime($cal['start_date']));
@@ -571,7 +570,7 @@ class Dashboard extends Controller
             // Subject info
             $subject = $this->subjectModel->find($subjectId);
 
-            // Teachers assigned to this subject
+            // Teachers assigned
             $assignedTeachers = $this->userModel
                 ->like('assagin_sub', $subjectId)
                 ->findAll();
@@ -580,7 +579,6 @@ class Dashboard extends Controller
 
                 $teacherId = $t['id'];
 
-                // If the teacher is not added yet, initialize
                 if (!isset($teachers[$teacherId])) {
                     $teachers[$teacherId] = [
                         'teacher'  => $t,
@@ -588,7 +586,7 @@ class Dashboard extends Controller
                     ];
                 }
 
-                // 4️⃣ Count results
+                // 3️⃣ Count results
                 $results = $this->resultModel
                     ->where('subject_id', $subjectId)
                     ->where('exam', $examName)
@@ -601,18 +599,18 @@ class Dashboard extends Controller
                 $fullMark = $subject['full_mark'] ?? 100;
                 $maxPossible = $totalStudents * $fullMark;
 
-                $percentage = ($maxPossible > 0)
+                $progress = ($maxPossible > 0)
                     ? round(($totalMarksEntered / $maxPossible) * 100)
                     : 0;
 
-                // Add subject to this teacher
+                // Add subject to teacher
                 $teachers[$teacherId]['subjects'][] = [
                     'subject_name' => $subject['subject'],
                     'class'        => $subject['class'],
                     'exam'         => $examName,
                     'total_students' => $totalStudents,
                     'marks_entered'  => $totalMarksEntered,
-                    'progress'       => $percentage,
+                    'progress'       => $progress
                 ];
             }
         }
