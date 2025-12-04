@@ -548,16 +548,21 @@ class Dashboard extends Controller
 
         if (!empty($openExams)) {
             $examNames = array_column($openExams, 'exam_name');
-
             $currentYear = date('Y');
 
-            $calendarSubjects = $this->calendarModel
-                ->select('class, subcategory, subject')
-                ->whereIn('subcategory', $examNames)       // filter by open exams
-                ->where('category', 'Exam')
-                ->where('YEAR(start_date)', $currentYear)  // filter current year
-                ->orderBy('CAST(class AS UNSIGNED)', 'ASC') // sort class numerically
-                ->findAll();
+            $builder = $this->calendarModel->db->table('events e');
+            $builder->select('e.class, e.subcategory, s.subject, u.id AS user_id, u.name AS teacher_name, u.position');
+            $builder->join('subjects s', 'e.subject = s.id');
+            $builder->join('users u', "FIND_IN_SET(e.subject, u.assagin_sub) > 0");
+            $builder->whereIn('e.subcategory', $examNames);
+            $builder->where('e.category', 'Exam');
+            $builder->where('YEAR(e.start_date)', $currentYear);
+            $builder->orderBy('u.position', 'ASC');
+            $builder->orderBy('CAST(e.class AS UNSIGNED)', 'ASC');
+            $builder->orderBy('e.subcategory', 'ASC');
+            $builder->orderBy('s.subject', 'ASC');
+
+            $calendarSubjects = $builder->get()->getResultArray();
 
             echo "<pre>";
             print_r($calendarSubjects);
