@@ -552,7 +552,7 @@ class Dashboard extends Controller
 
         $examNames = array_column($openExams, 'exam_name');
 
-        // 2) Calendar subjects for those exams
+        // 2) Get calendar subjects for those exams
         $calendarSubjects = $this->calendarModel
             ->whereIn('subcategory', $examNames)
             ->where('category', 'Exam')
@@ -565,14 +565,14 @@ class Dashboard extends Controller
             $examName  = $cal['subcategory'];
             $year      = date('Y', strtotime($cal['start_date']));
 
-            // Subject info (may be null if not found)
+            // Subject info
             $subject = $this->subjectModel->find($subjectId) ?: [
                 'subject'   => '-',
                 'class'     => '-',
                 'full_mark' => 100
             ];
 
-            // Teachers assigned to this subject (assagin_sub contains subject ids in a string)
+            // Teachers assigned to this subject
             $teachers = $this->userModel
                 ->like('assagin_sub', $subjectId)
                 ->findAll();
@@ -584,43 +584,35 @@ class Dashboard extends Controller
                 ->where('year', $year)
                 ->findAll();
 
-            // Build per-teacher stats (how many rows inserted, how many have non-empty total)
-            $user_stats = [];
-
-            // initialize stats for assigned teachers (so teachers with zero rows still show)
+            // Compute per teacher progress
+            $teacherProgress = [];
             foreach ($teachers as $t) {
-                $user_stats[$t['id']] = [
-                    'rows'     => 0,   // number of result rows for this teacher+subject+exam+year
-                    'inserted' => 0    // rows where 'total' is set (marks entered)
+                $tid = $t['id'];
+                $teacherProgress[$tid] = [
+                    'rows' => 0,
+                    'marks_given' => 0
                 ];
             }
 
-            // walk results and accumulate per teacher
             foreach ($results as $r) {
-                $tid = $r['teacher_id'] ?? null; // adjust key if your result table has different column
-                if ($tid === null) {
-                    continue;
-                }
-                if (!isset($user_stats[$tid])) {
-                    // if teacher not listed in assigned teachers, still track it so it shows
-                    $user_stats[$tid] = ['rows' => 0, 'inserted' => 0];
-                }
-                $user_stats[$tid]['rows']++;
+                $tid = $r['teacher_id'] ?? null;
+                if ($tid === null) continue;
 
-                // consider a mark "inserted" if 'total' is not null/empty
+                if (!isset($teacherProgress[$tid])) {
+                    $teacherProgress[$tid] = ['rows' => 0, 'marks_given' => 0];
+                }
+
+                $teacherProgress[$tid]['rows']++;
                 if (isset($r['total']) && $r['total'] !== '' && $r['total'] !== null) {
-                    $user_stats[$tid]['inserted']++;
+                    $teacherProgress[$tid]['marks_given']++;
                 }
             }
 
-            // For teachers that exist in assigned list but have no results, stats remain 0.
-
             $joint_data[] = [
-                'calendar'   => $cal,
-                'subject'    => $subject,
-                'users'      => $teachers,
-                'results'    => $results,
-                'user_stats' => $user_stats,
+                'calendar'  => $cal,
+                'subject'   => $subject,
+                'teachers'  => $teachers,
+                'teacherProgress' => $teacherProgress,
             ];
         }
 
