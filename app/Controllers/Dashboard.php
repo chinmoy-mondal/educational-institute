@@ -551,16 +551,11 @@ class Dashboard extends Controller
             $currentYear = date('Y');
 
             $builder = $this->calendarModel->db->table('events e');
-            $builder->select('e.class, e.subcategory, s.subject, u.id AS user_id, u.name AS teacher_name, u.position');
+            $builder->select('e.class, e.subcategory, s.subject, s.id AS subject_id');
             $builder->join('subjects s', 'e.subject = s.id');
-            $builder->join('users u', "FIND_IN_SET(e.subject, u.assagin_sub) > 0");
             $builder->whereIn('e.subcategory', $examNames);
-            $builder->where('e.category', 'Exam');
             $builder->where('YEAR(e.start_date)', $currentYear);
-            $builder->orderBy('u.position', 'ASC');
-            $builder->orderBy('CAST(e.class AS UNSIGNED)', 'ASC');
-            $builder->orderBy('e.subcategory', 'ASC');
-            $builder->orderBy('s.subject', 'ASC');
+            $builder->orderBy('s.id', 'ASC');
 
             $calendarSubjects = $builder->get()->getResultArray();
 
