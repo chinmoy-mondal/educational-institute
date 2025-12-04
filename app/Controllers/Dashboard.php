@@ -745,21 +745,41 @@ class Dashboard extends Controller
 
     public function marking_open()
     {
-        // Use $this->data which already has navbarItems, sidebarItems
         $this->data['title'] = 'Teacher Management';
         $this->data['activeSection'] = 'teacher';
+
+        // Navbar
         $this->data['navbarItems'] = [
             ['label' => 'Teacher List', 'url' => base_url('teacher_management')],
             ['label' => 'Marking Action', 'url' => base_url('marking_open')],
         ];
 
-
+        // 1️⃣ Get all distinct exam names from calendar
         $examNames = $this->calendarModel
             ->select('subcategory')
             ->distinct()
             ->orderBy('subcategory', 'ASC')
             ->findAll();
-        $this->data['exam_name'] = $examNames;
+
+        // 2️⃣ Check status (open/closed) for each exam
+        $examStatus = [];
+        foreach ($examNames as $exam) {
+            $examName = $exam['subcategory'];
+
+            // Get status from markingModel
+            $mark = $this->markingModel
+                ->select('status')
+                ->where('exam_name', $examName)
+                ->first();
+
+            $examStatus[] = [
+                'exam_name' => $examName,
+                'status'    => $mark['status'] ?? 'closed'  // default to closed
+            ];
+        }
+
+        // Pass to view
+        $this->data['exam_name'] = $examStatus;
 
         return view('dashboard/marking_open', $this->data);
     }
