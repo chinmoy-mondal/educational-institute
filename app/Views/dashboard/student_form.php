@@ -40,7 +40,7 @@
               <label>Class</label>
               <select name="class" id="class-select" class="form-control" required>
                 <option value="">Select Class</option>
-                <?php for ($i = 2; $i <= 10; $i++): ?>
+                <?php for ($i = 1; $i <= 10; $i++): ?>
                   <option value="<?= $i ?>" <?= old('class') == $i ? 'selected' : '' ?>><?= $i ?></option>
                 <?php endfor; ?>
               </select>
