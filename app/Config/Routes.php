@@ -154,6 +154,8 @@ $routes->get('public-calendar/events', 'PublicCalendar::events');
 $routes->match(['get', 'post'], 'admin/attendance/calendar', 'Dashboard::attendanceCalendar');
 $routes->post('admin/attendance/save', 'Dashboard::saveAttendance');
 
+//add new code for admin
+
 $routes->set404Override(function () {
     $controller = new \App\Controllers\ErrorController();
     return $controller->show404();
