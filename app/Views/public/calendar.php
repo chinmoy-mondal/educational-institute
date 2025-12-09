@@ -1,16 +1,11 @@
-<!-- chinmoy is testing calendar page only -->
-
 <?= $this->extend("layouts/base.php") ?>
 <?= $this->section("content"); ?>
 
-<!-- Fixed Wrapper for Navbar -->
 <div class="fixed-header">
     <?= $this->include("layouts/base-structure/header"); ?>
 </div>
 
-<div class="container content"> <!-- offset for fixed navbar -->
-
-    <!-- Start: Calendar Section -->
+<div class="container content mt-5 pt-5">
     <section class="calendar-section py-5 bg-white">
         <div class="container">
             <div class="text-center mb-4">
@@ -24,16 +19,38 @@
             </div>
         </div>
     </section>
-
 </div>
 
 <?= $this->include("layouts/base-structure/footer"); ?>
 
-<!-- FullCalendar CSS & JS -->
+<!-- FullCalendar -->
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
-<!-- Event Details Modal -->
+<!-- Custom Calendar Styling -->
+<style>
+    /* White text inside calendar events */
+    .fc-event,
+    .fc-event-title,
+    .fc-event-time {
+        color: #fff !important;
+    }
+
+    /* Add rounded corners & soft shadow */
+    .fc-event {
+        border-radius: 6px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        padding: 2px 4px;
+        font-weight: 500;
+    }
+
+    /* Optional: highlight today's date */
+    .fc-day-today {
+        background-color: #eaf4ff !important;
+    }
+</style>
+
+<!-- Event Modal -->
 <div class="modal fade" id="eventModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content rounded-3 shadow">
@@ -45,17 +62,16 @@
                 <p><strong>Title:</strong> <span id="modal-title"></span></p>
                 <p><strong>Description:</strong> <span id="modal-desc"></span></p>
                 <p><strong>Category:</strong> <span id="modal-category"></span></p>
+                <p><strong>Subcategory:</strong> <span id="modal-subcategory"></span></p>
                 <p><strong>Class:</strong> <span id="modal-class"></span></p>
                 <p><strong>Subject:</strong> <span id="modal-subject"></span></p>
-                <p><strong>Date:</strong> <span id="modal-date"></span></p>
-                <p><strong>Start Time:</strong> <span id="modal-start"></span></p>
-                <p><strong>End Time:</strong> <span id="modal-end"></span></p>
+                <p><strong>Start:</strong> <span id="modal-start"></span></p>
+                <p><strong>End:</strong> <span id="modal-end"></span></p>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Calendar Init -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const calendarEl = document.getElementById('calendar');
@@ -67,39 +83,55 @@
                 center: 'title',
                 right: 'dayGridMonth,timeGridWeek,listMonth'
             },
-            events: '/calendar/events', // JSON feed
-            eventDidMount: function(info) {
-                // style: left color ribbon
-                info.el.style.borderLeft = "5px solid " + (info.event.backgroundColor || "#0d6efd");
-                info.el.style.backgroundColor = "#2984e0ff";
+            events: '<?= base_url('public-calendar/events') ?>',
+
+            // 👇 New part: show category + subcategory + class below title
+            eventContent: function(arg) {
+                const titleEl = document.createElement('div');
+
+                const category = arg.event.extendedProps.category || '';
+                const subcategory = arg.event.extendedProps.subcategory || '';
+                const eventClass = arg.event.extendedProps.event_class || '';
+
+                // Combine available info neatly
+                let details = [category, subcategory, eventClass].filter(Boolean).join(' • ');
+
+                const detailEl = document.createElement('div');
+                detailEl.innerHTML = `<small style="font-size: 11px; opacity: 0.9;">${details}</small>`;
+
+                return {
+                    domNodes: [titleEl, detailEl]
+                };
             },
+
+            eventDidMount: function(info) {
+                info.el.style.borderLeft = "5px solid " + (info.event.backgroundColor || "#0d6efd");
+                info.el.style.backgroundColor = info.event.backgroundColor || "#0d6efd";
+                info.el.style.color = "#fff";
+                info.el.style.borderRadius = "6px";
+                info.el.style.padding = "2px 4px";
+                info.el.style.boxShadow = "0 2px 5px rgba(0,0,0,0.15)";
+            },
+
             eventClick: function(info) {
                 const event = info.event;
 
                 document.getElementById("modal-title").innerText = event.title || "";
                 document.getElementById("modal-desc").innerText = event.extendedProps.description || "";
                 document.getElementById("modal-category").innerText = event.extendedProps.category || "";
-                document.getElementById("modal-class").innerText = event.extendedProps.class || "";
+                document.getElementById("modal-subcategory").innerText = event.extendedProps.subcategory || "";
+                document.getElementById("modal-class").innerText = event.extendedProps.event_class || "";
                 document.getElementById("modal-subject").innerText = event.extendedProps.subject || "";
 
-                const startDate = event.start ? event.start.toLocaleDateString() : '';
-                const startTime = event.start ? event.start.toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                }) : '';
-                const endDate = event.end ? event.end.toLocaleDateString() : '';
-                const endTime = event.end ? event.end.toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                }) : '';
+                const start = event.start ? event.start.toLocaleString() : '';
+                const end = event.end ? event.end.toLocaleString() : '';
 
-                document.getElementById("modal-start").innerText = startDate + " " + startTime;
-                document.getElementById("modal-end").innerText = endDate + " " + endTime;
+                document.getElementById("modal-start").innerText = start;
+                document.getElementById("modal-end").innerText = end;
 
                 new bootstrap.Modal(document.getElementById('eventModal')).show();
             }
         });
-
         calendar.render();
     });
 </script>

@@ -40,31 +40,31 @@
               <label>Class</label>
               <select name="class" id="class-select" class="form-control" required>
                 <option value="">Select Class</option>
-                <?php for ($i = 6; $i <= 10; $i++): ?>
+                <?php for ($i = 1; $i <= 10; $i++): ?>
                   <option value="<?= $i ?>" <?= old('class') == $i ? 'selected' : '' ?>><?= $i ?></option>
                 <?php endfor; ?>
               </select>
             </div>
           </div>
 
-<div class="row mt-3">
-  <div class="col-md-6">
-    <label>Section (optional, only for Class 9 & 10)</label>
-	<select name="section" class="form-control">
-	  <option value="">Select Section</option>
-	  <option value="n/a" <?= old('section') == 'n/a' ? 'selected' : '' ?>>N/A</option>
-	  <option value="General - Science" <?= old('section') == 'General - Science' ? 'selected' : '' ?>>General → Science</option>
-	  <option value="General - Arts" <?= old('section') == 'General - Arts' ? 'selected' : '' ?>>General → Arts</option>
-	  <option value="Vocational - Food Processing and Preservation" <?= old('section') == 'Vocational - Food Processing and Preservation' ? 'selected' : '' ?>>Vocational → Food Processing and Preservation</option>
-	  <option value="Vocational - IT Support and IoT Basics" <?= old('section') == 'Vocational - IT Support and IoT Basics' ? 'selected' : '' ?>>Vocational → IT Support and IoT Basics</option>
-	</select>
-  </div>
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <label>Section (optional, only for Class 9 & 10)</label>
+              <select name="section" class="form-control">
+                <option value="">Select Section</option>
+                <option value="n/a" <?= old('section') == 'n/a' ? 'selected' : '' ?>>N/A</option>
+                <option value="General - Science" <?= old('section') == 'General - Science' ? 'selected' : '' ?>>General → Science</option>
+                <option value="General - Arts" <?= old('section') == 'General - Arts' ? 'selected' : '' ?>>General → Arts</option>
+                <option value="Vocational - Food Processing and Preservation" <?= old('section') == 'Vocational - Food Processing and Preservation' ? 'selected' : '' ?>>Vocational → Food Processing and Preservation</option>
+                <option value="Vocational - IT Support and IoT Basics" <?= old('section') == 'Vocational - IT Support and IoT Basics' ? 'selected' : '' ?>>Vocational → IT Support and IoT Basics</option>
+              </select>
+            </div>
 
-  <div class="col-md-6">
-    <label>Board ID</label>
-    <input type="text" name="esif" class="form-control" value="<?= old('esif') ?>" required>
-  </div>
-</div>
+            <div class="col-md-6">
+              <label>Board ID</label>
+              <input type="text" name="esif" class="form-control" value="<?= old('esif') ?>" required>
+            </div>
+          </div>
 
           <div class="row mt-3">
             <div class="col-md-6">
@@ -125,8 +125,8 @@
               <select name="blood_group" class="form-control">
                 <option value="">Select Blood Group</option>
                 <?php
-                  $bloods = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-                  foreach ($bloods as $bg):
+                $bloods = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+                foreach ($bloods as $bg):
                 ?>
                   <option value="<?= $bg ?>" <?= old('blood_group') === $bg ? 'selected' : '' ?>><?= $bg ?></option>
                 <?php endforeach; ?>

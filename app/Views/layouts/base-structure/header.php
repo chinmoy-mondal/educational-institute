@@ -2,8 +2,8 @@
 <div class="top-bar">
     <div class="container d-flex justify-content-between">
         <div>
-            <i class="fas fa-phone"></i> <a href="tel:+8801309115832">+8801309115832</a>
-            <i class="fas fa-envelope"></i> <a href="mailto:info@example.com">s115832mul@gmail.com</a>
+            <i class="fas fa-phone"></i> <a href="tel:+8801309115832">+88 01886007142</a>
+            <i class="fas fa-envelope"></i> <a href="mailto:info@example.com">jpsc2023hafiz@gmail.com</a>
         </div>
         <div>
             <a href="#"><i class="fab fa-facebook"></i></a>
@@ -15,7 +15,7 @@
 <!--  Second Line: Logo, Institute Name & Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark  bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="<?= base_url(''); ?>"><img src="<?= base_url('public/assets/img/logo.jpg'); ?>">Mulgram Secondary School</a>
+        <a class="navbar-brand" href="<?= base_url(''); ?>"><img src="<?= base_url('public/assets/img/logo.jpg'); ?>">Jhenaidah Public School & Collage</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>

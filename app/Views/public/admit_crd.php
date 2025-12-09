@@ -23,14 +23,12 @@
 
         .page {
             width: 210mm;
-            height: 297mm;
-            /* A4 */
-            padding: 12mm 12mm;
+            height: 303mm;
+            padding: 3mm 12mm;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            gap: 6mm;
-            /* space between 2 cards */
+            gap: 3mm;
             page-break-after: always;
         }
 
@@ -75,7 +73,34 @@
         .footer-note {
             font-size: 11px;
             margin-top: 6px;
-            text-align: center;
+            text-align: left;
+        }
+
+        .instructions {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .instruction-left {
+            flex: 0 0 30%;
+            text-align: left;
+        }
+
+        .instruction-left h5 {
+            margin: 0;
+            font-size: 13px;
+            text-decoration: underline;
+        }
+
+        .instruction-right {
+            flex: 1;
+        }
+
+        .instruction-right ol {
+            margin: 0;
+            padding-left: 18px;
         }
 
         .sign {
@@ -90,6 +115,7 @@
             text-align: left;
             width: 50%;
         }
+
         .sign .block2 {
             text-align: right;
             width: 50%;
@@ -190,7 +216,17 @@
 
                         <!-- Footer Note -->
                         <div class="footer-note">
-                            পরীক্ষার দিন নির্ধারিত সময়ের ৩০ মিনিট পূর্বে কেন্দ্রে উপস্থিত থাকতে হবে।
+                            <div class="instructions">
+                                <div class="instruction-left">
+                                    <h5>পরীক্ষার নির্দেশাবলী:</h5>
+                                </div>
+                                <div class="instruction-right">
+                                    <ol>
+                                        <li>পরীক্ষার দিন নির্ধারিত সময়ের ৩০ মিনিট পূর্বে কেন্দ্রে উপস্থিত থাকতে হবে।</li>
+                                        <li>পরীক্ষা কেন্দ্রে অবশ্যই মূল প্রবেশপত্র সংগে নিয়ে আসতে হব।</li>
+                                    </ol>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Signatures -->

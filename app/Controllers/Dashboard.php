@@ -162,8 +162,25 @@ class Dashboard extends Controller
         // Count teachers safely
         $this->data['givenSubjects'] = count($given_subjects);
         $this->data['totalSubjects'] = count($total_subjects);
-        $this->data['total_income'] = 150000.00;
-        $this->data['total_cost'] = 42000.00;
+        // ✅ Total Income (status = 1 means approved or received)
+        $totalIncome = $this->transactionModel
+            ->selectSum('amount')
+            ->where('status', 0)
+            ->get()
+            ->getRow()
+            ->amount ?? 0;
+
+        // ✅ Total Cost (status = 0 means pending or expense)
+        $totalCost = $this->transactionModel
+            ->selectSum('amount')
+            ->where('status', 1)
+            ->get()
+            ->getRow()
+            ->amount ?? 0;
+
+        // ✅ Assign to $this->data for the view
+        $this->data['total_income'] = (float) $totalIncome;
+        $this->data['total_cost']   = (float) $totalCost;
 
         return view('dashboard/index', $this->data);
     }
@@ -189,6 +206,23 @@ class Dashboard extends Controller
             throw new \CodeIgniter\Exceptions\PageNotFoundException("Teacher not found");
         }
 
+        // Convert assigned subject IDs to subject names as an array
+        $assignedSubjects = [];
+        if (!empty($teacher['assagin_sub'])) {
+            $subjectModel = new \App\Models\SubjectModel();
+
+            // Handle multiple subjects (comma-separated IDs)
+            $subjectIds = explode(',', $teacher['assagin_sub']);
+
+            foreach ($subjectIds as $subId) {
+                $sub = $subjectModel->where('id', trim($subId))->first();
+                if ($sub) {
+                    $assignedSubjects[] = $sub['subject'];
+                }
+            }
+        }
+
+        $teacher['assagin_sub_list'] = $assignedSubjects; // store as array
         $this->data['user'] = $teacher;
 
         return view('dashboard/profile', $this->data);
@@ -213,10 +247,28 @@ class Dashboard extends Controller
             throw new \CodeIgniter\Exceptions\PageNotFoundException("Teacher not found");
         }
 
+        // Convert assigned subject IDs to subject names as an array
+        $assignedSubjects = [];
+        if (!empty($teacher['assagin_sub'])) {
+            $subjectModel = new \App\Models\SubjectModel();
+
+            // Handle multiple subjects (comma-separated IDs)
+            $subjectIds = explode(',', $teacher['assagin_sub']);
+
+            foreach ($subjectIds as $subId) {
+                $sub = $subjectModel->where('id', trim($subId))->first();
+                if ($sub) {
+                    $assignedSubjects[] = $sub['subject'];
+                }
+            }
+        }
+
+        $teacher['assagin_sub_list'] = $assignedSubjects; // store as array
         $this->data['user'] = $teacher;
 
         return view('dashboard/profile', $this->data);
     }
+
     public function restrict($id)
     {
         if (!$this->session->get('isLoggedIn')) {
@@ -367,7 +419,6 @@ class Dashboard extends Controller
 
     public function events()
     {
-
         $events = $this->calendarModel->findAll();
 
         $data = array_map(function ($event) {
@@ -384,7 +435,11 @@ class Dashboard extends Controller
                 'end'         => $endDate,
                 'color'       => $event['color'],
                 'description' => $event['description'],
-                'allDay'      => true // important for date-only events
+                'category'    => $event['category'],     // ✅ added
+                'subcategory' => $event['subcategory'],  // ✅ added
+                'class'       => $event['class'],        // ✅ added
+                'subject'     => $event['subject'],      // ✅ added
+                'allDay'      => true
             ];
         }, $events);
 
@@ -2218,7 +2273,7 @@ class Dashboard extends Controller
 
         $this->data['transactions'] = $this->transactionModel->orderBy('created_at', 'DESC')->findAll();
 
-        // ✅ Totals
+        // Totals
         $totalEarnRow = $this->transactionModel->where('status', 0)->selectSum('amount')->get()->getRowArray();
         $totalCostRow = $this->transactionModel->where('status', 1)->selectSum('amount')->get()->getRowArray();
 
@@ -2227,9 +2282,37 @@ class Dashboard extends Controller
 
         $builder = db_connect()->table('transactions');
 
-        // ✅ Current month (daily earn vs cost)
+
+        /* -------------------------------------------------------
+       ⭐ TODAY REPORT — HOURLY EARN VS COST
+    ------------------------------------------------------- */
+        $today = date('Y-m-d');
+
+        $todayData = $builder
+            ->select("
+            HOUR(created_at) as hour,
+            SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) as earn,
+            SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) as cost
+        ")
+            ->where('DATE(created_at)', $today)
+            ->groupBy('HOUR(created_at)')
+            ->orderBy('HOUR(created_at)', 'ASC')
+            ->get()
+            ->getResultArray();
+
+        // Hour labels (e.g., 0,1,2...)
+        $this->data['todayLabels'] = array_map(fn($d) => $d['hour'] . ":00", $todayData);
+        $this->data['todayEarns'] = array_map('floatval', array_column($todayData, 'earn'));
+        $this->data['todayCosts'] = array_map('floatval', array_column($todayData, 'cost'));
+
+
+
+        /* -------------------------------------------------------
+       ⭐ CURRENT MONTH DAILY REPORT
+    ------------------------------------------------------- */
         $monthStart = date('Y-m-01');
         $monthEnd = date('Y-m-t');
+
         $currentMonthData = $builder
             ->select("
             DATE(created_at) as date,
@@ -2247,7 +2330,10 @@ class Dashboard extends Controller
         $this->data['dailyEarns'] = array_map('floatval', array_column($currentMonthData, 'earn'));
         $this->data['dailyCosts'] = array_map('floatval', array_column($currentMonthData, 'cost'));
 
-        // ✅ 12-month summary (month-wise)
+
+        /* -------------------------------------------------------
+       ⭐ YEARLY MONTHLY SUMMARY
+    ------------------------------------------------------- */
         $yearData = $builder
             ->select("
             MONTH(created_at) as month,
@@ -2260,7 +2346,11 @@ class Dashboard extends Controller
             ->get()
             ->getResultArray();
 
-        $this->data['monthLabels'] = array_map(fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)), $yearData);
+        $this->data['monthLabels'] = array_map(
+            fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)),
+            $yearData
+        );
+
         $this->data['monthEarns'] = array_map('floatval', array_column($yearData, 'earn'));
         $this->data['monthCosts'] = array_map('floatval', array_column($yearData, 'cost'));
 
@@ -2269,7 +2359,7 @@ class Dashboard extends Controller
 
     public function tec_pay()
     {
-        $this->data['title'] = 'Transaction Dashboard';
+        $this->data['title'] = 'Teacher Earnings';
         $this->data['activeSection'] = 'accounts';
 
         $this->data['navbarItems'] = [
@@ -2280,7 +2370,46 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
+        // Fetch teachers sorted by position
+        $teachers = $this->userModel
+            ->where('account_status !=', 0)
+            ->orderBy('position', 'ASC') // sort by position ascending
+            ->findAll();
+
+        foreach ($teachers as &$t) {
+            // Sum only "earn" transactions (status=0) for this teacher
+            $t['total_earned'] = $this->transactionModel
+                ->selectSum('amount')
+                ->where('receiver_id', $t['id'])
+                ->where('status', 0)      // only earn
+                ->where('activity', 0)    // not paid
+                ->first()['amount'] ?? 0;
+
+            // Optional: sum only unpaid (same as total_earned if same filter)
+            $t['unpaid'] = $this->transactionModel
+                ->selectSum('amount')
+                ->where('receiver_id', $t['id'])
+                ->where('status', 0)
+                ->where('activity', 0)   // not paid
+                ->first()['amount'] ?? 0;
+        }
+
+        $this->data['teachers'] = $teachers;
+
         return view('dashboard/tec_pay', $this->data);
+    }
+
+    public function reset_amount($teacher_id)
+    {
+        // Update all unpaid earn transactions for this teacher to mark as paid
+        $this->transactionModel
+            ->where('receiver_id', $teacher_id)
+            ->where('status', 0)      // only earn
+            ->where('activity', 0)    // only not paid
+            ->set(['activity' => 1])
+            ->update();
+
+        return redirect()->back()->with('success', 'Teacher earnings marked as paid.');
     }
 
     public function std_pay()

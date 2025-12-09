@@ -29,7 +29,7 @@
         </div>
       </div>
 
-      
+
       <!-- Teachers who gave marking -->
       <div class="col-lg-3 col-6">
         <div class="small-box bg-info">
@@ -82,11 +82,11 @@
       <div class="col-lg-3 col-6">
         <div class="small-box bg-success">
           <div class="inner">
-            <h3>৳<?= esc(number_format($total_income, 2)) ?></h3>
-            <p>Total Income test chinmoy</p>
+            <h3>৳ <?= esc(number_format($total_income, 2)) ?></h3>
+            <p>Total Income</p>
           </div>
           <div class="icon"><i class="fas fa-coins"></i></div>
-          <a href="<?= base_url('admin/income') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          <a href="<?= base_url('admin/transactions') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
 
@@ -94,11 +94,11 @@
       <div class="col-lg-3 col-6">
         <div class="small-box bg-danger">
           <div class="inner">
-            <h3>৳<?= esc(number_format($total_cost, 2)) ?></h3>
+            <h3>৳ <?= esc(number_format($total_cost, 2)) ?></h3>
             <p>Total Cost</p>
           </div>
           <div class="icon"><i class="fas fa-money-bill-wave"></i></div>
-          <a href="<?= base_url('admin/cost') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          <a href="<?= base_url('admin/transactions') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
       </div>
     </div>
