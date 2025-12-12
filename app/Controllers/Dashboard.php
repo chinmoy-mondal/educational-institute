@@ -2875,15 +2875,20 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        // Teacher list
-        $teachers = $this->userModel->where('role', 'teacher')->orderBy('name', 'ASC')->findAll();
+        // Teacher list (all with account_status > 0)
+        $teachers = $this->userModel
+            ->where('account_status >', 0)
+            ->orderBy('position', 'ASC') // sort by position first
+            ->findAll();
 
-        // Filtered teachers
-        $builder = $this->userModel->where('role', 'teacher');
+        // Filtered teachers for selection (if a teacher is selected)
+        $builder = $this->userModel->where('account_status >', 0);
         if (!empty($selectedTeacher)) {
             $builder->where('id', $selectedTeacher);
         }
-        $teacherList = $builder->orderBy('name', 'ASC')->findAll();
+        $teacherList = $builder
+            ->orderBy('position', 'ASC')
+            ->findAll();
 
         // Build days of the month
         $daysInMonth = [];
