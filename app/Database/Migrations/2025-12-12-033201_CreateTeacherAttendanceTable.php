@@ -40,7 +40,7 @@ class CreateTeacherAttendanceTable extends Migration
         ]);
 
         $this->forge->addPrimaryKey('id');
-        $this->forge->addForeignKey('teacher_id', 'teachers', 'id', 'CASCADE', 'CASCADE');
+        $this->forge->addForeignKey('teacher_id', 'users', 'id', 'CASCADE', 'CASCADE');
 
         $this->forge->createTable('teacher_attendance');
     }
