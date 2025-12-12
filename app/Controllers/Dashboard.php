@@ -2903,12 +2903,10 @@ class Dashboard extends Controller
 
         // Fetch teacher attendance for month
         $attendanceData = $this->teacherAttendanceModel
+            ->where('created_at >=', $selectedMonth . '-01 00:00:00')
+            ->where('created_at <=', $selectedMonth . '-' . $numDays . ' 23:59:59')
             ->findAll();
 
-        // Debug: print raw attendance data
-        echo "<pre>Attendance Data:\n";
-        print_r($attendanceData);
-        echo "</pre>";
 
         // Map attendance by teacher + date
         $attendanceMap = [];
@@ -2940,10 +2938,6 @@ class Dashboard extends Controller
             }
         }
 
-        // Debug: print mapped attendance
-        echo "<pre>Attendance Map:\n";
-        print_r($attendanceMap);
-        echo "</pre>";
 
         // Fill missing days with Absent or Holiday
         foreach ($teachers as $t) {
