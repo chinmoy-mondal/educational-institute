@@ -2897,10 +2897,7 @@ class Dashboard extends Controller
             ->where('created_at >=', $selectedMonth . '-01 00:00:00')
             ->where('created_at <=', $selectedMonth . '-' . $numDays . ' 23:59:59')
             ->findAll();
-        // Debug: show map
-        echo "<pre>Attendance Map:\n";
-        print_r($attendanceData);
-        echo "</pre>";
+
         // Map attendance
         $attendanceMap = [];
         foreach ($attendanceData as $record) {
