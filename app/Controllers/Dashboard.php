@@ -2860,53 +2860,45 @@ class Dashboard extends Controller
 
     public function teacherAttendance()
     {
-        // Filters
         $selectedMonth = $this->request->getGet('month') ?? date('Y-m');
         $selectedTeacher = $this->request->getGet('teacher');
 
         // Page setup
         $this->data['title'] = 'Teacher Attendance';
         $this->data['activeSection'] = 'teacher_attendance';
-        $this->data['navbarItems'] = [
-            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
-            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
-        ];
 
-        // Teacher list (all with account_status > 0)
+        // Teacher list (all active)
         $teachers = $this->userModel
             ->where('account_status >', 0)
             ->orderBy('position', 'ASC')
             ->findAll();
 
-        // Filtered teachers for selection
+        // Filtered teachers
         $builder = $this->userModel->where('account_status >', 0);
-        if (!empty($selectedTeacher)) {
-            $builder->where('id', $selectedTeacher);
-        }
-        $teacherList = $builder
-            ->orderBy('position', 'ASC')
-            ->findAll();
+        if (!empty($selectedTeacher)) $builder->where('id', $selectedTeacher);
+        $teacherList = $builder->orderBy('position', 'ASC')->findAll();
 
-        // Build days of the month
+        // Build days of month
         $daysInMonth = [];
         $numDays = date('t', strtotime($selectedMonth . '-01'));
         for ($d = 1; $d <= $numDays; $d++) {
             $date = date('Y-m-d', strtotime($selectedMonth . '-' . sprintf("%02d", $d)));
             $daysInMonth[] = [
                 'date' => $date,
-                'day'  => date('D', strtotime($date))
+                'day' => date('D', strtotime($date))
             ];
         }
 
-        // Fetch teacher attendance for month
+        // Fetch attendance for the month
         $attendanceData = $this->teacherAttendanceModel
             ->where('created_at >=', $selectedMonth . '-01 00:00:00')
             ->where('created_at <=', $selectedMonth . '-' . $numDays . ' 23:59:59')
             ->findAll();
 
+        // Debug: show raw attendance
+        echo "<pre>Attendance Data:\n";
+        print_r($attendanceData);
+        echo "</pre>";
 
         // Map attendance by teacher + date
         $attendanceMap = [];
@@ -2916,54 +2908,45 @@ class Dashboard extends Controller
             $tid = $record['teacher_id'];
             $date = date('Y-m-d', strtotime($record['created_at']));
 
+            // Default remark from DB
+            $remark = $record['remark'] ?? 'A';
+
+            // Optional: check for Late if arrival time is after 10 AM
+            $arrivalTime = strtotime($record['created_at']);
+            $tenAM = strtotime($date . ' 10:00:00');
+            if ($remark === 'P' && $arrivalTime > $tenAM) {
+                $remark = 'L'; // mark as Late
+            }
+
             $attendanceMap[$tid][$date] = [
-                'remark' => $record['remark'] ?? 'A',
-                'arrival' => null,
+                'remark' => $remark,
+                'arrival' => $record['created_at'],
                 'leave' => null
             ];
-
-            // Determine arrival/leave for 10am–4pm logic
-            $inSec  = strtotime($record['created_at']);
-            $tenAM  = strtotime($date . ' 10:00:00');
-            $fourPM = strtotime($date . ' 16:00:00');
-
-            if ($record['remark'] === 'Present') {
-                $attendanceMap[$tid][$date]['remark'] = 'P';
-            } elseif ($record['remark'] === 'Late') {
-                $attendanceMap[$tid][$date]['remark'] = 'L';
-            } elseif ($record['remark'] === 'Leave') {
-                $attendanceMap[$tid][$date]['remark'] = 'E';
-            } elseif ($record['remark'] === 'Absent') {
-                $attendanceMap[$tid][$date]['remark'] = 'A';
-            }
         }
 
-
-        // Fill missing days with Absent or Holiday
+        // Fill missing days
         foreach ($teachers as $t) {
             foreach ($daysInMonth as $day) {
                 $date = $day['date'];
                 $dayName = $day['day'];
 
                 if (!isset($attendanceMap[$t['id']][$date])) {
-                    if ($dayName === 'Fri' || $dayName === 'Sat') {
-                        $attendanceMap[$t['id']][$date] = [
-                            'remark' => 'H',
-                            'arrival' => null,
-                            'leave' => null
-                        ];
-                    } else {
-                        $attendanceMap[$t['id']][$date] = [
-                            'remark' => 'A',
-                            'arrival' => null,
-                            'leave' => null
-                        ];
-                    }
+                    $attendanceMap[$t['id']][$date] = [
+                        'remark' => ($dayName == 'Fri' || $dayName == 'Sat') ? 'H' : 'A',
+                        'arrival' => null,
+                        'leave' => null
+                    ];
                 }
             }
         }
 
-        // Pass data to view
+        // Debug: show mapped attendance
+        echo "<pre>Attendance Map:\n";
+        print_r($attendanceMap);
+        echo "</pre>";
+
+        // Pass to view
         $this->data['teachers'] = $teacherList;
         $this->data['allTeachers'] = $teachers;
         $this->data['selectedTeacher'] = $selectedTeacher;
