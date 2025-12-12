@@ -2860,28 +2860,18 @@ class Dashboard extends Controller
 
     public function teacherAttendance()
     {
-        // ✅ Page setup (for navbar & active section)
+        // ✅ Page setup
         $this->data['title'] = 'Teacher Attendance';
         $this->data['activeSection'] = 'teacher_attendance';
         $this->data['navbarItems'] = [
-            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
-            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+            ['label' => 'Teacher attendance', 'url' => base_url('admin/teacher-attendance')],
         ];
 
-        // Filters
+        // ✅ Filters
         $selectedMonth = $this->request->getGet('month') ?? date('Y-m');
         $selectedTeacher = $this->request->getGet('teacher');
 
-        // Teacher list (role = teacher)
-        $teachers = $this->userModel
-            ->where('role', 'teacher')
-            ->orderBy('name', 'ASC')
-            ->findAll();
-
-        // Filtered teachers
+        // ✅ Teacher list (role = teacher)
         $builder = $this->userModel->where('role', 'teacher');
 
         if (!empty($selectedTeacher)) {
@@ -2889,8 +2879,9 @@ class Dashboard extends Controller
         }
 
         $teacherList = $builder->orderBy('name', 'ASC')->findAll();
+        $allTeachers  = $this->userModel->where('role', 'teacher')->orderBy('name', 'ASC')->findAll();
 
-        // Build calendar
+        // ✅ Build calendar for selected month
         $daysInMonth = [];
         $numDays = date('t', strtotime($selectedMonth . '-01'));
 
@@ -2902,38 +2893,33 @@ class Dashboard extends Controller
             ];
         }
 
-        // Fetch attendance for month
+        // ✅ Fetch existing attendance for selected teachers in this month
         $attendanceData = $this->attendanceModel
             ->where('created_at >=', $selectedMonth . '-01 00:00:00')
-            ->where('created_at <=', $selectedMonth . '-' . $numDays . ' 23:59:59')
-            ->findAll();
+            ->where('created_at <=', $selectedMonth . '-' . $numDays . ' 23:59:59');
 
-        // Map by teacher + date
+        if (!empty($selectedTeacher)) {
+            $attendanceData->where('teacher_id', $selectedTeacher);
+        }
+
+        $attendanceData = $attendanceData->findAll();
+
+        // ✅ Map attendance: [teacher_id][date] = remark
         $attendanceMap = [];
-
         foreach ($attendanceData as $record) {
             $tid = $record['teacher_id'];
             $date = date('Y-m-d', strtotime($record['created_at']));
-
-            if (!isset($attendanceMap[$tid][$date])) {
-                $attendanceMap[$tid][$date] = [
-                    'arrival' => null,
-                    'leave' => null,
-                    'remark' => $record['remark']
-                ];
-            }
-
-            if ($record['remark'] === 'A') {
-                $attendanceMap[$tid][$date]['arrival'] = $record['created_at'];
-            }
-            if ($record['remark'] === 'L') {
-                $attendanceMap[$tid][$date]['leave'] = $record['created_at'];
-            }
+            $attendanceMap[$tid][$date] = [
+                'remark' => $record['remark'],
+                'arrival' => $record['remark'] === 'A' ? $record['created_at'] : null,
+                'leave'   => $record['remark'] === 'L' ? $record['created_at'] : null
+            ];
         }
 
+        // ✅ Pass all data to view
         $data = [
             'teachers'        => $teacherList,
-            'allTeachers'     => $teachers,
+            'allTeachers'     => $allTeachers,
             'selectedTeacher' => $selectedTeacher,
             'selectedMonth'   => $selectedMonth,
             'daysInMonth'     => $daysInMonth,
