@@ -2878,7 +2878,7 @@ class Dashboard extends Controller
         // Teacher list (all with account_status > 0)
         $teachers = $this->userModel
             ->where('account_status >', 0)
-            ->orderBy('position', 'ASC') // sort by position first
+            ->orderBy('position', 'ASC')
             ->findAll();
 
         // Filtered teachers for selection (if a teacher is selected)
@@ -2910,10 +2910,7 @@ class Dashboard extends Controller
         // Map attendance by teacher + date
         $attendanceMap = [];
         foreach ($attendanceData as $record) {
-            // Skip if teacher_id is not set
-            if (!isset($record['teacher_id'])) {
-                continue;
-            }
+            if (!isset($record['teacher_id'])) continue;
 
             $tid = $record['teacher_id'];
             $date = date('Y-m-d', strtotime($record['created_at']));
@@ -2921,20 +2918,26 @@ class Dashboard extends Controller
             if (!isset($attendanceMap[$tid][$date])) {
                 $attendanceMap[$tid][$date] = [
                     'arrival' => null,
-                    'leave' => null,
-                    'remark' => $record['remark'] ?? null,
+                    'leave'   => null,
                 ];
             }
 
-            if (($record['remark'] ?? null) === 'A') {
-                $attendanceMap[$tid][$date]['arrival'] = $record['created_at'];
+            // Arrival
+            if ($record['remark'] === 'A') {
+                if (!$attendanceMap[$tid][$date]['arrival'] || strtotime($record['created_at']) < strtotime($attendanceMap[$tid][$date]['arrival'])) {
+                    $attendanceMap[$tid][$date]['arrival'] = $record['created_at'];
+                }
             }
-            if (($record['remark'] ?? null) === 'L') {
-                $attendanceMap[$tid][$date]['leave'] = $record['created_at'];
+
+            // Leave
+            if ($record['remark'] === 'L') {
+                if (!$attendanceMap[$tid][$date]['leave'] || strtotime($record['created_at']) > strtotime($attendanceMap[$tid][$date]['leave'])) {
+                    $attendanceMap[$tid][$date]['leave'] = $record['created_at'];
+                }
             }
         }
 
-        // Pass data to view using $this->data for consistency
+        // Pass data to view
         $this->data['teachers'] = $teacherList;
         $this->data['allTeachers'] = $teachers;
         $this->data['selectedTeacher'] = $selectedTeacher;

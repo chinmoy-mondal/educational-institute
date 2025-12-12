@@ -26,8 +26,7 @@
                     </div>
 
                     <div class="col-md-4">
-                        <input type="month" name="month" class="form-control"
-                            value="<?= esc($selectedMonth) ?>">
+                        <input type="month" name="month" class="form-control" value="<?= esc($selectedMonth) ?>">
                     </div>
 
                     <div class="col-md-4">
@@ -41,6 +40,7 @@
                     <span class="badge bg-secondary">A = Absent</span>
                     <span class="badge bg-warning text-dark">L = Late</span>
                     <span class="badge bg-info text-dark">E = Early Out</span>
+                    <span class="badge bg-primary">L/E = Late & Early</span>
                     <span class="badge bg-danger">H = Holiday</span>
                 </div>
 
@@ -49,14 +49,12 @@
                         <thead class="table-dark">
                             <tr>
                                 <th>Teacher Name</th>
-
                                 <?php foreach ($daysInMonth as $day): ?>
                                     <th title="<?= $day['date'] ?>">
                                         <?= $day['day'] ?><br>
                                         <?= date('d', strtotime($day['date'])) ?>
                                     </th>
                                 <?php endforeach; ?>
-
                                 <th>Total Days</th>
                                 <th>Present</th>
                                 <th>%</th>
@@ -64,7 +62,6 @@
                         </thead>
 
                         <tbody>
-
                             <?php foreach ($teachers as $t): ?>
                                 <?php
                                 $presentCount = 0;
@@ -92,21 +89,35 @@
                                         $badge = 'bg-secondary';
 
                                         if ($attendance) {
-                                            $status = $attendance['remark'];
+                                            $arrival = $attendance['arrival'] ? strtotime($attendance['arrival']) : null;
+                                            $leave   = $attendance['leave']   ? strtotime($attendance['leave'])   : null;
 
-                                            if ($status == 'Present') {
-                                                $status = 'P';
-                                                $badge = 'bg-success';
-                                                $presentCount++;
-                                            } elseif ($status == 'Absent') {
-                                                $status = 'A';
-                                                $badge = 'bg-secondary';
-                                            } elseif ($status == 'Late') {
-                                                $status = 'L';
-                                                $badge = 'bg-warning text-dark';
-                                            } elseif ($status == 'Leave') {
-                                                $status = 'E';
-                                                $badge = 'bg-info text-dark';
+                                            $tenAM  = strtotime($date . ' 10:00:00');
+                                            $fourPM = strtotime($date . ' 16:00:00');
+
+                                            if ($arrival && $leave) {
+                                                if ($arrival <= $tenAM && $leave >= $fourPM) {
+                                                    $status = 'P';
+                                                    $badge = 'bg-success';
+                                                    $presentCount++;
+                                                } elseif ($arrival > $tenAM && $leave < $fourPM) {
+                                                    $status = 'L/E';
+                                                    $badge = 'bg-primary';
+                                                } elseif ($arrival > $tenAM) {
+                                                    $status = 'L';
+                                                    $badge = 'bg-warning text-dark';
+                                                } elseif ($leave < $fourPM) {
+                                                    $status = 'E';
+                                                    $badge = 'bg-info text-dark';
+                                                }
+                                            } elseif ($arrival && !$leave) {
+                                                $status = ($arrival > $tenAM) ? 'L' : 'P';
+                                                if ($status == 'P') $presentCount++;
+                                                $badge = ($status == 'P') ? 'bg-success' : 'bg-warning text-dark';
+                                            } elseif (!$arrival && $leave) {
+                                                $status = ($leave < $fourPM) ? 'E' : 'P';
+                                                if ($status == 'P') $presentCount++;
+                                                $badge = ($status == 'P') ? 'bg-success' : 'bg-info text-dark';
                                             }
                                         }
                                         ?>
@@ -117,11 +128,10 @@
 
                                     <td><strong><?= $totalDays ?></strong></td>
                                     <td><strong><?= $presentCount ?></strong></td>
-                                    <td><strong><?= round(($presentCount / $totalDays) * 100) ?>%</strong></td>
+                                    <td><strong><?= $totalDays ? round(($presentCount / $totalDays) * 100) : 0 ?>%</strong></td>
                                 </tr>
 
                             <?php endforeach; ?>
-
                         </tbody>
 
                     </table>
