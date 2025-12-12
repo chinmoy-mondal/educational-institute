@@ -2860,20 +2860,25 @@ class Dashboard extends Controller
 
     public function teacherAttendance()
     {
-        // Page setup
+        // Filters
         $selectedMonth = $this->request->getGet('month') ?? date('Y-m');
         $selectedTeacher = $this->request->getGet('teacher');
 
-        $this->data['title'] = 'Student Payment';
-        $this->data['activeSection'] = 'accounts';
-        $navbarItems = [
+        // Page setup for admin theme
+        $this->data['title'] = 'Teacher Attendance';
+        $this->data['activeSection'] = 'teacher_attendance';
+        $this->data['navbarItems'] = [
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
         // Teacher list
         $teachers = $this->userModel->where('role', 'teacher')->orderBy('name', 'ASC')->findAll();
 
+        // Filtered teachers
         $builder = $this->userModel->where('role', 'teacher');
         if (!empty($selectedTeacher)) {
             $builder->where('id', $selectedTeacher);
@@ -2891,13 +2896,13 @@ class Dashboard extends Controller
             ];
         }
 
-        // Fetch teacher attendance
+        // Fetch teacher attendance for month
         $attendanceData = $this->attendanceModel
             ->where('created_at >=', $selectedMonth . '-01 00:00:00')
             ->where('created_at <=', $selectedMonth . '-' . $numDays . ' 23:59:59')
             ->findAll();
 
-        // Map by teacher + date
+        // Map attendance by teacher + date
         $attendanceMap = [];
         foreach ($attendanceData as $record) {
             $tid = $record['teacher_id'];
@@ -2917,15 +2922,14 @@ class Dashboard extends Controller
             }
         }
 
-        // Pass data to view
-        return view('dashboard/teacher_attendance', [
-            'navbarItems'     => $navbarItems, // ✅ pass navbar
-            'teachers'        => $teacherList,
-            'allTeachers'     => $teachers,
-            'selectedTeacher' => $selectedTeacher,
-            'selectedMonth'   => $selectedMonth,
-            'daysInMonth'     => $daysInMonth,
-            'attendanceMap'   => $attendanceMap
-        ]);
+        // Pass data to view using $this->data for consistency
+        $this->data['teachers'] = $teacherList;
+        $this->data['allTeachers'] = $teachers;
+        $this->data['selectedTeacher'] = $selectedTeacher;
+        $this->data['selectedMonth'] = $selectedMonth;
+        $this->data['daysInMonth'] = $daysInMonth;
+        $this->data['attendanceMap'] = $attendanceMap;
+
+        return view('dashboard/teacher_attendance', $this->data);
     }
 }
