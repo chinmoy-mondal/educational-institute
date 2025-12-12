@@ -5,7 +5,7 @@
 	<div class="container-fluid">
 		<div class="row mb-2">
 			<div class="col-sm-6">
-				<h1 class="m-0">Teacher Attendance Report</h1>
+				<h1 class="m-0">Student List (<?= esc($total) ?>)</h1>
 			</div>
 		</div>
 	</div>
@@ -13,138 +13,159 @@
 
 <div class="content">
 	<div class="container-fluid">
+		<!-- success error message -->
+		<?php if (session()->getFlashdata('success')): ?>
+			<div class="alert alert-success alert-dismissible fade show" role="alert">
+				<?= session()->getFlashdata('success') ?>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+		<?php endif; ?>
 
-		<!-- Filter Form -->
-		<div class="card mb-3">
+		<?php if (session()->getFlashdata('error')): ?>
+			<div class="alert alert-danger alert-dismissible fade show" role="alert">
+				<?= session()->getFlashdata('error') ?>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+		<?php endif; ?>
+
+		<!-- Search & Filter Form -->
+		<div class="card">
 			<div class="card-body">
-				<form method="get" class="row g-3">
-					<div class="col-md-4">
-						<div class="form-group">
-							<label for="teacher">Select Teacher</label>
-							<select name="teacher" id="teacher" class="form-control">
-								<option value="">All Teachers</option>
-								<?php foreach ($allTeachers as $t): ?>
-									<option value="<?= esc($t['id']) ?>" <?= ($selectedTeacher == $t['id']) ? 'selected' : '' ?>>
-										<?= esc($t['name']) ?>
-									</option>
-								<?php endforeach; ?>
-							</select>
+				<form method="get" action="<?= site_url('admin/student') ?>">
+					<div class="row align-items-end">
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="search">Search</label>
+								<input type="text" name="q" id="search" class="form-control" placeholder="Name, Roll, or ID" value="<?= esc($q ?? '') ?>">
+							</div>
 						</div>
-					</div>
-
-					<div class="col-md-3">
-						<div class="form-group">
-							<label for="month">Month</label>
-							<input type="month" name="month" id="month" class="form-control" value="<?= esc($selectedMonth) ?>">
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="class">Class</label>
+								<select name="class" id="class" class="form-control">
+									<option value="" <?= ($class ?? '') === '' ? 'selected' : '' ?>>All Classes</option>
+									<?php for ($i = 6; $i <= 10; $i++): ?>
+										<option value="<?= $i ?>" <?= ($class ?? '') == $i ? 'selected' : '' ?>>Class <?= $i ?></option>
+									<?php endfor; ?>
+								</select>
+							</div>
 						</div>
-					</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="section">Section</label>
+								<select name="section" id="section" class="form-control">
+									<option value="" <?= ($section ?? '') === '' ? 'selected' : '' ?>>All Sections</option>
+									<?php foreach ($sections as $sec): ?>
+										<option value="<?= esc($sec['section']) ?>" <?= ($section ?? '') === $sec['section'] ? 'selected' : '' ?>>
+											<?= esc($sec['section']) ?>
+										</option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="religion">Religion</label>
+								<select name="religion" id="religion" class="form-control">
+									<option value="" <?= ($religion ?? '') === '' ? 'selected' : '' ?>>All Religions</option>
+									<option value="__NULL__" <?= ($religion ?? '') === '__NULL__' ? 'selected' : '' ?>>Not Set</option> <!-- ✅ New Option -->
 
-					<div class="col-md-2 d-grid">
-						<button type="submit" class="btn btn-primary mt-4">Filter</button>
+									<?php foreach ($religions as $r): ?>
+										<option value="<?= esc($r['religion']) ?>" <?= ($religion ?? '') === $r['religion'] ? 'selected' : '' ?>>
+											<?= esc(ucfirst($r['religion'])) ?>
+										</option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<label for="gender">Gender</label>
+								<select name="gender" id="gender" class="form-control">
+									<option value="" <?= ($gender ?? '') === '' ? 'selected' : '' ?>>All Genders</option>
+									<option value="__NULL__" <?= ($gender ?? '') === '__NULL__' ? 'selected' : '' ?>>Not Set</option> <!-- ✅ New Option -->
+
+									<?php foreach ($genders as $g): ?>
+										<option value="<?= esc($g['gender']) ?>" <?= ($gender ?? '') === $g['gender'] ? 'selected' : '' ?>>
+											<?= esc(ucfirst($g['gender'])) ?>
+										</option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="form-group">
+								<label class="invisible d-block">Search</label>
+								<button type="submit" class="btn btn-primary w-100">Search</button>
+							</div>
+						</div>
 					</div>
 				</form>
 			</div>
 		</div>
 
-		<!-- Attendance Table -->
-		<?php if (!empty($teachers)): ?>
+		<!-- Pagination -->
+		<?php if (!empty($pager)): ?>
+			<div class="mt-3">
+				<?= $pager->only(['q', 'class', 'section'])->links('bootstrap') ?>
+			</div>
+		<?php endif ?>
+
+		<!-- Student Table -->
+		<?php if (!empty($students)): ?>
 			<div class="card">
-				<div class="card-body table-responsive p-0" style="max-height:600px; overflow-y:auto;">
-					<table class="table table-bordered table-hover table-sm text-center">
-						<thead class="table-light sticky-top">
+				<div class="card-body table-responsive p-0">
+					<table class="table table-bordered table-hover">
+
+						<!-- Table Header -->
+						<thead class="table-light">
 							<tr>
-								<th style="min-width:150px;">Teacher</th>
-								<?php foreach ($daysInMonth as $day): ?>
-									<th style="min-width:40px;" title="<?= esc($day['date']) ?>">
-										<?= esc($day['day']) ?><br><?= date('d', strtotime($day['date'])) ?>
-									</th>
-								<?php endforeach; ?>
-								<th style="min-width:70px;">Total</th>
-								<th style="min-width:70px;">Present</th>
-								<th style="min-width:80px;">% Present</th>
+								<th>ID</th>
+								<th>Name</th>
+								<th>Roll</th>
+								<th>Class</th>
+								<th>Section</th>
+								<th>Action</th> <!-- New column -->
 							</tr>
 						</thead>
+
+						<!-- Table Rows -->
 						<tbody>
-							<?php foreach ($teachers as $t): ?>
+							<?php foreach ($students as $s): ?>
 								<tr>
-									<td class="text-start"><?= esc($t['name']) ?></td>
-									<?php
-									$totalDays = 0;
-									$presentCount = 0;
-									?>
-									<?php foreach ($daysInMonth as $day): ?>
-										<?php
-										$date = $day['date'];
-										$dayName = $day['day'];
-										$att = $attendanceMap[$t['id']][$date] ?? null;
-
-										// Count weekdays only
-										if (!in_array($dayName, ['Fri', 'Sat'])) {
-											$totalDays++;
-										}
-
-										$status = 'A'; // default Absent
-										$tooltip = 'Absent';
-
-										if ($att) {
-											$inSec = $att['arrival'] ? strtotime($att['arrival']) : null;
-											$outSec = $att['leave'] ? strtotime($att['leave']) : null;
-
-											$tenAM = strtotime($date . ' 10:00:00');
-											$fourPM = strtotime($date . ' 16:00:00');
-
-											if ($inSec && $outSec) {
-												if ($inSec <= $tenAM && $outSec >= $fourPM) {
-													$status = 'P';
-													$presentCount++;
-												} elseif ($inSec > $tenAM && $outSec < $fourPM) {
-													$status = 'L/E';
-												} elseif ($inSec > $tenAM) {
-													$status = 'L';
-												} elseif ($outSec < $fourPM) {
-													$status = 'E';
-												}
-											} elseif ($inSec && !$outSec) {
-												$status = ($inSec > $tenAM) ? 'L' : 'P';
-												$presentCount += ($status === 'P') ? 1 : 0;
-											} elseif (!$inSec && $outSec) {
-												$status = ($outSec < $fourPM) ? 'E' : 'P';
-												$presentCount += ($status === 'P') ? 1 : 0;
-											}
-											$tooltip = "In: " . ($att['arrival'] ? date('H:i', strtotime($att['arrival'])) : '--') .
-												", Out: " . ($att['leave'] ? date('H:i', strtotime($att['leave'])) : '--');
-										} else {
-											// Holiday on Fri/Sat
-											if (in_array($dayName, ['Fri', 'Sat'])) {
-												$status = 'H';
-												$tooltip = 'Holiday';
-											}
-										}
-
-										$badgeClass = match ($status) {
-											'P' => 'bg-success',
-											'A' => 'bg-white text-dark',
-											'L' => 'bg-warning text-dark',
-											'E' => 'bg-info text-dark',
-											'L/E' => 'bg-primary',
-											'H' => 'bg-secondary text-white',
-											default => 'bg-secondary'
-										};
-										?>
-										<td><span class="badge <?= $badgeClass ?>" title="<?= esc($tooltip) ?>"><?= esc($status) ?></span></td>
-									<?php endforeach; ?>
-									<td><strong><?= $totalDays ?></strong></td>
-									<td><strong><?= $presentCount ?></strong></td>
-									<td><strong><?= $totalDays > 0 ? round(($presentCount / $totalDays) * 100) : 0 ?>%</strong></td>
+									<td><?= esc($s['id']) ?></td>
+									<td><?= esc($s['student_name']) ?></td>
+									<td><?= esc($s['roll']) ?></td>
+									<td><?= esc($s['class']) ?></td>
+									<td><?= esc($s['section']) ?></td>
+									<td>
+										<a href="<?= site_url('admin/students/view/' . $s['id']) ?>" class="btn btn-info btn-sm" target="_blank">
+											<i class="fas fa-eye"></i> View
+										</a>
+										<a href="<?= site_url('admin/students/delete/' . $s['id']) ?>"
+											class="btn btn-danger btn-sm"
+											onclick="return confirm('Are you sure you want to delete this student?');">
+											<i class="fas fa-trash-alt"></i> Delete
+										</a>
+									</td>
 								</tr>
-							<?php endforeach; ?>
+							<?php endforeach ?>
 						</tbody>
+
+
+
 					</table>
 				</div>
 			</div>
 		<?php else: ?>
-			<div class="alert alert-info">No teachers found.</div>
-		<?php endif; ?>
+			<div class="alert alert-info">No students found.</div>
+		<?php endif ?>
+
+
 
 	</div>
 </div>
