@@ -2903,12 +2903,6 @@ class Dashboard extends Controller
 
         // Fetch teacher attendance for month
         $attendanceData = $this->attendanceModel
-            ->where('created_at >=', $selectedMonth . '-01 00:00:00')
-            ->where('created_at <=', $selectedMonth . '-' . $numDays . ' 23:59:59')
-            ->findAll();
-        $attendanceData = $this->attendanceModel
-            ->where('DATE(created_at) >=', $selectedMonth . '-01')
-            ->where('DATE(created_at) <=', $selectedMonth . '-' . $numDays)
             ->findAll();
 
         // Debug: print raw attendance data
