@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mulgram Secondary School</title>
+    <title>Jhenaidah Public School & Collage</title>
 
     <link rel="stylesheet" href="<?= base_url('public/assets/css/bootstrap.min.css'); ?>">
     <script src="<?= base_url('public/assets/js/bootstrap.bundle.min.js') ?>"></script>
@@ -173,66 +173,65 @@
             }
         }
     </style>
-
-    <!-- Pagination -->
-    <style>
-        /* Pagination wrapper styling */
-        .pagination {
-            margin: 0 0 20px 0;
-            /* add bottom margin so it doesn't overlap table */
-            position: relative;
-            /* bring above table if needed */
-            z-index: 50;
-            display: flex;
-            flex-wrap: wrap;
-            list-style: none;
-            padding-left: 0;
-        }
-
-        /* Pagination links */
-        .pagination li a {
-            color: #333;
-            padding: 6px 12px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            margin: 0 2px;
-            background: #fff;
-            text-decoration: none !important;
-            transition: background 0.2s, color 0.2s;
-        }
-
-        /* Hover and focus states */
-        .pagination li a:hover,
-        .pagination li a:focus {
-            background: #f1f1f1;
-            text-decoration: none !important;
-            color: #000;
-        }
-
-        /* Active page */
-        .pagination li.active a {
-            background: #0d6efd;
-            color: #fff !important;
-            border-color: #0d6efd;
-            pointer-events: none;
-        }
-
-        /* Smaller font for icons or text inside <span> */
-        .pagination li a span {
-            font-size: 14px;
-        }
-
-        /* Fix for table-responsive hiding pagination */
-        .table-responsive {
-            overflow: visible !important;
-        }
-    </style>
 </head>
 
 <body>
 
 
     <?= $this->rendersection("content") ?>
+
+
+</body>
+
+</html>
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title><?= esc($title ?? 'School Admin Dashboard') ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- AdminLTE CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+
+    <!-- Optional: Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
+</head>
+
+<body class="hold-transition sidebar-mini">
+
+    <div class="wrapper">
+
+        <!-- Navbar -->
+        <?= $this->include('layouts/admin-structure/navbar') ?>
+
+        <!-- Sidebar -->
+        <?= $this->include('layouts/admin-structure/sidebar') ?>
+
+        <!-- Main Content -->
+        <div class="content-wrapper">
+            <?= $this->renderSection('content') ?>
+        </div>
+
+    </div>
+
+    <!-- ✅ Scripts (jQuery first, only once) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- AdminLTE -->
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+
 
 
 </body>
