@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateTeacherAttendanceTable extends Migration
+class CreateAttendanceTable extends Migration
 {
     public function up()
     {
@@ -15,14 +15,14 @@ class CreateTeacherAttendanceTable extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'teacher_id' => [
+            'student_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,
                 'unsigned'   => true,
             ],
             'remark' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 100,
+                'constraint' => 1,
                 'null'       => true,
             ],
             'created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
@@ -32,15 +32,12 @@ class CreateTeacherAttendanceTable extends Migration
         // Primary key
         $this->forge->addKey('id', true);
 
-        // Foreign key
-        $this->forge->addForeignKey('teacher_id', 'users', 'id', 'CASCADE', 'CASCADE');
-
         // Create table
-        $this->forge->createTable('teacher_attendance');
+        $this->forge->createTable('attendance');
     }
 
     public function down()
     {
-        $this->forge->dropTable('teacher_attendance');
+        $this->forge->dropTable('attendance');
     }
 }
