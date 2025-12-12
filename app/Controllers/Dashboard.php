@@ -2858,74 +2858,76 @@ class Dashboard extends Controller
         return view('dashboard/student_payment_history', $this->data);
     }
 
-    public function teacherAttendance()
-    {
-        // ✅ Page setup
-        $this->data['title'] = 'Teacher Attendance';
-        $this->data['activeSection'] = 'teacher_attendance';
-        $this->data['navbarItems'] = [
-            ['label' => 'Teacher attendance', 'url' => base_url('admin/teacher-attendance')],
-        ];
+public function teacherAttendance()
+{
+    // Page setup
+    $selectedMonth = $this->request->getGet('month') ?? date('Y-m');
+    $selectedTeacher = $this->request->getGet('teacher');
 
-        // ✅ Filters
-        $selectedMonth = $this->request->getGet('month') ?? date('Y-m');
-        $selectedTeacher = $this->request->getGet('teacher');
+    // Navbar items (needed for navbar.php)
+    $navbarItems = [
+        ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+        ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+        ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+        ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+        ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+    ];
 
-        // ✅ Teacher list (role = teacher)
-        $builder = $this->userModel->where('role', 'teacher');
+    // Teacher list
+    $teachers = $this->userModel->where('role', 'teacher')->orderBy('name', 'ASC')->findAll();
 
-        if (!empty($selectedTeacher)) {
-            $builder->where('id', $selectedTeacher);
-        }
-
-        $teacherList = $builder->orderBy('name', 'ASC')->findAll();
-        $allTeachers  = $this->userModel->where('role', 'teacher')->orderBy('name', 'ASC')->findAll();
-
-        // ✅ Build calendar for selected month
-        $daysInMonth = [];
-        $numDays = date('t', strtotime($selectedMonth . '-01'));
-
-        for ($d = 1; $d <= $numDays; $d++) {
-            $date = date('Y-m-d', strtotime($selectedMonth . '-' . sprintf("%02d", $d)));
-            $daysInMonth[] = [
-                'date' => $date,
-                'day'  => date('D', strtotime($date))
-            ];
-        }
-
-        // ✅ Fetch existing attendance for selected teachers in this month
-        $attendanceData = $this->attendanceModel
-            ->where('created_at >=', $selectedMonth . '-01 00:00:00')
-            ->where('created_at <=', $selectedMonth . '-' . $numDays . ' 23:59:59');
-
-        if (!empty($selectedTeacher)) {
-            $attendanceData->where('teacher_id', $selectedTeacher);
-        }
-
-        $attendanceData = $attendanceData->findAll();
-
-        // ✅ Map attendance: [teacher_id][date] = remark
-        $attendanceMap = [];
-        foreach ($attendanceData as $record) {
-            $tid = $record['teacher_id'];
-            $date = date('Y-m-d', strtotime($record['created_at']));
-            $attendanceMap[$tid][$date] = [
-                'remark' => $record['remark'],
-                'arrival' => $record['remark'] === 'A' ? $record['created_at'] : null,
-                'leave'   => $record['remark'] === 'L' ? $record['created_at'] : null
-            ];
-        }
-
-        // ✅ Pass all data to view
-        $data = [
-            'teachers'        => $teacherList,
-            'allTeachers'     => $allTeachers,
-            'selectedTeacher' => $selectedTeacher,
-            'selectedMonth'   => $selectedMonth,
-            'daysInMonth'     => $daysInMonth,
-            'attendanceMap'   => $attendanceMap
-        ];
-
-        return view('dashboard/teacher_attendance', $data);
+    $builder = $this->userModel->where('role', 'teacher');
+    if (!empty($selectedTeacher)) {
+        $builder->where('id', $selectedTeacher);
     }
+    $teacherList = $builder->orderBy('name', 'ASC')->findAll();
+
+    // Build days of the month
+    $daysInMonth = [];
+    $numDays = date('t', strtotime($selectedMonth . '-01'));
+    for ($d = 1; $d <= $numDays; $d++) {
+        $date = date('Y-m-d', strtotime($selectedMonth . '-' . sprintf("%02d", $d)));
+        $daysInMonth[] = [
+            'date' => $date,
+            'day'  => date('D', strtotime($date))
+        ];
+    }
+
+    // Fetch teacher attendance
+    $attendanceData = $this->attendanceModel
+        ->where('created_at >=', $selectedMonth . '-01 00:00:00')
+        ->where('created_at <=', $selectedMonth . '-' . $numDays . ' 23:59:59')
+        ->findAll();
+
+    // Map by teacher + date
+    $attendanceMap = [];
+    foreach ($attendanceData as $record) {
+        $tid = $record['teacher_id'];
+        $date = date('Y-m-d', strtotime($record['created_at']));
+        if (!isset($attendanceMap[$tid][$date])) {
+            $attendanceMap[$tid][$date] = [
+                'arrival' => null,
+                'leave' => null,
+                'remark' => $record['remark']
+            ];
+        }
+        if ($record['remark'] === 'A') {
+            $attendanceMap[$tid][$date]['arrival'] = $record['created_at'];
+        }
+        if ($record['remark'] === 'L') {
+            $attendanceMap[$tid][$date]['leave'] = $record['created_at'];
+        }
+    }
+
+    // Pass data to view
+    return view('dashboard/teacher_attendance', [
+        'navbarItems'     => $navbarItems, // ✅ pass navbar
+        'teachers'        => $teacherList,
+        'allTeachers'     => $teachers,
+        'selectedTeacher' => $selectedTeacher,
+        'selectedMonth'   => $selectedMonth,
+        'daysInMonth'     => $daysInMonth,
+        'attendanceMap'   => $attendanceMap
+    ]);
+}
 }
