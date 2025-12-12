@@ -13,7 +13,6 @@
 
                 <!-- Filter Form -->
                 <form method="get" class="row g-3 mb-4">
-
                     <div class="col-md-4">
                         <select name="teacher" class="form-control">
                             <option value="">All Teachers</option>
@@ -24,11 +23,9 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
-
                     <div class="col-md-4">
                         <input type="month" name="month" class="form-control" value="<?= esc($selectedMonth) ?>">
                     </div>
-
                     <div class="col-md-4">
                         <button class="btn btn-primary btn-block">Show</button>
                     </div>
@@ -39,12 +36,12 @@
                     <span class="badge bg-success">P = Present</span>
                     <span class="badge bg-secondary">A = Absent</span>
                     <span class="badge bg-warning text-dark">L = Late</span>
-                    <span class="badge bg-info text-dark">E = Early Out</span>
-                    <span class="badge bg-primary">L/E = Late & Early</span>
+                    <span class="badge bg-info text-dark">E = Leave</span>
                     <span class="badge bg-danger">H = Holiday</span>
                 </div>
 
-                <div class="table-responsive" style="max-height:600px;overflow:auto;">
+                <!-- Attendance Table -->
+                <div class="table-responsive" style="max-height:600px; overflow:auto;">
                     <table class="table table-bordered text-center small">
                         <thead class="table-dark">
                             <tr>
@@ -60,7 +57,6 @@
                                 <th>%</th>
                             </tr>
                         </thead>
-
                         <tbody>
                             <?php foreach ($teachers as $t): ?>
                                 <?php
@@ -69,76 +65,36 @@
                                 ?>
                                 <tr>
                                     <td class="text-left"><?= esc($t['name']) ?></td>
-
                                     <?php foreach ($daysInMonth as $day): ?>
                                         <?php
                                         $date = $day['date'];
-                                        $dayName = $day['day'];
+                                        $status = $attendanceMap[$t['id']][$date]['remark'] ?? 'A';
 
-                                        // Friday & Saturday Holiday
-                                        if ($dayName == 'Fri' || $dayName == 'Sat') {
-                                            echo "<td><span class='badge bg-danger'>H</span></td>";
-                                            continue;
-                                        }
+                                        if ($status !== 'H') $totalDays++;
+                                        if ($status === 'P') $presentCount++;
 
-                                        $totalDays++;
-
-                                        $attendance = $attendanceMap[$t['id']][$date] ?? null;
-
-                                        $status = 'A';
-                                        $badge = 'bg-secondary';
-
-                                        if ($attendance) {
-                                            $arrival = $attendance['arrival'] ? strtotime($attendance['arrival']) : null;
-                                            $leave   = $attendance['leave']   ? strtotime($attendance['leave'])   : null;
-
-                                            $tenAM  = strtotime($date . ' 10:00:00');
-                                            $fourPM = strtotime($date . ' 16:00:00');
-
-                                            if ($arrival && $leave) {
-                                                if ($arrival <= $tenAM && $leave >= $fourPM) {
-                                                    $status = 'P';
-                                                    $badge = 'bg-success';
-                                                    $presentCount++;
-                                                } elseif ($arrival > $tenAM && $leave < $fourPM) {
-                                                    $status = 'L/E';
-                                                    $badge = 'bg-primary';
-                                                } elseif ($arrival > $tenAM) {
-                                                    $status = 'L';
-                                                    $badge = 'bg-warning text-dark';
-                                                } elseif ($leave < $fourPM) {
-                                                    $status = 'E';
-                                                    $badge = 'bg-info text-dark';
-                                                }
-                                            } elseif ($arrival && !$leave) {
-                                                $status = ($arrival > $tenAM) ? 'L' : 'P';
-                                                if ($status == 'P') $presentCount++;
-                                                $badge = ($status == 'P') ? 'bg-success' : 'bg-warning text-dark';
-                                            } elseif (!$arrival && $leave) {
-                                                $status = ($leave < $fourPM) ? 'E' : 'P';
-                                                if ($status == 'P') $presentCount++;
-                                                $badge = ($status == 'P') ? 'bg-success' : 'bg-info text-dark';
-                                            }
-                                        }
+                                        $badge = match ($status) {
+                                            'P' => 'bg-success',
+                                            'A' => 'bg-secondary',
+                                            'L' => 'bg-warning text-dark',
+                                            'E' => 'bg-info text-dark',
+                                            'H' => 'bg-danger',
+                                            default => 'bg-secondary'
+                                        };
                                         ?>
-
                                         <td><span class="badge <?= $badge ?>"><?= $status ?></span></td>
-
                                     <?php endforeach; ?>
-
                                     <td><strong><?= $totalDays ?></strong></td>
                                     <td><strong><?= $presentCount ?></strong></td>
                                     <td><strong><?= $totalDays ? round(($presentCount / $totalDays) * 100) : 0 ?>%</strong></td>
                                 </tr>
-
                             <?php endforeach; ?>
                         </tbody>
-
                     </table>
                 </div>
+
             </div>
         </div>
-
     </div>
 </section>
 

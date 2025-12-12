@@ -2864,7 +2864,7 @@ class Dashboard extends Controller
         $selectedMonth = $this->request->getGet('month') ?? date('Y-m');
         $selectedTeacher = $this->request->getGet('teacher');
 
-        // Page setup for admin theme
+        // Page setup
         $this->data['title'] = 'Teacher Attendance';
         $this->data['activeSection'] = 'teacher_attendance';
         $this->data['navbarItems'] = [
@@ -2881,7 +2881,7 @@ class Dashboard extends Controller
             ->orderBy('position', 'ASC')
             ->findAll();
 
-        // Filtered teachers for selection (if a teacher is selected)
+        // Filtered teachers for selection
         $builder = $this->userModel->where('account_status >', 0);
         if (!empty($selectedTeacher)) {
             $builder->where('id', $selectedTeacher);
@@ -2907,6 +2907,11 @@ class Dashboard extends Controller
             ->where('created_at <=', $selectedMonth . '-' . $numDays . ' 23:59:59')
             ->findAll();
 
+        // Debug: print raw attendance data
+        echo "<pre>Attendance Data:\n";
+        print_r($attendanceData);
+        echo "</pre>";
+
         // Map attendance by teacher + date
         $attendanceMap = [];
         foreach ($attendanceData as $record) {
@@ -2915,24 +2920,53 @@ class Dashboard extends Controller
             $tid = $record['teacher_id'];
             $date = date('Y-m-d', strtotime($record['created_at']));
 
-            if (!isset($attendanceMap[$tid][$date])) {
-                $attendanceMap[$tid][$date] = [
-                    'arrival' => null,
-                    'leave'   => null,
-                ];
-            }
+            $attendanceMap[$tid][$date] = [
+                'remark' => $record['remark'] ?? 'A',
+                'arrival' => null,
+                'leave' => null
+            ];
 
-            // Arrival
-            if ($record['remark'] === 'A') {
-                if (!$attendanceMap[$tid][$date]['arrival'] || strtotime($record['created_at']) < strtotime($attendanceMap[$tid][$date]['arrival'])) {
-                    $attendanceMap[$tid][$date]['arrival'] = $record['created_at'];
-                }
-            }
+            // Determine arrival/leave for 10am–4pm logic
+            $inSec  = strtotime($record['created_at']);
+            $tenAM  = strtotime($date . ' 10:00:00');
+            $fourPM = strtotime($date . ' 16:00:00');
 
-            // Leave
-            if ($record['remark'] === 'L') {
-                if (!$attendanceMap[$tid][$date]['leave'] || strtotime($record['created_at']) > strtotime($attendanceMap[$tid][$date]['leave'])) {
-                    $attendanceMap[$tid][$date]['leave'] = $record['created_at'];
+            if ($record['remark'] === 'Present') {
+                $attendanceMap[$tid][$date]['remark'] = 'P';
+            } elseif ($record['remark'] === 'Late') {
+                $attendanceMap[$tid][$date]['remark'] = 'L';
+            } elseif ($record['remark'] === 'Leave') {
+                $attendanceMap[$tid][$date]['remark'] = 'E';
+            } elseif ($record['remark'] === 'Absent') {
+                $attendanceMap[$tid][$date]['remark'] = 'A';
+            }
+        }
+
+         // Debug: print mapped attendance
+    echo "<pre>Attendance Map:\n";
+    print_r($attendanceMap);
+    echo "</pre>";
+
+        // Fill missing days with Absent or Holiday
+        foreach ($teachers as $t) {
+            foreach ($daysInMonth as $day) {
+                $date = $day['date'];
+                $dayName = $day['day'];
+
+                if (!isset($attendanceMap[$t['id']][$date])) {
+                    if ($dayName === 'Fri' || $dayName === 'Sat') {
+                        $attendanceMap[$t['id']][$date] = [
+                            'remark' => 'H',
+                            'arrival' => null,
+                            'leave' => null
+                        ];
+                    } else {
+                        $attendanceMap[$t['id']][$date] = [
+                            'remark' => 'A',
+                            'arrival' => null,
+                            'leave' => null
+                        ];
+                    }
                 }
             }
         }
