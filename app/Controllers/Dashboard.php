@@ -2910,19 +2910,26 @@ class Dashboard extends Controller
         // Map attendance by teacher + date
         $attendanceMap = [];
         foreach ($attendanceData as $record) {
+            // Skip if teacher_id is not set
+            if (!isset($record['teacher_id'])) {
+                continue;
+            }
+
             $tid = $record['teacher_id'];
             $date = date('Y-m-d', strtotime($record['created_at']));
+
             if (!isset($attendanceMap[$tid][$date])) {
                 $attendanceMap[$tid][$date] = [
                     'arrival' => null,
                     'leave' => null,
-                    'remark' => $record['remark']
+                    'remark' => $record['remark'] ?? null,
                 ];
             }
-            if ($record['remark'] === 'A') {
+
+            if (($record['remark'] ?? null) === 'A') {
                 $attendanceMap[$tid][$date]['arrival'] = $record['created_at'];
             }
-            if ($record['remark'] === 'L') {
+            if (($record['remark'] ?? null) === 'L') {
                 $attendanceMap[$tid][$date]['leave'] = $record['created_at'];
             }
         }
