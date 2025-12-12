@@ -37,6 +37,7 @@
                     <span class="badge bg-secondary">A = Absent</span>
                     <span class="badge bg-warning text-dark">L = Late</span>
                     <span class="badge bg-info text-dark">E = Leave</span>
+                    <span class="badge bg-primary">L/E = Late/Early</span>
                     <span class="badge bg-danger">H = Holiday</span>
                 </div>
 
@@ -68,7 +69,30 @@
                                     <?php foreach ($daysInMonth as $day): ?>
                                         <?php
                                         $date = $day['date'];
-                                        $status = $attendanceMap[$t['id']][$date]['remark'] ?? 'A';
+                                        $dayName = $day['day'];
+                                        $attendance = $attendanceMap[$t['id']][$date] ?? null;
+
+                                        // Holiday on Fri/Sat
+                                        if ($dayName === 'Fri' || $dayName === 'Sat') {
+                                            $status = 'H';
+                                            $tooltip = 'Holiday';
+                                        } else {
+                                            $status = $attendance['remark'] ?? 'A';
+                                            $tooltip = '';
+
+                                            // Calculate L/E if both arrival and leave exist
+                                            $arrivalSec = isset($attendance['arrival']) ? strtotime($date . ' ' . $attendance['arrival']) : null;
+                                            $leaveSec   = isset($attendance['leave']) ? strtotime($date . ' ' . $attendance['leave']) : null;
+                                            $tenAM  = strtotime($date . ' 10:00:00');
+                                            $fourPM = strtotime($date . ' 16:00:00');
+
+                                            if ($arrivalSec && $leaveSec) {
+                                                if ($arrivalSec > $tenAM && $leaveSec < $fourPM) {
+                                                    $status = 'L/E';
+                                                    $tooltip = 'Late/Early';
+                                                }
+                                            }
+                                        }
 
                                         if ($status !== 'H') $totalDays++;
                                         if ($status === 'P') $presentCount++;
@@ -78,11 +102,12 @@
                                             'A' => 'bg-secondary',
                                             'L' => 'bg-warning text-dark',
                                             'E' => 'bg-info text-dark',
+                                            'L/E' => 'bg-primary',
                                             'H' => 'bg-danger',
                                             default => 'bg-secondary'
                                         };
                                         ?>
-                                        <td><span class="badge <?= $badge ?>"><?= $status ?></span></td>
+                                        <td><span class="badge <?= $badge ?>" title="<?= esc($tooltip) ?>"><?= $status ?></span></td>
                                     <?php endforeach; ?>
                                     <td><strong><?= $totalDays ?></strong></td>
                                     <td><strong><?= $presentCount ?></strong></td>
