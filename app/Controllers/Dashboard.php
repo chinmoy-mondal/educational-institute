@@ -2902,7 +2902,7 @@ class Dashboard extends Controller
         }
 
         // Fetch teacher attendance for month
-        $attendanceData = $this->attendanceModel
+        $attendanceData = $this->teacherAttendanceModel
             ->findAll();
 
         // Debug: print raw attendance data
