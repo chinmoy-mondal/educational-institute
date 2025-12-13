@@ -809,7 +809,7 @@ class Dashboard extends Controller
             'dob'          => 'permit_empty|valid_date',
             'gender'       => 'permit_empty',
             'phone'        => 'permit_empty',
-            'student_pic'  => 'permit_empty|is_image[student_pic]',
+            'student_pic'  => 'permit_empty',
             'birth_registration_number' => 'permit_empty',
             'father_nid_number'         => 'permit_empty',
             'mother_nid_number'         => 'permit_empty',
@@ -819,14 +819,22 @@ class Dashboard extends Controller
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        // Handle student picture
+        // Optional student picture
         $file = $this->request->getFile('student_pic');
+        $filePath = null;
 
         if ($file && $file->isValid() && !$file->hasMoved()) {
+            // Validate image ONLY if uploaded
+            if (!in_array($file->getMimeType(), ['image/png', 'image/jpg', 'image/jpeg'])) {
+                return redirect()->back()->withInput()->with(
+                    'errors',
+                    ['student_pic' => 'Only JPG, JPEG, PNG images are allowed']
+                );
+            }
+
             $fileName = $file->getRandomName();
             $file->move('uploads/students', $fileName);
-        } else {
-            return redirect()->back()->withInput()->with('errors', ['student_pic' => 'File upload failed.']);
+            $filePath = 'uploads/students/' . $fileName;
         }
 
         // Prepare student data
@@ -841,16 +849,17 @@ class Dashboard extends Controller
             'dob'          => $this->request->getPost('dob'),
             'gender'       => $this->request->getPost('gender'),
             'phone'        => $this->request->getPost('phone'),
-            'student_pic'  => 'uploads/students/' . $fileName,
+            'student_pic'  => $filePath, // NULL if not uploaded
             'birth_registration_number' => $this->request->getPost('birth_registration_number'),
             'father_nid_number'         => $this->request->getPost('father_nid_number'),
             'mother_nid_number'         => $this->request->getPost('mother_nid_number'),
         ];
 
-        // Save to DB
         $this->studentModel->insert($data);
 
-        return redirect()->to(site_url('admin/student/create'))->with('success', 'Student registered successfully!');
+        return redirect()
+            ->to(site_url('admin/student/create'))
+            ->with('success', 'Student registered successfully!');
     }
 
     public function student()
