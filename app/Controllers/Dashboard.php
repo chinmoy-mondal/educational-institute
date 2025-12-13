@@ -799,20 +799,20 @@ class Dashboard extends Controller
         helper(['form']);
 
         $rules = [
-            'student_name' => 'required',
-            'roll'         => 'required|numeric',
-            'class'        => 'required',
+            'student_name' => 'permit_empty',
+            'roll'         => 'permit_empty|numeric',
+            'class'        => 'permit_empty',
             'section'      => 'permit_empty',
-            'esif'         => 'required',
-            'father_name'  => 'required',
-            'mother_name'  => 'required',
-            'dob'          => 'required|valid_date',
-            'gender'       => 'required',
-            'phone'        => 'required',
-            'student_pic'  => 'uploaded[student_pic]|is_image[student_pic]',
-            'birth_registration_number' => 'required',
-            'father_nid_number'         => 'required',
-            'mother_nid_number'         => 'required',
+            'esif'         => 'permit_empty',
+            'father_name'  => 'permit_empty',
+            'mother_name'  => 'permit_empty',
+            'dob'          => 'permit_empty|valid_date',
+            'gender'       => 'permit_empty',
+            'phone'        => 'permit_empty',
+            'student_pic'  => 'permit_empty|is_image[student_pic]',
+            'birth_registration_number' => 'permit_empty',
+            'father_nid_number'         => 'permit_empty',
+            'mother_nid_number'         => 'permit_empty',
         ];
 
         if (!$this->validate($rules)) {

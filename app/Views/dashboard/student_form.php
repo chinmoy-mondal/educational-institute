@@ -33,7 +33,7 @@
               <input type="text" name="student_name" class="form-control" value="<?= old('student_name') ?>" required>
             </div>
             <div class="col-md-3">
-              <label>Roll</label>
+              <label>Index No.</label>
               <input type="text" name="roll" class="form-control" value="<?= old('roll') ?>" required>
             </div>
             <div class="col-md-3">
@@ -49,18 +49,14 @@
 
           <div class="row mt-3">
             <div class="col-md-6">
-              <label>Section (optional, only for Class 9 & 10)</label>
               <select name="section" class="form-control">
-                <option value="">Select Section</option>
-                <option value="n/a" <?= old('section') == 'n/a' ? 'selected' : '' ?>>N/A</option>
-                <option value="General - Science" <?= old('section') == 'General - Science' ? 'selected' : '' ?>>General → Science</option>
-                <option value="General - Arts" <?= old('section') == 'General - Arts' ? 'selected' : '' ?>>General → Arts</option>
-                <option value="Vocational - Food Processing and Preservation" <?= old('section') == 'Vocational - Food Processing and Preservation' ? 'selected' : '' ?>>Vocational → Food Processing and Preservation</option>
-                <option value="Vocational - IT Support and IoT Basics" <?= old('section') == 'Vocational - IT Support and IoT Basics' ? 'selected' : '' ?>>Vocational → IT Support and IoT Basics</option>
+                <option value="">সেকশন নির্বাচন করুন</option>
+                <option value="আবাসিক" <?= old('section') == 'আবাসিক' ? 'selected' : '' ?>>আবাসিক</option>
+                <option value="অনাবাসিক" <?= old('section') == 'অনাবাসিক' ? 'selected' : '' ?>>অনাবাসিক</option>
               </select>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-6 d-none">
               <label>Board ID</label>
               <input type="text" name="esif" class="form-control" value="<?= old('esif') ?>" required>
             </div>
