@@ -22,7 +22,7 @@
 
     <?php if (!empty($selectedClass)): ?>
         <!-- Fees Setup Form -->
-        <form method="post" action="<?= base_url('dashboard/save-amount') ?>">
+        <form method="post" action="<?= base_url('admin/save_fees') ?>">
             <input type="hidden" name="class" value="<?= esc($selectedClass) ?>">
 
             <div class="card shadow-sm">
