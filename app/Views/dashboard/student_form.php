@@ -49,8 +49,8 @@
 
           <div class="row mt-3">
             <div class="col-md-6">
+              <label>Section</label>
               <select name="section" class="form-control">
-                <option value="">সেকশন নির্বাচন করুন</option>
                 <option value="আবাসিক" <?= old('section') == 'আবাসিক' ? 'selected' : '' ?>>আবাসিক</option>
                 <option value="অনাবাসিক" <?= old('section') == 'অনাবাসিক' ? 'selected' : '' ?>>অনাবাসিক</option>
               </select>
