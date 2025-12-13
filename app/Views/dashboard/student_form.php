@@ -30,15 +30,15 @@
           <div class="row">
             <div class="col-md-6">
               <label>Student Name</label>
-              <input type="text" name="student_name" class="form-control" value="<?= old('student_name') ?>" required>
+              <input type="text" name="student_name" class="form-control" value="<?= old('student_name') ?>">
             </div>
             <div class="col-md-3">
               <label>Index No.</label>
-              <input type="text" name="roll" class="form-control" value="<?= old('roll') ?>" required>
+              <input type="text" name="roll" class="form-control" value="<?= old('roll') ?>">
             </div>
             <div class="col-md-3">
               <label>Class</label>
-              <select name="class" id="class-select" class="form-control" required>
+              <select name="class" id="class-select" class="form-control">
                 <option value="">Select Class</option>
                 <?php for ($i = 1; $i <= 10; $i++): ?>
                   <option value="<?= $i ?>" <?= old('class') == $i ? 'selected' : '' ?>><?= $i ?></option>
@@ -58,7 +58,7 @@
 
             <div class="col-md-6 d-none">
               <label>Board ID</label>
-              <input type="text" name="esif" class="form-control" value="<?= old('esif') ?>" required>
+              <input type="text" name="esif" class="form-control" value="<?= old('esif') ?>">
             </div>
           </div>
 
