@@ -8,21 +8,21 @@
     <form method="get" action="<?= base_url('admin/set_fees') ?>" class="mb-4">
         <div class="row g-2 align-items-center">
             <div class="col-md-4">
-<select name="class" class="form-select" onchange="this.form.submit()">
-    <option value="">Select Class</option>
-    <?php foreach ($classes as $classOption): ?>
-        <option value="<?= esc($classOption) ?>" <?= ($selectedClass == $classOption) ? 'selected' : '' ?>>
-            Class <?= esc($classOption) ?>
-        </option>
-    <?php endforeach; ?>
-</select>
+                <select name="class" class="form-select" onchange="this.form.submit()">
+                    <option value="">Select Class</option>
+                    <?php foreach ($classes as $classOption): ?>
+                        <option value="<?= esc($classOption) ?>" <?= ($selectedClass == $classOption) ? 'selected' : '' ?>>
+                            Class <?= esc($classOption) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
             </div>
         </div>
     </form>
 
     <?php if (!empty($selectedClass)): ?>
         <!-- Fees Setup Form -->
-        <form method="post" action="<?= base_url('dashboard/save-amount') ?>">
+        <form method="post" action="<?= base_url('admin/set_fees') ?>">
             <input type="hidden" name="class" value="<?= esc($selectedClass) ?>">
 
             <div class="card shadow-sm">

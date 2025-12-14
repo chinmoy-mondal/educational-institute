@@ -1154,6 +1154,7 @@ class Dashboard extends Controller
 
         // Build query
         $builder = $this->studentModel;
+        $builder = $builder->where('permission', 1);
         if ($q) {
             $builder = $builder->groupStart()
                 ->like('student_name', $q)
