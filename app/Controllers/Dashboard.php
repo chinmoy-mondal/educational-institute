@@ -1496,6 +1496,7 @@ class Dashboard extends Controller
 
         $students = $builder
             ->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
+            ->where('permission', 0)
             ->findAll();
 
         $finalData = [];
