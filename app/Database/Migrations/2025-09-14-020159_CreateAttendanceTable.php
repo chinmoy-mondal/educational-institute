@@ -22,7 +22,7 @@ class CreateAttendanceTable extends Migration
             ],
             'remark' => [
                 'type'       => 'VARCHAR',
-                'constraint' => 1,
+                'constraint' => 100,
                 'null'       => true,
             ],
             'created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP',
