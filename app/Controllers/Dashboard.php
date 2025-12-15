@@ -2649,7 +2649,7 @@ class Dashboard extends Controller
     {
         $class = $this->request->getPost('class');
         $feesData = $this->request->getPost('fees');
-        $unitsData = $this->request->getPost('units');
+        $unitsData = $this->request->getPost('unit');
 
         if (!$class) {
             return redirect()->back()->with('error', 'Please select a class before saving.');
