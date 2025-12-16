@@ -133,6 +133,7 @@ $routes->post('admin/updateNotice/(:num)', 'Dashboard::updateNotice/$1');
 // Transaction routes
 $routes->get('admin/transactions', 'Dashboard::transactionDashboard');
 $routes->get('admin/tec_pay', 'Dashboard::tec_pay');
+$routes->post('admin/reset_amount/(:num)', 'Dashboard::reset_amount/$1');
 $routes->get('admin/std_pay', 'Dashboard::std_pay');
 $routes->get('admin/pay_stat', 'Dashboard::pay_stat');
 $routes->get('admin/set_fees', 'Dashboard::set_fees');
@@ -153,8 +154,6 @@ $routes->get('public-calendar/events', 'PublicCalendar::events');
 
 $routes->match(['get', 'post'], 'admin/attendance/calendar', 'Dashboard::attendanceCalendar');
 $routes->post('admin/attendance/save', 'Dashboard::saveAttendance');
-
-//add new code for admin
 
 $routes->set404Override(function () {
     $controller = new \App\Controllers\ErrorController();

@@ -17,7 +17,8 @@ class TransactionModel extends Model
         'amount',
         'purpose',
         'description',
-        'status'
+        'status',
+        'activity' // new field
     ];
 
     // ✅ Automatic timestamps

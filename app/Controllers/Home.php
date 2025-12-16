@@ -283,6 +283,7 @@ class Home extends BaseController
 				->whereIn('subject', $subjectIds)
 				->where('subcategory', $exam_name)
 				->where('YEAR(start_date)', $year)   // extract year from start_date
+				->orderBy('start_date', 'ASC')       // sort ascending (earliest first)
 				->findAll();
 
 			// Combine into one array
@@ -305,47 +306,60 @@ class Home extends BaseController
 		$studentModel = new \App\Models\StudentModel();
 		$attendanceModel = new \App\Models\AttendanceModel();
 
-		// GET filters
-		$selectedClass = $this->request->getGet('class');
-		$selectedMonth = $this->request->getGet('month') ?? date('Y-m');
+		// ✅ GET filters
+		$selectedClass   = $this->request->getGet('class');
+		$selectedMonth   = $this->request->getGet('month') ?? date('Y-m');
+		$selectedSection = $this->request->getGet('section'); // <-- renamed for clarity
 
+		// ✅ Base query: only active students (permission = 0)
 		$builder = $studentModel->where('permission', 0);
-		if ($selectedClass) {
+
+		// ✅ Filter by class (if selected)
+		if (!empty($selectedClass)) {
 			$builder->where('class', $selectedClass);
 		}
 
+		// ✅ Filter by section (General / Vocational)
+		if (!empty($selectedSection)) {
+			if (strtolower($selectedSection) === 'vocational') {
+				// Show all where section includes the word "Vocational"
+				$builder->like('section', 'Vocational');
+			} else {
+				// Show all where section does NOT include "Vocational"
+				$builder->notLike('section', 'Vocational');
+			}
+		}
+
+		// ✅ Fetch filtered students
 		$students = $builder
-			->orderBy('class', 'ASC')
-			->orderBy('section', 'ASC')
 			->orderBy('CAST(roll AS UNSIGNED)', 'ASC')
 			->findAll();
 
-
-		// Classes for dropdown
+		// ✅ Distinct classes for dropdown
 		$classes = $studentModel
 			->select('class')
 			->distinct()
 			->orderBy('CAST(class AS UNSIGNED)', 'ASC')
 			->findAll();
 
-		// Build days in month
+		// ✅ Build days in selected month
 		$daysInMonth = [];
 		$numDays = date('t', strtotime($selectedMonth . '-01'));
 		for ($d = 1; $d <= $numDays; $d++) {
 			$date = date('Y-m-d', strtotime($selectedMonth . '-' . sprintf("%02d", $d)));
 			$daysInMonth[] = [
 				'date' => $date,
-				'day'  => date('D', strtotime($date)) // short day name
+				'day'  => date('D', strtotime($date))
 			];
 		}
 
-		// Fetch attendance of all students for the month
+		// ✅ Fetch attendance records for the month
 		$attendanceData = $attendanceModel
 			->where('created_at >=', $selectedMonth . '-01 00:00:00')
 			->where('created_at <=', $selectedMonth . '-' . $numDays . ' 23:59:59')
 			->findAll();
 
-		// Map attendance by student and date
+		// ✅ Map attendance by student and date
 		$attendanceMap = [];
 		foreach ($attendanceData as $record) {
 			$studentId = $record['student_id'];
@@ -365,13 +379,15 @@ class Home extends BaseController
 			$attendanceMap[$studentId][$date]['remarks'][] = $record['remark'];
 		}
 
+		// ✅ Pass everything to the view
 		$data = [
-			'students' => $students,
-			'classes' => $classes,
-			'selectedClass' => $selectedClass,
-			'selectedMonth' => $selectedMonth,
-			'daysInMonth' => $daysInMonth,
-			'attendanceMap' => $attendanceMap
+			'students'        => $students,
+			'classes'         => $classes,
+			'selectedClass'   => $selectedClass,
+			'selectedMonth'   => $selectedMonth,
+			'selectedSection' => $selectedSection, // <-- renamed variable
+			'daysInMonth'     => $daysInMonth,
+			'attendanceMap'   => $attendanceMap
 		];
 
 		return view('public/attendance_list', $data);

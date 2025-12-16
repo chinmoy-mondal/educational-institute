@@ -31,25 +31,22 @@
                                       : base_url('public/assets/img/default.png') ?>"
                             width="50" height="50" class="rounded-circle">
                         </a>
-
                       </td>
                       <td><?= esc($user['name']) ?></td>
                       <td><?= esc($user['subject']) ?></td>
                       <td class="text-center">
                         <div class="d-flex justify-content-center align-items-center">
-
                           <div style="margin-right:5px;">
                             <a href="#" class="btn btn-sm btn-info edit-btn"
                               data-id="<?= $user['id'] ?>"
                               data-name="<?= esc($user['name']) ?>"
-                              data-subject="<?= esc($user['subject']) ?>"
+                              data-assign_sub="<?= $user['assagin_sub'] ?>"
                               data-photo="<?= !empty($user['photo'])
                                             ? base_url($user['photo'])
                                             : base_url('public/assets/img/default.png') ?>">
                               <i class="fas fa-edit"></i>
                             </a>
                           </div>
-
                           <div style="margin-right:5px;">
                             <a href="<?= site_url('profile_id/' . $user['id']) ?>"
                               class="btn btn-sm btn-primary"
@@ -57,7 +54,6 @@
                               <i class="fas fa-user"></i>
                             </a>
                           </div>
-
                           <div>
                             <a href="<?= site_url('assignSubject/' . $user['id']) ?>"
                               class="btn btn-sm btn-success"
@@ -65,7 +61,6 @@
                               <i class="fas fa-file-alt"></i>
                             </a>
                           </div>
-
                         </div>
                       </td>
                     </tr>
@@ -152,38 +147,121 @@
   </div>
 </section>
 
-<!-- JavaScript for dynamic behavior (unchanged) -->
+<!-- CSS for aligned delete button -->
+<style>
+  #selectedSubjectsList li div {
+    display: flex;
+    justify-content: space-between;
+    /* subject left, delete right */
+    align-items: center;
+  }
+
+  #selectedSubjectsList li button {
+    flex: 0 0 auto;
+    width: 25px;
+    height: 25px;
+    line-height: 20px;
+    text-align: center;
+    padding: 0;
+    font-size: 16px;
+    border-radius: 50%;
+  }
+</style>
+
+<!-- JavaScript for dynamic behavior -->
 <script>
+  const subjectsLookup = {};
+  <?php foreach ($subjects as $sub): ?>
+    subjectsLookup['<?= $sub['id'] ?>'] = '<?= esc($sub['subject']) ?> (<?= esc($sub['class']) ?> - <?= esc($sub['section']) ?>)';
+  <?php endforeach; ?>
+
   document.addEventListener('DOMContentLoaded', () => {
+    const hidden = document.getElementById('subjectIds');
+    const list = document.getElementById('selectedSubjectsList');
+
+    function updateHidden() {
+      const ids = Array.from(list.querySelectorAll('li')).map(li => li.dataset.sid);
+      hidden.value = ids.join(',');
+    }
+
+    // Edit teacher button
     document.querySelector('#teacherTable').addEventListener('click', e => {
       const btn = e.target.closest('.edit-btn');
       if (!btn) return;
 
-      document.getElementById('teacherId').value = btn.dataset.id;
-      document.getElementById('teacherName').value = btn.dataset.name;
-      document.getElementById('subjectIds').value = '';
-      document.getElementById('selectedSubjectsList').innerHTML = '';
+      const teacherId = btn.dataset.id;
+      const teacherName = btn.dataset.name;
+      const assignSub = btn.dataset.assign_sub;
+
+      document.getElementById('teacherId').value = teacherId;
+      document.getElementById('teacherName').value = teacherName;
+
+      list.innerHTML = '';
+
+      if (assignSub) {
+        assignSub.split(',').forEach(id => {
+          if (subjectsLookup[id]) {
+            const li = document.createElement('li');
+            li.dataset.sid = id;
+
+            const innerDiv = document.createElement('div');
+            const span = document.createElement('span');
+            span.textContent = subjectsLookup[id];
+
+            const delBtn = document.createElement('button');
+            delBtn.type = 'button';
+            delBtn.textContent = '×';
+            delBtn.className = 'btn btn-sm btn-danger';
+            delBtn.onclick = () => {
+              li.remove();
+              updateHidden();
+            };
+
+            innerDiv.appendChild(span);
+            innerDiv.appendChild(delBtn);
+            li.appendChild(innerDiv);
+            list.appendChild(li);
+          }
+        });
+      }
+
+      updateHidden();
       document.getElementById('editForm').style.display = 'block';
       document.getElementById('placeholderMsg').style.display = 'none';
     });
 
+    // Add subject from subject list
     document.querySelector('.card-info').addEventListener('click', e => {
       const addBtn = e.target.closest('.add-subject');
       if (!addBtn) return;
 
       e.preventDefault();
-
       const sid = addBtn.dataset.sid;
       const sname = addBtn.dataset.sname;
-      const hidden = document.getElementById('subjectIds');
-      let ids = hidden.value ? hidden.value.split(',') : [];
 
-      if (!ids.includes(sid)) {
-        ids.push(sid);
-        hidden.value = ids.join(',');
+      if (!Array.from(list.querySelectorAll('li')).some(li => li.dataset.sid === sid)) {
         const li = document.createElement('li');
-        li.textContent = sname;
-        document.getElementById('selectedSubjectsList').appendChild(li);
+        li.dataset.sid = sid;
+
+        const innerDiv = document.createElement('div');
+        const span = document.createElement('span');
+        span.textContent = sname;
+
+        const delBtn = document.createElement('button');
+        delBtn.type = 'button';
+        delBtn.textContent = '×';
+        delBtn.className = 'btn btn-sm btn-danger';
+        delBtn.onclick = () => {
+          li.remove();
+          updateHidden();
+        };
+
+        innerDiv.appendChild(span);
+        innerDiv.appendChild(delBtn);
+        li.appendChild(innerDiv);
+        list.appendChild(li);
+
+        updateHidden();
       }
     });
 

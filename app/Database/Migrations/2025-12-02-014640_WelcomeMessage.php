@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateFeesAmountTable extends Migration
+class WelcomeMessage extends Migration
 {
     public function up()
     {
@@ -12,37 +12,38 @@ class CreateFeesAmountTable extends Migration
             'id' => [
                 'type'           => 'INT',
                 'unsigned'       => true,
-                'auto_increment' => true,
+                'auto_increment' => true
             ],
-            'class' => [
+            'title' => [
                 'type'       => 'VARCHAR',
-                'constraint' => '50',
+                'constraint' => '255',
+                'null'       => true
             ],
-            'title_id' => [
-                'type'       => 'INT',
-                'unsigned'   => true,
+            'photo' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '255',
+                'null'       => true
             ],
-            'fees' => [
-                'type'       => 'DECIMAL',
-                'constraint' => '10,2',
-                'default'    => 0.00,
+            'message' => [
+                'type' => 'TEXT',
+                'null' => true
             ],
             'created_at' => [
                 'type' => 'DATETIME',
-                'null' => true,
+                'null' => true
             ],
             'updated_at' => [
                 'type' => 'DATETIME',
-                'null' => true,
+                'null' => true
             ],
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->createTable('fees_amount');
+        $this->forge->createTable('welcome_message');
     }
 
     public function down()
     {
-        $this->forge->dropTable('fees_amount');
+        $this->forge->dropTable('welcome_message');
     }
 }

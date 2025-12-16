@@ -1,5 +1,4 @@
 <?= $this->extend('layouts/admin') ?>
-
 <?= $this->section('content') ?>
 <div class="content-wrapper">
 
@@ -7,22 +6,30 @@
     <section class="content">
         <div class="container-fluid">
 
+            <!-- Flash messages -->
             <?php if (session()->getFlashdata('success')): ?>
-                <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="fas fa-check-circle"></i> <?= session()->getFlashdata('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             <?php endif; ?>
             <?php if (session()->getFlashdata('error')): ?>
-                <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="fas fa-exclamation-triangle"></i> <?= session()->getFlashdata('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
             <?php endif; ?>
 
             <!-- Page header -->
-            <section class="content-header">
+            <section class="content-header mb-3">
                 <div class="container-fluid">
                     <h1 class="text-center">Marking Action</h1>
                 </div>
             </section>
+
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <div class="card">
+                    <div class="card shadow">
                         <div class="card-header bg-primary">
                             <h3 class="card-title">Select Exam(s) and Status</h3>
                         </div>
@@ -40,17 +47,27 @@
 
                                 <!-- Exams Checkboxes -->
                                 <div class="form-group">
-                                    <?php foreach ($exam_name as $exam): ?>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox"
-                                                name="exam_name[]"
-                                                value="<?= esc($exam['subcategory']) ?>"
-                                                id="exam_<?= esc($exam['subcategory']) ?>">
-                                            <label class="form-check-label" for="exam_<?= esc($exam['subcategory']) ?>">
-                                                <?= esc($exam['subcategory']) ?>
-                                            </label>
-                                        </div>
-                                    <?php endforeach; ?>
+                                    <?php if (!empty($exam_name)): ?>
+                                        <?php foreach ($exam_name as $exam): ?>
+                                            <div class="form-check mb-1">
+                                                <input class="form-check-input" type="checkbox"
+                                                    name="exam_name[]"
+                                                    value="<?= esc($exam['exam_name']) ?>"
+                                                    id="exam_<?= esc($exam['exam_name']) ?>"
+                                                    <?= ($exam['status'] === 'open') ? 'checked' : '' ?>>
+                                                <label class="form-check-label d-flex justify-content-between align-items-center" for="exam_<?= esc($exam['exam_name']) ?>">
+                                                    <span class="exam-name" style="display:inline-block; width: 150px;">
+                                                        <?= esc($exam['exam_name']) ?>
+                                                    </span>
+                                                    <span class="badge <?= ($exam['status'] === 'open') ? 'bg-success' : 'bg-secondary' ?>">
+                                                        <?= ucfirst($exam['status']) ?>
+                                                    </span>
+                                                </label>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <p class="text-muted">No exams found.</p>
+                                    <?php endif; ?>
                                 </div>
 
                                 <div class="text-center mt-3">
