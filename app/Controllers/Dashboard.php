@@ -1341,6 +1341,7 @@ class Dashboard extends Controller
 
             $data = [
                 'student_id' => $student['id'],
+                'roll'       => $student['roll'],
                 'subject_id' => $subjectId,
                 'exam'       => $exam,
                 'year'       => $year,

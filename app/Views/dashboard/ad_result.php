@@ -94,6 +94,7 @@
                                             <td>
                                                 <?= esc($s['student_name']) ?>
                                                 <input type="hidden" name="students[<?= $i ?>][id]" value="<?= esc($s['id']) ?>">
+                                                <input type="hidden" name="students[<?= $i ?>][roll]" value="<?= esc($s['roll']) ?>">
                                             </td>
                                             <td><?= esc($s['roll']) ?></td>
                                             <td><?= esc($s['class']) ?></td>
