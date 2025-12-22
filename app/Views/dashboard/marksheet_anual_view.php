@@ -275,514 +275,108 @@ if (!is_null($roll)) {
   <table class="table table-bordered text-center">
     <thead>
       <tr>
-        <th rowspan="2">Subject</th>
-        <th rowspan="2">Full Marks</th>
-        <th rowspan="2">Obtained Marks</th>
-        <th colspan="4">Marks Distribution</th>
-        <th rowspan="2">Total Marks</th>
-        <th rowspan="2">Letter Grade</th>
-        <th rowspan="2">GP</th>
+        <th rowspan="3">Subject</th>
+        <th rowspan="3">F.M</th>
+
+        <th colspan="5">Half Yearly</th>
+        <th colspan="5">Annual</th>
+
+        <th rowspan="3">T.M</th>
+        <th rowspan="3">Average</th>
+        <th rowspan="3">Grade</th>
+        <th rowspan="3">GP</th>
       </tr>
+
       <tr>
-        <th>Wri</th>
-        <th>MCQ</th>
-        <th>Pra</th>
+        <th>O.M</th>
+        <th>W</th>
+        <th>M</th>
+        <th>P</th>
+        <th>%</th>
+        <th>O.M</th>
+        <th>W</th>
+        <th>M</th>
+        <th>P</th>
         <th>%</th>
       </tr>
     </thead>
+
     <tbody>
       <?php
-      $totalMarks = 0;
       $totalGPA = 0;
       $subjectCount = 0;
       $totalFailed = 0;
-      $totalFailed = 0;
-      $forthGPA = 0;
-      $grade = 0;
-      $gpa = 0;
       ?>
-      <?php foreach ($marksheet as $i => $mark): ?>
-        <?php $totalMarks = $totalMarks +  $mark['total']; ?>
+
+      <?php foreach ($marksheet as $row): ?>
+        <?php
+        $half   = $row['half'];
+        $annual = $row['annual'];
+        $fm     = $row['full_mark'];
+
+        $tm = $half['total'] + $annual['total'];
+        $avg = round($tm / 2, 2);
+        $percent = ($avg / $fm) * 100;
+
+        if ($percent >= 80) {
+          $grade = 'A+';
+          $gpa = 5;
+        } elseif ($percent >= 70) {
+          $grade = 'A';
+          $gpa = 4;
+        } elseif ($percent >= 60) {
+          $grade = 'A-';
+          $gpa = 3.5;
+        } elseif ($percent >= 50) {
+          $grade = 'B';
+          $gpa = 3;
+        } elseif ($percent >= 40) {
+          $grade = 'C';
+          $gpa = 2;
+        } elseif ($percent >= 33) {
+          $grade = 'D';
+          $gpa = 1;
+        } else {
+          $grade = 'F';
+          $gpa = 0;
+          $totalFailed++;
+        }
+
+        $totalGPA += $gpa;
+        $subjectCount++;
+        ?>
+
         <tr>
-          <td>
-            <?= esc($mark['subject']) ?>
-            <?php
-            if (count($marksheet) - 1 == $i && in_array((int)$student['class'], [9, 10])) {
-              echo " <b>(4th)</b>";
-            }
-            ?>
-          </td>
-          <td><?= esc($mark['full_mark'] ?? 100) ?></td>
-          <td><?= esc($mark['obtained'] ?? $mark['total']) ?></td>
-          <td><?= esc($mark['written']) ?></td>
-          <td><?= esc($mark['mcq']) ?></td>
-          <td><?= esc($mark['practical']) ?></td>
-          <td><?= esc(round($mark['total'] / $mark['full_mark'] * 100, 2)) ?>%</td>
+          <td><?= esc($row['subject']) ?></td>
+          <td><?= $fm ?></td>
 
-          <?php
-          // Handle 1st Paper (rowspan with empty cells to fill later)
-          if (in_array($mark['subject'], ['Bangla 1st Paper', 'English 1st Paper'])):
-            $subjectKey = strtolower(str_replace(' ', '_', explode(' ', $mark['subject'])[0]));
-          ?>
-            <td id="combined_mark_<?= $subjectKey ?>" rowspan="2"></td>
-            <td id="combined_grade_<?= $subjectKey ?>" rowspan="2"></td>
-            <td id="combined_gpa_<?= $subjectKey ?>" rowspan="2"></td>
+          <!-- Half -->
+          <td><?= $half['total'] ?></td>
+          <td><?= $half['written'] ?></td>
+          <td><?= $half['mcq'] ?></td>
+          <td><?= $half['practical'] ?></td>
+          <td><?= round($half['total'] / $fm * 100, 2) ?>%</td>
 
-          <?php
-          // Handle 2nd Paper (inject values into previous IDs)
-          elseif (in_array($mark['subject'], ['Bangla 2nd Paper', 'English 2nd Paper'])):
-            $subjectKey = strtolower(str_replace(' ', '_', explode(' ', $mark['subject'])[0]));
-            $total = $mark['total'] + ($marksheet[$i - 1]['total'] ?? 0); // Combine 1st + 2nd paper total
+          <!-- Annual -->
+          <td><?= $annual['total'] ?></td>
+          <td><?= $annual['written'] ?></td>
+          <td><?= $annual['mcq'] ?></td>
+          <td><?= $annual['practical'] ?></td>
+          <td><?= round($annual['total'] / $fm * 100, 2) ?>%</td>
 
-            $subject = $mark['subject'];
-
-            if (in_array((int)$student['class'], [6, 7, 8])) {
-              if (($mark['total'] + ($marksheet[$i - 1]['total'] ?? 0)) < 49) {
-                $grade = 'F';
-                $gpa = '0.00';
-                $totalFailed++;
-              } else {
-                $fullMark = $mark['full_mark'] + ($marksheet[$i - 1]['full_mark'] ?? 0);
-                $percentage = $total / $fullMark * 100;
-
-                if ($percentage >= 80) {
-                  $grade = 'A+';
-                  $gpa = '5.00';
-                } elseif ($percentage >= 70) {
-                  $grade = 'A';
-                  $gpa = '4.00';
-                } elseif ($percentage >= 60) {
-                  $grade = 'A-';
-                  $gpa = '3.50';
-                } elseif ($percentage >= 50) {
-                  $grade = 'B';
-                  $gpa = '3.00';
-                } elseif ($percentage >= 40) {
-                  $grade = 'C';
-                  $gpa = '2.00';
-                } elseif ($percentage >= 33) {
-                  $grade = 'D';
-                  $gpa = '1.00';
-                } else {
-                  $grade = 'F';
-                  $gpa = '0.00';
-                }
-              }
-            } elseif (
-              in_array((int)$student['class'], [9, 10]) &&
-              $subject == 'Bangla 2nd Paper'
-            ) {
-
-              if (($mark['written'] + $marksheet[$i - 1]['written']) < 40 || ($mark['mcq'] + $marksheet[$i - 1]['mcq']) < 20) {
-                $grade = 'F';
-                $gpa = '0.00';
-
-                $totalFailed++;
-              } else {
-                $fullMark = $mark['full_mark'] + ($marksheet[$i - 1]['full_mark'] ?? 0);
-                $percentage = $total / $fullMark * 100;
-
-                if ($percentage >= 80) {
-                  $grade = 'A+';
-                  $gpa = '5.00';
-                } elseif ($percentage >= 70) {
-                  $grade = 'A';
-                  $gpa = '4.00';
-                } elseif ($percentage >= 60) {
-                  $grade = 'A-';
-                  $gpa = '3.50';
-                } elseif ($percentage >= 50) {
-                  $grade = 'B';
-                  $gpa = '3.00';
-                } elseif ($percentage >= 40) {
-                  $grade = 'C';
-                  $gpa = '2.00';
-                } elseif ($percentage >= 33) {
-                  $grade = 'D';
-                  $gpa = '1.00';
-                } else {
-                  $grade = 'F';
-                  $gpa = '0.00';
-                }
-              }
-            } elseif (
-              in_array((int)$student['class'], [9, 10]) &&
-              $subject == 'English 2nd Paper'
-            ) {
-
-              if (($mark['written'] + $marksheet[$i - 1]['written']) < 66) {
-                $grade = 'F';
-                $gpa = '0.00';
-
-                $totalFailed++;
-              } else {
-                $fullMark = $mark['full_mark'] + $marksheet[$i - 1]['full_mark'];
-                $percentage = $total / $fullMark * 100;
-
-                if ($percentage >= 80) {
-                  $grade = 'A+';
-                  $gpa = '5.00';
-                } elseif ($percentage >= 70) {
-                  $grade = 'A';
-                  $gpa = '4.00';
-                } elseif ($percentage >= 60) {
-                  $grade = 'A-';
-                  $gpa = '3.50';
-                } elseif ($percentage >= 50) {
-                  $grade = 'B';
-                  $gpa = '3.00';
-                } elseif ($percentage >= 40) {
-                  $grade = 'C';
-                  $gpa = '2.00';
-                } elseif ($percentage >= 33) {
-                  $grade = 'D';
-                  $gpa = '1.00';
-                } else {
-                  $grade = 'F';
-                  $gpa = '0.00';
-                }
-              }
-            }
-
-
-          ?>
-            <script>
-              document.addEventListener("DOMContentLoaded", function() {
-                document.getElementById("combined_mark_<?= $subjectKey ?>").textContent = "<?= $total ?>";
-                document.getElementById("combined_grade_<?= $subjectKey ?>").textContent = "<?= $grade ?>";
-                document.getElementById("combined_gpa_<?= $subjectKey ?>").textContent = "<?= $gpa ?>";
-              });
-              <?php
-              $totalGPA = $totalGPA + $gpa;
-              $subjectCount++;
-              ?>
-            </script>
-
-          <?php
-          // All other subjects: print normally
-          else:
-          ?>
-            <?php
-            $subject = trim($mark['subject']);
-            $class = (int)$student['class'];
-            $total = $mark['total'];
-            $fullMark = $mark['full_mark'];
-            $percentage = $total / $fullMark * 100;
-
-            if (in_array($class, [6, 7, 8])) {
-              if ($subject === 'ICT' && $total < 17) {
-                $grade = 'F';
-                $gpa = '0.00';
-
-                $totalFailed++;
-              } elseif ($subject !== 'ICT' && $total < 33) {
-                $grade = 'F';
-                $gpa = '0.00';
-
-                $totalFailed++;
-              } else {
-
-                if ($percentage >= 80) {
-                  $grade = 'A+';
-                  $gpa = '5.00';
-                } elseif ($percentage >= 70) {
-                  $grade = 'A';
-                  $gpa = '4.00';
-                } elseif ($percentage >= 60) {
-                  $grade = 'A-';
-                  $gpa = '3.50';
-                } elseif ($percentage >= 50) {
-                  $grade = 'B';
-                  $gpa = '3.00';
-                } elseif ($percentage >= 40) {
-                  $grade = 'C';
-                  $gpa = '2.00';
-                } elseif ($percentage >= 33) {
-                  $grade = 'D';
-                  $gpa = '1.00';
-                } else {
-                  $grade = 'F';
-                  $gpa = '0.00';
-                }
-              }
-            } elseif (in_array($class, [9, 10])) {
-              $section = strtolower($student['section']);
-              $subject = trim($mark['subject']);
-              $written = $mark['written'];
-              $mcq = $mark['mcq'];
-              $practical = $mark['practical'];
-              $total = $mark['total'];
-              $fullMark = $mark['full_mark'];
-              $percentage = $total / $fullMark * 100;
-
-              // ✳ Vocational section
-              if (strpos($section, 'vocational') !== false) {
-                if (
-                  strpos($subject, 'Physics') !== false ||
-                  strpos($subject, 'Chemistry') !== false ||
-                  strpos($subject, 'Self Employment and Entrepreneur') !== false ||
-                  strpos($subject, 'Bangladesh and Global studies') !== false
-                ) {
-                  if ($written < 10) {
-                    $grade = 'F';
-                    $gpa = '0.00';
-                    $totalFailed++;
-                  } else {
-
-                    if ($percentage >= 80) {
-                      $grade = 'A+';
-                      $gpa = '5.00';
-                    } elseif ($percentage >= 70) {
-                      $grade = 'A';
-                      $gpa = '4.00';
-                    } elseif ($percentage >= 60) {
-                      $grade = 'A-';
-                      $gpa = '3.50';
-                    } elseif ($percentage >= 50) {
-                      $grade = 'B';
-                      $gpa = '3.00';
-                    } elseif ($percentage >= 40) {
-                      $grade = 'C';
-                      $gpa = '2.00';
-                    } elseif ($percentage >= 33) {
-                      $grade = 'D';
-                      $gpa = '1.00';
-                    } else {
-                      $grade = 'N/A';
-                      $gpa = '0.00';
-                    }
-                  }
-                } elseif (str_contains($subject, 'Computer Application')) {
-                  if ($practical < 17) {
-                    $grade = 'F';
-                    $gpa = '0.00';
-                    $totalFailed++;
-                  } else {
-
-                    if ($percentage >= 80) {
-                      $grade = 'A+';
-                      $gpa = '5.00';
-                    } elseif ($percentage >= 70) {
-                      $grade = 'A';
-                      $gpa = '4.00';
-                    } elseif ($percentage >= 60) {
-                      $grade = 'A-';
-                      $gpa = '3.50';
-                    } elseif ($percentage >= 50) {
-                      $grade = 'B';
-                      $gpa = '3.00';
-                    } elseif ($percentage >= 40) {
-                      $grade = 'C';
-                      $gpa = '2.00';
-                    } elseif ($percentage >= 33) {
-                      $grade = 'D';
-                      $gpa = '1.00';
-                    } else {
-                      $grade = 'N/A';
-                      $gpa = '0.00';
-                    }
-                  }
-                } elseif (str_contains($subject, 'Agriculture Studies')) {
-                  if ($written < 15) {
-                    $grade = 'F';
-                    $gpa = '0.00';
-                    $totalFailed++;
-                  } else {
-
-                    if ($percentage >= 80) {
-                      $grade = 'A+';
-                      $gpa = '5.00';
-                    } elseif ($percentage >= 70) {
-                      $grade = 'A';
-                      $gpa = '4.00';
-                    } elseif ($percentage >= 60) {
-                      $grade = 'A-';
-                      $gpa = '3.50';
-                    } elseif ($percentage >= 50) {
-                      $grade = 'B';
-                      $gpa = '3.00';
-                    } elseif ($percentage >= 40) {
-                      $grade = 'C';
-                      $gpa = '2.00';
-                    } elseif ($percentage >= 33) {
-                      $grade = 'D';
-                      $gpa = '1.00';
-                    } else {
-                      $grade = 'N/A';
-                      $gpa = '0.00';
-                    }
-                  }
-                } elseif (
-                  str_contains($subject, 'Bangla') ||
-                  str_contains($subject, 'English') ||
-                  str_contains($subject, 'Islamic Studies') ||
-                  str_contains($subject, 'Hindu Religion Studies') ||
-                  str_contains($subject, 'Mathematics') ||
-                  str_contains($subject, 'IT Support') ||
-                  str_contains($subject, 'Food Processing and Preservation')
-                ) {
-                  if ($written < 20) {
-                    $grade = 'F';
-                    $gpa = '0.00';
-                    $totalFailed++;
-                  } else {
-
-                    if ($percentage >= 80) {
-                      $grade = 'A+';
-                      $gpa = '5.00';
-                    } elseif ($percentage >= 70) {
-                      $grade = 'A';
-                      $gpa = '4.00';
-                    } elseif ($percentage >= 60) {
-                      $grade = 'A-';
-                      $gpa = '3.50';
-                    } elseif ($percentage >= 50) {
-                      $grade = 'B';
-                      $gpa = '3.00';
-                    } elseif ($percentage >= 40) {
-                      $grade = 'C';
-                      $gpa = '2.00';
-                    } elseif ($percentage >= 33) {
-                      $grade = 'D';
-                      $gpa = '1.00';
-                    } else {
-                      $grade = 'N/A';
-                      $gpa = '0.00';
-                    }
-                  }
-                }
-              }
-
-
-              // ✳ General section
-              else {
-                if ($subject === 'ICT') {
-                  if (($written + $mcq) < 7 || $practical < 8) {
-                    $grade = 'F';
-                    $gpa = '0.00';
-
-                    $totalFailed++;
-                  } else {
-
-                    if ($percentage >= 80) {
-                      $grade = 'A+';
-                      $gpa = '5.00';
-                    } elseif ($percentage >= 70) {
-                      $grade = 'A';
-                      $gpa = '4.00';
-                    } elseif ($percentage >= 60) {
-                      $grade = 'A-';
-                      $gpa = '3.50';
-                    } elseif ($percentage >= 50) {
-                      $grade = 'B';
-                      $gpa = '3.00';
-                    } elseif ($percentage >= 40) {
-                      $grade = 'C';
-                      $gpa = '2.00';
-                    } elseif ($percentage >= 33) {
-                      $grade = 'D';
-                      $gpa = '1.00';
-                    } else {
-                      $grade = 'F';
-                      $gpa = '0.00';
-                    }
-                  }
-                } elseif (in_array($subject, ['Physics', 'Chemistry', 'Higher Mathematics', 'Biology'])) {
-                  if ($written < 17 || $mcq < 8 || $practical < 8) {
-                    $grade = 'F';
-                    $gpa = '0.00';
-
-                    $totalFailed++;
-                  } else {
-                    if ($percentage >= 80) {
-                      $grade = 'A+';
-                      $gpa = '5.00';
-                    } elseif ($percentage >= 70) {
-                      $grade = 'A';
-                      $gpa = '4.00';
-                    } elseif ($percentage >= 60) {
-                      $grade = 'A-';
-                      $gpa = '3.50';
-                    } elseif ($percentage >= 50) {
-                      $grade = 'B';
-                      $gpa = '3.00';
-                    } elseif ($percentage >= 40) {
-                      $grade = 'C';
-                      $gpa = '2.00';
-                    } elseif ($percentage >= 33) {
-                      $grade = 'D';
-                      $gpa = '1.00';
-                    } else {
-                      $grade = 'F';
-                      $gpa = '0.00';
-                    }
-                  }
-                } else {
-                  if ($written < 23 || $mcq < 10) {
-                    $grade = 'F';
-                    $gpa = '0.00';
-
-                    $totalFailed++;
-                  } else {
-                    if ($percentage >= 80) {
-                      $grade = 'A+';
-                      $gpa = '5.00';
-                    } elseif ($percentage >= 70) {
-                      $grade = 'A';
-                      $gpa = '4.00';
-                    } elseif ($percentage >= 60) {
-                      $grade = 'A-';
-                      $gpa = '3.50';
-                    } elseif ($percentage >= 50) {
-                      $grade = 'B';
-                      $gpa = '3.00';
-                    } elseif ($percentage >= 40) {
-                      $grade = 'C';
-                      $gpa = '2.00';
-                    } elseif ($percentage >= 33) {
-                      $grade = 'D';
-                      $gpa = '1.00';
-                    } else {
-                      $grade = 'F';
-                      $gpa = '0.00';
-                    }
-                  }
-                }
-              }
-            }
-
-
-
-            ?>
-
-            <td><?= esc($mark['total']) ?></td>
-            <td><?= esc($grade) ?></td>
-            <td>
-              <?= esc($gpa) ?>
-              <?php
-              if (count($marksheet) - 1 == $i && in_array((int)$student['class'], [9, 10])) {
-                $forthGPA =  max(0, $gpa - 2);
-              } else {
-                $totalGPA = $totalGPA + $gpa;
-                $subjectCount++;
-              }
-              ?>
-            </td>
-            <!-- <td>
-            <?= $subject ?> = <?= in_array($subject, ['Physics', 'Chemistry', 'Higher Mathematics ', 'Biology', 'ICT']) ? 'yes' : 'no';  ?> u
-            </td> -->
-          <?php endif; ?>
+          <td><?= $tm ?></td>
+          <td><?= $avg ?></td>
+          <td><?= $grade ?></td>
+          <td><?= number_format($gpa, 2) ?></td>
         </tr>
       <?php endforeach; ?>
-
     </tbody>
+
     <tfoot>
       <tr>
-        <th colspan="7">Total Marks</th>
-
-        <th class="text-end"><?= $totalMarks ?></th>
+        <th colspan="14">GPA</th>
         <th colspan="2">
-          <?= $subjectCount > 0 ? (($golden_gpa = ($totalGPA + $forthGPA) / $subjectCount) > 5 ? '5.00*' : number_format($golden_gpa, 2)) : '0.00' ?>
+          <?= $subjectCount ? number_format($totalGPA / $subjectCount, 2) : '0.00' ?>
         </th>
       </tr>
     </tfoot>
