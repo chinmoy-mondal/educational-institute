@@ -2014,11 +2014,9 @@ class Dashboard extends Controller
             $this->data['student']   = $student;
             $this->data['examName']  = $exam;
             $this->data['examYear']  = $year;
-            echo "<pre>";
-            print_r($this->data);
-            echo "</pre>";
 
-            // return view($viewFile, $this->data);
+
+            return view($viewFile, $this->data);
         }
 
         return redirect()->back()->with('error', 'Invalid search method.');
