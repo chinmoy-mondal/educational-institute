@@ -289,6 +289,10 @@ if (!is_null($roll)) {
                 <th>MCQ</th>
                 <th>Pra</th>
                 <th>Total</th>
+                <th>Wri</th>
+                <th>MCQ</th>
+                <th>Pra</th>
+                <th>Total</th>
             </tr>
         </thead>
         <tbody>
