@@ -1855,7 +1855,7 @@ class Dashboard extends Controller
                 ->join('subjects', 'subjects.id = results.subject_id')
                 ->where([
                     'results.student_id' => $studentId,
-                    'results.exam'       => 'Half Yearly',
+                    'results.exam'       => 'Half-Yearly',
                     'results.year'       => $year,
                 ])
                 ->findAll();
@@ -1865,7 +1865,7 @@ class Dashboard extends Controller
                 ->join('subjects', 'subjects.id = results.subject_id')
                 ->where([
                     'results.student_id' => $studentId,
-                    'results.exam'       => 'Annual',
+                    'results.exam'       => 'Annual Exam',
                     'results.year'       => $year,
                 ])
                 ->findAll();
@@ -1914,13 +1914,11 @@ class Dashboard extends Controller
 
             $class = (int)$student['class'];
 
-            // ✅ MAIN CONDITION
-            if (strtolower($exam) === 'annual exam' && $class >= 6 && $class <= 9) {
-
+            // ✅ MAIN CONDITION: Annual Exam for class 6–9
+            if ($exam === 'Annual Exam' && $class >= 6 && $class <= 9) {
                 $this->data['marksheet'] = $getAnnualAverage($studentId, $year);
                 $viewFile = 'dashboard/marksheet_anual_view';
             } else {
-
                 $this->data['marksheet'] = $this->resultModel
                     ->select('results.*, subjects.subject, subjects.full_mark')
                     ->join('subjects', 'subjects.id = results.subject_id')
@@ -1930,7 +1928,6 @@ class Dashboard extends Controller
                         'results.year'       => $year,
                     ])
                     ->findAll();
-
                 $viewFile = 'dashboard/marksheet_view';
             }
 
@@ -1976,13 +1973,11 @@ class Dashboard extends Controller
                 return redirect()->back()->with('error', 'Student not found.');
             }
 
-            // ✅ SAME CONDITION HERE
-            if (strtolower($exam) === 'annual' && $class >= 6 && $class <= 9) {
-
+            // ✅ SAME CONDITION: Annual Exam for class 6–9
+            if ($exam === 'Annual Exam' && $class >= 6 && $class <= 9) {
                 $this->data['marksheet'] = $getAnnualAverage($student['id'], $year);
                 $viewFile = 'dashboard/marksheet_anual_view';
             } else {
-
                 $this->data['marksheet'] = $this->resultModel
                     ->select('results.*, subjects.subject, subjects.full_mark')
                     ->join('subjects', 'subjects.id = results.subject_id')
@@ -1992,7 +1987,6 @@ class Dashboard extends Controller
                         'results.year'       => $year,
                     ])
                     ->findAll();
-
                 $viewFile = 'dashboard/marksheet_view';
             }
 
