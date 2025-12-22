@@ -2009,9 +2009,9 @@ class Dashboard extends Controller
 
             // Sort subjects
             $marksheet = $sortMarksheet($marksheet, $student['assign_sub']);
-            echo "<pre>";
-            print_r($marksheet);
-            echo "</pre>";
+            // echo "<pre>";
+            // print_r($marksheet);
+            // echo "</pre>";
 
             $this->data['marksheet'] = $marksheet;
             $this->data['student']   = $student;
