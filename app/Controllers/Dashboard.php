@@ -1914,9 +1914,6 @@ class Dashboard extends Controller
                     ->findAll();
 
                 $marksheet = array_merge($half, $annual);
-                echo "<pre>";
-                print_r($marksheet);
-                echo "</pre>";
                 $viewFile = 'dashboard/marksheet_anual_view';
             } else {
                 $marksheet = $this->resultModel
@@ -1996,6 +1993,9 @@ class Dashboard extends Controller
 
                 $marksheet = array_merge($half, $annual);
                 $viewFile = 'dashboard/marksheet_anual_view';
+                echo "<pre>";
+                print_r($marksheet);
+                echo "</pre>";
             } else {
                 $marksheet = $this->resultModel
                     ->select('results.*, subjects.subject, subjects.full_mark')
