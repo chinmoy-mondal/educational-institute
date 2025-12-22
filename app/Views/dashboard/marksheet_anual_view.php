@@ -255,26 +255,25 @@ $isAnnualCombined = ($exam === 'Annual Exam' && $class >= 6 && $class <= 9);
     <table class="table table-bordered text-center">
       <thead>
         <tr>
-          <th rowspan="3">Subject</th>
-          <th rowspan="3">F.M</th>
-          <th colspan="5">Half-Yearly</th>
-          <th colspan="5">Annual</th>
-          <th rowspan="3">T.M</th>
-          <th rowspan="3">Average</th>
-          <th rowspan="3">Grade</th>
-          <th rowspan="3">GP</th>
+          <th rowspan="2">Subject</th>
+          <th rowspan="2">F.M</th>
+          <th colspan="4">Half-Yearly</th>
+          <th colspan="4">Annual</th>
+          <th rowspan="2">T.M</th>
+          <th rowspan="2">Average</th>
+          <th rowspan="2">%</th>
+          <th rowspan="2">Grade</th>
+          <th rowspan="2">GP</th>
         </tr>
         <tr>
-          <th>O.M</th>
           <th>W</th>
           <th>M</th>
           <th>P</th>
-          <th>%</th>
-          <th>O.M</th>
+          <th>Total</th>
           <th>W</th>
           <th>M</th>
           <th>P</th>
-          <th>%</th>
+          <th>Total</th>
         </tr>
       </thead>
       <tbody>
@@ -286,50 +285,60 @@ $isAnnualCombined = ($exam === 'Annual Exam' && $class >= 6 && $class <= 9);
           $half   = $row['half'] ?? ['written' => 0, 'mcq' => 0, 'practical' => 0, 'total' => 0];
           $annual = $row['annual'] ?? ['written' => 0, 'mcq' => 0, 'practical' => 0, 'total' => 0];
           $fm     = $row['full_mark'] ?? 0;
-          $tm     = $half['total'] + $annual['total'];
-          $avg    = round($tm / 2, 2);
+
+          // Total & Average
+          $tm      = $half['total'] + $annual['total'];
+          $avg     = round($tm / 2, 2);
           $percent = ($avg / $fm) * 100;
+
+          // Grade & GPA
           if ($percent >= 80) {
             $grade = 'A+';
-            $gpa = 5;
+            $gpa   = 5;
           } elseif ($percent >= 70) {
             $grade = 'A';
-            $gpa = 4;
+            $gpa   = 4;
           } elseif ($percent >= 60) {
             $grade = 'A-';
-            $gpa = 3.5;
+            $gpa   = 3.5;
           } elseif ($percent >= 50) {
             $grade = 'B';
-            $gpa = 3;
+            $gpa   = 3;
           } elseif ($percent >= 40) {
             $grade = 'C';
-            $gpa = 2;
+            $gpa   = 2;
           } elseif ($percent >= 33) {
             $grade = 'D';
-            $gpa = 1;
+            $gpa   = 1;
           } else {
             $grade = 'F';
-            $gpa = 0;
+            $gpa   = 0;
             $totalFailed++;
           }
-          $totalGPA += $gpa;
+
+          $totalGPA++;
           $subjectCount++;
         ?>
           <tr>
             <td><?= esc($row['subject']) ?></td>
             <td><?= $fm ?></td>
-            <td><?= $half['total'] ?></td>
+
+            <!-- Half-Yearly -->
             <td><?= $half['written'] ?></td>
             <td><?= $half['mcq'] ?></td>
             <td><?= $half['practical'] ?></td>
-            <td><?= round($half['total'] / $fm * 100, 2) ?>%</td>
-            <td><?= $annual['total'] ?></td>
+            <td><?= $half['total'] ?></td>
+
+            <!-- Annual -->
             <td><?= $annual['written'] ?></td>
             <td><?= $annual['mcq'] ?></td>
             <td><?= $annual['practical'] ?></td>
-            <td><?= round($annual['total'] / $fm * 100, 2) ?>%</td>
+            <td><?= $annual['total'] ?></td>
+
+            <!-- Total & Average -->
             <td><?= $tm ?></td>
             <td><?= $avg ?></td>
+            <td><?= round($percent, 2) ?>%</td>
             <td><?= $grade ?></td>
             <td><?= number_format($gpa, 2) ?></td>
           </tr>
@@ -339,80 +348,6 @@ $isAnnualCombined = ($exam === 'Annual Exam' && $class >= 6 && $class <= 9);
         <tr>
           <th colspan="14">GPA</th>
           <th colspan="2"><?= $subjectCount ? number_format($totalGPA / $subjectCount, 2) : '0.00' ?></th>
-        </tr>
-      </tfoot>
-    </table>
-  <?php else: ?>
-    <!-- Single Exam Table -->
-    <table class="table table-bordered text-center">
-      <thead>
-        <tr>
-          <th>Subject</th>
-          <th>F.M</th>
-          <th>Written</th>
-          <th>MCQ</th>
-          <th>Practical</th>
-          <th>Total</th>
-          <th>%</th>
-          <th>Grade</th>
-          <th>GP</th>
-        </tr>
-      </thead>
-      <tbody>
-        <?php
-        $totalGPA = 0;
-        $subjectCount = 0;
-        $totalFailed = 0;
-        foreach ($marksheet as $row):
-          $written = $row['written'];
-          $mcq = $row['mcq'];
-          $practical = $row['practical'];
-          $tm = $written + $mcq + $practical;
-          $fm = $row['full_mark'];
-          $percent = ($tm / $fm) * 100;
-          if ($percent >= 80) {
-            $grade = 'A+';
-            $gpa = 5;
-          } elseif ($percent >= 70) {
-            $grade = 'A';
-            $gpa = 4;
-          } elseif ($percent >= 60) {
-            $grade = 'A-';
-            $gpa = 3.5;
-          } elseif ($percent >= 50) {
-            $grade = 'B';
-            $gpa = 3;
-          } elseif ($percent >= 40) {
-            $grade = 'C';
-            $gpa = 2;
-          } elseif ($percent >= 33) {
-            $grade = 'D';
-            $gpa = 1;
-          } else {
-            $grade = 'F';
-            $gpa = 0;
-            $totalFailed++;
-          }
-          $totalGPA += $gpa;
-          $subjectCount++;
-        ?>
-          <tr>
-            <td><?= esc($row['subject']) ?></td>
-            <td><?= $fm ?></td>
-            <td><?= $written ?></td>
-            <td><?= $mcq ?></td>
-            <td><?= $practical ?></td>
-            <td><?= $tm ?></td>
-            <td><?= round($percent, 2) ?>%</td>
-            <td><?= $grade ?></td>
-            <td><?= number_format($gpa, 2) ?></td>
-          </tr>
-        <?php endforeach; ?>
-      </tbody>
-      <tfoot>
-        <tr>
-          <th colspan="8">GPA</th>
-          <th><?= $subjectCount ? number_format($totalGPA / $subjectCount, 2) : '0.00' ?></th>
         </tr>
       </tfoot>
     </table>
