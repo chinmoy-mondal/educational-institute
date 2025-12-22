@@ -277,9 +277,9 @@ if (!is_null($roll)) {
         <thead>
             <tr>
                 <th rowspan="2">Subject</th>
-                <th rowspan="2">Full Marks</th>
-                <th rowspan="2">Obtained Marks</th>
-                <th colspan="4">Marks Distribution</th>
+                <th rowspan="2">F.M</th>
+                <th colspan="4">Half Yearly</th>
+                <th colspan="4">Annualy</th>
                 <th rowspan="2">Total Marks</th>
                 <th rowspan="2">Letter Grade</th>
                 <th rowspan="2">GP</th>
@@ -288,7 +288,7 @@ if (!is_null($roll)) {
                 <th>Wri</th>
                 <th>MCQ</th>
                 <th>Pra</th>
-                <th>%</th>
+                <th>Total</th>
             </tr>
         </thead>
         <tbody>
