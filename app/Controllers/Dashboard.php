@@ -1993,9 +1993,6 @@ class Dashboard extends Controller
 
                 $marksheet = array_merge($half, $annual);
                 $viewFile = 'dashboard/marksheet_anual_view';
-                echo "<pre>";
-                print_r($marksheet);
-                echo "</pre>";
             } else {
                 $marksheet = $this->resultModel
                     ->select('results.*, subjects.subject, subjects.full_mark')
@@ -2012,6 +2009,9 @@ class Dashboard extends Controller
 
             // Sort subjects
             $marksheet = $sortMarksheet($marksheet, $student['assign_sub']);
+            echo "<pre>";
+            print_r($marksheet);
+            echo "</pre>";
 
             $this->data['marksheet'] = $marksheet;
             $this->data['student']   = $student;
