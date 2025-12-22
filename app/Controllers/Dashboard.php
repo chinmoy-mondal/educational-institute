@@ -1840,16 +1840,11 @@ class Dashboard extends Controller
             ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
         ];
 
-        $request    = service('request');
+        $request = service('request');
         $searchType = $request->getGet('search_type');
 
-        /**
-         * ==================================
-         * HELPER: GET HALF + ANNUAL (AVERAGE)
-         * ==================================
-         */
+        // Helper to calculate Annual Average (Half + Annual)
         $getAnnualAverage = function ($studentId, $year) {
-
             $half = $this->resultModel
                 ->select('results.*, subjects.subject, subjects.full_mark')
                 ->join('subjects', 'subjects.id = results.subject_id')
@@ -1876,7 +1871,6 @@ class Dashboard extends Controller
             }
 
             $final = [];
-
             foreach ($annual as $a) {
                 $sid = $a['subject_id'];
                 $h   = $halfMap[$sid] ?? [];
@@ -1892,13 +1886,8 @@ class Dashboard extends Controller
             return $final;
         };
 
-        /**
-         * ======================
-         * SEARCH BY STUDENT ID
-         * ======================
-         */
+        // SEARCH BY STUDENT ID
         if ($searchType === 'id') {
-
             $studentId = $request->getGet('student_id');
             $exam      = $request->getGet('exam');
             $year      = $request->getGet('year');
@@ -1914,7 +1903,7 @@ class Dashboard extends Controller
 
             $class = (int)$student['class'];
 
-            // ✅ MAIN CONDITION: Annual Exam for class 6–9
+            // Annual Exam 6–9: use annual average
             if ($exam === 'Annual Exam' && $class >= 6 && $class <= 9) {
                 $this->data['marksheet'] = $getAnnualAverage($studentId, $year);
                 $viewFile = 'dashboard/marksheet_anual_view';
@@ -1938,13 +1927,8 @@ class Dashboard extends Controller
             return view($viewFile, $this->data);
         }
 
-        /**
-         * ======================
-         * SEARCH BY ROLL
-         * ======================
-         */
+        // SEARCH BY ROLL
         if ($searchType === 'roll') {
-
             $class   = (int)$request->getGet('class');
             $roll    = $request->getGet('roll');
             $section = $request->getGet('section');
@@ -1973,7 +1957,7 @@ class Dashboard extends Controller
                 return redirect()->back()->with('error', 'Student not found.');
             }
 
-            // ✅ SAME CONDITION: Annual Exam for class 6–9
+            // Annual Exam 6–9: use annual average
             if ($exam === 'Annual Exam' && $class >= 6 && $class <= 9) {
                 $this->data['marksheet'] = $getAnnualAverage($student['id'], $year);
                 $viewFile = 'dashboard/marksheet_anual_view';
