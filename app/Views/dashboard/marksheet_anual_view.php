@@ -1,6 +1,133 @@
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
+<style>
+.marksheet-wrapper {
+    background: white;
+    padding: 24px;
+    border: 6px double goldenrod;
+    margin: auto;
+    max-width: 850px;
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+}
 
+.school-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.school-header h2 {
+    margin: 0;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.school-header h5 {
+    margin: 5px 0;
+}
+
+.student-info,
+.exam-info {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.student-info td,
+.exam-info td {
+    padding: 4px;
+}
+
+.table-bordered td,
+.table-bordered th {
+    border: 1px solid #000 !important;
+    padding: 4px !important;
+}
+
+.grade-table td,
+.grade-table th {
+    font-size: 12px;
+    padding: 1px 1px !important;
+    line-height: 1.0;
+}
+
+.qr-signature {
+    margin-top: 30px;
+}
+
+.qr-code {
+    text-align: center;
+}
+
+.qr-code img {
+    width: 100px;
+    height: 100px;
+}
+
+.signature {
+    text-align: right;
+    margin-top: 30px;
+    font-weight: bold;
+}
+
+.grade-table td,
+.grade-table th {
+    font-size: 12px;
+    padding: 3px 6px !important;
+    line-height: 1.2;
+}
+
+.transcript-title {
+    text-align: center;
+}
+
+.transcript-title img {
+    display: block;
+    margin: 0 auto;
+}
+
+.grade-box {
+    float: right;
+}
+
+.align-items-center {
+    align-items: initial !important;
+}
+
+th {
+    text-align: center;
+    vertical-align: middle !important;
+}
+
+td strong {
+    display: inline-block;
+    width: 140px;
+    /* Adjust as needed */
+    font-weight: bold;
+}
+
+@page {
+    size: A4;
+    margin: 20mm;
+}
+
+@media print {
+    body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        margin-top: 15mm;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    html,
+    body {
+        width: 210mm;
+        height: 297mm;
+    }
+}
+</style>
 <?php
 // ---------- GROUP DATA ----------
 $subjects = [];
