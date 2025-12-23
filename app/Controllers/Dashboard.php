@@ -1341,7 +1341,6 @@ class Dashboard extends Controller
 
             $data = [
                 'student_id' => $student['id'],
-                'roll'       => $student['roll'],
                 'subject_id' => $subjectId,
                 'exam'       => $exam,
                 'year'       => $year,
@@ -1693,149 +1692,6 @@ class Dashboard extends Controller
         return view('dashboard/select_marksheet_info', $this->data);
     }
 
-    // public function showMarksheet()
-    // {
-    //     $this->data['title'] = 'Marksheet';
-    //     $this->data['activeSection'] = 'result';
-    //     $this->data['navbarItems'] = [
-    //         ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
-    //         ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
-    //     ];
-
-    //     $request = service('request');
-    //     $searchType = $request->getGet('search_type');
-
-    //     if ($searchType === 'id') {
-    //         $studentId = $request->getGet('student_id');
-    //         $exam      = $request->getGet('exam');
-    //         $year      = $request->getGet('year');
-
-    //         if (!$studentId) {
-    //             return redirect()->back()->with('error', 'Please enter a Student ID.');
-    //         }
-
-    //         $student = $this->studentModel->find($studentId);
-
-    //         if (!$student) {
-    //             return redirect()->back()->with('error', 'Student not found.');
-    //         }
-
-    //         // Fetch results with subject name
-    //         $marksheet = $this->resultModel
-    //             ->select('results.*, subjects.subject, subjects.full_mark')
-    //             ->join('subjects', 'subjects.id = results.subject_id')
-    //             ->where([
-    //                 'results.student_id' => $studentId,
-    //                 'results.exam'       => $exam,
-    //                 'results.year'       => $year,
-    //             ])
-    //             ->findAll();
-
-    //         // Sort based on assigned subjects
-    //         $assigned = explode(',', $student['assign_sub'] ?? '');
-    //         $orderMap = array_flip($assigned);
-
-    //         usort($marksheet, function ($a, $b) use ($orderMap) {
-    //             $posA = $orderMap[$a['subject_id']] ?? PHP_INT_MAX;
-    //             $posB = $orderMap[$b['subject_id']] ?? PHP_INT_MAX;
-    //             return $posA <=> $posB;
-    //         });
-
-    //         $this->data['examName'] = $exam;
-    //         $this->data['examYear'] = $year;
-    //         $this->data['student'] = $student;
-    //         $this->data['marksheet'] = $marksheet;
-
-    //         return view('dashboard/marksheet_view', $this->data);
-    //     } elseif ($searchType === 'roll') {
-    //         $class   = $request->getGet('class');
-    //         $section = $request->getGet('section');
-    //         $roll    = $request->getGet('roll');
-    //         $exam    = $request->getGet('exam');
-    //         $year    = $request->getGet('year');
-
-    //         if (!$class || !$section || !$roll || !$exam || !$year) {
-    //             return redirect()->back()->with('error', 'Please fill in all fields.');
-    //         }
-
-    //         $builder = $this->studentModel
-    //             ->where('class', $class)
-    //             ->where('roll', $roll);
-
-    //         if ($section === 'vocational') {
-    //             $builder->like('section', 'vocational');
-    //         } else {
-    //             $builder->groupStart()
-    //                 ->like('section', 'n/a')
-    //                 ->orLike('section', 'general')
-    //                 ->groupEnd();
-    //         }
-
-    //         $student = $builder->first();
-
-    //         if (!$student) {
-    //             return redirect()->back()->with('error', 'Student not found for given Class/Roll.');
-    //         }
-
-    //         // Fetch marksheet with subject join
-    //         $marksheet = $this->resultModel
-    //             ->select('results.*, subjects.subject, subjects.full_mark')
-    //             ->join('subjects', 'subjects.id = results.subject_id')
-    //             ->where([
-    //                 'results.student_id' => $student['id'],
-    //                 'results.exam'       => $exam,
-    //                 'results.year'       => $year,
-    //             ])
-    //             ->findAll();
-
-    //         // Sort by assigned subjects
-    //         $assignRaw = explode(',', $student['assign_sub']);
-    //         $starredId = null;
-    //         $ordered = [];
-
-    //         // Separate normal and starred
-    //         foreach ($assignRaw as $id) {
-    //             if (str_ends_with($id, '*')) {
-    //                 $starredId = rtrim($id, '*');
-    //             } else {
-    //                 $ordered[] = $id;
-    //             }
-    //         }
-
-    //         usort($marksheet, function ($a, $b) use ($ordered, $starredId) {
-    //             // If either subject is the starred one
-    //             if ($a['subject_id'] == $starredId) {
-    //                 return 1;
-    //             }
-    //             if ($b['subject_id'] == $starredId) {
-    //                 return -1;
-    //             }
-
-    //             // Compare position in ordered list
-    //             $posA = array_search($a['subject_id'], $ordered);
-    //             $posB = array_search($b['subject_id'], $ordered);
-    //             return $posA <=> $posB;
-    //         });
-
-    //         $this->data['examName'] = $exam;
-    //         $this->data['examYear'] = $year;
-    //         $this->data['student'] = $student;
-    //         $this->data['marksheet'] = $marksheet;
-    //         // echo '<pre>';
-    //         // print_r($marksheet);
-    //         // echo '</pre>';
-
-    //         return view('dashboard/marksheet_view', $this->data);
-    //     }
-
-    //     return redirect()->back()->with('error', 'Invalid search method.');
-    // }
-
-    // public function test_result()
-    // {
-    //     $marksheet = $this->resultModel
-    //     ->f
-    // }
     public function showMarksheet()
     {
         $this->data['title'] = 'Marksheet';
@@ -1848,115 +1704,56 @@ class Dashboard extends Controller
         $request = service('request');
         $searchType = $request->getGet('search_type');
 
-        // Function to sort marksheet according to assign_sub
-        // Sort marksheet according to assign_sub order
-        $sortMarksheet = function ($marksheet, $assignSub) {
-            $assignRaw = explode(',', $assignSub ?? '');
-            $starredId = null;
-            $ordered = [];
-
-            foreach ($assignRaw as $id) {
-                $id = trim($id);
-                if (str_ends_with($id, '*')) {
-                    $starredId = rtrim($id, '*');
-                } else {
-                    $ordered[] = $id;
-                }
-            }
-
-            usort($marksheet, function ($a, $b) use ($ordered, $starredId) {
-                // Starred subject should appear last
-                if ($a['subject_id'] == $starredId) return 1;
-                if ($b['subject_id'] == $starredId) return -1;
-
-                // Order by assign_sub position
-                $posA = array_search($a['subject_id'], $ordered);
-                $posB = array_search($b['subject_id'], $ordered);
-
-                $posA = $posA === false ? PHP_INT_MAX : $posA;
-                $posB = $posB === false ? PHP_INT_MAX : $posB;
-
-                return $posA <=> $posB;
-            });
-
-            return $marksheet;
-        };
-
-        // ---------------- SEARCH BY STUDENT ID ----------------
         if ($searchType === 'id') {
             $studentId = $request->getGet('student_id');
             $exam      = $request->getGet('exam');
             $year      = $request->getGet('year');
 
-            if (!$studentId || !$exam || !$year) {
-                return redirect()->back()->with('error', 'Missing required fields.');
+            if (!$studentId) {
+                return redirect()->back()->with('error', 'Please enter a Student ID.');
             }
 
             $student = $this->studentModel->find($studentId);
+
             if (!$student) {
                 return redirect()->back()->with('error', 'Student not found.');
             }
 
-            $class = (int)$student['class'];
+            // Fetch results with subject name
+            $marksheet = $this->resultModel
+                ->select('results.*, subjects.subject, subjects.full_mark')
+                ->join('subjects', 'subjects.id = results.subject_id')
+                ->where([
+                    'results.student_id' => $studentId,
+                    'results.exam'       => $exam,
+                    'results.year'       => $year,
+                ])
+                ->findAll();
 
-            if ($exam === 'Annual Exam' && $class >= 6 && $class <= 9) {
-                // Fetch both Half-Yearly and Annual exam data
-                $half = $this->resultModel
-                    ->select('results.*, subjects.subject, subjects.full_mark')
-                    ->join('subjects', 'subjects.id = results.subject_id')
-                    ->where([
-                        'results.student_id' => $studentId,
-                        'results.exam'       => 'Half-Yearly',
-                        'results.year'       => $year,
-                    ])
-                    ->findAll();
+            // Sort based on assigned subjects
+            $assigned = explode(',', $student['assign_sub'] ?? '');
+            $orderMap = array_flip($assigned);
 
-                $annual = $this->resultModel
-                    ->select('results.*, subjects.subject, subjects.full_mark')
-                    ->join('subjects', 'subjects.id = results.subject_id')
-                    ->where([
-                        'results.student_id' => $studentId,
-                        'results.exam'       => 'Annual Exam',
-                        'results.year'       => $year,
-                    ])
-                    ->findAll();
+            usort($marksheet, function ($a, $b) use ($orderMap) {
+                $posA = $orderMap[$a['subject_id']] ?? PHP_INT_MAX;
+                $posB = $orderMap[$b['subject_id']] ?? PHP_INT_MAX;
+                return $posA <=> $posB;
+            });
 
-                $marksheet = array_merge($half, $annual);
-                $viewFile = 'dashboard/marksheet_anual_view';
-            } else {
-                $marksheet = $this->resultModel
-                    ->select('results.*, subjects.subject, subjects.full_mark')
-                    ->join('subjects', 'subjects.id = results.subject_id')
-                    ->where([
-                        'results.student_id' => $studentId,
-                        'results.exam'       => $exam,
-                        'results.year'       => $year,
-                    ])
-                    ->findAll();
-
-                $viewFile = 'dashboard/marksheet_view';
-            }
-
-            // Sort subjects
-            $marksheet = $sortMarksheet($marksheet, $student['assign_sub']);
-
+            $this->data['examName'] = $exam;
+            $this->data['examYear'] = $year;
+            $this->data['student'] = $student;
             $this->data['marksheet'] = $marksheet;
-            $this->data['student']   = $student;
-            $this->data['examName']  = $exam;
-            $this->data['examYear']  = $year;
 
-            return view($viewFile, $this->data);
-        }
-
-        // ---------------- SEARCH BY ROLL ----------------
-        if ($searchType === 'roll') {
-            $class   = (int)$request->getGet('class');
-            $roll    = $request->getGet('roll');
+            return view('dashboard/marksheet_view', $this->data);
+        } elseif ($searchType === 'roll') {
+            $class   = $request->getGet('class');
             $section = $request->getGet('section');
+            $roll    = $request->getGet('roll');
             $exam    = $request->getGet('exam');
             $year    = $request->getGet('year');
 
-            if (!$class || !$roll || !$exam || !$year) {
+            if (!$class || !$section || !$roll || !$exam || !$year) {
                 return redirect()->back()->with('error', 'Please fill in all fields.');
             }
 
@@ -1968,69 +1765,124 @@ class Dashboard extends Controller
                 $builder->like('section', 'vocational');
             } else {
                 $builder->groupStart()
-                    ->like('section', 'general')
-                    ->orLike('section', 'n/a')
+                    ->like('section', 'n/a')
+                    ->orLike('section', 'general')
                     ->groupEnd();
             }
 
             $student = $builder->first();
+
             if (!$student) {
-                return redirect()->back()->with('error', 'Student not found.');
+                return redirect()->back()->with('error', 'Student not found for given Class/Roll.');
             }
 
-            if ($exam === 'Annual Exam' && $class >= 6 && $class <= 9) {
-                $half = $this->resultModel
-                    ->select('results.*, subjects.subject, subjects.full_mark')
-                    ->join('subjects', 'subjects.id = results.subject_id')
-                    ->where([
-                        'results.student_id' => $student['id'],
-                        'results.exam'       => 'Half-Yearly',
-                        'results.year'       => $year,
-                    ])
-                    ->findAll();
+            // Fetch marksheet with subject join
+            $marksheet = $this->resultModel
+                ->select('results.*, subjects.subject, subjects.full_mark')
+                ->join('subjects', 'subjects.id = results.subject_id')
+                ->where([
+                    'results.student_id' => $student['id'],
+                    'results.exam'       => $exam,
+                    'results.year'       => $year,
+                ])
+                ->findAll();
 
-                $annual = $this->resultModel
-                    ->select('results.*, subjects.subject, subjects.full_mark')
-                    ->join('subjects', 'subjects.id = results.subject_id')
-                    ->where([
-                        'results.student_id' => $student['id'],
-                        'results.exam'       => 'Annual Exam',
-                        'results.year'       => $year,
-                    ])
-                    ->findAll();
+            // Sort by assigned subjects
+            $assignRaw = explode(',', $student['assign_sub']);
+            $starredId = null;
+            $ordered = [];
 
-                $marksheet = array_merge($half, $annual);
-                $viewFile = 'dashboard/marksheet_anual_view';
-            } else {
-                $marksheet = $this->resultModel
-                    ->select('results.*, subjects.subject, subjects.full_mark')
-                    ->join('subjects', 'subjects.id = results.subject_id')
-                    ->where([
-                        'results.student_id' => $student['id'],
-                        'results.exam'       => $exam,
-                        'results.year'       => $year,
-                    ])
-                    ->findAll();
-
-                $viewFile = 'dashboard/marksheet_view';
+            // Separate normal and starred
+            foreach ($assignRaw as $id) {
+                if (str_ends_with($id, '*')) {
+                    $starredId = rtrim($id, '*');
+                } else {
+                    $ordered[] = $id;
+                }
             }
 
-            // Sort subjects
-            $marksheet = $sortMarksheet($marksheet, $student['assign_sub']);
-            // echo "<pre>";
-            // print_r($marksheet);
-            // echo "</pre>";
+            usort($marksheet, function ($a, $b) use ($ordered, $starredId) {
+                // If either subject is the starred one
+                if ($a['subject_id'] == $starredId) {
+                    return 1;
+                }
+                if ($b['subject_id'] == $starredId) {
+                    return -1;
+                }
 
+                // Compare position in ordered list
+                $posA = array_search($a['subject_id'], $ordered);
+                $posB = array_search($b['subject_id'], $ordered);
+                return $posA <=> $posB;
+            });
+
+            $this->data['examName'] = $exam;
+            $this->data['examYear'] = $year;
+            $this->data['student'] = $student;
             $this->data['marksheet'] = $marksheet;
-            $this->data['student']   = $student;
-            $this->data['examName']  = $exam;
-            $this->data['examYear']  = $year;
+            // echo '<pre>';
+            // print_r($marksheet);
+            // echo '</pre>';
 
-
-            return view($viewFile, $this->data);
+            return view('dashboard/marksheet_view', $this->data);
         }
 
         return redirect()->back()->with('error', 'Invalid search method.');
+    }
+
+    public function viewStudent($id)
+    {
+        $this->studentModel = new StudentModel();
+        $this->subjectModel = new SubjectModel();
+
+        $student = $this->studentModel->find($id);
+
+        if (!$student) {
+            return redirect()->back()->with('error', 'No data found');
+        }
+
+        // ✅ Step 1: Parse subject IDs and extract 4th subject
+        $subject_str_id = $student['assign_sub'];
+        $rawIds = explode(',', $subject_str_id); // e.g. ['12', '13', '14*', '15']
+
+        $subjectIds = [];
+        $fourthSubjectId = null;
+
+        foreach ($rawIds as $idEntry) {
+            if (str_contains($idEntry, '*')) {
+                $fourthSubjectId = str_replace('*', '', $idEntry);
+                $subjectIds[] = $fourthSubjectId;
+            } else {
+                $subjectIds[] = $idEntry;
+            }
+        }
+
+        $subjects = $this->subjectModel
+            ->whereIn('id', $subjectIds)
+            ->findAll();
+
+        $fourthSubjectName = null;
+        if ($fourthSubjectId) {
+            $fourth = $this->subjectModel->find($fourthSubjectId);
+            if ($fourth) {
+                $fourthSubjectName = $fourth['subject'];
+            }
+        }
+
+        // ✅ Step 4: Pass to view
+        $this->data['title'] = 'Student Details';
+        $this->data['activeSection'] = 'student';
+        $this->data['navbarItems'] = [
+            ['label' => 'Student List', 'url' => base_url('ad-student')],
+            ['label' => 'Add Student', 'url' => base_url('student_create')],
+            ['label' => 'View Student', 'url' => current_url()],
+        ];
+        $this->data['student'] = $student;
+        $this->data['subjectsStr'] = $subject_str_id;
+        $this->data['subjects'] = $subjects;
+        $this->data['forthSubject'] = $fourthSubjectName;
+
+        return view('dashboard/student_view', $this->data);
     }
 
     public function forthsub($id)
