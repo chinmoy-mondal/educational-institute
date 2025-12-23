@@ -1849,6 +1849,7 @@ class Dashboard extends Controller
         $searchType = $request->getGet('search_type');
 
         // Function to sort marksheet according to assign_sub
+        // Sort marksheet according to assign_sub order
         $sortMarksheet = function ($marksheet, $assignSub) {
             $assignRaw = explode(',', $assignSub ?? '');
             $starredId = null;
@@ -1864,9 +1865,11 @@ class Dashboard extends Controller
             }
 
             usort($marksheet, function ($a, $b) use ($ordered, $starredId) {
+                // Starred subject should appear last
                 if ($a['subject_id'] == $starredId) return 1;
                 if ($b['subject_id'] == $starredId) return -1;
 
+                // Order by assign_sub position
                 $posA = array_search($a['subject_id'], $ordered);
                 $posB = array_search($b['subject_id'], $ordered);
 
