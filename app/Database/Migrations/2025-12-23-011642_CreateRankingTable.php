@@ -59,6 +59,20 @@ class CreateRankingTable extends Migration
                 'default'    => 0.00,
             ],
 
+            // GPA
+            'gpa' => [
+                'type'       => 'DECIMAL',
+                'constraint' => '4,2',
+                'default'    => 0.00,
+            ],
+
+            // Letter Grade
+            'grade_letter' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 2,
+                'null'       => true,
+            ],
+
             // Academic year
             'year' => [
                 'type'       => 'INT',
