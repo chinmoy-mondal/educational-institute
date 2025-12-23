@@ -1696,19 +1696,76 @@ class Dashboard extends Controller
     {
         $studentId = 207;  // Specific student ID
         $year      = 2025; // Specific year
-        $exams     = ['Half-Yearly', 'Annual Exam']; // Both exams
+        $exams     = ['Half-Yearly', 'Annual Exam'];
 
-        // Fetch results for both Half-Yearly and Annual Exam
-        $marksheet = $this->resultModel
+        // Fetch Half-Yearly results
+        $half = $this->resultModel
             ->where('student_id', $studentId)
             ->where('year', $year)
-            ->whereIn('exam', $exams)
+            ->where('exam', 'Half-Yearly')
             ->findAll();
 
-        // Display results
-        echo "<pre>";
-        print_r($marksheet);
-        echo "</pre>";
+        // Fetch Annual Exam results
+        $annual = $this->resultModel
+            ->where('student_id', $studentId)
+            ->where('year', $year)
+            ->where('exam', 'Annual Exam')
+            ->findAll();
+
+        // Combine data by subject_id for easy side-by-side display
+        $marksheet = [];
+        foreach ($half as $h) {
+            $marksheet[$h['subject_id']]['subject'] = $h['subject'] ?? 'Unknown';
+            $marksheet[$h['subject_id']]['half'] = $h;
+            $marksheet[$h['subject_id']]['annual'] = null;
+        }
+
+        foreach ($annual as $a) {
+            if (!isset($marksheet[$a['subject_id']])) {
+                $marksheet[$a['subject_id']]['subject'] = $a['subject'] ?? 'Unknown';
+                $marksheet[$a['subject_id']]['half'] = null;
+            }
+            $marksheet[$a['subject_id']]['annual'] = $a;
+        }
+
+        // Display in table
+        echo "<table border='1' cellpadding='5' cellspacing='0'>";
+        echo "<tr>
+            <th>Subject</th>
+            <th>Half-Yearly (Wri)</th>
+            <th>Half-Yearly (MCQ)</th>
+            <th>Half-Yearly (Prac)</th>
+            <th>Half-Yearly Total</th>
+            <th>Annual (Wri)</th>
+            <th>Annual (MCQ)</th>
+            <th>Annual (Prac)</th>
+            <th>Annual Total</th>
+          </tr>";
+
+        foreach ($marksheet as $row) {
+            $half = $row['half'];
+            $annual = $row['annual'];
+
+            $halfTotal = $half ? ($half['written'] + $half['mcq'] + ($half['practical'] ?? 0)) : '';
+            $annualTotal = $annual ? ($annual['written'] + $annual['mcq'] + ($annual['practical'] ?? 0)) : '';
+
+            echo "<tr>";
+            echo "<td>{$row['subject']}</td>";
+
+            echo "<td>" . ($half['written'] ?? '') . "</td>";
+            echo "<td>" . ($half['mcq'] ?? '') . "</td>";
+            echo "<td>" . ($half['practical'] ?? '') . "</td>";
+            echo "<td>$halfTotal</td>";
+
+            echo "<td>" . ($annual['written'] ?? '') . "</td>";
+            echo "<td>" . ($annual['mcq'] ?? '') . "</td>";
+            echo "<td>" . ($annual['practical'] ?? '') . "</td>";
+            echo "<td>$annualTotal</td>";
+
+            echo "</tr>";
+        }
+
+        echo "</table>";
     }
 
 
