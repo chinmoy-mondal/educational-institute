@@ -98,7 +98,6 @@ $routes->post('results/submit', 'Dashboard::submitResults');
 
 $routes->get('admin/tabulation_form', 'Dashboard::selectTabulationForm');
 $routes->post('admin/mark/', 'Dashboard::Mark');
-$routes->get('admin/tabulation/download', 'Dashboard::downloadCSV');
 $routes->get('admin/select-marksheet', 'Dashboard::selectMarksheetForm');
 $routes->get('admin/show-marksheet', 'Dashboard::showMarksheet');
 
