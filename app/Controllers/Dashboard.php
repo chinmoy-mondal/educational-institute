@@ -1554,41 +1554,6 @@ class Dashboard extends Controller
         return view('dashboard/mark_copy', $this->data);
     }
 
-    private function getTabulationData(): array
-    {
-        // Use your actual data fetching logic here
-        $class = $this->request->getGet('class') ?? '9';
-        $exam  = $this->request->getGet('exam') ?? 'Half Yearly';
-        $year  = $this->request->getGet('year') ?? date('Y');
-
-        $studentModel = new \App\Models\StudentModel();
-        $resultModel = new \App\Models\ResultModel();
-
-        $students = $studentModel
-            ->select('id, roll, student_name') // include 'name' here
-            ->where('class', $class)
-            ->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
-            ->findAll();
-
-        $finalData = [];
-
-        foreach ($students as $student) {
-            $results = $resultModel
-                ->where('student_id', $student['id'])
-                ->where('exam', $exam)
-                ->where('year', $year)
-                ->findAll();
-
-            $finalData[] = [
-                'roll' => $student['roll'],
-                'name' => $student['student_name'],
-                'results' => $results
-            ];
-        }
-
-        return $finalData;
-    }
-
 
 
     public function selectMarksheetForm()
