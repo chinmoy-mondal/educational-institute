@@ -16,6 +16,11 @@ class CreateRankingTable extends Migration
                 'auto_increment' => true,
             ],
 
+            'student_id' => [
+                'type'     => 'INT',
+                'unsigned' => true,
+            ],
+
             // Class (6–10 etc.)
             'class' => [
                 'type'       => 'TINYINT',
