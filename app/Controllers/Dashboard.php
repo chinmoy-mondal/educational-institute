@@ -1626,7 +1626,9 @@ class Dashboard extends Controller
             }
             $marksheet[$sid]['annual'] = $a;
         }
-
+        echo "<pre>";
+        print_r($marksheet);
+        echo "<pre>";
         // ---------- TABLE ----------
         echo "<table border='1' cellpadding='6' cellspacing='0' width='100%'>";
 
