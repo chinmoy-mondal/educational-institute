@@ -1694,7 +1694,21 @@ class Dashboard extends Controller
 
     public function test_result()
     {
-        echo "test result";
+        $studentId = 207;  // Specific student ID
+        $year      = 2025; // Specific year
+        $exam      = 'Annual Exam'; // Specific exam
+
+        // Fetch only results for this student, year, and exam
+        $marksheet = $this->resultModel
+            ->where('student_id', $studentId)
+            ->where('year', $year)
+            ->where('exam', $exam)
+            ->findAll();
+
+        // Display results
+        echo "<pre>";
+        print_r($marksheet);
+        echo "</pre>";
     }
 
 
