@@ -1697,35 +1697,45 @@ class Dashboard extends Controller
         $studentId = $this->request->getGet('student_id');
         $year      = $this->request->getGet('year');
 
+        if (!$studentId || !$year) {
+            return "Student ID and Year are required";
+        }
+
         // Fetch Half-Yearly
         $half = $this->resultModel
-            ->where('student_id', $studentId)
-            ->where('year', $year)
-            ->where('exam', 'Half-Yearly')
+            ->select('results.*, subjects.subject')
+            ->join('subjects', 'subjects.id = results.subject_id')
+            ->where('results.student_id', $studentId)
+            ->where('results.year', $year)
+            ->where('results.exam', 'Half-Yearly')
             ->findAll();
 
         // Fetch Annual
         $annual = $this->resultModel
-            ->where('student_id', $studentId)
-            ->where('year', $year)
-            ->where('exam', 'Annual Exam')
+            ->select('results.*, subjects.subject')
+            ->join('subjects', 'subjects.id = results.subject_id')
+            ->where('results.student_id', $studentId)
+            ->where('results.year', $year)
+            ->where('results.exam', 'Annual Exam')
             ->findAll();
 
         // Merge by subject_id
         $marksheet = [];
 
         foreach ($half as $h) {
-            $marksheet[$h['subject_id']]['subject_id'] = $h['subject_id'];
-            $marksheet[$h['subject_id']]['half'] = $h;
-            $marksheet[$h['subject_id']]['annual'] = null;
+            $sid = $h['subject_id'];
+            $marksheet[$sid]['subject'] = $h['subject'];
+            $marksheet[$sid]['half'] = $h;
+            $marksheet[$sid]['annual'] = null;
         }
 
         foreach ($annual as $a) {
-            if (!isset($marksheet[$a['subject_id']])) {
-                $marksheet[$a['subject_id']]['subject_id'] = $a['subject_id'];
-                $marksheet[$a['subject_id']]['half'] = null;
+            $sid = $a['subject_id'];
+            if (!isset($marksheet[$sid])) {
+                $marksheet[$sid]['subject'] = $a['subject'];
+                $marksheet[$sid]['half'] = null;
             }
-            $marksheet[$a['subject_id']]['annual'] = $a;
+            $marksheet[$sid]['annual'] = $a;
         }
 
         // ---------- TABLE ----------
@@ -1734,7 +1744,7 @@ class Dashboard extends Controller
         // Header row 1
         echo "
         <tr>
-            <th rowspan='2'>Subject ID</th>
+            <th rowspan='2'>Subject</th>
             <th colspan='4'>Half-Yearly</th>
             <th colspan='4'>Annual Exam</th>
         </tr>
@@ -1747,7 +1757,6 @@ class Dashboard extends Controller
             <th>MCQ</th>
             <th>Prac</th>
             <th>Total</th>
-
             <th>Wri</th>
             <th>MCQ</th>
             <th>Prac</th>
@@ -1766,7 +1775,7 @@ class Dashboard extends Controller
 
             echo "<tr>";
 
-            echo "<td>{$row['subject_id']}</td>";
+            echo "<td>{$row['subject']}</td>";
 
             // Half-Yearly
             echo "<td>" . ($h['written'] ?? '') . "</td>";
