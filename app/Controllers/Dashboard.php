@@ -1694,8 +1694,8 @@ class Dashboard extends Controller
 
     public function test_result()
     {
-        $studentId = 207;
-        $year = 2025;
+        $studentId = $this->request->getGet('student_id');
+        $year      = $this->request->getGet('year');
 
         // Fetch Half-Yearly
         $half = $this->resultModel
