@@ -1831,6 +1831,10 @@ class Dashboard extends Controller
         return redirect()->back()->with('error', 'Invalid search method.');
     }
 
+    public function test_result()
+    {
+        echo "test result";
+    }
     // public function showMarksheet()
     // {
     //     $this->data['title'] = 'Marksheet';

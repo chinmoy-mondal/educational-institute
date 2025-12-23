@@ -102,6 +102,11 @@ $routes->get('admin/tabulation/download', 'Dashboard::downloadCSV');
 $routes->get('admin/select-marksheet', 'Dashboard::selectMarksheetForm');
 $routes->get('admin/show-marksheet', 'Dashboard::showMarksheet');
 
+
+$routes->get('admin/test_reselt', 'Dashboard::test_result');
+
+
+
 $routes->get('admin/student', 'Dashboard::student');
 $routes->get('admin/deletedStudent', 'Dashboard::deleted_student');
 $routes->get('admin/students/view/(:num)', 'Dashboard::viewStudent/$1');
