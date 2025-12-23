@@ -1692,6 +1692,12 @@ class Dashboard extends Controller
         return view('dashboard/select_marksheet_info', $this->data);
     }
 
+    public function test_result()
+    {
+        echo "test result";
+    }
+
+
     public function showMarksheet()
     {
         $this->data['title'] = 'Marksheet';
