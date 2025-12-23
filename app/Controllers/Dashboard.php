@@ -1696,13 +1696,13 @@ class Dashboard extends Controller
     {
         $studentId = 207;  // Specific student ID
         $year      = 2025; // Specific year
-        $exam      = 'Annual Exam'; // Specific exam
+        $exams     = ['Half-Yearly', 'Annual Exam']; // Both exams
 
-        // Fetch only results for this student, year, and exam
+        // Fetch results for both Half-Yearly and Annual Exam
         $marksheet = $this->resultModel
             ->where('student_id', $studentId)
             ->where('year', $year)
-            ->where('exam', $exam)
+            ->whereIn('exam', $exams)
             ->findAll();
 
         // Display results
