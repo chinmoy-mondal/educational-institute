@@ -157,7 +157,7 @@
                     </div>
 
                     <div class="row mt-3">
-                        <div class="col-md-6 d-none">
+                        <div class="col-md-6">
                             <label>Address</label>
                             <textarea name="address" class="form-control" rows="3"><?= old('address') ?></textarea>
                         </div>

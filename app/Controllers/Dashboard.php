@@ -809,10 +809,11 @@ class Dashboard extends Controller
             'dob'          => 'permit_empty|valid_date',
             'gender'       => 'permit_empty',
             'phone'        => 'permit_empty',
-            'student_pic'  => 'permit_empty',
+            'student_pic'               => 'permit_empty',
             'birth_registration_number' => 'permit_empty',
             'father_nid_number'         => 'permit_empty',
             'mother_nid_number'         => 'permit_empty',
+            'address'                   => 'permit_empty',
         ];
 
         if (!$this->validate($rules)) {
@@ -853,6 +854,7 @@ class Dashboard extends Controller
             'birth_registration_number' => $this->request->getPost('birth_registration_number'),
             'father_nid_number'         => $this->request->getPost('father_nid_number'),
             'mother_nid_number'         => $this->request->getPost('mother_nid_number'),
+            'address'         => $this->request->getPost('address'),
         ];
 
         $this->studentModel->insert($data);

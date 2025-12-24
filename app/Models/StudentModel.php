@@ -32,6 +32,7 @@ class StudentModel extends Model
         'blood_group',
         'assign_sub',
         'permission',
+        'address',
         'created_at',
         'updated_at'
     ];
