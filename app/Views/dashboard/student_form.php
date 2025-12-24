@@ -59,9 +59,9 @@
                             </select>
                         </div>
 
-                        <div class="col-md-6">
-                            <label>Address</label>
-                            <textarea name="esif" class="form-control" rows="3"><?= old('esif') ?></textarea>
+                        <div class="col-md-6 d-none">
+                            <label>Board ID</label>
+                            <input type="text" name="esif" class="form-control" value="<?= old('esif') ?>">
                         </div>
                     </div>
 
@@ -153,6 +153,13 @@
                         <div class="col-md-6">
                             <label>Student Picture</label>
                             <input type="file" name="student_pic" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-6 d-none">
+                            <label>Address</label>
+                            <textarea name="address" class="form-control" rows="3"><?= old('address') ?></textarea>
                         </div>
                     </div>
 
