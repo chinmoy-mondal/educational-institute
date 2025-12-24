@@ -1775,8 +1775,8 @@ class Dashboard extends Controller
 
     public function viewStudent($id)
     {
-        $this->studentModel = new StudentModel();
-        $this->subjectModel = new SubjectModel();
+        // $this->studentModel = new StudentModel();
+        // $this->subjectModel = new SubjectModel();
 
         $student = $this->studentModel->find($id);
 
@@ -1813,13 +1813,16 @@ class Dashboard extends Controller
         }
 
         // ✅ Step 4: Pass to view
-        $this->data['title'] = 'Student Details';
+
+        $this->data['title']         = 'Student Management';
         $this->data['activeSection'] = 'student';
-        $this->data['navbarItems'] = [
-            ['label' => 'Student List', 'url' => base_url('ad-student')],
-            ['label' => 'Add Student', 'url' => base_url('student_create')],
-            ['label' => 'View Student', 'url' => current_url()],
+        $this->data['navbarItems']   = [
+            ['label' => 'Student List', 'url' => base_url('admin/student')],
+            ['label' => 'Add Student', 'url' => base_url('admin/student/create')],
+            ['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
+            ['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
         ];
+
         $this->data['student'] = $student;
         $this->data['subjectsStr'] = $subject_str_id;
         $this->data['subjects'] = $subjects;
