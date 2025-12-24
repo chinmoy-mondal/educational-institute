@@ -59,9 +59,9 @@
                             </select>
                         </div>
 
-                        <div class="col-md-6 d-none">
-                            <label>Board ID</label>
-                            <input type="text" name="esif" class="form-control" value="<?= old('esif') ?>">
+                        <div class="col-md-6">
+                            <label>Address</label>
+                            <textarea name="esif" class="form-control" rows="3"><?= old('esif') ?></textarea>
                         </div>
                     </div>
 
