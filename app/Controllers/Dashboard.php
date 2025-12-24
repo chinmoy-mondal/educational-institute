@@ -1777,9 +1777,6 @@ class Dashboard extends Controller
 
     public function viewStudent($id)
     {
-        // $this->studentModel = new StudentModel();
-        // $this->subjectModel = new SubjectModel();
-
         $student = $this->studentModel->find($id);
 
         if (!$student) {
