@@ -20,6 +20,14 @@ class CreateFeesAmountTable extends Migration
                 'constraint' => 50,
             ],
 
+            'section' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 20,
+                'null'       => false,
+                'after'      => 'class',
+                'collation'  => 'utf8mb4_unicode_ci',
+            ],
+
             'title_id' => [
                 'type'     => 'INT',
                 'unsigned' => true,

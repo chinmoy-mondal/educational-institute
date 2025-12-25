@@ -9,6 +9,7 @@ class FeesAmountModel extends Model
     protected $primaryKey = 'id';
     protected $allowedFields = [
         'class',
+        'section',
         'title_id',
         'unit',
         'fees',
