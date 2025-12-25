@@ -2636,13 +2636,6 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-
-        // ✅ Load models
-        // $studentModel = new \App\Models\StudentModel();
-        // $feesModel = new \App\Models\FeesModel();
-        // $feesAmountModel = new \App\Models\FeesAmountModel();
-        // $userModel = new \App\Models\UserModel();
-
         // 🧍 Get student info
         $student = $this->studentModel->find($id);
         if (!$student) {
