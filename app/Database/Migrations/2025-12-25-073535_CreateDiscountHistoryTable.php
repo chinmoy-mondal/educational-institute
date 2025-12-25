@@ -25,13 +25,6 @@ class CreateDiscountHistoryTable extends Migration
                 'default'    => 0,
                 'null'       => false,
             ],
-            'permanent_discount' => [
-                'type'       => 'TINYINT',
-                'constraint' => 1,
-                'default'    => 0,
-                'null'       => false,
-                'comment'    => '0 = temporary, 1 = permanent',
-            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
