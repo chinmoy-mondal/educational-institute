@@ -2462,9 +2462,6 @@ class Dashboard extends Controller
             ->get()
             ->getResultArray();
 
-        /* ===============================
-       FEES SUMMARY (SECTION WISE)
-    ================================ */
         $this->data['fees_summary'] = $this->feesAmountModel
             ->select('section, SUM(fees * unit) AS total_fees')
             ->groupBy('section')
@@ -2472,12 +2469,24 @@ class Dashboard extends Controller
             ->get()
             ->getResultArray();
 
+        // Debug fees_summary
+        echo '<pre>';
+        print_r($this->data['fees_summary']);
+        echo '</pre>';
+
+        // Convert to sectionFees array
         $sectionFees = [];
         foreach ($this->data['fees_summary'] as $row) {
-            $sectionName = trim($row['section']); // ✅ Trim spaces
-            $sectionFees[$sectionName] = $row['total_fees'];
+            $sectionFees[trim($row['section'])] = $row['total_fees'];
         }
-        $this->data['sectionFees'] = $sectionFees;
+
+        // Debug sectionFees
+        echo '<pre>';
+        print_r($sectionFees);
+        echo '</pre>';
+
+        // Stop execution (optional)
+        exit();
 
         /* ===============================
        DEPOSIT SUMMARY (STUDENT WISE)
