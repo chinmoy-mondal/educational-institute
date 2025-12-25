@@ -2541,34 +2541,12 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        $class   = $this->request->getGet('class');
+        // ✅ ONLY SECTION
         $section = $this->request->getGet('section');
 
-        /* ✅ Classes */
-        $classes = $this->studentModel
-            ->select('class')
-            ->distinct()
-            ->orderBy('CAST(class AS UNSIGNED)', 'ASC')
-            ->findAll();
-
-        $this->data['classes'] = array_column($classes, 'class');
-
-        /* ✅ Sections (Bangla) */
-        $sections = [];
-        if ($class) {
-            $sections = $this->studentModel
-                ->select('section')
-                ->where('class', $class)
-                ->distinct()
-                ->orderBy('section', 'ASC')
-                ->findAll();
-        }
-
-        $this->data['sections'] = array_column($sections, 'section');
-
-        $this->data['selectedClass']   = $class;
         $this->data['selectedSection'] = $section;
 
+        // Fee titles
         $this->data['titles'] = $this->feesModel->findAll();
 
         $existingAmounts = [];
@@ -2576,9 +2554,8 @@ class Dashboard extends Controller
         $existingUpdates = [];
         $totalAmount     = 0;
 
-        if ($class && $section) {
+        if ($section) {
             $amounts = $this->feesAmountModel
-                ->where('class', $class)
                 ->where('section', $section)
                 ->findAll();
 
@@ -2603,12 +2580,12 @@ class Dashboard extends Controller
 
     public function save_fees()
     {
-        $class = $this->request->getPost('class');
-        $feesData = $this->request->getPost('fees');
+        $section   = $this->request->getPost('section');
+        $feesData  = $this->request->getPost('fees');
         $unitsData = $this->request->getPost('unit');
 
-        if (!$class) {
-            return redirect()->back()->with('error', 'Please select a class before saving.');
+        if (!$section) {
+            return redirect()->back()->with('error', 'Please select a section before saving.');
         }
 
         if (empty($feesData)) {
@@ -2618,28 +2595,32 @@ class Dashboard extends Controller
         $amountModel = new FeesAmountModel();
 
         foreach ($feesData as $title_id => $amount) {
+
             if ($amount === '' || $amount === null) {
                 continue;
             }
 
-            $unit = isset($unitsData[$title_id]) ? $unitsData[$title_id] : null;
+            $unit = $unitsData[$title_id] ?? null;
 
-            $existing = $this->feesAmountModel->where('class', $class)
+            $existing = $this->feesAmountModel
+                ->where('section', $section)
                 ->where('title_id', $title_id)
                 ->first();
 
             if ($existing) {
+                // UPDATE
                 $amountModel->update($existing['id'], [
-                    'fees' => $amount,
-                    'unit' => $unit,
+                    'fees'       => $amount,
+                    'unit'       => $unit,
                     'updated_at' => date('Y-m-d H:i:s')
                 ]);
             } else {
+                // INSERT
                 $amountModel->insert([
-                    'class' => $class,
-                    'title_id' => $title_id,
-                    'fees' => $amount,
-                    'unit' => $unit,
+                    'section'    => $section,
+                    'title_id'   => $title_id,
+                    'fees'       => $amount,
+                    'unit'       => $unit,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                 ]);
