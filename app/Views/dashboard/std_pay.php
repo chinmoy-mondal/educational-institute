@@ -91,7 +91,7 @@
                     <?php $i = 1;
                         foreach ($students as $s): ?>
                     <?php
-                            $total = $sectionFees[$s['section']] ?? 0;
+                            $total = $sectionFees[trim($s['section'])] ?? 0; // ✅ Trim section
                             $paid  = $senderDeposits[$s['id']] ?? 0;
                             $due   = $total - $paid;
                             ?>
