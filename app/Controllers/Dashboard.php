@@ -2636,35 +2636,39 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        // 🧍 Get student info
+        // 🧍 Student
         $student = $this->studentModel->find($id);
         if (!$student) {
             return redirect()->back()->with('error', 'Student not found.');
         }
 
-        // 🎓 Get all fees titles
+        // 🎓 Fee titles
         $fees = $this->feesModel->findAll();
 
-        // 💰 Get class-wise fee amounts
-        $classFees = $this->feesAmountModel->where('class', $student['class'])->findAll();
+        // 💰 SECTION-wise fees ONLY (✅ class removed)
+        $sectionFees = $this->feesAmountModel
+            ->where('section', trim($student['section'])) // আবাসিক / অনাবাসিক
+            ->findAll();
 
-        // 🧾 Map fee amounts properly using title_id
+        // 🧾 Map fee & unit
         $feeAmounts = [];
-        foreach ($classFees as $f) {
-            $feeAmounts[$f['title_id']] = $f['fees'];
-            $feeUnit[$f['title_id']] = $f['unit'];
+        $feeUnit    = [];
+
+        foreach ($sectionFees as $f) {
+            $feeAmounts[$f['title_id']] = (float) $f['fees'];
+            $feeUnit[$f['title_id']]    = (int) $f['unit'];
         }
 
-        // 👨‍🏫 Receiver (default admin)
-        $userId = $this->session->get('user_id');
+        // 👨‍🏫 Receiver
+        $userId   = session()->get('user_id');
         $receiver = $this->userModel->find($userId);
 
-        // 📦 Prepare data for view
-        $this->data['student'] = $student;
-        $this->data['fees'] = $fees;
+        // 📦 Send to view
+        $this->data['student']    = $student;
+        $this->data['fees']       = $fees;
         $this->data['feeAmounts'] = $feeAmounts;
-        $this->data['feeUnit'] = $feeUnit;
-        $this->data['receiver'] = $receiver;
+        $this->data['feeUnit']    = $feeUnit;
+        $this->data['receiver']   = $receiver;
 
         return view('dashboard/payStudentRequest', $this->data);
     }
