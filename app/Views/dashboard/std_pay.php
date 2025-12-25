@@ -88,12 +88,13 @@
                 </thead>
                 <tbody>
                     <?php if (!empty($students)): ?>
-                    <?php $i = 1;
-                        foreach ($students as $s): ?>
+                    <?php $i = 1; ?>
+                    <?php foreach ($students as $s): ?>
                     <?php
-                            $total = $sectionFees[trim($s['section'])] ?? 0; // ✅ Trim section
-                            $paid  = $senderDeposits[$s['id']] ?? 0;
-                            $due   = $total - $paid;
+                            $sectionName = trim($s['section']);
+                            $total = $sectionFees[$sectionName] ?? 0;  // Total fees per section
+                            $paid  = $senderDeposits[$s['id']] ?? 0;   // Amount paid by student
+                            $due   = $total - $paid;                   // Remaining due
                             ?>
                     <tr>
                         <td><?= $i++ ?></td>
@@ -101,9 +102,9 @@
                         <td><?= esc($s['id']) ?></td>
                         <td><?= esc($s['student_name']) ?></td>
                         <td><?= esc($s['section']) ?></td>
-                        <td>৳ <?= number_format($total, 2); ?></td>
-                        <td>৳ <?= number_format($paid, 2) ?></td>
-                        <td>৳ <?= number_format($due, 2) ?></td>
+                        <td class="text-end">৳ <?= number_format($total, 2) ?></td>
+                        <td class="text-end">৳ <?= number_format($paid, 2) ?></td>
+                        <td class="text-end">৳ <?= number_format($due, 2) ?></td>
                         <td class="text-center">
                             <?php if ($due > 0): ?>
                             <a href="<?= base_url('admin/pay_student_request/' . $s['id']) ?>"

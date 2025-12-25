@@ -2438,11 +2438,11 @@ class Dashboard extends Controller
 
         $builder = $this->studentModel->builder();
 
-        /* ✅ Get search & section */
+        /* Get search & section */
         $search  = $this->request->getGet('search');
         $section = $this->request->getGet('section');
 
-        /* ✅ Search: roll / ID / name */
+        /* Search: roll / ID / name */
         if ($search) {
             $builder->groupStart()
                 ->like('roll', $search)
@@ -2451,37 +2451,32 @@ class Dashboard extends Controller
                 ->groupEnd();
         }
 
-        /* ✅ Section filter only (আবাসিক / অনাবাসিক) */
+        /* Section filter only (আবাসিক / অনাবাসিক) */
         if ($section) {
             $builder->where('section', $section);
         }
 
-        /* ✅ Students list */
+        /* Students list */
         $this->data['students'] = $builder
             ->orderBy('student_name', 'ASC')
             ->get()
             ->getResultArray();
 
-        $this->data['fees_summary'] = $this->feesAmountModel
-            ->select('section, SUM(fees * unit) AS total_fees')
+        $feesSummary = $this->feesAmountModel
+            ->select('section, SUM(CASE WHEN unit = 0 THEN fees ELSE fees * unit END) AS total_fees')
             ->groupBy('section')
             ->orderBy('section', 'ASC')
             ->get()
             ->getResultArray();
 
-  
-
-        // Convert to sectionFees array
         $sectionFees = [];
-        foreach ($this->data['fees_summary'] as $row) {
-            $sectionFees[trim($row['section'])] = $row['total_fees'];
+        foreach ($feesSummary as $row) {
+            $section = trim($row['section']);
+            $sectionFees[$section] = (float)$row['total_fees'];
         }
+        $this->data['sectionFees'] = $sectionFees;
 
-
-        /* ===============================
-       DEPOSIT SUMMARY (STUDENT WISE)
-    ================================ */
-        $this->data['fees_deposit'] = $this->transactionModel
+        $feesDeposit = $this->transactionModel
             ->select('sender_id, sender_name, SUM(amount) AS total_deposit')
             ->groupBy('sender_id, sender_name')
             ->orderBy('sender_name', 'ASC')
@@ -2489,14 +2484,11 @@ class Dashboard extends Controller
             ->getResultArray();
 
         $senderDeposits = [];
-        foreach ($this->data['fees_deposit'] as $row) {
-            $senderDeposits[$row['sender_id']] = $row['total_deposit'];
+        foreach ($feesDeposit as $row) {
+            $senderDeposits[$row['sender_id']] = (float)$row['total_deposit'];
         }
         $this->data['senderDeposits'] = $senderDeposits;
 
-        /* ===============================
-       SECTION DROPDOWN (Bangla)
-    ================================ */
         $sections = $this->studentModel
             ->select('section')
             ->distinct()
@@ -2506,8 +2498,8 @@ class Dashboard extends Controller
 
         $this->data['sections'] = array_column($sections, 'section');
 
-        /* ✅ Pass values to view */
-        $this->data['search']          = $search;
+        /* Pass values to view */
+        $this->data['search'] = $search;
         $this->data['selectedSection'] = $section;
 
         return view('dashboard/std_pay', $this->data);
