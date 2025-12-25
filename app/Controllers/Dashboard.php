@@ -2541,34 +2541,52 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
+        $class   = $this->request->getGet('class');
+        $section = $this->request->getGet('section');
 
-        $class = $this->request->getGet('class');
-
-        // ✅ Fetch distinct classes dynamically from students
+        /* ✅ Classes */
         $classes = $this->studentModel
             ->select('class')
             ->distinct()
             ->orderBy('CAST(class AS UNSIGNED)', 'ASC')
             ->findAll();
+
         $this->data['classes'] = array_column($classes, 'class');
 
-        $this->data['selectedClass'] = $class;
+        /* ✅ Sections (Bangla) */
+        $sections = [];
+        if ($class) {
+            $sections = $this->studentModel
+                ->select('section')
+                ->where('class', $class)
+                ->distinct()
+                ->orderBy('section', 'ASC')
+                ->findAll();
+        }
+
+        $this->data['sections'] = array_column($sections, 'section');
+
+        $this->data['selectedClass']   = $class;
+        $this->data['selectedSection'] = $section;
+
         $this->data['titles'] = $this->feesModel->findAll();
 
         $existingAmounts = [];
-        $existingUnits = [];
+        $existingUnits   = [];
         $existingUpdates = [];
+        $totalAmount     = 0;
 
-        $totalAmount = 0;
+        if ($class && $section) {
+            $amounts = $this->feesAmountModel
+                ->where('class', $class)
+                ->where('section', $section)
+                ->findAll();
 
-        if ($class) {
-            $amounts = $this->feesAmountModel->where('class', $class)->findAll();
             foreach ($amounts as $a) {
                 $existingAmounts[$a['title_id']] = $a['fees'];
-                $existingUnits[$a['title_id']] = $a['unit'];
+                $existingUnits[$a['title_id']]   = $a['unit'];
                 $existingUpdates[$a['title_id']] = $a['updated_at'];
 
-                // ✅ Calculate total = Σ (unit * fees)
                 if (is_numeric($a['fees']) && is_numeric($a['unit'])) {
                     $totalAmount += $a['fees'] * $a['unit'];
                 }
@@ -2576,9 +2594,9 @@ class Dashboard extends Controller
         }
 
         $this->data['existingAmounts'] = $existingAmounts;
-        $this->data['existingUnits'] = $existingUnits;
+        $this->data['existingUnits']   = $existingUnits;
         $this->data['existingUpdates'] = $existingUpdates;
-        $this->data['totalAmount'] = $totalAmount;
+        $this->data['totalAmount']     = $totalAmount;
 
         return view('dashboard/set_fees', $this->data);
     }
