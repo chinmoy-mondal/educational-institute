@@ -2469,10 +2469,7 @@ class Dashboard extends Controller
             ->get()
             ->getResultArray();
 
-        // Debug fees_summary
-        echo '<pre>';
-        print_r($this->data['fees_summary']);
-        echo '</pre>';
+  
 
         // Convert to sectionFees array
         $sectionFees = [];
@@ -2480,13 +2477,6 @@ class Dashboard extends Controller
             $sectionFees[trim($row['section'])] = $row['total_fees'];
         }
 
-        // Debug sectionFees
-        echo '<pre>';
-        print_r($sectionFees);
-        echo '</pre>';
-
-        // Stop execution (optional)
-        exit();
 
         /* ===============================
        DEPOSIT SUMMARY (STUDENT WISE)
