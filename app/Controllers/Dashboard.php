@@ -2474,13 +2474,12 @@ class Dashboard extends Controller
 
         $sectionFees = [];
         foreach ($this->data['fees_summary'] as $row) {
-            $sectionFees[$row['section']] = $row['total_fees'];
+            $sectionName = trim($row['section']); // ✅ trim extra spaces
+            $sectionFees[$sectionName] = $row['total_fees'];
         }
         $this->data['sectionFees'] = $sectionFees;
 
-        /* ===============================
-       DEPOSIT SUMMARY (STUDENT WISE)
-    ================================ */
+
         $this->data['fees_deposit'] = $this->transactionModel
             ->select('sender_id, sender_name, SUM(amount) AS total_deposit')
             ->groupBy('sender_id, sender_name')
