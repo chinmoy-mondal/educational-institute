@@ -2438,12 +2438,11 @@ class Dashboard extends Controller
 
         $builder = $this->studentModel->builder();
 
-        // ✅ Get search/filter values
-        $search = $this->request->getGet('search');
-        $class = $this->request->getGet('class');
+        /* ✅ Get search & section */
+        $search  = $this->request->getGet('search');
         $section = $this->request->getGet('section');
 
-        // ✅ Apply search (roll, ID, or name)
+        /* ✅ Search: roll / ID / name */
         if ($search) {
             $builder->groupStart()
                 ->like('roll', $search)
@@ -2452,39 +2451,36 @@ class Dashboard extends Controller
                 ->groupEnd();
         }
 
-        // ✅ Apply class & section filters
-        if ($class) {
-            $builder->where('class', $class);
-        }
+        /* ✅ Section filter only (আবাসিক / অনাবাসিক) */
         if ($section) {
             $builder->where('section', $section);
         }
 
-        // ✅ Get results
+        /* ✅ Students list */
         $this->data['students'] = $builder
             ->orderBy('student_name', 'ASC')
             ->get()
             ->getResultArray();
 
-
-
-        // Load total fees per class
+        /* ===============================
+       FEES SUMMARY (SECTION WISE)
+    ================================ */
         $this->data['fees_summary'] = $this->feesAmountModel
-            ->select('class, SUM(fees) AS total_fees')
-            ->groupBy('class')
-            ->orderBy('class', 'ASC')
+            ->select('section, SUM(fees * unit) AS total_fees')
+            ->groupBy('section')
+            ->orderBy('section', 'ASC')
             ->get()
             ->getResultArray();
 
-        // Convert fees_summary into an easy-to-lookup array: [class => total_fees]
-        $classFees = [];
+        $sectionFees = [];
         foreach ($this->data['fees_summary'] as $row) {
-            $classFees[$row['class']] = $row['total_fees'];
+            $sectionFees[$row['section']] = $row['total_fees'];
         }
+        $this->data['sectionFees'] = $sectionFees;
 
-        $this->data['classFees'] = $classFees; // ✅ pass to view
-
-        // Load total deposit money per sender
+        /* ===============================
+       DEPOSIT SUMMARY (STUDENT WISE)
+    ================================ */
         $this->data['fees_deposit'] = $this->transactionModel
             ->select('sender_id, sender_name, SUM(amount) AS total_deposit')
             ->groupBy('sender_id, sender_name')
@@ -2492,21 +2488,26 @@ class Dashboard extends Controller
             ->get()
             ->getResultArray();
 
-        // Convert fees_deposit into an easy-to-lookup array: [sender_id => total_deposit]
         $senderDeposits = [];
         foreach ($this->data['fees_deposit'] as $row) {
             $senderDeposits[$row['sender_id']] = $row['total_deposit'];
         }
+        $this->data['senderDeposits'] = $senderDeposits;
 
-        $this->data['senderDeposits'] = $senderDeposits; // ✅ pass to view
+        /* ===============================
+       SECTION DROPDOWN (Bangla)
+    ================================ */
+        $sections = $this->studentModel
+            ->select('section')
+            ->distinct()
+            ->orderBy('section', 'ASC')
+            ->get()
+            ->getResultArray();
 
-        // ✅ Dropdown options
-        $this->data['classes'] = $this->studentModel->select('class')->distinct()->orderBy('class', 'ASC')->get()->getResultArray();
-        $this->data['sections'] = $this->studentModel->select('section')->distinct()->orderBy('section', 'ASC')->get()->getResultArray();
+        $this->data['sections'] = array_column($sections, 'section');
 
-        // ✅ Pass search values to view
-        $this->data['search'] = $search;
-        $this->data['selectedClass'] = $class;
+        /* ✅ Pass values to view */
+        $this->data['search']          = $search;
         $this->data['selectedSection'] = $section;
 
         return view('dashboard/std_pay', $this->data);
