@@ -2678,9 +2678,9 @@ class Dashboard extends Controller
 
     public function studentPayment()
     {
+        // ===================== BASIC DATA =====================
         $this->data['title'] = 'Student Payment';
         $this->data['activeSection'] = 'accounts';
-
         $this->data['navbarItems'] = [
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
@@ -2688,11 +2688,10 @@ class Dashboard extends Controller
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
+
         $step = $this->request->getPost('step');
 
-        /* =====================================================
-       STEP 1 → SHOW DISCOUNT PAGE
-    ===================================================== */
+        // ===================== STEP 1 → SHOW DISCOUNT PAGE =====================
         if ($step === 'discount') {
 
             $studentId  = $this->request->getPost('student_id');
@@ -2701,8 +2700,16 @@ class Dashboard extends Controller
             $amounts    = $this->request->getPost('amount');
             $months     = $this->request->getPost('month');
 
-            $fees = [];
+            // Fetch student and receiver
+            $student  = $this->studentModel->find($studentId);
+            $receiver = $this->userModel->find($receiverId);
 
+            if (!$student || !$receiver) {
+                return redirect()->back()->with('error', 'Invalid student or receiver.');
+            }
+
+            // Prepare fees array for discount page
+            $fees = [];
             foreach ($feeIds as $i => $feeId) {
                 if (!empty($amounts[$i]) && $amounts[$i] > 0) {
                     $fees[] = [
@@ -2718,18 +2725,18 @@ class Dashboard extends Controller
                 return redirect()->back()->with('error', 'Please enter at least one fee amount.');
             }
 
+            // Pass all required variables to view
             return view('dashboard/payment_discount', [
-                'student_id'  => $studentId,
-                'receiver_id' => $receiverId,
-                'fees'        => $fees,
-                'discount'    => $this->request->getPost('discount'),
-                'apply_discount' => $this->request->getPost('apply_discount')
+                'student'        => $student,
+                'receiver'       => $receiver,
+                'fees'           => $fees,
+                'discount'       => $this->request->getPost('discount'),
+                'apply_discount' => $this->request->getPost('apply_discount'),
+                'navbarItems'    => $this->data['navbarItems']
             ]);
         }
 
-        /* =====================================================
-       STEP 2 → FINAL SUBMIT (SAVE DATA)
-    ===================================================== */
+        // ===================== STEP 2 → FINAL SUBMIT (SAVE DATA) =====================
         $studentId      = $this->request->getPost('student_id');
         $receiverId     = $this->request->getPost('receiver_id');
         $feeIds         = $this->request->getPost('fee_id');
@@ -2738,7 +2745,15 @@ class Dashboard extends Controller
         $discount       = $this->request->getPost('discount');
         $applyDiscount  = $this->request->getPost('apply_discount');
 
-        /* ✅ SAVE DISCOUNT IF CHECKED */
+        // Fetch student & receiver for safety
+        $student  = $this->studentModel->find($studentId);
+        $receiver = $this->userModel->find($receiverId);
+
+        if (!$student || !$receiver) {
+            return redirect()->back()->with('error', 'Invalid student or receiver.');
+        }
+
+        // ===================== SAVE DISCOUNT IF CHECKED =====================
         if ($applyDiscount && $discount > 0) {
             $this->studentDiscountModel->insert([
                 'student_id' => $studentId,
@@ -2746,7 +2761,7 @@ class Dashboard extends Controller
             ]);
         }
 
-        /* ✅ SAVE TRANSACTIONS */
+        // ===================== SAVE TRANSACTIONS =====================
         foreach ($feeIds as $i => $feeId) {
             $this->transactionModel->insert([
                 'transaction_id' => uniqid('TXN'),
@@ -2755,7 +2770,8 @@ class Dashboard extends Controller
                 'amount'         => $amounts[$i],
                 'month'          => $months[$i],
                 'purpose'        => $this->feesModel->find($feeId)['title'] ?? 'Fee',
-                'status'         => 0
+                'status'         => 0,
+                'created_at'     => date('Y-m-d H:i:s')
             ]);
         }
 
