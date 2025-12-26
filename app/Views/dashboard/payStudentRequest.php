@@ -12,18 +12,20 @@
         <div class="card-body">
             <form method="post" action="<?= base_url('admin/studentPaymentDiscount') ?>">
                 <?= csrf_field() ?>
+
                 <input type="hidden" name="student_id" value="<?= esc($student['id']) ?>">
                 <input type="hidden" name="receiver_id" value="<?= esc($receiver['id']) ?>">
 
-                <div class="table-responsive mb-3">
+                <!-- ================= FEES TABLE ================= -->
+                <div class="table-responsive mb-4">
                     <table class="table table-bordered align-middle">
                         <thead class="table-light">
                             <tr>
-                                <th>SL</th>
+                                <th width="5%">SL</th>
                                 <th>Fee Title</th>
-                                <th>Max Amount (৳)</th>
-                                <th>Month</th>
-                                <th>Pay Amount (৳)</th>
+                                <th width="18%">Max Amount (৳)</th>
+                                <th width="18%">Month</th>
+                                <th width="18%">Pay Amount (৳)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -44,28 +46,39 @@
                                 '12' => 'December'
                             ];
                             ?>
+
                             <?php foreach ($fees as $index => $f):
-                                $unit = $feeUnit[$f['id']] ?? 0;
+                                $unit   = $feeUnit[$f['id']] ?? 0;
                                 $amount = $feeAmounts[$f['id']] ?? 0;
-                                $max = $unit * $amount;
+                                $max    = $unit * $amount;
                             ?>
                             <tr>
                                 <td><?= $sl++ ?></td>
+
                                 <td><?= esc($f['title']) ?></td>
-                                <td><?= $unit && $amount ? $unit . ' × ' . $amount : '-' ?></td>
+
+                                <td>
+                                    <?= $unit && $amount ? esc($unit . ' × ' . $amount) : '-' ?>
+                                </td>
+
                                 <td>
                                     <select name="month[<?= $index ?>]" class="form-select form-select-sm">
-                                        <option value="">--Select Month--</option>
+                                        <option value="">-- Select Month --</option>
                                         <?php foreach ($months as $key => $label): ?>
-                                        <option value="<?= $key ?>"><?= $label ?></option>
+                                        <option value="<?= $key ?>"
+                                            <?= old("month.$index") === $key ? 'selected' : '' ?>>
+                                            <?= $label ?>
+                                        </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </td>
+
                                 <td>
                                     <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['id']) ?>">
+
                                     <input type="number" step="0.01" name="amount[<?= $index ?>]"
                                         class="form-control form-control-sm" placeholder="Enter amount"
-                                        max="<?= $max ?>">
+                                        max="<?= esc($max) ?>" value="<?= old("amount.$index") ?>">
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -73,9 +86,41 @@
                     </table>
                 </div>
 
-                <div class="text-end">
-                    <button type="submit" class="btn btn-primary">Next: Apply Discount</button>
+                <!-- ================= DISCOUNT SECTION ================= -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Discount Type</label>
+                        <select name="discount_type" class="form-select">
+                            <option value="">-- No Discount --</option>
+                            <option value="flat" <?= old('discount_type') === 'flat' ? 'selected' : '' ?>>
+                                Flat (৳)
+                            </option>
+                            <option value="percent" <?= old('discount_type') === 'percent' ? 'selected' : '' ?>>
+                                Percentage (%)
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Discount Amount</label>
+                        <input type="number" step="0.01" name="discount" class="form-control"
+                            placeholder="Enter discount" value="<?= old('discount') ?>">
+                    </div>
+
+                    <div class="col-md-4 d-flex align-items-end">
+                        <small class="text-muted">
+                            Discount will be applied on total payable amount
+                        </small>
+                    </div>
                 </div>
+
+                <!-- ================= SUBMIT ================= -->
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary">
+                        Next: Apply Discount
+                    </button>
+                </div>
+
             </form>
         </div>
     </div>
