@@ -57,9 +57,7 @@
 
                                 <td><?= esc($f['title']) ?></td>
 
-                                <td>
-                                    <?= $unit && $amount ? esc($unit . ' × ' . $amount) : '-' ?>
-                                </td>
+                                <td><?= $unit && $amount ? esc($unit . ' × ' . $amount) : '-' ?></td>
 
                                 <td>
                                     <select name="month[<?= $index ?>]" class="form-select form-select-sm">
@@ -75,7 +73,6 @@
 
                                 <td>
                                     <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['id']) ?>">
-
                                     <input type="number" step="0.01" name="amount[<?= $index ?>]"
                                         class="form-control form-control-sm" placeholder="Enter amount"
                                         max="<?= esc($max) ?>" value="<?= old("amount.$index") ?>">
@@ -89,27 +86,24 @@
                 <!-- ================= DISCOUNT SECTION ================= -->
                 <div class="row mb-4">
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold">Discount Type</label>
-                        <select name="discount_type" class="form-select">
-                            <option value="">-- No Discount --</option>
-                            <option value="flat" <?= old('discount_type') === 'flat' ? 'selected' : '' ?>>
-                                Flat (৳)
-                            </option>
-                            <option value="percent" <?= old('discount_type') === 'percent' ? 'selected' : '' ?>>
-                                Percentage (%)
-                            </option>
-                        </select>
+                        <label class="form-label fw-semibold">Discount (৳)</label>
+                        <input type="number" step="0.01" name="discount" class="form-control"
+                            placeholder="Enter discount amount" value="<?= old('discount') ?>">
                     </div>
 
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold">Discount Amount</label>
-                        <input type="number" step="0.01" name="discount" class="form-control"
-                            placeholder="Enter discount" value="<?= old('discount') ?>">
+                    <div class="col-md-4 d-flex align-items-end">
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" name="apply_discount" value="1"
+                                id="applyDiscount" <?= old('apply_discount') ? 'checked' : '' ?>>
+                            <label class="form-check-label fw-semibold" for="applyDiscount">
+                                Apply Discount
+                            </label>
+                        </div>
                     </div>
 
                     <div class="col-md-4 d-flex align-items-end">
                         <small class="text-muted">
-                            Discount will be applied on total payable amount
+                            If unchecked, discount will not be applied
                         </small>
                     </div>
                 </div>
@@ -117,7 +111,7 @@
                 <!-- ================= SUBMIT ================= -->
                 <div class="text-end">
                     <button type="submit" class="btn btn-primary">
-                        Next: Apply Discount
+                        Next: Confirm Payment
                     </button>
                 </div>
 
