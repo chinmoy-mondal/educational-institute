@@ -2680,54 +2680,43 @@ class Dashboard extends Controller
     {
         $request = $this->request;
 
-
         // Single inputs
-        $step = $request->getPost('step');
         $studentId = $request->getPost('student_id');
         $receiverId = $request->getPost('receiver_id');
         $discount = floatval($request->getPost('discount', 0));
         $applyDiscount = $request->getPost('apply_discount') == 1;
 
         // Array inputs
-        $feeIds = $request->getPost('fee_id', FILTER_DEFAULT, []);
-        $amounts = $request->getPost('amount', FILTER_DEFAULT, []);
-        $months = $request->getPost('month', FILTER_DEFAULT, []);
+        $feeIds = $request->getPost('fee_id') ?? [];
+        $amounts = $request->getPost('amount') ?? [];
+        $months = $request->getPost('month') ?? [];
 
         // Fetch student and receiver
         $student = $this->studentModel->find($studentId);
         $receiver = $this->userModel->find($receiverId);
 
-        if (!$student || !$receiver) {
-            return redirect()->back()->with('error', 'Invalid student or receiver.');
-        }
-
         // Process fees
         $fees = [];
         $totalAmount = 0;
-
-        foreach ($feeIds as $index => $feeId) {
+        foreach ($feeIds as $i => $feeId) {
             $fee = $this->feesModel->find($feeId);
             if (!$fee) continue;
-
-            $amount = floatval($amounts[$index] ?? 0);
-            $month = $months[$index] ?? '';
-
+            $amount = floatval($amounts[$i] ?? 0);
+            $month = $months[$i] ?? '';
             $fees[] = [
                 'title' => $fee['title'],
                 'month' => $month,
                 'amount' => $amount
             ];
-
             $totalAmount += $amount;
         }
 
         // Apply discount
         if ($applyDiscount) {
             $totalAmount -= $discount;
-            if ($totalAmount < 0) $totalAmount = 0;
         }
 
-        // Data for receipt
+        // Prepare data for receipt view
         $data = [
             'student' => $student,
             'receiver' => $receiver,
