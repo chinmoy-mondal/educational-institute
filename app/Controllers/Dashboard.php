@@ -2709,53 +2709,9 @@ class Dashboard extends Controller
     // }
     public function studentPayment()
     {
-        $request = $this->request;
-
-        // Single inputs
-        $studentId = $request->getPost('student_id');
-        $receiverId = $request->getPost('receiver_id');
-        $discount = floatval($request->getPost('discount', 0));
-        $applyDiscount = $request->getPost('apply_discount') == 1;
-
-        // Array inputs
-        $feeIds = $request->getPost('fee_id') ?? [];
-        $amounts = $request->getPost('amount') ?? [];
-        $months = $request->getPost('month') ?? [];
-
-        // Process fees
-        $fees = [];
-        $totalAmount = 0;
-
-        foreach ($feeIds as $index => $feeId) {
-            $amount = floatval($amounts[$index] ?? 0);
-            $month = $months[$index] ?? '';
-
-            $fees[] = [
-                'title' => 'Fee ' . $feeId, // or get title from fee model if needed
-                'month' => $month,
-                'amount' => $amount
-            ];
-
-            $totalAmount += $amount;
-        }
-
-        // Apply discount
-        if ($applyDiscount) {
-            $totalAmount -= $discount;
-            if ($totalAmount < 0) $totalAmount = 0;
-        }
-
-        // Store in $this->data for view
-        $this->data['student'] = ['id' => $studentId, 'name' => '']; // fill name if needed
-        $this->data['receiver'] = ['id' => $receiverId, 'name' => '']; // fill name if needed
-        $this->data['fees'] = $fees;
-        $this->data['discount'] = $applyDiscount ? $discount : 0;
-        $this->data['totalAmount'] = $totalAmount;
-        $this->data['date'] = date('Y-m-d H:i:s');
-
-        // Optional: add navbar or page info
         $this->data['title'] = 'Student Payment';
         $this->data['activeSection'] = 'accounts';
+
         $this->data['navbarItems'] = [
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
@@ -2763,8 +2719,20 @@ class Dashboard extends Controller
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
+        $request = $this->request;
 
-        // Send to view
+        // Single inputs
+        $this->data['student_id']     = $request->getPost('student_id');
+        $this->data['receiver_id']    = $request->getPost('receiver_id');
+        $this->data['discount']       = floatval($request->getPost('discount'));
+        $this->data['apply_discount'] = $request->getPost('apply_discount') == 1;
+
+        // Array inputs
+        $this->data['fees']    = $request->getPost('fee_id');   // array
+        $this->data['amounts'] = $request->getPost('amount');   // array
+        $this->data['months']  = $request->getPost('month');    // array
+
+        // Pass the $this->data array to the payment_receipt view
         return view('dashboard/payment_receipt', $this->data);
     }
     public function studentPaymentHistory($studentId)
