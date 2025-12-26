@@ -2683,13 +2683,13 @@ class Dashboard extends Controller
         // single inputs
         $studentId = $request->getPost('student_id');
         $receiverId = $request->getPost('receiver_id');
-        $discount = floatval($request->getPost('discount') ?? 0);
+        $discount = floatval($request->getPost('discount', 0));
         $applyDiscount = $request->getPost('apply_discount') == 1;
 
         // array inputs
-        $feeIds = $request->getPost('fee_id') ?? [];   // array
-        $amounts = $request->getPost('amount') ?? [];  // array
-        $months = $request->getPost('month') ?? [];    // array
+        $feeIds = $request->getPost('fee_id');   // array
+        $amounts = $request->getPost('amount');  // array
+        $months = $request->getPost('month');    // array
 
         // Fetch student and receiver
         $student = $this->studentModel->find($studentId);
@@ -2699,9 +2699,14 @@ class Dashboard extends Controller
             return redirect()->back()->with('error', 'Invalid student or receiver.');
         }
 
+        // Make sure 'name' exists
+        $studentName = $student['name'] ?? 'N/A';
+        $receiverName = $receiver['name'] ?? 'N/A';
+
         // Process fees
         $fees = [];
         $totalAmount = 0;
+
         foreach ($feeIds as $index => $feeId) {
             $fee = $this->feesModel->find($feeId);
             if (!$fee) continue;
@@ -2724,26 +2729,26 @@ class Dashboard extends Controller
             if ($totalAmount < 0) $totalAmount = 0;
         }
 
-        // ✅ Admin page layout data
-        $this->data['title'] = 'Student Payment';
-        $this->data['activeSection'] = 'accounts';
-        $this->data['navbarItems'] = [
-            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
-            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+        // Prepare data
+        $data = [
+            'title' => 'Student Payment',
+            'activeSection' => 'accounts',
+            'navbarItems' => [
+                ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+                ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+                ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+                ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+                ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+            ],
+            'student' => ['name' => $studentName, 'id' => $studentId],
+            'receiver' => ['name' => $receiverName],
+            'fees' => $fees,
+            'discount' => $applyDiscount ? $discount : 0,
+            'totalAmount' => $totalAmount,
+            'date' => date('Y-m-d H:i:s')
         ];
 
-        // Pass data to view
-        $this->data['student'] = $student;
-        $this->data['receiver'] = $receiver;
-        $this->data['fees'] = $fees;
-        $this->data['discount'] = $applyDiscount ? $discount : 0;
-        $this->data['totalAmount'] = $totalAmount;
-        $this->data['date'] = date('Y-m-d H:i:s');
-
-        return view('dashboard/payment_receipt', $this->data);
+        return view('dashboard/payment_receipt', $data);
     }
 
     public function studentPaymentHistory($studentId)
