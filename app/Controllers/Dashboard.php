@@ -2680,55 +2680,32 @@ class Dashboard extends Controller
     {
         $request = $this->request;
 
-        // Single inputs
+        // single inputs
         $studentId = $request->getPost('student_id');
         $receiverId = $request->getPost('receiver_id');
-        $discount = floatval($request->getPost('discount', 0));
+        $discount = floatval($request->getPost('discount'));
         $applyDiscount = $request->getPost('apply_discount') == 1;
 
-        // Array inputs
-        $feeIds = $request->getPost('fee_id') ?? [];
-        $amounts = $request->getPost('amount') ?? [];
-        $months = $request->getPost('month') ?? [];
+        // array inputs
+        $feeIds = $request->getPost('fee_id');   // array
+        $amounts = $request->getPost('amount');  // array
+        $months = $request->getPost('month');    // array
 
-        // Fetch student and receiver
-        $student = $this->studentModel->find($studentId);
-        $receiver = $this->userModel->find($receiverId);
+        // now $feeIds, $amounts, $months are arrays, no filter needed
 
-        // Process fees
-        $fees = [];
-        $totalAmount = 0;
-        foreach ($feeIds as $i => $feeId) {
-            $fee = $this->feesModel->find($feeId);
-            if (!$fee) continue;
-            $amount = floatval($amounts[$i] ?? 0);
-            $month = $months[$i] ?? '';
-            $fees[] = [
-                'title' => $fee['title'],
-                'month' => $month,
-                'amount' => $amount
-            ];
-            $totalAmount += $amount;
-        }
-
-        // Apply discount
-        if ($applyDiscount) {
-            $totalAmount -= $discount;
-        }
-
-        // Prepare data for receipt view
-        $data = [
-            'student' => $student,
-            'receiver' => $receiver,
-            'fees' => $fees,
-            'discount' => $applyDiscount ? $discount : 0,
-            'total_amount' => $totalAmount,
-            'date' => date('Y-m-d H:i:s')
-        ];
+        // Example: print data
         echo "<pre>";
-        print_r($data);
+        print_r([
+            'student' => $studentId,
+            'receiver' => $receiverId,
+            'fees' => $feeIds,
+            'amounts' => $amounts,
+            'months' => $months,
+            'discount' => $discount,
+            'applyDiscount' => $applyDiscount
+        ]);
         echo "</pre>";
-        // return view('dashboard/payment_receipt', $data);
+        exit;
     }
 
     public function studentPaymentHistory($studentId)
