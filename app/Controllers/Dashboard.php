@@ -2709,16 +2709,6 @@ class Dashboard extends Controller
     // }
     public function studentPayment()
     {
-        $this->data['title'] = 'Student Payment';
-        $this->data['activeSection'] = 'accounts';
-
-        $this->data['navbarItems'] = [
-            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
-            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
-        ];
         $request = $this->request;
 
         // Single inputs
@@ -2728,11 +2718,37 @@ class Dashboard extends Controller
         $this->data['apply_discount'] = $request->getPost('apply_discount') == 1;
 
         // Array inputs
-        $this->data['fees']    = $request->getPost('fee_id');   // array
-        $this->data['amounts'] = $request->getPost('amount');   // array
-        $this->data['months']  = $request->getPost('month');    // array
+        $feeIds = $request->getPost('fee_id');   // array of IDs
+        $amounts = $request->getPost('amount');  // array of amounts
+        $months = $request->getPost('month');    // array of months
 
-        // Pass the $this->data array to the payment_receipt view
+        // Combine into a structured array for the view
+        $fees = [];
+        $totalAmount = 0;
+        if (!empty($feeIds)) {
+            foreach ($feeIds as $i => $id) {
+                $amount = floatval($amounts[$i] ?? 0);
+                $fees[] = [
+                    'title' => 'Fee #' . $id,       // you can replace with actual fee title from DB
+                    'month' => $months[$i] ?? '',
+                    'amount' => $amount
+                ];
+                $totalAmount += $amount;
+            }
+        }
+
+        // Apply discount if needed
+        if ($this->data['apply_discount']) {
+            $totalAmount -= $this->data['discount'];
+        }
+
+        $this->data['fees'] = $fees;
+        $this->data['totalAmount'] = $totalAmount;
+
+        // Optionally, fetch student details from DB
+        // $this->data['student'] = $this->studentModel->find($this->data['student_id']);
+
+        // Pass to view
         return view('dashboard/payment_receipt', $this->data);
     }
     public function studentPaymentHistory($studentId)
