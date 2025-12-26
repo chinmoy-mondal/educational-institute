@@ -54,7 +54,7 @@
                                 <td><?= esc($f['title']) ?></td>
                                 <td><?= $unit && $amount ? $unit . ' × ' . $amount : '-' ?></td>
                                 <td>
-                                    <select name="month[<?= $index ?>]" class="form-select form-select-sm" required>
+                                    <select name="month[<?= $index ?>]" class="form-select form-select-sm">
                                         <option value="">--Select Month--</option>
                                         <?php foreach ($months as $key => $label): ?>
                                         <option value="<?= $key ?>"><?= $label ?></option>
