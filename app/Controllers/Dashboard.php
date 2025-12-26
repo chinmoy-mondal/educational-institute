@@ -2680,78 +2680,32 @@ class Dashboard extends Controller
     {
         $request = $this->request;
 
-        // Single inputs
+        // single inputs
         $studentId = $request->getPost('student_id');
         $receiverId = $request->getPost('receiver_id');
-        $discount = floatval($request->getPost('discount', 0));
+        $discount = floatval($request->getPost('discount'));
         $applyDiscount = $request->getPost('apply_discount') == 1;
 
-        // Array inputs
-        $feeIds = $request->getPost('fee_id');
-        $amounts = $request->getPost('amount');
-        $months = $request->getPost('month');
+        // array inputs
+        $feeIds = $request->getPost('fee_id');   // array
+        $amounts = $request->getPost('amount');  // array
+        $months = $request->getPost('month');    // array
 
-        // Ensure arrays exist to avoid errors
-        if (!$feeIds) $feeIds = [];
-        if (!$amounts) $amounts = [];
-        if (!$months) $months = [];
+        // now $feeIds, $amounts, $months are arrays, no filter needed
 
-        // Fetch student and receiver data
-        $student = $this->studentModel->find($studentId);
-        $receiver = $this->userModel->find($receiverId);
-
-        if (!$student || !$receiver) {
-            return redirect()->back()->with('error', 'Invalid student or receiver.');
-        }
-
-        $studentName = $student['student_name'] ?? 'N/A';
-        $receiverName = $receiver['name'] ?? 'N/A';
-
-        // Process fees
-        $fees = [];
-        $totalAmount = 0;
-
-        foreach ($feeIds as $index => $feeId) {
-            $fee = $this->feesModel->find($feeId);
-            if (!$fee) continue;
-
-            $amount = floatval($amounts[$index] ?? 0);
-            $month = $months[$index] ?? '';
-
-            $fees[] = [
-                'title' => $fee['title'],
-                'month' => $month,
-                'amount' => $amount
-            ];
-
-            $totalAmount += $amount;
-        }
-
-        // Apply discount
-        if ($applyDiscount) {
-            $totalAmount -= $discount;
-            if ($totalAmount < 0) $totalAmount = 0;
-        }
-
-        // Prepare data for view
-        $this->data['title'] = 'Student Payment';
-        $this->data['activeSection'] = 'accounts';
-        $this->data['navbarItems'] = [
-            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
-            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
-        ];
-
-        $this->data['student'] = ['id' => $studentId, 'name' => $studentName];
-        $this->data['receiver'] = ['name' => $receiverName];
-        $this->data['fees'] = $fees;
-        $this->data['discount'] = $applyDiscount ? $discount : 0;
-        $this->data['totalAmount'] = $totalAmount;
-        $this->data['date'] = date('Y-m-d H:i:s');
-
-        return view('dashboard/payment_receipt', $this->data);
+        // Example: print data
+        echo "<pre>";
+        print_r([
+            'student' => $studentId,
+            'receiver' => $receiverId,
+            'fees' => $feeIds,
+            'amounts' => $amounts,
+            'months' => $months,
+            'discount' => $discount,
+            'applyDiscount' => $applyDiscount
+        ]);
+        echo "</pre>";
+        exit;
     }
 
     public function studentPaymentHistory($studentId)
