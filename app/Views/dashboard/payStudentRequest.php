@@ -28,6 +28,30 @@
                         <label class="form-label">Receiver</label>
                         <input type="text" class="form-control" value="<?= esc($receiver['name']) ?>" readonly>
                     </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Payment Month</label>
+                        <select name="month" class="form-select" required>
+                            <option value="">-- Select Month --</option>
+                            <?php
+                            $months = [
+                                '01' => 'January',
+                                '02' => 'February',
+                                '03' => 'March',
+                                '04' => 'April',
+                                '05' => 'May',
+                                '06' => 'June',
+                                '07' => 'July',
+                                '08' => 'August',
+                                '09' => 'September',
+                                '10' => 'October',
+                                '11' => 'November',
+                                '12' => 'December'
+                            ];
+                            foreach ($months as $key => $label): ?>
+                            <option value="<?= $key ?>"><?= $label ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="table-responsive mb-3">
@@ -47,18 +71,19 @@
                                 $amount = $feeAmounts[$f['id']] ?? 0;
                                 $max = $unit * $amount;
                             ?>
-                                <tr>
-                                    <td><?= $sl++ ?></td>
-                                    <td><?= esc($f['title']) ?></td>
-                                    <td>
-                                        <?= $unit && $amount ? $unit . ' × ' . $amount : '-' ?>
-                                    </td>
-                                    <td>
-                                        <input type="hidden" name="fee_id[]" value="<?= esc($f['id']) ?>">
-                                        <input type="number" step="0.01" name="amount[]" class="form-control form-control-sm"
-                                            placeholder="Enter amount" max="<?= $max ?>">
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td><?= $sl++ ?></td>
+                                <td><?= esc($f['title']) ?></td>
+                                <td>
+                                    <?= $unit && $amount ? $unit . ' × ' . $amount : '-' ?>
+                                </td>
+                                <td>
+                                    <input type="hidden" name="fee_id[]" value="<?= esc($f['id']) ?>">
+                                    <input type="number" step="0.01" name="amount[]"
+                                        class="form-control form-control-sm" placeholder="Enter amount"
+                                        max="<?= $max ?>">
+                                </td>
+                            </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
