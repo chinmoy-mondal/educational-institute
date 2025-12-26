@@ -2725,8 +2725,10 @@ class Dashboard extends Controller
             'total_amount' => $totalAmount,
             'date' => date('Y-m-d H:i:s')
         ];
-
-        return view('dashboard/payment_receipt', $data);
+        echo "<pre>";
+        print_r($data);
+        echo "</pre>";
+        // return view('dashboard/payment_receipt', $data);
     }
 
     public function studentPaymentHistory($studentId)
