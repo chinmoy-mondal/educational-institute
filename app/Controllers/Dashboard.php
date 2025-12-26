@@ -2678,66 +2678,7 @@ class Dashboard extends Controller
 
     public function studentPayment()
     {
-        $request = $this->request;
-
-        if ($request->getMethod() !== 'post') {
-            throw new PageNotFoundException('Invalid request method.');
-        }
-
-        $step = $request->getPost('step');
-        $studentId = $request->getPost('student_id');
-        $receiverId = $request->getPost('receiver_id');
-
-        // Fetch student and receiver info
-        $student = $this->studentModel->find($studentId);
-        $receiver = $this->userModel->find($receiverId);
-
-        if (!$student || !$receiver) {
-            return redirect()->back()->with('error', 'Invalid student or receiver.');
-        }
-
-        // Get fees from POST
-        $feeIds = $request->getPost('fee_id', FILTER_DEFAULT, []);
-        $amounts = $request->getPost('amount', FILTER_DEFAULT, []);
-        $months = $request->getPost('month', FILTER_DEFAULT, []);
-        $discount = floatval($request->getPost('discount', 0));
-        $applyDiscount = $request->getPost('apply_discount') == 1;
-
-        $fees = [];
-        $totalAmount = 0;
-
-        foreach ($feeIds as $index => $feeId) {
-            $fee = $this->feesModel->find($feeId);
-            if (!$fee) continue;
-
-            $amount = floatval($amounts[$index] ?? 0);
-            $month = $months[$index] ?? '';
-
-            $fees[] = [
-                'title' => $fee['title'],
-                'month' => $month,
-                'amount' => $amount
-            ];
-
-            $totalAmount += $amount;
-        }
-
-        // Apply discount if applicable
-        if ($applyDiscount) {
-            $totalAmount -= $discount;
-        }
-
-        // Prepare data for receipt
-        $data = [
-            'student' => $student,
-            'receiver' => $receiver,
-            'fees' => $fees,
-            'discount' => $applyDiscount ? $discount : 0,
-            'total_amount' => $totalAmount,
-            'date' => date('Y-m-d H:i:s')
-        ];
-
-        return view('dashboard/payment_receipt', $data);
+        echo "hi";
     }
 
     public function studentPaymentHistory($studentId)
