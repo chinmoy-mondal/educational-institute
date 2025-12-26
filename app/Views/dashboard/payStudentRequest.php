@@ -10,8 +10,11 @@
         </div>
 
         <div class="card-body">
-            <form method="post" action="<?= base_url('admin/studentPaymentDiscount') ?>">
+
+            <!-- ✅ CHANGE ACTION + ADD STEP -->
+            <form method="post" action="<?= base_url('admin/student-payment') ?>">
                 <?= csrf_field() ?>
+                <input type="hidden" name="step" value="discount">
 
                 <input type="hidden" name="student_id" value="<?= esc($student['id']) ?>">
                 <input type="hidden" name="receiver_id" value="<?= esc($receiver['id']) ?>">
@@ -54,19 +57,14 @@
                             ?>
                             <tr>
                                 <td><?= $sl++ ?></td>
-
                                 <td><?= esc($f['title']) ?></td>
-
                                 <td><?= $unit && $amount ? esc($unit . ' × ' . $amount) : '-' ?></td>
 
                                 <td>
                                     <select name="month[<?= $index ?>]" class="form-select form-select-sm">
                                         <option value="">-- Select Month --</option>
                                         <?php foreach ($months as $key => $label): ?>
-                                        <option value="<?= $key ?>"
-                                            <?= old("month.$index") === $key ? 'selected' : '' ?>>
-                                            <?= $label ?>
-                                        </option>
+                                        <option value="<?= $key ?>"><?= $label ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </td>
@@ -75,7 +73,7 @@
                                     <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['id']) ?>">
                                     <input type="number" step="0.01" name="amount[<?= $index ?>]"
                                         class="form-control form-control-sm" placeholder="Enter amount"
-                                        max="<?= esc($max) ?>" value="<?= old("amount.$index") ?>">
+                                        max="<?= esc($max) ?>">
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -88,13 +86,13 @@
                     <div class="col-md-4">
                         <label class="form-label fw-semibold">Discount (৳)</label>
                         <input type="number" step="0.01" name="discount" class="form-control"
-                            placeholder="Enter discount amount" value="<?= old('discount') ?>">
+                            placeholder="Enter discount amount">
                     </div>
 
                     <div class="col-md-4 d-flex align-items-end">
                         <div class="form-check mt-2">
                             <input class="form-check-input" type="checkbox" name="apply_discount" value="1"
-                                id="applyDiscount" <?= old('apply_discount') ? 'checked' : '' ?>>
+                                id="applyDiscount">
                             <label class="form-check-label fw-semibold" for="applyDiscount">
                                 Apply Discount
                             </label>

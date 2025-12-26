@@ -140,17 +140,8 @@ $routes->get('admin/set_fees', 'Dashboard::set_fees');
 $routes->post('admin/save_fees', 'Dashboard::save_fees');
 
 $routes->get('admin/pay_student_request/(:num)', 'Dashboard::payStudentRequest/$1');
-
-$routes->post('admin/submitStudentPayment', 'Dashboard::submitStudentPayment');
-
-$routes->post('admin/studentPaymentDiscount', 'Dashboard::studentPaymentDiscount');
-
-$routes->get('admin/paymentDiscountPage', 'Dashboard::paymentDiscountPage');
-
-$routes->post('admin/submitStudentPaymentWithDiscount', 'Dashboard::submitStudentPaymentWithDiscount');
-
+$routes->match(['get', 'post'], 'admin/student-payment', 'Dashboard::studentPayment');
 $routes->get('admin/studentPaymentHistory/(:num)', 'Dashboard::studentPaymentHistory/$1');
-
 
 
 $routes->get('/user_permit/(:num)', 'Dashboard::user_permit/$1');
