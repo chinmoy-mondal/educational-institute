@@ -2,48 +2,87 @@
 <?= $this->section('content') ?>
 
 <div class="container-fluid">
-    <h4 class="mb-4">Confirm Payment</h4>
+    <h4 class="mb-4">Student Payment - Discount</h4>
 
-    <form method="post" action="<?= base_url('admin/student-payment') ?>">
-        <?= csrf_field() ?>
-        <input type="hidden" name="step" value="final">
-
-        <input type="hidden" name="student_id" value="<?= esc($student_id) ?>">
-        <input type="hidden" name="receiver_id" value="<?= esc($receiver_id) ?>">
-
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Fee</th>
-                    <th>Month</th>
-                    <th>Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($fees as $i => $f): ?>
-                <tr>
-                    <td><?= esc($f['title']) ?></td>
-                    <td><?= esc($f['month']) ?></td>
-                    <td><?= esc($f['amount']) ?></td>
-                </tr>
-
-                <input type="hidden" name="fee_id[]" value="<?= esc($f['fee_id']) ?>">
-                <input type="hidden" name="amount[]" value="<?= esc($f['amount']) ?>">
-                <input type="hidden" name="month[]" value="<?= esc($f['month']) ?>">
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-
-        <?php if ($apply_discount): ?>
-        <p><strong>Discount:</strong> ৳<?= esc($discount) ?></p>
-        <input type="hidden" name="discount" value="<?= esc($discount) ?>">
-        <input type="hidden" name="apply_discount" value="1">
-        <?php endif; ?>
-
-        <div class="text-end">
-            <button class="btn btn-success">Confirm & Save</button>
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <strong>Confirm Payment with Discount</strong>
         </div>
-    </form>
+
+        <div class="card-body">
+            <form method="post" action="<?= base_url('admin/student-payment') ?>">
+                <?= csrf_field() ?>
+
+                <input type="hidden" name="step" value="final">
+                <input type="hidden" name="student_id" value="<?= esc($student['id']) ?>">
+                <input type="hidden" name="receiver_id" value="<?= esc($receiver['id']) ?>">
+
+                <!-- ================= FEES TABLE ================= -->
+                <div class="table-responsive mb-4">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>SL</th>
+                                <th>Fee Title</th>
+                                <th>Month</th>
+                                <th>Pay Amount (৳)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($fees as $index => $f): ?>
+                            <tr>
+                                <td><?= $index + 1 ?></td>
+                                <td><?= esc($f['title']) ?></td>
+                                <td>
+                                    <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['fee_id']) ?>">
+                                    <input type="text" name="month[<?= $index ?>]" class="form-control form-control-sm"
+                                        value="<?= esc($f['month']) ?>" readonly>
+                                </td>
+                                <td>
+                                    <input type="number" step="0.01" name="amount[<?= $index ?>]"
+                                        class="form-control form-control-sm" value="<?= esc($f['amount']) ?>" readonly>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ================= DISCOUNT SECTION ================= -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Discount (৳)</label>
+                        <input type="number" step="0.01" name="discount" class="form-control"
+                            value="<?= esc($discount ?? 0) ?>">
+                    </div>
+
+                    <div class="col-md-4 d-flex align-items-end">
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" name="apply_discount" value="1"
+                                id="applyDiscount" <?= !empty($apply_discount) ? 'checked' : '' ?>>
+                            <label class="form-check-label fw-semibold" for="applyDiscount">
+                                Apply Discount
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 d-flex align-items-end">
+                        <small class="text-muted">
+                            If unchecked, discount will not be applied
+                        </small>
+                    </div>
+                </div>
+
+                <!-- ================= SUBMIT ================= -->
+                <div class="text-end">
+                    <button type="submit" class="btn btn-success">
+                        Finalize Payment
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
 </div>
 
 <?= $this->endSection() ?>
