@@ -2764,15 +2764,41 @@ class Dashboard extends Controller
 
     public function studentPaymentDiscount()
     {
-        $data = $this->request->getPost();
-        session()->set('payment_data', $data); // store temporarily
+        $post = $this->request->getPost();
 
-        return view('admin/payment_discount', [
-            'student' => $this->studentModel->find($data['student_id']),
-            'fees' => $data['fee_id'],
-            'amounts' => $data['amount'],
-            'months' => $data['month']
+        $studentId  = $post['student_id'];
+        $receiverId = $post['receiver_id'];
+        $amounts    = $post['amount'] ?? [];
+        $feeIds     = $post['fee_id'] ?? [];
+        $months     = $post['month'] ?? [];
+
+        $filteredFees = [];
+        foreach ($feeIds as $index => $feeId) {
+            $amount = $amounts[$index];
+            if ($amount > 0) {
+                // If month is not selected, set to 'None'
+                $month = !empty($months[$index]) ? $months[$index] : 'None';
+
+                $filteredFees[] = [
+                    'fee_id' => $feeId,
+                    'amount' => $amount,
+                    'month'  => $month,
+                ];
+            }
+        }
+
+        if (empty($filteredFees)) {
+            return redirect()->back()->with('error', 'Please enter at least one amount.');
+        }
+
+        // Store filtered data in session for discount page
+        session()->set('payment_data', [
+            'student_id' => $studentId,
+            'receiver_id' => $receiverId,
+            'fees' => $filteredFees
         ]);
+
+        return redirect()->to(base_url('admin/paymentDiscountPage'));
     }
 
     public function submitStudentPaymentWithDiscount()
