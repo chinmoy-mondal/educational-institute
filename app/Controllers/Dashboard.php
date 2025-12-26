@@ -2680,37 +2680,64 @@ class Dashboard extends Controller
     {
         $request = $this->request;
 
-        // Ensure the request is POST
-        if ($request->getMethod() !== 'post') {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Invalid request method.');
+
+        // Single inputs
+        $step = $request->getPost('step');
+        $studentId = $request->getPost('student_id');
+        $receiverId = $request->getPost('receiver_id');
+        $discount = floatval($request->getPost('discount', 0));
+        $applyDiscount = $request->getPost('apply_discount') == 1;
+
+        // Array inputs
+        $feeIds = $request->getPost('fee_id', FILTER_DEFAULT, []);
+        $amounts = $request->getPost('amount', FILTER_DEFAULT, []);
+        $months = $request->getPost('month', FILTER_DEFAULT, []);
+
+        // Fetch student and receiver
+        $student = $this->studentModel->find($studentId);
+        $receiver = $this->userModel->find($receiverId);
+
+        if (!$student || !$receiver) {
+            return redirect()->back()->with('error', 'Invalid student or receiver.');
         }
 
-        // Get all POST data from the form
-        $step = $request->getPost('step');                    // Step field
-        $studentId = $request->getPost('student_id');        // Student ID
-        $receiverId = $request->getPost('receiver_id');      // Receiver/Admin ID
-        $discount = $request->getPost('discount');           // Discount value
-        $applyDiscount = $request->getPost('apply_discount'); // Checkbox (1 or null)
+        // Process fees
+        $fees = [];
+        $totalAmount = 0;
 
-        // Get array inputs
-        $feeIds = $request->getPost('fee_id', FILTER_DEFAULT, []);    // Array of fee IDs
-        $amounts = $request->getPost('amount', FILTER_DEFAULT, []);   // Array of amounts
-        $months = $request->getPost('month', FILTER_DEFAULT, []);     // Array of months
+        foreach ($feeIds as $index => $feeId) {
+            $fee = $this->feesModel->find($feeId);
+            if (!$fee) continue;
 
-        // Just for debugging: show all received inputs
-        echo '<pre>';
-        echo "Step: $step\n";
-        echo "Student ID: $studentId\n";
-        echo "Receiver ID: $receiverId\n";
-        echo "Discount: $discount\n";
-        echo "Apply Discount: $applyDiscount\n";
-        echo "Fee IDs: ";
-        print_r($feeIds);
-        echo "Amounts: ";
-        print_r($amounts);
-        echo "Months: ";
-        print_r($months);
-        echo '</pre>';
+            $amount = floatval($amounts[$index] ?? 0);
+            $month = $months[$index] ?? '';
+
+            $fees[] = [
+                'title' => $fee['title'],
+                'month' => $month,
+                'amount' => $amount
+            ];
+
+            $totalAmount += $amount;
+        }
+
+        // Apply discount
+        if ($applyDiscount) {
+            $totalAmount -= $discount;
+            if ($totalAmount < 0) $totalAmount = 0;
+        }
+
+        // Data for receipt
+        $data = [
+            'student' => $student,
+            'receiver' => $receiver,
+            'fees' => $fees,
+            'discount' => $applyDiscount ? $discount : 0,
+            'total_amount' => $totalAmount,
+            'date' => date('Y-m-d H:i:s')
+        ];
+
+        return view('dashboard/payment_receipt', $data);
     }
 
     public function studentPaymentHistory($studentId)
