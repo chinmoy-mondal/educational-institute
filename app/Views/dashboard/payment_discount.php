@@ -2,32 +2,48 @@
 <?= $this->section('content') ?>
 
 <div class="container-fluid">
-    <h4 class="mb-4">Apply Discount</h4>
+    <h4 class="mb-4">Confirm Payment</h4>
 
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <form method="post" action="<?= base_url('admin/submitStudentPaymentWithDiscount') ?>">
-                <?= csrf_field() ?>
-                <?php foreach ($fees as $index => $feeId): ?>
-                <input type="hidden" name="fee_id[]" value="<?= $feeId ?>">
-                <input type="hidden" name="amount[]" value="<?= $amounts[$index] ?>">
-                <input type="hidden" name="month[]" value="<?= $months[$index] ?>">
+    <form method="post" action="<?= base_url('admin/student-payment') ?>">
+        <?= csrf_field() ?>
+        <input type="hidden" name="step" value="final">
 
-                <div class="mb-2">
-                    <label>Discount for Fee <?= esc($this->feesModel->find($feeId)['title']) ?>:</label>
-                    <input type="number" step="0.01" name="discount[]" class="form-control" value="0">
-                </div>
+        <input type="hidden" name="student_id" value="<?= esc($student_id) ?>">
+        <input type="hidden" name="receiver_id" value="<?= esc($receiver_id) ?>">
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Fee</th>
+                    <th>Month</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($fees as $i => $f): ?>
+                <tr>
+                    <td><?= esc($f['title']) ?></td>
+                    <td><?= esc($f['month']) ?></td>
+                    <td><?= esc($f['amount']) ?></td>
+                </tr>
+
+                <input type="hidden" name="fee_id[]" value="<?= esc($f['fee_id']) ?>">
+                <input type="hidden" name="amount[]" value="<?= esc($f['amount']) ?>">
+                <input type="hidden" name="month[]" value="<?= esc($f['month']) ?>">
                 <?php endforeach; ?>
+            </tbody>
+        </table>
 
-                <input type="hidden" name="student_id" value="<?= $student['id'] ?>">
-                <input type="hidden" name="receiver_id" value="<?= $student['receiver_id'] ?? 0 ?>">
+        <?php if ($apply_discount): ?>
+        <p><strong>Discount:</strong> ৳<?= esc($discount) ?></p>
+        <input type="hidden" name="discount" value="<?= esc($discount) ?>">
+        <input type="hidden" name="apply_discount" value="1">
+        <?php endif; ?>
 
-                <div class="text-end">
-                    <button type="submit" class="btn btn-success">Submit & Generate Receipt</button>
-                </div>
-            </form>
+        <div class="text-end">
+            <button class="btn btn-success">Confirm & Save</button>
         </div>
-    </div>
+    </form>
 </div>
 
 <?= $this->endSection() ?>

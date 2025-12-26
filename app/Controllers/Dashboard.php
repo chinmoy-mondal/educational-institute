@@ -2678,163 +2678,78 @@ class Dashboard extends Controller
 
     public function studentPayment()
     {
-        $request = $this->request;
+        $step = $this->request->getPost('step');
 
-        /* ===============================
-       STEP 1 : SHOW PAYMENT FORM
-    =============================== */
-        if ($request->getMethod() === 'get') {
+        /* =====================================================
+       STEP 1 → SHOW DISCOUNT PAGE
+    ===================================================== */
+        if ($step === 'discount') {
 
-            $id = $request->getGet('id');
+            $studentId  = $this->request->getPost('student_id');
+            $receiverId = $this->request->getPost('receiver_id');
+            $feeIds     = $this->request->getPost('fee_id');
+            $amounts    = $this->request->getPost('amount');
+            $months     = $this->request->getPost('month');
 
-            $this->data['title'] = 'Student Payment';
-            $this->data['activeSection'] = 'accounts';
-
-            $this->data['navbarItems'] = [
-                ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-                ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-                ['label' => 'Students', 'url' => base_url('admin/std_pay')],
-                ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-                ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
-            ];
-
-            // Student
-            $student = $this->studentModel->find($id);
-            if (!$student) {
-                return redirect()->back()->with('error', 'Student not found');
-            }
-
-            // Fees
-            $fees = $this->feesModel->findAll();
-
-            // Section-wise fees
-            $sectionFees = $this->feesAmountModel
-                ->where('section', trim($student['section']))
-                ->findAll();
-
-            $feeAmounts = [];
-            $feeUnit = [];
-
-            foreach ($sectionFees as $f) {
-                $feeAmounts[$f['title_id']] = (float) $f['fees'];
-                $feeUnit[$f['title_id']] = (int) $f['unit'];
-            }
-
-            // Receiver
-            $receiver = $this->userModel->find(session()->get('user_id'));
-
-            return view('dashboard/payStudentRequest', [
-                'student'    => $student,
-                'fees'       => $fees,
-                'feeAmounts' => $feeAmounts,
-                'feeUnit'    => $feeUnit,
-                'receiver'   => $receiver,
-            ]);
-        }
-
-        /* ===============================
-       STEP 2 : DISCOUNT CONFIRM PAGE
-    =============================== */
-        if ($request->getPost('step') === 'discount') {
-
-            $feeIds  = $request->getPost('fee_id');
-            $amounts = $request->getPost('amount');
-            $months  = $request->getPost('month');
-
-            $filtered = [];
+            $fees = [];
 
             foreach ($feeIds as $i => $feeId) {
                 if (!empty($amounts[$i]) && $amounts[$i] > 0) {
-                    $filtered[] = [
+                    $fees[] = [
                         'fee_id' => $feeId,
+                        'title'  => $this->feesModel->find($feeId)['title'] ?? 'Fee',
                         'amount' => $amounts[$i],
-                        'month'  => $months[$i] ?: 'None',
+                        'month'  => $months[$i] ?? null
                     ];
                 }
             }
 
-            if (empty($filtered)) {
-                return redirect()->back()->with('error', 'Enter at least one amount');
+            if (empty($fees)) {
+                return redirect()->back()->with('error', 'Please enter at least one fee amount.');
             }
 
-            session()->set('payment_data', [
-                'student_id'     => $request->getPost('student_id'),
-                'receiver_id'    => $request->getPost('receiver_id'),
-                'fees'           => $filtered,
-                'discount'       => $request->getPost('apply_discount')
-                    ? (float)$request->getPost('discount')
-                    : 0,
-            ]);
-
-            return view('dashboard/payment_discount');
-        }
-
-        /* ===============================
-       STEP 3 : FINAL SAVE + RECEIPT
-    =============================== */
-        if ($request->getPost('step') === 'final') {
-
-            $data = session()->get('payment_data');
-            if (!$data) {
-                return redirect()->to('admin/std_pay');
-            }
-
-            $student  = $this->studentModel->find($data['student_id']);
-            $receiver = $this->userModel->find($data['receiver_id']);
-
-            $discount = $data['discount'];
-            $total    = array_sum(array_column($data['fees'], 'amount'));
-            $remain   = max($total - $discount, 0);
-
-            $transactions = [];
-
-            foreach ($data['fees'] as $fee) {
-
-                $txn = [
-                    'transaction_id' => uniqid('TXN'),
-                    'sender_id'      => $student['id'],
-                    'sender_name'    => $student['student_name'],
-                    'receiver_id'    => $receiver['id'],
-                    'receiver_name'  => $receiver['name'],
-                    'amount'         => $fee['amount'],
-                    'discount'       => 0,
-                    'month'          => $fee['month'],
-                    'purpose'        => $this->feesModel->find($fee['fee_id'])['title'] ?? 'Fee',
-                    'description'    => 'Student fee payment',
-                    'status'         => 1,
-                    'created_at'     => date('Y-m-d H:i:s'),
-                ];
-
-                $this->transactionModel->insert($txn);
-                $transactions[] = $txn;
-            }
-
-            // Discount transaction
-            if ($discount > 0) {
-                $this->transactionModel->insert([
-                    'transaction_id' => uniqid('DSC'),
-                    'sender_id'      => $student['id'],
-                    'sender_name'    => $student['student_name'],
-                    'receiver_id'    => $receiver['id'],
-                    'receiver_name'  => $receiver['name'],
-                    'amount'         => -$discount,
-                    'purpose'        => 'Discount',
-                    'description'    => 'Fee discount',
-                    'status'         => 1,
-                    'created_at'     => date('Y-m-d H:i:s'),
-                ]);
-            }
-
-            session()->remove('payment_data');
-
-            return view('admin/payment_receipt', [
-                'student'      => $student,
-                'transactions' => $transactions,
-                'discount'     => $discount,
-                'total'        => $total,
-                'payable'      => $remain,
+            return view('dashboard/payment_discount', [
+                'student_id'  => $studentId,
+                'receiver_id' => $receiverId,
+                'fees'        => $fees,
+                'discount'    => $this->request->getPost('discount'),
+                'apply_discount' => $this->request->getPost('apply_discount')
             ]);
         }
+
+        /* =====================================================
+       STEP 2 → FINAL SUBMIT (SAVE DATA)
+    ===================================================== */
+        $studentId      = $this->request->getPost('student_id');
+        $receiverId     = $this->request->getPost('receiver_id');
+        $feeIds         = $this->request->getPost('fee_id');
+        $amounts        = $this->request->getPost('amount');
+        $months         = $this->request->getPost('month');
+        $discount       = $this->request->getPost('discount');
+        $applyDiscount  = $this->request->getPost('apply_discount');
+
+        /* ✅ SAVE DISCOUNT IF CHECKED */
+        if ($applyDiscount && $discount > 0) {
+            $this->studentDiscountModel->insert([
+                'student_id' => $studentId,
+                'amount'     => $discount
+            ]);
+        }
+
+        /* ✅ SAVE TRANSACTIONS */
+        foreach ($feeIds as $i => $feeId) {
+            $this->transactionModel->insert([
+                'transaction_id' => uniqid('TXN'),
+                'sender_id'      => $studentId,
+                'receiver_id'    => $receiverId,
+                'amount'         => $amounts[$i],
+                'month'          => $months[$i],
+                'purpose'        => $this->feesModel->find($feeId)['title'] ?? 'Fee',
+                'status'         => 0
+            ]);
+        }
+
+        return redirect()->to('admin/std_pay')->with('success', 'Payment completed successfully.');
     }
 
     public function studentPaymentHistory($studentId)
