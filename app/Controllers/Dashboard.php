@@ -2678,7 +2678,39 @@ class Dashboard extends Controller
 
     public function studentPayment()
     {
-        echo "hi";
+        $request = $this->request;
+
+        // Ensure the request is POST
+        if ($request->getMethod() !== 'post') {
+            throw new \CodeIgniter\Exceptions\PageNotFoundException('Invalid request method.');
+        }
+
+        // Get all POST data from the form
+        $step = $request->getPost('step');                    // Step field
+        $studentId = $request->getPost('student_id');        // Student ID
+        $receiverId = $request->getPost('receiver_id');      // Receiver/Admin ID
+        $discount = $request->getPost('discount');           // Discount value
+        $applyDiscount = $request->getPost('apply_discount'); // Checkbox (1 or null)
+
+        // Get array inputs
+        $feeIds = $request->getPost('fee_id', FILTER_DEFAULT, []);    // Array of fee IDs
+        $amounts = $request->getPost('amount', FILTER_DEFAULT, []);   // Array of amounts
+        $months = $request->getPost('month', FILTER_DEFAULT, []);     // Array of months
+
+        // Just for debugging: show all received inputs
+        echo '<pre>';
+        echo "Step: $step\n";
+        echo "Student ID: $studentId\n";
+        echo "Receiver ID: $receiverId\n";
+        echo "Discount: $discount\n";
+        echo "Apply Discount: $applyDiscount\n";
+        echo "Fee IDs: ";
+        print_r($feeIds);
+        echo "Amounts: ";
+        print_r($amounts);
+        echo "Months: ";
+        print_r($months);
+        echo '</pre>';
     }
 
     public function studentPaymentHistory($studentId)
