@@ -28,11 +28,22 @@
                         <label class="form-label">Receiver</label>
                         <input type="text" class="form-control" value="<?= esc($receiver['name']) ?>" readonly>
                     </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Payment Month</label>
-                        <select name="month" class="form-select" required>
-                            <option value="">-- Select Month --</option>
+                </div>
+
+                <div class="table-responsive mb-3">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>SL</th>
+                                <th>Fee Title</th>
+                                <th>Max Amount (৳)</th>
+                                <th>Month</th>
+                                <th>Pay Amount (৳)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
                             <?php
+                            $sl = 1;
                             $months = [
                                 '01' => 'January',
                                 '02' => 'February',
@@ -47,25 +58,7 @@
                                 '11' => 'November',
                                 '12' => 'December'
                             ];
-                            foreach ($months as $key => $label): ?>
-                            <option value="<?= $key ?>"><?= $label ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="table-responsive mb-3">
-                    <table class="table table-bordered align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>SL</th>
-                                <th>Fee Title</th>
-                                <th>Max Amount (৳)</th>
-                                <th>Pay Amount (৳)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php $sl = 1; ?>
+                            ?>
                             <?php foreach ($fees as $f):
                                 $unit = $feeUnit[$f['id']] ?? 0;
                                 $amount = $feeAmounts[$f['id']] ?? 0;
@@ -76,6 +69,14 @@
                                 <td><?= esc($f['title']) ?></td>
                                 <td>
                                     <?= $unit && $amount ? $unit . ' × ' . $amount : '-' ?>
+                                </td>
+                                <td>
+                                    <select name="month[]" class="form-select form-select-sm" required>
+                                        <option value="">-- Select Month --</option>
+                                        <?php foreach ($months as $key => $label): ?>
+                                        <option value="<?= $key ?>"><?= $label ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </td>
                                 <td>
                                     <input type="hidden" name="fee_id[]" value="<?= esc($f['id']) ?>">
