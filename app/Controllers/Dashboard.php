@@ -2700,7 +2700,7 @@ class Dashboard extends Controller
         }
 
         // Make sure 'name' exists
-        $studentName = $student['name'] ?? 'N/A';
+        $studentName = $student['student_name'] ?? 'N/A';
         $receiverName = $receiver['name'] ?? 'N/A';
 
         // Process fees
