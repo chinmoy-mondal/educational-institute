@@ -2679,7 +2679,9 @@ class Dashboard extends Controller
         $receiverId = $this->request->getPost('receiver_id');
         $amounts    = $this->request->getPost('amount');
         $feeIds     = $this->request->getPost('fee_id');
+        $months     = $this->request->getPost('month'); // New: month per fee
 
+        // Fetch student and receiver
         $student  = $this->studentModel->find($studentId);
         $receiver = $this->userModel->find($receiverId);
 
@@ -2687,7 +2689,7 @@ class Dashboard extends Controller
             return redirect()->back()->with('error', 'Invalid student or receiver.');
         }
 
-        if (empty($amounts) || empty($feeIds)) {
+        if (empty($amounts) || empty($feeIds) || empty($months)) {
             return redirect()->back()->with('error', 'No payment data provided.');
         }
 
@@ -2696,8 +2698,10 @@ class Dashboard extends Controller
 
         foreach ($feeIds as $index => $feeId) {
             $amount = $amounts[$index] ?? 0;
-            if ($amount <= 0) {
-                continue;
+            $month  = $months[$index] ?? null;
+
+            if ($amount <= 0 || !$month) {
+                continue; // skip if no amount or month selected
             }
 
             // Get maximum allowed for this fee for the student's class
@@ -2707,17 +2711,20 @@ class Dashboard extends Controller
                 ->first();
             $maxAmount = $feeMax['unit'] * $feeMax['fees'] ?? 0;
 
-            // Calculate total already paid by this student for this fee
+            // Get fee title
             $feeTitle = $this->feesModel->find($feeId)['title'] ?? 'Unknown Fee';
+
+            // Check total already paid for this fee in this month
             $totalPaid = $this->transactionModel
                 ->where('sender_id', $student['id'])
                 ->where('purpose', $feeTitle)
+                ->where('month', $month)
                 ->select('SUM(amount) as paid')
                 ->first();
             $paidAmount = $totalPaid['paid'] ?? 0;
 
             if ($paidAmount >= $maxAmount) {
-                $errorMessages[] = "Sorry, maximum payment for '{$feeTitle}' already received.";
+                $errorMessages[] = "Maximum payment for '{$feeTitle}' in this month already received.";
                 continue;
             }
 
@@ -2726,6 +2733,7 @@ class Dashboard extends Controller
                 $amount = $maxAmount - $paidAmount;
             }
 
+            // Insert transaction
             $this->transactionModel->insert([
                 'transaction_id' => uniqid('TXN'),
                 'sender_id'      => $student['id'],
@@ -2734,6 +2742,7 @@ class Dashboard extends Controller
                 'receiver_name'  => $receiver['name'],
                 'amount'         => $amount,
                 'purpose'        => $feeTitle,
+                'month'          => $month, // store selected month
                 'description'    => 'Educational fees payment request',
                 'status'         => 0,
             ]);
@@ -2741,7 +2750,7 @@ class Dashboard extends Controller
             $successCount++;
         }
 
-        // Send messages separately
+        // Flash messages
         if ($successCount > 0) {
             session()->setFlashdata('success', "$successCount payment request(s) submitted successfully.");
         }
