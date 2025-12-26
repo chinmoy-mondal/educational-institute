@@ -2678,104 +2678,66 @@ class Dashboard extends Controller
 
     public function studentPayment()
     {
-        // ===================== BASIC DATA =====================
-        $this->data['title'] = 'Student Payment';
-        $this->data['activeSection'] = 'accounts';
-        $this->data['navbarItems'] = [
-            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
-            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
-        ];
+        $request = $this->request;
 
-        $step = $this->request->getPost('step');
-
-        // ===================== STEP 1 → SHOW DISCOUNT PAGE =====================
-        if ($step === 'discount') {
-
-            $studentId  = $this->request->getPost('student_id');
-            $receiverId = $this->request->getPost('receiver_id');
-            $feeIds     = $this->request->getPost('fee_id');
-            $amounts    = $this->request->getPost('amount');
-            $months     = $this->request->getPost('month');
-
-            // Fetch student and receiver
-            $student  = $this->studentModel->find($studentId);
-            $receiver = $this->userModel->find($receiverId);
-
-            if (!$student || !$receiver) {
-                return redirect()->back()->with('error', 'Invalid student or receiver.');
-            }
-
-            // Prepare fees array for discount page
-            $fees = [];
-            foreach ($feeIds as $i => $feeId) {
-                if (!empty($amounts[$i]) && $amounts[$i] > 0) {
-                    $fees[] = [
-                        'fee_id' => $feeId,
-                        'title'  => $this->feesModel->find($feeId)['title'] ?? 'Fee',
-                        'amount' => $amounts[$i],
-                        'month'  => $months[$i] ?? null
-                    ];
-                }
-            }
-
-            if (empty($fees)) {
-                return redirect()->back()->with('error', 'Please enter at least one fee amount.');
-            }
-
-            // Pass all required variables to view
-            return view('dashboard/payment_discount', [
-                'student'        => $student,
-                'receiver'       => $receiver,
-                'fees'           => $fees,
-                'discount'       => $this->request->getPost('discount'),
-                'apply_discount' => $this->request->getPost('apply_discount'),
-                'navbarItems'    => $this->data['navbarItems']
-            ]);
+        if ($request->getMethod() !== 'post') {
+            throw new PageNotFoundException('Invalid request method.');
         }
 
-        // ===================== STEP 2 → FINAL SUBMIT (SAVE DATA) =====================
-        $studentId      = $this->request->getPost('student_id');
-        $receiverId     = $this->request->getPost('receiver_id');
-        $feeIds         = $this->request->getPost('fee_id');
-        $amounts        = $this->request->getPost('amount');
-        $months         = $this->request->getPost('month');
-        $discount       = $this->request->getPost('discount');
-        $applyDiscount  = $this->request->getPost('apply_discount');
+        $step = $request->getPost('step');
+        $studentId = $request->getPost('student_id');
+        $receiverId = $request->getPost('receiver_id');
 
-        // Fetch student & receiver for safety
-        $student  = $this->studentModel->find($studentId);
+        // Fetch student and receiver info
+        $student = $this->studentModel->find($studentId);
         $receiver = $this->userModel->find($receiverId);
 
         if (!$student || !$receiver) {
             return redirect()->back()->with('error', 'Invalid student or receiver.');
         }
 
-        // ===================== SAVE DISCOUNT IF CHECKED =====================
-        if ($applyDiscount && $discount > 0) {
-            $this->studentDiscountModel->insert([
-                'student_id' => $studentId,
-                'amount'     => $discount
-            ]);
+        // Get fees from POST
+        $feeIds = $request->getPost('fee_id', FILTER_DEFAULT, []);
+        $amounts = $request->getPost('amount', FILTER_DEFAULT, []);
+        $months = $request->getPost('month', FILTER_DEFAULT, []);
+        $discount = floatval($request->getPost('discount', 0));
+        $applyDiscount = $request->getPost('apply_discount') == 1;
+
+        $fees = [];
+        $totalAmount = 0;
+
+        foreach ($feeIds as $index => $feeId) {
+            $fee = $this->feesModel->find($feeId);
+            if (!$fee) continue;
+
+            $amount = floatval($amounts[$index] ?? 0);
+            $month = $months[$index] ?? '';
+
+            $fees[] = [
+                'title' => $fee['title'],
+                'month' => $month,
+                'amount' => $amount
+            ];
+
+            $totalAmount += $amount;
         }
 
-        // ===================== SAVE TRANSACTIONS =====================
-        foreach ($feeIds as $i => $feeId) {
-            $this->transactionModel->insert([
-                'transaction_id' => uniqid('TXN'),
-                'sender_id'      => $studentId,
-                'receiver_id'    => $receiverId,
-                'amount'         => $amounts[$i],
-                'month'          => $months[$i],
-                'purpose'        => $this->feesModel->find($feeId)['title'] ?? 'Fee',
-                'status'         => 0,
-                'created_at'     => date('Y-m-d H:i:s')
-            ]);
+        // Apply discount if applicable
+        if ($applyDiscount) {
+            $totalAmount -= $discount;
         }
 
-        return redirect()->to('admin/std_pay')->with('success', 'Payment completed successfully.');
+        // Prepare data for receipt
+        $data = [
+            'student' => $student,
+            'receiver' => $receiver,
+            'fees' => $fees,
+            'discount' => $applyDiscount ? $discount : 0,
+            'total_amount' => $totalAmount,
+            'date' => date('Y-m-d H:i:s')
+        ];
+
+        return view('dashboard/payment_receipt', $data);
     }
 
     public function studentPaymentHistory($studentId)
