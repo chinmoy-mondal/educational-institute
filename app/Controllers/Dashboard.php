@@ -2676,38 +2676,97 @@ class Dashboard extends Controller
         return view('dashboard/payStudentRequest', $this->data);
     }
 
+    // public function studentPayment()
+    // {
+    //     $request = $this->request;
+
+    //     // single inputs
+    //     $studentId = $request->getPost('student_id');
+    //     $receiverId = $request->getPost('receiver_id');
+    //     $discount = floatval($request->getPost('discount'));
+    //     $applyDiscount = $request->getPost('apply_discount') == 1;
+
+    //     // array inputs
+    //     $feeIds = $request->getPost('fee_id');   // array
+    //     $amounts = $request->getPost('amount');  // array
+    //     $months = $request->getPost('month');    // array
+
+    //     // now $feeIds, $amounts, $months are arrays, no filter needed
+
+    //     // Example: print data
+    //     echo "<pre>";
+    //     print_r([
+    //         'student' => $studentId,
+    //         'receiver' => $receiverId,
+    //         'fees' => $feeIds,
+    //         'amounts' => $amounts,
+    //         'months' => $months,
+    //         'discount' => $discount,
+    //         'applyDiscount' => $applyDiscount
+    //     ]);
+    //     echo "</pre>";
+    //     exit;
+    // }
     public function studentPayment()
     {
         $request = $this->request;
 
-        // single inputs
+        // Single inputs
         $studentId = $request->getPost('student_id');
         $receiverId = $request->getPost('receiver_id');
-        $discount = floatval($request->getPost('discount'));
+        $discount = floatval($request->getPost('discount', 0));
         $applyDiscount = $request->getPost('apply_discount') == 1;
 
-        // array inputs
-        $feeIds = $request->getPost('fee_id');   // array
-        $amounts = $request->getPost('amount');  // array
-        $months = $request->getPost('month');    // array
+        // Array inputs
+        $feeIds = $request->getPost('fee_id') ?? [];
+        $amounts = $request->getPost('amount') ?? [];
+        $months = $request->getPost('month') ?? [];
 
-        // now $feeIds, $amounts, $months are arrays, no filter needed
+        // Process fees
+        $fees = [];
+        $totalAmount = 0;
 
-        // Example: print data
-        echo "<pre>";
-        print_r([
-            'student' => $studentId,
-            'receiver' => $receiverId,
-            'fees' => $feeIds,
-            'amounts' => $amounts,
-            'months' => $months,
-            'discount' => $discount,
-            'applyDiscount' => $applyDiscount
-        ]);
-        echo "</pre>";
-        exit;
+        foreach ($feeIds as $index => $feeId) {
+            $amount = floatval($amounts[$index] ?? 0);
+            $month = $months[$index] ?? '';
+
+            $fees[] = [
+                'title' => 'Fee ' . $feeId, // or get title from fee model if needed
+                'month' => $month,
+                'amount' => $amount
+            ];
+
+            $totalAmount += $amount;
+        }
+
+        // Apply discount
+        if ($applyDiscount) {
+            $totalAmount -= $discount;
+            if ($totalAmount < 0) $totalAmount = 0;
+        }
+
+        // Store in $this->data for view
+        $this->data['student'] = ['id' => $studentId, 'name' => '']; // fill name if needed
+        $this->data['receiver'] = ['id' => $receiverId, 'name' => '']; // fill name if needed
+        $this->data['fees'] = $fees;
+        $this->data['discount'] = $applyDiscount ? $discount : 0;
+        $this->data['totalAmount'] = $totalAmount;
+        $this->data['date'] = date('Y-m-d H:i:s');
+
+        // Optional: add navbar or page info
+        $this->data['title'] = 'Student Payment';
+        $this->data['activeSection'] = 'accounts';
+        $this->data['navbarItems'] = [
+            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+        ];
+
+        // Send to view
+        return view('dashboard/payment_receipt', $this->data);
     }
-
     public function studentPaymentHistory($studentId)
     {
 
