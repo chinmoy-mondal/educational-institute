@@ -10,25 +10,10 @@
         </div>
 
         <div class="card-body">
-            <form method="post" action="<?= base_url('admin/submitStudentPayment') ?>">
+            <form method="post" action="<?= base_url('admin/studentPaymentDiscount') ?>">
                 <?= csrf_field() ?>
                 <input type="hidden" name="student_id" value="<?= esc($student['id']) ?>">
                 <input type="hidden" name="receiver_id" value="<?= esc($receiver['id']) ?>">
-
-                <div class="row mb-3">
-                    <div class="col-md-4">
-                        <label class="form-label">Student Name</label>
-                        <input type="text" class="form-control" value="<?= esc($student['student_name']) ?>" readonly>
-                    </div>
-                    <div class="col-md-2">
-                        <label class="form-label">Class</label>
-                        <input type="text" class="form-control" value="Class <?= esc($student['class']) ?>" readonly>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Receiver</label>
-                        <input type="text" class="form-control" value="<?= esc($receiver['name']) ?>" readonly>
-                    </div>
-                </div>
 
                 <div class="table-responsive mb-3">
                     <table class="table table-bordered align-middle">
@@ -59,7 +44,7 @@
                                 '12' => 'December'
                             ];
                             ?>
-                            <?php foreach ($fees as $f):
+                            <?php foreach ($fees as $index => $f):
                                 $unit = $feeUnit[$f['id']] ?? 0;
                                 $amount = $feeAmounts[$f['id']] ?? 0;
                                 $max = $unit * $amount;
@@ -67,20 +52,18 @@
                             <tr>
                                 <td><?= $sl++ ?></td>
                                 <td><?= esc($f['title']) ?></td>
+                                <td><?= $unit && $amount ? $unit . ' × ' . $amount : '-' ?></td>
                                 <td>
-                                    <?= $unit && $amount ? $unit . ' × ' . $amount : '-' ?>
-                                </td>
-                                <td>
-                                    <select name="month[]" class="form-select form-select-sm" required>
-                                        <option value="">-- Select Month --</option>
+                                    <select name="month[<?= $index ?>]" class="form-select form-select-sm" required>
+                                        <option value="">--Select Month--</option>
                                         <?php foreach ($months as $key => $label): ?>
                                         <option value="<?= $key ?>"><?= $label ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="hidden" name="fee_id[]" value="<?= esc($f['id']) ?>">
-                                    <input type="number" step="0.01" name="amount[]"
+                                    <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['id']) ?>">
+                                    <input type="number" step="0.01" name="amount[<?= $index ?>]"
                                         class="form-control form-control-sm" placeholder="Enter amount"
                                         max="<?= $max ?>">
                                 </td>
@@ -91,9 +74,7 @@
                 </div>
 
                 <div class="text-end">
-                    <button type="submit" class="btn btn-success">
-                        <i class="fas fa-paper-plane"></i> Submit Payment Request
-                    </button>
+                    <button type="submit" class="btn btn-primary">Next: Apply Discount</button>
                 </div>
             </form>
         </div>

@@ -2762,6 +2762,59 @@ class Dashboard extends Controller
         return redirect()->to(base_url('admin/std_pay'));
     }
 
+    public function studentPaymentDiscount()
+    {
+        $data = $this->request->getPost();
+        session()->set('payment_data', $data); // store temporarily
+
+        return view('admin/payment_discount', [
+            'student' => $this->studentModel->find($data['student_id']),
+            'fees' => $data['fee_id'],
+            'amounts' => $data['amount'],
+            'months' => $data['month']
+        ]);
+    }
+
+    public function submitStudentPaymentWithDiscount()
+    {
+        $studentId = $this->request->getPost('student_id');
+        $receiverId = $this->request->getPost('receiver_id');
+        $amounts = $this->request->getPost('amount');
+        $feeIds = $this->request->getPost('fee_id');
+        $months = $this->request->getPost('month');
+        $discounts = $this->request->getPost('discount');
+
+        $student = $this->studentModel->find($studentId);
+        $receiver = $this->userModel->find($receiverId);
+
+        $transactions = [];
+
+        foreach ($feeIds as $i => $feeId) {
+            $txnId = uniqid('TXN');
+            $transactions[] = [
+                'transaction_id' => $txnId,
+                'sender_id' => $studentId,
+                'sender_name' => $student['student_name'],
+                'receiver_id' => $receiverId,
+                'receiver_name' => $receiver['name'],
+                'amount' => $amounts[$i],
+                'discount' => $discounts[$i] ?? 0,
+                'month' => $months[$i],
+                'purpose' => $this->feesModel->find($feeId)['title'] ?? 'Fee',
+                'description' => 'Payment with discount',
+                'status' => 0,
+                'created_at' => date('Y-m-d H:i:s')
+            ];
+
+            $this->transactionModel->insert($transactions[$i]);
+        }
+
+        return view('admin/payment_receipt', [
+            'student' => $student,
+            'transactions' => $transactions
+        ]);
+    }
+
     public function studentPaymentHistory($studentId)
     {
 

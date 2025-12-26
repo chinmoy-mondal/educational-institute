@@ -15,6 +15,8 @@ class TransactionModel extends Model
         'receiver_id',
         'receiver_name',
         'amount',
+        'discount',
+        'month',
         'purpose',
         'description',
         'status',

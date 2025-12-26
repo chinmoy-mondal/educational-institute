@@ -56,6 +56,18 @@ class CreateTransactionsTable extends Migration
                 'default'    => '0.00',
             ],
 
+            'discount' => [   // NEW FIELD
+                'type'       => 'DECIMAL',
+                'constraint' => '10,2',
+                'default'    => '0.00',
+            ],
+
+            'month' => [     // NEW FIELD
+                'type'       => 'VARCHAR',
+                'constraint' => 2,
+                'null'       => true,
+            ],
+
             'purpose' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 150,
