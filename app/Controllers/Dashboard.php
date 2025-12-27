@@ -1590,94 +1590,112 @@ class Dashboard extends Controller
             return "Student ID and Year are required";
         }
 
-        // Fetch assigned subject order from students table
+        // ---------------- STUDENT ----------------
         $student = $this->studentModel->find($studentId);
-        $assign_sub_order = $student['assign_sub'] ?? '';
-        $assign_sub_order = array_filter(explode(',', $assign_sub_order));
+        if (!$student) {
+            return "Student not found";
+        }
 
-        // Fetch Half-Yearly
+        // ---------------- ASSIGN SUBJECT ORDER ----------------
+        $assignSubArr = explode(',', $student['assign_sub']);
+
+        $normalSubs   = [];
+        $optionalSub  = null;
+
+        foreach ($assignSubArr as $sub) {
+            if (str_contains($sub, '*')) {
+                $optionalSub = (int) str_replace('*', '', $sub);
+            } else {
+                $normalSubs[] = (int) $sub;
+            }
+        }
+
+        $orderedSubjects = $normalSubs;
+        if ($optionalSub) {
+            $orderedSubjects[] = $optionalSub; // optional always last
+        }
+
+        // ---------------- FETCH RESULTS ----------------
         $half = $this->resultModel
             ->select('results.*, subjects.subject, subjects.full_mark')
             ->join('subjects', 'subjects.id = results.subject_id')
-            ->where('results.student_id', $studentId)
-            ->where('results.year', $year)
-            ->where('results.exam', 'Half-Yearly')
+            ->where([
+                'results.student_id' => $studentId,
+                'results.year'       => $year,
+                'results.exam'       => 'Half-Yearly'
+            ])
             ->findAll();
 
-        // Fetch Annual
         $annual = $this->resultModel
             ->select('results.*, subjects.subject, subjects.full_mark')
             ->join('subjects', 'subjects.id = results.subject_id')
-            ->where('results.student_id', $studentId)
-            ->where('results.year', $year)
-            ->where('results.exam', 'Annual Exam')
+            ->where([
+                'results.student_id' => $studentId,
+                'results.year'       => $year,
+                'results.exam'       => 'Annual Exam'
+            ])
             ->findAll();
 
-        // Merge Half-Yearly
+        // ---------------- MERGE ----------------
         $marksheet = [];
+
         foreach ($half as $h) {
             $sid = $h['subject_id'];
             $marksheet[$sid] = [
-                'subject'   => $h['subject'],
-                'full_mark' => $h['full_mark'],
-                'half'      => $h,
-                'annual'    => null,
-                'average'   => null
+                'subject'    => $h['subject'],
+                'full_mark'  => $h['full_mark'],
+                'half'       => $h,
+                'annual'     => null,
+                'is_optional' => ($sid == $optionalSub)
             ];
         }
 
-        // Merge Annual
         foreach ($annual as $a) {
             $sid = $a['subject_id'];
 
             if (!isset($marksheet[$sid])) {
                 $marksheet[$sid] = [
-                    'subject'   => $a['subject'],
-                    'full_mark' => $a['full_mark'],
-                    'half'      => null,
-                    'annual'    => $a,
-                    'average'   => null
+                    'subject'    => $a['subject'],
+                    'full_mark'  => $a['full_mark'],
+                    'half'       => null,
+                    'is_optional' => ($sid == $optionalSub)
                 ];
-            } else {
-                $marksheet[$sid]['annual'] = $a;
-                if (!isset($marksheet[$sid]['full_mark']) || !$marksheet[$sid]['full_mark']) {
-                    $marksheet[$sid]['full_mark'] = $a['full_mark'];
-                }
             }
+            $marksheet[$sid]['annual'] = $a;
         }
 
-        // Subject-wise average
-        foreach ($marksheet as $sid => $row) {
-            $h = $row['half'];
-            $a = $row['annual'];
+        // ---------------- AVERAGE ----------------
+        foreach ($marksheet as $sid => &$row) {
 
-            $hWri = $h['written'] ?? 0;
-            $hMCQ = $h['mcq'] ?? 0;
-            $hPrac = $h['practical'] ?? 0;
+            $h = $row['half']   ?? [];
+            $a = $row['annual'] ?? [];
 
-            $aWri = $a['written'] ?? 0;
-            $aMCQ = $a['mcq'] ?? 0;
-            $aPrac = $a['practical'] ?? 0;
+            $hW = $h['written']   ?? 0;
+            $hM = $h['mcq']       ?? 0;
+            $hP = $h['practical'] ?? 0;
 
-            $marksheet[$sid]['average'] = [
-                'written'   => round(($hWri + $aWri) / 2, 2),
-                'mcq'       => round(($hMCQ + $aMCQ) / 2, 2),
-                'practical' => round(($hPrac + $aPrac) / 2, 2),
-                'total'     => round(($hWri + $hMCQ + $hPrac + $aWri + $aMCQ + $aPrac) / 2, 2)
+            $aW = $a['written']   ?? 0;
+            $aM = $a['mcq']       ?? 0;
+            $aP = $a['practical'] ?? 0;
+
+            $row['average'] = [
+                'written'   => round(($hW + $aW) / 2, 2),
+                'mcq'       => round(($hM + $aM) / 2, 2),
+                'practical' => round(($hP + $aP) / 2, 2),
+                'total'     => round((($hW + $hM + $hP) + ($aW + $aM + $aP)) / 2, 2)
             ];
         }
 
-        // Sort marksheet according to assign_sub
-        $sorted_marksheet = [];
-        foreach ($assign_sub_order as $sub_id) {
-            if (isset($marksheet[$sub_id])) {
-                $sorted_marksheet[$sub_id] = $marksheet[$sub_id];
+        // ---------------- SORT BY ASSIGN_SUB ----------------
+        $sorted = [];
+        foreach ($orderedSubjects as $sid) {
+            if (isset($marksheet[$sid])) {
+                $sorted[$sid] = $marksheet[$sid];
             }
         }
 
-        // Pass data to view
-        return view('result/test_result', [
-            'marksheet' => $sorted_marksheet
+        return view('results/test_result', [
+            'marksheet' => $sorted
         ]);
     }
 
