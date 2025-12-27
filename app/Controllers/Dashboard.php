@@ -2808,7 +2808,7 @@ class Dashboard extends Controller
             }
         }
 
-        return view('dashboard/payment_receipt', $this->data);
+        return redirect()->to(base_url('admin/transactions'))->with('success', 'Payment recorded successfully.');
     }
     
     public function studentPaymentHistory($studentId)
