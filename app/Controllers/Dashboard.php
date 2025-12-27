@@ -2676,37 +2676,7 @@ class Dashboard extends Controller
         return view('dashboard/payStudentRequest', $this->data);
     }
 
-    // public function studentPayment()
-    // {
-    //     $request = $this->request;
 
-    //     // single inputs
-    //     $studentId = $request->getPost('student_id');
-    //     $receiverId = $request->getPost('receiver_id');
-    //     $discount = floatval($request->getPost('discount'));
-    //     $applyDiscount = $request->getPost('apply_discount') == 1;
-
-    //     // array inputs
-    //     $feeIds = $request->getPost('fee_id');   // array
-    //     $amounts = $request->getPost('amount');  // array
-    //     $months = $request->getPost('month');    // array
-
-    //     // now $feeIds, $amounts, $months are arrays, no filter needed
-
-    //     // Example: print data
-    //     echo "<pre>";
-    //     print_r([
-    //         'student' => $studentId,
-    //         'receiver' => $receiverId,
-    //         'fees' => $feeIds,
-    //         'amounts' => $amounts,
-    //         'months' => $months,
-    //         'discount' => $discount,
-    //         'applyDiscount' => $applyDiscount
-    //     ]);
-    //     echo "</pre>";
-    //     exit;
-    // }
 
     public function studentPayment()
     {
@@ -2739,7 +2709,7 @@ class Dashboard extends Controller
         $amounts = $request->getPost('amount');   // array of amounts
         $months  = $request->getPost('month');    // array of months
 
-        // Array to map month numbers to names
+        // Map month numbers to names
         $monthNames = [
             1 => 'January',
             2 => 'February',
@@ -2752,7 +2722,7 @@ class Dashboard extends Controller
             9 => 'September',
             10 => 'October',
             11 => 'November',
-            12 => 'December',
+            12 => 'December'
         ];
 
         $fees = [];
@@ -2761,17 +2731,11 @@ class Dashboard extends Controller
         if (!empty($feeIds)) {
             foreach ($feeIds as $i => $id) {
                 $amount = floatval($amounts[$i] ?? 0);
+                if ($amount <= 0) continue;
 
-                // Skip zero amounts
-                if ($amount <= 0) {
-                    continue;
-                }
-
-                // Get fee title from DB
                 $feeData = $this->feesModel->find($id);
                 $title = $feeData ? $feeData['title'] : 'Fee #' . $id;
 
-                // Convert month number to name
                 $monthNumber = intval($months[$i] ?? 0);
                 $monthName = $monthNames[$monthNumber] ?? '';
 
@@ -2792,6 +2756,29 @@ class Dashboard extends Controller
 
         $this->data['fees']        = $fees;
         $this->data['totalAmount'] = $totalAmount;
+
+        /* ---------- SEND SMS ---------- */
+        // $studentPhone = $this->data['student']['phone'] ?? '';
+        $studentPhone = '01920232269';
+        if ($studentPhone) {
+            $message = "Dear {$this->data['student']['name']}, your payment of Tk {$totalAmount} has been received. Thank you!";
+            $apiKey = "xxxxxx"; // replace with your real API key
+            $callerID = "1234";
+
+            $smsUrl = "https://bulksmsdhaka.com/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
+
+            // Using file_get_contents
+            @file_get_contents($smsUrl);
+
+            // Alternatively, using cURL (more robust)
+            /*
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $smsUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        curl_close($ch);
+        */
+        }
 
         return view('dashboard/payment_receipt', $this->data);
     }
