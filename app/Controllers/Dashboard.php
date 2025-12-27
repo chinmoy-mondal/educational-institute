@@ -2761,7 +2761,7 @@ class Dashboard extends Controller
         // $studentPhone = $this->data['student']['phone'] ?? '';
         $studentPhone = '01920232269';
         if ($studentPhone) {
-            $message = "Dear {$this->data['student']['name']}, your payment of Tk {$totalAmount} has been received. Thank you!";
+            $message = "Dear {$this->data['student']['student_name']}, your payment of Tk {$totalAmount} has been received. Thank you!";
             $apiKey = "xxxxxx"; // replace with your real API key
             $callerID = "1234";
 
