@@ -2739,26 +2739,45 @@ class Dashboard extends Controller
         $amounts = $request->getPost('amount');   // array of amounts
         $months  = $request->getPost('month');    // array of months
 
+        // Array to map month numbers to names
+        $monthNames = [
+            1 => 'January',
+            2 => 'February',
+            3 => 'March',
+            4 => 'April',
+            5 => 'May',
+            6 => 'June',
+            7 => 'July',
+            8 => 'August',
+            9 => 'September',
+            10 => 'October',
+            11 => 'November',
+            12 => 'December',
+        ];
+
         $fees = [];
         $totalAmount = 0;
 
         if (!empty($feeIds)) {
-
             foreach ($feeIds as $i => $id) {
                 $amount = floatval($amounts[$i] ?? 0);
 
-                // Skip fees with zero amount
+                // Skip zero amounts
                 if ($amount <= 0) {
                     continue;
                 }
 
-                // Get the fee title from DB
+                // Get fee title from DB
                 $feeData = $this->feesModel->find($id);
                 $title = $feeData ? $feeData['title'] : 'Fee #' . $id;
 
+                // Convert month number to name
+                $monthNumber = intval($months[$i] ?? 0);
+                $monthName = $monthNames[$monthNumber] ?? '';
+
                 $fees[] = [
                     'title'  => $title,
-                    'month'  => $months[$i] ?? '',
+                    'month'  => $monthName,
                     'amount' => $amount
                 ];
 
