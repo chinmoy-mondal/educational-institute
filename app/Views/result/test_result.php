@@ -28,36 +28,29 @@
 
     <table>
         <tr>
-            <th rowspan="2">Subject</th>
-            <th rowspan="2">Full Mark</th>
-            <th colspan="4">Half-Yearly</th>
-            <th colspan="4">Annual</th>
-            <th colspan="4">Average</th>
-            <th rowspan="2">Total</th>
-            <th rowspan="2">%</th>
-            <th rowspan="2">Grade</th>
-            <th rowspan="2">GP</th>
+            <th>Subject</th>
+            <th>Full Mark</th>
+            <th>Half W</th>
+            <th>Half M</th>
+            <th>Half P</th>
+            <th>Half T</th>
+            <th>Annual W</th>
+            <th>Annual M</th>
+            <th>Annual P</th>
+            <th>Annual T</th>
+            <th>Average W</th>
+            <th>Average M</th>
+            <th>Average P</th>
+            <th>Average T</th>
+            <th>Total</th>
+            <th>%</th>
+            <th>Grade</th>
+            <th>GP</th>
         </tr>
-        <tr>
-            <th>W</th>
-            <th>M</th>
-            <th>P</th>
-            <th>T</th>
-            <th>W</th>
-            <th>M</th>
-            <th>P</th>
-            <th>T</th>
-            <th>W</th>
-            <th>M</th>
-            <th>P</th>
-            <th>T</th>
-        </tr>
-
         <?php foreach ($marksheet as $row): ?>
         <tr>
             <td><?= esc($row['subject']) ?></td>
             <td><?= $row['full_mark'] ?></td>
-
             <td><?= $row['half']['written'] ?? 0 ?></td>
             <td><?= $row['half']['mcq'] ?? 0 ?></td>
             <td><?= $row['half']['practical'] ?? 0 ?></td>
@@ -75,13 +68,20 @@
             <td><?= $row['average']['practical'] ?></td>
             <td><?= $row['average']['total'] ?></td>
 
+            <?php if (isset($row['final_combined'])): ?>
+            <td rowspan="<?= $row['final_combined']['rowspan'] ?>"><?= $row['final_combined']['total'] ?></td>
+            <td rowspan="<?= $row['final_combined']['rowspan'] ?>"><?= $row['final_combined']['percentage'] ?>%</td>
+            <td rowspan="<?= $row['final_combined']['rowspan'] ?>"><?= $row['final_combined']['grade'] ?></td>
+            <td rowspan="<?= $row['final_combined']['rowspan'] ?>"><?= number_format($row['final_combined']['gp'], 2) ?>
+            </td>
+            <?php else: ?>
             <td><?= $row['final']['total'] ?></td>
             <td><?= $row['final']['percentage'] ?>%</td>
             <td><?= $row['final']['grade'] ?></td>
             <td><?= number_format($row['final']['gp'], 2) ?></td>
+            <?php endif; ?>
         </tr>
         <?php endforeach; ?>
-
     </table>
 </body>
 
