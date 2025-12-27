@@ -53,9 +53,9 @@
             <th>T</th>
         </tr>
 
-        <?php foreach ($marksheet as $row): ?>
+        <?php foreach ($marksheet as $sl => $row): ?>
         <tr>
-            <td><?= esc($row['subject']) ?></td>
+            <td><?= $sl + 1 ?>. <?= esc($row['subject']) ?></td> <!-- Serial number -->
             <td><?= $row['full_mark'] ?></td>
 
             <td><?= $row['half']['written'] ?? 0 ?></td>
