@@ -98,98 +98,104 @@ th {
 }
 </style>
 
-<div class="page">
+<!-- ✅ AdminLTE padding wrapper ONLY -->
+<div class="container-fluid px-4 py-3">
 
-    <?php for ($copy = 0; $copy < 2; $copy++): ?>
+    <div class="page">
 
-    <div class="receipt">
+        <?php for ($copy = 0; $copy < 2; $copy++): ?>
 
-        <div class="copy-label">
-            <?= $copy === 0 ? 'Student Copy' : 'Institute Copy' ?>
+        <div class="receipt">
+
+            <div class="copy-label">
+                <?= $copy === 0 ? 'Student Copy' : 'Institute Copy' ?>
+            </div>
+
+            <div class="header">
+                <div class="school-name">YOUR SCHOOL NAME</div>
+                <div class="school-sub">Address: __________ | Phone: __________</div>
+                <div class="school-sub"><b>Payment Receipt</b></div>
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="info">
+                <b>Date:</b> <?= esc($date ?? date('Y-m-d')) ?>
+                &nbsp;&nbsp;
+                <b>Receipt No:</b> ___________
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="info">
+                <b>Student Name:</b> <?= esc($student['student_name'] ?? 'N/A') ?><br>
+                <b>Student ID:</b> <?= esc($student['id'] ?? '') ?><br>
+                <b>Class:</b> <?= esc($student['class'] ?? '') ?><br>
+                <b>Session:</b> <?= esc($student['session'] ?? '') ?>
+            </div>
+
+            <div class="hr"></div>
+
+            <table>
+                <tr>
+                    <th width="7%">SL</th>
+                    <th>Fee Category</th>
+                    <th width="22%">Amount (৳)</th>
+                </tr>
+
+                <?php if (!empty($fees)): ?>
+                <?php foreach ($fees as $i => $f): ?>
+                <tr>
+                    <td align="center"><?= $i + 1 ?></td>
+                    <td>
+                        <?= esc($f['title']) ?>
+                        <?= !empty($f['month']) ? ' (' . esc($f['month']) . ')' : '' ?>
+                    </td>
+                    <td align="right"><?= number_format($f['amount'], 2) ?></td>
+                </tr>
+                <?php endforeach; ?>
+                <?php else: ?>
+                <tr>
+                    <td colspan="3" align="center">No fees found</td>
+                </tr>
+                <?php endif; ?>
+
+                <tr>
+                    <td colspan="2" align="right"><b>Discount</b></td>
+                    <td align="right"><?= number_format($discount ?? 0, 2) ?></td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" align="right"><b>Total Paid</b></td>
+                    <td align="right">
+                        <b><?= number_format($totalAmount ?? 0, 2) ?></b>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="footer">
+                <b>Payment Mode:</b> Cash / Mobile / Bank<br>
+                <b>Received By:</b> <?= esc($receiver['name'] ?? 'N/A') ?>
+            </div>
+
+            <div class="sign">
+                <span>Office Signature</span>
+                <span>Student Signature</span>
+            </div>
+
+            <div class="note">
+                All paid amounts are non-refundable.
+            </div>
+
         </div>
 
-        <div class="header">
-            <div class="school-name">YOUR SCHOOL NAME</div>
-            <div class="school-sub">Address: __________ | Phone: __________</div>
-            <div class="school-sub"><b>Payment Receipt</b></div>
-        </div>
+        <?php if ($copy === 0): ?>
+        <div class="divider"></div>
+        <?php endif; ?>
 
-        <div class="hr"></div>
-
-        <div class="info">
-            <b>Date:</b> <?= esc($date ?? date('Y-m-d')) ?>
-            &nbsp;&nbsp;
-            <b>Receipt No:</b> ___________
-        </div>
-
-        <div class="hr"></div>
-
-        <div class="info">
-            <b>Student Name:</b> <?= esc($student['student_name'] ?? 'N/A') ?><br>
-            <b>Student ID:</b> <?= esc($student['id'] ?? '') ?><br>
-            <b>Class:</b> <?= esc($student['class'] ?? '') ?><br>
-            <b>Session:</b> <?= esc($student['session'] ?? '') ?>
-        </div>
-
-        <div class="hr"></div>
-
-        <table>
-            <tr>
-                <th width="7%">SL</th>
-                <th>Fee Category</th>
-                <th width="22%">Amount (৳)</th>
-            </tr>
-
-            <?php if (!empty($fees)): ?>
-            <?php foreach ($fees as $i => $f): ?>
-            <tr>
-                <td align="center"><?= $i + 1 ?></td>
-                <td>
-                    <?= esc($f['title']) ?>
-                    <?= !empty($f['month']) ? ' (' . esc($f['month']) . ')' : '' ?>
-                </td>
-                <td align="right"><?= number_format($f['amount'], 2) ?></td>
-            </tr>
-            <?php endforeach; ?>
-            <?php else: ?>
-            <tr>
-                <td colspan="3" align="center">No fees found</td>
-            </tr>
-            <?php endif; ?>
-
-            <tr>
-                <td colspan="2" align="right"><b>Discount</b></td>
-                <td align="right"><?= number_format($discount ?? 0, 2) ?></td>
-            </tr>
-
-            <tr>
-                <td colspan="2" align="right"><b>Total Paid</b></td>
-                <td align="right"><b><?= number_format($totalAmount ?? 0, 2) ?></b></td>
-            </tr>
-        </table>
-
-        <div class="footer">
-            <b>Payment Mode:</b> Cash / Mobile / Bank<br>
-            <b>Received By:</b> <?= esc($receiver['name'] ?? 'N/A') ?>
-        </div>
-
-        <div class="sign">
-            <span>Office Signature</span>
-            <span>Student Signature</span>
-        </div>
-
-        <div class="note">
-            All paid amounts are non-refundable.
-        </div>
+        <?php endfor; ?>
 
     </div>
-
-    <?php if ($copy === 0): ?>
-    <div class="divider"></div>
-    <?php endif; ?>
-
-    <?php endfor; ?>
-
 </div>
 
 <?= $this->endSection() ?>
