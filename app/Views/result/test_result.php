@@ -100,6 +100,7 @@
 
             <?php if ($id == 0 || $id == 2): ?>
             <td rowspan="2"><?= $final_total ?></td>
+            <td><?= $total_marks_sum ?></td>
             <td rowspan="2"><?= $final_percentage ?>%</td>
             <td rowspan="2"><?= $final_grade ?></td>
             <td rowspan="2"><?= $final_gp ?></td>
