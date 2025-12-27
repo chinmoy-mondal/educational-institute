@@ -2707,6 +2707,7 @@ class Dashboard extends Controller
     //     echo "</pre>";
     //     exit;
     // }
+
     public function studentPayment()
     {
         $this->data['title'] = 'Student Payment';
@@ -2719,48 +2720,54 @@ class Dashboard extends Controller
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
+
         $request = $this->request;
 
-        // Single inputs
-        $this->data['student_id']     = $request->getPost('student_id');
-        $this->data['receiver_id']    = $request->getPost('receiver_id');
+        /* ---------- BASIC INPUTS ---------- */
+        $studentId  = $request->getPost('student_id');
+        $receiverId = $request->getPost('receiver_id');
+
         $this->data['discount']       = floatval($request->getPost('discount'));
         $this->data['apply_discount'] = $request->getPost('apply_discount') == 1;
+        $this->data['date']           = date('Y-m-d');
 
-        // Array inputs
-        $feeIds = $request->getPost('fee_id');   // array of IDs
-        $amounts = $request->getPost('amount');  // array of amounts
-        $months = $request->getPost('month');    // array of months
+        $this->data['student'] = $this->studentModel->find($studentId);
 
-        // Combine into a structured array for the view
+        $this->data['receiver'] = $this->userModel->find($receiverId);
+
+        /* ---------- FEES ---------- */
+        $feeIds  = $request->getPost('fee_id');
+        $amounts = $request->getPost('amount');
+        $months  = $request->getPost('month');
+
         $fees = [];
         $totalAmount = 0;
+
         if (!empty($feeIds)) {
             foreach ($feeIds as $i => $id) {
                 $amount = floatval($amounts[$i] ?? 0);
+
                 $fees[] = [
-                    'title' => 'Fee #' . $id,       // you can replace with actual fee title from DB
-                    'month' => $months[$i] ?? '',
+                    'title'  => 'Fee #' . $id, // replace with DB title later
+                    'month'  => $months[$i] ?? '',
                     'amount' => $amount
                 ];
+
                 $totalAmount += $amount;
             }
         }
 
-        // Apply discount if needed
+        /* ---------- DISCOUNT ---------- */
         if ($this->data['apply_discount']) {
             $totalAmount -= $this->data['discount'];
         }
 
-        $this->data['fees'] = $fees;
+        $this->data['fees']        = $fees;
         $this->data['totalAmount'] = $totalAmount;
 
-        // Optionally, fetch student details from DB
-        // $this->data['student'] = $this->studentModel->find($this->data['student_id']);
-
-        // Pass to view
         return view('dashboard/payment_receipt', $this->data);
     }
+    
     public function studentPaymentHistory($studentId)
     {
 
