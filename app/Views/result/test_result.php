@@ -53,10 +53,38 @@
             <th>T</th>
         </tr>
 
-        <?php foreach ($marksheet as $sl => $row): ?>
+        <?php
+        $marksheetNumeric = array_values($marksheet); // reindex array
+        $combinedIndexes = [
+            [0, 1], // Bangla 1st + 2nd
+            [2, 3], // English 1st + 2nd
+            // add more pairs if needed
+        ];
+        ?>
+
+        <?php foreach ($marksheetNumeric as $sl => $row): ?>
         <tr>
-            <td><?= $sl + 1 ?>. <?= esc($row['subject']) ?></td> <!-- Serial number -->
-            <td><?= $row['full_mark'] ?></td>
+            <td><?= esc($row['subject']) ?></td>
+
+            <?php
+                // Check if current index is the first in a combined pair
+                $fullMark = $row['full_mark'];
+                $totalMark = $row['final']['total'];
+
+                foreach ($combinedIndexes as $pair) {
+                    if ($sl === $pair[0]) {
+                        // combine Full Mark and Total
+                        $fullMark = $marksheetNumeric[$pair[0]]['full_mark'] + $marksheetNumeric[$pair[1]]['full_mark'];
+                        $totalMark = $marksheetNumeric[$pair[0]]['final']['total'] + $marksheetNumeric[$pair[1]]['final']['total'];
+                        break;
+                    } elseif ($sl === $pair[1]) {
+                        // skip the second item of the pair to avoid duplicate row
+                        continue 2;
+                    }
+                }
+                ?>
+
+            <td><?= $fullMark ?></td>
 
             <td><?= $row['half']['written'] ?? 0 ?></td>
             <td><?= $row['half']['mcq'] ?? 0 ?></td>
@@ -75,8 +103,8 @@
             <td><?= $row['average']['practical'] ?></td>
             <td><?= $row['average']['total'] ?></td>
 
-            <td><?= $row['final']['total'] ?></td>
-            <td><?= $row['final']['percentage'] ?>%</td>
+            <td><?= $totalMark ?></td>
+            <td><?= round(($totalMark / $fullMark) * 100, 2) ?>%</td>
             <td></td>
             <td></td>
         </tr>
