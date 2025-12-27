@@ -97,16 +97,28 @@ th {
     margin: 8mm 0;
 }
 
-/* ✅ FIX PRINT LEFT & RIGHT MARGIN (AdminLTE padding removed) */
+/* ✅ PRINT VIEW FIX */
 @media print {
+
+    /* Remove AdminLTE padding */
     .container-fluid {
-        padding-left: 0 !important;
-        padding-right: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Make receipt full width with 10px margin */
+    .receipt {
+        width: calc(100% - 20px) !important;
+        margin: 0 10px !important;
+    }
+
+    .divider {
+        width: calc(100% - 20px);
+        margin: 8mm 10px;
     }
 }
 </style>
 
-<!-- ✅ AdminLTE spacing (screen only) -->
+<!-- AdminLTE spacing (screen only) -->
 <div class="container-fluid px-4 py-3">
 
     <div class="page">
