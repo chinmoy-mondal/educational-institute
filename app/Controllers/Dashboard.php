@@ -1664,27 +1664,76 @@ class Dashboard extends Controller
             $marksheet[$sid]['annual'] = $a;
         }
 
-        // ---------------- AVERAGE + FINAL WITH PAIR SUM ----------------
-        $marksheetNumeric = array_values($marksheet); // reindex numerically
+        // ---------------- SORT BY ASSIGNED ORDER ----------------
+        $marksheetNumeric = [];
+        foreach ($orderedSubjects as $sid) {
+            if (isset($marksheet[$sid])) {
+                $marksheetNumeric[] = $marksheet[$sid];
+            }
+        }
 
-        // Define which serials to combine (0+1, 2+3, ...)
+        // ---------------- CALCULATE AVERAGE + FINAL TOTALS ----------------
         $combinePairs = [
             [0, 1], // 1st + 2nd
             [2, 3]  // 3rd + 4th
         ];
 
-        // Calculate combined totals for pairs
         foreach ($combinePairs as $pair) {
-            $totalW = 0;
-            $totalM = 0;
-            $totalP = 0;
-            $totalSum = 0;
-            $fullMarkSum = 0;
+            $totalW = $totalM = $totalP = $totalSum = $fullMarkSum = 0;
 
             foreach ($pair as $i) {
                 if (!isset($marksheetNumeric[$i])) continue;
 
                 $row = $marksheetNumeric[$i];
+                $h = $row['half'] ?? [];
+                $a = $row['annual'] ?? [];
+
+                $hW = $h['written'] ?? 0;
+                $hM = $h['mcq'] ?? 0;
+                $hP = $h['practical'] ?? 0;
+
+                $aW = $a['written'] ?? 0;
+                $aM = $a['mcq'] ?? 0;
+                $aP = $a['practical'] ?? 0;
+
+                $avgW = round(($hW + $aW) / 2, 2);
+                $avgM = round(($hM + $aM) / 2, 2);
+                $avgP = round(($hP + $aP) / 2, 2);
+                $avgTotal = round((($hW + $hM + $hP) + ($aW + $aM + $aP)) / 2, 2);
+
+                // Store average
+                $marksheetNumeric[$i]['average'] = [
+                    'written'   => $avgW,
+                    'mcq'       => $avgM,
+                    'practical' => $avgP,
+                    'total'     => $avgTotal
+                ];
+
+                // Add to pair totals
+                $totalW += $avgW;
+                $totalM += $avgM;
+                $totalP += $avgP;
+                $totalSum += $avgTotal;
+                $fullMarkSum += $row['full_mark'];
+            }
+
+            // Assign final total to each row in the pair
+            foreach ($pair as $i) {
+                if (!isset($marksheetNumeric[$i])) continue;
+
+                $marksheetNumeric[$i]['final'] = [
+                    'total_written'   => $totalW,
+                    'total_mcq'       => $totalM,
+                    'total_practical' => $totalP,
+                    'total'           => $totalSum,
+                    'percentage'      => $fullMarkSum > 0 ? round(($totalSum / $fullMarkSum) * 100, 2) : 0
+                ];
+            }
+        }
+
+        // Calculate final for remaining subjects not in any pair
+        foreach ($marksheetNumeric as $i => &$row) {
+            if (!isset($row['final'])) {
                 $h = $row['half'] ?? [];
                 $a = $row['annual'] ?? [];
 
@@ -1708,73 +1757,20 @@ class Dashboard extends Controller
                     'total'     => $avgTotal
                 ];
 
-                $totalW += $avgW;
-                $totalM += $avgM;
-                $totalP += $avgP;
-                $totalSum += $avgTotal;
-                $fullMarkSum += $row['full_mark'];
-            }
-
-            // Assign the same total to both rows in the pair
-            foreach ($pair as $i) {
-                if (!isset($marksheetNumeric[$i])) continue;
                 $marksheetNumeric[$i]['final'] = [
-                    'total_written'   => $totalW,
-                    'total_mcq'       => $totalM,
-                    'total_practical' => $totalP,
-                    'total'           => $totalSum,
-                    'percentage'      => round(($totalSum / $fullMarkSum) * 100, 2)
-                ];
-            }
-        }
-
-        // Subjects not in any pair, calculate normally
-        foreach ($marksheetNumeric as $sl => &$row) {
-            if (!isset($row['final'])) {
-                $h = $row['half'] ?? [];
-                $a = $row['annual'] ?? [];
-
-                $hW = $h['written'] ?? 0;
-                $hM = $h['mcq'] ?? 0;
-                $hP = $h['practical'] ?? 0;
-
-                $aW = $a['written'] ?? 0;
-                $aM = $a['mcq'] ?? 0;
-                $aP = $a['practical'] ?? 0;
-
-                $avgW = round(($hW + $aW) / 2, 2);
-                $avgM = round(($hM + $aM) / 2, 2);
-                $avgP = round(($hP + $aP) / 2, 2);
-                $avgTotal = round((($hW + $hM + $hP) + ($aW + $aM + $aP)) / 2, 2);
-
-                $row['average'] = [
-                    'written'   => $avgW,
-                    'mcq'       => $avgM,
-                    'practical' => $avgP,
-                    'total'     => $avgTotal
-                ];
-
-                $row['final'] = [
                     'total_written'   => $avgW,
                     'total_mcq'       => $avgM,
                     'total_practical' => $avgP,
                     'total'           => $avgTotal,
-                    'percentage'      => round(($avgTotal / $row['full_mark']) * 100, 2)
+                    'percentage'      => $row['full_mark'] > 0 ? round(($avgTotal / $row['full_mark']) * 100, 2) : 0
                 ];
             }
         }
         unset($row);
 
-        // ---------------- SORT ----------------
-        $sorted = [];
-        foreach ($orderedSubjects as $sid) {
-            if (isset($marksheet[$sid])) {
-                $sorted[$sid] = $marksheet[$sid];
-            }
-        }
-
+        // ---------------- RETURN VIEW ----------------
         return view('result/test_result', [
-            'marksheet' => array_values($marksheetNumeric)
+            'marksheet' => $marksheetNumeric
         ]);
     }
 

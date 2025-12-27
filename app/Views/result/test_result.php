@@ -52,7 +52,7 @@
             <th>T</th>
         </tr>
 
-        <?php foreach ($marksheet as $sl => $row): ?>
+        <?php foreach ($marksheet as $row): ?>
         <tr>
             <td><?= esc($row['subject']) ?></td>
             <td><?= $row['full_mark'] ?></td>
@@ -69,21 +69,12 @@
             <td><?= ($row['annual']['written'] ?? 0) + ($row['annual']['mcq'] ?? 0) + ($row['annual']['practical'] ?? 0) ?>
             </td>
 
-            <?php if (isset($combinedTotals[$sl])): ?>
-            <td rowspan="2"><?= $combinedTotals[$sl]['total'] ?></td>
-            <td rowspan="2"><?= $combinedTotals[$sl]['percentage'] ?>%</td>
-            <?php elseif (in_array($sl, [1, 3])): ?>
-            <!-- skip, already rowspan for previous row -->
-            <?php else: ?>
-            <td><?= $row['final']['total'] ?></td>
-            <td><?= $row['final']['percentage'] ?>%</td>
-            <?php endif; ?>
-
+            <td><?= $row['final']['total'] ?? 0 ?></td>
+            <td><?= $row['final']['percentage'] ?? 0 ?>%</td>
             <td></td>
             <td></td>
         </tr>
         <?php endforeach; ?>
-
     </table>
 
 </body>
