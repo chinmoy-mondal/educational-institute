@@ -1595,40 +1595,79 @@ class Dashboard extends Controller
         $assign_sub_order = $student['assign_sub'] ?? ''; // e.g., "1,3,2,5"
         $assign_sub_order = array_filter(explode(',', $assign_sub_order));
 
-        // Fetch Half-Yearly
+        // Fetch Half-Yearly results
         $half = $this->resultModel
-            ->select('results.*, subjects.subject')
+            ->select('results.*, subjects.subject, subjects.full_mark')
             ->join('subjects', 'subjects.id = results.subject_id')
             ->where('results.student_id', $studentId)
             ->where('results.year', $year)
             ->where('results.exam', 'Half-Yearly')
             ->findAll();
 
-        // Fetch Annual
+        // Fetch Annual results
         $annual = $this->resultModel
-            ->select('results.*, subjects.subject')
+            ->select('results.*, subjects.subject, subjects.full_mark')
             ->join('subjects', 'subjects.id = results.subject_id')
             ->where('results.student_id', $studentId)
             ->where('results.year', $year)
             ->where('results.exam', 'Annual Exam')
             ->findAll();
 
-        // Merge by subject_id
+        // Merge Half-Yearly into marksheet
         $marksheet = [];
         foreach ($half as $h) {
             $sid = $h['subject_id'];
-            $marksheet[$sid]['subject'] = $h['subject'];
-            $marksheet[$sid]['half'] = $h;
-            $marksheet[$sid]['annual'] = null;
+            $marksheet[$sid] = [
+                'subject'   => $h['subject'],
+                'full_mark' => $h['full_mark'],
+                'half'      => $h,
+                'annual'    => null,
+                'average'   => null // will calculate later
+            ];
         }
 
+        // Merge Annual into marksheet
         foreach ($annual as $a) {
             $sid = $a['subject_id'];
+
             if (!isset($marksheet[$sid])) {
-                $marksheet[$sid]['subject'] = $a['subject'];
-                $marksheet[$sid]['half'] = null;
+                // Subject exists only in Annual
+                $marksheet[$sid] = [
+                    'subject'   => $a['subject'],
+                    'full_mark' => $a['full_mark'],
+                    'half'      => null,
+                    'annual'    => $a,
+                    'average'   => null
+                ];
+            } else {
+                // Subject exists from Half-Yearly, add Annual
+                $marksheet[$sid]['annual'] = $a;
+                if (!isset($marksheet[$sid]['full_mark']) || !$marksheet[$sid]['full_mark']) {
+                    $marksheet[$sid]['full_mark'] = $a['full_mark'];
+                }
             }
-            $marksheet[$sid]['annual'] = $a;
+        }
+
+        // Calculate subject-wise average and add to array
+        foreach ($marksheet as $sid => $row) {
+            $h = $row['half'];
+            $a = $row['annual'];
+
+            $hWri = $h['written'] ?? 0;
+            $hMCQ = $h['mcq'] ?? 0;
+            $hPrac = $h['practical'] ?? 0;
+
+            $aWri = $a['written'] ?? 0;
+            $aMCQ = $a['mcq'] ?? 0;
+            $aPrac = $a['practical'] ?? 0;
+
+            // Subject-wise average
+            $marksheet[$sid]['average'] = [
+                'written'   => round(($hWri + $aWri) / 2, 2),
+                'mcq'       => round(($hMCQ + $aMCQ) / 2, 2),
+                'practical' => round(($hPrac + $aPrac) / 2, 2),
+                'total'     => round(($hWri + $hMCQ + $hPrac + $aWri + $aMCQ + $aPrac) / 2, 2)
+            ];
         }
 
         // Sort marksheet according to assign_sub_order
@@ -1658,22 +1697,22 @@ class Dashboard extends Controller
         foreach ($sorted_marksheet as $row) {
             $h = $row['half'];
             $a = $row['annual'];
+            $avg = $row['average'];
+            $fullMark = $row['full_mark'] ?? 0;
 
+            // Half-Yearly obtained
             $hWri = $h['written'] ?? 0;
             $hMCQ = $h['mcq'] ?? 0;
             $hPrac = $h['practical'] ?? 0;
-            $hTotal = $hWri + $hMCQ + $hPrac;
 
+            // Annual obtained
             $aWri = $a['written'] ?? 0;
             $aMCQ = $a['mcq'] ?? 0;
             $aPrac = $a['practical'] ?? 0;
-            $aTotal = $aWri + $aMCQ + $aPrac;
 
-            // Subject-wise average
-            $avgWri = round(($hWri + $aWri) / 2, 2);
-            $avgMCQ = round(($hMCQ + $aMCQ) / 2, 2);
-            $avgPrac = round(($hPrac + $aPrac) / 2, 2);
-            $avgTotal = round(($hTotal + $aTotal) / 2, 2);
+            // Total for Half-Yearly & Annual = full_mark
+            $hTotal = $fullMark;
+            $aTotal = $fullMark;
 
             echo "<tr>";
             echo "<td>{$row['subject']}</td>";
@@ -1682,7 +1721,7 @@ class Dashboard extends Controller
             // Annual
             echo "<td>$aWri</td><td>$aMCQ</td><td>$aPrac</td><td>$aTotal</td>";
             // Average
-            echo "<td>$avgWri</td><td>$avgMCQ</td><td>$avgPrac</td><td>$avgTotal</td>";
+            echo "<td>{$avg['written']}</td><td>{$avg['mcq']}</td><td>{$avg['practical']}</td><td>{$avg['total']}</td>";
             echo "</tr>";
         }
 
