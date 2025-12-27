@@ -2732,23 +2732,32 @@ class Dashboard extends Controller
         $this->data['date']           = date('Y-m-d');
 
         $this->data['student'] = $this->studentModel->find($studentId);
-
         $this->data['receiver'] = $this->userModel->find($receiverId);
 
         /* ---------- FEES ---------- */
-        $feeIds  = $request->getPost('fee_id');
-        $amounts = $request->getPost('amount');
-        $months  = $request->getPost('month');
+        $feeIds  = $request->getPost('fee_id');   // array of fee IDs
+        $amounts = $request->getPost('amount');   // array of amounts
+        $months  = $request->getPost('month');    // array of months
 
         $fees = [];
         $totalAmount = 0;
 
         if (!empty($feeIds)) {
+
             foreach ($feeIds as $i => $id) {
                 $amount = floatval($amounts[$i] ?? 0);
 
+                // Skip fees with zero amount
+                if ($amount <= 0) {
+                    continue;
+                }
+
+                // Get the fee title from DB
+                $feeData = $this->feesModel->find($id);
+                $title = $feeData ? $feeData['title'] : 'Fee #' . $id;
+
                 $fees[] = [
-                    'title'  => 'Fee #' . $id, // replace with DB title later
+                    'title'  => $title,
                     'month'  => $months[$i] ?? '',
                     'amount' => $amount
                 ];
