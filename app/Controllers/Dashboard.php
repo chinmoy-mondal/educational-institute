@@ -2696,20 +2696,23 @@ class Dashboard extends Controller
         /* ---------- BASIC INPUTS ---------- */
         $studentId  = $request->getPost('student_id');
         $receiverId = $request->getPost('receiver_id');
+        $discountAmount = floatval($request->getPost('discount'));
+        $applyDiscount = $request->getPost('apply_discount') == 1;
 
-        $this->data['discount']       = floatval($request->getPost('discount'));
-        $this->data['apply_discount'] = $request->getPost('apply_discount') == 1;
-        $this->data['date']           = date('Y-m-d');
+        $this->data['discount'] = $discountAmount;
+        $this->data['date'] = date('Y-m-d');
 
-        $this->data['student'] = $this->studentModel->find($studentId);
-        $this->data['receiver'] = $this->userModel->find($receiverId);
+        $student = $this->studentModel->find($studentId);
+        $receiver = $this->userModel->find($receiverId);
+
+        $this->data['student'] = $student;
+        $this->data['receiver'] = $receiver;
 
         /* ---------- FEES ---------- */
-        $feeIds  = $request->getPost('fee_id');   // array of fee IDs
-        $amounts = $request->getPost('amount');   // array of amounts
-        $months  = $request->getPost('month');    // array of months
+        $feeIds  = $request->getPost('fee_id');
+        $amounts = $request->getPost('amount');
+        $months  = $request->getPost('month');
 
-        // Map month numbers to names
         $monthNames = [
             1 => 'January',
             2 => 'February',
@@ -2746,30 +2749,46 @@ class Dashboard extends Controller
                 ];
 
                 $totalAmount += $amount;
+
+                // Save each fee as a transaction
+                $this->transactionModel->insert([
+                    'transaction_id' => uniqid('TX-'),
+                    'sender_id'      => $studentId,
+                    'sender_name'    => $student['student_name'],
+                    'receiver_id'    => $receiverId,
+                    'receiver_name'  => $receiver['name'] ?? '',
+                    'amount'         => $amount,
+                    'discount'       => 0,
+                    'month'          => $monthName,
+                    'purpose'        => $title,
+                    'description'    => 'Payment for ' . $title,
+                    'status'         => 'paid',
+                    'activity'       => 'fee_payment'
+                ]);
             }
         }
 
-        /* ---------- DISCOUNT ---------- */
-        // if ($this->data['apply_discount']) {
-        //     $totalAmount -= $this->data['discount'];
-        // }
-        $discount = floatval($request->getPost('discount'));
-
-        // Apply discount if it’s greater than 0
-        if ($discount > 0) {
-            $totalAmount -= $discount;
-            $this->data['discount'] = $discount; // store it for view
+        /* ---------- APPLY DISCOUNT ---------- */
+        if ($applyDiscount && $discountAmount > 0) {
+            // Save discount to student_discount table only
+            $this->studentDiscountModel->insert([
+                'student_id' => $studentId,
+                'amount'     => $discountAmount
+            ]);
+            // Discount does not reduce the totalAmount; it is separate
         }
 
-        $this->data['fees']        = $fees;
+        $this->data['fees'] = $fees;
         $this->data['totalAmount'] = $totalAmount;
 
         /* ---------- SEND SMS ---------- */
-        //$studentPhone = $this->data['student']['phone'] ?? '';
-        $studentPhone = '01920232269'; // include country code
+        $studentPhone = $student['phone'] ?? '';
         if ($studentPhone) {
-            $message = "Dear {$this->data['student']['student_name']}, your payment of Tk {$totalAmount} has been received. Thank you!";
-            $apiKey = "5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8"; // replace with actual API key
+            // ensure country code (Bangladesh 880)
+            $studentPhone = '880' . ltrim($studentPhone, '0');
+
+            $message = "Dear {$student['student_name']}, your payment of Tk {$totalAmount} has been received. Thank you!";
+            $apiKey = "5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8"; // your API key
             $callerID = "1234";
 
             $smsUrl = "https://bulksmsdhaka.com/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
