@@ -2750,14 +2750,22 @@ class Dashboard extends Controller
         }
 
         /* ---------- DISCOUNT ---------- */
-        if ($this->data['apply_discount']) {
-            $totalAmount -= $this->data['discount'];
+        // if ($this->data['apply_discount']) {
+        //     $totalAmount -= $this->data['discount'];
+        // }
+        $discount = floatval($request->getPost('discount'));
+
+        // Apply discount if it’s greater than 0
+        if ($discount > 0) {
+            $totalAmount -= $discount;
+            $this->data['discount'] = $discount; // store it for view
         }
 
         $this->data['fees']        = $fees;
         $this->data['totalAmount'] = $totalAmount;
 
         /* ---------- SEND SMS ---------- */
+        //$studentPhone = $this->data['student']['phone'] ?? '';
         $studentPhone = '01920232269'; // include country code
         if ($studentPhone) {
             $message = "Dear {$this->data['student']['student_name']}, your payment of Tk {$totalAmount} has been received. Thank you!";
