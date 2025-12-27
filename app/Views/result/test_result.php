@@ -55,17 +55,28 @@
 
         <?php
         $marksheetNumeric = array_values($marksheet); // reindex array
-        $combinedIndexes = [
-            [0, 1], // Bangla 1st + 2nd
-            [2, 3], // English 1st + 2nd
-            // add more pairs if needed
-        ];
-        ?>
 
-        <?php
-        $marksheetNumeric = array_values($marksheet); // reindex array
-        $combineTotalFor = [0, 1]; // combine for first 2 serials (Bangla 1st + 2nd)
-        $combinedTotal = $marksheetNumeric[0]['final']['total'] + $marksheetNumeric[1]['final']['total'];
+        // define which serials to combine
+        $combinePairs = [
+            [0, 1], // 1st + 2nd
+            [2, 3]  // 3rd + 4th
+        ];
+
+        // calculate combined totals for pairs
+        $combinedTotals = [];
+        foreach ($combinePairs as $pair) {
+            $total = 0;
+            $fullMarkSum = 0;
+            foreach ($pair as $i) {
+                $total += $marksheetNumeric[$i]['final']['total'];
+                $fullMarkSum += $marksheetNumeric[$i]['full_mark'];
+            }
+            $combinedTotals[$pair[0]] = [
+                'total' => $total,
+                'full_mark' => $fullMarkSum,
+                'percentage' => round(($total / $fullMarkSum) * 100, 2)
+            ];
+        }
         ?>
 
         <?php foreach ($marksheetNumeric as $sl => $row): ?>
@@ -90,13 +101,11 @@
             <td><?= $row['average']['practical'] ?></td>
             <td><?= $row['average']['total'] ?></td>
 
-            <?php if ($sl === 0): ?>
-            <td rowspan="2"><?= $combinedTotal ?></td>
-            <td rowspan="2">
-                <?= round(($combinedTotal / ($marksheetNumeric[0]['full_mark'] + $marksheetNumeric[1]['full_mark'])) * 100, 2) ?>%
-            </td>
-            <?php elseif ($sl === 1): ?>
-            <!-- skip, because already rowspan=2 -->
+            <?php if (isset($combinedTotals[$sl])): ?>
+            <td rowspan="2"><?= $combinedTotals[$sl]['total'] ?></td>
+            <td rowspan="2"><?= $combinedTotals[$sl]['percentage'] ?>%</td>
+            <?php elseif (in_array($sl, [1, 3])): ?>
+            <!-- skip, already rowspan for previous row -->
             <?php else: ?>
             <td><?= $row['final']['total'] ?></td>
             <td><?= $row['final']['percentage'] ?>%</td>
