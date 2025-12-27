@@ -70,11 +70,11 @@
             <td><?= $hWri ?></td>
             <td><?= $hMCQ ?></td>
             <td><?= $hPrac ?></td>
-            <td><?= $hTotal ?></td>
+            <td><?= $hWri + $hMCQ + $hPrac ?></td>
             <td><?= $aWri ?></td>
             <td><?= $aMCQ ?></td>
             <td><?= $aPrac ?></td>
-            <td><?= $aTotal ?></td>
+            <td><?= $aWri + $aMCQ + $aPrac ?></td>
             <td><?= $avg['written'] ?></td>
             <td><?= $avg['mcq'] ?></td>
             <td><?= $avg['practical'] ?></td>
