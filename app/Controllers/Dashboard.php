@@ -1741,129 +1741,61 @@ class Dashboard extends Controller
         // ---------------- AVERAGE + FINAL ----------------
         $marksheetNumeric = array_values($marksheet); // reindex numerically
 
-        // Define which serials to combine (0+1, 2+3, ...)
-        $combinePairs = [
-            [0, 1],
-            [2, 3]
-        ];
-
-        foreach ($combinePairs as $pair) {
-            $totalW = $totalM = $totalP = $totalSum = $fullMarkSum = 0;
-
-            foreach ($pair as $i) {
-                if (!isset($marksheetNumeric[$i])) continue;
-
-                $row = $marksheetNumeric[$i];
-                $h = $row['half'] ?? [];
-                $a = $row['annual'] ?? [];
-
-                $hW = $h['written'] ?? 0;
-                $hM = $h['mcq'] ?? 0;
-                $hP = $h['practical'] ?? 0;
-
-                $aW = $a['written'] ?? 0;
-                $aM = $a['mcq'] ?? 0;
-                $aP = $a['practical'] ?? 0;
-
-                $avgW = round(($hW + $aW) / 2, 2);
-                $avgM = round(($hM + $aM) / 2, 2);
-                $avgP = round(($hP + $aP) / 2, 2);
-                $avgTotal = round((($hW + $hM + $hP) + ($aW + $aM + $aP)) / 2, 2);
-
-                $marksheetNumeric[$i]['average'] = [
-                    'written'   => $avgW,
-                    'mcq'       => $avgM,
-                    'practical' => $avgP,
-                    'total'     => $avgTotal
-                ];
-
-                $totalW += $avgW;
-                $totalM += $avgM;
-                $totalP += $avgP;
-                $totalSum += $avgTotal;
-                $fullMarkSum += $row['full_mark'];
-            }
-
-            // Assign final array with grade & grade point
-            foreach ($pair as $i) {
-                if (!isset($marksheetNumeric[$i])) continue;
-
-                $row = $marksheetNumeric[$i];
-                $gradeInfo = $this->resultManipulation(
-                    $student['class'],
-                    $student['section'],
-                    strtolower($row['subject']),
-                    $totalW,
-                    $totalM,
-                    $totalP,
-                    $totalSum
-                );
-
-                $marksheetNumeric[$i]['final'] = [
-                    'total_written'   => $totalW,
-                    'total_mcq'       => $totalM,
-                    'total_practical' => $totalP,
-                    'total'           => $totalSum,
-                    'full_mark'       => $fullMarkSum,
-                    'grade'           => $gradeInfo['grade'],
-                    'grade_point'     => $gradeInfo['gp'],
-                    'percentage'      => $fullMarkSum > 0 ? round(($totalSum / $fullMarkSum) * 100, 2) : 0
-                ];
-            }
-        }
-
-        // Subjects not in any pair
         foreach ($marksheetNumeric as $i => &$row) {
-            if (!isset($row['final'])) {
-                $h = $row['half'] ?? [];
-                $a = $row['annual'] ?? [];
+            $h = $row['half'] ?? [];
+            $a = $row['annual'] ?? [];
 
-                $avgW = round((($h['written'] ?? 0) + ($a['written'] ?? 0)) / 2, 2);
-                $avgM = round((($h['mcq'] ?? 0) + ($a['mcq'] ?? 0)) / 2, 2);
-                $avgP = round((($h['practical'] ?? 0) + ($a['practical'] ?? 0)) / 2, 2);
-                $avgTotal = round($avgW + $avgM + $avgP, 2);
+            $avgW = round((($h['written'] ?? 0) + ($a['written'] ?? 0)) / 2, 2);
+            $avgM = round((($h['mcq'] ?? 0) + ($a['mcq'] ?? 0)) / 2, 2);
+            $avgP = round((($h['practical'] ?? 0) + ($a['practical'] ?? 0)) / 2, 2);
+            $avgTotal = round($avgW + $avgM + $avgP, 2);
 
-                $gradeInfo = $this->resultManipulation(
-                    $student['class'],
-                    $student['section'],
-                    strtolower($row['subject']),
-                    $avgW,
-                    $avgM,
-                    $avgP,
-                    $avgTotal
-                );
+            $gradeInfo = $this->resultManipulation(
+                $student['class'],
+                $student['section'],
+                strtolower($row['subject']),
+                $avgW,
+                $avgM,
+                $avgP,
+                $avgTotal
+            );
 
-                $row['average'] = [
-                    'written'   => $avgW,
-                    'mcq'       => $avgM,
-                    'practical' => $avgP,
-                    'total'     => $avgTotal
-                ];
+            $row['average'] = [
+                'written'   => $avgW,
+                'mcq'       => $avgM,
+                'practical' => $avgP,
+                'total'     => $avgTotal
+            ];
 
-                $row['final'] = [
-                    'total_written'   => $avgW,
-                    'total_mcq'       => $avgM,
-                    'total_practical' => $avgP,
-                    'total'           => $avgTotal,
-                    'full_mark'       => $row['full_mark'],
-                    'grade'           => $gradeInfo['grade'],
-                    'grade_point'     => $gradeInfo['gp'],
-                    'percentage'      => $row['full_mark'] > 0 ? round(($avgTotal / $row['full_mark']) * 100, 2) : 0
-                ];
-            }
+            $row['final'] = [
+                'total_written'   => $avgW,
+                'total_mcq'       => $avgM,
+                'total_practical' => $avgP,
+                'total'           => $avgTotal,
+                'full_mark'       => $row['full_mark'],
+                'grade'           => $gradeInfo['grade'],
+                'grade_point'     => $gradeInfo['gp'],
+                'percentage'      => $row['full_mark'] > 0 ? round(($avgTotal / $row['full_mark']) * 100, 2) : 0
+            ];
         }
         unset($row);
 
-        // ---------------- SORT ----------------
+        // ---------------- SORT NUMERIC ARRAY ACCORDING TO assign_sub ----------------
         $marksheetSorted = [];
         foreach ($orderedSubjects as $sid) {
-            if (isset($marksheet[$sid])) {
-                $marksheetSorted[] = $marksheet[$sid]; // append in order
+            foreach ($marksheetNumeric as $row) {
+                if (isset($row['half']['subject_id']) && $row['half']['subject_id'] == $sid) {
+                    $marksheetSorted[] = $row;
+                    break;
+                } elseif (isset($row['annual']['subject_id']) && $row['annual']['subject_id'] == $sid) {
+                    $marksheetSorted[] = $row;
+                    break;
+                }
             }
         }
 
         return view('result/test_result', [
-            'marksheet' => array_values($marksheetSorted)
+            'marksheet' => $marksheetSorted
         ]);
     }
 
