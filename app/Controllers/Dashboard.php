@@ -1855,15 +1855,15 @@ class Dashboard extends Controller
         unset($row);
 
         // ---------------- SORT ----------------
-        $sorted = [];
+        $marksheetSorted = [];
         foreach ($orderedSubjects as $sid) {
             if (isset($marksheet[$sid])) {
-                $sorted[$sid] = $marksheet[$sid];
+                $marksheetSorted[] = $marksheet[$sid]; // append in order
             }
         }
 
         return view('result/test_result', [
-            'marksheet' => array_values($marksheetNumeric)
+            'marksheet' => array_values($marksheetSorted)
         ]);
     }
 
