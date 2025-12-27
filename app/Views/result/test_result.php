@@ -86,7 +86,7 @@
             <td><?= $annual_prac ?></td>
             <td><?= $annual_total ?></td>
 
-            <!-- Final -->
+            <!-- Final: rowspan for first pair only -->
             <?php
                 $final = $row['final'] ?? [];
                 $final_total = $final['total'] ?? 0;
@@ -94,10 +94,20 @@
                 $final_grade = $final['grade'] ?? '-';
                 $final_gp = $final['grade_point'] ?? '-';
                 ?>
+
+            <?php if ($id == 0): ?>
+            <!-- Merge first row and second row -->
+            <td rowspan="2"><?= $final_total ?></td>
+            <td rowspan="2"><?= $final_percentage ?>%</td>
+            <td rowspan="2"><?= $final_grade ?></td>
+            <td rowspan="2"><?= $final_gp ?></td>
+            <?php elseif ($id > 1): ?>
+            <!-- Normal td for remaining rows -->
             <td><?= $final_total ?></td>
             <td><?= $final_percentage ?>%</td>
             <td><?= $final_grade ?></td>
             <td><?= $final_gp ?></td>
+            <?php endif; ?>
         </tr>
         <?php endforeach; ?>
     </table>
