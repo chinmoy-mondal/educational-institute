@@ -1,88 +1,58 @@
-<!DOCTYPE html>
-<html>
+<table border="1" cellspacing="0" cellpadding="5">
+    <!-- First header row -->
+    <tr>
+        <th rowspan="2">Subject</th>
+        <th rowspan="2">Full Mark</th>
+        <th colspan="4">Half Yearly</th>
+        <th colspan="4">Annual</th>
+        <th rowspan="2">Total</th>
+        <th rowspan="2">%</th>
+        <th rowspan="2">Grade</th>
+        <th rowspan="2">GP</th>
+    </tr>
 
-<head>
-    <title>Marksheet</title>
-    <style>
-    table {
-        border-collapse: collapse;
-        width: 100%;
-    }
+    <!-- Second header row -->
+    <tr>
+        <th>W</th>
+        <th>M</th>
+        <th>P</th>
+        <th>T</th>
+        <th>W</th>
+        <th>M</th>
+        <th>P</th>
+        <th>T</th>
+    </tr>
 
-    th,
-    td {
-        border: 1px solid #000;
-        padding: 6px;
-        text-align: center;
-    }
+    <?php foreach ($marksheet as $id => $row): ?>
+    <tr>
+        <td><?= $row['subject'] ?></td>
+        <td><?= $row['full_mark'] ?></td>
 
-    th {
-        background: #eee;
-    }
-    </style>
-</head>
+        <!-- Half Yearly -->
+        <td><?= $row['half_written'] ?></td>
+        <td><?= $row['half_mcq'] ?></td>
+        <td><?= $row['half_prac'] ?></td>
+        <td><?= $row['half_total'] ?></td>
 
-<body>
+        <!-- Annual -->
+        <td><?= $row['annual_written'] ?></td>
+        <td><?= $row['annual_mcq'] ?></td>
+        <td><?= $row['annual_prac'] ?></td>
+        <td><?= $row['annual_total'] ?></td>
 
-    <h4 style="text-align:center">Academic Marksheet</h4>
-
-    <?php
-    // Debugging: remove in production
-    // echo '<pre>';
-    // print_r($marksheet);
-    // echo '</pre>';
-    ?>
-
-    <table>
-        <tr>
-            <th rowspan="2">Subject</th>
-            <th rowspan="2">Full Mark</th>
-            <th colspan="4">Half-Yearly</th>
-            <th colspan="4">Annual</th>
-            <th rowspan="2">Total</th>
-            <th rowspan="2">%</th>
-            <th rowspan="2">Grade</th>
-            <th rowspan="2">GP</th>
-        </tr>
-        <tr>
-            <th>W</th>
-            <th>M</th>
-            <th>P</th>
-            <th>T</th>
-            <th>W</th>
-            <th>M</th>
-            <th>P</th>
-            <th>T</th>
-        </tr>
-
-        <?php foreach ($marksheet as $row): ?>
-        <tr>
-            <td><?= esc($row['subject']) ?></td>
-            <td><?= $row['full_mark'] ?></td>
-
-            <!-- Half-Yearly -->
-            <td><?= $row['half']['written'] ?? 0 ?></td>
-            <td><?= $row['half']['mcq'] ?? 0 ?></td>
-            <td><?= $row['half']['practical'] ?? 0 ?></td>
-            <td><?= ($row['half']['written'] ?? 0) + ($row['half']['mcq'] ?? 0) + ($row['half']['practical'] ?? 0) ?>
-            </td>
-
-            <!-- Annual -->
-            <td><?= $row['annual']['written'] ?? 0 ?></td>
-            <td><?= $row['annual']['mcq'] ?? 0 ?></td>
-            <td><?= $row['annual']['practical'] ?? 0 ?></td>
-            <td><?= ($row['annual']['written'] ?? 0) + ($row['annual']['mcq'] ?? 0) + ($row['annual']['practical'] ?? 0) ?>
-            </td>
-
-            <!-- Final -->
-            <td><?= $row['final']['total'] ?? 0 ?></td>
-            <td><?= $row['final']['percentage'] ?? 0 ?>%</td>
-            <td><?= $row['final']['grade'] ?? '-' ?></td>
-            <td><?= $row['final']['grade_point'] ?? '-' ?></td>
-        </tr>
-        <?php endforeach; ?>
-    </table>
-
-</body>
-
-</html>
+        <?php
+            // First 2 pairs: rowspan
+            if ($id < 4 && $id % 2 == 0): ?>
+        <td rowspan="2"><?= $row['total'] ?></td>
+        <td rowspan="2"><?= $row['percentage'] ?>%</td>
+        <td rowspan="2"><?= $row['grade'] ?></td>
+        <td rowspan="2"><?= $row['gp'] ?></td>
+        <?php elseif ($id >= 4): ?>
+        <td><?= $row['total'] ?></td>
+        <td><?= $row['percentage'] ?>%</td>
+        <td><?= $row['grade'] ?></td>
+        <td><?= $row['gp'] ?></td>
+        <?php endif; ?>
+    </tr>
+    <?php endforeach; ?>
+</table>
