@@ -100,12 +100,19 @@ th {
 /* ✅ PRINT VIEW FIX */
 @media print {
 
-    /* Remove AdminLTE padding */
+    /* Remove AdminLTE padding/margin */
     .container-fluid {
         padding: 0 !important;
+        margin: 0 !important;
     }
 
-    /* Make receipt full width with 10px margin */
+    /* Make page full width */
+    .page {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    /* Receipt full width with 10px margin */
     .receipt {
         width: calc(100% - 20px) !important;
         margin: 0 10px !important;
