@@ -62,29 +62,16 @@
         ];
         ?>
 
+        <?php
+        $marksheetNumeric = array_values($marksheet); // reindex array
+        $combineTotalFor = [0, 1]; // combine for first 2 serials (Bangla 1st + 2nd)
+        $combinedTotal = $marksheetNumeric[0]['final']['total'] + $marksheetNumeric[1]['final']['total'];
+        ?>
+
         <?php foreach ($marksheetNumeric as $sl => $row): ?>
         <tr>
             <td><?= esc($row['subject']) ?></td>
-
-            <?php
-                // Check if current index is the first in a combined pair
-                $fullMark = $row['full_mark'];
-                $totalMark = $row['final']['total'];
-
-                foreach ($combinedIndexes as $pair) {
-                    if ($sl === $pair[0]) {
-                        // combine Full Mark and Total
-                        $fullMark = $marksheetNumeric[$pair[0]]['full_mark'] + $marksheetNumeric[$pair[1]]['full_mark'];
-                        $totalMark = $marksheetNumeric[$pair[0]]['final']['total'] + $marksheetNumeric[$pair[1]]['final']['total'];
-                        break;
-                    } elseif ($sl === $pair[1]) {
-                        // skip the second item of the pair to avoid duplicate row
-                        continue 2;
-                    }
-                }
-                ?>
-
-            <td><?= $fullMark ?></td>
+            <td><?= $row['full_mark'] ?></td>
 
             <td><?= $row['half']['written'] ?? 0 ?></td>
             <td><?= $row['half']['mcq'] ?? 0 ?></td>
@@ -103,8 +90,18 @@
             <td><?= $row['average']['practical'] ?></td>
             <td><?= $row['average']['total'] ?></td>
 
-            <td><?= $totalMark ?></td>
-            <td><?= round(($totalMark / $fullMark) * 100, 2) ?>%</td>
+            <?php if ($sl === 0): ?>
+            <td rowspan="2"><?= $combinedTotal ?></td>
+            <td rowspan="2">
+                <?= round(($combinedTotal / ($marksheetNumeric[0]['full_mark'] + $marksheetNumeric[1]['full_mark'])) * 100, 2) ?>%
+            </td>
+            <?php elseif ($sl === 1): ?>
+            <!-- skip, because already rowspan=2 -->
+            <?php else: ?>
+            <td><?= $row['final']['total'] ?></td>
+            <td><?= $row['final']['percentage'] ?>%</td>
+            <?php endif; ?>
+
             <td></td>
             <td></td>
         </tr>
