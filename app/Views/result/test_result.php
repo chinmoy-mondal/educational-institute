@@ -27,10 +27,9 @@
     <h4 style="text-align:center">Academic Marksheet</h4>
 
     <?php
-    // Debugging: remove in production
-    // echo '<pre>';
-    // print_r($marksheet);
-    // echo '</pre>';
+    $total_marks_sum = 0;
+    $total_percentage_sum = 0;
+    $total_rows = count($marksheet);
     ?>
 
     <table>
@@ -93,16 +92,18 @@
                 $final_percentage = $final['percentage'] ?? 0;
                 $final_grade = $final['grade'] ?? '-';
                 $final_gp = $final['grade_point'] ?? '-';
+
+                // accumulate for summary
+                $total_marks_sum += $final_total;
+                $total_percentage_sum += $final_percentage;
                 ?>
 
             <?php if ($id == 0 || $id == 2): ?>
-            <!-- Merge 1st & 2nd row, and 3rd & 4th row -->
             <td rowspan="2"><?= $final_total ?></td>
             <td rowspan="2"><?= $final_percentage ?>%</td>
             <td rowspan="2"><?= $final_grade ?></td>
             <td rowspan="2"><?= $final_gp ?></td>
             <?php elseif ($id > 3): ?>
-            <!-- Normal td for remaining rows -->
             <td><?= $final_total ?></td>
             <td><?= $final_percentage ?>%</td>
             <td><?= $final_grade ?></td>
@@ -110,6 +111,15 @@
             <?php endif; ?>
         </tr>
         <?php endforeach; ?>
+
+        <!-- Summary Row -->
+        <tr style="font-weight:bold; background:#f0f0f0;">
+            <td colspan="10">Total / Average</td>
+            <td><?= $total_marks_sum ?></td>
+            <td><?= round($total_percentage_sum / $total_rows, 2) ?>%</td>
+            <td>-</td> <!-- Optionally you can calculate overall grade -->
+            <td>-</td> <!-- Optionally you can calculate overall GP -->
+        </tr>
     </table>
 
 </body>
