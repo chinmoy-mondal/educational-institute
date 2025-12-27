@@ -1643,6 +1643,8 @@ class Dashboard extends Controller
                 'full_mark'   => $h['full_mark'],
                 'half'        => $h,
                 'annual'      => null,
+                'average'     => null, // placeholder for average
+                'final'       => null,
                 'is_optional' => ($sid == $optionalSub)
             ];
         }
@@ -1654,54 +1656,58 @@ class Dashboard extends Controller
                     'subject'     => $a['subject'],
                     'full_mark'   => $a['full_mark'],
                     'half'        => null,
+                    'average'     => null,
+                    'final'       => null,
                     'is_optional' => ($sid == $optionalSub)
                 ];
             }
             $marksheet[$sid]['annual'] = $a;
         }
 
-        echo "<pre>";
-        print_r($marksheet);
-        echo "</pre>";
-
         // ---------------- GRADE FUNCTION ----------------
-        $gradeCalc = function ($percent) {
-            if ($percent >= 80) return ['A+', 5.00];
-            if ($percent >= 70) return ['A', 4.00];
-            if ($percent >= 60) return ['A-', 3.50];
-            if ($percent >= 50) return ['B', 3.00];
-            if ($percent >= 40) return ['C', 2.00];
-            if ($percent >= 33) return ['D', 1.00];
-            return ['F', 0.00];
-        };
 
-        // ---------------- AVERAGE + TOTAL + GRADE ----------------
+
+        // ---------------- AVERAGE + FINAL ----------------
         foreach ($marksheet as $sid => &$row) {
-
             $h = $row['half'] ?? [];
             $a = $row['annual'] ?? [];
 
-            $hTotal = ($h['written'] ?? 0) + ($h['mcq'] ?? 0) + ($h['practical'] ?? 0);
-            $aTotal = ($a['written'] ?? 0) + ($a['mcq'] ?? 0) + ($a['practical'] ?? 0);
+            $hW = $h['written'] ?? 0;
+            $hM = $h['mcq'] ?? 0;
+            $hP = $h['practical'] ?? 0;
 
+            $aW = $a['written'] ?? 0;
+            $aM = $a['mcq'] ?? 0;
+            $aP = $a['practical'] ?? 0;
+
+            $hTotal = $hW + $hM + $hP;
+            $aTotal = $aW + $aM + $aP;
+
+            // Average
+            $avgW = round(($hW + $aW) / 2, 2);
+            $avgM = round(($hM + $aM) / 2, 2);
+            $avgP = round(($hP + $aP) / 2, 2);
             $avgTotal = round(($hTotal + $aTotal) / 2, 2);
 
             $row['average'] = [
-                'written'   => round((($h['written'] ?? 0) + ($a['written'] ?? 0)) / 2, 2),
-                'mcq'       => round((($h['mcq'] ?? 0) + ($a['mcq'] ?? 0)) / 2, 2),
-                'practical' => round((($h['practical'] ?? 0) + ($a['practical'] ?? 0)) / 2, 2),
+                'written'   => $avgW,
+                'mcq'       => $avgM,
+                'practical' => $avgP,
                 'total'     => $avgTotal
             ];
 
+            // Final total, percentage, grade, gp
+            $percentage = round(($avgTotal / $row['full_mark']) * 100, 2);
+
+
             $row['final'] = [
                 'total'      => $avgTotal,
-                'percentage' => round(($avgTotal / $row['full_mark']) * 100, 2),
+                'percentage' => $percentage
             ];
-
-            [$grade, $gp] = $gradeCalc($row['final']['percentage']);
-            $row['final']['grade'] = $grade;
-            $row['final']['gp']    = $gp;
         }
+        echo "<pre>";
+        print_r($marksheet);
+        echo "</pre>";
         unset($row);
 
         // ---------------- SORT ----------------
