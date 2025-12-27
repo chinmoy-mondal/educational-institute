@@ -1,58 +1,107 @@
-<table border="1" cellspacing="0" cellpadding="5">
-    <!-- First header row -->
-    <tr>
-        <th rowspan="2">Subject</th>
-        <th rowspan="2">Full Mark</th>
-        <th colspan="4">Half Yearly</th>
-        <th colspan="4">Annual</th>
-        <th rowspan="2">Total</th>
-        <th rowspan="2">%</th>
-        <th rowspan="2">Grade</th>
-        <th rowspan="2">GP</th>
-    </tr>
+<!DOCTYPE html>
+<html>
 
-    <!-- Second header row -->
-    <tr>
-        <th>W</th>
-        <th>M</th>
-        <th>P</th>
-        <th>T</th>
-        <th>W</th>
-        <th>M</th>
-        <th>P</th>
-        <th>T</th>
-    </tr>
+<head>
+    <title>Marksheet</title>
+    <style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
 
-    <?php foreach ($marksheet as $id => $row): ?>
-    <tr>
-        <td><?= $row['subject'] ?></td>
-        <td><?= $row['full_mark'] ?></td>
+    th,
+    td {
+        border: 1px solid #000;
+        padding: 6px;
+        text-align: center;
+    }
 
-        <!-- Half Yearly -->
-        <td><?= $row['half_written'] ?></td>
-        <td><?= $row['half_mcq'] ?></td>
-        <td><?= $row['half_prac'] ?></td>
-        <td><?= $row['half_total'] ?></td>
+    th {
+        background: #eee;
+    }
+    </style>
+</head>
 
-        <!-- Annual -->
-        <td><?= $row['annual_written'] ?></td>
-        <td><?= $row['annual_mcq'] ?></td>
-        <td><?= $row['annual_prac'] ?></td>
-        <td><?= $row['annual_total'] ?></td>
+<body>
 
-        <?php
-            // First 2 pairs: rowspan
-            if ($id < 4 && $id % 2 == 0): ?>
-        <td rowspan="2"><?= $row['total'] ?></td>
-        <td rowspan="2"><?= $row['percentage'] ?>%</td>
-        <td rowspan="2"><?= $row['grade'] ?></td>
-        <td rowspan="2"><?= $row['gp'] ?></td>
-        <?php elseif ($id >= 4): ?>
-        <td><?= $row['total'] ?></td>
-        <td><?= $row['percentage'] ?>%</td>
-        <td><?= $row['grade'] ?></td>
-        <td><?= $row['gp'] ?></td>
-        <?php endif; ?>
-    </tr>
-    <?php endforeach; ?>
-</table>
+    <h4 style="text-align:center">Academic Marksheet</h4>
+
+    <?php
+    // Debugging: remove in production
+    // echo '<pre>';
+    // print_r($marksheet);
+    // echo '</pre>';
+    ?>
+
+    <table>
+        <tr>
+            <th rowspan="2">Subject</th>
+            <th rowspan="2">Full Mark</th>
+            <th colspan="4">Half-Yearly</th>
+            <th colspan="4">Annual</th>
+            <th rowspan="2">Total</th>
+            <th rowspan="2">%</th>
+            <th rowspan="2">Grade</th>
+            <th rowspan="2">GP</th>
+        </tr>
+        <tr>
+            <th>W</th>
+            <th>M</th>
+            <th>P</th>
+            <th>T</th>
+            <th>W</th>
+            <th>M</th>
+            <th>P</th>
+            <th>T</th>
+        </tr>
+
+        <?php foreach ($marksheet as $id => $row): ?>
+        <tr>
+            <td><?= esc($row['subject'] ?? '-') ?></td>
+            <td><?= $row['full_mark'] ?? 0 ?></td>
+
+            <!-- Half-Yearly -->
+            <?php
+                $half = $row['half'] ?? [];
+                $half_written = $half['written'] ?? 0;
+                $half_mcq = $half['mcq'] ?? 0;
+                $half_prac = $half['practical'] ?? 0;
+                $half_total = $half_written + $half_mcq + $half_prac;
+                ?>
+            <td><?= $half_written ?></td>
+            <td><?= $half_mcq ?></td>
+            <td><?= $half_prac ?></td>
+            <td><?= $half_total ?></td>
+
+            <!-- Annual -->
+            <?php
+                $annual = $row['annual'] ?? [];
+                $annual_written = $annual['written'] ?? 0;
+                $annual_mcq = $annual['mcq'] ?? 0;
+                $annual_prac = $annual['practical'] ?? 0;
+                $annual_total = $annual_written + $annual_mcq + $annual_prac;
+                ?>
+            <td><?= $annual_written ?></td>
+            <td><?= $annual_mcq ?></td>
+            <td><?= $annual_prac ?></td>
+            <td><?= $annual_total ?></td>
+
+            <!-- Final -->
+            <?php
+                $final = $row['final'] ?? [];
+                $final_total = $final['total'] ?? 0;
+                $final_percentage = $final['percentage'] ?? 0;
+                $final_grade = $final['grade'] ?? '-';
+                $final_gp = $final['grade_point'] ?? '-';
+                ?>
+            <td><?= $final_total ?></td>
+            <td><?= $final_percentage ?>%</td>
+            <td><?= $final_grade ?></td>
+            <td><?= $final_gp ?></td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
+
+</body>
+
+</html>
