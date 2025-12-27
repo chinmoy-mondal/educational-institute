@@ -1694,7 +1694,7 @@ class Dashboard extends Controller
             }
         }
 
-        return view('results/test_result', [
+        return view('result/test_result', [
             'marksheet' => $sorted
         ]);
     }
