@@ -32,7 +32,7 @@
             <th rowspan="2">Full Mark</th>
             <th colspan="4">Half-Yearly</th>
             <th colspan="4">Annual</th>
-            <th colspan="4">Average</th>
+            <!-- Average columns removed -->
             <th rowspan="2">Total</th>
             <th rowspan="2">%</th>
             <th rowspan="2">Grade</th>
@@ -47,10 +47,7 @@
             <th>M</th>
             <th>P</th>
             <th>T</th>
-            <th>W</th>
-            <th>M</th>
-            <th>P</th>
-            <th>T</th>
+            <!-- Average headers removed -->
         </tr>
 
         <?php
@@ -95,11 +92,6 @@
             <td><?= $row['annual']['practical'] ?? 0 ?></td>
             <td><?= ($row['annual']['written'] ?? 0) + ($row['annual']['mcq'] ?? 0) + ($row['annual']['practical'] ?? 0) ?>
             </td>
-
-            <td><?= $row['average']['written'] ?></td>
-            <td><?= $row['average']['mcq'] ?></td>
-            <td><?= $row['average']['practical'] ?></td>
-            <td><?= $row['average']['total'] ?></td>
 
             <?php if (isset($combinedTotals[$sl])): ?>
             <td rowspan="2"><?= $combinedTotals[$sl]['total'] ?></td>
