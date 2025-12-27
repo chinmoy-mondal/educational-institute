@@ -1590,6 +1590,11 @@ class Dashboard extends Controller
             return "Student ID and Year are required";
         }
 
+        // Fetch assigned subject order from students table
+        $student = $this->studentModel->find($studentId);
+        $assign_sub_order = $student['assign_sub'] ?? ''; // e.g., "1,3,2,5"
+        $assign_sub_order = array_filter(explode(',', $assign_sub_order));
+
         // Fetch Half-Yearly
         $half = $this->resultModel
             ->select('results.*, subjects.subject')
@@ -1610,7 +1615,6 @@ class Dashboard extends Controller
 
         // Merge by subject_id
         $marksheet = [];
-
         foreach ($half as $h) {
             $sid = $h['subject_id'];
             $marksheet[$sid]['subject'] = $h['subject'];
@@ -1626,64 +1630,117 @@ class Dashboard extends Controller
             }
             $marksheet[$sid]['annual'] = $a;
         }
-        echo "<pre>";
-        print_r($marksheet);
-        echo "<pre>";
-        // ---------- TABLE ----------
+
+        // Sort marksheet according to assign_sub_order
+        $sorted_marksheet = [];
+        foreach ($assign_sub_order as $sub_id) {
+            if (isset($marksheet[$sub_id])) {
+                $sorted_marksheet[$sub_id] = $marksheet[$sub_id];
+            }
+        }
+
+        // ---------- MARKSHEET TABLE ----------
         echo "<table border='1' cellpadding='6' cellspacing='0' width='100%'>";
-
-        // Header row 1
         echo "
-        <tr>
-            <th rowspan='2'>Subject</th>
-            <th colspan='4'>Half-Yearly</th>
-            <th colspan='4'>Annual Exam</th>
-        </tr>
+    <tr>
+        <th rowspan='2'>Subject</th>
+        <th colspan='4'>Half-Yearly</th>
+        <th colspan='4'>Annual Exam</th>
+    </tr>
+    <tr>
+        <th>Wri</th>
+        <th>MCQ</th>
+        <th>Prac</th>
+        <th>Total</th>
+        <th>Wri</th>
+        <th>MCQ</th>
+        <th>Prac</th>
+        <th>Total</th>
+    </tr>
     ";
 
-        // Header row 2
-        echo "
-        <tr>
-            <th>Wri</th>
-            <th>MCQ</th>
-            <th>Prac</th>
-            <th>Total</th>
-            <th>Wri</th>
-            <th>MCQ</th>
-            <th>Prac</th>
-            <th>Total</th>
-        </tr>
-    ";
+        // Initialize sums for averages
+        $halfSum = $annualSum = 0;
+        $halfWri = $halfMCQ = $halfPrac = 0;
+        $annualWri = $annualMCQ = $annualPrac = 0;
+        $subjectCount = count($sorted_marksheet);
 
-        // Data rows
-        foreach ($marksheet as $row) {
-
+        foreach ($sorted_marksheet as $row) {
             $h = $row['half'];
             $a = $row['annual'];
 
-            $hTotal = $h ? ($h['written'] + $h['mcq'] + ($h['practical'] ?? 0)) : '';
-            $aTotal = $a ? ($a['written'] + $a['mcq'] + ($a['practical'] ?? 0)) : '';
+            $hWri = $h['written'] ?? 0;
+            $hMCQ = $h['mcq'] ?? 0;
+            $hPrac = $h['practical'] ?? 0;
+            $hTotal = $hWri + $hMCQ + $hPrac;
+
+            $aWri = $a['written'] ?? 0;
+            $aMCQ = $a['mcq'] ?? 0;
+            $aPrac = $a['practical'] ?? 0;
+            $aTotal = $aWri + $aMCQ + $aPrac;
+
+            // Sum for average
+            $halfWri += $hWri;
+            $halfMCQ += $hMCQ;
+            $halfPrac += $hPrac;
+            $halfSum += $hTotal;
+            $annualWri += $aWri;
+            $annualMCQ += $aMCQ;
+            $annualPrac += $aPrac;
+            $annualSum += $aTotal;
 
             echo "<tr>";
-
             echo "<td>{$row['subject']}</td>";
-
             // Half-Yearly
             echo "<td>" . ($h['written'] ?? '') . "</td>";
             echo "<td>" . ($h['mcq'] ?? '') . "</td>";
             echo "<td>" . ($h['practical'] ?? '') . "</td>";
             echo "<td>$hTotal</td>";
-
             // Annual
             echo "<td>" . ($a['written'] ?? '') . "</td>";
             echo "<td>" . ($a['mcq'] ?? '') . "</td>";
             echo "<td>" . ($a['practical'] ?? '') . "</td>";
             echo "<td>$aTotal</td>";
-
             echo "</tr>";
         }
-
         echo "</table>";
+
+        // ---------- AVERAGE TABLE ----------
+        $halfWriAvg = $subjectCount ? round($halfWri / $subjectCount, 2) : 0;
+        $halfMCQAvg = $subjectCount ? round($halfMCQ / $subjectCount, 2) : 0;
+        $halfPracAvg = $subjectCount ? round($halfPrac / $subjectCount, 2) : 0;
+        $halfTotalAvg = $subjectCount ? round($halfSum / $subjectCount, 2) : 0;
+
+        $annualWriAvg = $subjectCount ? round($annualWri / $subjectCount, 2) : 0;
+        $annualMCQAvg = $subjectCount ? round($annualMCQ / $subjectCount, 2) : 0;
+        $annualPracAvg = $subjectCount ? round($annualPrac / $subjectCount, 2) : 0;
+        $annualTotalAvg = $subjectCount ? round($annualSum / $subjectCount, 2) : 0;
+
+        echo "<br><br>";
+        echo "<table border='1' cellpadding='6' cellspacing='0' width='50%'>";
+        echo "
+    <tr>
+        <th>Exam</th>
+        <th>Wri Avg</th>
+        <th>MCQ Avg</th>
+        <th>Prac Avg</th>
+        <th>Total Avg</th>
+    </tr>
+    <tr>
+        <td>Half-Yearly</td>
+        <td>$halfWriAvg</td>
+        <td>$halfMCQAvg</td>
+        <td>$halfPracAvg</td>
+        <td>$halfTotalAvg</td>
+    </tr>
+    <tr>
+        <td>Annual Exam</td>
+        <td>$annualWriAvg</td>
+        <td>$annualMCQAvg</td>
+        <td>$annualPracAvg</td>
+        <td>$annualTotalAvg</td>
+    </tr>
+    </table>";
     }
 
 
