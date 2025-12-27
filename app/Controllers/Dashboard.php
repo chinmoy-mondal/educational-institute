@@ -1598,34 +1598,58 @@ class Dashboard extends Controller
         return ($mark >= $passMark);
     }
 
+    private function normalizeSubject(string $subject): string
+    {
+        $subject = strtolower(trim($subject));
+
+        if (str_contains($subject, 'bangla')) return 'bangla';
+        if (str_contains($subject, 'english')) return 'english';
+        if (str_contains($subject, 'physics')) return 'physics';
+        if (str_contains($subject, 'chemistry')) return 'chemistry';
+        if (str_contains($subject, 'biology')) return 'biology';
+        if (str_contains($subject, 'higher mathematics')) return 'higher_math';
+        if (str_contains($subject, 'mathematics')) return 'math';
+        if (str_contains($subject, 'ict')) return 'ict';
+        if (str_contains($subject, 'religion')) return 'religion';
+        if (str_contains($subject, 'bangladesh')) return 'bgs';
+
+        return 'general';
+    }
+
     public function resultManipulation($class, $section, $subject, $wri, $mcq, $pra, $mark)
     {
-        $subject = strtolower($subject);
         $section = strtolower($section);
+        $key     = $this->normalizeSubject($subject);
 
-        // CLASS 9–10 (GENERAL)
+        // ---------------- CLASS 9–10 (GENERAL) ----------------
         if (in_array($class, [9, 10]) && strpos($section, 'vocational') === false) {
 
-            if ($subject === 'bangla') {
+            // Bangla (1st + 2nd combined handled outside)
+            if ($key === 'bangla') {
                 return ($this->branchCheck($wri, 46) && $this->branchCheck($mcq, 20))
                     ? $this->markToGrade($mark)
                     : ['grade' => 'F', 'gp' => 0.00];
             }
 
-            if ($subject === 'english') {
+            // English
+            if ($key === 'english') {
                 return $this->branchCheck($wri, 66)
                     ? $this->markToGrade($mark)
                     : ['grade' => 'F', 'gp' => 0.00];
             }
 
-            if ($subject === 'ict') {
+            // ICT
+            if ($key === 'ict') {
                 return ($this->branchCheck($wri + $mcq, 7) && $this->branchCheck($pra, 8))
                     ? $this->markToGrade($mark)
                     : ['grade' => 'F', 'gp' => 0.00];
             }
 
-            if (in_array($subject, ['physics', 'chemistry', 'biology', 'higher mathematics'])) {
-                return ($this->branchCheck($wri, 17) && $this->branchCheck($mcq, 8) && $this->branchCheck($pra, 8))
+            // Science subjects
+            if (in_array($key, ['physics', 'chemistry', 'biology', 'higher_math'])) {
+                return ($this->branchCheck($wri, 17)
+                    && $this->branchCheck($mcq, 8)
+                    && $this->branchCheck($pra, 8))
                     ? $this->markToGrade($mark)
                     : ['grade' => 'F', 'gp' => 0.00];
             }
@@ -1636,20 +1660,20 @@ class Dashboard extends Controller
                 : ['grade' => 'F', 'gp' => 0.00];
         }
 
-        // CLASS 6–8
-        if (in_array($subject, ['bangla', 'english'])) {
+        // ---------------- CLASS 6–8 ----------------
+        if (in_array($key, ['bangla', 'english'])) {
             return $this->branchCheck($wri + $mcq + $pra, 49)
                 ? $this->markToGrade($mark)
                 : ['grade' => 'F', 'gp' => 0.00];
         }
 
-        if ($subject === 'ict') {
+        if ($key === 'ict') {
             return $this->branchCheck($wri + $mcq + $pra, 17)
                 ? $this->markToGrade($mark)
                 : ['grade' => 'F', 'gp' => 0.00];
         }
 
-        // All other subjects (class 6–10 vocational or remaining)
+        // ---------------- ALL OTHER SUBJECTS ----------------
         return $this->branchCheck($wri + $mcq + $pra, 33)
             ? $this->markToGrade($mark)
             : ['grade' => 'F', 'gp' => 0.00];
