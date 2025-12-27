@@ -1706,7 +1706,6 @@ class Dashboard extends Controller
             ];
         }
 
-        unset($row);
         // ---------------- SORT ----------------
         $sorted = [];
         foreach ($orderedSubjects as $sid) {
