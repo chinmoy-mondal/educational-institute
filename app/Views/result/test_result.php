@@ -32,6 +32,7 @@
             <th colspan="4">Half-Yearly</th>
             <th colspan="4">Annual Exam</th>
             <th colspan="4">Average</th>
+            <th rowspan="2">Full Mark</th> <!-- New column -->
         </tr>
         <tr>
             <th>Wri</th>
@@ -61,9 +62,6 @@
             $aWri = $a['written'] ?? 0;
             $aMCQ = $a['mcq'] ?? 0;
             $aPrac = $a['practical'] ?? 0;
-
-            $hTotal = $fullMark;
-            $aTotal = $fullMark;
         ?>
         <tr>
             <td><?= $row['subject'] ?></td>
@@ -79,6 +77,7 @@
             <td><?= $avg['mcq'] ?></td>
             <td><?= $avg['practical'] ?></td>
             <td><?= $avg['total'] ?></td>
+            <td><?= $fullMark ?></td> <!-- Full mark column -->
         </tr>
         <?php endforeach; ?>
     </table>
