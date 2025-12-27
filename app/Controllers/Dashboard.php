@@ -1599,8 +1599,8 @@ class Dashboard extends Controller
         // ---------------- ASSIGN SUBJECT ORDER ----------------
         $assignSubArr = explode(',', $student['assign_sub']);
 
-        $normalSubs   = [];
-        $optionalSub  = null;
+        $normalSubs  = [];
+        $optionalSub = null;
 
         foreach ($assignSubArr as $sub) {
             if (str_contains($sub, '*')) {
@@ -1612,7 +1612,7 @@ class Dashboard extends Controller
 
         $orderedSubjects = $normalSubs;
         if ($optionalSub) {
-            $orderedSubjects[] = $optionalSub; // optional always last
+            $orderedSubjects[] = $optionalSub;
         }
 
         // ---------------- FETCH RESULTS ----------------
@@ -1642,10 +1642,10 @@ class Dashboard extends Controller
         foreach ($half as $h) {
             $sid = $h['subject_id'];
             $marksheet[$sid] = [
-                'subject'    => $h['subject'],
-                'full_mark'  => $h['full_mark'],
-                'half'       => $h,
-                'annual'     => null,
+                'subject'     => $h['subject'],
+                'full_mark'   => $h['full_mark'],
+                'half'        => $h,
+                'annual'      => null,
                 'is_optional' => ($sid == $optionalSub)
             ];
         }
@@ -1655,16 +1655,16 @@ class Dashboard extends Controller
 
             if (!isset($marksheet[$sid])) {
                 $marksheet[$sid] = [
-                    'subject'    => $a['subject'],
-                    'full_mark'  => $a['full_mark'],
-                    'half'       => null,
+                    'subject'     => $a['subject'],
+                    'full_mark'   => $a['full_mark'],
+                    'half'        => null,
                     'is_optional' => ($sid == $optionalSub)
                 ];
             }
             $marksheet[$sid]['annual'] = $a;
         }
 
-        // ---------------- AVERAGE ----------------
+        // ---------------- AVERAGE + 1ST & 2ND PAPER ----------------
         foreach ($marksheet as $sid => &$row) {
 
             $h = $row['half']   ?? [];
@@ -1678,13 +1678,33 @@ class Dashboard extends Controller
             $aM = $a['mcq']       ?? 0;
             $aP = $a['practical'] ?? 0;
 
+            // -------- Average --------
             $row['average'] = [
                 'written'   => round(($hW + $aW) / 2, 2),
                 'mcq'       => round(($hM + $aM) / 2, 2),
                 'practical' => round(($hP + $aP) / 2, 2),
                 'total'     => round((($hW + $hM + $hP) + ($aW + $aM + $aP)) / 2, 2)
             ];
+
+            // -------- Bangla & English (1st + 2nd paper) --------
+            $subjectName = strtolower($row['subject']);
+
+            if (in_array($subjectName, ['bangla', 'english'])) {
+
+                $combinedFullMark = 200; // 100 + 100
+
+                $row['two_paper'] = [
+                    'total_mark' => $row['average']['total'],
+                    'percentage' => round(
+                        ($row['average']['total'] / $combinedFullMark) * 100,
+                        2
+                    )
+                ];
+            } else {
+                $row['two_paper'] = null;
+            }
         }
+        unset($row); // safety
 
         // ---------------- SORT BY ASSIGN_SUB ----------------
         $sorted = [];
