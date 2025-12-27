@@ -78,7 +78,7 @@
             <td><?= $row['final']['total'] ?></td>
             <td><?= $row['final']['percentage'] ?>%</td>
             <td></td>
-            <td><?= number_format($row['final']['gp'], 2) ?></td>
+            <td></td>
         </tr>
         <?php endforeach; ?>
 
