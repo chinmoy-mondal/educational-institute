@@ -1726,6 +1726,7 @@ class Dashboard extends Controller
                     'total_mcq'       => $totalM,
                     'total_practical' => $totalP,
                     'total'           => $totalSum,
+                    'full_mark'       => $fullMarkSum,
                     'percentage'      => $fullMarkSum > 0 ? round(($totalSum / $fullMarkSum) * 100, 2) : 0
                 ];
             }
@@ -1762,11 +1763,64 @@ class Dashboard extends Controller
                     'total_mcq'       => $avgM,
                     'total_practical' => $avgP,
                     'total'           => $avgTotal,
+                    'full_mark'       => $row['full_mark'],
                     'percentage'      => $row['full_mark'] > 0 ? round(($avgTotal / $row['full_mark']) * 100, 2) : 0
                 ];
             }
         }
         unset($row);
+
+        // ---------------- make grade ----------------
+
+        function markToGrade(float $percentage): array
+        {
+            if ($percentage >= 80) {
+                return ['grade' => 'A+', 'gp' => 5.00];
+            } elseif ($percentage >= 70) {
+                return ['grade' => 'A', 'gp' => 4.00];
+            } elseif ($percentage >= 60) {
+                return ['grade' => 'A-', 'gp' => 3.50];
+            } elseif ($percentage >= 50) {
+                return ['grade' => 'B', 'gp' => 3.00];
+            } elseif ($percentage >= 40) {
+                return ['grade' => 'C', 'gp' => 2.00];
+            } elseif ($percentage >= 33) {
+                return ['grade' => 'D', 'gp' => 1.00];
+            } else {
+                return ['grade' => 'F', 'gp' => 0.00];
+            }
+        }
+
+        function resultManipulation($class, $section, $subject, $wri, $mcq, $pra, $mark)
+        {
+            if (in_array($class, [9, 10])) {
+                if (stripos($section, 'vocational') !== false) {
+                    echo "vocational";
+                }
+                // for general of class 9, 10
+                else {
+                }
+            }
+            // for class 6 to 8 
+            else {
+                if (in_array($subject, ['bangla', 'english'])) {
+                    if (($wri + $mcq + $pra) >= 49) {
+                        markToGrade($mark);
+                    } else {
+                        return ['grade' => 'F', 'gp' => 0.00];
+                    }
+                } elseif ($subject == 'ict') {
+                    if (($wri + $mcq + $pra) >= 17) {
+                        markToGrade($mark);
+                    } else {
+                        return ['grade' => 'F', 'gp' => 0.00];
+                    }
+                } else {
+                }
+            }
+
+            return ['grade' => 'F', 'gp' => 0.00];
+        }
 
         // ---------------- RETURN VIEW ----------------
         return view('result/test_result', [
