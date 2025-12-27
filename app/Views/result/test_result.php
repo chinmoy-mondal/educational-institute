@@ -25,11 +25,14 @@
 <body>
 
     <h4 style="text-align:center">Academic Marksheet</h4>
+
     <?php
-    echo '<pre>';
-    print_r($marksheet);  // use $marksheet, not $marksheetNumeric
-    echo '</pre>';
+    // Debugging: remove in production
+    // echo '<pre>';
+    // print_r($marksheet);
+    // echo '</pre>';
     ?>
+
     <table>
         <tr>
             <th rowspan="2">Subject</th>
@@ -57,22 +60,25 @@
             <td><?= esc($row['subject']) ?></td>
             <td><?= $row['full_mark'] ?></td>
 
+            <!-- Half-Yearly -->
             <td><?= $row['half']['written'] ?? 0 ?></td>
             <td><?= $row['half']['mcq'] ?? 0 ?></td>
             <td><?= $row['half']['practical'] ?? 0 ?></td>
             <td><?= ($row['half']['written'] ?? 0) + ($row['half']['mcq'] ?? 0) + ($row['half']['practical'] ?? 0) ?>
             </td>
 
+            <!-- Annual -->
             <td><?= $row['annual']['written'] ?? 0 ?></td>
             <td><?= $row['annual']['mcq'] ?? 0 ?></td>
             <td><?= $row['annual']['practical'] ?? 0 ?></td>
             <td><?= ($row['annual']['written'] ?? 0) + ($row['annual']['mcq'] ?? 0) + ($row['annual']['practical'] ?? 0) ?>
             </td>
 
+            <!-- Final -->
             <td><?= $row['final']['total'] ?? 0 ?></td>
             <td><?= $row['final']['percentage'] ?? 0 ?>%</td>
-            <td></td>
-            <td></td>
+            <td><?= $row['final']['grade'] ?? '-' ?></td>
+            <td><?= $row['final']['grade_point'] ?? '-' ?></td>
         </tr>
         <?php endforeach; ?>
     </table>

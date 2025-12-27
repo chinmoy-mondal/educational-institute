@@ -1581,6 +1581,80 @@ class Dashboard extends Controller
         return view('dashboard/select_marksheet_info', $this->data);
     }
 
+
+    public function markToGrade(float $percentage): array
+    {
+        if ($percentage >= 80) return ['grade' => 'A+', 'gp' => 5.00];
+        if ($percentage >= 70) return ['grade' => 'A',  'gp' => 4.00];
+        if ($percentage >= 60) return ['grade' => 'A-', 'gp' => 3.50];
+        if ($percentage >= 50) return ['grade' => 'B',  'gp' => 3.00];
+        if ($percentage >= 40) return ['grade' => 'C',  'gp' => 2.00];
+        if ($percentage >= 33) return ['grade' => 'D',  'gp' => 1.00];
+        return ['grade' => 'F', 'gp' => 0.00];
+    }
+
+    public function branchCheck($mark, $passMark)
+    {
+        return ($mark >= $passMark);
+    }
+
+    public function resultManipulation($class, $section, $subject, $wri, $mcq, $pra, $mark)
+    {
+        $subject = strtolower($subject);
+        $section = strtolower($section);
+
+        // CLASS 9–10 (GENERAL)
+        if (in_array($class, [9, 10]) && strpos($section, 'vocational') === false) {
+
+            if ($subject === 'bangla') {
+                return ($this->branchCheck($wri, 46) && $this->branchCheck($mcq, 20))
+                    ? $this->markToGrade($mark)
+                    : ['grade' => 'F', 'gp' => 0.00];
+            }
+
+            if ($subject === 'english') {
+                return $this->branchCheck($wri, 66)
+                    ? $this->markToGrade($mark)
+                    : ['grade' => 'F', 'gp' => 0.00];
+            }
+
+            if ($subject === 'ict') {
+                return ($this->branchCheck($wri + $mcq, 7) && $this->branchCheck($pra, 8))
+                    ? $this->markToGrade($mark)
+                    : ['grade' => 'F', 'gp' => 0.00];
+            }
+
+            if (in_array($subject, ['physics', 'chemistry', 'biology', 'higher mathematics'])) {
+                return ($this->branchCheck($wri, 17) && $this->branchCheck($mcq, 8) && $this->branchCheck($pra, 8))
+                    ? $this->markToGrade($mark)
+                    : ['grade' => 'F', 'gp' => 0.00];
+            }
+
+            // Other subjects
+            return ($this->branchCheck($wri, 23) && $this->branchCheck($mcq, 10))
+                ? $this->markToGrade($mark)
+                : ['grade' => 'F', 'gp' => 0.00];
+        }
+
+        // CLASS 6–8
+        if (in_array($subject, ['bangla', 'english'])) {
+            return $this->branchCheck($wri + $mcq + $pra, 49)
+                ? $this->markToGrade($mark)
+                : ['grade' => 'F', 'gp' => 0.00];
+        }
+
+        if ($subject === 'ict') {
+            return $this->branchCheck($wri + $mcq + $pra, 17)
+                ? $this->markToGrade($mark)
+                : ['grade' => 'F', 'gp' => 0.00];
+        }
+
+        // All other subjects (class 6–10 vocational or remaining)
+        return $this->branchCheck($wri + $mcq + $pra, 33)
+            ? $this->markToGrade($mark)
+            : ['grade' => 'F', 'gp' => 0.00];
+    }
+
     public function test_result()
     {
         $studentId = $this->request->getGet('student_id');
@@ -1664,18 +1738,13 @@ class Dashboard extends Controller
             $marksheet[$sid]['annual'] = $a;
         }
 
-        // ---------------- SORT BY ASSIGNED ORDER ----------------
-        $marksheetNumeric = [];
-        foreach ($orderedSubjects as $sid) {
-            if (isset($marksheet[$sid])) {
-                $marksheetNumeric[] = $marksheet[$sid];
-            }
-        }
+        // ---------------- AVERAGE + FINAL ----------------
+        $marksheetNumeric = array_values($marksheet); // reindex numerically
 
-        // ---------------- CALCULATE AVERAGE + FINAL TOTALS ----------------
+        // Define which serials to combine (0+1, 2+3, ...)
         $combinePairs = [
-            [0, 1], // 1st + 2nd
-            [2, 3]  // 3rd + 4th
+            [0, 1],
+            [2, 3]
         ];
 
         foreach ($combinePairs as $pair) {
@@ -1701,7 +1770,6 @@ class Dashboard extends Controller
                 $avgP = round(($hP + $aP) / 2, 2);
                 $avgTotal = round((($hW + $hM + $hP) + ($aW + $aM + $aP)) / 2, 2);
 
-                // Store average
                 $marksheetNumeric[$i]['average'] = [
                     'written'   => $avgW,
                     'mcq'       => $avgM,
@@ -1709,7 +1777,6 @@ class Dashboard extends Controller
                     'total'     => $avgTotal
                 ];
 
-                // Add to pair totals
                 $totalW += $avgW;
                 $totalM += $avgM;
                 $totalP += $avgP;
@@ -1717,9 +1784,20 @@ class Dashboard extends Controller
                 $fullMarkSum += $row['full_mark'];
             }
 
-            // Assign final total to each row in the pair
+            // Assign final array with grade & grade point
             foreach ($pair as $i) {
                 if (!isset($marksheetNumeric[$i])) continue;
+
+                $row = $marksheetNumeric[$i];
+                $gradeInfo = $this->resultManipulation(
+                    $student['class'],
+                    $student['section'],
+                    strtolower($row['subject']),
+                    $totalW,
+                    $totalM,
+                    $totalP,
+                    $totalSum
+                );
 
                 $marksheetNumeric[$i]['final'] = [
                     'total_written'   => $totalW,
@@ -1727,104 +1805,65 @@ class Dashboard extends Controller
                     'total_practical' => $totalP,
                     'total'           => $totalSum,
                     'full_mark'       => $fullMarkSum,
+                    'grade'           => $gradeInfo['grade'],
+                    'grade_point'     => $gradeInfo['gp'],
                     'percentage'      => $fullMarkSum > 0 ? round(($totalSum / $fullMarkSum) * 100, 2) : 0
                 ];
             }
         }
 
-        // Calculate final for remaining subjects not in any pair
+        // Subjects not in any pair
         foreach ($marksheetNumeric as $i => &$row) {
             if (!isset($row['final'])) {
                 $h = $row['half'] ?? [];
                 $a = $row['annual'] ?? [];
 
-                $hW = $h['written'] ?? 0;
-                $hM = $h['mcq'] ?? 0;
-                $hP = $h['practical'] ?? 0;
+                $avgW = round((($h['written'] ?? 0) + ($a['written'] ?? 0)) / 2, 2);
+                $avgM = round((($h['mcq'] ?? 0) + ($a['mcq'] ?? 0)) / 2, 2);
+                $avgP = round((($h['practical'] ?? 0) + ($a['practical'] ?? 0)) / 2, 2);
+                $avgTotal = round($avgW + $avgM + $avgP, 2);
 
-                $aW = $a['written'] ?? 0;
-                $aM = $a['mcq'] ?? 0;
-                $aP = $a['practical'] ?? 0;
+                $gradeInfo = $this->resultManipulation(
+                    $student['class'],
+                    $student['section'],
+                    strtolower($row['subject']),
+                    $avgW,
+                    $avgM,
+                    $avgP,
+                    $avgTotal
+                );
 
-                $avgW = round(($hW + $aW) / 2, 2);
-                $avgM = round(($hM + $aM) / 2, 2);
-                $avgP = round(($hP + $aP) / 2, 2);
-                $avgTotal = round((($hW + $hM + $hP) + ($aW + $aM + $aP)) / 2, 2);
-
-                $marksheetNumeric[$i]['average'] = [
+                $row['average'] = [
                     'written'   => $avgW,
                     'mcq'       => $avgM,
                     'practical' => $avgP,
                     'total'     => $avgTotal
                 ];
 
-                $marksheetNumeric[$i]['final'] = [
+                $row['final'] = [
                     'total_written'   => $avgW,
                     'total_mcq'       => $avgM,
                     'total_practical' => $avgP,
                     'total'           => $avgTotal,
                     'full_mark'       => $row['full_mark'],
+                    'grade'           => $gradeInfo['grade'],
+                    'grade_point'     => $gradeInfo['gp'],
                     'percentage'      => $row['full_mark'] > 0 ? round(($avgTotal / $row['full_mark']) * 100, 2) : 0
                 ];
             }
         }
         unset($row);
 
-        // ---------------- make grade ----------------
-
-        function markToGrade(float $percentage): array
-        {
-            if ($percentage >= 80) {
-                return ['grade' => 'A+', 'gp' => 5.00];
-            } elseif ($percentage >= 70) {
-                return ['grade' => 'A', 'gp' => 4.00];
-            } elseif ($percentage >= 60) {
-                return ['grade' => 'A-', 'gp' => 3.50];
-            } elseif ($percentage >= 50) {
-                return ['grade' => 'B', 'gp' => 3.00];
-            } elseif ($percentage >= 40) {
-                return ['grade' => 'C', 'gp' => 2.00];
-            } elseif ($percentage >= 33) {
-                return ['grade' => 'D', 'gp' => 1.00];
-            } else {
-                return ['grade' => 'F', 'gp' => 0.00];
+        // ---------------- SORT ----------------
+        $sorted = [];
+        foreach ($orderedSubjects as $sid) {
+            if (isset($marksheet[$sid])) {
+                $sorted[$sid] = $marksheet[$sid];
             }
         }
 
-        function resultManipulation($class, $section, $subject, $wri, $mcq, $pra, $mark)
-        {
-            if (in_array($class, [9, 10])) {
-                if (stripos($section, 'vocational') !== false) {
-                    echo "vocational";
-                }
-                // for general of class 9, 10
-                else {
-                }
-            }
-            // for class 6 to 8 
-            else {
-                if (in_array($subject, ['bangla', 'english'])) {
-                    if (($wri + $mcq + $pra) >= 49) {
-                        markToGrade($mark);
-                    } else {
-                        return ['grade' => 'F', 'gp' => 0.00];
-                    }
-                } elseif ($subject == 'ict') {
-                    if (($wri + $mcq + $pra) >= 17) {
-                        markToGrade($mark);
-                    } else {
-                        return ['grade' => 'F', 'gp' => 0.00];
-                    }
-                } else {
-                }
-            }
-
-            return ['grade' => 'F', 'gp' => 0.00];
-        }
-
-        // ---------------- RETURN VIEW ----------------
         return view('result/test_result', [
-            'marksheet' => $marksheetNumeric
+            'marksheet' => array_values($marksheetNumeric)
         ]);
     }
 
