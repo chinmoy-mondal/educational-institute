@@ -1596,6 +1596,7 @@ class Dashboard extends Controller
             return "Student not found";
         }
 
+        // ---------------- ASSIGN SUBJECT ORDER ----------------
         $assignSubArr = explode(',', $student['assign_sub']);
         $normalSubs = [];
         $optionalSub = null;
@@ -1609,31 +1610,39 @@ class Dashboard extends Controller
         }
 
         $orderedSubjects = $normalSubs;
-        if ($optionalSub) $orderedSubjects[] = $optionalSub;
+        if ($optionalSub) {
+            $orderedSubjects[] = $optionalSub;
+        }
 
         // ---------------- FETCH RESULTS ----------------
         $half = $this->resultModel
             ->select('results.*, subjects.subject, subjects.full_mark')
             ->join('subjects', 'subjects.id = results.subject_id')
-            ->where(['results.student_id' => $studentId, 'results.year' => $year, 'results.exam' => 'Half-Yearly'])
-            ->findAll();
+            ->where([
+                'results.student_id' => $studentId,
+                'results.year'       => $year,
+                'results.exam'       => 'Half-Yearly'
+            ])->findAll();
 
         $annual = $this->resultModel
             ->select('results.*, subjects.subject, subjects.full_mark')
             ->join('subjects', 'subjects.id = results.subject_id')
-            ->where(['results.student_id' => $studentId, 'results.year' => $year, 'results.exam' => 'Annual Exam'])
-            ->findAll();
+            ->where([
+                'results.student_id' => $studentId,
+                'results.year'       => $year,
+                'results.exam'       => 'Annual Exam'
+            ])->findAll();
 
-        // ---------------- MERGE RESULTS ----------------
+        // ---------------- MERGE ----------------
         $marksheet = [];
 
         foreach ($half as $h) {
             $sid = $h['subject_id'];
             $marksheet[$sid] = [
-                'subject'    => $h['subject'],
-                'full_mark'  => $h['full_mark'],
-                'half'       => $h,
-                'annual'     => null,
+                'subject'     => $h['subject'],
+                'full_mark'   => $h['full_mark'],
+                'half'        => $h,
+                'annual'      => null,
                 'is_optional' => ($sid == $optionalSub)
             ];
         }
@@ -1642,9 +1651,9 @@ class Dashboard extends Controller
             $sid = $a['subject_id'];
             if (!isset($marksheet[$sid])) {
                 $marksheet[$sid] = [
-                    'subject' => $a['subject'],
-                    'full_mark' => $a['full_mark'],
-                    'half' => null,
+                    'subject'     => $a['subject'],
+                    'full_mark'   => $a['full_mark'],
+                    'half'        => null,
                     'is_optional' => ($sid == $optionalSub)
                 ];
             }
@@ -1662,69 +1671,46 @@ class Dashboard extends Controller
             return ['F', 0.00];
         };
 
-        // ---------------- CALCULATE AVERAGE AND FINAL ----------------
+        // ---------------- AVERAGE + TOTAL + GRADE ----------------
         foreach ($marksheet as $sid => &$row) {
+
             $h = $row['half'] ?? [];
             $a = $row['annual'] ?? [];
 
-            $hW = $h['written'] ?? 0;
-            $hM = $h['mcq'] ?? 0;
-            $hP = $h['practical'] ?? 0;
-            $aW = $a['written'] ?? 0;
-            $aM = $a['mcq'] ?? 0;
-            $aP = $a['practical'] ?? 0;
+            $hTotal = ($h['written'] ?? 0) + ($h['mcq'] ?? 0) + ($h['practical'] ?? 0);
+            $aTotal = ($a['written'] ?? 0) + ($a['mcq'] ?? 0) + ($a['practical'] ?? 0);
 
-            $hTotal = $hW + $hM + $hP;
-            $aTotal = $aW + $aM + $aP;
+            $avgTotal = round(($hTotal + $aTotal) / 2, 2);
 
             $row['average'] = [
-                'written' => round(($hW + $aW) / 2, 2),
-                'mcq' => round(($hM + $aM) / 2, 2),
-                'practical' => round(($hP + $aP) / 2, 2),
-                'total' => round(($hTotal + $aTotal) / 2, 2)
+                'written'   => round((($h['written'] ?? 0) + ($a['written'] ?? 0)) / 2, 2),
+                'mcq'       => round((($h['mcq'] ?? 0) + ($a['mcq'] ?? 0)) / 2, 2),
+                'practical' => round((($h['practical'] ?? 0) + ($a['practical'] ?? 0)) / 2, 2),
+                'total'     => $avgTotal
             ];
 
-            // ---------------- Total / % / Grade / GP ----------------
             $row['final'] = [
-                'total' => $row['average']['total'],
-                'percentage' => round(($row['average']['total'] / $row['full_mark']) * 100, 2)
+                'total'      => $avgTotal,
+                'percentage' => round(($avgTotal / $row['full_mark']) * 100, 2),
             ];
-            [$row['final']['grade'], $row['final']['gp']] = $gradeCalc($row['final']['percentage']);
+
+            [$grade, $gp] = $gradeCalc($row['final']['percentage']);
+            $row['final']['grade'] = $grade;
+            $row['final']['gp']    = $gp;
         }
         unset($row);
 
-        // ---------------- COMBINE BANG & ENG 1st+2nd ----------------
-        $finalSheet = [];
-        $skip = [];
-        $keys = array_keys($marksheet);
-
-        for ($i = 0; $i < count($keys); $i++) {
-            if (in_array($i, $skip)) continue;
-            $row = $marksheet[$keys[$i]];
-            $sub = strtolower($row['subject']);
-
-            if (($sub == 'bangla 1st paper' || $sub == 'english 1st paper') && isset($keys[$i + 1])) {
-                $next = $marksheet[$keys[$i + 1]];
-                $nextSub = strtolower($next['subject']);
-                if (str_contains($nextSub, '2nd paper')) {
-                    $combinedTotal = $row['final']['total'] + $next['final']['total'];
-                    $combinedFull  = $row['full_mark'] + $next['full_mark'];
-                    $percentage = round(($combinedTotal / $combinedFull) * 100, 2);
-                    [$grade, $gp] = $gradeCalc($percentage);
-                    $row['final_combined'] = [
-                        'total' => $combinedTotal,
-                        'percentage' => $percentage,
-                        'grade' => $grade,
-                        'gp' => $gp,
-                        'rowspan' => 2
-                    ];
-                    $skip[] = $i + 1;
-                }
+        // ---------------- SORT ----------------
+        $sorted = [];
+        foreach ($orderedSubjects as $sid) {
+            if (isset($marksheet[$sid])) {
+                $sorted[$sid] = $marksheet[$sid];
             }
-            $finalSheet[] = $row;
         }
 
-        return view('result/test_result', ['marksheet' => $finalSheet]);
+        return view('result/test_result', [
+            'marksheet' => array_values($sorted)
+        ]);
     }
 
 
