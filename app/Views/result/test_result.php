@@ -25,15 +25,11 @@
 <body>
 
     <h4 style="text-align:center">Academic Marksheet</h4>
-    <pre>
-<?php
-foreach ($marksheetNumeric as $i => $row) {
-    echo "Subject: " . $row['subject'] . "\n";
-    print_r($row['final']);
-    echo "\n---------------------\n";
-}
-?>
-</pre>
+    <?php
+    echo '<pre>';
+    print_r($marksheet);  // use $marksheet, not $marksheetNumeric
+    echo '</pre>';
+    ?>
     <table>
         <tr>
             <th rowspan="2">Subject</th>
