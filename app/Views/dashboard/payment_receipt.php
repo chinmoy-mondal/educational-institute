@@ -98,8 +98,8 @@ th {
 }
 </style>
 
-<!-- ✅ AdminLTE padding wrapper ONLY -->
-<div class="container-fluid px-4 py-3">
+<!-- ✅ SAME LEFT & RIGHT MARGIN -->
+<div class="container-fluid px-5 py-3">
 
     <div class="page">
 
@@ -143,8 +143,7 @@ th {
                     <th width="22%">Amount (৳)</th>
                 </tr>
 
-                <?php if (!empty($fees)): ?>
-                <?php foreach ($fees as $i => $f): ?>
+                <?php foreach ($fees ?? [] as $i => $f): ?>
                 <tr>
                     <td align="center"><?= $i + 1 ?></td>
                     <td>
@@ -154,11 +153,6 @@ th {
                     <td align="right"><?= number_format($f['amount'], 2) ?></td>
                 </tr>
                 <?php endforeach; ?>
-                <?php else: ?>
-                <tr>
-                    <td colspan="3" align="center">No fees found</td>
-                </tr>
-                <?php endif; ?>
 
                 <tr>
                     <td colspan="2" align="right"><b>Discount</b></td>
@@ -167,9 +161,7 @@ th {
 
                 <tr>
                     <td colspan="2" align="right"><b>Total Paid</b></td>
-                    <td align="right">
-                        <b><?= number_format($totalAmount ?? 0, 2) ?></b>
-                    </td>
+                    <td align="right"><b><?= number_format($totalAmount ?? 0, 2) ?></b></td>
                 </tr>
             </table>
 
