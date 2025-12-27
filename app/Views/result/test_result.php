@@ -93,9 +93,9 @@
                 $final_grade = $final['grade'] ?? '-';
                 $final_gp = $final['grade_point'] ?? '-';
 
-                // accumulate for summary
+            // accumulate for summary
+            if ($id == 0 || $id == 2)
                 $total_marks_sum += $final_total;
-                $total_percentage_sum += $final_percentage;
                 ?>
 
             <?php if ($id == 0 || $id == 2): ?>
