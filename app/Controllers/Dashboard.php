@@ -1660,6 +1660,10 @@ class Dashboard extends Controller
             $marksheet[$sid]['annual'] = $a;
         }
 
+        echo "<pre>";
+        print_r($marksheet);
+        echo "</pre>";
+
         // ---------------- GRADE FUNCTION ----------------
         $gradeCalc = function ($percent) {
             if ($percent >= 80) return ['A+', 5.00];
