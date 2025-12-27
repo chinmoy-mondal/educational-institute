@@ -1715,10 +1715,6 @@ class Dashboard extends Controller
         }
 
 
-        echo "<pre>";
-        print_r($sorted);
-        echo "</pre>";
-
         return view('result/test_result', [
             'marksheet' => array_values($sorted)
         ]);
