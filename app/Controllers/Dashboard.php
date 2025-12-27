@@ -2758,26 +2758,27 @@ class Dashboard extends Controller
         $this->data['totalAmount'] = $totalAmount;
 
         /* ---------- SEND SMS ---------- */
-        // $studentPhone = $this->data['student']['phone'] ?? '';
-        $studentPhone = '01920232269';
+        $studentPhone = '01920232269'; // include country code
         if ($studentPhone) {
             $message = "Dear {$this->data['student']['student_name']}, your payment of Tk {$totalAmount} has been received. Thank you!";
-            $apiKey = "xxxxxx"; // replace with your real API key
+            $apiKey = "5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8"; // replace with actual API key
             $callerID = "1234";
 
             $smsUrl = "https://bulksmsdhaka.com/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
 
-            // Using file_get_contents
-            @file_get_contents($smsUrl);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $smsUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            $response = curl_exec($ch);
+            $error = curl_error($ch);
+            curl_close($ch);
 
-            // Alternatively, using cURL (more robust)
-            /*
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $smsUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
-        curl_close($ch);
-        */
+            if ($error) {
+                log_message('error', "SMS sending failed: {$error}");
+            } else {
+                log_message('info', "SMS sent successfully: {$response}");
+            }
         }
 
         return view('dashboard/payment_receipt', $this->data);
