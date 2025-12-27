@@ -1706,6 +1706,10 @@ class Dashboard extends Controller
             ];
         }
 
+        unset($row);
+        echo "<pre>";
+        print_r($marksheet);
+        echo "</pre>";
         // ---------------- SORT ----------------
         $sorted = [];
         foreach ($orderedSubjects as $sid) {
@@ -1713,10 +1717,6 @@ class Dashboard extends Controller
                 $sorted[$sid] = $marksheet[$sid];
             }
         }
-        echo "<pre>";
-        print_r($marksheet);
-        echo "</pre>";
-        unset($row);
 
         return view('result/test_result', [
             'marksheet' => array_values($sorted)
