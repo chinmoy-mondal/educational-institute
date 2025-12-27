@@ -1687,7 +1687,7 @@ class Dashboard extends Controller
             $avgW = round(($hW + $aW) / 2, 2);
             $avgM = round(($hM + $aM) / 2, 2);
             $avgP = round(($hP + $aP) / 2, 2);
-            $avgTotal = $hTotal + $aTotal;
+            $avgTotal = round(($hTotal + $aTotal) / 2, 2);
 
             $row['average'] = [
                 'written'   => $avgW,
