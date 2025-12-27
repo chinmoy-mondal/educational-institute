@@ -2731,15 +2731,6 @@ class Dashboard extends Controller
         $fees = [];
         $totalAmount = 0;
 
-        /* ---------- APPLY DISCOUNT ---------- */
-        if ($discountAmount > 0) {
-            // Save discount to student_discount table
-            $this->studentDiscountModel->insert([
-                'student_id' => $studentId,
-                'amount'     => $discountAmount
-            ]);
-        }
-
         if (!empty($feeIds)) {
             foreach ($feeIds as $i => $id) {
                 $amount = floatval($amounts[$i] ?? 0);
@@ -2776,10 +2767,34 @@ class Dashboard extends Controller
                 ]);
             }
         }
+        /* ---------- APPLY DISCOUNT ---------- */
+        if ($discountAmount > 0) {
+            $existingDiscount = $this->studentDiscountModel
+                ->where('student_id', $studentId)
+                ->first();
 
+            if ($existingDiscount) {
+                // Update existing discount
+                $this->studentDiscountModel
+                    ->update($existingDiscount['id'], [
+                        'amount' => $discountAmount
+                    ]);
+            } else {
+                // Insert new discount
+                $this->studentDiscountModel->insert([
+                    'student_id' => $studentId,
+                    'amount'     => $discountAmount
+                ]);
+            }
+        }
 
         $this->data['fees'] = $fees;
         $this->data['totalAmount'] = $totalAmount;
+        if ($discountAmount > 0) {
+            $amountAfterDiscount = $totalAmount - $discountAmount;
+        } else {
+            $amountAfterDiscount = $totalAmount;
+        }
 
         /* ---------- SEND SMS ---------- */
         $studentPhone = $student['phone'] ?? '';
@@ -2787,7 +2802,7 @@ class Dashboard extends Controller
             // ensure country code (Bangladesh 880)
             $studentPhone = '880' . ltrim($studentPhone, '0');
 
-            $message = "Dear {$student['student_name']}, your payment of Tk {$totalAmount} has been received. Thank you!";
+            $message = "Dear {$student['student_name']}, your payment of Tk {$amountAfterDiscount} has been received. Thank you!";
             $apiKey = "5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8"; // your API key
             $callerID = "1234";
 
