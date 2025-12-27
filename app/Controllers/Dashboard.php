@@ -1718,9 +1718,9 @@ class Dashboard extends Controller
             }
         }
 
-        return view('result/test_result', [
-            'marksheet' => array_values($sorted)
-        ]);
+        // return view('result/test_result', [
+        //     'marksheet' => array_values($sorted)
+        // ]);
     }
 
 
