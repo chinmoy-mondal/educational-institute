@@ -2731,6 +2731,15 @@ class Dashboard extends Controller
         $fees = [];
         $totalAmount = 0;
 
+        /* ---------- APPLY DISCOUNT ---------- */
+        if ($discountAmount > 0) {
+            // Save discount to student_discount table
+            $this->studentDiscountModel->insert([
+                'student_id' => $studentId,
+                'amount'     => $discountAmount
+            ]);
+        }
+
         if (!empty($feeIds)) {
             foreach ($feeIds as $i => $id) {
                 $amount = floatval($amounts[$i] ?? 0);
@@ -2758,7 +2767,7 @@ class Dashboard extends Controller
                     'receiver_id'    => $receiverId,
                     'receiver_name'  => $receiver['name'] ?? '',
                     'amount'         => $amount,
-                    'discount'       => 0,
+                    'discount'       => $discountAmount,
                     'month'          => $monthName,
                     'purpose'        => $title,
                     'description'    => 'Payment for ' . $title,
@@ -2768,15 +2777,6 @@ class Dashboard extends Controller
             }
         }
 
-        /* ---------- APPLY DISCOUNT ---------- */
-        if ($applyDiscount && $discountAmount > 0) {
-            // Save discount to student_discount table only
-            $this->studentDiscountModel->insert([
-                'student_id' => $studentId,
-                'amount'     => $discountAmount
-            ]);
-            // Discount does not reduce the totalAmount; it is separate
-        }
 
         $this->data['fees'] = $fees;
         $this->data['totalAmount'] = $totalAmount;
