@@ -105,6 +105,7 @@
             <td rowspan="2"><?= $final_gp ?></td>
             <?php elseif ($id > 3): ?>
             <td><?= $final_total ?></td>
+            <td><?= $total_marks_sum ?></td>
             <td><?= $final_percentage ?>%</td>
             <td><?= $final_grade ?></td>
             <td><?= $final_gp ?></td>
