@@ -93,21 +93,19 @@
                 $final_grade = $final['grade'] ?? '-';
                 $final_gp = $final['grade_point'] ?? '-';
 
-            // accumulate for summary
-            if ($id == 1 || $id == 3) {
-            } else
-                $total_marks_sum += $final_total;
+                // accumulate for summary
+                if ($id == 1 || $id == 3) {
+                } else
+                    $total_marks_sum += $final_total;
                 ?>
 
             <?php if ($id == 0 || $id == 2): ?>
             <td rowspan="2"><?= $final_total ?></td>
-            <td><?= $total_marks_sum ?></td>
             <td rowspan="2"><?= $final_percentage ?>%</td>
             <td rowspan="2"><?= $final_grade ?></td>
             <td rowspan="2"><?= $final_gp ?></td>
             <?php elseif ($id > 3): ?>
             <td><?= $final_total ?></td>
-            <td><?= $total_marks_sum ?></td>
             <td><?= $final_percentage ?>%</td>
             <td><?= $final_grade ?></td>
             <td><?= $final_gp ?></td>
