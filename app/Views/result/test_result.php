@@ -38,15 +38,16 @@
             <th>Annual M</th>
             <th>Annual P</th>
             <th>Annual T</th>
-            <th>Average W</th>
-            <th>Average M</th>
-            <th>Average P</th>
-            <th>Average T</th>
+            <th>Avg W</th>
+            <th>Avg M</th>
+            <th>Avg P</th>
+            <th>Avg T</th>
             <th>Total</th>
             <th>%</th>
             <th>Grade</th>
             <th>GP</th>
         </tr>
+
         <?php foreach ($marksheet as $row): ?>
         <tr>
             <td><?= esc($row['subject']) ?></td>
