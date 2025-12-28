@@ -97,6 +97,7 @@
                 if ($id == 1 || $id == 3) {
                 } else
                     $total_marks_sum += $final_total;
+                $total_grade_point += $final_grade;
                 ?>
 
             <?php if ($id == 0 || $id == 2): ?>
@@ -118,8 +119,9 @@
             <td colspan="10">Total / Average</td>
             <td><?= $total_marks_sum ?></td>
             <td><?= round($total_percentage_sum / $total_rows, 2) ?>%</td>
-            <td>-</td> <!-- Optionally you can calculate overall grade -->
-            <td>-</td> <!-- Optionally you can calculate overall GP -->
+            <td><?= round($total_grade_point / $total_rows, 2) ?></td>
+            <!-- Optionally you can calculate overall grade -->
+            <td>-</td> $total_grade_point
         </tr>
     </table>
 
