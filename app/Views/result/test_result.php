@@ -99,9 +99,11 @@
                 if ($id == 1 || $id == 3) {
                 } else {
                     $total_marks_sum += $final_total;
+                if ($total_rows == $id + 1) {
+                    $total_grade_point += max(0, $final_gp - 2);
+                } else {
                     $total_grade_point += $final_gp;
-                    if (!$total_rows == $id) {
-                        $total_subject++;
+                    $total_subject++;
                     }
                 }
 
