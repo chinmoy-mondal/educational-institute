@@ -100,12 +100,12 @@
                 } else {
                     $total_marks_sum += $final_total;
                     if ($total_rows == $id + 1) {
-                    if (in_array($student['class'], [6, 8])) {
-                        $total_subject++;
-                        $total_grade_point += $final_gp;
-                    } else {
-                        $total_grade_point += max(0, $final_gp - 2);
-                    }
+                        if (in_array($student['class'], [6, 8])) {
+                            $total_subject++;
+                            $total_grade_point += $final_gp;
+                        } else {
+                            $total_grade_point += max(0, $final_gp - 2);
+                        }
                     } else {
                         $total_grade_point += $final_gp;
                         $total_subject++;
@@ -133,14 +133,23 @@
         <tr style="font-weight:bold; background:#f0f0f0;">
             <td colspan="10">Total / Average</td>
             <td><?= $total_marks_sum ?></td>
-            <td><?= round($total_percentage_sum / $total_rows, 2) ?>%</td>
+            <?php function gpToGrade(float $gp): string
+            {
+                if ($gp >= 5.00) return 'A+';
+                if ($gp >= 4.00) return 'A';
+                if ($gp >= 3.50) return 'A-';
+                if ($gp >= 3.00) return 'B';
+                if ($gp >= 2.00) return 'C';
+                if ($gp >= 1.00) return 'D';
+
+                return 'F';
+            } ?>
+            <td>
+                <?php gpToGrade($total_grade_point); ?>
+            </td>
             <td><?= round($total_grade_point / $total_subject, 2) ?></td>
             <td>
                 <?= $total_grade_point ?>
-            </td>
-
-            <td>
-                <?= $total_subject ?>
             </td>
         </tr>
     </table>
