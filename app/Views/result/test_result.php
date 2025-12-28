@@ -142,7 +142,7 @@
     <pre>
 <?php print_r($student); ?>
 </pre>
-
+    <?php echo $student['class']; ?>
 </body>
 
 </html>
