@@ -100,7 +100,12 @@
                 } else {
                     $total_marks_sum += $final_total;
                     if ($total_rows == $id + 1) {
+                    if (in_array($student['class'], [6, 8])) {
+
+                        $total_grade_point += $final_gp;
+                    } else {
                         $total_grade_point += max(0, $final_gp - 2);
+                    }
                     } else {
                         $total_grade_point += $final_gp;
                         $total_subject++;
