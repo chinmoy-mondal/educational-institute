@@ -98,7 +98,7 @@
                 if ($id == 1 || $id == 3) {
                 } else
                     $total_marks_sum += $final_total;
-                $total_grade_point += $final_grade;
+            $total_grade_point += $final_gp;
                 ?>
 
             <?php if ($id == 0 || $id == 2): ?>
