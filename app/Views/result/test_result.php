@@ -28,6 +28,7 @@
 
     <?php
     $total_marks_sum = 0;
+    $total_subject = 0;
     $total_grade_point = 0;
     $total_percentage_sum = 0;
     $total_rows = count($marksheet);
@@ -96,12 +97,15 @@
 
                 // accumulate for summary
                 if ($id == 1 || $id == 3) {
-            } else {
-                $total_marks_sum += $final_total;
-                $total_grade_point += $final_gp;
-            }
+                } else {
+                    $total_marks_sum += $final_total;
+                    $total_grade_point += $final_gp;
+                    if (!$total_rows == $id) {
+                        $total_subject++;
+                    }
+                }
 
-        ?>
+                ?>
 
             <?php if ($id == 0 || $id == 2): ?>
             <td rowspan="2"><?= $final_total ?></td>
@@ -124,9 +128,13 @@
             <td><?= $total_marks_sum ?></td>
             <td><?= round($total_percentage_sum / $total_rows, 2) ?>%</td>
             <td><?= round($total_grade_point / $total_rows, 2) ?></td>
-            <!-- Optionally you can calculate overall grade -->
             <td>
                 <?= $total_grade_point ?>
+            </td>
+
+            <td>
+                <?= $total_rows ?>
+                <?= $id ?>
             </td>
         </tr>
     </table>
