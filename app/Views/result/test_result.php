@@ -96,10 +96,12 @@
 
                 // accumulate for summary
                 if ($id == 1 || $id == 3) {
-                } else
-                    $total_marks_sum += $final_total;
+            } else {
+                $total_marks_sum += $final_total;
                 $total_grade_point += $final_gp;
-                ?>
+            }
+
+        ?>
 
             <?php if ($id == 0 || $id == 2): ?>
             <td rowspan="2"><?= $final_total ?></td>
