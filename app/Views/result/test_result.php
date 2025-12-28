@@ -99,11 +99,11 @@
                 if ($id == 1 || $id == 3) {
                 } else {
                     $total_marks_sum += $final_total;
-                if ($total_rows == $id + 1) {
-                    $total_grade_point += max(0, $final_gp - 2);
-                } else {
-                    $total_grade_point += $final_gp;
-                    $total_subject++;
+                    if ($total_rows == $id + 1) {
+                        $total_grade_point += max(0, $final_gp - 2);
+                    } else {
+                        $total_grade_point += $final_gp;
+                        $total_subject++;
                     }
                 }
 
@@ -129,14 +129,13 @@
             <td colspan="10">Total / Average</td>
             <td><?= $total_marks_sum ?></td>
             <td><?= round($total_percentage_sum / $total_rows, 2) ?>%</td>
-            <td><?= round($total_grade_point / $total_rows, 2) ?></td>
+            <td><?= round($total_grade_point / $total_subject, 2) ?></td>
             <td>
                 <?= $total_grade_point ?>
             </td>
 
             <td>
-                <?= $total_rows ?>
-                <?= $id ?>
+                <?= $total_subject ?>
             </td>
         </tr>
     </table>
