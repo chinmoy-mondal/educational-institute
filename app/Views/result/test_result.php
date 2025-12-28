@@ -151,6 +151,9 @@
             <td>
                 <?= $total_grade_point ?>
             </td>
+            <td>
+                <?= $total_grade_point ?>?>
+            </td>
         </tr>
     </table>
     <pre>
