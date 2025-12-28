@@ -111,6 +111,7 @@
             <td><?= $final_percentage ?>%</td>
             <td><?= $final_grade ?></td>
             <td><?= $final_gp ?></td>
+            <td><?= $total_grade_point ?></td>
             <?php endif; ?>
         </tr>
         <?php endforeach; ?>
@@ -123,7 +124,7 @@
             <td><?= round($total_grade_point / $total_rows, 2) ?></td>
             <!-- Optionally you can calculate overall grade -->
             <td>
-                <?= $total_grade_point ?>?>
+                <?= $total_grade_point ?>
             </td>
         </tr>
     </table>
