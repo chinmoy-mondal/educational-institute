@@ -1864,7 +1864,8 @@ class Dashboard extends Controller
         unset($row); // 🔒 VERY IMPORTANT
 
         return view('result/test_result', [
-            'marksheet' => $marksheetNumeric
+            'marksheet' => $marksheetNumeric,
+            'student'   => $student
         ]);
     }
 

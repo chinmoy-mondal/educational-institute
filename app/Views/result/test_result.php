@@ -139,6 +139,9 @@
             </td>
         </tr>
     </table>
+    <pre>
+<?php print_r($student); ?>
+</pre>
 
 </body>
 
