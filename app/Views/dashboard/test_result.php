@@ -169,14 +169,16 @@
             </tr>
             <tr>
                 <td><strong>Student ID:</strong> : <?= esc($student['id']) ?></td>
-                <td><strong>Exam:</strong> : </td>
+                <td><strong>Exam:</strong> : <?= $exam ?>
+                </td>
             </tr>
             <tr>
                 <td><strong>Class:</strong> : <?= esc($student['class']) ?></td>
-                <td><strong>Year:</strong> _____________</td>
+                <td><strong>Year:</strong> : <?= $year ?> </td>
             </tr>
             <tr>
-                <td><strong>Roll:</strong> : <?= esc($student['roll']) ?></td>
+                <td><strong>Roll:</strong> : <?= esc($student['roll']) ?>
+                </td>
                 <td><strong>Group:</strong> : <?= esc($student['section']) ?></td>
             </tr>
         </table>
@@ -329,7 +331,6 @@
                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= urlencode($url) ?>"
                         class="qr-img" alt="Student QR">
                     <p style="font-size: 12px;">Scan to Verify</p>
-                    Scan to Verify
                 </td>
             </tr>
         </table>

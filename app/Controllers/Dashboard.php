@@ -1865,7 +1865,9 @@ class Dashboard extends Controller
 
         return view('dashboard/test_result', [
             'marksheet' => $marksheetNumeric,
-            'student'   => $student
+            'student'   => $student,
+            'exam'      => 'Annual Exam',
+            'year'      => $year
         ]);
     }
 
