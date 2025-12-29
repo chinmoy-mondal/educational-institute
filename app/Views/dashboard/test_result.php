@@ -328,10 +328,13 @@
                     </td>
                     <td>
                         <?php
-                        if ($total_fail)
-                            echo 'F';
-                        else
-                            echo gpToGrade(round($total_grade_point / $total_subject, 2));
+                        if ($total_fail) {
+                            $grade_letter = 'F';
+                            echo $grade_letter;
+                        } else {
+                            $grade_letter = gpToGrade(round($total_grade_point / $total_subject, 2));
+                            echo $grade_letter;
+                        }
                         ?>
                     </td>
                     <td>
