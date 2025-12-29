@@ -1664,12 +1664,14 @@ class Dashboard extends Controller
 
         $section = strtolower($section);
         $key     = $this->normalizeSubject($subject);
+        echo $key . "<br>";
 
         // ---------------- CLASS 9–10 (GENERAL) ----------------
         if (in_array($class, [9, 10]) && strpos($section, 'vocational') === false) {
 
             // Bangla (1st + 2nd combined handled outside)
             if ($key === 'bangla') {
+                echo "Bangla-test";
                 return ($this->branchCheck($wri, 46) && $this->branchCheck($mcq, 20))
                     ? $this->markToGrade($mark)
                     : ['grade' => 'F', 'gp' => 0.00];
@@ -1677,6 +1679,7 @@ class Dashboard extends Controller
 
             // English
             if ($key === 'english') {
+                echo "english-test";
                 return $this->branchCheck($wri, 66)
                     ? $this->markToGrade($mark)
                     : ['grade' => 'F', 'gp' => 0.00];
@@ -1684,6 +1687,7 @@ class Dashboard extends Controller
 
             // ICT
             if ($key === 'ict') {
+                echo "ict-test";
                 return ($this->branchCheck($wri + $mcq, 7) && $this->branchCheck($pra, 8))
                     ? $this->markToGrade($mark)
                     : ['grade' => 'F', 'gp' => 0.00];
@@ -1692,13 +1696,8 @@ class Dashboard extends Controller
             // Science subjects
             if (in_array($key, ['physics', 'chemistry', 'biology', 'higher_math'])) {
 
-                echo "Class: " . $class . "<br>";
-                echo "Section: " . $section . "<br>";
-                echo "Subject: " . $subject . "<br>";
-                echo "Written: " . $wri . "<br>";
-                echo "MCQ: " . $mcq . "<br>";
-                echo "Practical: " . $pra . "<br>";
-                echo "Total Mark: " . $mark . "<br>";
+
+                echo "science-test";
 
                 return ($this->branchCheck($wri, 17)
                     && $this->branchCheck($mcq, 8)
