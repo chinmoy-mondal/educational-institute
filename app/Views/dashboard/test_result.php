@@ -314,11 +314,11 @@
                         return 'F';
                     } ?>
                     <td>
-                        <?php echo gpToGrade(round($total_grade_point / $total_subject, 2)); ?>
+
                     </td>
-                    <td><?= round($total_grade_point / $total_subject, 2) ?></td>
+                    <td><?php echo gpToGrade(round($total_grade_point / $total_subject, 2)); ?></td>
                     <td>
-                        <?= $total_grade_point ?>
+                        <?= round($total_grade_point / $total_subject, 2) ?>
                     </td>
                 </tr>
             </tfoot>
