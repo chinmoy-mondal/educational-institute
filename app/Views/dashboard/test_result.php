@@ -313,7 +313,12 @@
                     <strong>GPA (Without 4th):</strong> ___
                 </td>
                 <td style="text-align:center;">
-                    <img src="qr.png" class="qr-img"><br>
+                    <?php
+                    $url = 'https://mulss.edu.bd/student-id?q=' . $student['id'];
+                    ?>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= urlencode($url) ?>"
+                        class="qr-img" alt="Student QR">
+                    <p style="font-size: 12px;">Scan to Verify</p>
                     Scan to Verify
                 </td>
             </tr>
