@@ -277,6 +277,7 @@
                                     $total_grade_point += $final_gp;
                                     $total_grade_point_without_forth += $final_gp;
                                 } else {
+                                $full_mark += $row['full_mark'];
                                     $total_grade_point += max(0, $final_gp - 2);
                                 }
                             } else {
