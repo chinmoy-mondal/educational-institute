@@ -2039,7 +2039,7 @@ class Dashboard extends Controller
             'year'              => $year,
             'updated_at'        => date('Y-m-d H:i:s'),
         ];
-        echo "{$student['id']} | {$student['class']} | {$student['roll']} | {$student['student_name']} | {$student['roll']} | {$total_marks_sum} | {$percentage}% | {$gpa} | {$gpa_without_forth} | {$grade_letter} | {$total_fail} | {$year}<br>";
+        // echo "{$student['id']} | {$student['class']} | {$student['roll']} | {$student['student_name']} | {$student['roll']} | {$total_marks_sum} | {$percentage}% | {$gpa} | {$gpa_without_forth} | {$grade_letter} | {$total_fail} | {$year}<br>";
         // ---------------- INSERT OR UPDATE ----------------
         $existing = $this->rankingModel
             ->where(['student_id' => $student['id'], 'year' => $year])
@@ -2051,7 +2051,7 @@ class Dashboard extends Controller
         } else {
             $rankingData['created_at'] = date('Y-m-d H:i:s');
             $this->rankingModel->insert($rankingData);
-            echo 'Ranking saved successfully.';
+            // echo 'Ranking saved successfully.';
         }
     }
 
@@ -2066,6 +2066,7 @@ class Dashboard extends Controller
 
         $students = $this->studentModel
             ->where('class', $class)
+            ->where('permission', 0)
             ->where('section NOT LIKE', '%Vocational%') // exclude vocational students
             ->orderBy('roll', 'ASC')
             ->findAll();
