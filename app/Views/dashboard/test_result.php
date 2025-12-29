@@ -339,8 +339,10 @@
                     </td>
                     <td>
                         <?php
-                                                    $percentage = ($total_marks_sum / $full_mark) * 100;
-                        if ($total_fail) {
+                                                    // $percentage = ($total_marks_sum / $full_mark) * 100;
+
+                                                    $percentage =  $full_mark;
+                                                    if ($total_fail) {
                             $gpa = '0.00';
                             echo '0.00';
                         } else {
