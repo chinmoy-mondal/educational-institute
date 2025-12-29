@@ -2078,7 +2078,7 @@ class Dashboard extends Controller
             $section   = $student['section'];
 
             echo "{$studentId}  | {$section}<br>";
-            //$this->test_result($studentId, $year, $view);
+            $this->test_result($studentId, $year, $view);
         }
 
         // return redirect()->back()->with('success', 'Top sheet processed for all students.');
