@@ -268,20 +268,19 @@
                         // accumulate for summary
                         if ($id == 1 || $id == 3) {
                         } else {
+                            $full_mark += $row['full_mark'];
                             $total_marks_sum += $final_total;
                             if ($total_rows == $id + 1) {
                                 if (in_array($student['class'], [6, 7, 8])) {
-                                    $full_mark += $row['full_mark'];
+
                                     $total_fail += ($final_gp) ? 0 : 1;
                                     $total_subject++;
                                     $total_grade_point += $final_gp;
                                     $total_grade_point_without_forth += $final_gp;
                                 } else {
-                                    $full_mark += $row['full_mark'];
                                     $total_grade_point += max(0, $final_gp - 2);
                                 }
                             } else {
-                                $full_mark += $row['full_mark'];
                                 $total_fail += ($final_gp) ? 0 : 1;
                                 $total_grade_point += $final_gp;
                                 $total_grade_point_without_forth += $final_gp;
@@ -349,7 +348,7 @@
                             echo $gpa;
                         }
 
-                        ?><?= $full_mark ?>
+                        ?>
                     </td>
                 </tr>
             </tfoot>
