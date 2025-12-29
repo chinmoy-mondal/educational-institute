@@ -265,10 +265,10 @@
                         $final_grade = $final['grade'] ?? '-';
                         $final_gp = $final['grade_point'] ?? '-';
 
+                        $full_mark += $row['full_mark'];
                         // accumulate for summary
                         if ($id == 1 || $id == 3) {
-                        } else {
-                            $full_mark += $row['full_mark'];
+                    } else {
                             $total_marks_sum += $final_total;
                             if ($total_rows == $id + 1) {
                                 if (in_array($student['class'], [6, 7, 8])) {
