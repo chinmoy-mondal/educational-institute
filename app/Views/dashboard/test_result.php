@@ -104,9 +104,8 @@
 
                 <td style="border:none; text-align:center; width:50%;">
                     <img src="<?= base_url('public/assets/img/logo.jpg'); ?>" alt="School Logo" width="60">
-                    <h4 style="border-bottom:4px solid green; display:inline-block;">
-                        Academic Transcript
-                    </h4>
+                    <h4 style="border-bottom:4px solid green; display:inline-block;"> <br>
+                        < Academic Transcript </h4>
                 </td>
 
                 <td style="border:none; width:25%;">
