@@ -1919,7 +1919,7 @@ class Dashboard extends Controller
                 $gradeInfo = $this->resultManipulation(
                     (int)$student['class'],
                     $student['section'],
-                    $marksheetNumeric[$pair[0]]['subject'], // Bangla / English
+                    $row['subject'],
                     $avgW,
                     $avgM,
                     $avgP,
