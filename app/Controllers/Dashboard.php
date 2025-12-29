@@ -1735,8 +1735,9 @@ class Dashboard extends Controller
 
     public function test_result()
     {
-        $studentId = $this->request->getGet('student_id');
-        $year      = $this->request->getGet('year');
+        $studentId  = $this->request->getGet('student_id');
+        $year       = $this->request->getGet('year');
+        $view       = $this->request->getGet('view');
 
         if (!$studentId || !$year) {
             return "Student ID and Year are required";
@@ -1950,10 +1951,10 @@ class Dashboard extends Controller
             'year'      => $year
         ];
 
-        // Send to another function
-        $this->saveRankingFromResult($data);
-
-        return view('dashboard/test_result', $data);
+        if ($view)
+            $this->saveRankingFromResult($data);
+        else
+            return view('dashboard/test_result', $data);
     }
     private function gpToGrade(float $gp): string
     {
@@ -2057,10 +2058,6 @@ class Dashboard extends Controller
             echo 'Ranking saved successfully.';
         }
     }
-
-
-
-
 
     public function showMarksheet()
     {
