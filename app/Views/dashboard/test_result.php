@@ -95,11 +95,11 @@
         <table style="border:none;">
             <tr>
                 <td style="border:none; width:25%;">
-                    <img src="student-photo.jpg" width="150" alt="Student Photo">
+                    <img src="<?= $student['student_pic'] ?>" width="150" alt="Student Photo">
                 </td>
 
                 <td style="border:none; text-align:center; width:50%;">
-                    <img src="logo.jpg" width="60" alt="School Logo"><br>
+                    <img src="student_pic" width="60" alt="School Logo"><br>
                     <h4 style="border-bottom:4px solid green; display:inline-block;">
                         Academic Transcript
                     </h4>
