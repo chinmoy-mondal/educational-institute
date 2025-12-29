@@ -277,7 +277,7 @@
                                     $total_grade_point += $final_gp;
                                     $total_grade_point_without_forth += $final_gp;
                                 } else {
-                                $full_mark += $row['full_mark'];
+                                    $full_mark += $row['full_mark'];
                                     $total_grade_point += max(0, $final_gp - 2);
                                 }
                             } else {
@@ -301,9 +301,9 @@
                     <td><?= $final_percentage ?>%</td>
                     <td><?= $final_grade ?></td>
                     <td><?= $final_gp ?></td>
-                    <?php endif; ?>
-                </tr>
-                <?php endforeach; ?>
+                    <td><?= $full_mark ?></td>
+                    <td <?php endif; ?> </tr>
+                        <?php endforeach; ?>
 
 
             </tbody>
@@ -340,10 +340,10 @@
                     </td>
                     <td>
                         <?php
-                                                    // $percentage = ($total_marks_sum / $full_mark) * 100;
+                        // $percentage = ($total_marks_sum / $full_mark) * 100;
 
-                                                    $percentage =  $full_mark;
-                                                    if ($total_fail) {
+                        $percentage =  $full_mark;
+                        if ($total_fail) {
                             $gpa = '0.00';
                             echo '0.00';
                         } else {
