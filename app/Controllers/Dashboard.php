@@ -1965,6 +1965,7 @@ class Dashboard extends Controller
         if ($gp >= 1.00) return 'D';
         return 'F';
     }
+
     private function saveRankingFromResult(array $data)
     {
         $marksheet = $data['marksheet'];
@@ -2021,89 +2022,40 @@ class Dashboard extends Controller
             ? round(($total_marks_sum / $full_marks) * 100, 2)
             : 0;
 
-        // return [
-        //     'student_id'        => $student['id'],
-        //     'class'             => $student['class'],
-        //     'new_roll'          => $student['roll'],
-        //     'student_name'      => $student['student_name'],
-        //     'past_roll'         => $student['roll'],
-        //     'total'             => $total_marks_sum,
-        //     'percentage'        => $percentage,
-        //     'gpa'               => $gpa,
-        //     'gpa_without_forth' => $gpa_without_forth,
-        //     'grade_letter'      => $grade_letter,
-        //     'fail'              => $total_fail,
-        //     'year'              => $year,
-        // ];
 
-        echo "Student ID: {$student['id']}<br>";
-        echo "Class: {$student['class']}<br>";
-        echo "New Roll: {$student['roll']}<br>";
-        echo "Student Name: {$student['student_name']}<br>";
-        echo "Past Roll: {$student['roll']}<br>";
-        echo "Total Marks: {$total_marks_sum}<br>";
-        echo "Percentage: {$percentage}%<br>";
-        echo "GPA: {$gpa}<br>";
-        echo "GPA Without 4th: {$gpa_without_forth}<br>";
-        echo "Grade Letter: {$grade_letter}<br>";
-        echo "Fail Subjects: {$total_fail}<br>";
-        echo "Year: {$year}<br>";
-    }
 
-    public function topsheet()
-    {
-        $request = $this->request;
 
-        // ---------------- GET POST DATA ----------------
-        $studentId        = $request->getPost('student_id');
-        $class            = $request->getPost('class');
-        $new_roll         = $request->getPost('new_roll');
-        $student_name     = $request->getPost('student_name');
-        $past_roll        = $request->getPost('past_roll');
-        $total            = $request->getPost('total');
-        $percentage       = $request->getPost('percentage');
-        $gpa              = $request->getPost('gpa');
-        $gpa_without_forth = $request->getPost('gpa_without_forth');
-        $grade_letter     = $request->getPost('grade_letter');
-        $fail             = $request->getPost('fail');
-        $year             = $request->getPost('year');
-
-        if (!$studentId || !$year) {
-            return redirect()->back()->with('error', 'Student ID and Year are required');
-        }
 
         // ---------------- PREPARE DATA ----------------
         $rankingData = [
-            'student_id'        => $studentId,
-            'class'             => $class,
-            'new_roll'          => $new_roll,
-            'student_name'      => $student_name,
-            'past_roll'         => $past_roll,
-            'total'             => $total,
+            'student_id'        => $student['id'],
+            'class'             => $student['class'],
+            'new_roll'          => '',
+            'student_name'      => $student['student_name'],
+            'past_roll'         => $student['roll'],
+            'total'             => $total_marks_sum,
             'percentage'        => $percentage,
             'gpa'               => $gpa,
             'gpa_without_forth' => $gpa_without_forth,
             'grade_letter'      => $grade_letter,
-            'fail'              => $fail,
+            'fail'              => $total_fail,
             'year'              => $year,
             'updated_at'        => date('Y-m-d H:i:s'),
         ];
-
+        echo "{$student['id']} | {$student['class']} | {$student['roll']} | {$student['student_name']} | {$student['roll']} | {$total_marks_sum} | {$percentage}% | {$gpa} | {$gpa_without_forth} | {$grade_letter} | {$total_fail} | {$year}<br>";
         // ---------------- INSERT OR UPDATE ----------------
         $existing = $this->rankingModel
-            ->where(['student_id' => $studentId, 'year' => $year])
+            ->where(['student_id' => $student['id'], 'year' => $year])
             ->first();
 
         if ($existing) {
             $this->rankingModel->update($existing['id'], $rankingData);
-            $message = 'Ranking updated successfully.';
+            echo 'Ranking updated successfully.';
         } else {
             $rankingData['created_at'] = date('Y-m-d H:i:s');
             $this->rankingModel->insert($rankingData);
-            $message = 'Ranking saved successfully.';
+            echo 'Ranking saved successfully.';
         }
-
-        return redirect()->back()->with('success', $message);
     }
 
 
