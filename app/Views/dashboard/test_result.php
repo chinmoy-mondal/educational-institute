@@ -169,7 +169,7 @@
             </tr>
             <tr>
                 <td><strong>Student ID:</strong> : <?= esc($student['id']) ?></td>
-                <td><strong>Exam:</strong> : <?= ucwords(str_replace(['-', '_'], ' ', esc($examName))) ?></td>
+                <td><strong>Exam:</strong> : </td>
             </tr>
             <tr>
                 <td><strong>Class:</strong> : <?= esc($student['class']) ?></td>
