@@ -351,9 +351,9 @@
                     <strong>GPA (Without 4th):</strong>
                     <?php
                     if ($total_fail)
-                        echo 'F';
+                        echo '0.00';
                     else
-                        echo gpToGrade(round($total_grade_point_without_forth / $total_subject, 2));
+                        echo number_format(min(5, $total_grade_point_without_forth / $total_subject), 2)
                     ?>
 
                 </td>
