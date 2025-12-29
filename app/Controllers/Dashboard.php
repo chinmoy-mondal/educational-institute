@@ -1596,17 +1596,6 @@ class Dashboard extends Controller
         return ['grade' => 'F', 'gp' => 0.00];
     }
 
-    // public function gpToGrade(float $gp): string
-    // {
-    //     if ($gp >= 5.00) return 'A+';
-    //     if ($gp >= 4.00) return 'A';
-    //     if ($gp >= 3.50) return 'A-';
-    //     if ($gp >= 3.00) return 'B';
-    //     if ($gp >= 2.00) return 'C';
-    //     if ($gp >= 1.00) return 'D';
-    //     return 'F';
-    // }
-
     public function branchCheck($mark, $passMark)
     {
         return ($mark >= $passMark);

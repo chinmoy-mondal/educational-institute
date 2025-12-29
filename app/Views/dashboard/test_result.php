@@ -1,9 +1,3 @@
-<?php
-$marksheet = $data['marksheet'];
-$student   = $data['student'];
-$exam      = $data['exam'];
-$year      = $data['year'];
-?>
 <!DOCTYPE html>
 <html lang="en">
 
