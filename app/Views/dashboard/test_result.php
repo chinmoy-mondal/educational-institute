@@ -268,6 +268,7 @@
                             $total_marks_sum += $final_total;
                             if ($total_rows == $id + 1) {
                                 if (in_array($student['class'], [6, 8])) {
+                                $total_fail += ($final_gp) ? 0 : 1;
                                     $total_subject++;
                                     $total_grade_point += $final_gp;
                                 } else {
