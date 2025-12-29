@@ -2057,7 +2057,6 @@ class Dashboard extends Controller
 
     public function make_top_sheet()
     {
-        // Get class and year from GET
         $class = $this->request->getGet('class');
         $year  = $this->request->getGet('year');
 
@@ -2065,7 +2064,6 @@ class Dashboard extends Controller
             return redirect()->back()->with('error', 'Class and Year are required');
         }
 
-        // 1️⃣ Get all students in this class
         $students = $this->studentModel
             ->where('class', $class)
             ->orderBy('roll', 'ASC')
@@ -2074,12 +2072,11 @@ class Dashboard extends Controller
         foreach ($students as $student) {
             $studentId = $student['id'];
             $view = 1;
-            echo $studentId . "<br>";
-            $this->test_result($studentId, $year, $view);
 
-            // Wait 1 second
-            sleep(5);
+            $this->test_result($studentId, $year, $view);
         }
+
+        return redirect()->back()->with('success', 'Top sheet processed for all students.');
     }
 
     public function call_test_result()
