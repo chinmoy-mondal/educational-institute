@@ -103,7 +103,7 @@
                 </td>
 
                 <td style="border:none; text-align:center; width:50%;">
-                    <img src="student_pic" width="60" alt="School Logo"><br>
+                    <img src="<?= base_url('public/assets/img/logo.jpg'); ?>" alt="School Logo" width="60">
                     <h4 style="border-bottom:4px solid green; display:inline-block;">
                         Academic Transcript
                     </h4>
@@ -159,25 +159,25 @@
         <!-- Student Info -->
         <table class="student-info">
             <tr>
-                <td><strong>Student Name:</strong> _____________</td>
+                <td><strong>Student Name:</strong> :<?= esc($student['student_name']) ?></td>
             </tr>
             <tr>
-                <td><strong>Father's Name:</strong> _____________</td>
+                <td><strong>Father's Name:</strong> :<?= esc($student['father_name']) ?></td>
             </tr>
             <tr>
-                <td><strong>Mother's Name:</strong> _____________</td>
+                <td><strong>Mother's Name:</strong> : <?= esc($student['mother_name']) ?></td>
             </tr>
             <tr>
-                <td><strong>Student ID:</strong> _____________</td>
-                <td><strong>Exam:</strong> _____________</td>
+                <td><strong>Student ID:</strong> : <?= esc($student['id']) ?></td>
+                <td><strong>Exam:</strong> : <?= ucwords(str_replace(['-', '_'], ' ', esc($examName))) ?></td>
             </tr>
             <tr>
-                <td><strong>Class:</strong> _____________</td>
+                <td><strong>Class:</strong> : <?= esc($student['class']) ?></td>
                 <td><strong>Year:</strong> _____________</td>
             </tr>
             <tr>
-                <td><strong>Roll:</strong> _____________</td>
-                <td><strong>Group:</strong> _____________</td>
+                <td><strong>Roll:</strong> : <?= esc($student['roll']) ?></td>
+                <td><strong>Group:</strong> : <?= esc($student['section']) ?></td>
             </tr>
         </table>
 
@@ -186,40 +186,124 @@
             <thead>
                 <tr>
                     <th rowspan="2">Subject</th>
-                    <th rowspan="2">Full Marks</th>
-                    <th rowspan="2">Obtained</th>
-                    <th colspan="4">Marks Distribution</th>
+                    <th rowspan="2">Full Mark</th>
+                    <th colspan="4">Half-Yearly</th>
+                    <th colspan="4">Annual</th>
                     <th rowspan="2">Total</th>
+                    <th rowspan="2">%</th>
                     <th rowspan="2">Grade</th>
                     <th rowspan="2">GP</th>
                 </tr>
                 <tr>
-                    <th>Written</th>
-                    <th>MCQ</th>
-                    <th>Practical</th>
-                    <th>%</th>
+                    <th>W</th>
+                    <th>M</th>
+                    <th>P</th>
+                    <th>T</th>
+                    <th>W</th>
+                    <th>M</th>
+                    <th>P</th>
+                    <th>T</th>
                 </tr>
             </thead>
             <tbody>
+                <?php foreach ($marksheet as $id => $row): ?>
                 <tr>
-                    <td>Bangla</td>
-                    <td>100</td>
-                    <td>85</td>
-                    <td>55</td>
-                    <td>20</td>
-                    <td>10</td>
-                    <td>85%</td>
-                    <td>85</td>
-                    <td>A+</td>
-                    <td>5.00</td>
+                    <td><?= esc($row['subject'] ?? '-') ?></td>
+                    <td><?= $row['full_mark'] ?? 0 ?></td>
+
+                    <!-- Half-Yearly -->
+                    <?php
+                        $half = $row['half'] ?? [];
+                        $half_written = $half['written'] ?? 0;
+                        $half_mcq = $half['mcq'] ?? 0;
+                        $half_prac = $half['practical'] ?? 0;
+                        $half_total = $half_written + $half_mcq + $half_prac;
+                        ?>
+                    <td><?= $half_written ?></td>
+                    <td><?= $half_mcq ?></td>
+                    <td><?= $half_prac ?></td>
+                    <td><?= $half_total ?></td>
+
+                    <!-- Annual -->
+                    <?php
+                        $annual = $row['annual'] ?? [];
+                        $annual_written = $annual['written'] ?? 0;
+                        $annual_mcq = $annual['mcq'] ?? 0;
+                        $annual_prac = $annual['practical'] ?? 0;
+                        $annual_total = $annual_written + $annual_mcq + $annual_prac;
+                        ?>
+                    <td><?= $annual_written ?></td>
+                    <td><?= $annual_mcq ?></td>
+                    <td><?= $annual_prac ?></td>
+                    <td><?= $annual_total ?></td>
+
+                    <!-- Final -->
+                    <?php
+                        $final = $row['final'] ?? [];
+                        $final_total = $final['total'] ?? 0;
+                        $final_percentage = $final['percentage'] ?? 0;
+                        $final_grade = $final['grade'] ?? '-';
+                        $final_gp = $final['grade_point'] ?? '-';
+
+                        // accumulate for summary
+                        if ($id == 1 || $id == 3) {
+                        } else {
+                            $total_marks_sum += $final_total;
+                            if ($total_rows == $id + 1) {
+                                if (in_array($student['class'], [6, 8])) {
+                                    $total_subject++;
+                                    $total_grade_point += $final_gp;
+                                } else {
+                                    $total_grade_point += max(0, $final_gp - 2);
+                                }
+                            } else {
+                                $total_grade_point += $final_gp;
+                                $total_subject++;
+                            }
+                        }
+
+                        ?>
+
+                    <?php if ($id == 0 || $id == 2): ?>
+                    <td rowspan="2"><?= $final_total ?></td>
+                    <td rowspan="2"><?= $final_percentage ?>%</td>
+                    <td rowspan="2"><?= $final_grade ?></td>
+                    <td rowspan="2"><?= $final_gp ?></td>
+                    <?php elseif ($id > 3): ?>
+                    <td><?= $final_total ?></td>
+                    <td><?= $final_percentage ?>%</td>
+                    <td><?= $final_grade ?></td>
+                    <td><?= $final_gp ?></td>
+                    <!-- <td><?= $total_grade_point ?></td> -->
+                    <?php endif; ?>
                 </tr>
-                <!-- Repeat subject rows -->
+                <?php endforeach; ?>
+
+
             </tbody>
             <tfoot>
-                <tr>
-                    <th colspan="7">Total Marks</th>
-                    <th>----</th>
-                    <th colspan="2">GPA: ----</th>
+                <!-- Summary Row -->
+                <tr style="font-weight:bold; background:#f0f0f0;">
+                    <td colspan="10">Total / Average</td>
+                    <td><?= $total_marks_sum ?></td>
+                    <?php function gpToGrade(float $gp): string
+                    {
+                        if ($gp >= 5.00) return 'A+';
+                        if ($gp >= 4.00) return 'A';
+                        if ($gp >= 3.50) return 'A-';
+                        if ($gp >= 3.00) return 'B';
+                        if ($gp >= 2.00) return 'C';
+                        if ($gp >= 1.00) return 'D';
+
+                        return 'F';
+                    } ?>
+                    <td>
+                        <?php echo gpToGrade(round($total_grade_point / $total_subject, 2)); ?>
+                    </td>
+                    <td><?= round($total_grade_point / $total_subject, 2) ?></td>
+                    <td>
+                        <?= $total_grade_point ?>
+                    </td>
                 </tr>
             </tfoot>
         </table>
