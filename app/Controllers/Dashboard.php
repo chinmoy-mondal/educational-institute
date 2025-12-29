@@ -1661,6 +1661,7 @@ class Dashboard extends Controller
 
     public function resultManipulation($class, $section, $subject, $wri, $mcq, $pra, $mark)
     {
+        echo $class . "==";
         echo $subject . "==";
         $section = strtolower($section);
         $key     = $this->normalizeSubject($subject);
@@ -1706,46 +1707,27 @@ class Dashboard extends Controller
             return ($this->branchCheck($wri, 23) && $this->branchCheck($mcq, 10))
                 ? $this->markToGrade($mark)
                 : ['grade' => 'F', 'gp' => 0.00];
-        } else {
-            if (in_array($key, ['physics', 'chemistry', 'bgs'])) {
-                return ($this->branchCheck($wri, 10))
-                    ? $this->markToGrade($mark)
-                    : ['grade' => 'F', 'gp' => 0.00];
-            }
-            if ($key === 'computer') {
-                return ($this->branchCheck($pra, 17))
-                    ? $this->markToGrade($mark)
-                    : ['grade' => 'F', 'gp' => 0.00];
-            }
-            if ($key === 'agriculture') {
-                return ($this->branchCheck($wri, 15))
+        }
+
+        if (in_array($class, [6, 7, 8]) && strpos($section, 'vocational') === false) {
+            // ---------------- CLASS 6–8 ----------------
+            if (in_array($key, ['bangla', 'english'])) {
+                return $this->branchCheck($wri + $mcq + $pra, 49)
                     ? $this->markToGrade($mark)
                     : ['grade' => 'F', 'gp' => 0.00];
             }
 
-            // Other subjects
-            return ($this->branchCheck($wri, 20))
+            if ($key === 'ict') {
+                return $this->branchCheck($wri + $mcq + $pra, 17)
+                    ? $this->markToGrade($mark)
+                    : ['grade' => 'F', 'gp' => 0.00];
+            }
+
+            // ---------------- ALL OTHER SUBJECTS ----------------
+            return $this->branchCheck($wri + $mcq + $pra, 33)
                 ? $this->markToGrade($mark)
                 : ['grade' => 'F', 'gp' => 0.00];
         }
-
-        // ---------------- CLASS 6–8 ----------------
-        if (in_array($key, ['bangla', 'english'])) {
-            return $this->branchCheck($wri + $mcq + $pra, 49)
-                ? $this->markToGrade($mark)
-                : ['grade' => 'F', 'gp' => 0.00];
-        }
-
-        if ($key === 'ict') {
-            return $this->branchCheck($wri + $mcq + $pra, 17)
-                ? $this->markToGrade($mark)
-                : ['grade' => 'F', 'gp' => 0.00];
-        }
-
-        // ---------------- ALL OTHER SUBJECTS ----------------
-        return $this->branchCheck($wri + $mcq + $pra, 33)
-            ? $this->markToGrade($mark)
-            : ['grade' => 'F', 'gp' => 0.00];
     }
 
     public function test_result()
