@@ -268,14 +268,14 @@
                             $total_marks_sum += $final_total;
                             if ($total_rows == $id + 1) {
                                 if (in_array($student['class'], [6, 8])) {
-                                $total_fail += ($final_gp) ? 0 : 1;
+                                    $total_fail += ($final_gp) ? 0 : 1;
                                     $total_subject++;
                                     $total_grade_point += $final_gp;
                                 } else {
                                     $total_grade_point += max(0, $final_gp - 2);
                                 }
                             } else {
-                            $total_fail += ($final_gp) ? 0 : 1;
+                                $total_fail += ($final_gp) ? 0 : 1;
                                 $total_grade_point += $final_gp;
                                 $total_subject++;
                             }
@@ -293,7 +293,6 @@
                     <td><?= $final_percentage ?>%</td>
                     <td><?= $final_grade ?></td>
                     <td><?= $final_gp ?></td>
-                    <!-- <td><?= $total_grade_point ?></td> -->
                     <?php endif; ?>
                 </tr>
                 <?php endforeach; ?>
@@ -304,7 +303,8 @@
                 <!-- Summary Row -->
                 <tr style="font-weight:bold; background:#f0f0f0;">
                     <td colspan="10">Total / Average</td>
-                    <td><?= $total_marks_sum ?></td>
+                    <td>
+                        <?= $total_marks_sum ?></td>
                     <?php function gpToGrade(float $gp): string
                     {
                         if ($gp >= 5.00) return 'A+';
@@ -317,11 +317,24 @@
                         return 'F';
                     } ?>
                     <td>
-
+                        -
                     </td>
-                    <td><?php echo gpToGrade(round($total_grade_point / $total_subject, 2)); ?></td>
                     <td>
-                        <?= number_format(min(5, $total_grade_point / $total_subject), 2) ?>
+                        <?php
+                        if ($total_fail)
+                            echo 'F';
+                        else
+                            echo gpToGrade(round($total_grade_point / $total_subject, 2));
+                        ?>
+                    </td>
+                    <td>
+                        <?php
+
+                        if ($total_fail)
+                            echo 'F';
+                        else
+                            echo number_format(min(5, $total_grade_point / $total_subject), 2)
+                        ?>
                     </td>
                 </tr>
             </tfoot>
