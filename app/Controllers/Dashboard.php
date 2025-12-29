@@ -2059,6 +2059,41 @@ class Dashboard extends Controller
         }
     }
 
+    public function make_top_sheet()
+    {
+        // Get class and year from GET
+        $class = $this->request->getGet('class');
+        $year  = $this->request->getGet('year');
+
+        if (!$class || !$year) {
+            return redirect()->back()->with('error', 'Class and Year are required');
+        }
+
+        // 1️⃣ Get all students in this class
+        $students = $this->studentModel
+            ->where('class', $class)
+            ->orderBy('roll', 'ASC')
+            ->findAll();
+
+        // 2️⃣ Loop through each student
+        foreach ($students as $student) {
+
+            $studentId = $student['id'];
+            $view = 1; // optional parameter
+
+            // Option A: Redirect approach (less efficient, multiple redirects)
+            // return redirect()->to(base_url("admin/test_result?student_id={$studentId}&year={$year}&view={$view}"));
+
+            // Option B: Directly call your test_result function with parameters (recommended)
+            $this->test_result($studentId, $year, $view);
+
+            // Optional: sleep(1); // small delay if needed
+        }
+
+        // 3️⃣ After all students processed
+        return redirect()->back()->with('success', 'Top sheet processed for all students.');
+    }
+
     public function showMarksheet()
     {
         $this->data['title'] = 'Marksheet';

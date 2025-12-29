@@ -103,9 +103,7 @@ $routes->get('admin/show-marksheet', 'Dashboard::showMarksheet');
 
 
 $routes->get('admin/test_result', 'Dashboard::test_result');
-
-// POST route for saving ranking
-$routes->post('admin/topsheet', 'Dashboard::topsheet');
+$routes->get('admin/topsheet', 'Dashboard::make_top_sheet');
 
 
 
