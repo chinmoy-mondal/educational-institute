@@ -1869,7 +1869,15 @@ class Dashboard extends Controller
             }
 
             $percentage = $fullMarkSum > 0 ? round(($totalSum / $fullMarkSum) * 100, 2) : 0;
-            $gradeInfo = $this->markToGrade($percentage);
+            $gradeInfo = $this->resultManipulation(
+                (int)$student['class'],
+                $student['section'],
+                $marksheetNumeric[$pair[0]]['subject'], // Bangla / English
+                $totalW,
+                $totalM,
+                $totalP,
+                $percentage
+            );
 
             foreach ($pair as $i) {
                 if (!isset($marksheetNumeric[$i])) continue;
@@ -1903,7 +1911,15 @@ class Dashboard extends Controller
                     ? round(($avgTotal / $row['full_mark']) * 100, 2)
                     : 0;
 
-                $gradeInfo = $this->markToGrade($percentage);
+                $gradeInfo = $this->resultManipulation(
+                    (int)$student['class'],
+                    $student['section'],
+                    $marksheetNumeric[$pair[0]]['subject'], // Bangla / English
+                    $totalW,
+                    $totalM,
+                    $totalP,
+                    $percentage
+                );
 
                 $row['average'] = [
                     'written'   => $avgW,
