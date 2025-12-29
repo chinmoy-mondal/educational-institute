@@ -2095,6 +2095,34 @@ class Dashboard extends Controller
         return $this->test_result($studentId, $year, $view);
     }
 
+    public function updateNewRollByClass(int $class)
+    {
+        // 1️⃣ Get ordered ranking list
+        $rankings = $this->rankingModel
+            ->where('class', $class)
+            ->orderBy('fail', 'ASC')
+            ->orderBy('total', 'DESC')
+            ->findAll();
+
+        if (empty($rankings)) {
+            return false;
+        }
+
+        // 2️⃣ Update new_roll serially
+        $serial = 1;
+
+        foreach ($rankings as $row) {
+            $this->rankingModel->update($row['id'], [
+                'new_roll'   => $serial,
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+
+            $serial++;
+        }
+
+        return true;
+    }
+
     public function showMarksheet()
     {
         $this->data['title'] = 'Marksheet';
