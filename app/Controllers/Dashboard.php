@@ -1603,8 +1603,8 @@ class Dashboard extends Controller
         $subject = strtolower(trim($subject));
 
         // ---- Core Subjects ----
-        if (str_contains($subject, 'bangla')) return 'bangla';
-        if (str_contains($subject, 'english')) return 'english';
+        if (str_contains($subject, 'bangla ')) return 'bangla';
+        if (str_contains($subject, 'english ')) return 'english';
         if (str_contains($subject, 'physics')) return 'physics';
         if (str_contains($subject, 'chemistry')) return 'chemistry';
         if (str_contains($subject, 'biology')) return 'biology';
@@ -1661,7 +1661,7 @@ class Dashboard extends Controller
 
     public function resultManipulation($class, $section, $subject, $wri, $mcq, $pra, $mark)
     {
-        echo $subject . "==<br>";
+        echo $subject . "==";
         $section = strtolower($section);
         $key     = $this->normalizeSubject($subject);
         echo $key . "<br>";
