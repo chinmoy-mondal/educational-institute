@@ -2077,7 +2077,7 @@ class Dashboard extends Controller
             $name      = $student['student_name'];
             $section   = $student['section'];
 
-            echo "{$studentId} | {$roll} | {$name} | {$section}<br>";
+            echo "{$studentId}  | {$section}<br>";
             //$this->test_result($studentId, $year, $view);
         }
 
