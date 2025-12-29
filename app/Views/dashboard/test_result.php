@@ -318,7 +318,7 @@
                     </td>
                     <td><?php echo gpToGrade(round($total_grade_point / $total_subject, 2)); ?></td>
                     <td>
-                        <?= round($total_grade_point / $total_subject, 2) ?>
+                        <?= number_format(min(5, $total_grade_point / $total_subject), 2) ?>
                     </td>
                 </tr>
             </tfoot>
