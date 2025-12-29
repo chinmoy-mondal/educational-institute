@@ -2095,7 +2095,7 @@ class Dashboard extends Controller
         return $this->test_result($studentId, $year, $view);
     }
 
-    public function updateNewRollByClass(int $class)
+    public function updateNewRollByClass($class)
     {
         // 1️⃣ Get ordered ranking list
         $rankings = $this->rankingModel
