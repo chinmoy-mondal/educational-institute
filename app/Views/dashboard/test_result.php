@@ -95,7 +95,11 @@
         <table style="border:none;">
             <tr>
                 <td style="border:none; width:25%;">
-                    <img src="<?= $student['student_pic'] ?>" width="150" alt="Student Photo">
+                    <?php if (!empty($student['student_pic'])): ?>
+                    <img src="<?= base_url($student['student_pic']) ?>" alt="Student Photo" width="150">
+                    <?php else: ?>
+                    <img src="<?= base_url('public/assets/img/default.png') ?>" alt="No Photo" width="150">
+                    <?php endif; ?>
                 </td>
 
                 <td style="border:none; text-align:center; width:50%;">
