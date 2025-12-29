@@ -1602,6 +1602,7 @@ class Dashboard extends Controller
     {
         $subject = strtolower(trim($subject));
 
+        // ---- Core Subjects ----
         if (str_contains($subject, 'bangla')) return 'bangla';
         if (str_contains($subject, 'english')) return 'english';
         if (str_contains($subject, 'physics')) return 'physics';
@@ -1610,9 +1611,51 @@ class Dashboard extends Controller
         if (str_contains($subject, 'higher mathematics')) return 'higher_math';
         if (str_contains($subject, 'mathematics')) return 'math';
         if (str_contains($subject, 'ict')) return 'ict';
-        if (str_contains($subject, 'religion')) return 'religion';
-        if (str_contains($subject, 'bangladesh')) return 'bgs';
 
+        // ---- Religion ----
+        if (
+            str_contains($subject, 'religion') ||
+            str_contains($subject, 'islamic studies') ||
+            str_contains($subject, 'hindu religion')
+        ) {
+            return 'religion';
+        }
+
+        // ---- Bangladesh & Global Studies ----
+        if (
+            str_contains($subject, 'bangladesh') ||
+            str_contains($subject, 'global studies')
+        ) {
+            return 'bgs';
+        }
+
+        // ---- Vocational / Technical ----
+        if (
+            str_contains($subject, 'computer application')
+        ) {
+            return 'computer';
+        }
+
+        if (
+            str_contains($subject, 'it support') ||
+            str_contains($subject, 'iot')
+        ) {
+            return 'it_iot';
+        }
+
+        if (
+            str_contains($subject, 'food processing')
+        ) {
+            return 'food_processing';
+        }
+
+        if (
+            str_contains($subject, 'agriculture')
+        ) {
+            return 'agriculture';
+        }
+
+        // ---- Fallback ----
         return 'general';
     }
 
@@ -1656,6 +1699,27 @@ class Dashboard extends Controller
 
             // Other subjects
             return ($this->branchCheck($wri, 23) && $this->branchCheck($mcq, 10))
+                ? $this->markToGrade($mark)
+                : ['grade' => 'F', 'gp' => 0.00];
+        } else {
+            if (in_array($key, ['physics', 'chemistry', 'bgs'])) {
+                return ($this->branchCheck($wri, 10))
+                    ? $this->markToGrade($mark)
+                    : ['grade' => 'F', 'gp' => 0.00];
+            }
+            if ($key === 'computer') {
+                return ($this->branchCheck($pra, 17))
+                    ? $this->markToGrade($mark)
+                    : ['grade' => 'F', 'gp' => 0.00];
+            }
+            if ($key === 'agriculture') {
+                return ($this->branchCheck($wri, 15))
+                    ? $this->markToGrade($mark)
+                    : ['grade' => 'F', 'gp' => 0.00];
+            }
+
+            // Other subjects
+            return ($this->branchCheck($wri, 20))
                 ? $this->markToGrade($mark)
                 : ['grade' => 'F', 'gp' => 0.00];
         }
@@ -1862,6 +1926,9 @@ class Dashboard extends Controller
             }
         }
         unset($row); // 🔒 VERY IMPORTANT
+        echo "<pre>";
+        print_r($marksheetNumeric);
+        echo "</pre>";
 
         return view('dashboard/test_result', [
             'marksheet' => $marksheetNumeric,
