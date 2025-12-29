@@ -340,7 +340,7 @@
             <tr>
                 <td style="border:none; text-align:left;">
                     <img src="<?= base_url('public/assets/img/sign.png') ?>" alt="Signature" class="d-block"
-                        style="height: 41px;">
+                        style="height: 41px;"><br>
                     ____________________<br>
                     Head Teacher
                 </td>
