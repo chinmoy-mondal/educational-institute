@@ -1942,9 +1942,9 @@ class Dashboard extends Controller
             }
         }
         unset($row); // 🔒 VERY IMPORTANT
-        echo "<pre>";
-        print_r($marksheetNumeric);
-        echo "</pre>";
+        // echo "<pre>";
+        // print_r($marksheetNumeric);
+        // echo "</pre>";
 
         return view('dashboard/test_result', [
             'marksheet' => $marksheetNumeric,
