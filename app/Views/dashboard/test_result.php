@@ -388,6 +388,24 @@
         </div>
 
     </div>
+    <div class="no-print" style="text-align:center; margin-top:20px;">
+        <form action="<?= base_url('admin/topsheet') ?>" method="post">
+            <input type="hidden" name="student_id" value="<?= esc($student['id']) ?>">
+            <input type="hidden" name="class" value="<?= esc($student['class']) ?>">
+            <input type="hidden" name="new_roll" value="<?= esc($student['roll']) ?>">
+            <input type="hidden" name="student_name" value="<?= esc($student['student_name']) ?>">
+            <input type="hidden" name="past_roll" value="<?= esc($student['roll']) ?>">
+            <input type="hidden" name="total" value="<?= $total_marks_sum ?>">
+            <input type="hidden" name="percentage" value="<?= $percentage ?>">
+            <input type="hidden" name="gpa" value="<?= $gpa ?>">
+            <input type="hidden" name="gpa_without_forth" value="<?= $gpa_without_forth ?>">
+            <input type="hidden" name="grade_letter" value="<?= $grade_letter ?>">
+            <input type="hidden" name="fail" value="<?= $total_fail ?>">
+            <input type="hidden" name="year" value="<?= $year ?>">
+
+            <button type="submit">Save Ranking</button>
+        </form>
+    </div>
 
 </body>
 
