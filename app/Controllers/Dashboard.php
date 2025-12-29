@@ -1902,7 +1902,7 @@ class Dashboard extends Controller
         }
 
         // ---------------- SINGLE SUBJECTS ----------------
-        foreach ($marksheetNumeric as $i => $row) {
+        foreach ($marksheetNumeric as $i => &$row) {
             if (!isset($row['final'])) {
                 $h = $row['half'] ?? [];
                 $a = $row['annual'] ?? [];
@@ -1919,7 +1919,7 @@ class Dashboard extends Controller
                 $gradeInfo = $this->resultManipulation(
                     (int)$student['class'],
                     $student['section'],
-                    $row[$pair[0]]['subject'], // Bangla / English
+                    $marksheetNumeric[$pair[0]]['subject'], // Bangla / English
                     $avgW,
                     $avgM,
                     $avgP,
