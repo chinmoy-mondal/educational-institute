@@ -349,7 +349,7 @@
                             echo $gpa;
                         }
 
-                        ?>
+                        ?><?= $full_mark ?>
                     </td>
                 </tr>
             </tfoot>
