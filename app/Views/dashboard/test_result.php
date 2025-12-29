@@ -318,7 +318,7 @@
         </table>
 
         <!-- Bottom Section -->
-        <table style="margin-top:20px;">
+        <table style="">
             <tr>
                 <td>
                     <strong>Failed Subjects:</strong> ___ <br>
