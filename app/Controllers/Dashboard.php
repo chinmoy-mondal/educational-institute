@@ -1735,10 +1735,6 @@ class Dashboard extends Controller
 
     public function test_result($studentId = null, $year = null, $view = null)
     {
-        $studentId  = $this->request->getGet('student_id');
-        $year       = $this->request->getGet('year');
-        $view       = $this->request->getGet('view');
-
         if (!$studentId || !$year) {
             return "Student ID and Year are required";
         }
@@ -2095,6 +2091,15 @@ class Dashboard extends Controller
 
         // 3️⃣ After all students processed
         // return redirect()->back()->with('success', 'Top sheet processed for all students.');
+    }
+    public function call_test_result()
+    {
+        // Get class and year from GET
+        $studentId  = $this->request->getGet('student_id');
+        $year       = $this->request->getGet('year');
+        $view       = $this->request->getGet('view');
+
+        return $this->test_result($studentId, $year, $view);
     }
 
     public function showMarksheet()

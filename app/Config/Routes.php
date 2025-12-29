@@ -102,7 +102,7 @@ $routes->get('admin/select-marksheet', 'Dashboard::selectMarksheetForm');
 $routes->get('admin/show-marksheet', 'Dashboard::showMarksheet');
 
 
-$routes->get('admin/test_result', 'Dashboard::test_result');
+$routes->get('admin/test_result', 'Dashboard::call_test_result');
 $routes->get('admin/topsheet', 'Dashboard::make_top_sheet');
 
 
