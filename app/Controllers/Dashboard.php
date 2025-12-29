@@ -1733,7 +1733,7 @@ class Dashboard extends Controller
         }
     }
 
-    public function test_result()
+    public function test_result($studentId = null, $year = null, $view = null)
     {
         $studentId  = $this->request->getGet('student_id');
         $year       = $this->request->getGet('year');
