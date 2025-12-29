@@ -187,6 +187,7 @@
         $total_marks_sum = 0;
         $total_subject = 0;
         $total_grade_point = 0;
+        $total_grade_point_without_forth = 0;
         $total_percentage_sum = 0;
         $total_rows = count($marksheet);
         ?>
@@ -219,7 +220,7 @@
                     <td><?= esc($row['subject'] ?? '-') ?>
                         <?php
                             if ($total_rows == $id + 1) {
-                            if (in_array($student['class'], [6, 7, 8])) {
+                                if (in_array($student['class'], [6, 7, 8])) {
                                 } else {
                                     echo "<b>(4th)</b>";
                                 }
@@ -267,16 +268,18 @@
                         } else {
                             $total_marks_sum += $final_total;
                             if ($total_rows == $id + 1) {
-                            if (in_array($student['class'], [6, 7, 8])) {
+                                if (in_array($student['class'], [6, 7, 8])) {
                                     $total_fail += ($final_gp) ? 0 : 1;
                                     $total_subject++;
                                     $total_grade_point += $final_gp;
+                                    $total_grade_point_without_forth += $final_gp;
                                 } else {
                                     $total_grade_point += max(0, $final_gp - 2);
                                 }
                             } else {
                                 $total_fail += ($final_gp) ? 0 : 1;
                                 $total_grade_point += $final_gp;
+                                $total_grade_point_without_forth += $final_gp;
                                 $total_subject++;
                             }
                         }
@@ -345,7 +348,14 @@
             <tr>
                 <td>
                     <strong>Failed Subjects:</strong> <?= $total_fail ?><br>
-                    <!-- <strong>GPA (Without 4th):</strong> ___ -->
+                    <strong>GPA (Without 4th):</strong>
+                    <?php
+                    if ($total_fail)
+                        echo 'F';
+                    else
+                        echo gpToGrade(round($total_grade_point_without_forth / $total_subject, 2));
+                    ?>
+
                 </td>
                 <td style="text-align:center;">
                     <?php
