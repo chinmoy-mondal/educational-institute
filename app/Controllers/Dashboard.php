@@ -1671,7 +1671,6 @@ class Dashboard extends Controller
 
             // Bangla (1st + 2nd combined handled outside)
             if ($key === 'bangla') {
-                echo "Bangla-test";
                 return ($this->branchCheck($wri, 46) && $this->branchCheck($mcq, 20))
                     ? $this->markToGrade($mark)
                     : ['grade' => 'F', 'gp' => 0.00];
@@ -1679,7 +1678,6 @@ class Dashboard extends Controller
 
             // English
             if ($key === 'english') {
-                echo "english-test";
                 return $this->branchCheck($wri, 66)
                     ? $this->markToGrade($mark)
                     : ['grade' => 'F', 'gp' => 0.00];
@@ -1687,7 +1685,6 @@ class Dashboard extends Controller
 
             // ICT
             if ($key === 'ict') {
-                echo "ict-test";
                 return ($this->branchCheck($wri + $mcq, 7) && $this->branchCheck($pra, 8))
                     ? $this->markToGrade($mark)
                     : ['grade' => 'F', 'gp' => 0.00];
@@ -1697,7 +1694,6 @@ class Dashboard extends Controller
             if (in_array($key, ['physics', 'chemistry', 'biology', 'higher_math'])) {
 
 
-                echo "science-test";
 
                 return ($this->branchCheck($wri, 17)
                     && $this->branchCheck($mcq, 8)
