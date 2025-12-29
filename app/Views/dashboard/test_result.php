@@ -331,7 +331,7 @@
                         <?php
 
                         if ($total_fail)
-                            echo 'F';
+                            echo '0.00';
                         else
                             echo number_format(min(5, $total_grade_point / $total_subject), 2)
                         ?>
