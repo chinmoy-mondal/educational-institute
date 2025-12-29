@@ -345,7 +345,7 @@
             <tr>
                 <td>
                     <strong>Failed Subjects:</strong> <?= $total_fail ?><br>
-                    <strong>GPA (Without 4th):</strong> ___
+                    <!-- <strong>GPA (Without 4th):</strong> ___ -->
                 </td>
                 <td style="text-align:center;">
                     <?php
