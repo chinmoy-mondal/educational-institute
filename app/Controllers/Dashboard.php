@@ -1661,13 +1661,7 @@ class Dashboard extends Controller
 
     public function resultManipulation($class, $section, $subject, $wri, $mcq, $pra, $mark)
     {
-        echo "Class: " . $class . "<br>";
-        echo "Section: " . $section . "<br>";
-        echo "Subject: " . $subject . "<br>";
-        echo "Written: " . $wri . "<br>";
-        echo "MCQ: " . $mcq . "<br>";
-        echo "Practical: " . $pra . "<br>";
-        echo "Total Mark: " . $mark . "<br>";
+
         $section = strtolower($section);
         $key     = $this->normalizeSubject($subject);
 
@@ -1697,6 +1691,15 @@ class Dashboard extends Controller
 
             // Science subjects
             if (in_array($key, ['physics', 'chemistry', 'biology', 'higher_math'])) {
+
+                echo "Class: " . $class . "<br>";
+                echo "Section: " . $section . "<br>";
+                echo "Subject: " . $subject . "<br>";
+                echo "Written: " . $wri . "<br>";
+                echo "MCQ: " . $mcq . "<br>";
+                echo "Practical: " . $pra . "<br>";
+                echo "Total Mark: " . $mark . "<br>";
+
                 return ($this->branchCheck($wri, 17)
                     && $this->branchCheck($mcq, 8)
                     && $this->branchCheck($pra, 8))
