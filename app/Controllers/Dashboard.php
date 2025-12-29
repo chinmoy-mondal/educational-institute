@@ -2066,6 +2066,7 @@ class Dashboard extends Controller
 
         $students = $this->studentModel
             ->where('class', $class)
+            ->where('section !=', 'Vocational') // exclude vocational students
             ->orderBy('roll', 'ASC')
             ->findAll();
 
