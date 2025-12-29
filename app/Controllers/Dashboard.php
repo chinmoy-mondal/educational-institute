@@ -1959,47 +1959,56 @@ class Dashboard extends Controller
     {
         $request = $this->request;
 
-        $studentId = $request->getPost('student_id');
-        $year      = $request->getPost('year');
+        // ---------------- GET POST DATA ----------------
+        $studentId        = $request->getPost('student_id');
+        $class            = $request->getPost('class');
+        $new_roll         = $request->getPost('new_roll');
+        $student_name     = $request->getPost('student_name');
+        $past_roll        = $request->getPost('past_roll');
+        $total            = $request->getPost('total');
+        $percentage       = $request->getPost('percentage');
+        $gpa              = $request->getPost('gpa');
+        $gpa_without_forth = $request->getPost('gpa_without_forth');
+        $grade_letter     = $request->getPost('grade_letter');
+        $fail             = $request->getPost('fail');
+        $year             = $request->getPost('year');
 
         if (!$studentId || !$year) {
-            return "Student ID and Year are required";
+            return redirect()->back()->with('error', 'Student ID and Year are required');
         }
 
-        // Prepare ranking data
+        // ---------------- PREPARE DATA ----------------
         $rankingData = [
             'student_id'        => $studentId,
-            'class'             => $request->getPost('class'),
-            'new_roll'          => $request->getPost('new_roll'),
-            'student_name'      => $request->getPost('student_name'),
-            'past_roll'         => $request->getPost('past_roll'),
-            'total'             => $request->getPost('total'),
-            'percentage'        => $request->getPost('percentage'),
-            'gpa'               => $request->getPost('gpa'),
-            'gpa_without_forth' => $request->getPost('gpa_without_forth'),
-            'grade_letter'      => $request->getPost('grade_letter'),
-            'fail'              => $request->getPost('fail'),
+            'class'             => $class,
+            'new_roll'          => $new_roll,
+            'student_name'      => $student_name,
+            'past_roll'         => $past_roll,
+            'total'             => $total,
+            'percentage'        => $percentage,
+            'gpa'               => $gpa,
+            'gpa_without_forth' => $gpa_without_forth,
+            'grade_letter'      => $grade_letter,
+            'fail'              => $fail,
             'year'              => $year,
             'updated_at'        => date('Y-m-d H:i:s'),
-            'created_at'        => date('Y-m-d H:i:s'),
         ];
 
-        // Check if record exists
+        // ---------------- INSERT OR UPDATE ----------------
         $existing = $this->rankingModel
             ->where(['student_id' => $studentId, 'year' => $year])
             ->first();
 
         if ($existing) {
-            // Update
             $this->rankingModel->update($existing['id'], $rankingData);
-            $message = "Ranking updated successfully!";
+            $message = 'Ranking updated successfully.';
         } else {
-            // Insert
+            $rankingData['created_at'] = date('Y-m-d H:i:s');
             $this->rankingModel->insert($rankingData);
-            $message = "Ranking inserted successfully!";
+            $message = 'Ranking saved successfully.';
         }
 
-        return redirect()->back()->with('message', $message);
+        return redirect()->back()->with('success', $message);
     }
 
 
