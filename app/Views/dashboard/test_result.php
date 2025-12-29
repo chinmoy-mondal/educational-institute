@@ -1,162 +1,162 @@
-<?= $this->extend('layouts/admin') ?>
-<?= $this->section('content') ?>
+<!DOCTYPE html>
+<html>
 
-<style>
-.marksheet-box {
-    background: #fff;
-    padding: 20px;
-    border: 2px solid #000;
-}
-
-.marksheet-box h4 {
-    text-align: center;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-.table-bordered th,
-.table-bordered td {
-    border: 1px solid #000 !important;
-    text-align: center;
-    vertical-align: middle;
-    padding: 6px;
-}
-
-thead th {
-    background: #eee;
-}
-
-.table-danger {
-    background-color: #f8d7da !important;
-}
-
-@media print {
-    .no-print {
-        display: none !important;
+<head>
+    <title>Marksheet</title>
+    <style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
     }
-}
-</style>
 
-<div class="container-fluid">
-    <div class="marksheet-box">
+    th,
+    td {
+        border: 1px solid #000;
+        padding: 6px;
+        text-align: center;
+    }
 
-        <h4>Academic Marksheet</h4>
+    th {
+        background: #eee;
+    }
+    </style>
+</head>
 
-        <!-- Student Info -->
-        <?php if (isset($student)): ?>
-        <div class="mb-3">
-            <strong>Name:</strong> <?= esc($student['name'] ?? '') ?> |
-            <strong>Class:</strong> <?= esc($student['class'] ?? '') ?> |
-            <strong>Roll:</strong> <?= esc($student['roll'] ?? '') ?> |
-            <strong>Year:</strong> <?= esc($year ?? '') ?>
-        </div>
-        <?php endif; ?>
+<body>
 
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th rowspan="2">Subject</th>
-                    <th rowspan="2">Full Mark</th>
-                    <th colspan="4">Half-Yearly</th>
-                    <th colspan="4">Annual</th>
-                    <th colspan="4">Average</th>
-                    <th rowspan="2">Total</th>
-                    <th rowspan="2">%</th>
-                    <th rowspan="2">Grade</th>
-                    <th rowspan="2">GP</th>
-                </tr>
-                <tr>
-                    <th>W</th>
-                    <th>M</th>
-                    <th>P</th>
-                    <th>T</th>
-                    <th>W</th>
-                    <th>M</th>
-                    <th>P</th>
-                    <th>T</th>
-                    <th>W</th>
-                    <th>M</th>
-                    <th>P</th>
-                    <th>T</th>
-                </tr>
-            </thead>
+    <h4 style="text-align:center">Academic Marksheet</h4>
 
-            <tbody>
-                <?php foreach ($marksheet as $row): ?>
-                <?php
-                    // Half-Yearly
-                    $halfW = $row['half']['written'] ?? 0;
-                    $halfM = $row['half']['mcq'] ?? 0;
-                    $halfP = $row['half']['practical'] ?? 0;
-                    $halfT = $halfW + $halfM + $halfP;
+    <?php
+    $total_marks_sum = 0;
+    $total_subject = 0;
+    $total_grade_point = 0;
+    $total_percentage_sum = 0;
+    $total_rows = count($marksheet);
+    ?>
 
-                    // Annual
-                    $annW = $row['annual']['written'] ?? 0;
-                    $annM = $row['annual']['mcq'] ?? 0;
-                    $annP = $row['annual']['practical'] ?? 0;
-                    $annT = $annW + $annM + $annP;
+    <table>
+        <tr>
+            <th rowspan="2">Subject</th>
+            <th rowspan="2">Full Mark</th>
+            <th colspan="4">Half-Yearly</th>
+            <th colspan="4">Annual</th>
+            <th rowspan="2">Total</th>
+            <th rowspan="2">%</th>
+            <th rowspan="2">Grade</th>
+            <th rowspan="2">GP</th>
+        </tr>
+        <tr>
+            <th>W</th>
+            <th>M</th>
+            <th>P</th>
+            <th>T</th>
+            <th>W</th>
+            <th>M</th>
+            <th>P</th>
+            <th>T</th>
+        </tr>
 
-                    // Average
-                    $avgW = $row['average']['written'] ?? round(($halfW + $annW) / 2, 2);
-                    $avgM = $row['average']['mcq'] ?? round(($halfM + $annM) / 2, 2);
-                    $avgP = $row['average']['practical'] ?? round(($halfP + $annP) / 2, 2);
-                    $avgT = $row['average']['total'] ?? round($avgW + $avgM + $avgP, 2);
+        <?php foreach ($marksheet as $id => $row): ?>
+        <tr>
+            <td><?= esc($row['subject'] ?? '-') ?></td>
+            <td><?= $row['full_mark'] ?? 0 ?></td>
 
-                    // Final
-                    $finalTotal = $row['final']['total'] ?? $avgT;
-                    $percentage = $row['final']['percentage'] ?? ($row['full_mark'] > 0 ? round(($finalTotal / $row['full_mark']) * 100, 2) : 0);
-                    $grade      = $row['final']['grade'] ?? '-';
-                    $gp         = $row['final']['grade_point'] ?? '-';
-                    $passStatus = $row['final']['pass_status'] ?? 'Pass';
+            <!-- Half-Yearly -->
+            <?php
+                $half = $row['half'] ?? [];
+                $half_written = $half['written'] ?? 0;
+                $half_mcq = $half['mcq'] ?? 0;
+                $half_prac = $half['practical'] ?? 0;
+                $half_total = $half_written + $half_mcq + $half_prac;
+                ?>
+            <td><?= $half_written ?></td>
+            <td><?= $half_mcq ?></td>
+            <td><?= $half_prac ?></td>
+            <td><?= $half_total ?></td>
 
-                    // Optional subject mark
-                    $subjectName = esc($row['subject']);
-                    if (isset($row['half']['optional']) || isset($row['annual']['optional'])) {
-                        $subjectName .= ' *';
+            <!-- Annual -->
+            <?php
+                $annual = $row['annual'] ?? [];
+                $annual_written = $annual['written'] ?? 0;
+                $annual_mcq = $annual['mcq'] ?? 0;
+                $annual_prac = $annual['practical'] ?? 0;
+                $annual_total = $annual_written + $annual_mcq + $annual_prac;
+                ?>
+            <td><?= $annual_written ?></td>
+            <td><?= $annual_mcq ?></td>
+            <td><?= $annual_prac ?></td>
+            <td><?= $annual_total ?></td>
+
+            <!-- Final -->
+            <?php
+                $final = $row['final'] ?? [];
+                $final_total = $final['total'] ?? 0;
+                $final_percentage = $final['percentage'] ?? 0;
+                $final_grade = $final['grade'] ?? '-';
+                $final_gp = $final['grade_point'] ?? '-';
+
+                // accumulate for summary
+                if ($id == 1 || $id == 3) {
+                } else {
+                    $total_marks_sum += $final_total;
+                    if ($total_rows == $id + 1) {
+                        if (in_array($student['class'], [6, 8])) {
+                            $total_subject++;
+                            $total_grade_point += $final_gp;
+                        } else {
+                            $total_grade_point += max(0, $final_gp - 2);
+                        }
+                    } else {
+                        $total_grade_point += $final_gp;
+                        $total_subject++;
                     }
+                }
 
-                    // Row class for fail
-                    $rowClass = ($passStatus === 'Fail') ? 'table-danger' : '';
-                    ?>
-                <tr class="<?= $rowClass ?>">
-                    <td><?= $subjectName ?></td>
-                    <td><?= esc($row['full_mark']) ?></td>
+                ?>
 
-                    <!-- Half-Yearly -->
-                    <td><?= $halfW ?></td>
-                    <td><?= $halfM ?></td>
-                    <td><?= $halfP ?></td>
-                    <td><?= $halfT ?></td>
+            <?php if ($id == 0 || $id == 2): ?>
+            <td rowspan="2"><?= $final_total ?></td>
+            <td rowspan="2"><?= $final_percentage ?>%</td>
+            <td rowspan="2"><?= $final_grade ?></td>
+            <td rowspan="2"><?= $final_gp ?></td>
+            <?php elseif ($id > 3): ?>
+            <td><?= $final_total ?></td>
+            <td><?= $final_percentage ?>%</td>
+            <td><?= $final_grade ?></td>
+            <td><?= $final_gp ?></td>
+            <!-- <td><?= $total_grade_point ?></td> -->
+            <?php endif; ?>
+        </tr>
+        <?php endforeach; ?>
 
-                    <!-- Annual -->
-                    <td><?= $annW ?></td>
-                    <td><?= $annM ?></td>
-                    <td><?= $annP ?></td>
-                    <td><?= $annT ?></td>
+        <!-- Summary Row -->
+        <tr style="font-weight:bold; background:#f0f0f0;">
+            <td colspan="10">Total / Average</td>
+            <td><?= $total_marks_sum ?></td>
+            <?php function gpToGrade(float $gp): string
+            {
+                if ($gp >= 5.00) return 'A+';
+                if ($gp >= 4.00) return 'A';
+                if ($gp >= 3.50) return 'A-';
+                if ($gp >= 3.00) return 'B';
+                if ($gp >= 2.00) return 'C';
+                if ($gp >= 1.00) return 'D';
 
-                    <!-- Average -->
-                    <td><?= $avgW ?></td>
-                    <td><?= $avgM ?></td>
-                    <td><?= $avgP ?></td>
-                    <td><?= $avgT ?></td>
+                return 'F';
+            } ?>
+            <td>
+                <?php echo gpToGrade(round($total_grade_point / $total_subject, 2)); ?>
+            </td>
+            <td><?= round($total_grade_point / $total_subject, 2) ?></td>
+            <td>
+                <?= $total_grade_point ?>
+            </td>
+        </tr>
+    </table>
+    <pre>
+<?php print_r($student); ?>
+</pre>
+    <?php echo $student['class']; ?>
+</body>
 
-                    <!-- Final -->
-                    <td><?= $finalTotal ?></td>
-                    <td><?= $percentage ?>%</td>
-                    <td><?= $grade ?></td>
-                    <td><?= $gp ?></td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-
-        <div class="text-center mt-3 no-print">
-            <button onclick="window.print()" class="btn btn-primary">
-                <i class="fas fa-print"></i> Print
-            </button>
-        </div>
-
-    </div>
-</div>
-
-<?= $this->endSection() ?>
+</html>
