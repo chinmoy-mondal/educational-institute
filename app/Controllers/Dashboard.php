@@ -2073,8 +2073,8 @@ class Dashboard extends Controller
         foreach ($students as $student) {
             $studentId = $student['id'];
             $view = 1;
-
-            $this->test_result($studentId, $year, $view);
+echo $studentId."<br>";
+            //$this->test_result($studentId, $year, $view);
         }
 
         return redirect()->back()->with('success', 'Top sheet processed for all students.');
