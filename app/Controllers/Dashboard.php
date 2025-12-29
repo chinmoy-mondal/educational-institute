@@ -2074,11 +2074,11 @@ class Dashboard extends Controller
         foreach ($students as $student) {
             $studentId = $student['id'];
             $view = 1;
-
+            echo $studentId . "<br>";
             $this->test_result($studentId, $year, $view);
 
             // Wait 1 second
-            sleep(20);
+            sleep(5);
         }
     }
 
