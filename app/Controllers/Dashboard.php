@@ -1661,7 +1661,7 @@ class Dashboard extends Controller
 
     public function resultManipulation($class, $section, $subject, $wri, $mcq, $pra, $mark)
     {
-
+        echo $subject . "==<br>";
         $section = strtolower($section);
         $key     = $this->normalizeSubject($subject);
         echo $key . "<br>";
