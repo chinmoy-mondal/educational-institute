@@ -2073,7 +2073,11 @@ class Dashboard extends Controller
         foreach ($students as $student) {
             $studentId = $student['id'];
             $view = 1;
-echo $studentId."<br>";
+            $roll      = $student['roll'];
+            $name      = $student['student_name'];
+            $section   = $student['section'];
+
+            echo "{$studentId} | {$roll} | {$name} | {$section}<br>";
             //$this->test_result($studentId, $year, $view);
         }
 
