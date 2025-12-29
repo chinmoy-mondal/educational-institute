@@ -302,10 +302,8 @@
                     <td><?= $final_grade ?></td>
                     <td><?= $final_gp ?></td>
                     <td><?= $full_mark ?></td>
-                    <td <?php endif; ?> </tr>
-                        <?php endforeach; ?>
-
-
+                    <?php endif; ?>
+                    <?php endforeach; ?>
             </tbody>
             <tfoot>
                 <!-- Summary Row -->
