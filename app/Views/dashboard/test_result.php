@@ -182,6 +182,13 @@
         </table>
 
         <!-- Marks Table -->
+        <?php
+        $total_marks_sum = 0;
+        $total_subject = 0;
+        $total_grade_point = 0;
+        $total_percentage_sum = 0;
+        $total_rows = count($marksheet);
+        ?>
         <table>
             <thead>
                 <tr>
