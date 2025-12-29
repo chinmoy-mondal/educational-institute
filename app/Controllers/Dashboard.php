@@ -2077,7 +2077,7 @@ echo $studentId."<br>";
             //$this->test_result($studentId, $year, $view);
         }
 
-        return redirect()->back()->with('success', 'Top sheet processed for all students.');
+        // return redirect()->back()->with('success', 'Top sheet processed for all students.');
     }
 
     public function call_test_result()
