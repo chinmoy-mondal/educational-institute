@@ -215,7 +215,16 @@
             <tbody>
                 <?php foreach ($marksheet as $id => $row): ?>
                 <tr>
-                    <td><?= esc($row['subject'] ?? '-') ?></td>
+                    <td><?= esc($row['subject'] ?? '-') ?>
+                        <?php
+                            if ($total_rows == $id + 1) {
+                                if (in_array($student['class'], [6, 8])) {
+                                } else {
+                                    echo "<b>(4th)</b>";
+                                }
+                            }
+                            ?>
+                    </td>
                     <td><?= $row['full_mark'] ?? 0 ?></td>
 
                     <!-- Half-Yearly -->
@@ -316,7 +325,7 @@
         </table>
 
         <!-- Bottom Section -->
-        <table style="">
+        <table>
             <tr>
                 <td>
                     <strong>Failed Subjects:</strong> ___ <br>
