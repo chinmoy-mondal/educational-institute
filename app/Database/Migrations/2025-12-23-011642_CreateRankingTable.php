@@ -73,6 +73,12 @@ class CreateRankingTable extends Migration
                 'null'       => true,
             ],
 
+            'fail' => [
+                'type'       => 'TINYINT',
+                'constraint' => 2,
+                'default'    => 0,
+            ],
+
             // Academic year
             'year' => [
                 'type'       => 'INT',

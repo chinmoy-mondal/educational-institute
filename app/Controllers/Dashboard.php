@@ -1661,6 +1661,13 @@ class Dashboard extends Controller
 
     public function resultManipulation($class, $section, $subject, $wri, $mcq, $pra, $mark)
     {
+        echo "Class: " . $class . "<br>";
+        echo "Section: " . $section . "<br>";
+        echo "Subject: " . $subject . "<br>";
+        echo "Written: " . $wri . "<br>";
+        echo "MCQ: " . $mcq . "<br>";
+        echo "Practical: " . $pra . "<br>";
+        echo "Total Mark: " . $mark . "<br>";
         $section = strtolower($section);
         $key     = $this->normalizeSubject($subject);
 
