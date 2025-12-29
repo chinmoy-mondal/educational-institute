@@ -2070,28 +2070,18 @@ class Dashboard extends Controller
             ->where('class', $class)
             ->orderBy('roll', 'ASC')
             ->findAll();
-        // echo "<pre>";
-        // print_r($students);
-        // echo "</pre>";
-        // 2️⃣ Loop through each student
+
         foreach ($students as $student) {
-
             $studentId = $student['id'];
-            echo $studentId;
-            $view = 1; // optional parameter
+            $view = 1;
 
-            // Option A: Redirect approach (less efficient, multiple redirects)
-            // return redirect()->to(base_url("admin/test_result?student_id={$studentId}&year={$year}&view={$view}"));
-
-            // Option B: Directly call your test_result function with parameters (recommended)
             $this->test_result($studentId, $year, $view);
 
-            // Optional: sleep(1); // small delay if needed
+            // Wait 1 second
+            sleep(1);
         }
-
-        // 3️⃣ After all students processed
-        // return redirect()->back()->with('success', 'Top sheet processed for all students.');
     }
+
     public function call_test_result()
     {
         // Get class and year from GET
