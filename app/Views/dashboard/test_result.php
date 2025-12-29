@@ -274,7 +274,7 @@
                                     $total_grade_point += max(0, $final_gp - 2);
                                 }
                             } else {
-                                $total_fail += ($final_gp) ? 1 : 0;
+                            $total_fail += ($final_gp) ? 0 : 1;
                                 $total_grade_point += $final_gp;
                                 $total_subject++;
                             }
