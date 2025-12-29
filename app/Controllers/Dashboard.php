@@ -2078,7 +2078,7 @@ class Dashboard extends Controller
             $this->test_result($studentId, $year, $view);
 
             // Wait 1 second
-            sleep(1);
+            sleep(20);
         }
     }
 
