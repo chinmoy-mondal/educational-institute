@@ -183,6 +183,7 @@
 
         <!-- Marks Table -->
         <?php
+        $total_fail = 0;
         $total_marks_sum = 0;
         $total_subject = 0;
         $total_grade_point = 0;
@@ -273,6 +274,7 @@
                                     $total_grade_point += max(0, $final_gp - 2);
                                 }
                             } else {
+                                $total_fail += ($final_gp) ? 1 : 0;
                                 $total_grade_point += $final_gp;
                                 $total_subject++;
                             }
@@ -328,7 +330,7 @@
         <table>
             <tr>
                 <td>
-                    <strong>Failed Subjects:</strong> ___ <br>
+                    <strong>Failed Subjects:</strong> <?= $total_fail ?><br>
                     <strong>GPA (Without 4th):</strong> ___
                 </td>
                 <td style="text-align:center;">
