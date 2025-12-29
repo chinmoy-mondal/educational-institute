@@ -1,3 +1,9 @@
+<?php
+$marksheet = $data['marksheet'];
+$student   = $data['student'];
+$exam      = $data['exam'];
+$year      = $data['year'];
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -268,7 +274,7 @@
                         $full_mark += $row['full_mark'];
                         // accumulate for summary
                         if ($id == 1 || $id == 3) {
-                    } else {
+                        } else {
                             $total_marks_sum += $final_total;
                             if ($total_rows == $id + 1) {
                                 if (in_array($student['class'], [6, 7, 8])) {
@@ -300,7 +306,6 @@
                     <td><?= $final_percentage ?>%</td>
                     <td><?= $final_grade ?></td>
                     <td><?= $final_gp ?></td>
-                    <td><?= $full_mark ?></td>
                     <?php endif; ?>
                     <?php endforeach; ?>
             </tbody>

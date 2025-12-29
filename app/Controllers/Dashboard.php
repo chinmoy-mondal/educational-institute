@@ -1947,12 +1947,118 @@ class Dashboard extends Controller
         // print_r($marksheetNumeric);
         // echo "</pre>";
 
-        return view('dashboard/test_result', [
+        // return view('dashboard/test_result', [
+        //     'marksheet' => $marksheetNumeric,
+        //     'student'   => $student,
+        //     'exam'      => 'Annual Exam',
+        //     'year'      => $year
+        // ]);
+
+        $data = [
             'marksheet' => $marksheetNumeric,
             'student'   => $student,
             'exam'      => 'Annual Exam',
             'year'      => $year
-        ]);
+        ];
+
+        // Send to another function
+        $this->saveRankingFromResult($data);
+
+        return view('dashboard/test_result', $data);
+    }
+    private function gpToGrade(float $gp): string
+    {
+        if ($gp >= 5.00) return 'A+';
+        if ($gp >= 4.00) return 'A';
+        if ($gp >= 3.50) return 'A-';
+        if ($gp >= 3.00) return 'B';
+        if ($gp >= 2.00) return 'C';
+        if ($gp >= 1.00) return 'D';
+        return 'F';
+    }
+    private function saveRankingFromResult(array $data)
+    {
+        $marksheet = $data['marksheet'];
+        $student   = $data['student'];
+        $exam      = $data['exam'];
+        $year      = $data['year'];
+
+
+        $total_fail = 0;
+        $total_marks_sum = 0;
+        $total_subject = 0;
+        $total_grade_point = 0;
+        $total_grade_point_without_forth = 0;
+
+        $total_rows = count($marksheet);
+
+        foreach ($marksheet as $id => $row) {
+
+            $final = $row['final'] ?? [];
+
+            $final_total = $final['total'] ?? 0;
+            $final_gp    = $final['grade_point'] ?? 0;
+
+            // skip combined rows
+            if ($id == 1 || $id == 3) {
+                continue;
+            }
+
+            $total_marks_sum += $final_total;
+
+            // last subject (4th subject logic)
+            if ($total_rows == $id + 1 && !in_array($student['class'], [6, 7, 8])) {
+
+                $total_grade_point += max(0, $final_gp - 2);
+            } else {
+
+                $total_fail += ($final_gp > 0) ? 0 : 1;
+                $total_grade_point += $final_gp;
+                $total_grade_point_without_forth += $final_gp;
+                $total_subject++;
+            }
+        }
+
+        // GPA
+        $gpa = $total_fail ? 0.00 : round(min(5, $total_grade_point / $total_subject), 2);
+        $gpa_without_forth = $total_fail ? 0.00 : round(min(5, $total_grade_point_without_forth / $total_subject), 2);
+
+        // Grade Letter
+        $grade_letter = $total_fail ? 'F' : $this->gpToGrade($gpa);
+
+        // Percentage
+        $full_marks = array_sum(array_column($marksheet, 'full_mark'));
+        $percentage = $full_marks > 0
+            ? round(($total_marks_sum / $full_marks) * 100, 2)
+            : 0;
+
+        // return [
+        //     'student_id'        => $student['id'],
+        //     'class'             => $student['class'],
+        //     'new_roll'          => $student['roll'],
+        //     'student_name'      => $student['student_name'],
+        //     'past_roll'         => $student['roll'],
+        //     'total'             => $total_marks_sum,
+        //     'percentage'        => $percentage,
+        //     'gpa'               => $gpa,
+        //     'gpa_without_forth' => $gpa_without_forth,
+        //     'grade_letter'      => $grade_letter,
+        //     'fail'              => $total_fail,
+        //     'year'              => $year,
+        // ];
+
+        echo "Student ID: {$student['id']}<br>";
+        echo "Class: {$student['class']}<br>";
+        echo "New Roll: {$student['roll']}<br>";
+        echo "Student Name: {$student['student_name']}<br>";
+        echo "Past Roll: {$student['roll']}<br>";
+        echo "Total Marks: {$total_marks_sum}<br>";
+        echo "Percentage: {$percentage}%<br>";
+        echo "GPA: {$gpa}<br>";
+        echo "GPA Without 4th: {$gpa_without_forth}<br>";
+        echo "Grade Letter: {$grade_letter}<br>";
+        echo "Fail Subjects: {$total_fail}<br>";
+        echo "Year: {$year}<br>";
     }
 
     public function topsheet()
