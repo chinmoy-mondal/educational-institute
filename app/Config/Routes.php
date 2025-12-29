@@ -104,6 +104,9 @@ $routes->get('admin/show-marksheet', 'Dashboard::showMarksheet');
 
 $routes->get('admin/test_result', 'Dashboard::test_result');
 
+$routes->get('admin/topsheet', 'Dashboard::topsheet');
+
+
 
 
 $routes->get('admin/student', 'Dashboard::student');

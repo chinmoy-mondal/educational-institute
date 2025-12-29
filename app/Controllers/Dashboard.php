@@ -15,6 +15,7 @@ use App\Models\FeesModel;
 use App\Models\FeesAmountModel;
 use App\Models\TransactionModel;
 use App\Models\TeacherAttendanceModel;
+use App\Models\RankingModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Dashboard extends Controller
@@ -32,6 +33,7 @@ class Dashboard extends Controller
     protected $transactionModel;
     protected $welcomeModel;
     protected $teacherAttendanceModel;
+    protected $rankingModel;
 
     protected $session;
     protected $data;
@@ -50,6 +52,7 @@ class Dashboard extends Controller
         $this->feesAmountModel  = new FeesAmountModel();
         $this->transactionModel = new TransactionModel();
         $this->teacherAttendanceModel = new TeacherAttendanceModel();
+        $this->rankingModel = new RankingModel();
 
 
         $this->session       = session();
@@ -1593,6 +1596,17 @@ class Dashboard extends Controller
         return ['grade' => 'F', 'gp' => 0.00];
     }
 
+    public function gpToGrade(float $gp): string
+    {
+        if ($gp >= 5.00) return 'A+';
+        if ($gp >= 4.00) return 'A';
+        if ($gp >= 3.50) return 'A-';
+        if ($gp >= 3.00) return 'B';
+        if ($gp >= 2.00) return 'C';
+        if ($gp >= 1.00) return 'D';
+        return 'F';
+    }
+
     public function branchCheck($mark, $passMark)
     {
         return ($mark >= $passMark);
@@ -1941,139 +1955,304 @@ class Dashboard extends Controller
         ]);
     }
 
-    // public function test_result()
-    // {
-    //     $request   = service('request');
-    //     $studentId = $request->getGet('student_id');
-    //     $year      = $request->getGet('year');
+    public function topsheet()
+    {
+        $studentId = $this->request->getGet('student_id');
+        $year      = $this->request->getGet('year');
 
-    //     if (!$studentId || !$year) {
-    //         return redirect()->back()->with('error', 'Student ID and Year are required.');
-    //     }
+        if (!$studentId || !$year) {
+            return "Student ID and Year are required";
+        }
 
-    //     /* ================= PAGE DATA (FROM showMarksheet) ================= */
-    //     $this->data['title'] = 'Marksheet';
-    //     $this->data['activeSection'] = 'result';
-    //     $this->data['navbarItems'] = [
-    //         ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
-    //         ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
-    //     ];
+        // ---------------- STUDENT ----------------
+        $student = $this->studentModel->find($studentId);
+        if (!$student) {
+            return "Student not found";
+        }
 
-    //     /* ================= STUDENT ================= */
-    //     $student = $this->studentModel->find($studentId);
-    //     if (!$student) {
-    //         return redirect()->back()->with('error', 'Student not found.');
-    //     }
+        // ---------------- ASSIGN SUBJECT ORDER ----------------
+        $assignSubArr = explode(',', $student['assign_sub']);
+        $normalSubs = [];
+        $optionalSub = null;
 
-    //     $this->data['student'] = $student;
-    //     $this->data['year']    = $year;
+        foreach ($assignSubArr as $sub) {
+            if (str_contains($sub, '*')) {
+                $optionalSub = (int) str_replace('*', '', $sub);
+            } else {
+                $normalSubs[] = (int) $sub;
+            }
+        }
 
-    //     /* ================= ASSIGNED SUBJECT ORDER ================= */
-    //     $assignSubArr = explode(',', $student['assign_sub']);
-    //     $normalSubs   = [];
-    //     $optionalSub  = null;
+        $orderedSubjects = $normalSubs;
+        if ($optionalSub) {
+            $orderedSubjects[] = $optionalSub;
+        }
 
-    //     foreach ($assignSubArr as $sub) {
-    //         if (str_contains($sub, '*')) {
-    //             $optionalSub = (int) str_replace('*', '', $sub);
-    //         } else {
-    //             $normalSubs[] = (int) $sub;
-    //         }
-    //     }
+        // ---------------- FETCH RESULTS ----------------
+        $half = $this->resultModel
+            ->select('results.*, subjects.subject, subjects.full_mark')
+            ->join('subjects', 'subjects.id = results.subject_id')
+            ->where([
+                'results.student_id' => $studentId,
+                'results.year'       => $year,
+                'results.exam'       => 'Half-Yearly'
+            ])->findAll();
 
-    //     $orderedSubjects = $normalSubs;
-    //     if ($optionalSub) {
-    //         $orderedSubjects[] = $optionalSub;
-    //     }
+        $annual = $this->resultModel
+            ->select('results.*, subjects.subject, subjects.full_mark')
+            ->join('subjects', 'subjects.id = results.subject_id')
+            ->where([
+                'results.student_id' => $studentId,
+                'results.year'       => $year,
+                'results.exam'       => 'Annual Exam'
+            ])->findAll();
 
-    //     /* ================= FETCH RESULTS ================= */
-    //     $half = $this->resultModel
-    //         ->select('results.*, subjects.subject, subjects.full_mark')
-    //         ->join('subjects', 'subjects.id = results.subject_id')
-    //         ->where([
-    //             'results.student_id' => $studentId,
-    //             'results.year'       => $year,
-    //             'results.exam'       => 'Half-Yearly'
-    //         ])->findAll();
+        // ---------------- MERGE ----------------
+        $marksheet = [];
 
-    //     $annual = $this->resultModel
-    //         ->select('results.*, subjects.subject, subjects.full_mark')
-    //         ->join('subjects', 'subjects.id = results.subject_id')
-    //         ->where([
-    //             'results.student_id' => $studentId,
-    //             'results.year'       => $year,
-    //             'results.exam'       => 'Annual Exam'
-    //         ])->findAll();
+        foreach ($half as $h) {
+            $sid = $h['subject_id'];
+            $marksheet[$sid] = [
+                'subject'   => $h['subject'],
+                'full_mark' => $h['full_mark'],
+                'half'      => $h,
+                'annual'    => null,
+                'average'   => null,
+                'final'     => null
+            ];
+        }
 
-    //     /* ================= MERGE HALF + ANNUAL ================= */
-    //     $marksheet = [];
+        foreach ($annual as $a) {
+            $sid = $a['subject_id'];
+            if (!isset($marksheet[$sid])) {
+                $marksheet[$sid] = [
+                    'subject'   => $a['subject'],
+                    'full_mark' => $a['full_mark'],
+                    'half'      => null,
+                    'annual'    => null,
+                    'average'   => null,
+                    'final'     => null
+                ];
+            }
+            $marksheet[$sid]['annual'] = $a;
+        }
 
-    //     foreach ($half as $h) {
-    //         $sid = $h['subject_id'];
-    //         $marksheet[$sid] = [
-    //             'subject'   => $h['subject'],
-    //             'full_mark' => $h['full_mark'],
-    //             'half'      => $h,
-    //             'annual'    => null,
-    //             'final'     => null,
-    //         ];
-    //     }
+        // ---------------- SORT BY ASSIGNED ORDER ----------------
+        $marksheetNumeric = [];
+        foreach ($orderedSubjects as $sid) {
+            if (isset($marksheet[$sid])) {
+                $marksheetNumeric[] = $marksheet[$sid];
+            }
+        }
 
-    //     foreach ($annual as $a) {
-    //         $sid = $a['subject_id'];
-    //         if (!isset($marksheet[$sid])) {
-    //             $marksheet[$sid] = [
-    //                 'subject'   => $a['subject'],
-    //                 'full_mark' => $a['full_mark'],
-    //                 'half'      => null,
-    //                 'annual'    => null,
-    //                 'final'     => null,
-    //             ];
-    //         }
-    //         $marksheet[$sid]['annual'] = $a;
-    //     }
+        // ---------------- COMBINE PAIRS (Bangla / English) ----------------
+        $combinePairs = [
+            [0, 1],
+            [2, 3]
+        ];
 
-    //     /* ================= SORT BY ASSIGNED SUBJECT ================= */
-    //     $marksheetNumeric = [];
-    //     foreach ($orderedSubjects as $sid) {
-    //         if (isset($marksheet[$sid])) {
-    //             $marksheetNumeric[] = $marksheet[$sid];
-    //         }
-    //     }
+        foreach ($combinePairs as $pair) {
+            $totalW = $totalM = $totalP = $totalSum = $fullMarkSum = 0;
 
-    //     /* ================= CALCULATE FINAL ================= */
-    //     foreach ($marksheetNumeric as &$row) {
+            foreach ($pair as $i) {
+                if (!isset($marksheetNumeric[$i])) continue;
 
-    //         $h = $row['half'] ?? [];
-    //         $a = $row['annual'] ?? [];
+                $row = $marksheetNumeric[$i];
+                $h = $row['half'] ?? [];
+                $a = $row['annual'] ?? [];
 
-    //         $avgTotal = (
-    //             ($h['written'] ?? 0) + ($h['mcq'] ?? 0) + ($h['practical'] ?? 0) +
-    //             ($a['written'] ?? 0) + ($a['mcq'] ?? 0) + ($a['practical'] ?? 0)
-    //         ) / 2;
+                $avgW = round((($h['written'] ?? 0) + ($a['written'] ?? 0)) / 2, 2);
+                $avgM = round((($h['mcq'] ?? 0) + ($a['mcq'] ?? 0)) / 2, 2);
+                $avgP = round((($h['practical'] ?? 0) + ($a['practical'] ?? 0)) / 2, 2);
+                $avgTotal = round($avgW + $avgM + $avgP, 2);
 
-    //         $percentage = $row['full_mark'] > 0
-    //             ? round(($avgTotal / $row['full_mark']) * 100, 2)
-    //             : 0;
+                $marksheetNumeric[$i]['average'] = [
+                    'written'   => $avgW,
+                    'mcq'       => $avgM,
+                    'practical' => $avgP,
+                    'total'     => $avgTotal
+                ];
 
-    //         $gradeInfo = $this->markToGrade($percentage);
+                $totalW += $avgW;
+                $totalM += $avgM;
+                $totalP += $avgP;
+                $totalSum += $avgTotal;
+                $fullMarkSum += $row['full_mark'];
+            }
 
-    //         $row['final'] = [
-    //             'total'       => round($avgTotal, 2),
-    //             'full_mark'   => $row['full_mark'],
-    //             'percentage'  => $percentage,
-    //             'grade'       => $gradeInfo['grade'],
-    //             'grade_point' => $gradeInfo['gp'],
-    //             'pass_status' => ($percentage >= 33 ? 'Pass' : 'Fail'),
-    //         ];
-    //     }
-    //     unset($row); // 🔒 IMPORTANT
+            $percentage = $fullMarkSum > 0 ? round(($totalSum / $fullMarkSum) * 100, 2) : 0;
+            $gradeInfo = $this->resultManipulation(
+                (int)$student['class'],
+                $student['section'],
+                $marksheetNumeric[$pair[0]]['subject'], // Bangla / English
+                $totalW,
+                $totalM,
+                $totalP,
+                $percentage
+            );
 
-    //     /* ================= SEND TO VIEW ================= */
-    //     $this->data['marksheet'] = $marksheetNumeric;
+            foreach ($pair as $i) {
+                if (!isset($marksheetNumeric[$i])) continue;
 
-    //     return view('dashboard/test_result', $this->data);
-    // }
+                $marksheetNumeric[$i]['final'] = [
+                    'total_written'   => $totalW,
+                    'total_mcq'       => $totalM,
+                    'total_practical' => $totalP,
+                    'total'           => $totalSum,
+                    'full_mark'       => $fullMarkSum,
+                    'percentage'      => $percentage,
+                    'grade'           => $gradeInfo['grade'],
+                    'grade_point'     => $gradeInfo['gp'],
+                    'pass_status'     => ($percentage >= 33 ? 'Pass' : 'Fail')
+                ];
+            }
+        }
+
+        // ---------------- SINGLE SUBJECTS ----------------
+        foreach ($marksheetNumeric as $i => &$row) {
+            if (!isset($row['final'])) {
+                $h = $row['half'] ?? [];
+                $a = $row['annual'] ?? [];
+
+                $avgW = round((($h['written'] ?? 0) + ($a['written'] ?? 0)) / 2, 2);
+                $avgM = round((($h['mcq'] ?? 0) + ($a['mcq'] ?? 0)) / 2, 2);
+                $avgP = round((($h['practical'] ?? 0) + ($a['practical'] ?? 0)) / 2, 2);
+                $avgTotal = round($avgW + $avgM + $avgP, 2);
+
+                $percentage = $row['full_mark'] > 0
+                    ? round(($avgTotal / $row['full_mark']) * 100, 2)
+                    : 0;
+
+                $gradeInfo = $this->resultManipulation(
+                    (int)$student['class'],
+                    $student['section'],
+                    $row['subject'],
+                    $avgW,
+                    $avgM,
+                    $avgP,
+                    $percentage
+                );
+
+                $row['average'] = [
+                    'written'   => $avgW,
+                    'mcq'       => $avgM,
+                    'practical' => $avgP,
+                    'total'     => $avgTotal
+                ];
+
+                $row['final'] = [
+                    'total_written'   => $avgW,
+                    'total_mcq'       => $avgM,
+                    'total_practical' => $avgP,
+                    'total'           => $avgTotal,
+                    'full_mark'       => $row['full_mark'],
+                    'percentage'      => $percentage,
+                    'grade'           => $gradeInfo['grade'],
+                    'grade_point'     => $gradeInfo['gp'],
+                    'pass_status'     => ($percentage >= 33 ? 'Pass' : 'Fail')
+                ];
+            }
+        }
+        unset($row); // 🔒 VERY IMPORTANT
+
+
+        $total_fail = 0;
+        $total_marks_sum = 0;
+        $total_subject = 0;
+        $total_grade_point = 0;
+        $total_grade_point_without_forth = 0;
+        $total_rows = count($marksheet);
+
+        foreach ($marksheet as $id => $row) {
+            // Half-Yearly
+            $half = $row['half'] ?? [];
+            $half_written = $half['written'] ?? 0;
+            $half_mcq = $half['mcq'] ?? 0;
+            $half_prac = $half['practical'] ?? 0;
+            $half_total = $half_written + $half_mcq + $half_prac;
+
+            // Annual
+            $annual = $row['annual'] ?? [];
+            $annual_written = $annual['written'] ?? 0;
+            $annual_mcq = $annual['mcq'] ?? 0;
+            $annual_prac = $annual['practical'] ?? 0;
+            $annual_total = $annual_written + $annual_mcq + $annual_prac;
+
+            // Final
+            $final = $row['final'] ?? [];
+            $final_total = $final['total'] ?? 0;
+            $final_percentage = $final['percentage'] ?? 0;
+            $final_grade = $final['grade'] ?? '-';
+            $final_gp = $final['grade_point'] ?? 0;
+
+            // accumulate for summary
+            if ($id != 1 && $id != 3) { // skip combined rows
+                $total_marks_sum += $final_total;
+
+                if ($total_rows == $id + 1) {
+                    if (in_array($student['class'], [6, 7, 8])) {
+                        $total_fail += ($final_gp) ? 0 : 1;
+                        $total_subject++;
+                        $total_grade_point += $final_gp;
+                        $total_grade_point_without_forth += $final_gp;
+                    } else {
+                        $total_grade_point += max(0, $final_gp - 2);
+                    }
+                } else {
+                    $total_fail += ($final_gp) ? 0 : 1;
+                    $total_grade_point += $final_gp;
+                    $total_grade_point_without_forth += $final_gp;
+                    $total_subject++;
+                }
+            }
+        }
+
+        // GPA and Grade Calculation
+        $gpa = $total_fail ? 0.00 : number_format(min(5, $total_grade_point / $total_subject), 2);
+        $gpa_without_forth = $total_fail ? 0.00 : number_format(min(5, $total_grade_point_without_forth / $total_subject), 2);
+        $grade_letter = $total_fail ? 'F' : gpToGrade(round($total_grade_point / $total_subject, 2));
+
+        // Percentage calculation
+        $total_full_marks = array_sum(array_column($marksheetNumeric, 'full_mark'));
+        $percentage = $total_full_marks > 0 ? round(($total_marks_sum / $total_full_marks) * 100, 2) : 0;
+
+        // ---------------- PREPARE DATA FOR INSERT ----------------
+        $rankingData = [
+            'student_id'        => $student['id'],
+            'class'             => $student['class'],
+            'new_roll'          => $student['roll'],
+            'student_name'      => $student['student_name'],
+            'past_roll'         => $student['roll'],
+            'total'             => $total_marks_sum,
+            'percentage'        => $percentage,
+            'gpa'               => $gpa,
+            'gpa_without_forth' => $gpa_without_forth,
+            'grade_letter'      => $grade_letter,
+            'fail'              => $total_fail,
+            'year'              => $year,
+            'created_at'        => date('Y-m-d H:i:s'),
+            'updated_at'        => date('Y-m-d H:i:s'),
+        ];
+
+        // Check if a ranking already exists for this student & year
+        $existingRanking = $this->rankingModel
+            ->where('student_id', $student['id'])
+            ->where('year', $year)
+            ->first();
+
+        if ($existingRanking) {
+            // update existing record
+            $rankingData['id'] = $existingRanking['id'];
+        }
+
+        // Save (insert or update)
+        $this->rankingModel->save($rankingData);
+
+        echo "Data is save";
+    }
+
+
+
 
     public function showMarksheet()
     {
