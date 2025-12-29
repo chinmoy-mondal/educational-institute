@@ -2123,6 +2123,20 @@ class Dashboard extends Controller
         return true;
     }
 
+    public function print_topsheet($class)
+    {
+        $rankings = $this->rankingModel
+            ->where('class', $class)
+            ->orderBy('fail', 'ASC')
+            ->orderBy('total', 'DESC')
+            ->findAll();
+
+        return view('dashboard/print_topsheet', [
+            'class'    => $class,
+            'rankings' => $rankings
+        ]);
+    }
+
     public function showMarksheet()
     {
         $this->data['title'] = 'Marksheet';
