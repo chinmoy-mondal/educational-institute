@@ -185,11 +185,11 @@
                     <td><?= $passPercentage ?>%</td>
                 </tr>
                 <tr>
+                    <td colspan="2"></td>
                     <td><strong>Total Fail</strong></td>
                     <td><?= $totalFail ?></td>
                     <td><strong>Fail %</strong></td>
                     <td><?= $failPercentage ?>%</td>
-                    <td colspan="2"></td>
                 </tr>
                 <tr>
                     <td><strong>A+</strong></td>
