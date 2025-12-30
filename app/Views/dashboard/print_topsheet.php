@@ -88,16 +88,41 @@
         text-align: right;
         font-style: italic;
     }
-
-    @media print {
-        body {
-            margin: 0;
-        }
-    }
     </style>
 </head>
 
 <body>
+
+    <?php
+    // ---------------- SUMMARY CALCULATION ----------------
+    $totalStudents = count($rankings);
+    $totalPass = 0;
+    $totalFail = 0;
+
+    $gradeCount = [
+        'A+' => 0,
+        'A'  => 0,
+        'A-' => 0,
+        'B'  => 0,
+        'C'  => 0,
+        'D'  => 0,
+    ];
+
+    foreach ($rankings as $row) {
+        if ((int)$row['fail'] > 0) {
+            $totalFail++;
+        } else {
+            $totalPass++;
+        }
+
+        if (isset($gradeCount[$row['grade_letter']])) {
+            $gradeCount[$row['grade_letter']]++;
+        }
+    }
+
+    $passPercentage = $totalStudents > 0 ? round(($totalPass / $totalStudents) * 100, 2) : 0;
+    $failPercentage = $totalStudents > 0 ? round(($totalFail / $totalStudents) * 100, 2) : 0;
+    ?>
 
     <div class="sheet-wrapper">
 
@@ -113,7 +138,7 @@
             Top Sheet – Promotion from Class <?= esc($class) ?> to Class <?= esc($class + 1) ?>
         </div>
 
-        <!-- Table -->
+        <!-- Main Table -->
         <table>
             <thead>
                 <tr>
@@ -140,6 +165,48 @@
                     <td><?= esc($row['fail']) ?></td>
                 </tr>
                 <?php endforeach; ?>
+            </tbody>
+        </table>
+
+        <!-- RESULT SUMMARY -->
+        <table style="margin-top:20px;">
+            <thead>
+                <tr>
+                    <th colspan="6">Result Summary</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Total Students</strong></td>
+                    <td><?= $totalStudents ?></td>
+                    <td><strong>Total Pass</strong></td>
+                    <td><?= $totalPass ?></td>
+                    <td><strong>Pass %</strong></td>
+                    <td><?= $passPercentage ?>%</td>
+                </tr>
+                <tr>
+                    <td><strong>Total Fail</strong></td>
+                    <td><?= $totalFail ?></td>
+                    <td><strong>Fail %</strong></td>
+                    <td><?= $failPercentage ?>%</td>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td><strong>A+</strong></td>
+                    <td><?= $gradeCount['A+'] ?></td>
+                    <td><strong>A</strong></td>
+                    <td><?= $gradeCount['A'] ?></td>
+                    <td><strong>A-</strong></td>
+                    <td><?= $gradeCount['A-'] ?></td>
+                </tr>
+                <tr>
+                    <td><strong>B</strong></td>
+                    <td><?= $gradeCount['B'] ?></td>
+                    <td><strong>C</strong></td>
+                    <td><?= $gradeCount['C'] ?></td>
+                    <td><strong>D</strong></td>
+                    <td><?= $gradeCount['D'] ?></td>
+                </tr>
             </tbody>
         </table>
 
