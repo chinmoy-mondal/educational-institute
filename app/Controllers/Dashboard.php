@@ -2511,6 +2511,8 @@ class Dashboard extends Controller
     public function receipt($transactionId)
     {
         // Ensure uppercase to match stored IDs
+        // noproblem 
+
         $transactionId = strtoupper($transactionId);
 
         // Fetch all transactions for this ID
