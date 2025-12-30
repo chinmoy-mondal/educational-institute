@@ -2510,25 +2510,59 @@ class Dashboard extends Controller
 
     public function receipt($transactionId)
     {
+        // Make transaction ID uppercase to match stored IDs
+        $transactionId = strtoupper($transactionId);
+
+        // Get all fee rows for this transaction
         $transactions = $this->transactionModel
             ->where('transaction_id', $transactionId)
             ->findAll();
 
-        // if (empty($transactions)) {
-        //     return redirect()
-        //         ->to(base_url('admin/transactions'))
-        //         ->with('error', 'Receipt not found.');
-        // }
+        // If no transactions found, create empty placeholders
+        if (empty($transactions)) {
+            $this->data['transactions']   = [];
+            $this->data['transaction_id'] = $transactionId;
+            $this->data['student']        = [];
+            $this->data['receiver']       = [];
+            $this->data['fees']           = [];
+            $this->data['discount']       = 0;
+            $this->data['totalAmount']    = 0;
+            $this->data['netAmount']      = 0;
+            $this->data['date']           = date('Y-m-d');
 
-        $this->data['transactions']   = $transactions;
+            return view('dashboard/receipt', $this->data);
+        }
+
+        // Map first row for student & receiver info
+        $first = $transactions[0];
+
+        $this->data['student']        = [
+            'student_name' => $first['sender_name'],
+            'id'           => $first['sender_id'] ?? '',
+            'class'        => $first['student_class'] ?? '',
+            'section'      => $first['student_section'] ?? '',
+        ];
+
+        $this->data['receiver']       = [
+            'name' => $first['receiver_name'] ?? ''
+        ];
+
         $this->data['transaction_id'] = $transactionId;
+        $this->data['date']           = $first['created_at'] ?? date('Y-m-d');
+        $this->data['discount']       = $first['discount'] ?? 0;
 
-        $this->data['student_name']  = $transactions[0]['sender_name'];
-        $this->data['receiver_name'] = $transactions[0]['receiver_name'];
-        $this->data['discount']      = $transactions[0]['discount'];
-        $this->data['date']          = $transactions[0]['created_at'];
+        // Fees array for table
+        $this->data['fees'] = [];
+        foreach ($transactions as $t) {
+            $this->data['fees'][] = [
+                'title' => $t['purpose'],
+                'month' => $t['month'] ?? '',
+                'amount' => $t['amount']
+            ];
+        }
 
-        $this->data['totalAmount'] = array_sum(array_column($transactions, 'amount'));
+        // Total calculations
+        $this->data['totalAmount'] = array_sum(array_column($this->data['fees'], 'amount'));
         $this->data['netAmount']   = $this->data['totalAmount'] - ($this->data['discount'] ?? 0);
 
         return view('dashboard/receipt', $this->data);
