@@ -2508,6 +2508,32 @@ class Dashboard extends Controller
         return view('dashboard/std_pay', $this->data);
     }
 
+    public function receipt($transactionId)
+    {
+        $transactions = $this->transactionModel
+            ->where('transaction_id', $transactionId)
+            ->findAll();
+
+        if (empty($transactions)) {
+            return redirect()
+                ->to(base_url('admin/transactions'))
+                ->with('error', 'Receipt not found.');
+        }
+
+        $this->data['transactions']   = $transactions;
+        $this->data['transaction_id'] = $transactionId;
+
+        $this->data['student_name']  = $transactions[0]['sender_name'];
+        $this->data['receiver_name'] = $transactions[0]['receiver_name'];
+        $this->data['discount']      = $transactions[0]['discount'];
+        $this->data['date']          = $transactions[0]['created_at'];
+
+        $this->data['totalAmount'] = array_sum(array_column($transactions, 'amount'));
+        $this->data['netAmount']   = $this->data['totalAmount'] - ($this->data['discount'] ?? 0);
+
+        return view('dashboard/receipt', $this->data);
+    }
+
     public function pay_stat()
     {
         $this->data['title'] = 'Transaction Dashboard';
@@ -2730,6 +2756,7 @@ class Dashboard extends Controller
 
         $fees = [];
         $totalAmount = 0;
+        $transactionId = strtoupper(uniqid('TX-'));
 
         if (!empty($feeIds)) {
             foreach ($feeIds as $i => $id) {
@@ -2752,7 +2779,7 @@ class Dashboard extends Controller
 
                 // Save each fee as a transaction
                 $this->transactionModel->insert([
-                    'transaction_id' => uniqid('TX-'),
+                    'transaction_id' => $transactionId,
                     'sender_id'      => $studentId,
                     'sender_name'    => $student['student_name'],
                     'receiver_id'    => $receiverId,

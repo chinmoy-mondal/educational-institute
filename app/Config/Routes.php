@@ -138,6 +138,7 @@ $routes->get('admin/std_pay', 'Dashboard::std_pay');
 $routes->get('admin/pay_stat', 'Dashboard::pay_stat');
 $routes->get('admin/set_fees', 'Dashboard::set_fees');
 $routes->post('admin/save_fees', 'Dashboard::save_fees');
+$routes->get('admin/receipt/(:any)', 'PaymentController::receipt/$1');
 
 $routes->get('admin/pay_student_request/(:num)', 'Dashboard::payStudentRequest/$1');
 $routes->post('admin/student-payment', 'Dashboard::studentPayment');

@@ -117,31 +117,36 @@
                 </thead>
                 <tbody>
                     <?php if (!empty($transactions)): ?>
-                        <?php $i = 1;
+                    <?php $i = 1;
                         foreach ($transactions as $t): ?>
-                            <tr>
-                                <td><?= $i++ ?></td>
-                                <td><?= date('d M Y', strtotime($t['created_at'])) ?></td>
-                                <td><?= esc($t['transaction_id']) ?></td>
-                                <td><?= esc($t['sender_name']) ?></td>
-                                <td><?= esc($t['receiver_name']) ?></td>
-                                <td>
-                                    <?php if ($t['status'] == 0): ?>
-                                        <span class="badge bg-success">Earn</span>
-                                    <?php else: ?>
-                                        <span class="badge bg-danger">Cost</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="fw-bold <?= $t['status'] == 0 ? 'text-success' : 'text-danger' ?>">
-                                    <?= number_format($t['amount'], 2) ?>
-                                </td>
-                                <td><?= esc($t['description']) ?></td>
-                            </tr>
-                        <?php endforeach; ?>
+                    <tr>
+                        <td><?= $i++ ?></td>
+                        <td><?= date('d M Y', strtotime($t['created_at'])) ?></td>
+                        <td>
+                            <a href="<?= site_url('admin/receipt/' . esc($t['transaction_id'])) ?>"
+                                class="btn btn-sm btn-primary" target="_blank">
+                                View Receipt
+                            </a>
+                        </td>
+                        <td><?= esc($t['sender_name']) ?></td>
+                        <td><?= esc($t['receiver_name']) ?></td>
+                        <td>
+                            <?php if ($t['status'] == 0): ?>
+                            <span class="badge bg-success">Earn</span>
+                            <?php else: ?>
+                            <span class="badge bg-danger">Cost</span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="fw-bold <?= $t['status'] == 0 ? 'text-success' : 'text-danger' ?>">
+                            <?= number_format($t['amount'], 2) ?>
+                        </td>
+                        <td><?= esc($t['description']) ?></td>
+                    </tr>
+                    <?php endforeach; ?>
                     <?php else: ?>
-                        <tr>
-                            <td colspan="8" class="text-center text-muted">No transactions found.</td>
-                        </tr>
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">No transactions found.</td>
+                    </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
@@ -152,183 +157,183 @@
 <!-- ✅ Chart.js + Tooltip Fix -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    /* -----------------------------------------------------------
+/* -----------------------------------------------------------
    ⭐ TODAY'S GRAPH
 ----------------------------------------------------------- */
-    const todayCtx = document.getElementById('todayChart').getContext('2d');
-    new Chart(todayCtx, {
-        type: 'bar',
-        data: {
-            labels: <?= json_encode($todayLabels ?? []) ?>,
-            datasets: [{
-                    label: 'Earn (৳)',
-                    data: <?= json_encode($todayEarns ?? []) ?>,
-                    backgroundColor: 'rgba(25, 135, 84, 0.7)',
-                    borderRadius: 6
-                },
-                {
-                    label: 'Cost (৳)',
-                    data: <?= json_encode($todayCosts ?? []) ?>,
-                    backgroundColor: 'rgba(220, 53, 69, 0.7)',
-                    borderRadius: 6
-                }
-            ]
+const todayCtx = document.getElementById('todayChart').getContext('2d');
+new Chart(todayCtx, {
+    type: 'bar',
+    data: {
+        labels: <?= json_encode($todayLabels ?? []) ?>,
+        datasets: [{
+                label: 'Earn (৳)',
+                data: <?= json_encode($todayEarns ?? []) ?>,
+                backgroundColor: 'rgba(25, 135, 84, 0.7)',
+                borderRadius: 6
+            },
+            {
+                label: 'Cost (৳)',
+                data: <?= json_encode($todayCosts ?? []) ?>,
+                backgroundColor: 'rgba(220, 53, 69, 0.7)',
+                borderRadius: 6
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        interaction: {
+            mode: 'index',
+            intersect: false
         },
-        options: {
-            responsive: true,
-            interaction: {
+        plugins: {
+            legend: {
+                position: 'bottom'
+            },
+            tooltip: {
+                enabled: true,
                 mode: 'index',
                 intersect: false
-            },
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                },
-                tooltip: {
-                    enabled: true,
-                    mode: 'index',
-                    intersect: false
+            }
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Time (Hours)'
                 }
             },
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Time (Hours)'
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Amount (৳)'
-                    }
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Amount (৳)'
                 }
             }
         }
-    });
+    }
+});
 
-    /* -----------------------------------------------------------
-       ⭐ CURRENT MONTH GRAPH
-    ----------------------------------------------------------- */
-    const dailyCtx = document.getElementById('dailyChart').getContext('2d');
-    new Chart(dailyCtx, {
-        type: 'bar',
-        data: {
-            labels: <?= json_encode($dailyLabels ?? []) ?>,
-            datasets: [{
-                    label: 'Earn (৳)',
-                    data: <?= json_encode($dailyEarns ?? []) ?>,
-                    backgroundColor: 'rgba(25, 135, 84, 0.7)',
-                    borderRadius: 6
-                },
-                {
-                    label: 'Cost (৳)',
-                    data: <?= json_encode($dailyCosts ?? []) ?>,
-                    backgroundColor: 'rgba(220, 53, 69, 0.7)',
-                    borderRadius: 6
-                }
-            ]
+/* -----------------------------------------------------------
+   ⭐ CURRENT MONTH GRAPH
+----------------------------------------------------------- */
+const dailyCtx = document.getElementById('dailyChart').getContext('2d');
+new Chart(dailyCtx, {
+    type: 'bar',
+    data: {
+        labels: <?= json_encode($dailyLabels ?? []) ?>,
+        datasets: [{
+                label: 'Earn (৳)',
+                data: <?= json_encode($dailyEarns ?? []) ?>,
+                backgroundColor: 'rgba(25, 135, 84, 0.7)',
+                borderRadius: 6
+            },
+            {
+                label: 'Cost (৳)',
+                data: <?= json_encode($dailyCosts ?? []) ?>,
+                backgroundColor: 'rgba(220, 53, 69, 0.7)',
+                borderRadius: 6
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        interaction: {
+            mode: 'index',
+            intersect: false
         },
-        options: {
-            responsive: true,
-            interaction: {
+        plugins: {
+            legend: {
+                position: 'bottom'
+            },
+            tooltip: {
+                enabled: true,
                 mode: 'index',
                 intersect: false
-            },
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                },
-                tooltip: {
-                    enabled: true,
-                    mode: 'index',
-                    intersect: false
+            }
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Date'
                 }
             },
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Date'
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Amount (৳)'
-                    }
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Amount (৳)'
                 }
             }
         }
-    });
+    }
+});
 
-    /* -----------------------------------------------------------
-       ⭐ YEARLY GRAPH
-    ----------------------------------------------------------- */
-    const monthCtx = document.getElementById('monthChart').getContext('2d');
-    new Chart(monthCtx, {
-        type: 'line',
-        data: {
-            labels: <?= json_encode($monthLabels ?? []) ?>,
-            datasets: [{
-                    label: 'Earn (৳)',
-                    data: <?= json_encode($monthEarns ?? []) ?>,
-                    borderColor: 'rgb(25, 135, 84)',
-                    backgroundColor: 'rgba(25, 135, 84, 0.2)',
-                    tension: 0.3,
-                    fill: true
-                },
-                {
-                    label: 'Cost (৳)',
-                    data: <?= json_encode($monthCosts ?? []) ?>,
-                    borderColor: 'rgb(220, 53, 69)',
-                    backgroundColor: 'rgba(220, 53, 69, 0.2)',
-                    tension: 0.3,
-                    fill: true
-                }
-            ]
+/* -----------------------------------------------------------
+   ⭐ YEARLY GRAPH
+----------------------------------------------------------- */
+const monthCtx = document.getElementById('monthChart').getContext('2d');
+new Chart(monthCtx, {
+    type: 'line',
+    data: {
+        labels: <?= json_encode($monthLabels ?? []) ?>,
+        datasets: [{
+                label: 'Earn (৳)',
+                data: <?= json_encode($monthEarns ?? []) ?>,
+                borderColor: 'rgb(25, 135, 84)',
+                backgroundColor: 'rgba(25, 135, 84, 0.2)',
+                tension: 0.3,
+                fill: true
+            },
+            {
+                label: 'Cost (৳)',
+                data: <?= json_encode($monthCosts ?? []) ?>,
+                borderColor: 'rgb(220, 53, 69)',
+                backgroundColor: 'rgba(220, 53, 69, 0.2)',
+                tension: 0.3,
+                fill: true
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        interaction: {
+            mode: 'index',
+            intersect: false
         },
-        options: {
-            responsive: true,
-            interaction: {
+        plugins: {
+            legend: {
+                position: 'bottom'
+            },
+            tooltip: {
+                enabled: true,
                 mode: 'index',
                 intersect: false
-            },
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                },
-                tooltip: {
-                    enabled: true,
-                    mode: 'index',
-                    intersect: false
+            }
+        },
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Month'
                 }
             },
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Month'
-                    }
-                },
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Amount (৳)'
-                    }
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Amount (৳)'
                 }
             }
         }
-    });
+    }
+});
 </script>
 
 <style>
-    .card-body canvas {
-        pointer-events: auto !important;
-    }
+.card-body canvas {
+    pointer-events: auto !important;
+}
 </style>
 
 <?= $this->endSection() ?>
