@@ -2735,8 +2735,6 @@ class Dashboard extends Controller
         return view('dashboard/payStudentRequest', $this->data);
     }
 
-
-
     public function studentPayment()
     {
         $this->data['title'] = 'Student Payment';

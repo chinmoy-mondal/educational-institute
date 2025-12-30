@@ -20,7 +20,7 @@ class CreateTransactionsTable extends Migration
             'transaction_id' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 100,
-                'unique'     => true,
+                'unique'     => false,
                 'null'       => false,
             ],
 
