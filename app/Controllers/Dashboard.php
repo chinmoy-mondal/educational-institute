@@ -2514,11 +2514,11 @@ class Dashboard extends Controller
             ->where('transaction_id', $transactionId)
             ->findAll();
 
-        if (empty($transactions)) {
-            return redirect()
-                ->to(base_url('admin/transactions'))
-                ->with('error', 'Receipt not found.');
-        }
+        // if (empty($transactions)) {
+        //     return redirect()
+        //         ->to(base_url('admin/transactions'))
+        //         ->with('error', 'Receipt not found.');
+        // }
 
         $this->data['transactions']   = $transactions;
         $this->data['transaction_id'] = $transactionId;
