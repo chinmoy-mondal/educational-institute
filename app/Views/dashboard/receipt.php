@@ -97,7 +97,6 @@ th {
     margin: 8mm 0;
 }
 
-/* ✅ PRINT VIEW FIX */
 @media print {
     .container-fluid {
         padding: 0 !important;
@@ -125,12 +124,9 @@ th {
     <div class="page">
 
         <?php for ($copy = 0; $copy < 2; $copy++): ?>
-
         <div class="receipt">
 
-            <div class="copy-label">
-                <?= $copy === 0 ? 'Student Copy' : 'Institute Copy' ?>
-            </div>
+            <div class="copy-label"><?= $copy === 0 ? 'Student Copy' : 'Institute Copy' ?></div>
 
             <div class="header">
                 <div class="school-name"><?= esc($schoolName ?? 'YOUR SCHOOL NAME') ?></div>
@@ -142,8 +138,7 @@ th {
             <div class="hr"></div>
 
             <div class="info">
-                <b>Date:</b> <?= esc($date ?? date('Y-m-d')) ?>
-                &nbsp;&nbsp;
+                <b>Date:</b> <?= esc($date ?? date('Y-m-d')) ?> &nbsp;&nbsp;
                 <b>Receipt No:</b> <?= esc($transaction_id ?? '__________') ?>
             </div>
 
@@ -169,10 +164,7 @@ th {
                 <?php foreach ($fees as $i => $f): ?>
                 <tr>
                     <td align="center"><?= $i + 1 ?></td>
-                    <td>
-                        <?= esc($f['title']) ?>
-                        <?= !empty($f['month']) ? ' (' . esc($f['month']) . ')' : '' ?>
-                    </td>
+                    <td><?= esc($f['title']) ?><?= !empty($f['month']) ? ' (' . esc($f['month']) . ')' : '' ?></td>
                     <td align="right"><?= number_format($f['amount'], 2) ?></td>
                 </tr>
                 <?php endforeach; ?>
@@ -186,7 +178,6 @@ th {
                     <td colspan="2" align="right"><b>Discount</b></td>
                     <td align="right"><?= number_format($discount ?? 0, 2) ?></td>
                 </tr>
-
                 <tr>
                     <td colspan="2" align="right"><b>Total Paid</b></td>
                     <td align="right"><b><?= number_format($totalAmount ?? 0, 2) ?></b></td>
@@ -203,9 +194,7 @@ th {
                 <span>Student Signature</span>
             </div>
 
-            <div class="note">
-                All paid amounts are non-refundable.
-            </div>
+            <div class="note">All paid amounts are non-refundable.</div>
 
         </div>
 
