@@ -2787,7 +2787,10 @@ class Dashboard extends Controller
 
         $fees = [];
         $totalAmount = 0;
-        $transactionId = strtoupper(uniqid('TX-'));
+        $transactionId = 'TX-'
+            . date('YmdHis')
+            . sprintf('%03d', (microtime(true) * 1000) % 1000)
+            . '-' . strtoupper(bin2hex(random_bytes(2)));
 
         if (!empty($feeIds)) {
             foreach ($feeIds as $i => $id) {
