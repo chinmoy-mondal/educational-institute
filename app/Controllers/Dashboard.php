@@ -2508,20 +2508,12 @@ class Dashboard extends Controller
         return view('dashboard/std_pay', $this->data);
     }
 
-    public function receipt()
+    public function receipt($transactionId)
     {
-        // Get transaction ID from POST
-        $transactionId = $this->request->getPost('transaction_id');
+        // Ensure uppercase to match stored IDs
+        $transactionId = strtoupper($transactionId);
 
-        if (!$transactionId) {
-            // If no transaction ID provided, redirect back
-            return redirect()->to(base_url('admin/transactions'))
-                ->with('error', 'Transaction ID is required.');
-        }
-
-        $transactionId = strtoupper($transactionId); // ensure uppercase
-
-        // Fetch all fee rows for this transaction
+        // Fetch all transactions for this ID
         $transactions = $this->transactionModel
             ->where('transaction_id', $transactionId)
             ->findAll();
@@ -2531,9 +2523,9 @@ class Dashboard extends Controller
                 ->with('error', 'Receipt not found.');
         }
 
-        // Map first row for student & receiver info
         $first = $transactions[0];
 
+        // Student info
         $this->data['student'] = [
             'student_name' => $first['sender_name'],
             'id'           => $first['sender_id'] ?? '',
@@ -2541,15 +2533,14 @@ class Dashboard extends Controller
             'section'      => $first['student_section'] ?? '',
         ];
 
-        $this->data['receiver']       = [
-            'name' => $first['receiver_name'] ?? ''
-        ];
+        // Receiver info
+        $this->data['receiver'] = ['name' => $first['receiver_name'] ?? ''];
 
         $this->data['transaction_id'] = $transactionId;
         $this->data['date']           = $first['created_at'] ?? date('Y-m-d');
         $this->data['discount']       = $first['discount'] ?? 0;
 
-        // Fees array for table
+        // Fees array
         $this->data['fees'] = [];
         foreach ($transactions as $t) {
             $this->data['fees'][] = [
@@ -2562,6 +2553,7 @@ class Dashboard extends Controller
         $this->data['totalAmount'] = array_sum(array_column($this->data['fees'], 'amount'));
         $this->data['netAmount']   = $this->data['totalAmount'] - ($this->data['discount'] ?? 0);
 
+        // Load the receipt view
         return view('dashboard/receipt', $this->data);
     }
 
