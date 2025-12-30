@@ -2508,35 +2508,33 @@ class Dashboard extends Controller
         return view('dashboard/std_pay', $this->data);
     }
 
-    public function receipt($transactionId)
+    public function receipt()
     {
-        // Make transaction ID uppercase to match stored IDs
-        $transactionId = strtoupper($transactionId);
+        // Get transaction ID from POST
+        $transactionId = $this->request->getPost('transaction_id');
 
-        // Get all fee rows for this transaction
+        if (!$transactionId) {
+            // If no transaction ID provided, redirect back
+            return redirect()->to(base_url('admin/transactions'))
+                ->with('error', 'Transaction ID is required.');
+        }
+
+        $transactionId = strtoupper($transactionId); // ensure uppercase
+
+        // Fetch all fee rows for this transaction
         $transactions = $this->transactionModel
             ->where('transaction_id', $transactionId)
             ->findAll();
 
-        // If no transactions found, create empty placeholders
         if (empty($transactions)) {
-            $this->data['transactions']   = [];
-            $this->data['transaction_id'] = $transactionId;
-            $this->data['student']        = [];
-            $this->data['receiver']       = [];
-            $this->data['fees']           = [];
-            $this->data['discount']       = 0;
-            $this->data['totalAmount']    = 0;
-            $this->data['netAmount']      = 0;
-            $this->data['date']           = date('Y-m-d');
-
-            return view('dashboard/receipt', $this->data);
+            return redirect()->to(base_url('admin/transactions'))
+                ->with('error', 'Receipt not found.');
         }
 
         // Map first row for student & receiver info
         $first = $transactions[0];
 
-        $this->data['student']        = [
+        $this->data['student'] = [
             'student_name' => $first['sender_name'],
             'id'           => $first['sender_id'] ?? '',
             'class'        => $first['student_class'] ?? '',
@@ -2561,7 +2559,6 @@ class Dashboard extends Controller
             ];
         }
 
-        // Total calculations
         $this->data['totalAmount'] = array_sum(array_column($this->data['fees'], 'amount'));
         $this->data['netAmount']   = $this->data['totalAmount'] - ($this->data['discount'] ?? 0);
 

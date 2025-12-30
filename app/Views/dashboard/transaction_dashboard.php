@@ -123,10 +123,13 @@
                         <td><?= $i++ ?></td>
                         <td><?= date('d M Y', strtotime($t['created_at'])) ?></td>
                         <td>
-                            <a href="<?= site_url('admin/receipt/' . esc($t['transaction_id'])) ?>"
-                                class="btn btn-sm btn-primary" target="_blank">
-                                View Receipt
-                            </a>
+                            <form action="<?= site_url('admin/receipt') ?>" method="post" target="_blank"
+                                style="display:inline;">
+                                <input type="hidden" name="transaction_id" value="<?= esc($t['transaction_id']) ?>">
+                                <button type="submit" class="btn btn-link p-0" style="text-decoration: underline;">
+                                    <?= esc($t['transaction_id']) ?>
+                                </button>
+                            </form>
                         </td>
                         <td><?= esc($t['sender_name']) ?></td>
                         <td><?= esc($t['receiver_name']) ?></td>
