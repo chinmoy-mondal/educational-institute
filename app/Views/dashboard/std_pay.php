@@ -39,7 +39,7 @@
                     </div>
                 </div>
 
-                <!-- Section Select 1-->
+                <!-- Section Select 2-->
                 <div class="col-md-3">
                     <select name="section" class="form-control">
                         <option value="" <?= old('section') === null || old('section') === '' ? 'selected' : '' ?>>
