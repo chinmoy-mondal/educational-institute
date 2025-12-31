@@ -2798,16 +2798,9 @@ class Dashboard extends Controller
         $amounts = $request->getPost('amount');
         $months  = $request->getPost('month');
 
-        echo "apply discount = " . $applyDiscount;
-
-        $this->data['discount'] = $discountAmount;
-        $this->data['date'] = date('Y-m-d');
 
         $student = $this->studentModel->find($studentId);
         $receiver = $this->userModel->find($receiverId);
-
-        $this->data['student'] = $student;
-        $this->data['receiver'] = $receiver;
 
 
         $monthNames = [
@@ -2875,7 +2868,7 @@ class Dashboard extends Controller
             }
         }
         /* ---------- APPLY DISCOUNT ---------- */
-        if ($discountAmount > 0) {
+        if ($applyDiscount) {
             $existingDiscount = $this->studentDiscountModel
                 ->where('student_id', $studentId)
                 ->first();
