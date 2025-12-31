@@ -2522,7 +2522,7 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        // Fetch all transactions with this transaction ID
+        // Fetch all transactions for this ID
         $transactions = $this->transactionModel
             ->where('transaction_id', $transactionId)
             ->findAll();
@@ -2534,12 +2534,15 @@ class Dashboard extends Controller
 
         $first = $transactions[0];
 
-        // Student info
+        // Fetch student info
+        $studentId = $first['sender_id'] ?? null;
+        $student   = $studentId ? $this->studentModel->find($studentId) : [];
+
         $this->data['student'] = [
-            'student_name' => $first['sender_name'] ?? '',
-            'id'           => $first['sender_id'] ?? '',
-            'class'        => $first['student_class'] ?? '',
-            'section'      => $first['student_section'] ?? '',
+            'student_name' => $student['student_name'] ?? $first['sender_name'] ?? '',
+            'id'           => $studentId ?? '',
+            'class'        => $student['class'] ?? $first['student_class'] ?? '',
+            'section'      => $student['section'] ?? $first['student_section'] ?? '',
         ];
 
         // Receiver info
@@ -2548,26 +2551,43 @@ class Dashboard extends Controller
         ];
 
         $this->data['transaction_id'] = $transactionId;
-        $this->data['date']           = $first['created_at'] ?? date('Y-m-d');
-        $this->data['discount']       = floatval($first['discount'] ?? 0);
+        $this->data['date'] = $first['created_at'] ?? date('Y-m-d');
 
-        // Fees array
-        $this->data['fees'] = [];
+        // Prepare fees with only current month transactions
+        $currentMonth = date('m');
+        $fees = [];
+        $totalPaid = 0;
+        $discountApplied = false;
+
         foreach ($transactions as $t) {
-            $this->data['fees'][] = [
+            $transactionMonth = date('m', strtotime($t['created_at'] ?? date('Y-m-d')));
+            if ($transactionMonth != $currentMonth) continue; // Skip other months
+
+            $amount = floatval($t['amount'] ?? 0);
+
+            // Apply discount only to first transaction
+            $discount = 0;
+            if (!$discountApplied && !empty($t['discount'])) {
+                $discount = floatval($t['discount']);
+                $discountApplied = true;
+            }
+
+            $fees[] = [
                 'title'  => $t['purpose'] ?? '',
                 'month'  => $t['month'] ?? '',
-                'amount' => floatval($t['amount'] ?? 0)
+                'amount' => $amount,
+                'paid'   => $amount >= (($t['full_amount'] ?? $amount)) ? true : false
             ];
+
+            $totalPaid += $amount;
         }
 
-        // Total amount (sum of all fee amounts)
-        $this->data['totalAmount'] = array_sum(array_column($this->data['fees'], 'amount'));
+        $this->data['fees'] = $fees;
+        $this->data['discount'] = $discount ?? 0;
+        $this->data['totalAmount'] = $totalPaid;
+        $this->data['netAmount'] = $totalPaid - ($discount ?? 0);
 
-        // Net amount (subtract only first fee discount)
-        $this->data['netAmount'] = $this->data['totalAmount'] - $this->data['discount'];
-
-        // Load the receipt view
+        // Load receipt view
         return view('dashboard/receipt', $this->data);
     }
 

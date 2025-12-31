@@ -130,8 +130,10 @@ th {
 
             <div class="header">
                 <div class="school-name"><?= esc($schoolName ?? 'YOUR SCHOOL NAME') ?></div>
-                <div class="school-sub">Address: <?= esc($schoolAddress ?? '__________') ?> | Phone:
-                    <?= esc($schoolPhone ?? '__________') ?></div>
+                <div class="school-sub">
+                    Address: <?= esc($schoolAddress ?? '__________') ?> | Phone:
+                    <?= esc($schoolPhone ?? '__________') ?>
+                </div>
                 <div class="school-sub"><b>Payment Receipt</b></div>
             </div>
 
@@ -157,7 +159,7 @@ th {
                 <tr>
                     <th width="7%">SL</th>
                     <th>Fee Category</th>
-                    <th width="22%">Amount (৳)</th>
+                    <th width="22%">Status / Amount (৳)</th>
                 </tr>
 
                 <?php if (!empty($fees)): ?>
@@ -165,7 +167,13 @@ th {
                 <tr>
                     <td align="center"><?= $i + 1 ?></td>
                     <td><?= esc($f['title']) ?><?= !empty($f['month']) ? ' (' . esc($f['month']) . ')' : '' ?></td>
-                    <td align="right"><?= number_format($f['amount'], 2) ?></td>
+                    <td align="center">
+                        <?php if ($copy === 0): ?>
+                        <?= ($f['paid'] ?? false) ? 'Paid' : 'Due' ?>
+                        <?php else: ?>
+                        <?= number_format($f['amount'], 2) ?>
+                        <?php endif; ?>
+                    </td>
                 </tr>
                 <?php endforeach; ?>
                 <?php else: ?>
@@ -174,6 +182,8 @@ th {
                 </tr>
                 <?php endif; ?>
 
+                <?php if ($copy === 1): ?>
+                <!-- Only Institute copy shows totals -->
                 <tr>
                     <td colspan="2" align="right"><b>Discount</b></td>
                     <td align="right"><?= number_format($discount ?? 0, 2) ?></td>
@@ -182,6 +192,7 @@ th {
                     <td colspan="2" align="right"><b>Net Amount</b></td>
                     <td align="right"><b><?= number_format($netAmount ?? 0, 2) ?></b></td>
                 </tr>
+                <?php endif; ?>
             </table>
 
             <div class="footer">
@@ -191,7 +202,7 @@ th {
 
             <div class="sign">
                 <span>Office Signature</span>
-                <span>Student Signature</span>
+                <span>Depositor Signature</span>
             </div>
 
             <div class="note">All paid amounts are non-refundable.</div>
