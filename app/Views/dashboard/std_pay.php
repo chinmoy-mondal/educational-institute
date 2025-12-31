@@ -42,9 +42,12 @@
                 <!-- Section Select -->
                 <div class="col-md-3">
                     <select name="section" class="form-control">
-                        <option value="">Select Section</option>
+                        <option value="" <?= old('section') === null || old('section') === '' ? 'selected' : '' ?>>
+                            Select Section
+                        </option>
+
                         <?php foreach ($sections as $s): ?>
-                        <option value="<?= esc($s) ?>" <?= ($selectedSection ?? '') == $s ? 'selected' : '' ?>>
+                        <option value="<?= esc($s) ?>" <?= old('section') === $s ? 'selected' : '' ?>>
                             <?= esc($s) ?>
                         </option>
                         <?php endforeach; ?>
