@@ -2805,6 +2805,7 @@ class Dashboard extends Controller
             . '-' . strtoupper(bin2hex(random_bytes(2)));
 
         if (!empty($feeIds)) {
+            $first = true; // flag for first fee
             foreach ($feeIds as $i => $id) {
                 $amount = floatval($amounts[$i] ?? 0);
                 if ($amount <= 0) continue;
@@ -2823,6 +2824,9 @@ class Dashboard extends Controller
 
                 $totalAmount += $amount;
 
+                // Apply discount only for the first insert
+                $discountToInsert = $first ? $discountAmount : 0;
+
                 // Save each fee as a transaction
                 $this->transactionModel->insert([
                     'transaction_id' => $transactionId,
@@ -2831,13 +2835,15 @@ class Dashboard extends Controller
                     'receiver_id'    => $receiverId,
                     'receiver_name'  => $receiver['name'] ?? '',
                     'amount'         => $amount,
-                    'discount'       => $discountAmount,
+                    'discount'       => $discountToInsert,
                     'month'          => $monthName,
                     'purpose'        => $title,
                     'description'    => 'Payment for ' . $title,
                     'status'         => 'paid',
                     'activity'       => 'fee_payment'
                 ]);
+
+                $first = false; // reset flag after first insert
             }
         }
         /* ---------- APPLY DISCOUNT ---------- */
