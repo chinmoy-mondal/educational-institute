@@ -2930,7 +2930,7 @@ class Dashboard extends Controller
         //     }
         // }
 
-        return redirect()->to(base_url('admin/transactions'))->with('success', 'Payment recorded successfully.');
+        // return redirect()->to(base_url('admin/transactions'))->with('success', 'Payment recorded successfully.');
     }
     
     public function studentPaymentHistory($studentId)
