@@ -2287,11 +2287,12 @@ class Dashboard extends Controller
 
         $this->data['transactions'] = $this->transactionModel->orderBy('created_at', 'DESC')->findAll();
 
-        // Totals
+
         $totalEarnRow = $this->transactionModel->where('status', 0)->selectSum('amount')->get()->getRowArray();
+        $totaldiscountRow = $this->transactionModel->where('status', 0)->selectSum('discount')->get()->getRowArray();
         $totalCostRow = $this->transactionModel->where('status', 1)->selectSum('amount')->get()->getRowArray();
 
-        $this->data['totalEarn'] = $totalEarnRow['amount'] ?? 0;
+        $this->data['totalEarn'] = $totalEarnRow['amount'] - $totaldiscountRow['discount'] ?? 0;
         $this->data['totalCost'] = $totalCostRow['amount'] ?? 0;
 
         $builder = db_connect()->table('transactions');
