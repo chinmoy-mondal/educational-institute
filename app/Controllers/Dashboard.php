@@ -2522,9 +2522,7 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        $transactionId = strtoupper($transactionId);
-
-        // Fetch all transactions for this ID
+        // Fetch all transactions with this transaction ID
         $transactions = $this->transactionModel
             ->where('transaction_id', $transactionId)
             ->findAll();
@@ -2538,31 +2536,36 @@ class Dashboard extends Controller
 
         // Student info
         $this->data['student'] = [
-            'student_name' => $first['sender_name'],
+            'student_name' => $first['sender_name'] ?? '',
             'id'           => $first['sender_id'] ?? '',
             'class'        => $first['student_class'] ?? '',
             'section'      => $first['student_section'] ?? '',
         ];
 
         // Receiver info
-        $this->data['receiver'] = ['name' => $first['receiver_name'] ?? ''];
+        $this->data['receiver'] = [
+            'name' => $first['receiver_name'] ?? ''
+        ];
 
         $this->data['transaction_id'] = $transactionId;
         $this->data['date']           = $first['created_at'] ?? date('Y-m-d');
-        $this->data['discount']       = $first['discount'] ?? 0;
+        $this->data['discount']       = floatval($first['discount'] ?? 0);
 
         // Fees array
         $this->data['fees'] = [];
         foreach ($transactions as $t) {
             $this->data['fees'][] = [
-                'title' => $t['purpose'],
-                'month' => $t['month'] ?? '',
-                'amount' => $t['amount']
+                'title'  => $t['purpose'] ?? '',
+                'month'  => $t['month'] ?? '',
+                'amount' => floatval($t['amount'] ?? 0)
             ];
         }
 
+        // Total amount (sum of all fee amounts)
         $this->data['totalAmount'] = array_sum(array_column($this->data['fees'], 'amount'));
-        $this->data['netAmount']   = $this->data['totalAmount'] - ($this->data['discount'] ?? 0);
+
+        // Net amount (subtract only first fee discount)
+        $this->data['netAmount'] = $this->data['totalAmount'] - $this->data['discount'];
 
         // Load the receipt view
         return view('dashboard/receipt', $this->data);

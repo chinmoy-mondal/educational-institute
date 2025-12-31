@@ -179,8 +179,8 @@ th {
                     <td align="right"><?= number_format($discount ?? 0, 2) ?></td>
                 </tr>
                 <tr>
-                    <td colspan="2" align="right"><b>Total Paid</b></td>
-                    <td align="right"><b><?= number_format($totalAmount ?? 0, 2) ?></b></td>
+                    <td colspan="2" align="right"><b>Net Amount</b></td>
+                    <td align="right"><b><?= number_format($netAmount ?? 0, 2) ?></b></td>
                 </tr>
             </table>
 
