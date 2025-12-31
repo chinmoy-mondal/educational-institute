@@ -2725,12 +2725,24 @@ class Dashboard extends Controller
         $userId   = session()->get('user_id');
         $receiver = $this->userModel->find($userId);
 
+        $payments = $this->transactionModel
+            ->where('sender_id', $id)
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
+
+        // ✅ Calculate total paid
+        $totalPaid = array_sum(array_column($payments, 'amount'));
+        $totalDiscount = array_sum(array_column($payments, 'discount'));
+
+
         // 📦 Send to view
         $this->data['student']    = $student;
         $this->data['fees']       = $fees;
         $this->data['feeAmounts'] = $feeAmounts;
         $this->data['feeUnit']    = $feeUnit;
         $this->data['receiver']   = $receiver;
+        $this->data['pay_history']   = $payments;
+        $this->data['totalPaid'] = $totalPaid - $totalDiscount;
 
         return view('dashboard/payStudentRequest', $this->data);
     }
@@ -2913,11 +2925,12 @@ class Dashboard extends Controller
 
         // ✅ Calculate total paid
         $totalPaid = array_sum(array_column($payments, 'amount'));
+        $totalDiscount = array_sum(array_column($payments, 'discount'));
 
         // ✅ Pass data to view
         $this->data['student']   = $student;
         $this->data['payments']  = $payments;
-        $this->data['totalPaid'] = $totalPaid;
+        $this->data['totalPaid'] = $totalPaid - $totalDiscount;
 
         return view('dashboard/student_payment_history', $this->data);
     }

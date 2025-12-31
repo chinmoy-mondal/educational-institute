@@ -6,20 +6,20 @@
     <!-- Page Heading -->
     <h3 class="fw-bold text-primary mb-4">💰 Student Payment History</h3>
 
-    
+
 
     <!-- Flash Messages -->
     <?php if (session()->getFlashdata('success')): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <?= session()->getFlashdata('success') ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <?= session()->getFlashdata('success') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     <?php endif; ?>
     <?php if (session()->getFlashdata('error')): ?>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <?= session()->getFlashdata('error') ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <?= session()->getFlashdata('error') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     <?php endif; ?>
 
     <!-- Student Info -->
@@ -62,6 +62,7 @@
                         <th>Transaction ID</th>
                         <th>Receiver Name</th>
                         <th>Amount (৳)</th>
+                        <th>Discount (৳)</th>
                         <th>Purpose</th>
                         <th>Description</th>
                         <th>Status</th>
@@ -70,30 +71,32 @@
                 </thead>
                 <tbody>
                     <?php if (!empty($payments)): ?>
-                        <?php $i = 1; foreach ($payments as $p): ?>
-                            <tr>
-                                <td><?= $i++ ?></td>
-                                <td><?= esc($p['transaction_id']) ?></td>
-                                <td><?= esc($p['receiver_name']) ?></td>
-                                <td><?= number_format($p['amount'], 2) ?></td>
-                                <td><?= esc($p['purpose']) ?></td>
-                                <td><?= esc($p['description']) ?></td>
-                                <td>
-                                    <?php if ($p['status'] === 'approved'): ?>
-                                        <span class="badge bg-success">Approved</span>
-                                    <?php elseif ($p['status'] === 'pending'): ?>
-                                        <span class="badge bg-warning text-dark">Pending</span>
-                                    <?php else: ?>
-                                        <span class="badge bg-danger">Rejected</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td><?= date('d M, Y h:i A', strtotime($p['created_at'])) ?></td>
-                            </tr>
-                        <?php endforeach; ?>
+                    <?php $i = 1;
+                        foreach ($payments as $p): ?>
+                    <tr>
+                        <td><?= $i++ ?></td>
+                        <td><?= esc($p['transaction_id']) ?></td>
+                        <td><?= esc($p['receiver_name']) ?></td>
+                        <td><?= number_format($p['amount'], 2) ?></td>
+                        <td><?= number_format($p['discount'], 2) ?></td>
+                        <td><?= esc($p['purpose']) ?></td>
+                        <td><?= esc($p['description']) ?></td>
+                        <td>
+                            <?php if ($p['status'] === 'approved'): ?>
+                            <span class="badge bg-success">Approved</span>
+                            <?php elseif ($p['status'] === 'pending'): ?>
+                            <span class="badge bg-warning text-dark">Pending</span>
+                            <?php else: ?>
+                            <span class="badge bg-danger">Rejected</span>
+                            <?php endif; ?>
+                        </td>
+                        <td><?= date('d M, Y h:i A', strtotime($p['created_at'])) ?></td>
+                    </tr>
+                    <?php endforeach; ?>
                     <?php else: ?>
-                        <tr>
-                            <td colspan="8" class="text-center text-muted">No transaction history found.</td>
-                        </tr>
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">No transaction history found.</td>
+                    </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
