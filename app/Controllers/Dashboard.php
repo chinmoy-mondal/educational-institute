@@ -2790,7 +2790,15 @@ class Dashboard extends Controller
         $studentId  = $request->getPost('student_id');
         $receiverId = $request->getPost('receiver_id');
         $discountAmount = floatval($request->getPost('discount'));
-        $applyDiscount = $request->getPost('apply_discount') == 1;
+        $applyDiscount = $request->getPost('apply_discount');
+
+
+        /* ---------- FEES ---------- */
+        $feeIds  = $request->getPost('fee_id');
+        $amounts = $request->getPost('amount');
+        $months  = $request->getPost('month');
+
+        echo "apply discount = " . $applyDiscount;
 
         $this->data['discount'] = $discountAmount;
         $this->data['date'] = date('Y-m-d');
@@ -2801,10 +2809,6 @@ class Dashboard extends Controller
         $this->data['student'] = $student;
         $this->data['receiver'] = $receiver;
 
-        /* ---------- FEES ---------- */
-        $feeIds  = $request->getPost('fee_id');
-        $amounts = $request->getPost('amount');
-        $months  = $request->getPost('month');
 
         $monthNames = [
             1 => 'January',
@@ -2860,7 +2864,7 @@ class Dashboard extends Controller
                     'receiver_name'  => $receiver['name'] ?? '',
                     'amount'         => $amount,
                     'discount'       => $discountToInsert,
-                    'month'          => $monthName,
+                    'month'          => $monthNumber,
                     'purpose'        => $title,
                     'description'    => 'Payment for ' . $title,
                     'status'         => 'paid',
@@ -2900,31 +2904,31 @@ class Dashboard extends Controller
         }
 
         /* ---------- SEND SMS ---------- */
-        $studentPhone = $student['phone'] ?? '';
-        if ($studentPhone) {
-            // ensure country code (Bangladesh 880)
-            $studentPhone = '880' . ltrim($studentPhone, '0');
+        // $studentPhone = $student['phone'] ?? '';
+        // if ($studentPhone) {
+        //     // ensure country code (Bangladesh 880)
+        //     $studentPhone = '880' . ltrim($studentPhone, '0');
 
-            $message = "Dear {$student['student_name']}, your payment of Tk {$amountAfterDiscount} has been received. Thank you!";
-            $apiKey = "5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8"; // your API key
-            $callerID = "1234";
+        //     $message = "Dear {$student['student_name']}, your payment of Tk {$amountAfterDiscount} has been received. Thank you!";
+        //     $apiKey = "5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8"; // your API key
+        //     $callerID = "1234";
 
-            $smsUrl = "https://bulksmsdhaka.com/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
+        //     $smsUrl = "https://bulksmsdhaka.com/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $smsUrl);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-            $response = curl_exec($ch);
-            $error = curl_error($ch);
-            curl_close($ch);
+        //     $ch = curl_init();
+        //     curl_setopt($ch, CURLOPT_URL, $smsUrl);
+        //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        //     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        //     $response = curl_exec($ch);
+        //     $error = curl_error($ch);
+        //     curl_close($ch);
 
-            if ($error) {
-                log_message('error', "SMS sending failed: {$error}");
-            } else {
-                log_message('info', "SMS sent successfully: {$response}");
-            }
-        }
+        //     if ($error) {
+        //         log_message('error', "SMS sending failed: {$error}");
+        //     } else {
+        //         log_message('info', "SMS sent successfully: {$response}");
+        //     }
+        // }
 
         return redirect()->to(base_url('admin/transactions'))->with('success', 'Payment recorded successfully.');
     }
