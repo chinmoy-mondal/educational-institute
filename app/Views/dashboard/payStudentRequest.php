@@ -130,6 +130,9 @@
                 </div>
 
             </form>
+            <button type="button" class="btn btn-info me-2" onclick="showMonthFeePopup()">
+                Preview Month Payment
+            </button>
         </div>
     </div>
 
@@ -217,6 +220,53 @@ document.addEventListener('input', function(e) {
 
 document.getElementById('applyDiscount').addEventListener('change', calculateNet);
 window.addEventListener('load', calculateNet);
+
+////
+function calculateMonthFees() {
+
+    const month = parseInt(document.getElementById('payMonth').value);
+    let total = 0;
+
+    document.querySelectorAll('.fee-amount').forEach(input => {
+
+        const unit = parseInt(input.dataset.unit);
+        const base = parseFloat(input.dataset.base);
+        let amount = 0;
+
+        if (unit > 0 && base > 0) {
+            const interval = 12 / unit;
+
+            // charge only if month matches interval
+            if (month % interval === 0) {
+                amount = base;
+            }
+        }
+
+        input.value = amount.toFixed(2);
+        total += amount;
+    });
+
+    applyDiscountAndNet(total);
+}
+
+function applyDiscountAndNet(total) {
+
+    const discount = parseFloat(document.getElementById('discount').value) || 0;
+    const apply = document.getElementById('applyDiscount').checked;
+
+    let net = apply ? total - discount : total;
+    if (net < 0) net = 0;
+
+    document.getElementById('totalAmount').value = total.toFixed(2);
+    document.getElementById('netAmount').value = net.toFixed(2);
+}
+
+// ---- EVENTS ----
+document.getElementById('payMonth').addEventListener('change', calculateMonthFees);
+document.getElementById('discount').addEventListener('input', calculateMonthFees);
+document.getElementById('applyDiscount').addEventListener('change', calculateMonthFees);
+
+window.addEventListener('load', calculateMonthFees);
 </script>
 
 <?= $this->endSection() ?>
