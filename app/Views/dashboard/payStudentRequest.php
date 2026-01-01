@@ -38,7 +38,7 @@
                         ];
                         $currentMonth = date('m'); // current month
                         ?>
-                        <select name="month" class="form-select">
+                        <select name="month" id="payMonth" class="form-select">
                             <?php foreach ($months as $key => $label): ?>
                             <option value="<?= $key ?>" <?= $key == $currentMonth ? 'selected' : '' ?>>
                                 <?= $label ?>
@@ -74,8 +74,9 @@
                                 <td>
                                     <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['id']) ?>">
                                     <input type="number" step="0.01" name="amount[<?= $index ?>]"
-                                        class="form-control form-control-sm fee-amount" placeholder="Enter amount"
-                                        max="<?= esc($max) ?>">
+                                        class="form-control form-control-sm fee-amount" data-unit="<?= esc($unit) ?>"
+                                        data-base="<?= esc($amount) ?>" data-title="<?= esc($f['title']) ?>"
+                                        max="<?= esc($max) ?>" readonly>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -267,6 +268,28 @@ document.getElementById('discount').addEventListener('input', calculateMonthFees
 document.getElementById('applyDiscount').addEventListener('change', calculateMonthFees);
 
 window.addEventListener('load', calculateMonthFees);
+
+
+function showMonthFeePopup() {
+
+    const monthText = document.querySelector('#payMonth option:checked').text;
+    let message = `Payment Preview for ${monthText}\n\n`;
+    let total = 0;
+
+    document.querySelectorAll('.fee-amount').forEach(input => {
+        const title = input.dataset.title;
+        const amount = parseFloat(input.value) || 0;
+
+        if (amount > 0) {
+            message += `${title}: ৳${amount.toFixed(2)}\n`;
+            total += amount;
+        }
+    });
+
+    message += `\n----------------------\nTotal: ৳${total.toFixed(2)}`;
+
+    alert(message);
+}
 </script>
 
 <?= $this->endSection() ?>
