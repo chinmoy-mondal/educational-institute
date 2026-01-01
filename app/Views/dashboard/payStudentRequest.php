@@ -55,7 +55,7 @@
                             <tr>
                                 <th width="5%">SL</th>
                                 <th>Fee Title</th>
-                                <th width="18%">Unit × Amount (৳)</th>
+                                <th width="18%">Max Amount (৳)</th>
                                 <th width="18%">Pay Amount (৳)</th>
                             </tr>
                         </thead>
@@ -63,19 +63,19 @@
                             <?php
                             $sl = 1;
                             foreach ($fees as $index => $f):
-                                $unit   = $f['unit'] ?? 1;
-                                $annual = $f['annual_fee'] ?? $f['amount'] ?? 0;
-                                $max    = $unit * $annual;
+                                $unit   = $feeUnit[$f['id']] ?? 0;
+                                $amount = $feeAmounts[$f['id']] ?? 0;
+                                $max    = $unit * $amount;
                             ?>
                             <tr>
                                 <td><?= $sl++ ?></td>
-                                <td><?= esc($f['title'] ?? 'Fee') ?></td>
-                                <td><?= $unit && $annual ? esc($unit . ' × ' . number_format($annual, 2)) : '-' ?></td>
+                                <td><?= esc($f['title']) ?></td>
+                                <td><?= $unit && $amount ? esc($unit . ' × ' . $amount) : '-' ?></td>
                                 <td>
-                                    <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['id'] ?? 0) ?>">
+                                    <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['id']) ?>">
                                     <input type="number" step="0.01" name="amount[<?= $index ?>]"
                                         class="form-control form-control-sm fee-amount" placeholder="Enter amount"
-                                        max="<?= esc($max) ?>" value="<?= esc($f['amount'] ?? 0) ?>">
+                                        max="<?= esc($max) ?>">
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -114,7 +114,9 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold text-success">Net Payable Amount (৳)</label>
+                        <label class="form-label fw-semibold text-success">
+                            Net Payable Amount (৳)
+                        </label>
                         <input type="text" id="netAmount" class="form-control fw-bold text-success" readonly
                             value="0.00">
                     </div>
@@ -157,20 +159,19 @@
                         foreach ($pay_history as $p): ?>
                     <tr>
                         <td><?= $i++ ?></td>
-                        <td><?= esc($p['transaction_id'] ?? '-') ?></td>
-                        <td><?= esc($p['receiver_name'] ?? '-') ?></td>
-                        <td><?= number_format($p['amount'] ?? 0, 2) ?></td>
-                        <td><?= number_format($p['discount'] ?? 0, 2) ?></td>
-                        <td><?= esc($p['purpose'] ?? '-') ?></td>
-                        <td><?= esc($p['description'] ?? '-') ?></td>
+                        <td><?= esc($p['transaction_id']) ?></td>
+                        <td><?= esc($p['receiver_name']) ?></td>
+                        <td><?= number_format($p['amount'], 2) ?></td>
+                        <td><?= number_format($p['discount'], 2) ?></td>
+                        <td><?= esc($p['purpose']) ?></td>
+                        <td><?= esc($p['description']) ?></td>
                         <td>
                             <span
-                                class="badge bg-<?= ($p['status'] ?? '') == 'approved' ? 'success' : (($p['status'] ?? '') == 'pending' ? 'warning' : 'danger') ?>">
-                                <?= ucfirst($p['status'] ?? '-') ?>
+                                class="badge bg-<?= $p['status'] == 'approved' ? 'success' : ($p['status'] == 'pending' ? 'warning' : 'danger') ?>">
+                                <?= ucfirst($p['status']) ?>
                             </span>
                         </td>
-                        <td><?= !empty($p['created_at']) ? date('d M Y h:i A', strtotime($p['created_at'])) : '-' ?>
-                        </td>
+                        <td><?= date('d M Y h:i A', strtotime($p['created_at'])) ?></td>
                     </tr>
                     <?php endforeach;
                     else: ?>
@@ -183,7 +184,7 @@
         </div>
 
         <div class="card-footer text-end fw-bold">
-            Total Paid: ৳ <?= number_format($totalPaid ?? 0, 2) ?>
+            Total Paid: ৳ <?= number_format($totalPaid, 2) ?>
         </div>
     </div>
 </div>
