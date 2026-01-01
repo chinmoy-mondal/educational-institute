@@ -2778,9 +2778,9 @@ class Dashboard extends Controller
 
         $studentId      = $request->getPost('student_id');
         $receiverId     = $request->getPost('receiver_id');
-        $discountAmount = floatval($request->getPost('discount'));
+        $discountAmount = floatval($request->getPost('discount') ?? 0);
         $applyDiscount  = $request->getPost('apply_discount') ? true : false;
-        $monthNumber    = intval($request->getPost('month'));
+        $monthNumber    = intval($request->getPost('month') ?? date('m'));
 
         $student  = $this->studentModel->find($studentId);
         $receiver = $this->userModel->find($receiverId);
@@ -2799,22 +2799,31 @@ class Dashboard extends Controller
         if (!empty($feeIds)) {
             $first = true; // discount applies to first fee only
             foreach ($feeIds as $i => $id) {
+
                 $feeData = $this->feesAmountModel->find($id);
                 if (!$feeData) continue;
 
-                $unit         = intval($feeData['unit']) ?: 1; // installments per year
-                $annualAmount = floatval($feeData['amount']);  // total annual fee
+                $unit         = intval($feeData['unit']) ?: 1;   // installments per year
+                $annualAmount = floatval($feeData['amount']);    // total annual fee
 
-                // Interval in months
-                $interval = 12 / $unit;
-                $installments = floor($monthNumber / $interval);
-                $installments = min($installments, $unit);
+                // Calculate amount up to selected month
+                if ($unit === 1) {
+                    // One-time fee, pay full
+                    $calculatedAmount = $annualAmount;
+                } else {
+                    // Installment fee, calculate installments up to monthNumber
+                    $interval     = 12 / $unit;
+                    $installments = floor($monthNumber / $interval);
+                    $installments = min($installments, $unit);
+                    $calculatedAmount = ($annualAmount / $unit) * $installments;
+                }
 
-                // Fee amount to pay up to selected month
-                $feePayAmount = ($annualAmount / $unit) * $installments;
+                // If user entered amount, use it instead
+                $enteredAmount = isset($amounts[$i]) && $amounts[$i] !== ''
+                    ? floatval($amounts[$i])
+                    : $calculatedAmount;
 
-                // Add user-entered amount if exists (optional)
-                $enteredAmount = isset($amounts[$i]) ? floatval($amounts[$i]) : $feePayAmount;
+                // Skip if zero
                 if ($enteredAmount <= 0) continue;
 
                 $totalAmount += $enteredAmount;
@@ -2841,7 +2850,7 @@ class Dashboard extends Controller
             }
         }
 
-        // Apply discount in student_discount table
+        // Update or insert student discount
         if ($applyDiscount) {
             $existingDiscount = $this->studentDiscountModel
                 ->where('student_id', $studentId)
@@ -2859,10 +2868,10 @@ class Dashboard extends Controller
             }
         }
 
-        // Calculate net & due amounts
+        // Calculate net & due
         $netAmount = max($totalAmount - ($applyDiscount ? $discountAmount : 0), 0);
 
-        // Already paid by this student
+        // Already paid
         $paidAmount = $this->transactionModel
             ->where('sender_id', $studentId)
             ->where('activity', 'fee_payment')
@@ -2871,7 +2880,7 @@ class Dashboard extends Controller
 
         $dueAmount = max($netAmount - $paidAmount, 0);
 
-        // ================= SHOW PAID & DUE =================
+        // ================= SHOW SUMMARY =================
         echo "Student: {$student['student_name']}\n";
         echo "Month Number: {$monthNumber}\n";
         echo "Total Amount: ৳" . number_format($totalAmount, 2) . "\n";
