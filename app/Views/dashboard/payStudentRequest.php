@@ -13,40 +13,10 @@
         <div class="card-body">
             <form method="post" action="<?= base_url('admin/student-payment') ?>">
                 <?= csrf_field() ?>
+
                 <input type="hidden" name="step" value="discount">
                 <input type="hidden" name="student_id" value="<?= esc($student['id']) ?>">
                 <input type="hidden" name="receiver_id" value="<?= esc($receiver['id']) ?>">
-
-                <!-- ================= MONTH SELECTION ================= -->
-                <div class="row mb-4">
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold">Select Month</label>
-                        <?php
-                        $months = [
-                            '01' => 'January',
-                            '02' => 'February',
-                            '03' => 'March',
-                            '04' => 'April',
-                            '05' => 'May',
-                            '06' => 'June',
-                            '07' => 'July',
-                            '08' => 'August',
-                            '09' => 'September',
-                            '10' => 'October',
-                            '11' => 'November',
-                            '12' => 'December'
-                        ];
-                        $currentMonth = date('m'); // current month
-                        ?>
-                        <select name="month" id="monthSelect" class="form-select">
-                            <?php foreach ($months as $key => $label): ?>
-                            <option value="<?= $key ?>" <?= $key == $currentMonth ? 'selected' : '' ?>>
-                                <?= $label ?>
-                            </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                </div>
 
                 <!-- ================= FEES TABLE ================= -->
                 <div class="table-responsive mb-4">
@@ -56,14 +26,31 @@
                                 <th width="5%">SL</th>
                                 <th>Fee Title</th>
                                 <th width="18%">Max Amount (৳)</th>
+                                <th width="18%">Month</th>
                                 <th width="18%">Pay Amount (৳)</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                             $sl = 1;
-                            foreach ($fees as $index => $f):
-                                $unit   = $feeUnit[$f['id']] ?? 1;
+                            $months = [
+                                '01' => 'January',
+                                '02' => 'February',
+                                '03' => 'March',
+                                '04' => 'April',
+                                '05' => 'May',
+                                '06' => 'June',
+                                '07' => 'July',
+                                '08' => 'August',
+                                '09' => 'September',
+                                '10' => 'October',
+                                '11' => 'November',
+                                '12' => 'December'
+                            ];
+                            ?>
+
+                            <?php foreach ($fees as $index => $f):
+                                $unit   = $feeUnit[$f['id']] ?? 0;
                                 $amount = $feeAmounts[$f['id']] ?? 0;
                                 $max    = $unit * $amount;
                             ?>
@@ -72,10 +59,18 @@
                                 <td><?= esc($f['title']) ?></td>
                                 <td><?= $unit && $amount ? esc($unit . ' × ' . $amount) : '-' ?></td>
                                 <td>
+                                    <select name="month[<?= $index ?>]" class="form-select form-select-sm">
+                                        <option value="">-- Select Month --</option>
+                                        <?php foreach ($months as $key => $label): ?>
+                                        <option value="<?= $key ?>"><?= $label ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
+                                <td>
                                     <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['id']) ?>">
                                     <input type="number" step="0.01" name="amount[<?= $index ?>]"
                                         class="form-control form-control-sm fee-amount" placeholder="Enter amount"
-                                        max="<?= esc($max) ?>" data-unit="<?= $unit ?>" data-annual="<?= $amount ?>">
+                                        max="<?= esc($max) ?>">
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -94,7 +89,7 @@
                     <div class="col-md-4 d-flex align-items-end">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="applyDiscount" name="apply_discount"
-                                value="1" <?= !empty($student_discount) ? 'checked' : '' ?>>
+                                value="1">
                             <label class="form-check-label fw-semibold" for="applyDiscount">
                                 Apply Discount
                             </label>
@@ -109,7 +104,7 @@
                 <!-- ================= AMOUNT SUMMARY ================= -->
                 <div class="row mb-4">
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold">Total Amount (৳)</label>
+                        <label class="form-label fw-semibold">Total Entered Amount (৳)</label>
                         <input type="text" id="totalAmount" class="form-control" readonly value="0.00">
                     </div>
 
@@ -192,33 +187,43 @@
 <!-- ================= JS LOGIC ================= -->
 <script>
 function calculateNet() {
-    const monthNumber = parseInt(document.getElementById('monthSelect').value);
     let total = 0;
 
-    document.querySelectorAll('.fee-amount').forEach(input => {
-        const unit = parseInt(input.dataset.unit) || 1;
-        const annual = parseFloat(input.dataset.annual) || 0;
-
-        const interval = 12 / unit;
-        let installments = Math.floor(monthNumber / interval);
-        installments = Math.min(installments, unit);
-
-        const feePayAmount = (annual / unit) * installments;
-        input.value = feePayAmount.toFixed(2);
-        total += feePayAmount;
+    // Sum all fee amounts
+    document.querySelectorAll('input[name^="amount"]').forEach(input => {
+        let val = parseFloat(input.value);
+        if (!isNaN(val)) total += val;
     });
 
-    const discount = parseFloat(document.getElementById('discount').value) || 0;
-    const applyDiscount = document.getElementById('applyDiscount').checked;
-    const net = applyDiscount ? Math.max(total - discount, 0) : total;
+    // Read discount value
+    let discountInput = document.querySelector('input[name="discount"]');
+    let discount = parseFloat(discountInput.value) || 0;
 
+    // Check if discount should be applied
+    let applyDiscount = document.getElementById('applyDiscount').checked;
+
+    // Calculate net
+    let net = applyDiscount ? (total - discount) : total;
+
+    if (net < 0) net = 0;
+
+    // Update UI
     document.getElementById('totalAmount').value = total.toFixed(2);
     document.getElementById('netAmount').value = net.toFixed(2);
 }
 
-document.getElementById('monthSelect').addEventListener('change', calculateNet);
-document.getElementById('discount').addEventListener('input', calculateNet);
+// Trigger calculation on input changes
+document.addEventListener('input', function(e) {
+    // Recalculate only if relevant inputs change
+    if (e.target.matches('input[name^="amount"]') || e.target.matches('input[name="discount"]')) {
+        calculateNet();
+    }
+});
+
+// Trigger calculation when checkbox changes
 document.getElementById('applyDiscount').addEventListener('change', calculateNet);
+
+// Initial calculation on page load
 window.addEventListener('load', calculateNet);
 </script>
 
