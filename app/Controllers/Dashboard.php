@@ -2798,7 +2798,8 @@ class Dashboard extends Controller
 
         if (!empty($feeIds)) {
             $first = true; // discount applies to first fee only
-            foreach ($feeIds as $key => $id) {
+
+            foreach ($feeIds as $index => $id) {
 
                 $feeData = $this->feesAmountModel->find($id);
                 if (!$feeData) continue;
@@ -2806,22 +2807,22 @@ class Dashboard extends Controller
                 $unit         = intval($feeData['unit']) ?: 1;   // installments per year
                 $annualAmount = floatval($feeData['amount']);    // total annual fee
 
-                // Calculate amount up to selected month
+                // Calculate default amount (if user didn't enter any)
                 if ($unit === 1) {
-                    // One-time fee, pay full
+                    // One-time fee
                     $calculatedAmount = $annualAmount;
                 } else {
-                    // Installment fee, calculate installments up to monthNumber
+                    // Installment fee, calculate months up to selected month
                     $interval     = 12 / $unit;
                     $installments = floor($monthNumber / $interval);
                     $installments = min($installments, $unit);
                     $calculatedAmount = ($annualAmount / $unit) * $installments;
                 }
 
-                // Use user-entered amount if exists and valid
-                $enteredAmount = isset($amounts[$key]) && $amounts[$key] !== ''
-                    ? floatval($amounts[$key])
-                    : $calculatedAmount;
+                // Use user input if available, otherwise use calculatedAmount
+                $enteredAmount = isset($amounts[$index]) && $amounts[$index] !== ''
+                    ? floatval($amounts[$index])
+                    : 0; // default to 0 if user didn't enter
 
                 // Skip if zero
                 if ($enteredAmount <= 0) continue;
