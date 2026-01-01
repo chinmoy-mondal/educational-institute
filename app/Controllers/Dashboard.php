@@ -2787,23 +2787,14 @@ class Dashboard extends Controller
 
         $request = $this->request;
 
-        /* ---------- BASIC INPUTS ---------- */
+        // ---------- BASIC INPUTS ----------
         $studentId  = $request->getPost('student_id');
         $receiverId = $request->getPost('receiver_id');
         $discountAmount = floatval($request->getPost('discount'));
         $applyDiscount = $request->getPost('apply_discount');
 
-
-        /* ---------- FEES ---------- */
-        $feeIds  = $request->getPost('fee_id');
-        $amounts = $request->getPost('amount');
-        $months  = $request->getPost('month');
-
-
-        $student = $this->studentModel->find($studentId);
-        $receiver = $this->userModel->find($receiverId);
-
-
+        // Single month input for all fees
+        $monthNumber = intval($request->getPost('month'));
         $monthNames = [
             1 => 'January',
             2 => 'February',
@@ -2818,25 +2809,32 @@ class Dashboard extends Controller
             11 => 'November',
             12 => 'December'
         ];
+        $monthName = $monthNames[$monthNumber] ?? '';
+
+        // ---------- FEES ----------
+        $feeIds  = $request->getPost('fee_id');
+        $amounts = $request->getPost('amount');
+
+        $student = $this->studentModel->find($studentId);
+        $receiver = $this->userModel->find($receiverId);
 
         $fees = [];
         $totalAmount = 0;
+
+        // Generate a unique transaction ID
         $transactionId = 'TX-'
             . date('YmdHis')
             . sprintf('%03d', (microtime(true) * 1000) % 1000)
             . '-' . strtoupper(bin2hex(random_bytes(2)));
 
         if (!empty($feeIds)) {
-            $first = true; // flag for first fee
+            $first = true; // Apply discount only on first fee
             foreach ($feeIds as $i => $id) {
                 $amount = floatval($amounts[$i] ?? 0);
                 if ($amount <= 0) continue;
 
                 $feeData = $this->feesModel->find($id);
                 $title = $feeData ? $feeData['title'] : 'Fee #' . $id;
-
-                $monthNumber = intval($months[$i] ?? 0);
-                $monthName = $monthNames[$monthNumber] ?? '';
 
                 $fees[] = [
                     'title'  => $title,
@@ -2846,14 +2844,12 @@ class Dashboard extends Controller
 
                 $totalAmount += $amount;
 
-                // Apply discount only for the first insert
-                $discountToInsert = $first ? $discountAmount : 0;
+                $discountToInsert = $first && $applyDiscount ? $discountAmount : 0;
 
-                // Save each fee as a transaction
                 $this->transactionModel->insert([
                     'transaction_id' => $transactionId,
                     'sender_id'      => $studentId,
-                    'sender_name'    => $student['student_name'],
+                    'sender_name'    => $student['student_name'] ?? '',
                     'receiver_id'    => $receiverId,
                     'receiver_name'  => $receiver['name'] ?? '',
                     'amount'         => $amount,
@@ -2865,10 +2861,11 @@ class Dashboard extends Controller
                     'activity'       => 'fee_payment'
                 ]);
 
-                $first = false; // reset flag after first insert
+                $first = false;
             }
         }
-        /* ---------- APPLY DISCOUNT ---------- */
+
+        // ---------- APPLY DISCOUNT ----------
         if ($applyDiscount) {
             $existingDiscount = $this->studentDiscountModel
                 ->where('student_id', $studentId)
@@ -2889,42 +2886,14 @@ class Dashboard extends Controller
             }
         }
 
+        // Prepare data for view
         $this->data['fees'] = $fees;
         $this->data['totalAmount'] = $totalAmount;
-        if ($discountAmount > 0) {
-            $amountAfterDiscount = $totalAmount - $discountAmount;
-        } else {
-            $amountAfterDiscount = $totalAmount;
-        }
+        $this->data['netAmount'] = $applyDiscount ? max($totalAmount - $discountAmount, 0) : $totalAmount;
 
-        /* ---------- SEND SMS ---------- */
-        // $studentPhone = $student['phone'] ?? '';
-        // if ($studentPhone) {
-        //     // ensure country code (Bangladesh 880)
-        //     $studentPhone = '880' . ltrim($studentPhone, '0');
-
-        //     $message = "Dear {$student['student_name']}, your payment of Tk {$amountAfterDiscount} has been received. Thank you!";
-        //     $apiKey = "5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8"; // your API key
-        //     $callerID = "1234";
-
-        //     $smsUrl = "https://bulksmsdhaka.com/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
-
-        //     $ch = curl_init();
-        //     curl_setopt($ch, CURLOPT_URL, $smsUrl);
-        //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        //     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        //     $response = curl_exec($ch);
-        //     $error = curl_error($ch);
-        //     curl_close($ch);
-
-        //     if ($error) {
-        //         log_message('error', "SMS sending failed: {$error}");
-        //     } else {
-        //         log_message('info', "SMS sent successfully: {$response}");
-        //     }
-        // }
-
-        // return redirect()->to(base_url('admin/transactions'))->with('success', 'Payment recorded successfully.');
+        // Optional: redirect after insert
+        return redirect()->to(base_url('admin/transactions'))
+            ->with('success', 'Payment recorded successfully.');
     }
     
     public function studentPaymentHistory($studentId)
