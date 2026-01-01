@@ -2771,6 +2771,7 @@ class Dashboard extends Controller
 
         return view('dashboard/payStudentRequest', $this->data);
     }
+
     public function studentPayment()
     {
         $request = $this->request;
@@ -2778,15 +2779,14 @@ class Dashboard extends Controller
         $studentId      = $request->getPost('student_id');
         $receiverId     = $request->getPost('receiver_id');
         $discountAmount = floatval($request->getPost('discount'));
-        $applyDiscount  = $request->getPost('apply_discount');
-
-        // Single month input
-        $monthNumber = intval($request->getPost('month'));
+        $applyDiscount  = $request->getPost('apply_discount') ? true : false;
+        $monthNumber    = intval($request->getPost('month'));
 
         $student  = $this->studentModel->find($studentId);
         $receiver = $this->userModel->find($receiverId);
 
-        $feeIds = $request->getPost('fee_id');
+        $feeIds  = $request->getPost('fee_id') ?? [];
+        $amounts = $request->getPost('amount') ?? [];
 
         $totalAmount = 0;
 
@@ -2797,22 +2797,27 @@ class Dashboard extends Controller
             . '-' . strtoupper(bin2hex(random_bytes(2)));
 
         if (!empty($feeIds)) {
-            $first = true; // Discount applies only to first fee
-            foreach ($feeIds as $id) {
+            $first = true; // discount applies to first fee only
+            foreach ($feeIds as $i => $id) {
                 $feeData = $this->feesAmountModel->find($id);
                 if (!$feeData) continue;
 
-                $unit   = intval($feeData['unit']) ?: 1; // installments per year
-                $amount = floatval($feeData['amount']);  // annual fee
+                $unit         = intval($feeData['unit']) ?: 1; // installments per year
+                $annualAmount = floatval($feeData['amount']);  // total annual fee
 
-                // Calculate interval in months
+                // Interval in months
                 $interval = 12 / $unit;
                 $installments = floor($monthNumber / $interval);
-                $installments = min($installments, $unit); // cannot exceed unit
+                $installments = min($installments, $unit);
 
-                $feePayAmount = ($amount / $unit) * $installments;
+                // Fee amount to pay up to selected month
+                $feePayAmount = ($annualAmount / $unit) * $installments;
 
-                $totalAmount += $feePayAmount;
+                // Add user-entered amount if exists (optional)
+                $enteredAmount = isset($amounts[$i]) ? floatval($amounts[$i]) : $feePayAmount;
+                if ($enteredAmount <= 0) continue;
+
+                $totalAmount += $enteredAmount;
 
                 $discountToInsert = $first && $applyDiscount ? $discountAmount : 0;
 
@@ -2823,11 +2828,11 @@ class Dashboard extends Controller
                     'sender_name'    => $student['student_name'] ?? '',
                     'receiver_id'    => $receiverId,
                     'receiver_name'  => $receiver['name'] ?? '',
-                    'amount'         => $feePayAmount,
+                    'amount'         => $enteredAmount,
                     'discount'       => $discountToInsert,
                     'month'          => $monthNumber,
                     'purpose'        => $feeData['title'] ?? 'Fee #' . $id,
-                    'description'    => "Payment for fee up to month #{$monthNumber}",
+                    'description'    => "Payment for {$feeData['title']} up to month #{$monthNumber}",
                     'status'         => 'paid',
                     'activity'       => 'fee_payment'
                 ]);
@@ -2854,10 +2859,10 @@ class Dashboard extends Controller
             }
         }
 
-        // Calculate net and due amounts
+        // Calculate net & due amounts
         $netAmount = max($totalAmount - ($applyDiscount ? $discountAmount : 0), 0);
 
-        // Already paid
+        // Already paid by this student
         $paidAmount = $this->transactionModel
             ->where('sender_id', $studentId)
             ->where('activity', 'fee_payment')
@@ -2874,6 +2879,7 @@ class Dashboard extends Controller
         echo "Paid Amount: ৳" . number_format($paidAmount, 2) . "\n";
         echo "Due Amount: ৳" . number_format($dueAmount, 2) . "\n";
     }
+
     // public function studentPayment()
     // {
     //     $this->data['title'] = 'Student Payment';
