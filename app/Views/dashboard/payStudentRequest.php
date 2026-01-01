@@ -38,7 +38,7 @@
                         ];
                         $currentMonth = date('m');
                         ?>
-                        <select name="month" class="form-select">
+                        <select name="month" id="monthSelect" class="form-select">
                             <?php foreach ($months as $key => $label): ?>
                             <option value="<?= $key ?>" <?= $key == $currentMonth ? 'selected' : '' ?>>
                                 <?= $label ?>
@@ -60,22 +60,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
-                            $sl = 1;
-                            foreach ($fees as $index => $f):
-                                $unit   = $feeUnit[$f['id']] ?? 0;
-                                $amount = $feeAmounts[$f['id']] ?? 0;
-                                $max    = $unit * $amount;
+                            <?php $sl = 1; ?>
+                            <?php foreach ($fees as $index => $f):
+                                $unit   = $feeUnit[$f['id']] ?? 1;
+                                $annual = $feeAmounts[$f['id']] ?? 0;
+                                $max    = $unit * ($annual / $unit);
                             ?>
                             <tr>
                                 <td><?= $sl++ ?></td>
                                 <td><?= esc($f['title']) ?></td>
-                                <td><?= $unit && $amount ? esc($unit . ' × ' . $amount) : '-' ?></td>
+                                <td><?= $unit && $annual ? esc($unit . ' × ' . number_format($annual / $unit, 2)) : '-' ?>
+                                </td>
                                 <td>
                                     <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['id']) ?>">
                                     <input type="number" step="0.01" name="amount[<?= $index ?>]"
-                                        class="form-control form-control-sm fee-amount" placeholder="Enter amount"
-                                        max="<?= esc($max) ?>">
+                                        class="form-control form-control-sm fee-amount" placeholder="0.00" readonly>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -90,6 +89,7 @@
                         <input type="number" step="0.01" name="discount" id="discount" class="form-control"
                             value="<?= esc($student_discount ?? 0) ?>">
                     </div>
+
                     <div class="col-md-4 d-flex align-items-end">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="applyDiscount" name="apply_discount"
@@ -99,6 +99,7 @@
                             </label>
                         </div>
                     </div>
+
                     <div class="col-md-4 d-flex align-items-end">
                         <small class="text-muted">If unchecked, discount will be ignored</small>
                     </div>
@@ -110,20 +111,19 @@
                         <label class="form-label fw-semibold">Total Entered Amount (৳)</label>
                         <input type="text" id="totalAmount" class="form-control" readonly value="0.00">
                     </div>
+
                     <div class="col-md-4">
                         <label class="form-label fw-semibold text-success">Net Payable Amount (৳)</label>
                         <input type="text" id="netAmount" class="form-control fw-bold text-success" readonly
                             value="0.00">
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold text-danger">Due Amount (৳)</label>
-                        <input type="text" id="dueAmount" class="form-control fw-bold text-danger" readonly
-                            value="0.00">
-                    </div>
                 </div>
 
+                <!-- ================= SUBMIT ================= -->
                 <div class="text-end">
-                    <button type="submit" class="btn btn-primary">Next: Confirm Payment</button>
+                    <button type="submit" class="btn btn-primary">
+                        Next: Confirm Payment
+                    </button>
                 </div>
 
             </form>
@@ -152,8 +152,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (!empty($pay_history)): $i = 1;
-                        foreach ($pay_history as $p): ?>
+                    <?php if (!empty($pay_history)): $i = 1; ?>
+                    <?php foreach ($pay_history as $p): ?>
                     <tr>
                         <td><?= $i++ ?></td>
                         <td><?= esc($p['transaction_id']) ?></td>
@@ -170,8 +170,8 @@
                         </td>
                         <td><?= date('d M Y h:i A', strtotime($p['created_at'])) ?></td>
                     </tr>
-                    <?php endforeach;
-                    else: ?>
+                    <?php endforeach; ?>
+                    <?php else: ?>
                     <tr>
                         <td colspan="9" class="text-muted py-3">No transaction history found.</td>
                     </tr>
@@ -181,42 +181,47 @@
         </div>
 
         <div class="card-footer text-end fw-bold">
-            Total Paid: ৳ <span id="totalPaid"><?= number_format($totalPaid, 2) ?></span>
+            Total Paid: ৳ <?= number_format($totalPaid, 2) ?>
         </div>
     </div>
 </div>
 
 <!-- ================= JS LOGIC ================= -->
 <script>
-const totalPaid = parseFloat("<?= $totalPaid ?? 0 ?>");
+const feeAmounts = <?= json_encode($feeAmounts) ?>;
+const feeUnit = <?= json_encode($feeUnit) ?>;
+const monthSelect = document.getElementById('monthSelect');
 
-function calculateNetAndDue() {
+function calculateNet() {
+    const monthNumber = parseInt(monthSelect.value);
     let total = 0;
-    document.querySelectorAll('input[name^="amount"]').forEach(input => {
-        let val = parseFloat(input.value);
-        if (!isNaN(val)) total += val;
+
+    document.querySelectorAll('input[name^="amount"]').forEach((input, index) => {
+        const annual = parseFloat(feeAmounts[index] || 0);
+        const unit = parseInt(feeUnit[index] || 1);
+
+        const interval = 12 / unit;
+        let installments = Math.floor(monthNumber / interval);
+        installments = Math.min(installments, unit);
+
+        const feePayAmount = (annual / unit) * installments;
+        input.value = feePayAmount.toFixed(2);
+        total += feePayAmount;
     });
 
-    let discount = parseFloat(document.getElementById('discount').value) || 0;
-    let applyDiscount = document.getElementById('applyDiscount').checked;
-    let net = applyDiscount ? (total - discount) : total;
-    if (net < 0) net = 0;
-
-    let due = net - totalPaid;
-    if (due < 0) due = 0;
+    const discount = parseFloat(document.getElementById('discount').value) || 0;
+    const applyDiscount = document.getElementById('applyDiscount').checked;
+    const net = applyDiscount ? Math.max(total - discount, 0) : total;
 
     document.getElementById('totalAmount').value = total.toFixed(2);
     document.getElementById('netAmount').value = net.toFixed(2);
-    document.getElementById('dueAmount').value = due.toFixed(2);
 }
 
-document.addEventListener('input', function(e) {
-    if (e.target.matches('input[name^="amount"]') || e.target.matches('#discount')) {
-        calculateNetAndDue();
-    }
-});
-document.getElementById('applyDiscount').addEventListener('change', calculateNetAndDue);
-window.addEventListener('load', calculateNetAndDue);
+// Run on month change, discount change, or apply discount toggle
+monthSelect.addEventListener('change', calculateNet);
+document.getElementById('discount').addEventListener('input', calculateNet);
+document.getElementById('applyDiscount').addEventListener('change', calculateNet);
+window.addEventListener('load', calculateNet);
 </script>
 
 <?= $this->endSection() ?>
