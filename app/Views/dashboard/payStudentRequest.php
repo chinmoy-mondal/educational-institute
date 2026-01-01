@@ -36,7 +36,7 @@
                             '11' => 'November',
                             '12' => 'December'
                         ];
-                        $currentMonth = date('m');
+                        $currentMonth = date('m'); // current month
                         ?>
                         <select name="month" id="payMonth" class="form-select">
                             <?php foreach ($months as $key => $label): ?>
@@ -65,7 +65,7 @@
                             foreach ($fees as $index => $f):
                                 $unit   = $feeUnit[$f['id']] ?? 0;
                                 $amount = $feeAmounts[$f['id']] ?? 0;
-                                $max    = $unit * $amount;
+                                $max    = $unit * $amount; // yearly max
                             ?>
                             <tr>
                                 <td><?= $sl++ ?></td>
@@ -76,7 +76,7 @@
                                     <input type="number" step="0.01" name="amount[<?= $index ?>]"
                                         class="form-control form-control-sm fee-amount" data-unit="<?= esc($unit) ?>"
                                         data-base="<?= esc($amount) ?>" data-title="<?= esc($f['title']) ?>"
-                                        max="<?= esc($max) ?>" value="0.00">
+                                        data-max="<?= esc($max) ?>" value="0.00">
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -124,16 +124,16 @@
                 </div>
 
                 <!-- ================= SUBMIT ================= -->
-                <div class="text-end">
+                <div class="text-end mb-2">
                     <button type="submit" class="btn btn-primary">
                         Next: Confirm Payment
+                    </button>
+                    <button type="button" class="btn btn-info ms-2" onclick="showMonthFeePopup()">
+                        Preview Month Payment
                     </button>
                 </div>
 
             </form>
-            <button type="button" class="btn btn-info me-2" onclick="showMonthFeePopup()">
-                Preview Month Payment
-            </button>
         </div>
     </div>
 
@@ -195,45 +195,47 @@
 
 <!-- ================= JS LOGIC ================= -->
 <script>
-function calculateNet() {
+function calculateMonthFees() {
+    const month = parseInt(document.getElementById('payMonth').value);
     let total = 0;
 
     document.querySelectorAll('.fee-amount').forEach(input => {
-        let val = parseFloat(input.value) || 0;
-        total += val;
+        const unit = parseInt(input.dataset.unit);
+        const base = parseFloat(input.dataset.base);
+        let amount = 0;
+
+        if (!unit || !base) {
+            input.value = '0.00';
+            return;
+        }
+
+        if (unit === 1) {
+            // one-time fee
+            amount = base;
+        } else {
+            // recurring fee, count only up to selected month
+            const times = Math.min(unit, month);
+            amount = times * base;
+        }
+
+        input.value = amount.toFixed(2);
+        total += amount;
     });
 
+    applyDiscountAndNet(total);
+}
+
+function applyDiscountAndNet(total) {
     const discount = parseFloat(document.getElementById('discount').value) || 0;
     const apply = document.getElementById('applyDiscount').checked;
-    const net = apply ? Math.max(total - discount, 0) : total;
+    let net = apply ? total - discount : total;
+    if (net < 0) net = 0;
 
     document.getElementById('totalAmount').value = total.toFixed(2);
     document.getElementById('netAmount').value = net.toFixed(2);
 }
 
-// ---- MONTH CALCULATION WITHOUT OVERWRITING MANUAL ENTRY ----
-function calculateMonthFees() {
-    const month = parseInt(document.getElementById('payMonth').value);
-
-    document.querySelectorAll('.fee-amount').forEach(input => {
-        const unit = parseInt(input.dataset.unit);
-        const base = parseFloat(input.dataset.base);
-
-        if (unit > 0 && base > 0) {
-            const interval = 12 / unit;
-            const times = Math.floor(month / interval);
-            const defaultAmount = times > 0 ? (times * base) : 0;
-
-            // Only set the amount if the input is still 0 or empty
-            if (parseFloat(input.value) === 0) {
-                input.value = defaultAmount.toFixed(2);
-            }
-        }
-    });
-
-    calculateNet();
-}
-
+// Preview popup
 function showMonthFeePopup() {
     const monthSelect = document.getElementById('payMonth');
     const month = parseInt(monthSelect.value);
@@ -249,27 +251,22 @@ function showMonthFeePopup() {
 
         if (!unit || !base) return;
 
-        const interval = 12 / unit;
-        const times = Math.floor(month / interval);
-        const amount = times > 0 ? times * base : 0;
+        let times = 1;
+        if (unit > 1) times = Math.min(unit, month);
 
-        if (amount > 0) {
-            message += `${title}: ${times} × ${base} = ৳${amount.toFixed(2)}\n`;
-            total += amount;
-        }
+        const amount = times * base;
+        message += `${title}: ${times} × ${base} = ৳${amount.toFixed(2)}\n`;
+        total += amount;
     });
 
     message += `\n----------------------\nTotal: ৳${total.toFixed(2)}`;
     alert(message);
 }
 
-// ---- EVENTS ----
+// Events
 document.getElementById('payMonth').addEventListener('change', calculateMonthFees);
-document.getElementById('discount').addEventListener('input', calculateNet);
-document.getElementById('applyDiscount').addEventListener('change', calculateNet);
-document.querySelectorAll('.fee-amount').forEach(input => {
-    input.addEventListener('input', calculateNet);
-});
+document.getElementById('discount').addEventListener('input', calculateMonthFees);
+document.getElementById('applyDiscount').addEventListener('change', calculateMonthFees);
 
 window.addEventListener('load', calculateMonthFees);
 </script>
