@@ -189,23 +189,42 @@
 function calculateNet() {
     let total = 0;
 
-    document.querySelectorAll('.fee-amount').forEach(el => {
-        let val = parseFloat(el.value);
+    // Sum all fee amounts
+    document.querySelectorAll('input[name^="amount"]').forEach(input => {
+        let val = parseFloat(input.value);
         if (!isNaN(val)) total += val;
     });
 
-    let discount = parseFloat(document.getElementById('discount').value) || 0;
-    let apply = document.getElementById('applyDiscount').checked;
+    // Read discount value
+    let discountInput = document.querySelector('input[name="discount"]');
+    let discount = parseFloat(discountInput.value) || 0;
 
-    let net = apply ? total - discount : total;
+    // Check if discount should be applied
+    let applyDiscount = document.getElementById('applyDiscount').checked;
+
+    // Calculate net
+    let net = applyDiscount ? (total - discount) : total;
+
     if (net < 0) net = 0;
 
+    // Update UI
     document.getElementById('totalAmount').value = total.toFixed(2);
     document.getElementById('netAmount').value = net.toFixed(2);
 }
 
-document.addEventListener('input', calculateNet);
+// Trigger calculation on input changes
+document.addEventListener('input', function(e) {
+    // Recalculate only if relevant inputs change
+    if (e.target.matches('input[name^="amount"]') || e.target.matches('input[name="discount"]')) {
+        calculateNet();
+    }
+});
+
+// Trigger calculation when checkbox changes
 document.getElementById('applyDiscount').addEventListener('change', calculateNet);
+
+// Initial calculation on page load
+window.addEventListener('load', calculateNet);
 </script>
 
 <?= $this->endSection() ?>
