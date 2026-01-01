@@ -20,7 +20,7 @@
                 <!-- ================= MONTH SELECTION ================= -->
                 <div class="row mb-4">
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold">Select Month</label>
+                        <label class="form-label fw-semibold">Select Month (for preview)</label>
                         <?php
                         $months = [
                             '01' => 'January',
@@ -136,99 +136,22 @@
             </form>
         </div>
     </div>
-
-    <!-- ================= PAYMENT HISTORY ================= -->
-    <div class="card shadow-sm">
-        <div class="card-header bg-dark text-white">
-            <strong>Payment History</strong>
-        </div>
-
-        <div class="card-body p-0">
-            <table class="table table-bordered table-striped align-middle text-center mb-0">
-                <thead class="table-dark">
-                    <tr>
-                        <th>#</th>
-                        <th>Transaction ID</th>
-                        <th>Receiver Name</th>
-                        <th>Amount (৳)</th>
-                        <th>Discount (৳)</th>
-                        <th>Purpose</th>
-                        <th>Description</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($pay_history)): $i = 1;
-                        foreach ($pay_history as $p): ?>
-                    <tr>
-                        <td><?= $i++ ?></td>
-                        <td><?= esc($p['transaction_id']) ?></td>
-                        <td><?= esc($p['receiver_name']) ?></td>
-                        <td><?= number_format($p['amount'], 2) ?></td>
-                        <td><?= number_format($p['discount'], 2) ?></td>
-                        <td><?= esc($p['purpose']) ?></td>
-                        <td><?= esc($p['description']) ?></td>
-                        <td>
-                            <span
-                                class="badge bg-<?= $p['status'] == 'approved' ? 'success' : ($p['status'] == 'pending' ? 'warning' : 'danger') ?>">
-                                <?= ucfirst($p['status']) ?>
-                            </span>
-                        </td>
-                        <td><?= date('d M Y h:i A', strtotime($p['created_at'])) ?></td>
-                    </tr>
-                    <?php endforeach;
-                    else: ?>
-                    <tr>
-                        <td colspan="9" class="text-muted py-3">No transaction history found.</td>
-                    </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="card-footer text-end fw-bold">
-            Total Paid: ৳ <?= number_format($totalPaid, 2) ?>
-        </div>
-    </div>
 </div>
 
 <!-- ================= JS LOGIC ================= -->
 <script>
-function calculateMonthFees() {
-    const month = parseInt(document.getElementById('payMonth').value);
+function calculateNet() {
     let total = 0;
 
     document.querySelectorAll('.fee-amount').forEach(input => {
-        const unit = parseInt(input.dataset.unit);
-        const base = parseFloat(input.dataset.base);
-        let amount = 0;
-
-        if (!unit || !base) {
-            input.value = '0.00';
-            return;
-        }
-
-        if (unit === 1) {
-            // one-time fee
-            amount = base;
-        } else {
-            // recurring fee, count only up to selected month
-            const times = Math.min(unit, month);
-            amount = times * base;
-        }
-
-        input.value = amount.toFixed(2);
-        total += amount;
+        let val = parseFloat(input.value);
+        if (!isNaN(val)) total += val;
     });
 
-    applyDiscountAndNet(total);
-}
-
-function applyDiscountAndNet(total) {
     const discount = parseFloat(document.getElementById('discount').value) || 0;
-    const apply = document.getElementById('applyDiscount').checked;
-    let net = apply ? total - discount : total;
+    const applyDiscount = document.getElementById('applyDiscount').checked;
+
+    let net = applyDiscount ? total - discount : total;
     if (net < 0) net = 0;
 
     document.getElementById('totalAmount').value = total.toFixed(2);
@@ -255,7 +178,7 @@ function showMonthFeePopup() {
         if (unit > 1) times = Math.min(unit, month);
 
         const amount = times * base;
-        message += `${title}: ${times} × ${base} = ৳${amount.toFixed(2)}\n`;
+        if (amount > 0) message += `${title}: ${times} × ${base} = ৳${amount.toFixed(2)}\n`;
         total += amount;
     });
 
@@ -264,11 +187,14 @@ function showMonthFeePopup() {
 }
 
 // Events
-document.getElementById('payMonth').addEventListener('change', calculateMonthFees);
-document.getElementById('discount').addEventListener('input', calculateMonthFees);
-document.getElementById('applyDiscount').addEventListener('change', calculateMonthFees);
+document.querySelectorAll('.fee-amount').forEach(input => {
+    input.addEventListener('input', calculateNet);
+});
 
-window.addEventListener('load', calculateMonthFees);
+document.getElementById('discount').addEventListener('input', calculateNet);
+document.getElementById('applyDiscount').addEventListener('change', calculateNet);
+
+window.addEventListener('load', calculateNet);
 </script>
 
 <?= $this->endSection() ?>
