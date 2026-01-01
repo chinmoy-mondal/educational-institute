@@ -36,7 +36,7 @@
                             '11' => 'November',
                             '12' => 'December'
                         ];
-                        $currentMonth = date('m'); // current month
+                        $currentMonth = date('m');
                         ?>
                         <select name="month" class="form-select">
                             <?php foreach ($months as $key => $label): ?>
@@ -90,7 +90,6 @@
                         <input type="number" step="0.01" name="discount" id="discount" class="form-control"
                             value="<?= esc($student_discount ?? 0) ?>">
                     </div>
-
                     <div class="col-md-4 d-flex align-items-end">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="applyDiscount" name="apply_discount"
@@ -100,7 +99,6 @@
                             </label>
                         </div>
                     </div>
-
                     <div class="col-md-4 d-flex align-items-end">
                         <small class="text-muted">If unchecked, discount will be ignored</small>
                     </div>
@@ -112,21 +110,20 @@
                         <label class="form-label fw-semibold">Total Entered Amount (৳)</label>
                         <input type="text" id="totalAmount" class="form-control" readonly value="0.00">
                     </div>
-
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold text-success">
-                            Net Payable Amount (৳)
-                        </label>
+                        <label class="form-label fw-semibold text-success">Net Payable Amount (৳)</label>
                         <input type="text" id="netAmount" class="form-control fw-bold text-success" readonly
+                            value="0.00">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold text-danger">Due Amount (৳)</label>
+                        <input type="text" id="dueAmount" class="form-control fw-bold text-danger" readonly
                             value="0.00">
                     </div>
                 </div>
 
-                <!-- ================= SUBMIT ================= -->
                 <div class="text-end">
-                    <button type="submit" class="btn btn-primary">
-                        Next: Confirm Payment
-                    </button>
+                    <button type="submit" class="btn btn-primary">Next: Confirm Payment</button>
                 </div>
 
             </form>
@@ -184,16 +181,17 @@
         </div>
 
         <div class="card-footer text-end fw-bold">
-            Total Paid: ৳ <?= number_format($totalPaid, 2) ?>
+            Total Paid: ৳ <span id="totalPaid"><?= number_format($totalPaid, 2) ?></span>
         </div>
     </div>
 </div>
 
 <!-- ================= JS LOGIC ================= -->
 <script>
-function calculateNet() {
-    let total = 0;
+const totalPaid = parseFloat("<?= $totalPaid ?? 0 ?>");
 
+function calculateNetAndDue() {
+    let total = 0;
     document.querySelectorAll('input[name^="amount"]').forEach(input => {
         let val = parseFloat(input.value);
         if (!isNaN(val)) total += val;
@@ -201,22 +199,24 @@ function calculateNet() {
 
     let discount = parseFloat(document.getElementById('discount').value) || 0;
     let applyDiscount = document.getElementById('applyDiscount').checked;
-
     let net = applyDiscount ? (total - discount) : total;
     if (net < 0) net = 0;
 
+    let due = net - totalPaid;
+    if (due < 0) due = 0;
+
     document.getElementById('totalAmount').value = total.toFixed(2);
     document.getElementById('netAmount').value = net.toFixed(2);
+    document.getElementById('dueAmount').value = due.toFixed(2);
 }
 
 document.addEventListener('input', function(e) {
     if (e.target.matches('input[name^="amount"]') || e.target.matches('#discount')) {
-        calculateNet();
+        calculateNetAndDue();
     }
 });
-
-document.getElementById('applyDiscount').addEventListener('change', calculateNet);
-window.addEventListener('load', calculateNet);
+document.getElementById('applyDiscount').addEventListener('change', calculateNetAndDue);
+window.addEventListener('load', calculateNetAndDue);
 </script>
 
 <?= $this->endSection() ?>
