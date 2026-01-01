@@ -36,7 +36,7 @@
                             '11' => 'November',
                             '12' => 'December'
                         ];
-                        $currentMonth = date('m');
+                        $currentMonth = date('m'); // current month
                         ?>
                         <select name="month" id="monthSelect" class="form-select">
                             <?php foreach ($months as $key => $label): ?>
@@ -60,21 +60,22 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $sl = 1; ?>
-                            <?php foreach ($fees as $index => $f):
+                            <?php
+                            $sl = 1;
+                            foreach ($fees as $index => $f):
                                 $unit   = $feeUnit[$f['id']] ?? 1;
-                                $annual = $feeAmounts[$f['id']] ?? 0;
-                                $max    = $unit * ($annual / $unit);
+                                $amount = $feeAmounts[$f['id']] ?? 0;
+                                $max    = $unit * $amount;
                             ?>
                             <tr>
                                 <td><?= $sl++ ?></td>
                                 <td><?= esc($f['title']) ?></td>
-                                <td><?= $unit && $annual ? esc($unit . ' × ' . number_format($annual / $unit, 2)) : '-' ?>
-                                </td>
+                                <td><?= $unit && $amount ? esc($unit . ' × ' . $amount) : '-' ?></td>
                                 <td>
                                     <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['id']) ?>">
                                     <input type="number" step="0.01" name="amount[<?= $index ?>]"
-                                        class="form-control form-control-sm fee-amount" placeholder="0.00" readonly>
+                                        class="form-control form-control-sm fee-amount" placeholder="Enter amount"
+                                        max="<?= esc($max) ?>" data-unit="<?= $unit ?>" data-annual="<?= $amount ?>">
                                 </td>
                             </tr>
                             <?php endforeach; ?>
@@ -108,12 +109,14 @@
                 <!-- ================= AMOUNT SUMMARY ================= -->
                 <div class="row mb-4">
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold">Total Entered Amount (৳)</label>
+                        <label class="form-label fw-semibold">Total Amount (৳)</label>
                         <input type="text" id="totalAmount" class="form-control" readonly value="0.00">
                     </div>
 
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold text-success">Net Payable Amount (৳)</label>
+                        <label class="form-label fw-semibold text-success">
+                            Net Payable Amount (৳)
+                        </label>
                         <input type="text" id="netAmount" class="form-control fw-bold text-success" readonly
                             value="0.00">
                     </div>
@@ -152,8 +155,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (!empty($pay_history)): $i = 1; ?>
-                    <?php foreach ($pay_history as $p): ?>
+                    <?php if (!empty($pay_history)): $i = 1;
+                        foreach ($pay_history as $p): ?>
                     <tr>
                         <td><?= $i++ ?></td>
                         <td><?= esc($p['transaction_id']) ?></td>
@@ -170,8 +173,8 @@
                         </td>
                         <td><?= date('d M Y h:i A', strtotime($p['created_at'])) ?></td>
                     </tr>
-                    <?php endforeach; ?>
-                    <?php else: ?>
+                    <?php endforeach;
+                    else: ?>
                     <tr>
                         <td colspan="9" class="text-muted py-3">No transaction history found.</td>
                     </tr>
@@ -188,17 +191,13 @@
 
 <!-- ================= JS LOGIC ================= -->
 <script>
-const feeAmounts = <?= json_encode($feeAmounts) ?>;
-const feeUnit = <?= json_encode($feeUnit) ?>;
-const monthSelect = document.getElementById('monthSelect');
-
 function calculateNet() {
-    const monthNumber = parseInt(monthSelect.value);
+    const monthNumber = parseInt(document.getElementById('monthSelect').value);
     let total = 0;
 
-    document.querySelectorAll('input[name^="amount"]').forEach((input, index) => {
-        const annual = parseFloat(feeAmounts[index] || 0);
-        const unit = parseInt(feeUnit[index] || 1);
+    document.querySelectorAll('.fee-amount').forEach(input => {
+        const unit = parseInt(input.dataset.unit) || 1;
+        const annual = parseFloat(input.dataset.annual) || 0;
 
         const interval = 12 / unit;
         let installments = Math.floor(monthNumber / interval);
@@ -217,8 +216,7 @@ function calculateNet() {
     document.getElementById('netAmount').value = net.toFixed(2);
 }
 
-// Run on month change, discount change, or apply discount toggle
-monthSelect.addEventListener('change', calculateNet);
+document.getElementById('monthSelect').addEventListener('change', calculateNet);
 document.getElementById('discount').addEventListener('input', calculateNet);
 document.getElementById('applyDiscount').addEventListener('change', calculateNet);
 window.addEventListener('load', calculateNet);
