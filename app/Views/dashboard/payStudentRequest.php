@@ -128,12 +128,11 @@
                     <button type="submit" class="btn btn-primary">
                         Next: Confirm Payment
                     </button>
+                    <button type="button" class="btn btn-info me-2" onclick="showMonthFeePopup()">
+                        Preview Month Payment
+                    </button>
                 </div>
-
             </form>
-            <button type="button" class="btn btn-info me-2" onclick="showMonthFeePopup()">
-                Preview Month Payment
-            </button>
         </div>
     </div>
 
@@ -195,63 +194,32 @@
 
 <!-- ================= JS LOGIC ================= -->
 <script>
-function calculateNet() {
-    let total = 0;
-
-    document.querySelectorAll('input[name^="amount"]').forEach(input => {
-        let val = parseFloat(input.value);
-        if (!isNaN(val)) total += val;
-    });
-
-    let discount = parseFloat(document.getElementById('discount').value) || 0;
-    let applyDiscount = document.getElementById('applyDiscount').checked;
-
-    let net = applyDiscount ? (total - discount) : total;
-    if (net < 0) net = 0;
-
-    document.getElementById('totalAmount').value = total.toFixed(2);
-    document.getElementById('netAmount').value = net.toFixed(2);
-}
-
-document.addEventListener('input', function(e) {
-    if (e.target.matches('input[name^="amount"]') || e.target.matches('#discount')) {
-        calculateNet();
-    }
-});
-
-document.getElementById('applyDiscount').addEventListener('change', calculateNet);
-window.addEventListener('load', calculateNet);
-
-////
 function calculateMonthFees() {
-
     const month = parseInt(document.getElementById('payMonth').value);
     let total = 0;
 
     document.querySelectorAll('.fee-amount').forEach(input => {
-
         const unit = parseInt(input.dataset.unit);
         const base = parseFloat(input.dataset.base);
-        let amount = 0;
 
-        if (unit > 0 && base > 0) {
-            const interval = 12 / unit;
-
-            // charge only if month matches interval
-            if (month % interval === 0) {
-                amount = base;
-            }
+        if (!unit || !base) {
+            input.value = '0.00';
+            return;
         }
 
+        // How many times to charge based on month and unit
+        const interval = 12 / unit;
+        const times = Math.floor(month / interval);
+
+        const amount = times * base;
         input.value = amount.toFixed(2);
         total += amount;
     });
 
-    applyDiscountAndNet(total);
+    applyDiscount(total);
 }
 
-function applyDiscountAndNet(total) {
-
+function applyDiscount(total) {
     const discount = parseFloat(document.getElementById('discount').value) || 0;
     const apply = document.getElementById('applyDiscount').checked;
 
@@ -262,17 +230,8 @@ function applyDiscountAndNet(total) {
     document.getElementById('netAmount').value = net.toFixed(2);
 }
 
-// ---- EVENTS ----
-document.getElementById('payMonth').addEventListener('change', calculateMonthFees);
-document.getElementById('discount').addEventListener('input', calculateMonthFees);
-document.getElementById('applyDiscount').addEventListener('change', calculateMonthFees);
-
-window.addEventListener('load', calculateMonthFees);
-
-
 function showMonthFeePopup() {
-
-    const monthSelect = document.querySelector('select[name="month"]');
+    const monthSelect = document.getElementById('payMonth');
     const month = parseInt(monthSelect.value);
     const monthText = monthSelect.options[monthSelect.selectedIndex].text;
 
@@ -280,7 +239,6 @@ function showMonthFeePopup() {
     let total = 0;
 
     document.querySelectorAll('.fee-amount').forEach(input => {
-
         const title = input.dataset.title;
         const unit = parseInt(input.dataset.unit);
         const base = parseFloat(input.dataset.base);
@@ -300,6 +258,12 @@ function showMonthFeePopup() {
     message += `\n----------------------\nTotal: ৳${total.toFixed(2)}`;
     alert(message);
 }
+
+// ---- EVENTS ----
+document.getElementById('payMonth').addEventListener('change', calculateMonthFees);
+document.getElementById('discount').addEventListener('input', calculateMonthFees);
+document.getElementById('applyDiscount').addEventListener('change', calculateMonthFees);
+window.addEventListener('load', calculateMonthFees);
 </script>
 
 <?= $this->endSection() ?>
