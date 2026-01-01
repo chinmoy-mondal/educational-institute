@@ -272,22 +272,32 @@ window.addEventListener('load', calculateMonthFees);
 
 function showMonthFeePopup() {
 
-    const monthText = document.querySelector('#payMonth option:checked').text;
-    let message = `Payment Preview for ${monthText}\n\n`;
+    const monthSelect = document.querySelector('select[name="month"]');
+    const month = parseInt(monthSelect.value);
+    const monthText = monthSelect.options[monthSelect.selectedIndex].text;
+
+    let message = `Payment Preview up to ${monthText}\n\n`;
     let total = 0;
 
     document.querySelectorAll('.fee-amount').forEach(input => {
-        const title = input.dataset.title;
-        const amount = parseFloat(input.value) || 0;
 
-        if (amount > 0) {
-            message += `${title}: ৳${amount.toFixed(2)}\n`;
+        const title = input.dataset.title;
+        const unit = parseInt(input.dataset.unit);
+        const base = parseFloat(input.dataset.base);
+
+        if (!unit || !base) return;
+
+        const interval = 12 / unit;
+        const times = Math.floor(month / interval);
+
+        if (times > 0) {
+            const amount = times * base;
+            message += `${title}: ${times} × ${base} = ৳${amount.toFixed(2)}\n`;
             total += amount;
         }
     });
 
     message += `\n----------------------\nTotal: ৳${total.toFixed(2)}`;
-
     alert(message);
 }
 </script>
