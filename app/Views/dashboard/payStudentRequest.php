@@ -81,7 +81,7 @@
                     <div class="col-md-4">
                         <label class="form-label fw-semibold">Discount (৳)</label>
                         <input type="number" step="0.01" name="discount" class="form-control"
-                            placeholder="Enter discount amount">
+                            placeholder="Enter discount amount" value="<?= $student_discount ?>">
                     </div>
                     <div class="col-md-4 d-flex align-items-end">
                         <div class="form-check mt-2">

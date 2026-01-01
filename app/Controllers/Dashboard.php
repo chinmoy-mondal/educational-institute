@@ -2298,9 +2298,7 @@ class Dashboard extends Controller
         $builder = db_connect()->table('transactions');
 
 
-        /* -------------------------------------------------------
-       ⭐ TODAY REPORT — HOURLY EARN VS COST
-    ------------------------------------------------------- */
+        /* -------       ⭐ TODAY REPORT — HOURLY EARN VS COST -------------- */
         $today = date('Y-m-d');
 
         $todayData = $builder
@@ -2322,9 +2320,7 @@ class Dashboard extends Controller
 
 
 
-        /* -------------------------------------------------------
-       ⭐ CURRENT MONTH DAILY REPORT
-    ------------------------------------------------------- */
+        /* ------       ⭐ CURRENT MONTH DAILY REPORT ----- */
         $monthStart = date('Y-m-01');
         $monthEnd = date('Y-m-t');
 
@@ -2346,9 +2342,7 @@ class Dashboard extends Controller
         $this->data['dailyCosts'] = array_map('floatval', array_column($currentMonthData, 'cost'));
 
 
-        /* -------------------------------------------------------
-       ⭐ YEARLY MONTHLY SUMMARY
-    ------------------------------------------------------- */
+        /* ------       ⭐ YEARLY MONTHLY SUMMARY. -------- */
         $yearData = $builder
             ->select("
             MONTH(created_at) as month,
@@ -2728,6 +2722,12 @@ class Dashboard extends Controller
             return redirect()->back()->with('error', 'Student not found.');
         }
 
+        $student_discount = $this->studentDiscountModel
+            ->where('student_id', $id)
+            ->first();
+
+
+
         // 🎓 Fee titles
         $fees = $this->feesModel->findAll();
 
@@ -2760,12 +2760,13 @@ class Dashboard extends Controller
 
 
         // 📦 Send to view
-        $this->data['student']    = $student;
-        $this->data['fees']       = $fees;
-        $this->data['feeAmounts'] = $feeAmounts;
-        $this->data['feeUnit']    = $feeUnit;
-        $this->data['receiver']   = $receiver;
-        $this->data['pay_history']   = $payments;
+        $this->data['student']          = $student;
+        $this->data['fees']             = $fees;
+        $this->data['feeAmounts']       = $feeAmounts;
+        $this->data['feeUnit']          = $feeUnit;
+        $this->data['receiver']         = $receiver;
+        $this->data['pay_history']      = $payments;
+        $this->data['student_discount'] = $student_discount['amount'] ?? 0;
         $this->data['totalPaid'] = $totalPaid - $totalDiscount;
 
         return view('dashboard/payStudentRequest', $this->data);
