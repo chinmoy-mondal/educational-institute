@@ -13,7 +13,6 @@
         <div class="card-body">
             <form method="post" action="<?= base_url('admin/student-payment') ?>">
                 <?= csrf_field() ?>
-
                 <input type="hidden" name="step" value="discount">
                 <input type="hidden" name="student_id" value="<?= esc($student['id']) ?>">
                 <input type="hidden" name="receiver_id" value="<?= esc($receiver['id']) ?>">
@@ -89,7 +88,7 @@
                     <div class="col-md-4 d-flex align-items-end">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="applyDiscount" name="apply_discount"
-                                value="1">
+                                value="1" <?= !empty($student_discount) ? 'checked' : '' ?>>
                             <label class="form-check-label fw-semibold" for="applyDiscount">
                                 Apply Discount
                             </label>
@@ -196,31 +195,28 @@ function calculateNet() {
     });
 
     // Read discount value
-    let discountInput = document.querySelector('input[name="discount"]');
+    let discountInput = document.getElementById('discount');
     let discount = parseFloat(discountInput.value) || 0;
 
-    // Check if discount should be applied
+    // Apply discount only if checkbox checked
     let applyDiscount = document.getElementById('applyDiscount').checked;
 
-    // Calculate net
     let net = applyDiscount ? (total - discount) : total;
-
     if (net < 0) net = 0;
 
-    // Update UI
+    // Update UI fields
     document.getElementById('totalAmount').value = total.toFixed(2);
     document.getElementById('netAmount').value = net.toFixed(2);
 }
 
-// Trigger calculation on input changes
+// Recalculate on input change
 document.addEventListener('input', function(e) {
-    // Recalculate only if relevant inputs change
-    if (e.target.matches('input[name^="amount"]') || e.target.matches('input[name="discount"]')) {
+    if (e.target.matches('input[name^="amount"]') || e.target.matches('#discount')) {
         calculateNet();
     }
 });
 
-// Trigger calculation when checkbox changes
+// Recalculate when checkbox toggled
 document.getElementById('applyDiscount').addEventListener('change', calculateNet);
 
 // Initial calculation on page load
