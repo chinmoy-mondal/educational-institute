@@ -2798,7 +2798,7 @@ class Dashboard extends Controller
 
         if (!empty($feeIds)) {
             $first = true; // discount applies to first fee only
-            foreach ($feeIds as $i => $id) {
+            foreach ($feeIds as $key => $id) {
 
                 $feeData = $this->feesAmountModel->find($id);
                 if (!$feeData) continue;
@@ -2818,9 +2818,9 @@ class Dashboard extends Controller
                     $calculatedAmount = ($annualAmount / $unit) * $installments;
                 }
 
-                // If user entered amount, use it instead
-                $enteredAmount = isset($amounts[$i]) && $amounts[$i] !== ''
-                    ? floatval($amounts[$i])
+                // Use user-entered amount if exists and valid
+                $enteredAmount = isset($amounts[$key]) && $amounts[$key] !== ''
+                    ? floatval($amounts[$key])
                     : $calculatedAmount;
 
                 // Skip if zero
