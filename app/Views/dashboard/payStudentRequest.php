@@ -13,11 +13,12 @@
         <div class="card-body">
             <form method="post" action="<?= base_url('admin/student-payment') ?>">
                 <?= csrf_field() ?>
+
                 <input type="hidden" name="step" value="discount">
                 <input type="hidden" name="student_id" value="<?= esc($student['id']) ?>">
                 <input type="hidden" name="receiver_id" value="<?= esc($receiver['id']) ?>">
 
-                <!-- Fees Table -->
+                <!-- ================= FEES TABLE ================= -->
                 <div class="table-responsive mb-4">
                     <table class="table table-bordered align-middle">
                         <thead class="table-light">
@@ -47,6 +48,7 @@
                                 '12' => 'December'
                             ];
                             ?>
+
                             <?php foreach ($fees as $index => $f):
                                 $unit   = $feeUnit[$f['id']] ?? 0;
                                 $amount = $feeAmounts[$f['id']] ?? 0;
@@ -67,7 +69,7 @@
                                 <td>
                                     <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['id']) ?>">
                                     <input type="number" step="0.01" name="amount[<?= $index ?>]"
-                                        class="form-control form-control-sm" placeholder="Enter amount"
+                                        class="form-control form-control-sm fee-amount" placeholder="Enter amount"
                                         max="<?= esc($max) ?>">
                                 </td>
                             </tr>
@@ -76,41 +78,64 @@
                     </table>
                 </div>
 
-                <!-- Discount Section -->
+                <!-- ================= DISCOUNT ================= -->
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <label class="form-label fw-semibold">Discount (৳)</label>
-                        <input type="number" step="0.01" name="discount" class="form-control"
-                            placeholder="Enter discount amount" value="<?= $student_discount ?>">
+                        <input type="number" step="0.01" name="discount" id="discount" class="form-control"
+                            value="<?= esc($student_discount ?? 0) ?>">
                     </div>
+
                     <div class="col-md-4 d-flex align-items-end">
-                        <div class="form-check mt-2">
-                            <input class="form-check-input" type="checkbox" name="apply_discount" value="1"
-                                id="applyDiscount">
-                            <label class="form-check-label fw-semibold" for="applyDiscount">Apply Discount</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="applyDiscount" name="apply_discount"
+                                value="1">
+                            <label class="form-check-label fw-semibold" for="applyDiscount">
+                                Apply Discount
+                            </label>
                         </div>
                     </div>
+
                     <div class="col-md-4 d-flex align-items-end">
-                        <small class="text-muted">If unchecked, discount will not be applied</small>
+                        <small class="text-muted">If unchecked, discount will be ignored</small>
                     </div>
                 </div>
 
-                <!-- Submit -->
-                <div class="text-end">
-                    <button type="submit" class="btn btn-primary">Next: Confirm Payment</button>
+                <!-- ================= AMOUNT SUMMARY ================= -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Total Entered Amount (৳)</label>
+                        <input type="text" id="totalAmount" class="form-control" readonly value="0.00">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold text-success">
+                            Net Payable Amount (৳)
+                        </label>
+                        <input type="text" id="netAmount" class="form-control fw-bold text-success" readonly
+                            value="0.00">
+                    </div>
                 </div>
+
+                <!-- ================= SUBMIT ================= -->
+                <div class="text-end">
+                    <button type="submit" class="btn btn-primary">
+                        Next: Confirm Payment
+                    </button>
+                </div>
+
             </form>
         </div>
     </div>
 
-    <!-- ================= PAYMENT HISTORY TABLE ================= -->
+    <!-- ================= PAYMENT HISTORY ================= -->
     <div class="card shadow-sm">
         <div class="card-header bg-dark text-white">
             <strong>Payment History</strong>
         </div>
 
         <div class="card-body p-0">
-            <table class="table table-bordered table-striped align-middle text-center w-100 mb-0">
+            <table class="table table-bordered table-striped align-middle text-center mb-0">
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
@@ -121,12 +146,11 @@
                         <th>Purpose</th>
                         <th>Description</th>
                         <th>Status</th>
-                        <th width="160">Date</th>
+                        <th>Date</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php if (!empty($pay_history)): ?>
-                    <?php $i = 1;
+                    <?php if (!empty($pay_history)): $i = 1;
                         foreach ($pay_history as $p): ?>
                     <tr>
                         <td><?= $i++ ?></td>
@@ -137,22 +161,17 @@
                         <td><?= esc($p['purpose']) ?></td>
                         <td><?= esc($p['description']) ?></td>
                         <td>
-                            <?php if ($p['status'] === 'approved'): ?>
-                            <span class="badge bg-success">Approved</span>
-                            <?php elseif ($p['status'] === 'pending'): ?>
-                            <span class="badge bg-warning text-dark">Pending</span>
-                            <?php else: ?>
-                            <span class="badge bg-danger">Rejected</span>
-                            <?php endif; ?>
+                            <span
+                                class="badge bg-<?= $p['status'] == 'approved' ? 'success' : ($p['status'] == 'pending' ? 'warning' : 'danger') ?>">
+                                <?= ucfirst($p['status']) ?>
+                            </span>
                         </td>
-                        <td><?= date('d M, Y h:i A', strtotime($p['created_at'])) ?></td>
+                        <td><?= date('d M Y h:i A', strtotime($p['created_at'])) ?></td>
                     </tr>
-                    <?php endforeach; ?>
-                    <?php else: ?>
+                    <?php endforeach;
+                    else: ?>
                     <tr>
-                        <td colspan="9" class="text-muted py-3">
-                            No transaction history found.
-                        </td>
+                        <td colspan="9" class="text-muted py-3">No transaction history found.</td>
                     </tr>
                     <?php endif; ?>
                 </tbody>
@@ -163,7 +182,30 @@
             Total Paid: ৳ <?= number_format($totalPaid, 2) ?>
         </div>
     </div>
-
 </div>
+
+<!-- ================= JS LOGIC ================= -->
+<script>
+function calculateNet() {
+    let total = 0;
+
+    document.querySelectorAll('.fee-amount').forEach(el => {
+        let val = parseFloat(el.value);
+        if (!isNaN(val)) total += val;
+    });
+
+    let discount = parseFloat(document.getElementById('discount').value) || 0;
+    let apply = document.getElementById('applyDiscount').checked;
+
+    let net = apply ? total - discount : total;
+    if (net < 0) net = 0;
+
+    document.getElementById('totalAmount').value = total.toFixed(2);
+    document.getElementById('netAmount').value = net.toFixed(2);
+}
+
+document.addEventListener('input', calculateNet);
+document.getElementById('applyDiscount').addEventListener('change', calculateNet);
+</script>
 
 <?= $this->endSection() ?>
