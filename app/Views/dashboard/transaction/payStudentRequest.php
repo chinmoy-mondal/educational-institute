@@ -84,7 +84,6 @@
 
                 <!-- Discount + Last Totals -->
                 <div class="row mb-4">
-                    <!-- Discount + Save for Next -->
                     <div class="col-md-3">
                         <label class="form-label fw-semibold">Discount (৳)</label>
                         <input type="number" step="0.01" name="discount" id="discount" class="form-control"
@@ -97,21 +96,18 @@
                         </div>
                     </div>
 
-                    <!-- Full Total Payment -->
                     <div class="col-md-3">
                         <label class="form-label fw-semibold">Full Total Payment (৳)</label>
                         <input type="text" name="full_total_payment" class="form-control" id="fullTotalPayment" readonly
                             value="<?= esc(($totalPaid ?? 0) + ($totalDiscount ?? 0)) ?>">
                     </div>
 
-                    <!-- Last Total Payment -->
                     <div class="col-md-3">
                         <label class="form-label fw-semibold">Last Total Payment (৳)</label>
                         <input type="text" class="form-control" id="lastPaid" readonly
                             value="<?= esc($totalPaid ?? 0) ?>">
                     </div>
 
-                    <!-- Last Total Discount -->
                     <div class="col-md-3">
                         <label class="form-label fw-semibold">Last Total Discount (৳)</label>
                         <input type="text" class="form-control" id="lastDiscount" readonly
@@ -155,7 +151,7 @@
                         <div id="paymentStatusBox" class="alert alert-secondary fw-bold mb-0 text-end">
                             — Preview Only
                         </div>
-                        <input type="hidden" name="payment_status" id="paymentStatus" value="preview">
+                        <input type="hidden" name="payment_status" id="paymentStatus" value="0">
                     </div>
                 </div>
 
@@ -184,7 +180,7 @@ function calculateNet() {
     const finalAmount = fullTotalPayment + totalEntered;
     document.getElementById('final_amount').value = finalAmount.toFixed(2);
 
-    // Net Payable = Total Entered - Discount (for this payment only)
+    // Net Payable = Total Entered - Discount
     const netPayable = Math.max(totalEntered - discount, 0);
     document.getElementById('netAmount').value = netPayable.toFixed(2);
 
@@ -192,22 +188,22 @@ function calculateNet() {
     const monthTotalRaw = parseFloat(document.getElementById('monthTotal').dataset.raw || 0) || 0;
     document.getElementById('monthTotal').value = monthTotalRaw.toFixed(2);
 
-    // Payment Status
+    // Payment Status: Final Amount >= Month Total → Paid
     const statusBox = document.getElementById('paymentStatusBox');
     const statusInput = document.getElementById('paymentStatus');
 
-    if (netPayable >= monthTotalRaw && monthTotalRaw > 0) {
-        statusBox.className = 'alert alert-success fw-bold mb-0';
+    if (finalAmount >= monthTotalRaw && monthTotalRaw > 0) {
+        statusBox.className = 'alert alert-success fw-bold mb-0 text-end';
         statusBox.innerHTML = '✅ Paid';
-        statusInput.value = 'paid';
+        statusInput.value = '1';
     } else if (monthTotalRaw === 0) {
-        statusBox.className = 'alert alert-secondary fw-bold mb-0';
+        statusBox.className = 'alert alert-secondary fw-bold mb-0 text-end';
         statusBox.innerHTML = '— Preview Only';
-        statusInput.value = 'preview';
+        statusInput.value = '0';
     } else {
-        statusBox.className = 'alert alert-danger fw-bold mb-0';
+        statusBox.className = 'alert alert-danger fw-bold mb-0 text-end';
         statusBox.innerHTML = '❌ Not Paid';
-        statusInput.value = 'not_paid';
+        statusInput.value = '0';
     }
 }
 
