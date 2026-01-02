@@ -118,8 +118,8 @@
 
                     <div class="col-md-3">
                         <label class="form-label fw-semibold">Payment Status</label>
-                        <div id="paymentStatus" class="alert alert-success fw-bold mb-0">
-                            ✅ Paid
+                        <div id="paymentStatus" class="alert alert-secondary fw-bold mb-0">
+                            — Preview Only
                         </div>
                     </div>
                 </div>
@@ -154,10 +154,18 @@ function calculateNet() {
     let monthTotal = Math.max(monthTotalRaw - discount, 0);
     document.getElementById('monthTotal').value = monthTotal.toFixed(2);
 
-    // Payment Status → always Paid (not preview)
+    // Payment Status → Paid if Net >= MonthTotal else Not Paid
     const statusBox = document.getElementById('paymentStatus');
-    statusBox.className = 'alert alert-success fw-bold mb-0';
-    statusBox.innerHTML = '✅ Paid';
+    if (netPayable >= monthTotal && monthTotal > 0) {
+        statusBox.className = 'alert alert-success fw-bold mb-0';
+        statusBox.innerHTML = '✅ Paid';
+    } else if (monthTotal === 0) {
+        statusBox.className = 'alert alert-secondary fw-bold mb-0';
+        statusBox.innerHTML = '— Preview Only';
+    } else {
+        statusBox.className = 'alert alert-danger fw-bold mb-0';
+        statusBox.innerHTML = '❌ Not Paid';
+    }
 }
 
 /* ================== MONTH PREVIEW ================== */
@@ -207,5 +215,5 @@ document.addEventListener('DOMContentLoaded', function() {
     showMonthFeePreview();
 });
 </script>
-<!--  -->
+
 <?= $this->endSection() ?>
