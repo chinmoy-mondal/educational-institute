@@ -2888,14 +2888,14 @@ class Dashboard extends Controller
         $paymentStatus = ($netPayable >= $monthTotal) ? 'Paid' : 'Due';
 
         // ================= SHOW SUMMARY =================
-        echo "Student: {$student['student_name']}\n";
-        echo "Month Number: {$monthNumber}\n";
-        echo "Total Entered Amount: ৳" . number_format($totalEntered, 2) . "\n";
-        echo "Net Payable Amount: ৳" . number_format($netPayable, 2) . "\n";
-        echo "Total for Selected Month: ৳" . number_format($monthTotal, 2) . "\n";
-        echo "Paid Amount: ৳" . number_format($paidAmount, 2) . "\n";
-        echo "Due Amount: ৳" . number_format($dueAmount, 2) . "\n";
-        echo "Payment Status: {$paymentStatus}\n";
+        echo "Student: {$student['student_name']}<br>";
+        echo "Month Number: {$monthNumber}<br>";
+        echo "Total Entered Amount: ৳" . number_format($totalEntered, 2) . "<br>";
+        echo "Net Payable Amount: ৳" . number_format($netPayable, 2) . "<br>";
+        echo "Total for Selected Month: ৳" . number_format($monthTotal, 2) . "<br>";
+        echo "Paid Amount: ৳" . number_format($paidAmount, 2) . "<br>";
+        echo "Due Amount: ৳" . number_format($dueAmount, 2) . "<br>";
+        echo "Payment Status: {$paymentStatus}<br>";
     }
 
     // public function studentPayment()
