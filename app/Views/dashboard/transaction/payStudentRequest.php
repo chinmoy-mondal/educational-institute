@@ -86,14 +86,13 @@
                 <div class="row mb-4">
                     <!-- Current Discount -->
                     <div class="col-md-3">
+                        <!-- Discount input -->
                         <label class="form-label fw-semibold">Discount (৳)</label>
                         <input type="number" step="0.01" name="discount" id="discount" class="form-control"
                             value="<?= esc($student_discount ?? 0) ?>" min="0">
-                    </div>
 
-                    <!-- Save for next -->
-                    <div class="col-md-3 d-flex align-items-end">
-                        <div class="form-check">
+                        <!-- Save for next checkbox below input -->
+                        <div class="form-check mt-2">
                             <input class="form-check-input" type="checkbox" id="applyDiscount" name="apply_discount"
                                 value="1" <?= !empty($student_discount) ? 'checked' : '' ?>>
                             <label class="form-check-label fw-semibold" for="applyDiscount">Save for next</label>
