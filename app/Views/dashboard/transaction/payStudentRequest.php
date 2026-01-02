@@ -82,20 +82,37 @@
                     </table>
                 </div>
 
-                <!-- Discount (Save for next) -->
+                <!-- Discount (Save for next) + Last Totals -->
                 <div class="row mb-4">
-                    <div class="col-md-4">
+
+                    <!-- Current Discount -->
+                    <div class="col-md-3">
                         <label class="form-label fw-semibold">Discount (৳)</label>
                         <input type="number" step="0.01" name="discount" id="discount" class="form-control"
                             value="<?= esc($student_discount ?? 0) ?>" min="0">
                     </div>
-                    <div class="col-md-4 d-flex align-items-end">
+
+                    <!-- Save for next checkbox -->
+                    <div class="col-md-3 d-flex align-items-end">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="applyDiscount" name="apply_discount"
                                 value="1" <?= !empty($student_discount) ? 'checked' : '' ?>>
                             <label class="form-check-label fw-semibold" for="applyDiscount">Save for next</label>
                         </div>
                     </div>
+
+                    <!-- Last Total Payment -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Last Total Payment (৳)</label>
+                        <input type="text" class="form-control" readonly value="<?= esc($totalPaid ?? 0) ?>">
+                    </div>
+
+                    <!-- Last Total Discount -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Last Total Discount (৳)</label>
+                        <input type="text" class="form-control" readonly value="<?= esc($totalDiscount ?? 0) ?>">
+                    </div>
+
                 </div>
 
                 <!-- Summary -->

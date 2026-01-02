@@ -2767,7 +2767,8 @@ class Dashboard extends Controller
         $this->data['receiver']         = $receiver;
         $this->data['pay_history']      = $payments;
         $this->data['student_discount'] = $student_discount['amount'] ?? 0;
-        $this->data['totalPaid'] = $totalPaid - $totalDiscount;
+        $this->data['totalPaid'] = $totalPaid;
+        $this->data['totalDiscount'] = $totalDiscount;
 
         return view('dashboard/transaction/payStudentRequest', $this->data);
     }
