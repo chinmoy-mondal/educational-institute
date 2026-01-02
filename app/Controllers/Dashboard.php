@@ -1695,7 +1695,7 @@ class Dashboard extends Controller
             }
 
             // Science subjects
-            if (in_array($key, ['physics', 'chemistry', 'biology', 'higher_math'])) {
+            if (in_array($key, ['physics', 'chemistry', 'biology', 'higher_math', 'agriculture'])) {
 
 
 
