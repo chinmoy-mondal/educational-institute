@@ -2789,9 +2789,10 @@ class Dashboard extends Controller
         $feeIds  = $request->getPost('fee_id') ?? [];
         $amounts = $request->getPost('amount') ?? [];
 
-        $totalAmount = 0;
+        $totalEntered = 0;       // sum of all entered amounts
+        $totalMonth   = 0;       // total for selected month
 
-        // Generate transaction ID
+        // Generate unique transaction ID
         $transactionId = 'TX-'
             . date('YmdHis')
             . sprintf('%03d', (microtime(true) * 1000) % 1000)
@@ -2805,30 +2806,30 @@ class Dashboard extends Controller
                 $feeData = $this->feesAmountModel->find($id);
                 if (!$feeData) continue;
 
-                $unit         = intval($feeData['unit']) ?: 1;   // installments per year
-                $annualAmount = floatval($feeData['fees']);    // total annual fee
+                // Fetch fee title from fees_title table
+                $feeTitle = $this->feesTitleModel->find($feeData['title_id'])['title'] ?? 'Fee #' . $id;
 
-                // Calculate default amount (if user didn't enter any)
+                $unit         = intval($feeData['unit']) ?: 1;   // installments per year
+                $annualAmount = floatval($feeData['fees']);     // total annual fee
+
+                // Calculate default amount (if user didn't enter)
                 if ($unit === 1) {
-                    // One-time fee
                     $calculatedAmount = $annualAmount;
                 } else {
-                    // Installment fee, calculate months up to selected month
                     $interval     = 12 / $unit;
                     $installments = floor($monthNumber / $interval);
                     $installments = min($installments, $unit);
                     $calculatedAmount = ($annualAmount / $unit) * $installments;
                 }
 
-                // Use user input if available, otherwise use calculatedAmount
                 $enteredAmount = isset($amounts[$index]) && $amounts[$index] !== ''
                     ? floatval($amounts[$index])
-                    : 0; // default to 0 if user didn't enter
+                    : $calculatedAmount; // use calculated if user didn't enter
 
-                // Skip if zero
                 if ($enteredAmount <= 0) continue;
 
-                $totalAmount += $enteredAmount;
+                $totalEntered += $enteredAmount;
+                $totalMonth   += $calculatedAmount;
 
                 $discountToInsert = $first && $applyDiscount ? $discountAmount : 0;
 
@@ -2842,8 +2843,8 @@ class Dashboard extends Controller
                     'amount'         => $enteredAmount,
                     'discount'       => $discountToInsert,
                     'month'          => $monthNumber,
-                    'purpose'        => $feeData['title'] ?? 'Fee #' . $id,
-                    'description'    => "Payment for {$feeData['title']} up to month #{$monthNumber}",
+                    'purpose'        => $feeTitle,
+                    'description'    => "Payment for {$feeTitle} up to month #{$monthNumber}",
                     'status'         => 'paid',
                     'activity'       => 'fee_payment'
                 ]);
@@ -2852,7 +2853,7 @@ class Dashboard extends Controller
             }
         }
 
-        // Update or insert student discount
+        // Save discount for next
         if ($applyDiscount) {
             $existingDiscount = $this->studentDiscountModel
                 ->where('student_id', $studentId)
@@ -2870,25 +2871,31 @@ class Dashboard extends Controller
             }
         }
 
-        // Calculate net & due
-        $netAmount = max($totalAmount - ($applyDiscount ? $discountAmount : 0), 0);
+        // Apply discount
+        $netPayable   = max($totalEntered - $discountAmount, 0);
+        $monthTotal   = max($totalMonth - $discountAmount, 0);
 
-        // Already paid
+        // Already paid total for this student
         $paidAmount = $this->transactionModel
             ->where('sender_id', $studentId)
             ->where('activity', 'fee_payment')
             ->selectSum('amount')
             ->first()['amount'] ?? 0;
 
-        $dueAmount = max($netAmount - $paidAmount, 0);
+        $dueAmount = max($monthTotal - $paidAmount, 0);
+
+        // Determine Payment Status
+        $paymentStatus = ($netPayable >= $monthTotal) ? 'Paid' : 'Due';
 
         // ================= SHOW SUMMARY =================
         echo "Student: {$student['student_name']}\n";
         echo "Month Number: {$monthNumber}\n";
-        echo "Total Amount: ৳" . number_format($totalAmount, 2) . "\n";
-        echo "Net Amount (after discount): ৳" . number_format($netAmount, 2) . "\n";
+        echo "Total Entered Amount: ৳" . number_format($totalEntered, 2) . "\n";
+        echo "Net Payable Amount: ৳" . number_format($netPayable, 2) . "\n";
+        echo "Total for Selected Month: ৳" . number_format($monthTotal, 2) . "\n";
         echo "Paid Amount: ৳" . number_format($paidAmount, 2) . "\n";
         echo "Due Amount: ৳" . number_format($dueAmount, 2) . "\n";
+        echo "Payment Status: {$paymentStatus}\n";
     }
 
     // public function studentPayment()
