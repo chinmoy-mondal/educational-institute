@@ -225,6 +225,13 @@ function calculateNet() {
         statusBox.innerHTML = '❌ Not Paid';
         statusInput.value = '0';
     }
+    // ================== NEED TO PAY ==================
+    const needBox = document.getElementById('needTotal');
+
+    let needToPay = monthTotalRaw - finalAmount;
+    if (needToPay < 0) needToPay = 0;
+
+    needBox.value = needToPay.toFixed(2);
 }
 
 /* ================== MONTH PREVIEW ================== */
