@@ -135,24 +135,36 @@
                     </div>
 
                     <div class="col-md-3">
+                        <label class="form-label fw-semibold">Final Amount (৳)</label>
+                        <input type="text" id="final_amount" name="final_amount"
+                            class="form-control fw-bold text-success" readonly data-raw="0.00" value="0.00">
+                    </div>
+
+                    <div class="col-md-3">
                         <label class="form-label fw-semibold">Total for Selected Month (৳)</label>
                         <input type="text" id="monthTotal" class="form-control" readonly data-raw="0.00" value="0.00">
                     </div>
 
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold">Payment Status</label>
+                </div>
+
+                <!-- Submit -->
+                <!-- Submit & Payment Status Row -->
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <!-- Submit Button (Left) -->
+                    <div>
+                        <button type="submit" class="btn btn-primary">Next: Confirm Payment</button>
+                    </div>
+
+                    <!-- Payment Status (Right) -->
+                    <div class="col-md-3 p-0">
+                        <label class="form-label fw-semibold mb-1">Payment Status</label>
                         <!-- Alert box -->
-                        <div id="paymentStatusBox" class="alert alert-secondary fw-bold mb-0">
+                        <div id="paymentStatusBox" class="alert alert-secondary fw-bold mb-0 text-end">
                             — Preview Only
                         </div>
                         <!-- Hidden input to submit status -->
                         <input type="hidden" name="payment_status" id="paymentStatus" value="preview">
                     </div>
-                </div>
-
-                <!-- Submit -->
-                <div class="text-end mb-2">
-                    <button type="submit" class="btn btn-primary">Next: Confirm Payment</button>
                 </div>
             </form>
         </div>
