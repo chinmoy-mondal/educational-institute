@@ -99,13 +99,13 @@
                     <div class="col-md-3">
                         <label class="form-label fw-semibold">Full Total Payment (৳)</label>
                         <input type="text" name="full_total_payment" class="form-control" id="fullTotalPayment" readonly
-                            value="<?= esc(($totalPaid ?? 0) + ($totalDiscount ?? 0)) ?>">
+                            value="<?= esc(($totalPaid ?? 0)) ?>">
                     </div>
 
                     <div class="col-md-3">
                         <label class="form-label fw-semibold">Last Total Payment (৳)</label>
                         <input type="text" class="form-control" id="lastPaid" readonly
-                            value="<?= esc($totalPaid ?? 0) ?>">
+                            value="<?= esc(($totalPaid ?? 0) - ($totalDiscount ?? 0)) ?>">
                     </div>
 
                     <div class="col-md-3">
