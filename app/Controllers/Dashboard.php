@@ -2807,7 +2807,7 @@ class Dashboard extends Controller
                 if (!$feeData) continue;
 
                 // Fetch fee title from fees_title table
-                $feeTitle = $this->feesTitleModel->find($feeData['title_id'])['title'] ?? 'Fee #' . $id;
+                $feeTitle = $this->feesAmountModel->find($feeData['title_id'])['title'] ?? 'Fee #' . $id;
 
                 $unit         = intval($feeData['unit']) ?: 1;   // installments per year
                 $annualAmount = floatval($feeData['fees']);     // total annual fee
