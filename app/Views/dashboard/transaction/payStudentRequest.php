@@ -141,18 +141,38 @@
                 </div>
 
                 <!-- Submit & Payment Status -->
-                <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="d-flex justify-content-between align-items-end mb-2">
+
+                    <!-- LEFT: Submit Button -->
                     <div>
-                        <button type="submit" class="btn btn-primary">Next: Confirm Payment</button>
+                        <button type="submit" class="btn btn-primary">
+                            Confirm Payment
+                        </button>
                     </div>
 
-                    <div class="col-md-3 p-0">
-                        <label class="form-label fw-semibold mb-1">Payment Status</label>
-                        <div id="paymentStatusBox" class="alert alert-secondary fw-bold mb-0 text-end">
+                    <!-- MIDDLE: Need to Pay -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">
+                            Need to Pay
+                        </label>
+                        <input type="text" id="needTotal" class="form-control fw-bold text-danger text-end" readonly
+                            data-raw="0.00" value="0.00">
+                    </div>
+
+                    <!-- RIGHT: Payment Status -->
+                    <div class="col-md-3 p-0 text-end">
+                        <label class="form-label fw-semibold mb-1">
+                            Payment Status
+                        </label>
+
+                        <div id="paymentStatusBox" class="alert alert-secondary fw-bold mb-0">
                             — Preview Only
                         </div>
+
+                        <!-- Hidden status value -->
                         <input type="hidden" name="payment_status" id="paymentStatus" value="0">
                     </div>
+
                 </div>
 
             </form>
