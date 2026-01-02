@@ -120,8 +120,8 @@
 
                     <div class="col-md-4">
                         <label class="form-label fw-semibold">Payment Status</label>
-                        <div id="paymentStatus" class="alert alert-danger fw-bold mb-0">
-                            ❌ Not Paid
+                        <div id="paymentStatus" class="alert alert-secondary fw-bold mb-0">
+                            — Preview Only
                         </div>
                     </div>
                 </div>
@@ -129,9 +129,7 @@
                 <!-- Submit -->
                 <div class="text-end mb-2">
                     <button type="submit" class="btn btn-primary">Next: Confirm Payment</button>
-
                 </div>
-
             </form>
         </div>
     </div>
@@ -156,13 +154,12 @@ function calculateNet() {
     document.getElementById('netAmount').value = net.toFixed(2);
 }
 
-/* ================= MONTH PREVIEW (NO ALERT) ================= */
+/* ================= MONTH PREVIEW (AUTO-FILL) ================= */
 function showMonthFeePreview() {
     const monthSelect = document.getElementById('payMonth');
     if (!monthSelect) return;
 
     const month = parseInt(monthSelect.value);
-    let total = 0;
 
     document.querySelectorAll('.fee-amount').forEach(input => {
         const unit = parseInt(input.dataset.unit);
@@ -181,30 +178,28 @@ function showMonthFeePreview() {
         }
 
         const amount = times * base;
-        input.value = amount.toFixed(2); // auto fill row
-        total += amount;
+        input.value = amount.toFixed(2);
     });
 
-    // update summary (discount will apply next)
+    // update summary (discount included)
     calculateNet();
 }
 
 /* ================= EVENTS ================= */
 document.addEventListener('DOMContentLoaded', function() {
-
-    // manual amount change
+    // manual fee input
     document.querySelectorAll('.fee-amount').forEach(input => {
         input.addEventListener('input', calculateNet);
     });
 
-    // discount change
+    // discount changes
     document.getElementById('discount').addEventListener('input', calculateNet);
     document.getElementById('applyDiscount').addEventListener('change', calculateNet);
 
-    // 🔥 month change → auto preview
+    // month selection change
     document.getElementById('payMonth').addEventListener('change', showMonthFeePreview);
 
-    // initial load
+    // initial preview on page load
     showMonthFeePreview();
 });
 </script>
