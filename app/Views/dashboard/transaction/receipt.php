@@ -1,6 +1,29 @@
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
 
+<?php
+/* ================= SCHOOL INFO (EDIT HERE ONLY) ================= */
+$schoolName    = 'Jhenaidah Cadet Coaching';
+$schoolAddress = 'রেবাংলা সড়ক, কেন্দ্রীয় গোরস্থান সংলগ্ন, ঝিনাইদহ';
+$schoolPhone   = '01886007142, 01916487915';
+
+/* ================= MONTH MAP ================= */
+$monthNames = [
+    1  => 'Jan',
+    2  => 'Feb',
+    3  => 'Mar',
+    4  => 'Apr',
+    5  => 'May',
+    6  => 'Jun',
+    7  => 'Jul',
+    8  => 'Aug',
+    9  => 'Sep',
+    10 => 'Oct',
+    11 => 'Nov',
+    12 => 'Dec',
+];
+?>
+
 <style>
 @page {
     size: A4;
@@ -9,8 +32,6 @@
 
 body {
     font-family: "Times New Roman", serif;
-    margin: 0;
-    padding: 0;
 }
 
 .page {
@@ -24,7 +45,6 @@ body {
     border: 2px solid #000;
     padding: 8mm;
     font-size: 12px;
-    box-sizing: border-box;
 }
 
 .copy-label {
@@ -38,7 +58,7 @@ body {
 }
 
 .school-name {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: bold;
     color: #b30000;
 }
@@ -71,7 +91,6 @@ td {
 
 th {
     background: #f1f1f1;
-    text-align: center;
 }
 
 .footer {
@@ -96,28 +115,6 @@ th {
     border-top: 2px dashed #000;
     margin: 8mm 0;
 }
-
-@media print {
-    .container-fluid {
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-
-    .page {
-        width: 100% !important;
-        margin: 0 !important;
-    }
-
-    .receipt {
-        width: calc(100% - 20px) !important;
-        margin: 0 10px !important;
-    }
-
-    .divider {
-        width: calc(100% - 20px);
-        margin: 8mm 10px;
-    }
-}
 </style>
 
 <div class="container-fluid px-4 py-3">
@@ -126,13 +123,15 @@ th {
         <?php for ($copy = 0; $copy < 2; $copy++): ?>
         <div class="receipt">
 
-            <div class="copy-label"><?= $copy === 0 ? 'Student Copy' : 'Institute Copy' ?></div>
+            <div class="copy-label">
+                <?= $copy === 0 ? 'Student Copy' : 'Institute Copy' ?>
+            </div>
 
             <div class="header">
-                <div class="school-name"><?= esc($schoolName ?? 'YOUR SCHOOL NAME') ?></div>
+                <div class="school-name"><?= esc($schoolName) ?></div>
                 <div class="school-sub">
-                    Address: <?= esc($schoolAddress ?? '__________') ?> | Phone:
-                    <?= esc($schoolPhone ?? '__________') ?>
+                    Address: <?= esc($schoolAddress) ?> |
+                    Phone: <?= esc($schoolPhone) ?>
                 </div>
                 <div class="school-sub"><b>Payment Receipt</b></div>
             </div>
@@ -140,8 +139,8 @@ th {
             <div class="hr"></div>
 
             <div class="info">
-                <b>Date:</b> <?= esc($date ?? date('Y-m-d')) ?> &nbsp;&nbsp;
-                <b>Receipt No:</b> <?= esc($transaction_id ?? '__________') ?>
+                <b>Date:</b> <?= date('d-m-Y') ?>&nbsp;&nbsp;
+                <b>Receipt No:</b> <?= esc($transaction_id ?? 'N/A') ?>
             </div>
 
             <div class="hr"></div>
@@ -166,10 +165,15 @@ th {
                 <?php foreach ($fees as $i => $f): ?>
                 <tr>
                     <td align="center"><?= $i + 1 ?></td>
-                    <td><?= esc($f['title']) ?><?= !empty($f['month']) ? ' (' . esc($f['month']) . ')' : '' ?></td>
+                    <td>
+                        <?= esc($f['title']) ?>
+                        <?php if (!empty($f['month']) && isset($monthNames[(int)$f['month']])): ?>
+                        (<?= $monthNames[(int)$f['month']] ?>)
+                        <?php endif; ?>
+                    </td>
                     <td align="center">
                         <?php if ($copy === 0): ?>
-                        <?= ($f['paid'] ?? false) ? 'Paid' : 'Due' ?>
+                        <?= !empty($f['paid']) ? 'Paid' : 'Due' ?>
                         <?php else: ?>
                         <?= number_format($f['amount'], 2) ?>
                         <?php endif; ?>
@@ -183,7 +187,6 @@ th {
                 <?php endif; ?>
 
                 <?php if ($copy === 1): ?>
-                <!-- Only Institute copy shows totals -->
                 <tr>
                     <td colspan="2" align="right"><b>Discount</b></td>
                     <td align="right"><?= number_format($discount ?? 0, 2) ?></td>
