@@ -153,7 +153,6 @@ function calculateNet() {
     document.getElementById('totalAmount').value = total.toFixed(2);
     document.getElementById('netAmount').value = net.toFixed(2);
 
-    // -------- PAYMENT STATUS --------
     const statusBox = document.getElementById('paymentStatus');
 
     if (net === 0 && total > 0) {
@@ -167,6 +166,21 @@ function calculateNet() {
         statusBox.innerHTML = '❌ Not Paid';
     }
 }
+
+/* ================== FIX START ================== */
+document.addEventListener('DOMContentLoaded', function() {
+
+    document.querySelectorAll('.fee-amount').forEach(input => {
+        input.addEventListener('input', calculateNet);
+    });
+
+    document.getElementById('discount').addEventListener('input', calculateNet);
+    document.getElementById('applyDiscount').addEventListener('change', calculateNet);
+
+    // run once on page load
+    calculateNet();
+});
+/* ================== FIX END ================== */
 </script>
 
 <?= $this->endSection() ?>
