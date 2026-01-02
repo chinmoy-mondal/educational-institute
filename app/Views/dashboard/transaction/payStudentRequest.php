@@ -2,265 +2,182 @@
 <?= $this->section('content') ?>
 
 <div class="container-fluid">
-    <h4 class="mb-4">Student Payment Request</h4>
 
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
-            <strong>Student Payment Form</strong>
+    <form method="post" action="<?= base_url('admin/confirm-payment') ?>">
+
+        <div class="row g-3">
+
+            <!-- ================= SELECT MONTH ================= -->
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Pay Month</label>
+                <select id="payMonth" class="form-select">
+                    <?php for ($m = 1; $m <= 12; $m++): ?>
+                    <option value="<?= $m ?>"><?= date('F', mktime(0, 0, 0, $m, 1)) ?></option>
+                    <?php endfor; ?>
+                </select>
+            </div>
+
+            <!-- ================= SAMPLE FEES ================= -->
+            <?php foreach ($fees as $fee): ?>
+            <div class="col-md-3">
+                <label class="form-label fw-semibold"><?= esc($fee['title']) ?></label>
+                <input type="number" class="form-control fee-amount" data-base="<?= $fee['amount'] ?>"
+                    data-unit="<?= $fee['unit'] ?>" value="0">
+            </div>
+            <?php endforeach; ?>
+
+            <!-- ================= DISCOUNT ================= -->
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Discount (৳)</label>
+                <input type="number" step="0.01" id="discount" class="form-control" value="0">
+                <div class="form-check mt-1">
+                    <input class="form-check-input" type="checkbox" name="apply_discount" value="1">
+                    <label class="form-check-label fw-semibold">Save for next</label>
+                </div>
+            </div>
+
+            <!-- ================= TOTAL ENTERED ================= -->
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Total Entered Amount (৳)</label>
+                <input type="text" id="totalAmount" class="form-control" readonly>
+            </div>
+
+            <!-- ================= NET PAYABLE ================= -->
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Net Payable Amount (৳)</label>
+                <input type="text" id="netAmount" class="form-control" readonly>
+            </div>
+
+            <!-- ================= FULL TOTAL PAYMENT ================= -->
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Full Total Payment (৳)</label>
+                <input type="text" id="fullTotalPayment" class="form-control" readonly
+                    value="<?= esc(($totalPaid ?? 0) + ($totalDiscount ?? 0)) ?>">
+            </div>
+
+            <!-- ================= FINAL AMOUNT ================= -->
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Final Amount (৳)</label>
+                <input type="text" id="final_amount" class="form-control fw-bold text-success" readonly>
+            </div>
+
+            <!-- ================= TOTAL FOR MONTH ================= -->
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Total for Selected Month (৳)</label>
+                <input type="text" id="monthTotal" class="form-control" readonly data-raw="0.00">
+            </div>
+
+            <!-- ================= NEED TO PAY ================= -->
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Need to Pay (৳)</label>
+                <input type="text" id="needTotal" class="form-control fw-bold text-danger text-end" readonly>
+            </div>
+
         </div>
 
-        <div class="card-body">
-            <form method="post" action="<?= base_url('admin/student-payment') ?>">
-                <?= csrf_field() ?>
-                <input type="hidden" name="step" value="discount">
-                <input type="hidden" name="student_id" value="<?= esc($student['id']) ?>">
-                <input type="hidden" name="receiver_id" value="<?= esc($receiver['id']) ?>">
+        <!-- ================= FOOTER ================= -->
+        <div class="d-flex justify-content-between align-items-center mt-4">
 
-                <!-- Month Selection -->
-                <div class="row mb-4">
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold">Select Month (for preview)</label>
-                        <?php
-                        $months = [
-                            '01' => 'January',
-                            '02' => 'February',
-                            '03' => 'March',
-                            '04' => 'April',
-                            '05' => 'May',
-                            '06' => 'June',
-                            '07' => 'July',
-                            '08' => 'August',
-                            '09' => 'September',
-                            '10' => 'October',
-                            '11' => 'November',
-                            '12' => 'December'
-                        ];
-                        $currentMonth = date('m');
-                        ?>
-                        <select name="month" id="payMonth" class="form-select">
-                            <?php foreach ($months as $key => $label): ?>
-                            <option value="<?= $key ?>" <?= $key == $currentMonth ? 'selected' : '' ?>><?= $label ?>
-                            </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+            <button type="submit" class="btn btn-primary">
+                Confirm Payment
+            </button>
+
+            <div class="col-md-3 p-0">
+                <label class="form-label fw-semibold mb-1">Payment Status</label>
+                <div id="paymentStatusBox" class="alert alert-secondary fw-bold mb-0 text-end">
+                    — Preview Only
                 </div>
+                <input type="hidden" name="payment_status" id="paymentStatus" value="0">
+            </div>
 
-                <!-- Fees Table -->
-                <div class="table-responsive mb-4">
-                    <table class="table table-bordered align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th width="5%">SL</th>
-                                <th>Fee Title</th>
-                                <th width="18%">Max Amount (৳)</th>
-                                <th width="18%">Pay Amount (৳)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $sl = 1;
-                            foreach ($fees as $index => $f):
-                                $unit   = $feeUnit[$f['id']] ?? 0;
-                                $amount = $feeAmounts[$f['id']] ?? 0;
-                                $max    = $unit * $amount;
-                            ?>
-                            <tr>
-                                <td><?= $sl++ ?></td>
-                                <td><?= esc($f['title']) ?></td>
-                                <td><?= $unit && $amount ? esc($unit . ' × ' . $amount) : '-' ?></td>
-                                <td>
-                                    <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['id']) ?>">
-                                    <input type="number" step="0.01" name="amount[<?= $index ?>]"
-                                        class="form-control form-control-sm fee-amount" data-unit="<?= esc($unit) ?>"
-                                        data-base="<?= esc($amount) ?>" data-title="<?= esc($f['title']) ?>"
-                                        data-max="<?= esc($max) ?>" value="0.00" min="0">
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Discount + Last Totals -->
-                <div class="row mb-4">
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold">Discount (৳)</label>
-                        <input type="number" step="0.01" name="discount" id="discount" class="form-control"
-                            value="<?= esc($student_discount ?? 0) ?>" min="0">
-
-                        <div class="form-check mt-2">
-                            <input class="form-check-input" type="checkbox" id="applyDiscount" name="apply_discount"
-                                value="1" <?= !empty($student_discount) ? 'checked' : '' ?>>
-                            <label class="form-check-label fw-semibold" for="applyDiscount">Save for next</label>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold">Full Total Payment (৳)</label>
-                        <input type="text" name="full_total_payment" class="form-control" id="fullTotalPayment" readonly
-                            value="<?= esc(($totalPaid ?? 0)) ?>">
-                    </div>
-
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold">Last Total Payment (৳)</label>
-                        <input type="text" class="form-control" id="lastPaid" readonly
-                            value="<?= esc(($totalPaid ?? 0) - ($totalDiscount ?? 0)) ?>">
-                    </div>
-
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold">Last Total Discount (৳)</label>
-                        <input type="text" class="form-control" id="lastDiscount" readonly
-                            value="<?= esc($totalDiscount ?? 0) ?>">
-                    </div>
-                </div>
-
-                <!-- Summary -->
-                <div class="row mb-4">
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold">Total Entered Amount (৳)</label>
-                        <input type="text" id="totalAmount" class="form-control" readonly value="0.00">
-                    </div>
-
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold text-success">Net Payable Amount (৳)</label>
-                        <input type="text" id="netAmount" class="form-control fw-bold text-success" readonly
-                            value="0.00">
-                    </div>
-
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold">Final Amount (৳)</label>
-                        <input type="text" id="final_amount" name="final_amount"
-                            class="form-control fw-bold text-success" readonly data-raw="0.00" value="0.00">
-                    </div>
-
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold">Total for Selected Month (৳)</label>
-                        <input type="text" id="monthTotal" class="form-control" readonly data-raw="0.00" value="0.00">
-                    </div>
-                </div>
-
-                <!-- Submit & Payment Status -->
-                <div class="d-flex justify-content-between align-items-end mb-2">
-
-                    <!-- LEFT: Submit Button -->
-                    <div>
-                        <button type="submit" class="btn btn-primary">
-                            Confirm Payment
-                        </button>
-                    </div>
-
-                    <!-- MIDDLE: Need to Pay -->
-                    <div class="col-md-3">
-                        <label class="form-label fw-semibold">
-                            Need to Pay
-                        </label>
-                        <input type="text" id="needTotal" class="form-control fw-bold text-danger text-end" readonly
-                            data-raw="0.00" value="0.00">
-                    </div>
-
-                    <!-- RIGHT: Payment Status -->
-                    <div class="col-md-3 p-0 text-end">
-                        <label class="form-label fw-semibold mb-1">
-                            Payment Status
-                        </label>
-
-                        <div id="paymentStatusBox" class="alert alert-secondary fw-bold mb-0">
-                            — Preview Only
-                        </div>
-
-                        <!-- Hidden status value -->
-                        <input type="hidden" name="payment_status" id="paymentStatus" value="0">
-                    </div>
-
-                </div>
-
-            </form>
         </div>
-    </div>
+
+    </form>
 </div>
 
+<!-- ================= SCRIPT ================= -->
 <script>
-/* ================== CALCULATE TOTALS ================== */
 function calculateNet() {
+
     let totalEntered = 0;
-    document.querySelectorAll('.fee-amount').forEach(input => {
-        totalEntered += parseFloat(input.value) || 0;
+    document.querySelectorAll('.fee-amount').forEach(i => {
+        totalEntered += parseFloat(i.value) || 0;
     });
 
-    const discount = parseFloat(document.getElementById('discount').value) || 0;
-
-    // Total Entered Amount (this payment only)
     document.getElementById('totalAmount').value = totalEntered.toFixed(2);
 
-    // Full Total Payment (previous payments + discounts)
-    const fullTotalPayment = parseFloat(document.getElementById('fullTotalPayment').value) || 0;
-
-    // Final Amount = Full Total Payment + Total Entered Amount
-    const finalAmount = fullTotalPayment + totalEntered;
-    document.getElementById('final_amount').value = finalAmount.toFixed(2);
-
-    // Net Payable = Total Entered - Discount
+    const discount = parseFloat(document.getElementById('discount').value) || 0;
     const netPayable = Math.max(totalEntered - discount, 0);
     document.getElementById('netAmount').value = netPayable.toFixed(2);
 
-    // Total for selected month
-    const monthTotalRaw = parseFloat(document.getElementById('monthTotal').dataset.raw || 0) || 0;
-    document.getElementById('monthTotal').value = monthTotalRaw.toFixed(2);
+    const previousTotal =
+        parseFloat(document.getElementById('fullTotalPayment').value) || 0;
 
-    // Payment Status: Final Amount >= Month Total → Paid
-    const statusBox = document.getElementById('paymentStatusBox');
-    const statusInput = document.getElementById('paymentStatus');
+    const finalAmount = previousTotal + totalEntered;
+    document.getElementById('final_amount').value = finalAmount.toFixed(2);
 
-    if (finalAmount >= monthTotalRaw && monthTotalRaw > 0) {
-        statusBox.className = 'alert alert-success fw-bold mb-0 text-end';
-        statusBox.innerHTML = '✅ Paid';
-        statusInput.value = '1';
-    } else if (monthTotalRaw === 0) {
-        statusBox.className = 'alert alert-secondary fw-bold mb-0 text-end';
-        statusBox.innerHTML = '— Preview Only';
-        statusInput.value = '0';
+    const monthTotal =
+        parseFloat(document.getElementById('monthTotal').dataset.raw) || 0;
+
+    const needToPay = Math.max(monthTotal - finalAmount, 0);
+    document.getElementById('needTotal').value = needToPay.toFixed(2);
+
+    const box = document.getElementById('paymentStatusBox');
+    const input = document.getElementById('paymentStatus');
+
+    if (monthTotal > 0 && needToPay === 0) {
+        box.className = 'alert alert-success fw-bold mb-0 text-end';
+        box.innerHTML = '✅ Paid';
+        input.value = 1;
+    } else if (monthTotal === 0) {
+        box.className = 'alert alert-secondary fw-bold mb-0 text-end';
+        box.innerHTML = '— Preview Only';
+        input.value = 0;
     } else {
-        statusBox.className = 'alert alert-danger fw-bold mb-0 text-end';
-        statusBox.innerHTML = '❌ Not Paid';
-        statusInput.value = '0';
+        box.className = 'alert alert-danger fw-bold mb-0 text-end';
+        box.innerHTML = '❌ Not Paid';
+        input.value = 0;
     }
 }
 
-/* ================== MONTH PREVIEW ================== */
 function showMonthFeePreview() {
+
     const month = parseInt(document.getElementById('payMonth').value);
-    let totalMonth = 0;
+    let total = 0;
 
     document.querySelectorAll('.fee-amount').forEach(input => {
-        const unit = parseInt(input.dataset.unit) || 0;
+
         const base = parseFloat(input.dataset.base) || 0;
+        const unit = parseInt(input.dataset.unit) || 1;
 
         let times = 1;
         if (unit > 1) {
             const interval = 12 / unit;
-            times = Math.floor(month / interval);
-            times = Math.min(times, unit);
+            times = Math.min(Math.floor(month / interval), unit);
         }
 
-        const amount = times * base;
+        const amount = base * times;
         input.value = amount.toFixed(2);
-        totalMonth += amount;
+        total += amount;
     });
 
-    document.getElementById('monthTotal').dataset.raw = totalMonth.toFixed(2);
+    document.getElementById('monthTotal').dataset.raw = total.toFixed(2);
+    document.getElementById('monthTotal').value = total.toFixed(2);
 
-    // Recalculate all totals
     calculateNet();
 }
 
-/* ================== EVENTS ================== */
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.fee-amount').forEach(input => input.addEventListener('input', calculateNet));
-    document.getElementById('discount').addEventListener('input', calculateNet);
-    document.getElementById('payMonth').addEventListener('change', showMonthFeePreview);
+document.addEventListener('DOMContentLoaded', () => {
 
-    // Initial calculation
+    document.querySelectorAll('.fee-amount')
+        .forEach(i => i.addEventListener('input', calculateNet));
+
+    document.getElementById('discount')
+        .addEventListener('input', calculateNet);
+
+    document.getElementById('payMonth')
+        .addEventListener('change', showMonthFeePreview);
+
     showMonthFeePreview();
 });
 </script>
