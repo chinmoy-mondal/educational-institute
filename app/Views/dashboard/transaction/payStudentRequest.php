@@ -109,18 +109,27 @@
                         <label class="form-label fw-semibold">Total Entered Amount (৳)</label>
                         <input type="text" id="totalAmount" class="form-control" readonly value="0.00">
                     </div>
+
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold text-success">Net Payable Amount (৳)</label>
+                        <label class="form-label fw-semibold text-success">
+                            Net Payable Amount (৳)
+                        </label>
                         <input type="text" id="netAmount" class="form-control fw-bold text-success" readonly
                             value="0.00">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold">Payment Status</label>
+                        <div id="paymentStatus" class="alert alert-danger fw-bold mb-0">
+                            ❌ Not Paid
+                        </div>
                     </div>
                 </div>
 
                 <!-- Submit -->
                 <div class="text-end mb-2">
                     <button type="submit" class="btn btn-primary">Next: Confirm Payment</button>
-                    <button type="button" class="btn btn-info ms-2" onclick="showMonthFeePopup()">Preview Month
-                        Payment</button>
+
                 </div>
 
             </form>
@@ -129,12 +138,10 @@
 </div>
 
 <script>
-// Update totals when user changes amounts or discount
 function calculateNet() {
     let total = 0;
     document.querySelectorAll('.fee-amount').forEach(input => {
-        let val = parseFloat(input.value) || 0;
-        total += val;
+        total += parseFloat(input.value) || 0;
     });
 
     const discount = parseFloat(document.getElementById('discount').value) || 0;
@@ -145,49 +152,21 @@ function calculateNet() {
 
     document.getElementById('totalAmount').value = total.toFixed(2);
     document.getElementById('netAmount').value = net.toFixed(2);
+
+    // -------- PAYMENT STATUS --------
+    const statusBox = document.getElementById('paymentStatus');
+
+    if (net === 0 && total > 0) {
+        statusBox.className = 'alert alert-success fw-bold mb-0';
+        statusBox.innerHTML = '✅ Paid';
+    } else if (total === 0) {
+        statusBox.className = 'alert alert-secondary fw-bold mb-0';
+        statusBox.innerHTML = '— No Amount';
+    } else {
+        statusBox.className = 'alert alert-danger fw-bold mb-0';
+        statusBox.innerHTML = '❌ Not Paid';
+    }
 }
-
-// Preview popup for month
-function showMonthFeePopup() {
-    const monthSelect = document.getElementById('payMonth');
-    const month = parseInt(monthSelect.value);
-    const monthText = monthSelect.options[monthSelect.selectedIndex].text;
-
-    let message = `Payment Preview up to ${monthText}\n\n`;
-    let total = 0;
-
-    document.querySelectorAll('.fee-amount').forEach(input => {
-        const title = input.dataset.title;
-        const unit = parseInt(input.dataset.unit);
-        const base = parseFloat(input.dataset.base);
-
-        if (!unit || !base) return;
-
-        let times = 1;
-        if (unit > 1) {
-            const interval = 12 / unit;
-            times = Math.floor(month / interval);
-            times = Math.min(times, unit);
-        }
-
-        const amount = times * base;
-        if (amount > 0) message += `${title}: ${times} × ${base} = ৳${amount.toFixed(2)}\n`;
-        total += amount;
-    });
-
-    message += `\n----------------------\nTotal: ৳${total.toFixed(2)}`;
-    alert(message);
-}
-
-// Events
-document.querySelectorAll('.fee-amount').forEach(input => {
-    input.addEventListener('input', calculateNet);
-});
-document.getElementById('discount').addEventListener('input', calculateNet);
-document.getElementById('applyDiscount').addEventListener('change', calculateNet);
-
-// Initialize on load
-window.addEventListener('load', calculateNet);
 </script>
 
 <?= $this->endSection() ?>
