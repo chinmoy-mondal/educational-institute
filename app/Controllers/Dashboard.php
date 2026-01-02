@@ -2363,7 +2363,7 @@ class Dashboard extends Controller
         $this->data['monthEarns'] = array_map('floatval', array_column($yearData, 'earn'));
         $this->data['monthCosts'] = array_map('floatval', array_column($yearData, 'cost'));
 
-        return view('dashboard/transaction_dashboard', $this->data);
+        return view('dashboard/transaction/transaction_dashboard', $this->data);
     }
 
     public function tec_pay()
@@ -2405,7 +2405,7 @@ class Dashboard extends Controller
 
         $this->data['teachers'] = $teachers;
 
-        return view('dashboard/tec_pay', $this->data);
+        return view('dashboard/transaction/tec_pay', $this->data);
     }
 
     public function reset_amount($teacher_id)
@@ -2500,7 +2500,7 @@ class Dashboard extends Controller
         $this->data['search'] = $search;
         $this->data['selectedSection'] = $section;
 
-        return view('dashboard/std_pay', $this->data);
+        return view('dashboard/transaction/std_pay', $this->data);
     }
 
     public function receipt($transactionId)
@@ -2582,7 +2582,7 @@ class Dashboard extends Controller
         $this->data['netAmount'] = $totalPaid - ($discount ?? 0);
 
         // Load receipt view
-        return view('dashboard/receipt', $this->data);
+        return view('dashboard/transactions/receipt', $this->data);
     }
 
     public function pay_stat()
@@ -2598,7 +2598,7 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        return view('dashboard/pay_stat', $this->data);
+        // return view('dashboard/transaction/pay_stat', $this->data);
     }
 
     public function set_fees()
@@ -2648,7 +2648,7 @@ class Dashboard extends Controller
         $this->data['existingUpdates'] = $existingUpdates;
         $this->data['totalAmount']     = $totalAmount;
 
-        return view('dashboard/set_fees', $this->data);
+        return view('dashboard/transaction/set_fees', $this->data);
     }
 
     public function save_fees()
@@ -2769,7 +2769,7 @@ class Dashboard extends Controller
         $this->data['student_discount'] = $student_discount['amount'] ?? 0;
         $this->data['totalPaid'] = $totalPaid - $totalDiscount;
 
-        return view('dashboard/payStudentRequest', $this->data);
+        return view('dashboard/transaction/payStudentRequest', $this->data);
     }
 
     public function studentPayment()
@@ -3068,6 +3068,6 @@ class Dashboard extends Controller
         $this->data['payments']  = $payments;
         $this->data['totalPaid'] = $totalPaid - $totalDiscount;
 
-        return view('dashboard/student_payment_history', $this->data);
+        return view('dashboard/transaction/student_payment_history', $this->data);
     }
 }
