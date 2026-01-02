@@ -93,9 +93,7 @@
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="applyDiscount" name="apply_discount"
                                 value="1" <?= !empty($student_discount) ? 'checked' : '' ?>>
-                            <label class="form-check-label fw-semibold" for="applyDiscount">
-                                Apply Discount
-                            </label>
+                            <label class="form-check-label fw-semibold" for="applyDiscount">Apply Discount</label>
                         </div>
                     </div>
                     <div class="col-md-4 d-flex align-items-end">
@@ -139,7 +137,6 @@
 </div>
 
 <script>
-/* ================= CALCULATE TOTAL & NET ================= */
 function calculateNet() {
     let totalEntered = 0;
     document.querySelectorAll('.fee-amount').forEach(input => {
@@ -148,20 +145,40 @@ function calculateNet() {
 
     const discount = parseFloat(document.getElementById('discount').value) || 0;
     const applyDiscount = document.getElementById('applyDiscount').checked;
-    let net = applyDiscount ? totalEntered - discount : totalEntered;
-    if (net < 0) net = 0;
 
+    let netPayable = applyDiscount ? totalEntered - discount : totalEntered;
+    if (netPayable < 0) netPayable = 0;
+
+    // update summary fields
     document.getElementById('totalAmount').value = totalEntered.toFixed(2);
-    document.getElementById('netAmount').value = net.toFixed(2);
+    document.getElementById('netAmount').value = netPayable.toFixed(2);
+
+    // ------------------- PAYMENT STATUS -------------------
+    const monthTotalRaw = parseFloat(document.getElementById('monthTotal').dataset.raw || 0) || 0;
+    let monthTotal = applyDiscount ? Math.max(monthTotalRaw - discount, 0) : monthTotalRaw;
+    document.getElementById('monthTotal').value = monthTotal.toFixed(2);
+
+    const statusBox = document.getElementById('paymentStatus');
+
+    if (monthTotal === 0) {
+        statusBox.className = 'alert alert-secondary fw-bold mb-0';
+        statusBox.innerHTML = '— Preview Only';
+    } else if (monthTotal >= netPayable) {
+        statusBox.className = 'alert alert-success fw-bold mb-0';
+        statusBox.innerHTML = '✅ Paid';
+    } else {
+        statusBox.className = 'alert alert-warning fw-bold mb-0';
+        const due = (netPayable - monthTotal).toFixed(2);
+        statusBox.innerHTML = `⚠️ Due: ৳${due}`;
+    }
 }
 
-/* ================= MONTH PREVIEW ================= */
 function showMonthFeePreview() {
     const monthSelect = document.getElementById('payMonth');
     if (!monthSelect) return;
 
     const month = parseInt(monthSelect.value);
-    let monthTotal = 0;
+    let monthTotalRaw = 0;
 
     document.querySelectorAll('.fee-amount').forEach(input => {
         const unit = parseInt(input.dataset.unit);
@@ -181,30 +198,26 @@ function showMonthFeePreview() {
 
         const amount = times * base;
         input.value = amount.toFixed(2);
-        monthTotal += amount;
+        monthTotalRaw += amount;
     });
 
-    document.getElementById('monthTotal').value = monthTotal.toFixed(2);
+    // store raw month total for discount adjustment
+    document.getElementById('monthTotal').dataset.raw = monthTotalRaw;
 
-    // update summary with discount
+    // update net & payment status
     calculateNet();
 }
 
 /* ================= EVENTS ================= */
 document.addEventListener('DOMContentLoaded', function() {
-    // manual fee input
     document.querySelectorAll('.fee-amount').forEach(input => {
         input.addEventListener('input', calculateNet);
     });
-
-    // discount changes
     document.getElementById('discount').addEventListener('input', calculateNet);
     document.getElementById('applyDiscount').addEventListener('change', calculateNet);
-
-    // month selection change
     document.getElementById('payMonth').addEventListener('change', showMonthFeePreview);
 
-    // initial preview on page load
+    // initial preview
     showMonthFeePreview();
 });
 </script>
