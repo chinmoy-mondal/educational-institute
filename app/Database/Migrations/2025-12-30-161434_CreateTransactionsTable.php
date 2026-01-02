@@ -78,6 +78,13 @@ class CreateTransactionsTable extends Migration
                 'null' => true,
             ],
 
+            'payment_status' => [
+                'type'       => 'TINYINT',
+                'constraint' => 1,
+                'default'    => 0, // 0 = not paid, 1 = paid
+                'comment'    => '0=Not Paid, 1=Paid',
+            ],
+
             'status' => [
                 'type'       => 'TINYINT',
                 'constraint' => 1,
