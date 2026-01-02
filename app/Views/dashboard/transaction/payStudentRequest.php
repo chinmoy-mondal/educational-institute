@@ -105,20 +105,23 @@
 
                 <!-- Summary -->
                 <div class="row mb-4">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label class="form-label fw-semibold">Total Entered Amount (৳)</label>
                         <input type="text" id="totalAmount" class="form-control" readonly value="0.00">
                     </div>
 
-                    <div class="col-md-4">
-                        <label class="form-label fw-semibold text-success">
-                            Net Payable Amount (৳)
-                        </label>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold text-success">Net Payable Amount (৳)</label>
                         <input type="text" id="netAmount" class="form-control fw-bold text-success" readonly
                             value="0.00">
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Total for Selected Month (৳)</label>
+                        <input type="text" id="monthTotal" class="form-control" readonly value="0.00">
+                    </div>
+
+                    <div class="col-md-3">
                         <label class="form-label fw-semibold">Payment Status</label>
                         <div id="paymentStatus" class="alert alert-secondary fw-bold mb-0">
                             — Preview Only
@@ -138,28 +141,27 @@
 <script>
 /* ================= CALCULATE TOTAL & NET ================= */
 function calculateNet() {
-    let total = 0;
-
+    let totalEntered = 0;
     document.querySelectorAll('.fee-amount').forEach(input => {
-        total += parseFloat(input.value) || 0;
+        totalEntered += parseFloat(input.value) || 0;
     });
 
     const discount = parseFloat(document.getElementById('discount').value) || 0;
     const applyDiscount = document.getElementById('applyDiscount').checked;
-
-    let net = applyDiscount ? total - discount : total;
+    let net = applyDiscount ? totalEntered - discount : totalEntered;
     if (net < 0) net = 0;
 
-    document.getElementById('totalAmount').value = total.toFixed(2);
+    document.getElementById('totalAmount').value = totalEntered.toFixed(2);
     document.getElementById('netAmount').value = net.toFixed(2);
 }
 
-/* ================= MONTH PREVIEW (AUTO-FILL) ================= */
+/* ================= MONTH PREVIEW ================= */
 function showMonthFeePreview() {
     const monthSelect = document.getElementById('payMonth');
     if (!monthSelect) return;
 
     const month = parseInt(monthSelect.value);
+    let monthTotal = 0;
 
     document.querySelectorAll('.fee-amount').forEach(input => {
         const unit = parseInt(input.dataset.unit);
@@ -179,9 +181,12 @@ function showMonthFeePreview() {
 
         const amount = times * base;
         input.value = amount.toFixed(2);
+        monthTotal += amount;
     });
 
-    // update summary (discount included)
+    document.getElementById('monthTotal').value = monthTotal.toFixed(2);
+
+    // update summary with discount
     calculateNet();
 }
 
