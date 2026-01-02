@@ -100,6 +100,13 @@
                         </div>
                     </div>
 
+                    <!-- Full Total Payment -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">Full Total Payment (৳)</label>
+                        <input type="text" class="form-control" id="lastPaid" readonly
+                            value="<?= esc($totalPaid ?? 0) ?>">
+                    </div>
+
                     <!-- Last Total Payment -->
                     <div class="col-md-3">
                         <label class="form-label fw-semibold">Last Total Payment (৳)</label>
@@ -172,7 +179,7 @@ function calculateNet() {
 
     // Total for selected month
     const monthTotalRaw = parseFloat(document.getElementById('monthTotal').dataset.raw || 0) || 0;
-    let monthTotal = Math.max(monthTotalRaw - discount, 0);
+    let monthTotal = Math.max(monthTotalRaw, 0);
     document.getElementById('monthTotal').value = monthTotal.toFixed(2);
 
     // Payment Status
