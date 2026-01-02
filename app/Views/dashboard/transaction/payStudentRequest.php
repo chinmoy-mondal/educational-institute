@@ -138,6 +138,25 @@
 </div>
 
 <script>
+/* ================= CALCULATE TOTAL & NET ================= */
+function calculateNet() {
+    let total = 0;
+
+    document.querySelectorAll('.fee-amount').forEach(input => {
+        total += parseFloat(input.value) || 0;
+    });
+
+    const discount = parseFloat(document.getElementById('discount').value) || 0;
+    const applyDiscount = document.getElementById('applyDiscount').checked;
+
+    let net = applyDiscount ? total - discount : total;
+    if (net < 0) net = 0;
+
+    document.getElementById('totalAmount').value = total.toFixed(2);
+    document.getElementById('netAmount').value = net.toFixed(2);
+}
+
+/* ================= MONTH PREVIEW (NO ALERT) ================= */
 function showMonthFeePreview() {
     const monthSelect = document.getElementById('payMonth');
     if (!monthSelect) return;
@@ -149,7 +168,10 @@ function showMonthFeePreview() {
         const unit = parseInt(input.dataset.unit);
         const base = parseFloat(input.dataset.base);
 
-        if (!unit || !base) return;
+        if (!unit || !base) {
+            input.value = '0.00';
+            return;
+        }
 
         let times = 1;
         if (unit > 1) {
@@ -159,16 +181,32 @@ function showMonthFeePreview() {
         }
 
         const amount = times * base;
+        input.value = amount.toFixed(2); // auto fill row
         total += amount;
-
-        // OPTIONAL: auto fill each row
-        input.value = amount.toFixed(2);
     });
 
-    // ✅ Put preview total directly into summary fields
-    document.getElementById('totalAmount').value = total.toFixed(2);
-    document.getElementById('netAmount').value = total.toFixed(2);
+    // update summary (discount will apply next)
+    calculateNet();
 }
+
+/* ================= EVENTS ================= */
+document.addEventListener('DOMContentLoaded', function() {
+
+    // manual amount change
+    document.querySelectorAll('.fee-amount').forEach(input => {
+        input.addEventListener('input', calculateNet);
+    });
+
+    // discount change
+    document.getElementById('discount').addEventListener('input', calculateNet);
+    document.getElementById('applyDiscount').addEventListener('change', calculateNet);
+
+    // 🔥 month change → auto preview
+    document.getElementById('payMonth').addEventListener('change', showMonthFeePreview);
+
+    // initial load
+    showMonthFeePreview();
+});
 </script>
 
 <?= $this->endSection() ?>
