@@ -2506,9 +2506,91 @@ class Dashboard extends Controller
         return view('dashboard/transaction/std_pay', $this->data);
     }
 
+    // public function receipt($transactionId)
+    // {
+    //     $this->data['title'] = 'Teacher Earnings';
+    //     $this->data['activeSection'] = 'accounts';
+
+    //     $this->data['navbarItems'] = [
+    //         ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+    //         ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+    //         ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+    //         ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+    //         ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+    //     ];
+
+    //     // Fetch all transactions for this ID
+    //     $transactions = $this->transactionModel
+    //         ->where('transaction_id', $transactionId)
+    //         ->findAll();
+
+    //     if (empty($transactions)) {
+    //         return redirect()->to(base_url('admin/transactions'))
+    //             ->with('error', 'Receipt not found.');
+    //     }
+
+    //     $first = $transactions[0];
+
+    //     // Fetch student info
+    //     $studentId = $first['sender_id'] ?? null;
+    //     $student   = $studentId ? $this->studentModel->find($studentId) : [];
+
+    //     $this->data['student'] = [
+    //         'student_name' => $student['student_name'] ?? $first['sender_name'] ?? '',
+    //         'id'           => $studentId ?? '',
+    //         'class'        => $student['class'] ?? $first['student_class'] ?? '',
+    //         'section'      => $student['section'] ?? $first['student_section'] ?? '',
+    //     ];
+
+    //     // Receiver info
+    //     $this->data['receiver'] = [
+    //         'name' => $first['receiver_name'] ?? ''
+    //     ];
+
+    //     $this->data['transaction_id'] = $transactionId;
+    //     $this->data['date'] = $first['created_at'] ?? date('Y-m-d');
+
+    //     // Prepare fees with only current month transactions
+    //     $currentMonth = date('m');
+    //     $fees = [];
+    //     $totalPaid = 0;
+    //     $discountApplied = false;
+
+    //     foreach ($transactions as $t) {
+    //         $transactionMonth = date('m', strtotime($t['created_at'] ?? date('Y-m-d')));
+    //         if ($transactionMonth != $currentMonth) continue; // Skip other months
+
+    //         $amount = floatval($t['amount'] ?? 0);
+
+    //         // Apply discount only to first transaction
+    //         $discount = 0;
+    //         if (!$discountApplied && !empty($t['discount'])) {
+    //             $discount = floatval($t['discount']);
+    //             $discountApplied = true;
+    //         }
+
+    //         $fees[] = [
+    //             'title'  => $t['purpose'] ?? '',
+    //             'month'  => $t['month'] ?? '',
+    //             'amount' => $amount,
+    //             'paid'   => $amount >= (($t['full_amount'] ?? $amount)) ? true : false
+    //         ];
+
+    //         $totalPaid += $amount;
+    //     }
+
+    //     $this->data['fees'] = $fees;
+    //     $this->data['discount'] = $discount ?? 0;
+    //     $this->data['totalAmount'] = $totalPaid;
+    //     $this->data['netAmount'] = $totalPaid - ($discount ?? 0);
+
+    //     // Load receipt view
+    //     return view('dashboard/transaction/receipt', $this->data);
+    // }
+
     public function receipt($transactionId)
     {
-        $this->data['title'] = 'Teacher Earnings';
+        $this->data['title'] = 'Payment Receipt';
         $this->data['activeSection'] = 'accounts';
 
         $this->data['navbarItems'] = [
@@ -2519,7 +2601,7 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        // Fetch all transactions for this ID
+        // Fetch all transactions with this ID
         $transactions = $this->transactionModel
             ->where('transaction_id', $transactionId)
             ->findAll();
@@ -2550,30 +2632,44 @@ class Dashboard extends Controller
         $this->data['transaction_id'] = $transactionId;
         $this->data['date'] = $first['created_at'] ?? date('Y-m-d');
 
-        // Prepare fees with only current month transactions
-        $currentMonth = date('m');
+        // Month names for display
+        $monthNames = [
+            1  => 'January',
+            2  => 'February',
+            3  => 'March',
+            4  => 'April',
+            5  => 'May',
+            6  => 'June',
+            7  => 'July',
+            8  => 'August',
+            9  => 'September',
+            10 => 'October',
+            11 => 'November',
+            12 => 'December'
+        ];
+
         $fees = [];
         $totalPaid = 0;
         $discountApplied = false;
 
         foreach ($transactions as $t) {
-            $transactionMonth = date('m', strtotime($t['created_at'] ?? date('Y-m-d')));
-            if ($transactionMonth != $currentMonth) continue; // Skip other months
-
             $amount = floatval($t['amount'] ?? 0);
 
-            // Apply discount only to first transaction
+            // Apply discount only once (first transaction with discount)
             $discount = 0;
             if (!$discountApplied && !empty($t['discount'])) {
                 $discount = floatval($t['discount']);
                 $discountApplied = true;
             }
 
+            // Convert month number to month name
+            $monthName = isset($monthNames[intval($t['month'])]) ? $monthNames[intval($t['month'])] : '';
+
             $fees[] = [
                 'title'  => $t['purpose'] ?? '',
-                'month'  => $t['month'] ?? '',
+                'month'  => $monthName,
                 'amount' => $amount,
-                'paid'   => $amount >= (($t['full_amount'] ?? $amount)) ? true : false
+                'paid'   => ($t['payment_status'] ?? 0) == 1 ? true : false
             ];
 
             $totalPaid += $amount;
@@ -2784,8 +2880,8 @@ class Dashboard extends Controller
         $studentId     = $request->getPost('student_id');
         $receiverId    = $request->getPost('receiver_id');
         $discount      = floatval($request->getPost('discount') ?? 0);
-        $monthNumber   = $request->getPost('month');
-        $paymentStatus = intval($request->getPost('payment_status')); // 1 paid | 0 due
+        $monthNumber   = intval($request->getPost('month') ?? date('m')); // get as number
+        $paymentStatus = intval($request->getPost('payment_status'));      // 1 = paid | 0 = due
 
         $feeIds  = $request->getPost('fee_id') ?? [];
         $amounts = $request->getPost('amount') ?? [];
@@ -2799,12 +2895,30 @@ class Dashboard extends Controller
             $totalAmount += floatval($amt);
         }
 
-        $netAmount = max($totalAmount - $discount, 0);
-
         // ---------- TRANSACTION ID ----------
         $transactionId = 'TX-' . date('YmdHis') . rand(100, 999);
 
-        // ---------- INSERT ----------
+        // ---------- MONTH NAMES ----------
+        $monthNames = [
+            1  => 'January',
+            2  => 'February',
+            3  => 'March',
+            4  => 'April',
+            5  => 'May',
+            6  => 'June',
+            7  => 'July',
+            8  => 'August',
+            9  => 'September',
+            10 => 'October',
+            11 => 'November',
+            12 => 'December',
+        ];
+        $monthName = $monthNames[$monthNumber] ?? 'Unknown';
+
+        // ---------- PAYMENT STATUS TEXT ----------
+        $paymentStatusText = $paymentStatus ? 'paid' : 'due';
+
+        // ---------- INSERT TRANSACTIONS ----------
         foreach ($feeIds as $index => $feeId) {
 
             $amount = floatval($amounts[$index] ?? 0);
@@ -2824,78 +2938,60 @@ class Dashboard extends Controller
                 'month'          => $monthNumber,
                 'purpose'        => $feeTitle,
                 'description'    => "Payment for {$feeTitle}",
-                'status'         => 0,   // ✅ as requested
-                'activity'       => 0,   // ✅ as requested
+                'status'         => 0,          // pending
+                'activity'       => 0,          // extra tracking
                 'payment_status' => $paymentStatus
             ]);
         }
 
         // ---------- SAVE DISCOUNT ----------
         if ($request->getPost('apply_discount')) {
-            $this->studentDiscountModel->save([
-                'student_id' => $studentId,
-                'amount'     => $discount,
-            ]);
+            $existingDiscount = $this->studentDiscountModel->where('student_id', $studentId)->first();
+            if ($existingDiscount) {
+                $this->studentDiscountModel->update($existingDiscount['id'], [
+                    'amount' => $discount,
+                ]);
+            } else {
+                $this->studentDiscountModel->insert([
+                    'student_id' => $studentId,
+                    'amount'     => $discount,
+                ]);
+            }
         }
 
-        $monthNames = [
-            1  => 'January',
-            2  => 'February',
-            3  => 'March',
-            4  => 'April',
-            5  => 'May',
-            6  => 'June',
-            7  => 'July',
-            8  => 'August',
-            9  => 'September',
-            10 => 'October',
-            11 => 'November',
-            12 => 'December',
-        ];
-
-        $monthName = $monthNames[$monthNumber] ?? 'Unknown';
-        // If net payable > 0 → due, else paid
-        $paymentStatusText = $netAmount > 0 ? 'due' : 'paid';
-
+        // ---------- SEND SMS ----------
         $studentPhone = $student['phone'] ?? '';
         if ($studentPhone) {
             // Ensure Bangladesh country code
             $studentPhone = '880' . ltrim($studentPhone, '0');
 
             $message = "Dear {$student['student_name']}, your payment for {$monthName} is {$paymentStatusText}.";
+
+            $apiKey = "YOUR_API_KEY";   // Replace with real API key
+            $callerID = "1234";
+
+            $smsUrl = "https://bulksmsdhaka.com/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $smsUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            $response = curl_exec($ch);
+            $error = curl_error($ch);
+            curl_close($ch);
+
+            // ---------- LOG SMS ----------
+            $this->smsLogModel->insert([
+                'student_name' => $student['student_name'],
+                'phone_number' => $studentPhone,
+                'message'      => $message,
+                'status'       => $error ? 0 : 1,
+                'created_at'   => date('Y-m-d H:i:s'),
+            ]);
         }
-        $apiKey = "YOUR_API_KEY";   // 5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8
-        $callerID = "1234";
-
-        $smsUrl = "https://bulksmsdhaka.com/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $smsUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        $response = curl_exec($ch);
-        $error = curl_error($ch);
-        curl_close($ch);
-
-        // if ($error) {
-        //     log_message('error', "SMS sending failed: {$error}");
-        // } else {
-        //     log_message('info', "SMS sent successfully: {$response}");
-        // }
-
-        $this->smsLogModel->insert([
-            'student_name' => $student['student_name'],
-            'phone_number' => $studentPhone,
-            'message'      => $message,
-            'status'       => $error ? 0 : 1,
-            'created_at'   => date('Y-m-d H:i:s'),
-        ]);
-
 
         // ---------- REDIRECT TO RECEIPT ----------
-        return redirect()->to(
-            base_url('admin/receipt/' . $transactionId)
-        );
+        return redirect()->to(base_url('admin/receipt/' . $transactionId));
     }
 
 
