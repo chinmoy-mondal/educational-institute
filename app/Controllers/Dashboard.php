@@ -1726,6 +1726,12 @@ class Dashboard extends Controller
                     : ['grade' => 'F', 'gp' => 0.00];
             }
 
+            if ($key === 'agriculture') {
+                return $this->branchCheck($wri + $mcq + $pra, 17)
+                    ? $this->markToGrade($mark)
+                    : ['grade' => 'F', 'gp' => 0.00];
+            }
+
             // ---------------- ALL OTHER SUBJECTS ----------------
             return $this->branchCheck($wri + $mcq + $pra, 33)
                 ? $this->markToGrade($mark)
