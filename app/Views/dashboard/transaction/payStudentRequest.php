@@ -161,12 +161,19 @@ function calculateNet() {
 
     const discount = parseFloat(document.getElementById('discount').value) || 0;
 
-    // Net Payable = Total Entered - Discount
-    let netPayable = Math.max(totalEntered - discount, 0);
-    document.getElementById('totalAmount').value = totalEntered.toFixed(2);
+    // Previous totals
+    const lastPaid = parseFloat(document.getElementById('lastPaid').value) || 0;
+    const lastDiscount = parseFloat(document.getElementById('lastDiscount').value) || 0;
+
+    // Total Entered Amount for **this payment only** (exclude previous)
+    const currentTotalEntered = totalEntered;
+    document.getElementById('totalAmount').value = currentTotalEntered.toFixed(2);
+
+    // Net Payable = Total Entered - Discount (current only)
+    const netPayable = Math.max(currentTotalEntered - discount, 0);
     document.getElementById('netAmount').value = netPayable.toFixed(2);
 
-    // Total for selected month (discount applied)
+    // Total for selected month (apply discount)
     const monthTotalRaw = parseFloat(document.getElementById('monthTotal').dataset.raw || 0) || 0;
     let monthTotal = Math.max(monthTotalRaw - discount, 0);
     document.getElementById('monthTotal').value = monthTotal.toFixed(2);
