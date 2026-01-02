@@ -2805,7 +2805,7 @@ class Dashboard extends Controller
                 if (!$feeData) continue;
 
                 $unit         = intval($feeData['unit']) ?: 1;   // installments per year
-                $annualAmount = floatval($feeData['amount']);    // total annual fee
+                $annualAmount = floatval($feeData['fees']);    // total annual fee
 
                 // Calculate default amount (if user didn't enter any)
                 if ($unit === 1) {
