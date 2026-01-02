@@ -251,7 +251,6 @@ function showMonthFeePreview() {
         }
 
         const amount = times * base;
-        input.value = amount.toFixed(2);
         totalMonth += amount;
     });
 
