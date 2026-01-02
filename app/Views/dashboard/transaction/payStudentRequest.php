@@ -138,49 +138,37 @@
 </div>
 
 <script>
-function calculateNet() {
+function showMonthFeePreview() {
+    const monthSelect = document.getElementById('payMonth');
+    if (!monthSelect) return;
+
+    const month = parseInt(monthSelect.value);
     let total = 0;
+
     document.querySelectorAll('.fee-amount').forEach(input => {
-        total += parseFloat(input.value) || 0;
+        const unit = parseInt(input.dataset.unit);
+        const base = parseFloat(input.dataset.base);
+
+        if (!unit || !base) return;
+
+        let times = 1;
+        if (unit > 1) {
+            const interval = 12 / unit;
+            times = Math.floor(month / interval);
+            times = Math.min(times, unit);
+        }
+
+        const amount = times * base;
+        total += amount;
+
+        // OPTIONAL: auto fill each row
+        input.value = amount.toFixed(2);
     });
 
-    const discount = parseFloat(document.getElementById('discount').value) || 0;
-    const applyDiscount = document.getElementById('applyDiscount').checked;
-
-    let net = applyDiscount ? total - discount : total;
-    if (net < 0) net = 0;
-
+    // ✅ Put preview total directly into summary fields
     document.getElementById('totalAmount').value = total.toFixed(2);
-    document.getElementById('netAmount').value = net.toFixed(2);
-
-    const statusBox = document.getElementById('paymentStatus');
-
-    if (net === 0 && total > 0) {
-        statusBox.className = 'alert alert-success fw-bold mb-0';
-        statusBox.innerHTML = '✅ Paid';
-    } else if (total === 0) {
-        statusBox.className = 'alert alert-secondary fw-bold mb-0';
-        statusBox.innerHTML = '— No Amount';
-    } else {
-        statusBox.className = 'alert alert-danger fw-bold mb-0';
-        statusBox.innerHTML = '❌ Not Paid';
-    }
+    document.getElementById('netAmount').value = total.toFixed(2);
 }
-
-/* ================== FIX START ================== */
-document.addEventListener('DOMContentLoaded', function() {
-
-    document.querySelectorAll('.fee-amount').forEach(input => {
-        input.addEventListener('input', calculateNet);
-    });
-
-    document.getElementById('discount').addEventListener('input', calculateNet);
-    document.getElementById('applyDiscount').addEventListener('change', calculateNet);
-
-    // run once on page load
-    calculateNet();
-});
-/* ================== FIX END ================== */
 </script>
 
 <?= $this->endSection() ?>
