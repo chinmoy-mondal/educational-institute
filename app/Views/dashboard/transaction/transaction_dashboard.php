@@ -112,6 +112,8 @@
                         <th>Receiver</th>
                         <th>Type</th>
                         <th>Amount (৳)</th>
+                        <th>Discount (৳)</th>
+                        <th>Month</th>
                         <th>Description</th>
                     </tr>
                 </thead>
@@ -140,6 +142,8 @@
                         <td class="fw-bold <?= $t['status'] == 0 ? 'text-success' : 'text-danger' ?>">
                             <?= number_format($t['amount'], 2) ?>
                         </td>
+                        <td><?= esc($t['discount']) ?></td>
+                        <td><?= esc($t['month']) ?></td>
                         <td><?= esc($t['description']) ?></td>
                     </tr>
                     <?php endforeach; ?>
