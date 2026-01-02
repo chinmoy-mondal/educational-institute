@@ -82,9 +82,8 @@
                     </table>
                 </div>
 
-                <!-- Discount (Save for next) + Last Totals -->
+                <!-- Discount + Last Totals -->
                 <div class="row mb-4">
-
                     <!-- Current Discount -->
                     <div class="col-md-3">
                         <label class="form-label fw-semibold">Discount (৳)</label>
@@ -92,7 +91,7 @@
                             value="<?= esc($student_discount ?? 0) ?>" min="0">
                     </div>
 
-                    <!-- Save for next checkbox -->
+                    <!-- Save for next -->
                     <div class="col-md-3 d-flex align-items-end">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="applyDiscount" name="apply_discount"
@@ -104,15 +103,16 @@
                     <!-- Last Total Payment -->
                     <div class="col-md-3">
                         <label class="form-label fw-semibold">Last Total Payment (৳)</label>
-                        <input type="text" class="form-control" readonly value="<?= esc($totalPaid ?? 0) ?>">
+                        <input type="text" class="form-control" id="lastPaid" readonly
+                            value="<?= esc($totalPaid ?? 0) ?>">
                     </div>
 
                     <!-- Last Total Discount -->
                     <div class="col-md-3">
                         <label class="form-label fw-semibold">Last Total Discount (৳)</label>
-                        <input type="text" class="form-control" readonly value="<?= esc($totalDiscount ?? 0) ?>">
+                        <input type="text" class="form-control" id="lastDiscount" readonly
+                            value="<?= esc($totalDiscount ?? 0) ?>">
                     </div>
-
                 </div>
 
                 <!-- Summary -->
@@ -135,9 +135,12 @@
 
                     <div class="col-md-3">
                         <label class="form-label fw-semibold">Payment Status</label>
-                        <div id="paymentStatus" class="alert alert-secondary fw-bold mb-0">
+                        <!-- Alert box -->
+                        <div id="paymentStatusBox" class="alert alert-secondary fw-bold mb-0">
                             — Preview Only
                         </div>
+                        <!-- Hidden input to submit status -->
+                        <input type="hidden" name="payment_status" id="paymentStatus" value="preview">
                     </div>
                 </div>
 
@@ -145,7 +148,6 @@
                 <div class="text-end mb-2">
                     <button type="submit" class="btn btn-primary">Next: Confirm Payment</button>
                 </div>
-
             </form>
         </div>
     </div>
@@ -161,43 +163,40 @@ function calculateNet() {
 
     const discount = parseFloat(document.getElementById('discount').value) || 0;
 
-    // Previous totals
-    const lastPaid = parseFloat(document.getElementById('lastPaid').value) || 0;
-    const lastDiscount = parseFloat(document.getElementById('lastDiscount').value) || 0;
+    // Current totals
+    document.getElementById('totalAmount').value = totalEntered.toFixed(2);
 
-    // Total Entered Amount for **this payment only** (exclude previous)
-    const currentTotalEntered = totalEntered;
-    document.getElementById('totalAmount').value = currentTotalEntered.toFixed(2);
-
-    // Net Payable = Total Entered - Discount (current only)
-    const netPayable = Math.max(currentTotalEntered - discount, 0);
+    // Net Payable = Total Entered - Discount
+    const netPayable = Math.max(totalEntered - discount, 0);
     document.getElementById('netAmount').value = netPayable.toFixed(2);
 
-    // Total for selected month (apply discount)
+    // Total for selected month
     const monthTotalRaw = parseFloat(document.getElementById('monthTotal').dataset.raw || 0) || 0;
     let monthTotal = Math.max(monthTotalRaw - discount, 0);
     document.getElementById('monthTotal').value = monthTotal.toFixed(2);
 
-    // Payment Status → Paid if Net >= MonthTotal else Not Paid
-    const statusBox = document.getElementById('paymentStatus');
+    // Payment Status
+    const statusBox = document.getElementById('paymentStatusBox');
+    const statusInput = document.getElementById('paymentStatus');
+
     if (netPayable >= monthTotal && monthTotal > 0) {
         statusBox.className = 'alert alert-success fw-bold mb-0';
         statusBox.innerHTML = '✅ Paid';
+        statusInput.value = 'paid';
     } else if (monthTotal === 0) {
         statusBox.className = 'alert alert-secondary fw-bold mb-0';
         statusBox.innerHTML = '— Preview Only';
+        statusInput.value = 'preview';
     } else {
         statusBox.className = 'alert alert-danger fw-bold mb-0';
         statusBox.innerHTML = '❌ Not Paid';
+        statusInput.value = 'not_paid';
     }
 }
 
 /* ================== MONTH PREVIEW ================== */
 function showMonthFeePreview() {
-    const monthSelect = document.getElementById('payMonth');
-    if (!monthSelect) return;
-
-    const month = parseInt(monthSelect.value);
+    const month = parseInt(document.getElementById('payMonth').value);
     let totalMonth = 0;
 
     document.querySelectorAll('.fee-amount').forEach(input => {
@@ -218,26 +217,20 @@ function showMonthFeePreview() {
 
     document.getElementById('monthTotal').dataset.raw = totalMonth.toFixed(2);
 
-    // Recalculate totals (Net Payable & Month Total) always apply discount
+    // Recalculate totals
     calculateNet();
 }
 
 /* ================== EVENTS ================== */
 document.addEventListener('DOMContentLoaded', function() {
-    // manual input change
-    document.querySelectorAll('.fee-amount').forEach(input => {
-        input.addEventListener('input', calculateNet);
-    });
-
-    // discount save input
+    // manual input
+    document.querySelectorAll('.fee-amount').forEach(input => input.addEventListener('input', calculateNet));
     document.getElementById('discount').addEventListener('input', calculateNet);
-
-    // month select → auto preview
     document.getElementById('payMonth').addEventListener('change', showMonthFeePreview);
 
-    // initial load
+    // initial calculation
     showMonthFeePreview();
 });
 </script>
-<!--  -->
+
 <?= $this->endSection() ?>
