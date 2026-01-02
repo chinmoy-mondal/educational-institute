@@ -2582,7 +2582,7 @@ class Dashboard extends Controller
         $this->data['netAmount'] = $totalPaid - ($discount ?? 0);
 
         // Load receipt view
-        return view('dashboard/transactions/receipt', $this->data);
+        return view('dashboard/transaction/receipt', $this->data);
     }
 
     public function pay_stat()
@@ -2806,8 +2806,8 @@ class Dashboard extends Controller
                 $feeData = $this->feesAmountModel->find($id);
                 if (!$feeData) continue;
 
-                // Fetch fee title from fees_title table
-                $feeTitle = $this->feesAmountModel->find($feeData['title_id'])['title'] ?? 'Fee #' . $id;
+                $feeTitleRow = $this->feesModel->find($feeData['title_id']);
+                $feeTitle = $feeTitleRow['title'] ?? ('Fee #' . $id);
 
                 $unit         = intval($feeData['unit']) ?: 1;   // installments per year
                 $annualAmount = floatval($feeData['fees']);     // total annual fee
