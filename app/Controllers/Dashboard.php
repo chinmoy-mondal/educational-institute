@@ -15,6 +15,7 @@ use App\Models\FeesModel;
 use App\Models\FeesAmountModel;
 use App\Models\TransactionModel;
 use App\Models\StudentDiscountModel;
+use App\Models\SmsLogModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Dashboard extends Controller
@@ -31,6 +32,7 @@ class Dashboard extends Controller
     protected $feesAmountModel;
     protected $transactionModel;
     protected $studentDiscountModel;
+    protected $smsLogModel;
 
     protected $session;
     protected $data;
@@ -49,6 +51,7 @@ class Dashboard extends Controller
         $this->feesAmountModel      = new FeesAmountModel();
         $this->transactionModel     = new TransactionModel();
         $this->studentDiscountModel = new StudentDiscountModel();
+        $this->smsLogModel          = new SmsLogModel();
 
 
         $this->session       = session();
@@ -2835,267 +2838,67 @@ class Dashboard extends Controller
             ]);
         }
 
+        $monthNames = [
+            1  => 'January',
+            2  => 'February',
+            3  => 'March',
+            4  => 'April',
+            5  => 'May',
+            6  => 'June',
+            7  => 'July',
+            8  => 'August',
+            9  => 'September',
+            10 => 'October',
+            11 => 'November',
+            12 => 'December',
+        ];
+
+        $monthName = $monthNames[$monthNumber] ?? 'Unknown';
+        // If net payable > 0 → due, else paid
+        $paymentStatusText = $netAmount > 0 ? 'due' : 'paid';
+
+        $studentPhone = $student['phone'] ?? '';
+        if ($studentPhone) {
+            // Ensure Bangladesh country code
+            $studentPhone = '880' . ltrim($studentPhone, '0');
+
+            $message = "Dear {$student['student_name']}, your payment for {$monthName} is {$paymentStatusText}.";
+        }
+        $apiKey = "YOUR_API_KEY";   // 5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8
+        $callerID = "1234";
+
+        $smsUrl = "https://bulksmsdhaka.com/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $smsUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        $response = curl_exec($ch);
+        $error = curl_error($ch);
+        curl_close($ch);
+
+        // if ($error) {
+        //     log_message('error', "SMS sending failed: {$error}");
+        // } else {
+        //     log_message('info', "SMS sent successfully: {$response}");
+        // }
+
+        $this->smsLogModel->insert([
+            'student_name' => $student['student_name'],
+            'phone_number' => $studentPhone,
+            'message'      => $message,
+            'status'       => $error ? 0 : 1,
+            'created_at'   => date('Y-m-d H:i:s'),
+        ]);
+
+
         // ---------- REDIRECT TO RECEIPT ----------
         return redirect()->to(
             base_url('admin/receipt/' . $transactionId)
         );
     }
 
-    // public function studentPayment()
-    // {
-    //     $request = $this->request;
 
-    //     $studentId      = $request->getPost('student_id');
-    //     $receiverId     = $request->getPost('receiver_id');
-    //     $discountAmount = floatval($request->getPost('discount') ?? 0);
-    //     $applyDiscount  = $request->getPost('apply_discount') ? true : false;
-    //     $monthNumber    = intval($request->getPost('month') ?? date('m'));
-
-    //     $student  = $this->studentModel->find($studentId);
-    //     $receiver = $this->userModel->find($receiverId);
-
-    //     $feeIds  = $request->getPost('fee_id') ?? [];
-    //     $amounts = $request->getPost('amount') ?? [];
-
-    //     $totalEntered = 0;       // sum of all entered amounts
-    //     $totalMonth   = 0;       // total for selected month
-
-    //     // Generate unique transaction ID
-    //     $transactionId = 'TX-'
-    //         . date('YmdHis')
-    //         . sprintf('%03d', (microtime(true) * 1000) % 1000)
-    //         . '-' . strtoupper(bin2hex(random_bytes(2)));
-
-    //     if (!empty($feeIds)) {
-    //         $first = true; // discount applies to first fee only
-
-    //         foreach ($feeIds as $index => $id) {
-
-    //             $feeData = $this->feesAmountModel->find($id);
-    //             if (!$feeData) continue;
-
-    //             $feeTitleRow = $this->feesModel->find($feeData['title_id']);
-    //             $feeTitle = $feeTitleRow['title'] ?? ('Fee #' . $id);
-
-    //             $unit         = intval($feeData['unit']) ?: 1;   // installments per year
-    //             $annualAmount = floatval($feeData['fees']);     // total annual fee
-
-    //             // Calculate default amount (if user didn't enter)
-    //             if ($unit === 1) {
-    //                 $calculatedAmount = $annualAmount;
-    //             } else {
-    //                 $interval     = 12 / $unit;
-    //                 $installments = floor($monthNumber / $interval);
-    //                 $installments = min($installments, $unit);
-    //                 $calculatedAmount = ($annualAmount / $unit) * $installments;
-    //             }
-
-    //             $enteredAmount = isset($amounts[$index]) && $amounts[$index] !== ''
-    //                 ? floatval($amounts[$index])
-    //                 : $calculatedAmount; // use calculated if user didn't enter
-
-    //             if ($enteredAmount <= 0) continue;
-
-    //             $totalEntered += $enteredAmount;
-    //             $totalMonth   += $calculatedAmount;
-
-    //             $discountToInsert = $first && $applyDiscount ? $discountAmount : 0;
-
-    //             // Insert transaction
-    //             $this->transactionModel->insert([
-    //                 'transaction_id' => $transactionId,
-    //                 'sender_id'      => $studentId,
-    //                 'sender_name'    => $student['student_name'] ?? '',
-    //                 'receiver_id'    => $receiverId,
-    //                 'receiver_name'  => $receiver['name'] ?? '',
-    //                 'amount'         => $enteredAmount,
-    //                 'discount'       => $discountToInsert,
-    //                 'month'          => $monthNumber,
-    //                 'purpose'        => $feeTitle,
-    //                 'description'    => "Payment for {$feeTitle} up to month #{$monthNumber}",
-    //                 'status'         => 0,
-    //                 'payment_status' =>
-    //             ]);
-
-    //             $first = false;
-    //         }
-    //     }
-
-    //     // Save discount for next
-    //     if ($applyDiscount) {
-    //         $existingDiscount = $this->studentDiscountModel
-    //             ->where('student_id', $studentId)
-    //             ->first();
-
-    //         if ($existingDiscount) {
-    //             $this->studentDiscountModel->update($existingDiscount['id'], [
-    //                 'amount' => $discountAmount
-    //             ]);
-    //         } else {
-    //             $this->studentDiscountModel->insert([
-    //                 'student_id' => $studentId,
-    //                 'amount'     => $discountAmount
-    //             ]);
-    //         }
-    //     }
-
-
-
-    //     // ================= SHOW SUMMARY =================
-    //     echo "Student: {$student['student_name']}<br>";
-    //     echo "Month Number: {$monthNumber}<br>";
-    //     echo "Total Entered Amount: ৳" . number_format($totalEntered, 2) . "<br>";
-    //     echo "Net Payable Amount: ৳" . number_format($netPayable, 2) . "<br>";
-    //     echo "Total for Selected Month: ৳" . number_format($monthTotal, 2) . "<br>";
-    //     echo "Paid Amount: ৳" . number_format($paidAmount, 2) . "<br>";
-    //     echo "Due Amount: ৳" . number_format($dueAmount, 2) . "<br>";
-    //     echo "Payment Status: {$paymentStatus}<br>";
-    // }
-
-    // public function studentPayment()
-    // {
-    //     $this->data['title'] = 'Student Payment';
-    //     $this->data['activeSection'] = 'accounts';
-
-    //     $this->data['navbarItems'] = [
-    //         ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-    //         ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-    //         ['label' => 'Students', 'url' => base_url('admin/std_pay')],
-    //         ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-    //         ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
-    //     ];
-
-    //     $request = $this->request;
-
-    //     // ---------- BASIC INPUTS ----------
-    //     $studentId  = $request->getPost('student_id');
-    //     $receiverId = $request->getPost('receiver_id');
-    //     $discountAmount = floatval($request->getPost('discount'));
-    //     $applyDiscount = $request->getPost('apply_discount');
-
-    //     // Single month input for all fees
-    //     $monthNumber = intval($request->getPost('month'));
-    //     $monthNames = [
-    //         1 => 'January',
-    //         2 => 'February',
-    //         3 => 'March',
-    //         4 => 'April',
-    //         5 => 'May',
-    //         6 => 'June',
-    //         7 => 'July',
-    //         8 => 'August',
-    //         9 => 'September',
-    //         10 => 'October',
-    //         11 => 'November',
-    //         12 => 'December'
-    //     ];
-    //     $monthName = $monthNames[$monthNumber] ?? '';
-
-    //     // ---------- FEES ----------
-    //     $feeIds  = $request->getPost('fee_id');
-    //     $student = $this->studentModel->find($studentId);
-    //     $receiver = $this->userModel->find($receiverId);
-
-    //     $fees = [];
-    //     $totalAmount = 0;
-
-    //     // Generate unique transaction ID
-    //     $transactionId = 'TX-'
-    //         . date('YmdHis')
-    //         . sprintf('%03d', (microtime(true) * 1000) % 1000)
-    //         . '-' . strtoupper(bin2hex(random_bytes(2)));
-
-    //     if (!empty($feeIds)) {
-    //         $first = true; // Apply discount only on first fee
-    //         foreach ($feeIds as $id) {
-    //             $feeData = $this->feesAmountModel->find($id);
-    //             if (!$feeData) continue;
-
-    //             $title  = $feeData['title'] ?? 'Fee #' . $id;
-    //             $unit   = intval($feeData['unit']) ?: 1; // how many installments per year
-    //             $amount = floatval($feeData['amount']);  // total annual fee
-
-    //             // interval in months for this fee
-    //             $interval = 12 / $unit;
-    //             // number of installments to include up to selected month
-    //             $installments = floor($monthNumber / $interval);
-    //             $installments = min($installments, $unit); // cannot exceed unit
-
-    //             // amount to pay for this fee
-    //             $feePayAmount = ($amount / $unit) * $installments;
-
-    //             // Add to total
-    //             $totalAmount += $feePayAmount;
-
-    //             $discountToInsert = $first && $applyDiscount ? $discountAmount : 0;
-
-    //             $fees[] = [
-    //                 'title'       => $title,
-    //                 'month'       => $monthName,
-    //                 'unit'        => $unit,
-    //                 'amount'      => $feePayAmount,
-    //                 'installments' => $installments,
-    //                 'annual_fee'  => $amount
-    //             ];
-
-    //             // Save transaction for this fee
-    //             $this->transactionModel->insert([
-    //                 'transaction_id' => $transactionId,
-    //                 'sender_id'      => $studentId,
-    //                 'sender_name'    => $student['student_name'] ?? '',
-    //                 'receiver_id'    => $receiverId,
-    //                 'receiver_name'  => $receiver['name'] ?? '',
-    //                 'amount'         => $feePayAmount,
-    //                 'discount'       => $discountToInsert,
-    //                 'month'          => $monthNumber,
-    //                 'purpose'        => $title,
-    //                 'description'    => "Payment for {$title} up to {$monthName}",
-    //                 'status'         => 'paid',
-    //                 'activity'       => 'fee_payment'
-    //             ]);
-
-    //             $first = false;
-    //         }
-    //     }
-
-    //     // ---------- APPLY DISCOUNT ----------
-    //     if ($applyDiscount) {
-    //         $existingDiscount = $this->studentDiscountModel
-    //             ->where('student_id', $studentId)
-    //             ->first();
-
-    //         if ($existingDiscount) {
-    //             $this->studentDiscountModel->update($existingDiscount['id'], ['amount' => $discountAmount]);
-    //         } else {
-    //             $this->studentDiscountModel->insert([
-    //                 'student_id' => $studentId,
-    //                 'amount'     => $discountAmount
-    //             ]);
-    //         }
-    //     }
-
-    //     // ---------- CALCULATE NET & DUE ----------
-    //     $netAmount = max($totalAmount - ($applyDiscount ? $discountAmount : 0), 0);
-
-    //     // Calculate already paid amount (if any) for this student
-    //     $paidAmount = $this->transactionModel
-    //         ->where('sender_id', $studentId)
-    //         ->where('activity', 'fee_payment')
-    //         ->selectSum('amount')
-    //         ->first()['amount'] ?? 0;
-
-    //     $dueAmount = max($netAmount - $paidAmount, 0);
-
-    //     // ---------- PASS DATA TO VIEW ----------
-    //     $this->data['fees'] = $fees;
-    //     $this->data['totalAmount'] = $totalAmount;
-    //     $this->data['netAmount'] = $netAmount;
-    //     $this->data['dueAmount'] = $dueAmount;
-    //     $this->data['monthNumber'] = $monthNumber;
-
-    //     return redirect()->to(base_url('admin/transactions'))
-    //         ->with('success', 'Payment recorded successfully.');
-    // }
 
     public function studentPaymentHistory($studentId)
     {

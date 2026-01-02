@@ -19,6 +19,7 @@ class TransactionModel extends Model
         'month',
         'purpose',
         'description',
+        'payment_status',
         'status',
         'activity' // new field
     ];
