@@ -2758,6 +2758,7 @@ class Dashboard extends Controller
         $this->data['report'] = db_connect()->query($sql)->getResultArray();
 
         return view('dashboard/transaction/student_payment_report', $this->data);
+        // a
     }
 
     public function sms_log()
