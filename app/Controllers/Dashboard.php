@@ -2593,7 +2593,7 @@ class Dashboard extends Controller
                 $discount = floatval($t['discount']);
                 $discountApplied = true;
             }
-
+            echo "dis = " . $discount . "<br>";
             // Convert month number to month name
             $monthName = isset($monthNames[intval($t['month'])]) ? $monthNames[intval($t['month'])] : '';
 
