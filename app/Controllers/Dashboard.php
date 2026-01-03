@@ -2579,21 +2579,15 @@ class Dashboard extends Controller
         $fees = [];
         $totalPaid = 0;
         $discountApplied = false;
+        $discount = 0;
 
-        echo "<pre>";
-        print_r($first);
-        print_r($transactions);
-        echo "</pre>";
         foreach ($transactions as $t) {
             $amount = floatval($t['amount'] ?? 0);
-            echo "==" . $t['discount'] . "<br>";
             // Apply discount only once (first transaction with discount)
-            $discount = 0;
             if (!$discountApplied && !empty($t['discount'])) {
                 $discount = floatval($t['discount']);
                 $discountApplied = true;
             }
-            echo "dis = " . $discount . "<br>";
             // Convert month number to month name
             $monthName = isset($monthNames[intval($t['month'])]) ? $monthNames[intval($t['month'])] : '';
 
