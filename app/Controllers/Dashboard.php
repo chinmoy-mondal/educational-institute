@@ -169,12 +169,25 @@ class Dashboard extends Controller
         $this->data['givenSubjects'] = count($given_subjects);
         $this->data['totalSubjects'] = count($total_subjects);
         // ✅ Total Income (status = 1 means approved or received)
-        $totalIncome = $this->transactionModel
-            ->selectSum('amount')
+        $incomeRow = $this->transactionModel
+            ->selectSum('amount', 'total')
             ->where('status', 0)
             ->get()
-            ->getRow()
-            ->amount ?? 0;
+            ->getRowArray();
+
+        $totalIncomeRaw = $incomeRow['total'] ?? 0;
+        $discountRow = db_connect()->query("
+            SELECT SUM(discount) AS total_discount
+            FROM (
+                SELECT transaction_id, MAX(discount) AS discount
+                FROM transactions
+                WHERE status = 0
+                GROUP BY transaction_id
+            ) d
+        ")->getRowArray();
+
+        $totalDiscount = $discountRow['total_discount'] ?? 0;
+        $totalIncome = $totalIncomeRaw - $totalDiscount;
 
         // ✅ Total Cost (status = 0 means pending or expense)
         $totalCost = $this->transactionModel
