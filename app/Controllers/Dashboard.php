@@ -2346,37 +2346,28 @@ class Dashboard extends Controller
         $todayData = db_connect()->query("
     SELECT 
         HOUR(created_at) AS hour,
-
-        -- earn
-        SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
-
-        -- cost
-        SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
-
-        -- discount (ONLY ONCE PER TRANSACTION PER HOUR)
-        SUM(
-            CASE 
-                WHEN status = 0 
-                THEN discount 
-                ELSE 0 
-            END
-        ) AS discount
-
+        SUM(amount) AS earn_raw,
+        SUM(cost) AS cost,
+        SUM(discount) AS discount
     FROM (
         SELECT 
-            *,
-            MAX(discount) OVER (
-                PARTITION BY transaction_id
-            ) AS discount
+            transaction_id,
+            status,
+            amount,
+            discount,
+            created_at,
+            CASE WHEN status = 1 THEN amount ELSE 0 END AS cost
         FROM transactions
         WHERE DATE(created_at) = '$today'
+        GROUP BY transaction_id
     ) t
     GROUP BY HOUR(created_at)
     ORDER BY HOUR(created_at)
 ")->getResultArray();
 
+        // Prepare labels and values
         $this->data['todayLabels'] = array_map(fn($d) => $d['hour'] . ':00', $todayData);
-        $this->data['todayEarns']  = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $todayData);
+        $this->data['todayEarns']  = array_map(fn($d) => floatval($d['earn_raw'] - $d['discount']), $todayData);
         $this->data['todayCosts']  = array_map(fn($d) => floatval($d['cost']), $todayData);
         /* ================= ⭐ CURRENT MONTH DAILY REPORT ================= */
         $monthStart = date('Y-m-01');
