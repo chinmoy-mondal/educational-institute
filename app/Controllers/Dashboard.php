@@ -2692,9 +2692,9 @@ class Dashboard extends Controller
         return view('dashboard/transaction/receipt', $this->data);
     }
 
-    public function studentPaymentReportToday()
+    public function studentPaymentReport()
     {
-        $this->data['title'] = 'Today Student Payment Report';
+        $this->data['title'] = 'Student Payment Report';
         $this->data['activeSection'] = 'reports';
         $this->data['navbarItems'] = [
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
@@ -2704,18 +2704,16 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        // ---------------- SQL QUERY (TODAY ONLY) ----------------
+        // ---------------- SQL QUERY ----------------
         $sql = "
-        SELECT sender_name, receiver_name, month, total_pay, total_discount, net_amount
-        FROM (
+        (
             SELECT
                 sender_name,
                 receiver_name,
                 month,
                 SUM(amount) AS total_pay,
                 SUM(discount) AS total_discount,
-                SUM(amount) - SUM(discount) AS net_amount,
-                0 AS sort_order
+                SUM(amount) - SUM(discount) AS net_amount
             FROM (
                 SELECT
                     transaction_id,
@@ -2726,21 +2724,19 @@ class Dashboard extends Controller
                     MAX(discount) AS discount
                 FROM transactions
                 WHERE status = 0
-                  AND DATE(created_at) = CURDATE()
                 GROUP BY transaction_id, sender_name, receiver_name, month
             ) t
             GROUP BY sender_name, receiver_name, month
-
-            UNION ALL
-
+        )
+        UNION ALL
+        (
             SELECT
                 'TOTAL' AS sender_name,
                 '' AS receiver_name,
                 '' AS month,
                 SUM(amount) AS total_pay,
                 SUM(discount) AS total_discount,
-                SUM(amount) - SUM(discount) AS net_amount,
-                1 AS sort_order
+                SUM(amount) - SUM(discount) AS net_amount
             FROM (
                 SELECT
                     transaction_id,
@@ -2748,17 +2744,15 @@ class Dashboard extends Controller
                     MAX(discount) AS discount
                 FROM transactions
                 WHERE status = 0
-                  AND DATE(created_at) = CURDATE()
                 GROUP BY transaction_id
             ) x
-        ) final_table
-        ORDER BY sort_order ASC, net_amount DESC
+        )
+        ORDER BY net_amount DESC
     ";
 
         $this->data['report'] = db_connect()->query($sql)->getResultArray();
 
         return view('dashboard/transaction/student_payment_report', $this->data);
-        // a
     }
 
     public function sms_log()
