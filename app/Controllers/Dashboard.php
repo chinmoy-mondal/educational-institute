@@ -2982,7 +2982,7 @@ class Dashboard extends Controller
 
             // ---------- LOG SMS ----------
             $this->smsLogModel->insert([
-                'student_name' => $student['student_name'],
+                'student' => $student,
                 'phone_number' => $studentPhone,
                 'message'      => $message,
                 'status'       => $error ? 0 : 1,
