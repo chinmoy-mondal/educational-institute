@@ -19,13 +19,6 @@
         </div>
     </form>
 
-    <!-- Resend Failed SMS Button -->
-    <div class="mb-3">
-        <a href="<?= base_url('admin/resend-failed-sms') ?>" class="btn btn-warning">
-            <i class="fas fa-redo"></i> Resend All Failed SMS
-        </a>
-    </div>
-
     <!-- Flash message -->
     <?php if (session()->getFlashdata('success')): ?>
     <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
@@ -48,8 +41,12 @@
 
     <!-- SMS Log Table -->
     <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <strong>SMS Log List</strong>
+            <!-- Professional Resend Button -->
+            <a href="<?= base_url('admin/resend-failed-sms') ?>" class="btn btn-warning btn-sm">
+                <i class="fas fa-redo"></i> Resend All Failed SMS
+            </a>
         </div>
 
         <div class="card-body table-responsive p-0">
