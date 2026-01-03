@@ -188,6 +188,15 @@ class Dashboard extends Controller
         $this->data['total_income'] = (float) $totalIncome;
         $this->data['total_cost']   = (float) $totalCost;
 
+        $smsList  = $this->smsLogModel->findAll();
+
+        $totalSms = count(array_filter($smsList, function ($row) {
+            return $row['status'] == 1;
+        }));
+
+        $this->data['smsList']  = $smsList;
+        $this->data['smsTotal'] = $totalSms;
+
         return view('dashboard/index', $this->data);
     }
 
