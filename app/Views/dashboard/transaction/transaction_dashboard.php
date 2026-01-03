@@ -119,15 +119,35 @@
                 </thead>
                 <tbody>
                     <?php if (!empty($transactions)): ?>
-                    <?php $i = 1;
-                        foreach ($transactions as $t): ?>
+                    <?php
+                        $i = 1;
+                        $seenDiscount = []; // ⭐ track transaction_id
+
+                        foreach ($transactions as $t):
+
+                            $tid = $t['transaction_id'];
+                            $discount = floatval($t['discount'] ?? 0);
+
+                            if ($discount > 0) {
+                                if (isset($seenDiscount[$tid])) {
+                                    // second time → strike
+                                    $discountText = '<strike>' . number_format($discount, 2) . '</strike>';
+                                } else {
+                                    // first time → normal
+                                    $discountText = number_format($discount, 2);
+                                    $seenDiscount[$tid] = true;
+                                }
+                            } else {
+                                $discountText = '';
+                            }
+                        ?>
                     <tr>
                         <td><?= $i++ ?></td>
                         <td><?= date('d M Y', strtotime($t['created_at'])) ?></td>
                         <td>
-                            <a href="<?= site_url('admin/receipt/' . esc($t['transaction_id'])) ?>" target="_blank"
+                            <a href="<?= site_url('admin/receipt/' . esc($tid)) ?>" target="_blank"
                                 style="text-decoration: underline;">
-                                <?= esc($t['transaction_id']) ?>
+                                <?= esc($tid) ?>
                             </a>
                         </td>
                         <td><?= esc($t['sender_name']) ?></td>
@@ -142,14 +162,14 @@
                         <td class="fw-bold <?= $t['status'] == 0 ? 'text-success' : 'text-danger' ?>">
                             <?= number_format($t['amount'], 2) ?>
                         </td>
-                        <td><?= esc($t['discount']) ?></td>
+                        <td><?= $discountText ?></td>
                         <td><?= esc($t['month']) ?></td>
                         <td><?= esc($t['description']) ?></td>
                     </tr>
                     <?php endforeach; ?>
                     <?php else: ?>
                     <tr>
-                        <td colspan="8" class="text-center text-muted">No transactions found.</td>
+                        <td colspan="10" class="text-center text-muted">No transactions found.</td>
                     </tr>
                     <?php endif; ?>
                 </tbody>
