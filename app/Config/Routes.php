@@ -147,6 +147,8 @@ $routes->get('admin/studentPaymentHistory/(:num)', 'Dashboard::studentPaymentHis
 
 
 $routes->get('admin/sms-log', 'Dashboard::sms_log');
+// Resend all failed SMS
+$routes->get('admin/resend-failed-sms', 'Dashboard::resendFailedSms');
 
 
 $routes->get('/user_permit/(:num)', 'Dashboard::user_permit/$1');

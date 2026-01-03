@@ -19,6 +19,18 @@
         </div>
     </form>
 
+    <!-- Resend Failed SMS Button -->
+    <div class="mb-3">
+        <a href="<?= base_url('admin/resend-failed-sms') ?>" class="btn btn-warning">
+            <i class="fas fa-redo"></i> Resend All Failed SMS
+        </a>
+    </div>
+
+    <!-- Flash message -->
+    <?php if (session()->getFlashdata('success')): ?>
+    <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
+    <?php endif; ?>
+
     <?php if (!empty($smsList)): ?>
 
     <!-- Total Sent SMS Box -->

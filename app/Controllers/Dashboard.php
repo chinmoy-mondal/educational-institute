@@ -2714,6 +2714,46 @@ class Dashboard extends Controller
         return view('dashboard/transaction/sms_log', $this->data);
     }
 
+    public function resendFailedSms()
+    {
+        $failedSms = $this->smsLogModel->where('status', 0)->findAll();
+
+        $resendCount = 0;
+        foreach ($failedSms as $sms) {
+            $studentPhone = $sms['phone_number'] ?? '';
+            if (!$studentPhone) continue;
+
+            // Ensure Bangladesh country code
+            $studentPhone = '880' . ltrim($studentPhone, '0');
+            $message = $sms['message'];
+
+            $apiKey = "5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8"; // Replace with real API key
+            $callerID = "1234";
+
+            $smsUrl = "https://bulksmsdhaka.net/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $smsUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            $response = curl_exec($ch);
+            $error = curl_error($ch);
+            curl_close($ch);
+
+            // Update SMS log status if sent successfully
+            if (!$error) {
+                $this->smsLogModel->update($sms['id'], [
+                    'status' => 1,
+                    'updated_at' => date('Y-m-d H:i:s')
+                ]);
+                $resendCount++;
+            }
+        }
+
+        session()->setFlashdata('success', "$resendCount SMS(es) resent successfully.");
+        return redirect()->to(base_url('admin/sms-log'));
+    }
+
     public function pay_stat()
     {
         $this->data['title'] = 'Transaction Dashboard';
