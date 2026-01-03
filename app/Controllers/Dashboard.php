@@ -2586,7 +2586,7 @@ class Dashboard extends Controller
         echo "</pre>";
         foreach ($transactions as $t) {
             $amount = floatval($t['amount'] ?? 0);
-
+            echo "==" . $t['discount'] . "<br>";
             // Apply discount only once (first transaction with discount)
             $discount = 0;
             if (!$discountApplied && !empty($t['discount'])) {
