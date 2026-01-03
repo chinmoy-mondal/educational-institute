@@ -2297,20 +2297,50 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        $this->data['transactions'] = $this->transactionModel->orderBy('created_at', 'DESC')->findAll();
+        // ================= ALL TRANSACTIONS =================
+        $this->data['transactions'] = $this->transactionModel
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
 
+        // ================= TOTAL EARN (RAW AMOUNT) =================
+        $totalEarnRow = $this->transactionModel
+            ->where('status', 0)
+            ->selectSum('amount')
+            ->get()
+            ->getRowArray();
 
-        $totalEarnRow = $this->transactionModel->where('status', 0)->selectSum('amount')->get()->getRowArray();
-        $totaldiscountRow = $this->transactionModel->where('status', 0)->selectSum('discount')->get()->getRowArray();
-        $totalCostRow = $this->transactionModel->where('status', 1)->selectSum('amount')->get()->getRowArray();
+        $totalEarnAmount = $totalEarnRow['amount'] ?? 0;
 
-        $this->data['totalEarn'] = $totalEarnRow['amount'] - $totaldiscountRow['discount'] ?? 0;
-        $this->data['totalCost'] = $totalCostRow['amount'] ?? 0;
+        // ================= TOTAL DISCOUNT (ONLY ONCE PER TRANSACTION_ID) =================
+        $discountRow = db_connect()->query("
+        SELECT SUM(discount) AS total_discount FROM (
+            SELECT transaction_id, MAX(discount) AS discount
+            FROM transactions
+            WHERE status = 0
+            GROUP BY transaction_id
+        ) t
+    ")->getRowArray();
+
+        $totalDiscount = $discountRow['total_discount'] ?? 0;
+
+        // ================= TOTAL COST =================
+        $totalCostRow = $this->transactionModel
+            ->where('status', 1)
+            ->selectSum('amount')
+            ->get()
+            ->getRowArray();
+
+        $totalCost = $totalCostRow['amount'] ?? 0;
+
+        // ================= FINAL TOTALS =================
+        $this->data['totalEarn'] = $totalEarnAmount - $totalDiscount;
+        $this->data['totalCost'] = $totalCost;
+        $this->data['totalDiscount'] = $totalDiscount;
+        $this->data['netProfit'] = ($totalEarnAmount - $totalDiscount) - $totalCost;
 
         $builder = db_connect()->table('transactions');
 
-
-        /* -------       ⭐ TODAY REPORT — HOURLY EARN VS COST -------------- */
+        /* ================= ⭐ TODAY REPORT — HOURLY EARN VS COST ================= */
         $today = date('Y-m-d');
 
         $todayData = $builder
@@ -2325,16 +2355,13 @@ class Dashboard extends Controller
             ->get()
             ->getResultArray();
 
-        // Hour labels (e.g., 0,1,2...)
-        $this->data['todayLabels'] = array_map(fn($d) => $d['hour'] . ":00", $todayData);
-        $this->data['todayEarns'] = array_map('floatval', array_column($todayData, 'earn'));
-        $this->data['todayCosts'] = array_map('floatval', array_column($todayData, 'cost'));
+        $this->data['todayLabels'] = array_map(fn($d) => $d['hour'] . ':00', $todayData);
+        $this->data['todayEarns']  = array_map('floatval', array_column($todayData, 'earn'));
+        $this->data['todayCosts']  = array_map('floatval', array_column($todayData, 'cost'));
 
-
-
-        /* ------       ⭐ CURRENT MONTH DAILY REPORT ----- */
+        /* ================= ⭐ CURRENT MONTH DAILY REPORT ================= */
         $monthStart = date('Y-m-01');
-        $monthEnd = date('Y-m-t');
+        $monthEnd   = date('Y-m-t');
 
         $currentMonthData = $builder
             ->select("
@@ -2350,11 +2377,10 @@ class Dashboard extends Controller
             ->getResultArray();
 
         $this->data['dailyLabels'] = array_column($currentMonthData, 'date');
-        $this->data['dailyEarns'] = array_map('floatval', array_column($currentMonthData, 'earn'));
-        $this->data['dailyCosts'] = array_map('floatval', array_column($currentMonthData, 'cost'));
+        $this->data['dailyEarns']  = array_map('floatval', array_column($currentMonthData, 'earn'));
+        $this->data['dailyCosts']  = array_map('floatval', array_column($currentMonthData, 'cost'));
 
-
-        /* ------       ⭐ YEARLY MONTHLY SUMMARY. -------- */
+        /* ================= ⭐ YEARLY MONTHLY SUMMARY ================= */
         $yearData = $builder
             ->select("
             MONTH(created_at) as month,
