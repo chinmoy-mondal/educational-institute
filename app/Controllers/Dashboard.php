@@ -2344,32 +2344,36 @@ class Dashboard extends Controller
         $today = date('Y-m-d');
 
         $todayData = db_connect()->query("
-            SELECT 
-                HOUR(created_at) AS hour,
+    SELECT 
+        HOUR(created_at) AS hour,
 
-                -- total earn
-                SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
+        -- earn
+        SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
 
-                -- total cost
-                SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
+        -- cost
+        SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
 
-                -- discount counted ONCE per transaction
-                (
-                    SELECT SUM(d.discount)
-                    FROM (
-                        SELECT transaction_id, MAX(discount) AS discount
-                        FROM transactions
-                        WHERE status = 0
-                        AND DATE(created_at) = '$today'
-                        GROUP BY transaction_id
-                    ) d
-                ) AS discount
+        -- discount (ONLY ONCE PER TRANSACTION PER HOUR)
+        SUM(
+            CASE 
+                WHEN status = 0 
+                THEN discount 
+                ELSE 0 
+            END
+        ) AS discount
 
-            FROM transactions
-            WHERE DATE(created_at) = '$today'
-            GROUP BY HOUR(created_at)
-            ORDER BY HOUR(created_at)
-        ")->getResultArray();
+    FROM (
+        SELECT 
+            *,
+            MAX(discount) OVER (
+                PARTITION BY transaction_id
+            ) AS discount
+        FROM transactions
+        WHERE DATE(created_at) = '$today'
+    ) t
+    GROUP BY HOUR(created_at)
+    ORDER BY HOUR(created_at)
+")->getResultArray();
 
         $this->data['todayLabels'] = array_map(fn($d) => $d['hour'] . ':00', $todayData);
         $this->data['todayEarns']  = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $todayData);
