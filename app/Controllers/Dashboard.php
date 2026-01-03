@@ -2620,7 +2620,7 @@ class Dashboard extends Controller
         $this->data['student'] = [
             'student_name' => $student['student_name'] ?? $first['sender_name'] ?? '',
             'id'           => $studentId ?? '',
-            'class'        => $student['class'] ?? $first['student_class'] ?? '',
+            'roll'        => $student['roll'] ??  '',
             'section'      => $student['section'] ?? $first['student_section'] ?? '',
         ];
 
@@ -2982,7 +2982,7 @@ class Dashboard extends Controller
 
             // ---------- LOG SMS ----------
             $this->smsLogModel->insert([
-                'student' => $student,
+                'student_name' => $student['student_name'],
                 'phone_number' => $studentPhone,
                 'message'      => $message,
                 'status'       => $error ? 0 : 1,
