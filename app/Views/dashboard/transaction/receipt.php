@@ -146,9 +146,9 @@ th {
             <div class="hr"></div>
 
             <div class="info">
-                <b>Student Name:</b> <?= esc($student['student_name'] ?? 'N/A') ?><br>
-                <b>Student ID:</b> <?= esc($student['id'] ?? '') ?><br>
-                <b>Class:</b> <?= esc($student['class'] ?? '') ?><br>
+                <b>Student Name:</b> <?= esc($student['student_name'] ?? 'N/A') ?>
+                <b>Student ID:</b> <?= esc($student['id'] ?? '') ?>
+                <b>Index No:</b> <?= esc($student['roll'] ?? '') ?>
                 <b>Section:</b> <?= esc($student['section'] ?? '') ?>
             </div>
 
