@@ -115,6 +115,19 @@ th {
     border-top: 2px dashed #000;
     margin: 8mm 0;
 }
+
+.info {
+    display: flex;
+    width: 100%;
+}
+
+.info>div {
+    flex: 1;
+    /* equal width */
+    padding: 5px 8px;
+    box-sizing: border-box;
+    white-space: nowrap;
+}
 </style>
 
 <div class="container-fluid px-4 py-3">
@@ -146,10 +159,10 @@ th {
             <div class="hr"></div>
 
             <div class="info">
-                <b>Student Name:</b> <?= esc($student['student_name'] ?? 'N/A') ?>
-                <b>Student ID:</b> <?= esc($student['id'] ?? '') ?>
-                <b>Index No:</b> <?= esc($student['roll'] ?? '') ?>
-                <b>Section:</b> <?= esc($student['section'] ?? '') ?>
+                <div><b>Student Name:</b> <?= esc($student['student_name'] ?? 'N/A') ?></div>
+                <div><b>Student ID:</b> <?= esc($student['id'] ?? '') ?></div>
+                <div><b>Index No:</b> <?= esc($student['roll'] ?? '') ?></div>
+                <div><b>Section:</b> <?= esc($student['section'] ?? '') ?></div>
             </div>
 
             <div class="hr"></div>
