@@ -2706,14 +2706,16 @@ class Dashboard extends Controller
 
         // ---------------- SQL QUERY (TODAY ONLY) ----------------
         $sql = "
-        (
+        SELECT sender_name, receiver_name, month, total_pay, total_discount, net_amount
+        FROM (
             SELECT
                 sender_name,
                 receiver_name,
                 month,
                 SUM(amount) AS total_pay,
                 SUM(discount) AS total_discount,
-                SUM(amount) - SUM(discount) AS net_amount
+                SUM(amount) - SUM(discount) AS net_amount,
+                0 AS sort_order
             FROM (
                 SELECT
                     transaction_id,
@@ -2728,16 +2730,17 @@ class Dashboard extends Controller
                 GROUP BY transaction_id, sender_name, receiver_name, month
             ) t
             GROUP BY sender_name, receiver_name, month
-        )
-        UNION ALL
-        (
+
+            UNION ALL
+
             SELECT
                 'TOTAL' AS sender_name,
                 '' AS receiver_name,
                 '' AS month,
                 SUM(amount) AS total_pay,
                 SUM(discount) AS total_discount,
-                SUM(amount) - SUM(discount) AS net_amount
+                SUM(amount) - SUM(discount) AS net_amount,
+                1 AS sort_order
             FROM (
                 SELECT
                     transaction_id,
@@ -2748,7 +2751,8 @@ class Dashboard extends Controller
                   AND DATE(created_at) = CURDATE()
                 GROUP BY transaction_id
             ) x
-        )
+        ) final_table
+        ORDER BY sort_order ASC, net_amount DESC
     ";
 
         $this->data['report'] = db_connect()->query($sql)->getResultArray();

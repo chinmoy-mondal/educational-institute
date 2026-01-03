@@ -40,14 +40,14 @@
                 </tbody>
 
                 <?php if (!empty($report)): ?>
-                <tfoot class="table-secondary fw-bold text-end">
+                <tfoot class="table-dark fw-bold text-end">
                     <?php
                         $totalPay = array_sum(array_column($report, 'total_pay'));
                         $totalDiscount = array_sum(array_column($report, 'total_discount'));
                         $totalNet = array_sum(array_column($report, 'net_amount'));
                         ?>
                     <tr>
-                        <td colspan="3" class="text-center">TOTAL</td>
+                        <td colspan="3" class="text-center">GRAND TOTAL</td>
                         <td><?= number_format($totalPay, 2) ?></td>
                         <td><?= number_format($totalDiscount, 2) ?></td>
                         <td class="<?= ($totalNet < 0) ? 'text-danger' : 'text-success' ?>">
