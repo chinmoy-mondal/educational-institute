@@ -2614,7 +2614,16 @@ class Dashboard extends Controller
 
     public function sms_log()
     {
-        $this->data['title'] = 'SMS Log';
+        $this->data['title'] = 'Transaction Dashboard';
+        $this->data['activeSection'] = 'accounts';
+
+        $this->data['navbarItems'] = [
+            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+        ];
 
         // Optional filter: status (1 = Sent, 0 = Failed)
         $selectedStatus = $this->request->getGet('status');
