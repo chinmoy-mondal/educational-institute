@@ -132,8 +132,8 @@ class Dashboard extends Controller
         $this->data['navbarItems'] = [
             ['label' => 'Dashboard', 'url' => base_url('dashboard')],
             ['label' => 'Calendar', 'url' => base_url('calendar')],
-            ['label' => 'Result', 'url' => base_url('ad-result')],
-            ['label' => 'Accounts', 'url' => base_url('accounts')],
+            ['label' => 'Result', 'url' => base_url('admin/tabulation_form')],
+            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
         ];
         $this->data['total_students'] = $this->studentModel->where('account_status', 0)->countAll();
         $this->data['total_users'] = $this->userModel->where('account_status !=', 0)->countAllResults();
@@ -2690,6 +2690,69 @@ class Dashboard extends Controller
 
         // Load receipt view
         return view('dashboard/transaction/receipt', $this->data);
+    }
+
+    public function studentPaymentReport()
+    {
+        $this->data['title'] = 'Student Payment Report';
+        $this->data['activeSection'] = 'reports';
+        $this->data['navbarItems'] = [
+            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+        ];
+
+        // ---------------- SQL QUERY ----------------
+        $sql = "
+        (
+            SELECT
+                sender_name,
+                receiver_name,
+                month,
+                SUM(amount) AS total_pay,
+                SUM(discount) AS total_discount,
+                SUM(amount) - SUM(discount) AS net_amount
+            FROM (
+                SELECT
+                    transaction_id,
+                    sender_name,
+                    receiver_name,
+                    month,
+                    SUM(amount) AS amount,
+                    MAX(discount) AS discount
+                FROM transactions
+                WHERE status = 0
+                GROUP BY transaction_id, sender_name, receiver_name, month
+            ) t
+            GROUP BY sender_name, receiver_name, month
+        )
+        UNION ALL
+        (
+            SELECT
+                'TOTAL' AS sender_name,
+                '' AS receiver_name,
+                '' AS month,
+                SUM(amount) AS total_pay,
+                SUM(discount) AS total_discount,
+                SUM(amount) - SUM(discount) AS net_amount
+            FROM (
+                SELECT
+                    transaction_id,
+                    SUM(amount) AS amount,
+                    MAX(discount) AS discount
+                FROM transactions
+                WHERE status = 0
+                GROUP BY transaction_id
+            ) x
+        )
+        ORDER BY net_amount DESC
+    ";
+
+        $this->data['report'] = db_connect()->query($sql)->getResultArray();
+
+        return view('dashboard/transaction/student_payment_report', $this->data);
     }
 
     public function sms_log()

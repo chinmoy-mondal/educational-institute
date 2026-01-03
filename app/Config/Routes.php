@@ -144,6 +144,7 @@ $routes->get('admin/receipt/(:any)', 'Dashboard::receipt/$1');
 $routes->get('admin/pay_student_request/(:num)', 'Dashboard::payStudentRequest/$1');
 $routes->post('admin/student-payment', 'Dashboard::studentPayment');
 $routes->get('admin/studentPaymentHistory/(:num)', 'Dashboard::studentPaymentHistory/$1');
+$routes->get('admin/student-payment-report', 'Dashboard::studentPaymentReport');
 
 
 $routes->get('admin/sms-log', 'Dashboard::sms_log');
