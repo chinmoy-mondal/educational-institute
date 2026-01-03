@@ -146,6 +146,9 @@ $routes->post('admin/student-payment', 'Dashboard::studentPayment');
 $routes->get('admin/studentPaymentHistory/(:num)', 'Dashboard::studentPaymentHistory/$1');
 
 
+$routes->get('admin/sms-log', 'Dashboard::sms_log');
+
+
 $routes->get('/user_permit/(:num)', 'Dashboard::user_permit/$1');
 $routes->get('/user_delete/(:num)', 'Dashboard::user_delete/$1');
 $routes->get('generate-id-cards', 'IdCardGenerator::generate');

@@ -2515,87 +2515,6 @@ class Dashboard extends Controller
         return view('dashboard/transaction/std_pay', $this->data);
     }
 
-    // public function receipt($transactionId)
-    // {
-    //     $this->data['title'] = 'Teacher Earnings';
-    //     $this->data['activeSection'] = 'accounts';
-
-    //     $this->data['navbarItems'] = [
-    //         ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-    //         ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-    //         ['label' => 'Students', 'url' => base_url('admin/std_pay')],
-    //         ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-    //         ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
-    //     ];
-
-    //     // Fetch all transactions for this ID
-    //     $transactions = $this->transactionModel
-    //         ->where('transaction_id', $transactionId)
-    //         ->findAll();
-
-    //     if (empty($transactions)) {
-    //         return redirect()->to(base_url('admin/transactions'))
-    //             ->with('error', 'Receipt not found.');
-    //     }
-
-    //     $first = $transactions[0];
-
-    //     // Fetch student info
-    //     $studentId = $first['sender_id'] ?? null;
-    //     $student   = $studentId ? $this->studentModel->find($studentId) : [];
-
-    //     $this->data['student'] = [
-    //         'student_name' => $student['student_name'] ?? $first['sender_name'] ?? '',
-    //         'id'           => $studentId ?? '',
-    //         'class'        => $student['class'] ?? $first['student_class'] ?? '',
-    //         'section'      => $student['section'] ?? $first['student_section'] ?? '',
-    //     ];
-
-    //     // Receiver info
-    //     $this->data['receiver'] = [
-    //         'name' => $first['receiver_name'] ?? ''
-    //     ];
-
-    //     $this->data['transaction_id'] = $transactionId;
-    //     $this->data['date'] = $first['created_at'] ?? date('Y-m-d');
-
-    //     // Prepare fees with only current month transactions
-    //     $currentMonth = date('m');
-    //     $fees = [];
-    //     $totalPaid = 0;
-    //     $discountApplied = false;
-
-    //     foreach ($transactions as $t) {
-    //         $transactionMonth = date('m', strtotime($t['created_at'] ?? date('Y-m-d')));
-    //         if ($transactionMonth != $currentMonth) continue; // Skip other months
-
-    //         $amount = floatval($t['amount'] ?? 0);
-
-    //         // Apply discount only to first transaction
-    //         $discount = 0;
-    //         if (!$discountApplied && !empty($t['discount'])) {
-    //             $discount = floatval($t['discount']);
-    //             $discountApplied = true;
-    //         }
-
-    //         $fees[] = [
-    //             'title'  => $t['purpose'] ?? '',
-    //             'month'  => $t['month'] ?? '',
-    //             'amount' => $amount,
-    //             'paid'   => $amount >= (($t['full_amount'] ?? $amount)) ? true : false
-    //         ];
-
-    //         $totalPaid += $amount;
-    //     }
-
-    //     $this->data['fees'] = $fees;
-    //     $this->data['discount'] = $discount ?? 0;
-    //     $this->data['totalAmount'] = $totalPaid;
-    //     $this->data['netAmount'] = $totalPaid - ($discount ?? 0);
-
-    //     // Load receipt view
-    //     return view('dashboard/transaction/receipt', $this->data);
-    // }
 
     public function receipt($transactionId)
     {
@@ -2691,6 +2610,33 @@ class Dashboard extends Controller
 
         // Load receipt view
         return view('dashboard/transaction/receipt', $this->data);
+    }
+
+    public function sms_log()
+    {
+        $this->data['title'] = 'SMS Log';
+
+        // Optional filter: status (1 = Sent, 0 = Failed)
+        $selectedStatus = $this->request->getGet('status');
+        $this->data['selectedStatus'] = $selectedStatus;
+
+        // Base query
+        $query = $this->smsLogModel->orderBy('id', 'DESC');
+
+        // Apply filter if status is selected
+        if ($selectedStatus !== null && $selectedStatus !== '') {
+            $query->where('status', $selectedStatus);
+        }
+
+        // Fetch SMS records
+        $this->data['smsList'] = $query->findAll();
+
+        // Count total sent SMS (status = 1)
+        $this->data['smsTotal'] = $this->smsLogModel
+            ->where('status', 1)
+            ->countAllResults();
+
+        return view('dashboard/transaction/sms_log', $this->data);
     }
 
     public function pay_stat()
