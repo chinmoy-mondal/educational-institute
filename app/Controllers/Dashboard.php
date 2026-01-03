@@ -2343,63 +2343,104 @@ class Dashboard extends Controller
         /* ================= ⭐ TODAY REPORT — HOURLY EARN VS COST ================= */
         $today = date('Y-m-d');
 
-        $todayData = $builder
-            ->select("
-            HOUR(created_at) as hour,
-            SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) as earn,
-            SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) as cost
-        ")
-            ->where('DATE(created_at)', $today)
-            ->groupBy('HOUR(created_at)')
-            ->orderBy('HOUR(created_at)', 'ASC')
-            ->get()
-            ->getResultArray();
+        $todayData = db_connect()->query("
+            SELECT 
+                HOUR(created_at) AS hour,
+
+                -- total earn
+                SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
+
+                -- total cost
+                SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
+
+                -- discount counted ONCE per transaction
+                (
+                    SELECT SUM(d.discount)
+                    FROM (
+                        SELECT transaction_id, MAX(discount) AS discount
+                        FROM transactions
+                        WHERE status = 0
+                        AND DATE(created_at) = '$today'
+                        GROUP BY transaction_id
+                    ) d
+                ) AS discount
+
+            FROM transactions
+            WHERE DATE(created_at) = '$today'
+            GROUP BY HOUR(created_at)
+            ORDER BY HOUR(created_at)
+        ")->getResultArray();
 
         $this->data['todayLabels'] = array_map(fn($d) => $d['hour'] . ':00', $todayData);
-        $this->data['todayEarns']  = array_map('floatval', array_column($todayData, 'earn'));
-        $this->data['todayCosts']  = array_map('floatval', array_column($todayData, 'cost'));
-
+        $this->data['todayEarns']  = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $todayData);
+        $this->data['todayCosts']  = array_map(fn($d) => floatval($d['cost']), $todayData);
         /* ================= ⭐ CURRENT MONTH DAILY REPORT ================= */
         $monthStart = date('Y-m-01');
         $monthEnd   = date('Y-m-t');
 
-        $currentMonthData = $builder
-            ->select("
-            DATE(created_at) as date,
-            SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) as earn,
-            SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) as cost
-        ")
-            ->where('created_at >=', $monthStart)
-            ->where('created_at <=', $monthEnd)
-            ->groupBy('DATE(created_at)')
-            ->orderBy('DATE(created_at)', 'ASC')
-            ->get()
-            ->getResultArray();
+        $currentMonthData = db_connect()->query("
+            SELECT 
+                DATE(created_at) AS date,
+
+                SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
+                SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
+
+                (
+                    SELECT SUM(d.discount)
+                    FROM (
+                        SELECT transaction_id, MAX(discount) AS discount
+                        FROM transactions t2
+                        WHERE t2.status = 0
+                        AND DATE(t2.created_at) = DATE(t1.created_at)
+                        GROUP BY transaction_id
+                    ) d
+                ) AS discount
+
+            FROM transactions t1
+            WHERE created_at BETWEEN '$monthStart' AND '$monthEnd'
+            GROUP BY DATE(created_at)
+            ORDER BY DATE(created_at)
+        ")->getResultArray();
 
         $this->data['dailyLabels'] = array_column($currentMonthData, 'date');
-        $this->data['dailyEarns']  = array_map('floatval', array_column($currentMonthData, 'earn'));
-        $this->data['dailyCosts']  = array_map('floatval', array_column($currentMonthData, 'cost'));
+        $this->data['dailyEarns']  = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $currentMonthData);
+        $this->data['dailyCosts']  = array_map(fn($d) => floatval($d['cost']), $currentMonthData);
 
         /* ================= ⭐ YEARLY MONTHLY SUMMARY ================= */
-        $yearData = $builder
-            ->select("
-            MONTH(created_at) as month,
-            SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) as earn,
-            SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) as cost
-        ")
-            ->where('YEAR(created_at)', date('Y'))
-            ->groupBy('MONTH(created_at)')
-            ->orderBy('MONTH(created_at)', 'ASC')
-            ->get()
-            ->getResultArray();
+        $year = date('Y');
+
+        $yearData = db_connect()->query("
+            SELECT 
+                MONTH(created_at) AS month,
+
+                SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
+                SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
+
+                (
+                    SELECT SUM(d.discount)
+                    FROM (
+                        SELECT transaction_id, MAX(discount) AS discount
+                        FROM transactions t2
+                        WHERE t2.status = 0
+                        AND YEAR(t2.created_at) = $year
+                        AND MONTH(t2.created_at) = MONTH(t1.created_at)
+                        GROUP BY transaction_id
+                    ) d
+                ) AS discount
+
+            FROM transactions t1
+            WHERE YEAR(created_at) = $year
+            GROUP BY MONTH(created_at)
+            ORDER BY MONTH(created_at)
+        ")->getResultArray();
 
         $this->data['monthLabels'] = array_map(
             fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)),
             $yearData
         );
 
-        $this->data['monthEarns'] = array_map('floatval', array_column($yearData, 'earn'));
-        $this->data['monthCosts'] = array_map('floatval', array_column($yearData, 'cost'));
+        $this->data['monthEarns'] = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $yearData);
+        $this->data['monthCosts'] = array_map(fn($d) => floatval($d['cost']), $yearData);
 
         return view('dashboard/transaction/transaction_dashboard', $this->data);
     }
