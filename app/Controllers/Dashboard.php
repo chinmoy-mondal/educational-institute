@@ -2692,9 +2692,9 @@ class Dashboard extends Controller
         return view('dashboard/transaction/receipt', $this->data);
     }
 
-    public function studentPaymentReport()
+    public function studentPaymentReportToday()
     {
-        $this->data['title'] = 'Student Payment Report';
+        $this->data['title'] = 'Today Student Payment Report';
         $this->data['activeSection'] = 'reports';
         $this->data['navbarItems'] = [
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
@@ -2704,7 +2704,7 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        // ---------------- SQL QUERY ----------------
+        // ---------------- SQL QUERY (TODAY ONLY) ----------------
         $sql = "
         (
             SELECT
@@ -2724,6 +2724,7 @@ class Dashboard extends Controller
                     MAX(discount) AS discount
                 FROM transactions
                 WHERE status = 0
+                  AND DATE(created_at) = CURDATE()
                 GROUP BY transaction_id, sender_name, receiver_name, month
             ) t
             GROUP BY sender_name, receiver_name, month
@@ -2744,10 +2745,10 @@ class Dashboard extends Controller
                     MAX(discount) AS discount
                 FROM transactions
                 WHERE status = 0
+                  AND DATE(created_at) = CURDATE()
                 GROUP BY transaction_id
             ) x
         )
-        ORDER BY net_amount DESC
     ";
 
         $this->data['report'] = db_connect()->query($sql)->getResultArray();
