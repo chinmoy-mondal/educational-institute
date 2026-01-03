@@ -26,15 +26,24 @@
 
     <?php if (!empty($smsList)): ?>
 
-    <!-- Total Sent SMS Box -->
+    <!-- Total Sent / Failed SMS Boxes -->
     <div class="row mb-3">
         <div class="col-lg-3 col-6">
-            <div class="small-box bg-info">
+            <div class="small-box bg-success">
                 <div class="inner">
                     <h3><?= esc($smsTotal) ?></h3>
                     <p>Total Sent SMS</p>
                 </div>
-                <div class="icon"><i class="fas fa-sms"></i></div>
+                <div class="icon"><i class="fas fa-check-circle"></i></div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3><?= esc($smsFailed) ?></h3>
+                    <p>Total Failed SMS</p>
+                </div>
+                <div class="icon"><i class="fas fa-times-circle"></i></div>
             </div>
         </div>
     </div>
@@ -43,7 +52,6 @@
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
             <strong>SMS Log List</strong>
-            <!-- Professional Resend Button -->
             <a href="<?= base_url('admin/resend-failed-sms') ?>" class="btn btn-warning btn-sm">
                 <i class="fas fa-redo"></i> Resend All Failed SMS
             </a>

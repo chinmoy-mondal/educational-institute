@@ -2711,6 +2711,11 @@ class Dashboard extends Controller
             ->where('status', 1)
             ->countAllResults();
 
+        // Total failed SMS (status=0)
+        $this->data['smsFailed'] = $this->smsLogModel
+            ->where('status', 0)
+            ->countAllResults();
+
         return view('dashboard/transaction/sms_log', $this->data);
     }
 
