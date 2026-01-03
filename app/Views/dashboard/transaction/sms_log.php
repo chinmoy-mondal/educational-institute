@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <h4 class="mb-4">SMS History</h4>
 
-    <!-- Optional: Filter by Status -->
+    <!-- Status Filter -->
     <form method="get" action="<?= base_url('admin/sms-log') ?>" class="mb-4">
         <div class="row g-2 align-items-center">
             <div class="col-md-4">
@@ -21,9 +21,23 @@
 
     <?php if (!empty($smsList)): ?>
 
+    <!-- Total Sent SMS Box -->
+    <div class="row mb-3">
+        <div class="col-lg-3 col-6">
+            <div class="small-box bg-info">
+                <div class="inner">
+                    <h3><?= esc($smsTotal) ?></h3>
+                    <p>Total Sent SMS</p>
+                </div>
+                <div class="icon"><i class="fas fa-sms"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SMS Log Table -->
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
-            <strong>SMS Log</strong>
+            <strong>SMS Log List</strong>
         </div>
 
         <div class="card-body table-responsive p-0">
@@ -31,7 +45,8 @@
                 <thead class="table-light">
                     <tr>
                         <th>SL</th>
-                        <th>Mobile</th>
+                        <th>Student Name</th>
+                        <th>Phone Number</th>
                         <th>Message</th>
                         <th>Status</th>
                         <th>Sent At</th>
@@ -42,34 +57,27 @@
                     <?php foreach ($smsList as $sms): ?>
                     <tr>
                         <td><?= $sl++ ?></td>
-                        <td><?= esc($sms['mobile']) ?></td>
-                        <td><?= esc($sms['message']) ?></td>
+                        <td><?= esc($sms['student_name'] ?? '-') ?></td>
+                        <td><?= esc($sms['phone_number'] ?? '-') ?></td>
+                        <td><?= esc($sms['message'] ?? '-') ?></td>
                         <td>
-                            <?php if ($sms['status'] == 1): ?>
+                            <?php if (($sms['status'] ?? 0) == 1): ?>
                             <span class="badge bg-success">Sent</span>
                             <?php else: ?>
                             <span class="badge bg-danger">Failed</span>
                             <?php endif; ?>
                         </td>
-                        <td><?= date('d M, Y h:i A', strtotime($sms['created_at'])) ?></td>
+                        <td><?= isset($sms['created_at']) ? date('d M, Y h:i A', strtotime($sms['created_at'])) : '-' ?>
+                        </td>
                     </tr>
-                    <?php endforeach; ?>
+                    <?php endforeach ?>
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- Total Sent SMS -->
-    <div class="alert alert-info mt-3">
-        <strong>Total Sent SMS:</strong> <?= esc($smsTotal) ?>
-    </div>
-
     <?php else: ?>
-
-    <div class="alert alert-warning">
-        No SMS records found.
-    </div>
-
+    <div class="alert alert-warning">No SMS records found.</div>
     <?php endif; ?>
 
 </div>

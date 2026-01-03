@@ -2614,8 +2614,8 @@ class Dashboard extends Controller
 
     public function sms_log()
     {
-        $this->data['title'] = 'Transaction Dashboard';
-        $this->data['activeSection'] = 'accounts';
+        $this->data['title'] = 'Student Payment';
+        $this->data['activeSection'] = 'payments';
 
         $this->data['navbarItems'] = [
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
@@ -2625,14 +2625,13 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        // Optional filter: status (1 = Sent, 0 = Failed)
+        // Optional filter: status
         $selectedStatus = $this->request->getGet('status');
         $this->data['selectedStatus'] = $selectedStatus;
 
         // Base query
         $query = $this->smsLogModel->orderBy('id', 'DESC');
 
-        // Apply filter if status is selected
         if ($selectedStatus !== null && $selectedStatus !== '') {
             $query->where('status', $selectedStatus);
         }
@@ -2640,7 +2639,7 @@ class Dashboard extends Controller
         // Fetch SMS records
         $this->data['smsList'] = $query->findAll();
 
-        // Count total sent SMS (status = 1)
+        // Total sent SMS (status=1)
         $this->data['smsTotal'] = $this->smsLogModel
             ->where('status', 1)
             ->countAllResults();
