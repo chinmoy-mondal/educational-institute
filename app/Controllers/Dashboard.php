@@ -2344,33 +2344,35 @@ class Dashboard extends Controller
         $today = date('Y-m-d');
 
         $todayData = db_connect()->query("
-            SELECT 
-                HOUR(created_at) AS hour,
+    SELECT
+        HOUR(created_at) AS hour,
 
-                -- total earn
-                SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
+        -- total earn
+        SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
 
-                -- total cost
-                SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
+        -- total cost
+        SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
 
-                -- discount counted ONCE per transaction
-                (
-                    SELECT SUM(d.discount)
-                    FROM (
-                        SELECT transaction_id, MAX(discount) AS discount
-                        FROM transactions
-                        WHERE status = 0
-                        AND DATE(created_at) = '$today'
-                        GROUP BY transaction_id
-                    ) d
-                ) AS discount
+        -- discount counted ONCE per transaction per hour
+        (
+            SELECT SUM(d.discount)
+            FROM (
+                SELECT transaction_id, MAX(discount) AS discount
+                FROM transactions t2
+                WHERE status = 0
+                  AND DATE(created_at) = '$today'
+                  AND HOUR(created_at) = HOUR(t1.created_at)
+                GROUP BY transaction_id
+            ) d
+        ) AS discount
 
-            FROM transactions
-            WHERE DATE(created_at) = '$today'
-            GROUP BY HOUR(created_at)
-            ORDER BY HOUR(created_at)
-        ")->getResultArray();
+    FROM transactions t1
+    WHERE DATE(created_at) = '$today'
+    GROUP BY HOUR(created_at)
+    ORDER BY HOUR(created_at)
+")->getResultArray();
 
+        // Prepare labels and values
         $this->data['todayLabels'] = array_map(fn($d) => $d['hour'] . ':00', $todayData);
         $this->data['todayEarns']  = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $todayData);
         $this->data['todayCosts']  = array_map(fn($d) => floatval($d['cost']), $todayData);
