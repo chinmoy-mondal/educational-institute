@@ -2140,7 +2140,7 @@ class Dashboard extends Controller
     public function class_promote()
     {
         $ranking = $this->rankingModel
-            ->select('student_id, class + 1 AS class, new_roll')
+            ->select('student_id, class + 1 AS class, new_roll', false) // false disables escaping
             ->findAll();
         echo "<pre>";
         print_r($ranking);
