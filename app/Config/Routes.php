@@ -106,6 +106,7 @@ $routes->get('admin/test_result', 'Dashboard::call_test_result');
 $routes->get('admin/topsheet', 'Dashboard::make_top_sheet');
 $routes->get('admin/update-new-roll/(:num)', 'Dashboard::updateNewRollByClass/$1');
 $routes->get('admin/print_topsheet/(:num)', 'Dashboard::print_topsheet/$1');
+$routes->get('admin/class_promote', 'Dashboard::class_promote');
 
 
 
@@ -168,9 +169,9 @@ $routes->get('admin/teacher-attendance', 'Dashboard::teacherAttendance');
 
 
 
-$routes->get('drug', 'Health::drugs');
-$routes->get('prescription', 'Health::prescription');
-$routes->get('search-drugs', 'Health::searchDrugs');
+// $routes->get('drug', 'Health::drugs');
+// $routes->get('prescription', 'Health::prescription');
+// $routes->get('search-drugs', 'Health::searchDrugs');
 
 
 $routes->set404Override(function () {

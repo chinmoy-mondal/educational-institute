@@ -2137,6 +2137,15 @@ class Dashboard extends Controller
         ]);
     }
 
+    public function class_promote()
+    {
+        $ranking = $this->rankingModel->findAll();
+        echo "<pre>";
+        print_r($ranking);
+        echo "</pre>";
+    }
+
+
     public function showMarksheet()
     {
         $this->data['title'] = 'Marksheet';
