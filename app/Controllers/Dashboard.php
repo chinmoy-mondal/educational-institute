@@ -2139,7 +2139,9 @@ class Dashboard extends Controller
 
     public function class_promote()
     {
-        $ranking = $this->rankingModel->findAll();
+        $ranking = $this->rankingModel
+            ->select('student_id, class, new_roll')
+            ->findAll();
         echo "<pre>";
         print_r($ranking);
         echo "</pre>";
