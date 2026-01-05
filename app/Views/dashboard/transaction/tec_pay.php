@@ -32,9 +32,8 @@
                         <td>৳ <?= number_format($t['unpaid'], 2) ?></td>
 
                         <?php if (
-                                    $t['account_status'] > 1 &&
-                                    $t['unpaid'] > 0 &&
-                                    ($teachers_id ?? 0) > 1
+                                isset($teachers_id) &&
+                                $teachers_id >= 2
                                 ): ?>
                         <!-- ✅ FORM -->
                         <form method="post" action="<?= base_url('admin/reset_amount/' . $t['id']) ?>">
