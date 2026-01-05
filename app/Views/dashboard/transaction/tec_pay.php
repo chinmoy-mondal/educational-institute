@@ -1,6 +1,5 @@
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
-<?php echo 'hello' . $teachers_id; ?>
 <div class="container-fluid">
     <h3 class="mb-4">Teacher Earnings Dashboard</h3>
 

@@ -2473,8 +2473,6 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        // Logged-in user ID (permission check)
-        $this->data['teachers_id'] = $this->session->get('user_id') ?? 0;
 
         // Fetch teachers
         $teachers = $this->userModel
@@ -2515,7 +2513,26 @@ class Dashboard extends Controller
             $t['unpaid']       = $t['total_earned'];
         }
 
+
+        // Get logged-in user ID from session
+        $user_id = $this->session->get('user_id') ?? 0;
+
+        // Load TeacherModel (or UserModel)
+        $teacherModel = $this->userModel;
+
+        // Fetch account_status for this user
+        $account_status = 0; // default
+        if ($user_id > 0) {
+            $user = $teacherModel->select('account_status')->find($user_id);
+            if ($user) {
+                $account_status = $user['account_status'];
+            }
+        }
+
+
         $this->data['teachers'] = $teachers;
+        echo account_status;
+        $this->data['account_status'] = $account_status;
 
         return view('dashboard/transaction/tec_pay', $this->data);
     }
