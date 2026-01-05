@@ -2,10 +2,16 @@
 <?= $this->section('content') ?>
 
 <style>
-/* Right-align numbers and use monospace for decimal alignment */
+/* Right-align numbers and use clean monospace font for decimal alignment */
 .decimal-align {
     text-align: right;
-    font-family: monospace;
+    font-family: 'Consolas', 'Courier New', monospace;
+}
+
+/* Make input numbers match table style */
+.decimal-input {
+    text-align: right;
+    font-family: 'Consolas', 'Courier New', monospace;
 }
 </style>
 
@@ -42,7 +48,8 @@
                             <?= csrf_field() ?>
                             <td>
                                 <input type="number" step="0.01" name="pay_amount"
-                                    class="form-control form-control-sm text-center" max="<?= $t['unpaid'] ?>" required
+                                    class="form-control form-control-sm decimal-input" max="<?= $t['unpaid'] ?>"
+                                    required
                                     value="<?= $t['unpaid'] > 0 ? number_format($t['unpaid'], 2, '.', '') : '0.00' ?>">
                             </td>
                             <td>
