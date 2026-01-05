@@ -4,31 +4,75 @@
 <div class="container-fluid">
     <h3 class="mb-4">Teacher Earnings Dashboard</h3>
 
-    <div class="row">
-        <?php foreach ($teachers as $t): ?>
-            <div class="col-lg-2 col-6 mb-3">
-                <div class="small-box <?= $t['unpaid'] > 0 ? 'bg-warning' : 'bg-success' ?>">
-                    <div class="inner text-center">
-                        <h4>৳ <?= number_format($t['total_earned'], 2) ?></h4>
-                        <p><?= esc($t['name']) ?></p>
-                    </div>
-                    <div class="icon">
-                        <i class="fas fa-user-tie"></i>
-                    </div>
+    <div class="card">
+        <div class="card-body table-responsive">
+            <table class="table table-bordered table-striped table-sm">
+                <thead class="thead-dark">
+                    <tr class="text-center">
+                        <th>#</th>
+                        <th>Teacher Name</th>
+                        <th>Total Earned (৳)</th>
+                        <th>Unpaid (৳)</th>
+                        <th>Pay Amount</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($teachers)): ?>
+                    <?php $i = 1;
+                        foreach ($teachers as $t): ?>
+                    <tr class="text-center">
+                        <td><?= $i++ ?></td>
 
-                    <!-- Make button more visible -->
-                    <div class="text-center mb-2 mt-1">
+                        <td class="text-left">
+                            <?= esc($t['name']) ?>
+                        </td>
+
+                        <td>
+                            ৳ <?= number_format($t['total_earned'], 2) ?>
+                        </td>
+
+                        <td>
+                            ৳ <?= number_format($t['unpaid'], 2) ?>
+                        </td>
+
+                        <?php if ($t['account_status'] > 1 && $t['unpaid'] > 0): ?>
+                        <!-- Eligible to take money -->
                         <form method="post" action="<?= base_url('admin/reset_amount/' . $t['id']) ?>">
                             <?= csrf_field() ?>
-                            <button type="submit" class="btn btn-sm btn-danger btn-block">
-                                Mark as Paid <i class="fas fa-check"></i>
-                            </button>
-                        </form>
-                    </div>
 
-                </div>
-            </div>
-        <?php endforeach; ?>
+                            <td>
+                                <input type="number" step="0.01" name="pay_amount"
+                                    class="form-control form-control-sm text-center" max="<?= $t['unpaid'] ?>"
+                                    placeholder="Amount">
+                            </td>
+
+                            <td>
+                                <button type="submit" class="btn btn-sm btn-success">
+                                    Pay <i class="fas fa-check"></i>
+                                </button>
+                            </td>
+                        </form>
+                        <?php else: ?>
+                        <!-- Not eligible -->
+                        <td colspan="2">
+                            <span class="badge badge-secondary">
+                                Not Eligible
+                            </span>
+                        </td>
+                        <?php endif; ?>
+                    </tr>
+                    <?php endforeach; ?>
+                    <?php else: ?>
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">
+                            No teachers found
+                        </td>
+                    </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
