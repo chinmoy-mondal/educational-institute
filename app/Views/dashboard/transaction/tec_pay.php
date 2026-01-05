@@ -18,33 +18,31 @@
                     </tr>
                 </thead>
                 <tbody>
+
                     <?php if (!empty($teachers)): ?>
                     <?php $i = 1;
                         foreach ($teachers as $t): ?>
                     <tr class="text-center">
                         <td><?= $i++ ?></td>
 
-                        <td class="text-left">
-                            <?= esc($t['name']) ?>
-                        </td>
+                        <td class="text-left"><?= esc($t['name']) ?></td>
 
-                        <td>
-                            ৳ <?= number_format($t['total_earned'], 2) ?>
-                        </td>
+                        <td>৳ <?= number_format($t['total_earned'], 2) ?></td>
 
-                        <td>
-                            ৳ <?= number_format($t['unpaid'], 2) ?>
-                        </td>
+                        <td>৳ <?= number_format($t['unpaid'], 2) ?></td>
 
-                        <?php if ($t['account_status'] > 1 && $t['unpaid'] > 0): ?>
-                        <!-- Eligible to take money -->
+                        <?php if (
+                                    $t['account_status'] > 1 &&
+                                    $t['unpaid'] > 0 &&
+                                    ($teachers_id ?? 0) > 1
+                                ): ?>
+                        <!-- ✅ FORM -->
                         <form method="post" action="<?= base_url('admin/reset_amount/' . $t['id']) ?>">
                             <?= csrf_field() ?>
 
                             <td>
                                 <input type="number" step="0.01" name="pay_amount"
-                                    class="form-control form-control-sm text-center" max="<?= $t['unpaid'] ?>"
-                                    placeholder="Amount">
+                                    class="form-control form-control-sm text-center" max="<?= $t['unpaid'] ?>" required>
                             </td>
 
                             <td>
@@ -54,13 +52,13 @@
                             </td>
                         </form>
                         <?php else: ?>
-                        <!-- Not eligible -->
                         <td colspan="2">
                             <span class="badge badge-secondary">
                                 Not Eligible
                             </span>
                         </td>
                         <?php endif; ?>
+
                     </tr>
                     <?php endforeach; ?>
                     <?php else: ?>
@@ -70,6 +68,7 @@
                         </td>
                     </tr>
                     <?php endif; ?>
+
                 </tbody>
             </table>
         </div>

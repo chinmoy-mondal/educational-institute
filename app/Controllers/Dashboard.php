@@ -2473,13 +2473,16 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        // 1️⃣ Teachers
+        // Logged-in user ID (permission check)
+        $this->data['teachers_id'] = $this->session->get('user_id') ?? 0;
+
+        // Fetch teachers
         $teachers = $this->userModel
             ->where('account_status !=', 0)
             ->orderBy('position', 'ASC')
             ->findAll();
 
-        // 2️⃣ Subquery using MODEL builder
+        // ===== Earnings calculation (discount-safe) =====
         $builder = $this->transactionModel->builder();
 
         $subQuery = $builder
@@ -2494,7 +2497,6 @@ class Dashboard extends Controller
             ->groupBy('receiver_id, transaction_id')
             ->getCompiledSelect();
 
-        // 3️⃣ Final aggregation (still via model builder)
         $finalBuilder = $this->transactionModel->builder("($subQuery) t");
 
         $totals = $finalBuilder
@@ -2506,7 +2508,6 @@ class Dashboard extends Controller
             ->get()
             ->getResultArray();
 
-        // 4️⃣ Map earnings
         $earnMap = array_column($totals, 'total_earned', 'receiver_id');
 
         foreach ($teachers as &$t) {
