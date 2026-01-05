@@ -40,7 +40,7 @@ class CreateUserCollectionsPayTable extends Migration
         ]);
 
         $this->forge->addKey('id', true); // primary key
-        $this->forge->createTable('user_collections');
+        $this->forge->createTable('user_collections_pay');
     }
 
     public function down()
