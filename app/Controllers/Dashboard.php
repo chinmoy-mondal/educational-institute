@@ -2531,7 +2531,6 @@ class Dashboard extends Controller
 
 
         $this->data['teachers'] = $teachers;
-        echo account_status;
         $this->data['account_status'] = $account_status;
 
         return view('dashboard/transaction/tec_pay', $this->data);
