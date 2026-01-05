@@ -1,6 +1,6 @@
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
-
+<?= $account_status ?>
 <div class="container-fluid">
     <h3 class="mb-4">Teacher Earnings Dashboard</h3>
 
