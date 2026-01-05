@@ -1,6 +1,6 @@
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
-
+<?php echo 'hello' . $teachers_id; ?>
 <div class="container-fluid">
     <h3 class="mb-4">Teacher Earnings Dashboard</h3>
 
@@ -32,8 +32,8 @@
                         <td>৳ <?= number_format($t['unpaid'], 2) ?></td>
 
                         <?php if (
-                                isset($teachers_id) &&
-                                $teachers_id >= 2
+                                    isset($teachers_id) &&
+                                    $teachers_id >= 2
                                 ): ?>
                         <!-- ✅ FORM -->
                         <form method="post" action="<?= base_url('admin/reset_amount/' . $t['id']) ?>">
