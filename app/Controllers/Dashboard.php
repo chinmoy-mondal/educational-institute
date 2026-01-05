@@ -2463,6 +2463,87 @@ class Dashboard extends Controller
         return view('dashboard/transaction/transaction_dashboard', $this->data);
     }
 
+    // public function tec_pay()
+    // {
+    //     $this->data['title'] = 'Teacher Earnings';
+    //     $this->data['activeSection'] = 'accounts';
+
+    //     $this->data['navbarItems'] = [
+    //         ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+    //         ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+    //         ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+    //         ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+    //         ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+    //     ];
+
+
+    //     // Fetch teachers
+    //     $teachers = $this->userModel
+    //         ->where('account_status !=', 0)
+    //         ->orderBy('position', 'ASC')
+    //         ->findAll();
+
+    //     // ===== Earnings calculation (discount-safe) =====
+    //     $builder = $this->transactionModel->builder();
+
+    //     $subQuery = $builder
+    //         ->select('
+    //         receiver_id,
+    //         transaction_id,
+    //         SUM(amount) AS amount_sum,
+    //         MAX(discount) AS discount_once
+    //     ')
+    //         ->where('status', 0)
+    //         ->where('activity', 0)
+    //         ->groupBy('receiver_id, transaction_id')
+    //         ->getCompiledSelect();
+
+    //     $finalBuilder = $this->transactionModel->builder("($subQuery) t");
+
+    //     $totals = $finalBuilder
+    //         ->select('
+    //         receiver_id,
+    //         SUM(amount_sum - discount_once) AS total_earned
+    //     ')
+    //         ->groupBy('receiver_id')
+    //         ->get()
+    //         ->getResultArray();
+
+    //     $earnMap = array_column($totals, 'total_earned', 'receiver_id');
+
+    //     foreach ($teachers as &$t) {
+    //         $t['total_earned'] = $earnMap[$t['id']] ?? 0;
+    //         $t['unpaid']       = $t['total_earned'];
+    //     }
+
+
+    //     // Get logged-in user ID from session
+    //     $user_id = $this->session->get('user_id') ?? 0;
+
+    //     // Load TeacherModel (or UserModel)
+    //     $teacherModel = $this->userModel;
+
+    //     // Fetch account_status for this user
+    //     $account_status = 0; // default
+    //     if ($user_id > 0) {
+    //         $user = $teacherModel->select('account_status')->find($user_id);
+    //         if ($user) {
+    //             $account_status = $user['account_status'];
+    //         }
+    //     }
+
+    //     $builder = $this->userCollectionsPayModel
+    //         ->select('user_id, user_name, SUM(amount_paid) as total_paid, COUNT(id) as total_payments')
+    //         ->groupBy('user_id, user_name')
+    //         ->findAll();
+
+
+    //     $this->data['teachers'] = $teachers;
+    //     $this->data['account_status'] = $account_status;
+
+    //     return view('dashboard/transaction/tec_pay', $this->data);
+    // }
+
     public function tec_pay()
     {
         $this->data['title'] = 'Teacher Earnings';
@@ -2476,14 +2557,13 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-
         // Fetch teachers
         $teachers = $this->userModel
             ->where('account_status !=', 0)
             ->orderBy('position', 'ASC')
             ->findAll();
 
-        // ===== Earnings calculation (discount-safe) =====
+        // ===== Earnings calculation =====
         $builder = $this->transactionModel->builder();
 
         $subQuery = $builder
@@ -2513,25 +2593,26 @@ class Dashboard extends Controller
 
         foreach ($teachers as &$t) {
             $t['total_earned'] = $earnMap[$t['id']] ?? 0;
-            $t['unpaid']       = $t['total_earned'];
+
+            // Fetch total already paid
+            $paid = $this->userCollectionsPayModel
+                ->select('SUM(amount_paid) as total_paid')
+                ->where('user_id', $t['id'])
+                ->first();
+
+            $t['total_paid'] = $paid['total_paid'] ?? 0;
+            $t['unpaid']     = $t['total_earned'] - $t['total_paid'];
         }
 
-
-        // Get logged-in user ID from session
+        // Logged-in user account_status
         $user_id = $this->session->get('user_id') ?? 0;
-
-        // Load TeacherModel (or UserModel)
-        $teacherModel = $this->userModel;
-
-        // Fetch account_status for this user
-        $account_status = 0; // default
+        $account_status = 0;
         if ($user_id > 0) {
-            $user = $teacherModel->select('account_status')->find($user_id);
+            $user = $this->userModel->select('account_status')->find($user_id);
             if ($user) {
                 $account_status = $user['account_status'];
             }
         }
-
 
         $this->data['teachers'] = $teachers;
         $this->data['account_status'] = $account_status;
@@ -2539,12 +2620,38 @@ class Dashboard extends Controller
         return view('dashboard/transaction/tec_pay', $this->data);
     }
 
+    // public function reset_amount($teacher_id = null)
+    // {
+    //     $request = $this->request;
+    //     $payAmount = $request->getPost('pay_amount');
+
+    //     if (!$teacher_id || !$payAmount) {
+    //         return redirect()->back()->with('error', 'Invalid data!');
+    //     }
+
+    //     $teacher = $this->userModel->find($teacher_id);
+
+    //     if (!$teacher) {
+    //         return redirect()->back()->with('error', 'Teacher not found!');
+    //     }
+
+    //     // Insert into the user_collections_pay table
+    //     $this->userCollectionsPayModel->insert([
+    //         'user_id'     => $teacher['id'],
+    //         'user_name'   => $teacher['name'],
+    //         'amount_paid' => $payAmount,
+    //         'created_at'  => date('Y-m-d H:i:s')
+    //     ]);
+
+    //     return redirect()->back()->with('success', 'Payment recorded successfully!');
+    // }
+
     public function reset_amount($teacher_id = null)
     {
         $request = $this->request;
         $payAmount = $request->getPost('pay_amount');
 
-        if (!$teacher_id || !$payAmount) {
+        if (!$teacher_id || !$payAmount || $payAmount <= 0) {
             return redirect()->back()->with('error', 'Invalid data!');
         }
 
@@ -2562,7 +2669,59 @@ class Dashboard extends Controller
             'created_at'  => date('Y-m-d H:i:s')
         ]);
 
-        return redirect()->back()->with('success', 'Payment recorded successfully!');
+        // ===== Send simple email =====
+        if (!empty($teacher['email'])) {
+            $email = \Config\Services::email();
+
+            // Use just sender and receiver
+            $email->setFrom('jpsc2023hafiz@gmail.com', 'Jhenaidah Cadet Coaching'); // sender
+            $email->setTo($teacher['email']);                           // receiver
+            $email->setSubject('Payment Received Notification');
+            $email->setMessage('
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Payment Confirmation</title>
+                </head>
+                <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+                    <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 20px auto; background-color: #ffffff; border: 1px solid #ddd; border-radius: 8px;">
+                        <tr>
+                            <td style="padding: 20px; text-align: center; background-color: #007bff; color: #ffffff; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+                                <h2>Payment Confirmation</h2>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 20px; color: #333333; font-size: 16px; line-height: 1.5;">
+                                <p>Dear <strong>' . esc($teacher["name"]) . '</strong>,</p>
+
+                                <p>We are pleased to inform you that a payment of <strong>৳ ' . number_format($payAmount, 2) . '</strong> has been successfully recorded in your account.</p>
+
+                                <p>Thank you for your continued contribution.</p>
+
+                                <p style="margin-top: 30px;">Best regards,<br>
+                                <strong>School Administration</strong></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 15px; text-align: center; font-size: 12px; color: #888888; background-color: #f4f4f4; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
+                                &copy; ' . date('Y') . ' School Name. All rights reserved.
+                            </td>
+                        </tr>
+                    </table>
+                </body>
+                </html>
+                ');
+
+            try {
+                $email->send();
+            } catch (\Exception $e) {
+                // Log error but don’t stop the process
+                log_message('error', 'Email not sent: ' . $e->getMessage());
+            }
+        }
+
+        return redirect()->back()->with('success', "Payment of ৳ " . number_format($payAmount, 2) . " recorded successfully!");
     }
 
     public function std_pay()

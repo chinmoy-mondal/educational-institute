@@ -2,13 +2,11 @@
 <?= $this->section('content') ?>
 
 <style>
-/* Right-align numbers and use clean monospace font for decimal alignment */
 .decimal-align {
     text-align: right;
     font-family: 'Consolas', 'Courier New', monospace;
 }
 
-/* Make input numbers match table style */
 .decimal-input {
     text-align: right;
     font-family: 'Consolas', 'Courier New', monospace;
@@ -39,13 +37,13 @@
                         <th>#</th>
                         <th>Teacher Name</th>
                         <th>Total Earned (৳)</th>
+                        <th>Total Paid (৳)</th>
                         <th>Unpaid (৳)</th>
                         <th>Pay Amount</th>
                         <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-
                     <?php if (!empty($teachers)): ?>
                     <?php $i = 1;
                         foreach ($teachers as $t): ?>
@@ -53,10 +51,10 @@
                         <td><?= $i++ ?></td>
                         <td class="text-left"><?= esc($t['name']) ?></td>
                         <td class="decimal-align">৳ <?= number_format($t['total_earned'], 2) ?></td>
+                        <td class="decimal-align">৳ <?= number_format($t['total_paid'], 2) ?></td>
                         <td class="decimal-align">৳ <?= number_format($t['unpaid'], 2) ?></td>
 
                         <?php if (!empty($account_status) && $account_status > 1): ?>
-                        <!-- ✅ PAY FORM -->
                         <form method="post" action="<?= base_url('admin/reset_amount/' . $t['id']) ?>">
                             <?= csrf_field() ?>
                             <td>
@@ -73,22 +71,16 @@
                         </form>
                         <?php else: ?>
                         <td colspan="2">
-                            <span class="badge badge-secondary">
-                                Not Eligible
-                            </span>
+                            <span class="badge badge-secondary">Not Eligible</span>
                         </td>
                         <?php endif; ?>
-
                     </tr>
                     <?php endforeach; ?>
                     <?php else: ?>
                     <tr>
-                        <td colspan="6" class="text-center text-muted">
-                            No teachers found
-                        </td>
+                        <td colspan="7" class="text-center text-muted">No teachers found</td>
                     </tr>
                     <?php endif; ?>
-
                 </tbody>
             </table>
         </div>
