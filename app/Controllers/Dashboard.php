@@ -1731,6 +1731,17 @@ class Dashboard extends Controller
         }
     }
 
+    private function gpToGrade(float $gp): string
+    {
+        if ($gp >= 5.00) return 'A+';
+        if ($gp >= 4.00) return 'A';
+        if ($gp >= 3.50) return 'A-';
+        if ($gp >= 3.00) return 'B';
+        if ($gp >= 2.00) return 'C';
+        if ($gp >= 1.00) return 'D';
+        return 'F';
+    }
+
     public function test_result($studentId = null, $year = null, $view = null)
     {
         if (!$studentId || !$year) {
@@ -1950,15 +1961,116 @@ class Dashboard extends Controller
         else
             return view('dashboard/test_result', $data);
     }
-    private function gpToGrade(float $gp): string
+
+    public function test_result_single_exam($studentId = null, $year = null, $exam = null, $view = null)
     {
-        if ($gp >= 5.00) return 'A+';
-        if ($gp >= 4.00) return 'A';
-        if ($gp >= 3.50) return 'A-';
-        if ($gp >= 3.00) return 'B';
-        if ($gp >= 2.00) return 'C';
-        if ($gp >= 1.00) return 'D';
-        return 'F';
+        if (!$studentId || !$year || !$exam) {
+            return "Student ID, Year and Exam are required";
+        }
+
+        // ---------------- STUDENT ----------------
+        $student = $this->studentModel->find($studentId);
+        if (!$student) {
+            return "Student not found";
+        }
+
+        // ---------------- ASSIGNED SUBJECT ORDER ----------------
+        $assignSubArr = explode(',', $student['assign_sub']);
+        $normalSubs = [];
+        $optionalSub = null;
+
+        foreach ($assignSubArr as $sub) {
+            if (str_contains($sub, '*')) {
+                $optionalSub = (int) str_replace('*', '', $sub);
+            } else {
+                $normalSubs[] = (int) $sub;
+            }
+        }
+
+        $orderedSubjects = $normalSubs;
+        if ($optionalSub) {
+            $orderedSubjects[] = $optionalSub;
+        }
+
+        // ---------------- FETCH SINGLE EXAM RESULT ----------------
+        $results = $this->resultModel
+            ->select('results.*, subjects.subject, subjects.full_mark')
+            ->join('subjects', 'subjects.id = results.subject_id')
+            ->where([
+                'results.student_id' => $studentId,
+                'results.year'       => $year,
+                'results.exam'       => $exam
+            ])
+            ->findAll();
+
+        // ---------------- PREPARE MARKSHEET ----------------
+        $marksheet = [];
+        foreach ($results as $r) {
+            $marksheet[$r['subject_id']] = $r;
+        }
+
+        // ---------------- ORDER SUBJECTS ----------------
+        $marksheetNumeric = [];
+        foreach ($orderedSubjects as $sid) {
+            if (!isset($marksheet[$sid])) continue;
+
+            $row = $marksheet[$sid];
+
+            $written   = $row['written'] ?? 0;
+            $mcq       = $row['mcq'] ?? 0;
+            $practical = $row['practical'] ?? 0;
+
+            $total = $written + $mcq + $practical;
+
+            $percentage = $row['full_mark'] > 0
+                ? round(($total / $row['full_mark']) * 100, 2)
+                : 0;
+
+            $gradeInfo = $this->resultManipulation(
+                (int)$student['class'],
+                $student['section'],
+                $row['subject'],
+                $written,
+                $mcq,
+                $practical,
+                $percentage
+            );
+
+            $marksheetNumeric[] = [
+                'subject'   => $row['subject'],
+                'full_mark' => $row['full_mark'],
+                'exam'      => [
+                    'written'   => $written,
+                    'mcq'       => $mcq,
+                    'practical' => $practical,
+                    'total'     => $total
+                ],
+                'final' => [
+                    'total_written'   => $written,
+                    'total_mcq'       => $mcq,
+                    'total_practical' => $practical,
+                    'total'           => $total,
+                    'percentage'      => $percentage,
+                    'grade'           => $gradeInfo['grade'],
+                    'grade_point'     => $gradeInfo['gp'],
+                    'pass_status'     => ($percentage >= 33 ? 'Pass' : 'Fail')
+                ]
+            ];
+        }
+
+        // ---------------- VIEW / SAVE ----------------
+        $data = [
+            'marksheet' => $marksheetNumeric,
+            'student'   => $student,
+            'exam'      => $exam,
+            'year'      => $year
+        ];
+
+        if ($view) {
+            $this->saveRankingFromResult($data);
+        } else {
+            return view('dashboard/test_result_single_exam', $data);
+        }
     }
 
     private function saveRankingFromResult(array $data)
