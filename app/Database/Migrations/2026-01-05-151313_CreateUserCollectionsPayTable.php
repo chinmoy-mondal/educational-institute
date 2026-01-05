@@ -45,6 +45,6 @@ class CreateUserCollectionsPayTable extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('user_collections');
+        $this->forge->dropTable('user_collections_pay');
     }
 }
