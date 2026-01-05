@@ -2473,28 +2473,47 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        // Fetch teachers sorted by position
+        // 1️⃣ Fetch active teachers
         $teachers = $this->userModel
             ->where('account_status !=', 0)
-            ->orderBy('position', 'ASC') // sort by position ascending
+            ->orderBy('position', 'ASC')
             ->findAll();
 
-        foreach ($teachers as &$t) {
-            // Sum only "earn" transactions (status=0) for this teacher
-            $t['total_earned'] = $this->transactionModel
-                ->selectSum('amount')
-                ->where('receiver_id', $t['id'])
-                ->where('status', 0)      // only earn
-                ->where('activity', 0)    // not paid
-                ->first()['amount'] ?? 0;
+        /**
+         * 2️⃣ Subquery:
+         *    transaction_id অনুযায়ী discount একবার
+         */
+        $subQuery = $this->db->table('transactions')
+            ->select('
+            receiver_id,
+            transaction_id,
+            SUM(amount) AS amount_sum,
+            MAX(discount) AS discount_once
+        ')
+            ->where('status', 0)
+            ->where('activity', 0)
+            ->groupBy('receiver_id, transaction_id')
+            ->getCompiledSelect();
 
-            // Optional: sum only unpaid (same as total_earned if same filter)
-            $t['unpaid'] = $this->transactionModel
-                ->selectSum('amount')
-                ->where('receiver_id', $t['id'])
-                ->where('status', 0)
-                ->where('activity', 0)   // not paid
-                ->first()['amount'] ?? 0;
+        /**
+         * 3️⃣ Teacher-wise final earnings
+         */
+        $totals = $this->db->table("($subQuery) t")
+            ->select('
+            receiver_id,
+            SUM(amount_sum - discount_once) AS total_earned
+        ')
+            ->groupBy('receiver_id')
+            ->get()
+            ->getResultArray();
+
+        // Map earnings by teacher ID
+        $earnMap = array_column($totals, 'total_earned', 'receiver_id');
+
+        // 4️⃣ Attach earnings to teachers
+        foreach ($teachers as &$t) {
+            $t['total_earned'] = $earnMap[$t['id']] ?? 0;
+            $t['unpaid']       = $t['total_earned']; // same filter
         }
 
         $this->data['teachers'] = $teachers;
