@@ -16,6 +16,7 @@ use App\Models\FeesAmountModel;
 use App\Models\TransactionModel;
 use App\Models\StudentDiscountModel;
 use App\Models\SmsLogModel;
+use App\Models\UserCollectionsPayModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Dashboard extends Controller
@@ -33,6 +34,7 @@ class Dashboard extends Controller
     protected $transactionModel;
     protected $studentDiscountModel;
     protected $smsLogModel;
+    protected $userCollectionsPayModel;
 
     protected $session;
     protected $data;
@@ -52,6 +54,7 @@ class Dashboard extends Controller
         $this->transactionModel     = new TransactionModel();
         $this->studentDiscountModel = new StudentDiscountModel();
         $this->smsLogModel          = new SmsLogModel();
+        $this->userCollectionsPayModel          = new UserCollectionsPayModel();
 
 
         $this->session       = session();
@@ -2536,17 +2539,30 @@ class Dashboard extends Controller
         return view('dashboard/transaction/tec_pay', $this->data);
     }
 
-    public function reset_amount($teacher_id)
+    public function reset_amount($teacher_id = null)
     {
-        // Update all unpaid earn transactions for this teacher to mark as paid
-        $this->transactionModel
-            ->where('receiver_id', $teacher_id)
-            ->where('status', 0)      // only earn
-            ->where('activity', 0)    // only not paid
-            ->set(['activity' => 1])
-            ->update();
+        $request = $this->request;
+        $payAmount = $request->getPost('pay_amount');
 
-        return redirect()->back()->with('success', 'Teacher earnings marked as paid.');
+        if (!$teacher_id || !$payAmount) {
+            return redirect()->back()->with('error', 'Invalid data!');
+        }
+
+        $teacher = $this->userModel->find($teacher_id);
+
+        if (!$teacher) {
+            return redirect()->back()->with('error', 'Teacher not found!');
+        }
+
+        // Insert into the user_collections_pay table
+        $this->userCollectionsPayModel->insert([
+            'user_id'     => $teacher['id'],
+            'user_name'   => $teacher['name'],
+            'amount_paid' => $payAmount,
+            'created_at'  => date('Y-m-d H:i:s')
+        ]);
+
+        return redirect()->back()->with('success', 'Payment recorded successfully!');
     }
 
     public function std_pay()
