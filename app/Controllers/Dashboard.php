@@ -2058,6 +2058,66 @@ class Dashboard extends Controller
             ];
         }
 
+        // ---------------- COMBINE PAIRS (Bangla / English) ----------------
+        $combinePairs = [
+            [0, 1], // Example: Bangla 1 + Bangla 2
+            [2, 3]  // Example: English 1 + English 2
+        ];
+
+        foreach ($combinePairs as $pair) {
+            $totalW = $totalM = $totalP = $totalSum = $fullMarkSum = 0;
+
+            foreach ($pair as $i) {
+                if (!isset($marksheetNumeric[$i])) continue;
+
+                $row = $marksheetNumeric[$i];
+                $w = $row['exam']['written'];
+                $m = $row['exam']['mcq'];
+                $p = $row['exam']['practical'];
+                $total = $w + $m + $p;
+
+                $marksheetNumeric[$i]['average'] = [
+                    'written'   => $w,
+                    'mcq'       => $m,
+                    'practical' => $p,
+                    'total'     => $total
+                ];
+
+                $totalW += $w;
+                $totalM += $m;
+                $totalP += $p;
+                $totalSum += $total;
+                $fullMarkSum += $row['full_mark'];
+            }
+
+            $percentage = $fullMarkSum > 0 ? round(($totalSum / $fullMarkSum) * 100, 2) : 0;
+            $gradeInfo = $this->resultManipulation(
+                (int)$student['class'],
+                $student['section'],
+                $marksheetNumeric[$pair[0]]['subject'],
+                $totalW,
+                $totalM,
+                $totalP,
+                $percentage
+            );
+
+            foreach ($pair as $i) {
+                if (!isset($marksheetNumeric[$i])) continue;
+
+                $marksheetNumeric[$i]['final'] = [
+                    'total_written'   => $totalW,
+                    'total_mcq'       => $totalM,
+                    'total_practical' => $totalP,
+                    'total'           => $totalSum,
+                    'full_mark'       => $fullMarkSum,
+                    'percentage'      => $percentage,
+                    'grade'           => $gradeInfo['grade'],
+                    'grade_point'     => $gradeInfo['gp'],
+                    'pass_status'     => ($percentage >= 33 ? 'Pass' : 'Fail')
+                ];
+            }
+        }
+
         // ---------------- VIEW / SAVE ----------------
         $data = [
             'marksheet' => $marksheetNumeric,
