@@ -166,8 +166,17 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-
                         <tbody>
+                            <?php
+                            // Define exams per class
+                            $exams_by_class = [
+                                6 => ['Half-Yearly', 'Annual Exam'],
+                                7 => ['Half-Yearly', 'Annual Exam'],
+                                8 => ['Half-Yearly', 'Annual Exam'],
+                                9 => ['Half-Yearly', 'Annual Exam'],
+                                10 => ['Half-Yearly', 'Pre-Test Exam', 'Test Exam', 'Annual Exam'],
+                            ];
+                            ?>
                             <?php foreach ($students as $s): ?>
                                 <tr>
                                     <td><?= esc($s['id']) ?></td>
@@ -177,6 +186,10 @@
                                     <td><?= esc($s['section']) ?></td>
                                     <td>
                                         <!-- Exam Dropdown -->
+                                        <?php
+                                        $student_class = $s['class'] ?? 6;
+                                        $exams = $exams_by_class[$student_class] ?? ['Half-Yearly', 'Annual Exam'];
+                                        ?>
                                         <div class="dropdown d-inline-block me-1">
                                             <button class="btn btn-success btn-sm dropdown-toggle" type="button"
                                                 id="examDropdown<?= $s['id'] ?>" data-bs-toggle="dropdown"
@@ -184,9 +197,7 @@
                                                 <i class="fas fa-file-alt"></i> Result
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="examDropdown<?= $s['id'] ?>">
-                                                <?php
-                                                $exams = ['Pre-Test Exam', 'Half-Yearly', 'Test Exam', 'Annual'];
-                                                foreach ($exams as $exam): ?>
+                                                <?php foreach ($exams as $exam): ?>
                                                     <li>
                                                         <a class="dropdown-item" target="_blank"
                                                             href="<?= site_url('admin/test_result') ?>?student_id=<?= $s['id'] ?>&year=2025&exam=<?= urlencode($exam) ?>">
