@@ -2287,7 +2287,7 @@ class Dashboard extends Controller
 
         if (strtolower($exam) === 'annual' || strtolower($exam) === 'annual_exam') {
             return $this->test_result($studentId, $year, $view);
-        } elseif (in_array(strtolower($exam), ['Pre-Test Exam', 'Half-Yearly', 'test exam'])) {
+        } elseif (in_array(strtolower($exam), ['pre-test exam', 'half-yearly', 'test exam'])) {
             return $this->test_result_single_exam($studentId, $year, $exam, $view);
         }
         return "no execution";
