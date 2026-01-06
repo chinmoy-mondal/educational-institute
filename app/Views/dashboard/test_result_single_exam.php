@@ -200,7 +200,7 @@
             </thead>
 
             <tbody>
-                <?php foreach ($marksheet as $id => $row): ?>
+                <?php foreach (array_values($marksheet) as $id => $row): ?>
                     <?php
                     $examData = $row['exam'];
                     $final = $row['final'];
@@ -220,10 +220,7 @@
                     }
                     ?>
                     <tr>
-                        <td>
-                            <?= esc($row['subject']) ?>
-                            <?= $isFourth ? '<b>(4th)</b>' : '' ?>
-                        </td>
+                        <td><?= esc($row['subject']) ?> <?= $isFourth ? '<b>(4th)</b>' : '' ?></td>
                         <td><?= $row['full_mark'] ?></td>
 
                         <td><?= $examData['written'] ?></td>
@@ -231,10 +228,21 @@
                         <td><?= $examData['practical'] ?></td>
                         <td><?= $examData['total'] ?></td>
 
-                        <td><?= $final['total'] ?></td>
-                        <td><?= $final['percentage'] ?>%</td>
-                        <td><?= $final['grade'] ?></td>
-                        <td><?= $final['grade_point'] ?></td>
+                        <?php if ($id == 0 || $id == 2): ?>
+                            <td rowspan="2"><?= $final['total'] ?></td>
+                            <td rowspan="2"><?= $final['percentage'] ?>%</td>
+                            <td rowspan="2"><?= $final['grade'] ?></td>
+                            <td rowspan="2"><?= $final['grade_point'] ?></td>
+
+                        <?php elseif ($id == 1 || $id == 3): ?>
+                            <!-- merged row -->
+
+                        <?php else: ?>
+                            <td><?= $final['total'] ?></td>
+                            <td><?= $final['percentage'] ?>%</td>
+                            <td><?= $final['grade'] ?></td>
+                            <td><?= $final['grade_point'] ?></td>
+                        <?php endif; ?>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
@@ -253,9 +261,7 @@
         <!-- FOOTER -->
         <table style="margin-top:30px;border:none;">
             <tr>
-                <td style="border:none;">
-                    <b>Failed Subjects:</b> <?= $total_fail ?>
-                </td>
+                <td style="border:none;"><b>Failed Subjects:</b> <?= $total_fail ?></td>
                 <td style="border:none;text-align:center;">
                     <?php $url = 'https://mulss.edu.bd/student-id?q=' . $student['id']; ?>
                     <img class="qr-img"
@@ -266,12 +272,8 @@
 
         <table style="margin-top:40px;border:none;">
             <tr>
-                <td style="border:none;text-align:left;">
-                    ____________________<br>Head Teacher
-                </td>
-                <td style="border:none;text-align:right;">
-                    ____________________<br>Class Teacher
-                </td>
+                <td style="border:none;text-align:left;">____________________<br>Head Teacher</td>
+                <td style="border:none;text-align:right;">____________________<br>Class Teacher</td>
             </tr>
         </table>
 
@@ -280,7 +282,6 @@
         </div>
 
     </div>
-
 </body>
 
 </html>
