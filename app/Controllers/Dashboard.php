@@ -2351,6 +2351,34 @@ class Dashboard extends Controller
         echo "</pre>";
     }
 
+    public function balance()
+    {
+        // 🔐 Your BulkSMSDhaka API Key
+        $apiKey = '5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8';
+
+        // 🌐 API URL
+        $url = "https://bulksmsdhaka.net/api/getBalance?apikey={$apiKey}";
+
+        try {
+            // cURL Request
+            $client = \Config\Services::curlrequest([
+                'timeout' => 10,
+            ]);
+
+            $response = $client->get($url);
+
+            // API returns plain number (balance)
+            $balance = trim($response->getBody());
+        } catch (\Throwable $e) {
+            $balance = 'API Error';
+        }
+
+        // 👉 Load View (AdminLTE / normal view)
+        return view('dashboard/sms_balance', [
+            'balance' => $balance
+        ]);
+    }
+
 
     public function showMarksheet()
     {
