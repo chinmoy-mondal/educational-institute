@@ -2143,6 +2143,10 @@ class Dashboard extends Controller
             'year'      => $year
         ];
 
+        echo "<pre>";
+        print_r($data);
+        echo "</pre>";
+
         if ($view) {
             $this->saveRankingFromResult($data);
         } else {
