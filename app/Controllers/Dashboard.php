@@ -2197,12 +2197,29 @@ class Dashboard extends Controller
 
     public function call_test_result()
     {
-        // Get class and year from GET
-        $studentId  = $this->request->getGet('student_id');
-        $year       = $this->request->getGet('year');
-        $view       = $this->request->getGet('view');
+        // Get parameters from GET request
+        $studentId = $this->request->getGet('student_id');
+        $year      = $this->request->getGet('year');
+        $exam      = $this->request->getGet('exam');
+        $view      = $this->request->getGet('view');
 
-        return $this->test_result($studentId, $year, $view);
+        // Validation
+        if (!$studentId || !$year || !$exam) {
+            return redirect()->back()->with('error', 'Missing required parameters!');
+        }
+
+        // If Annual Exam → call full result
+        if (strtolower($exam) === 'annual' || strtolower($exam) === 'annual_exam') {
+            return $this->test_result($studentId, $year, $view);
+        }
+
+        // Otherwise → single exam result
+        return $this->test_result_single_exam(
+            $studentId,
+            $year,
+            $exam,
+            $view
+        );
     }
 
     public function updateNewRollByClass($class)
