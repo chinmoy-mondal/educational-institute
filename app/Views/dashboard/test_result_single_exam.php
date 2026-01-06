@@ -157,25 +157,27 @@
         <!-- Student Info -->
         <table class="student-info">
             <tr>
-                <td><strong>Student Name:</strong> <?= esc($student['student_name']) ?></td>
+                <td><strong>Student Name:</strong> :<?= esc($student['student_name']) ?></td>
             </tr>
             <tr>
-                <td><strong>Father's Name:</strong> <?= esc($student['father_name']) ?></td>
+                <td><strong>Father's Name:</strong> :<?= esc($student['father_name']) ?></td>
             </tr>
             <tr>
-                <td><strong>Mother's Name:</strong> <?= esc($student['mother_name']) ?></td>
+                <td><strong>Mother's Name:</strong> : <?= esc($student['mother_name']) ?></td>
             </tr>
             <tr>
-                <td><strong>Student ID:</strong> <?= esc($student['id']) ?></td>
-                <td><strong>Exam:</strong> <?= $exam ?></td>
+                <td><strong>Student ID:</strong> : <?= esc($student['id']) ?></td>
+                <td><strong>Exam:</strong> : <?= $exam ?>
+                </td>
             </tr>
             <tr>
-                <td><strong>Class:</strong> <?= esc($student['class']) ?></td>
-                <td><strong>Year:</strong> <?= $year ?> </td>
+                <td><strong>Class:</strong> : <?= esc($student['class']) ?></td>
+                <td><strong>Year:</strong> : <?= $year ?> </td>
             </tr>
             <tr>
-                <td><strong>Roll:</strong> <?= esc($student['roll']) ?></td>
-                <td><strong>Group:</strong> <?= esc($student['section']) ?></td>
+                <td><strong>Roll:</strong> : <?= esc($student['roll']) ?>
+                </td>
+                <td><strong>Group:</strong> : <?= esc($student['section']) ?></td>
             </tr>
         </table>
 
@@ -188,74 +190,163 @@
         $total_subject = 0;
         $total_grade_point = 0;
         $total_grade_point_without_forth = 0;
+        $total_percentage_sum = 0;
         $total_rows = count($marksheet);
         ?>
         <table>
             <thead>
                 <tr>
-                    <th>Subject</th>
-                    <th>Full Mark</th>
+                    <th rowspan="2">Subject</th>
+                    <th rowspan="2">Full Mark</th>
+                    <th colspan="4">Half-Yearly</th>
+                    <th colspan="4">Annual</th>
+                    <th rowspan="2">Total</th>
+                    <th rowspan="2">%</th>
+                    <th rowspan="2">Grade</th>
+                    <th rowspan="2">GP</th>
+                </tr>
+                <tr>
                     <th>W</th>
                     <th>M</th>
                     <th>P</th>
                     <th>T</th>
-                    <th>%</th>
-                    <th>Grade</th>
-                    <th>GP</th>
+                    <th>W</th>
+                    <th>M</th>
+                    <th>P</th>
+                    <th>T</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($marksheet as $id => $row): ?>
                 <tr>
-                    <td><?= esc($row['subject'] ?? '-') ?></td>
+                    <td><?= esc($row['subject'] ?? '-') ?>
+                        <?php
+                            if ($total_rows == $id + 1) {
+                                if (in_array($student['class'], [6, 7, 8])) {
+                                } else {
+                                    echo "<b>(4th)</b>";
+                                }
+                            }
+                            ?>
+                    </td>
                     <td><?= $row['full_mark'] ?? 0 ?></td>
 
+                    <!-- Half-Yearly -->
+                    <?php
+                        $half = $row['half'] ?? [];
+                        $half_written = $half['written'] ?? 0;
+                        $half_mcq = $half['mcq'] ?? 0;
+                        $half_prac = $half['practical'] ?? 0;
+                        $half_total = $half_written + $half_mcq + $half_prac;
+                        ?>
+                    <td><?= $half_written ?></td>
+                    <td><?= $half_mcq ?></td>
+                    <td><?= $half_prac ?></td>
+                    <td><?= $half_total ?></td>
+
+                    <!-- Annual -->
+                    <?php
+                        $annual = $row['annual'] ?? [];
+                        $annual_written = $annual['written'] ?? 0;
+                        $annual_mcq = $annual['mcq'] ?? 0;
+                        $annual_prac = $annual['practical'] ?? 0;
+                        $annual_total = $annual_written + $annual_mcq + $annual_prac;
+                        ?>
+                    <td><?= $annual_written ?></td>
+                    <td><?= $annual_mcq ?></td>
+                    <td><?= $annual_prac ?></td>
+                    <td><?= $annual_total ?></td>
+
+                    <!-- Final -->
                     <?php
                         $final = $row['final'] ?? [];
-                        $w = $final['total_written'] ?? 0;
-                        $m = $final['total_mcq'] ?? 0;
-                        $p = $final['total_practical'] ?? 0;
-                        $t = $final['total'] ?? 0;
-                        $percentage = $final['percentage'] ?? 0;
-                        $grade = $final['grade'] ?? '-';
-                        $gp = $final['grade_point'] ?? '-';
+                        $final_total = $final['total'] ?? 0;
+                        $final_percentage = $final['percentage'] ?? 0;
+                        $final_grade = $final['grade'] ?? '-';
+                        $final_gp = $final['grade_point'] ?? '-';
 
                         $full_mark += $row['full_mark'];
-                        $total_marks_sum += $t;
-                        $total_subject++;
-                        $total_grade_point += $gp ?? 0;
-                        $total_fail += ($gp == 0) ? 1 : 0;
+                        // accumulate for summary
+                        if ($id == 1 || $id == 3) {
+                        } else {
+                            $total_marks_sum += $final_total;
+                            if ($total_rows == $id + 1) {
+                                if (in_array($student['class'], [6, 7, 8])) {
+
+                                    $total_fail += ($final_gp) ? 0 : 1;
+                                    $total_subject++;
+                                    $total_grade_point += $final_gp;
+                                    $total_grade_point_without_forth += $final_gp;
+                                } else {
+                                    $total_grade_point += max(0, $final_gp - 2);
+                                }
+                            } else {
+                                $total_fail += ($final_gp) ? 0 : 1;
+                                $total_grade_point += $final_gp;
+                                $total_grade_point_without_forth += $final_gp;
+                                $total_subject++;
+                            }
+                        }
+
                         ?>
 
-                    <td><?= $w ?></td>
-                    <td><?= $m ?></td>
-                    <td><?= $p ?></td>
-                    <td><?= $t ?></td>
-                    <td><?= $percentage ?>%</td>
-                    <td><?= $grade ?></td>
-                    <td><?= $gp ?></td>
-                </tr>
-                <?php endforeach; ?>
+                    <?php if ($id == 0 || $id == 2): ?>
+                    <td rowspan="2"><?= $final_total ?></td>
+                    <td rowspan="2"><?= $final_percentage ?>%</td>
+                    <td rowspan="2"><?= $final_grade ?></td>
+                    <td rowspan="2"><?= $final_gp ?></td>
+                    <?php elseif ($id > 3): ?>
+                    <td><?= $final_total ?></td>
+                    <td><?= $final_percentage ?>%</td>
+                    <td><?= $final_grade ?></td>
+                    <td><?= $final_gp ?></td>
+                    <?php endif; ?>
+                    <?php endforeach; ?>
             </tbody>
             <tfoot>
+                <!-- Summary Row -->
                 <tr style="font-weight:bold; background:#f0f0f0;">
-                    <td colspan="5">Total / Average</td>
-                    <td><?= $total_marks_sum ?></td>
+                    <td colspan="10">Total / Average</td>
                     <td>
-                        <?= round(($total_marks_sum / $full_mark) * 100, 2) ?>%
+                        <?= $total_marks_sum ?></td>
+                    <?php function gpToGrade(float $gp): string
+                    {
+                        if ($gp >= 5.00) return 'A+';
+                        if ($gp >= 4.00) return 'A';
+                        if ($gp >= 3.50) return 'A-';
+                        if ($gp >= 3.00) return 'B';
+                        if ($gp >= 2.00) return 'C';
+                        if ($gp >= 1.00) return 'D';
+
+                        return 'F';
+                    } ?>
+                    <td>
+                        -
                     </td>
                     <td>
                         <?php
                         if ($total_fail) {
-                            echo 'F';
+                            $grade_letter = 'F';
+                            echo $grade_letter;
                         } else {
-                            echo gpToGrade(round($total_grade_point / $total_subject, 2));
+                            $grade_letter = gpToGrade(round($total_grade_point / $total_subject, 2));
+                            echo $grade_letter;
                         }
                         ?>
                     </td>
                     <td>
                         <?php
-                        echo $total_fail ? '0.00' : number_format(min(5, $total_grade_point / $total_subject), 2);
+                        // $percentage = ($total_marks_sum / $full_mark) * 100;
+
+                        $percentage =  $full_mark;
+                        if ($total_fail) {
+                            $gpa = '0.00';
+                            echo '0.00';
+                        } else {
+                            $gpa = number_format(min(5, $total_grade_point / $total_subject), 2);
+                            echo $gpa;
+                        }
+
                         ?>
                     </td>
                 </tr>
@@ -270,14 +361,19 @@
                     <strong>GPA (Without 4th):</strong>
                     <?php
                     if ($total_fail) {
-                        echo '0.00';
+                        $gpa_without_forth = '0.00,';
+                        echo $gpa_without_forth;
                     } else {
-                        echo number_format(min(5, $total_grade_point_without_forth / $total_subject), 2);
+                        $gpa_without_forth = number_format(min(5, $total_grade_point_without_forth / $total_subject), 2);
+                        echo $gpa_without_forth;
                     }
                     ?>
+
                 </td>
                 <td style="text-align:center;">
-                    <?php $url = 'https://mulss.edu.bd/student-id?q=' . $student['id']; ?>
+                    <?php
+                    $url = 'https://mulss.edu.bd/student-id?q=' . $student['id'];
+                    ?>
                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= urlencode($url) ?>"
                         class="qr-img" alt="Student QR">
                     <p style="font-size: 12px;">Scan to Verify</p>
