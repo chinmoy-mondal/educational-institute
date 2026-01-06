@@ -6,11 +6,13 @@
     <!-- Page Header -->
     <div class="row mb-3">
         <div class="col-sm-6">
-            <h1 class="m-0">SMS Balance</h1>
+            <h1 class="m-0"><?= esc($title ?? 'SMS Balance') ?></h1>
         </div>
         <div class="col-sm-6 text-right">
             <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="<?= base_url('dashboard') ?>">Dashboard</a></li>
+                <li class="breadcrumb-item">
+                    <a href="<?= base_url('dashboard') ?>">Dashboard</a>
+                </li>
                 <li class="breadcrumb-item active">SMS Balance</li>
             </ol>
         </div>
@@ -21,7 +23,9 @@
         <div class="col-md-4">
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3><?= esc($balance) ?></h3>
+                    <h3>
+                        <?= is_numeric($balance) ? esc($balance) : 'N/A' ?>
+                    </h3>
                     <p>Available SMS Credit</p>
                 </div>
                 <div class="icon">
@@ -42,12 +46,13 @@
                 </div>
                 <div class="card-body">
                     <p>
-                        This balance is fetched live from <strong>BulkSMSDhaka API</strong>.
+                        This balance is fetched live from
+                        <strong>BulkSMSDhaka API</strong>.
                     </p>
                     <ul class="mb-0">
-                        <li>Balance updates automatically</li>
-                        <li>GET API method used</li>
-                        <li>API Response: Numeric value</li>
+                        <li>Real-time balance check</li>
+                        <li>GET method used</li>
+                        <li>Numeric API response</li>
                     </ul>
                 </div>
             </div>

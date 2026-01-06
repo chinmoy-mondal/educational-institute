@@ -2353,30 +2353,35 @@ class Dashboard extends Controller
 
     public function balance()
     {
-        // 🔐 Your BulkSMSDhaka API Key
+        // Page basic data (same pattern as marksheet)
+        $this->data['title'] = 'SMS Balance';
+        $this->data['activeSection'] = 'sms';
+        $this->data['navbarItems'] = [
+            ['label' => 'SMS Balance', 'url' => base_url('sms/balance')],
+            ['label' => 'Send SMS', 'url' => base_url('sms/send')],
+        ];
+
+        // 🔐 BulkSMSDhaka API Key
         $apiKey = '5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8';
 
         // 🌐 API URL
         $url = "https://bulksmsdhaka.net/api/getBalance?apikey={$apiKey}";
 
         try {
-            // cURL Request
             $client = \Config\Services::curlrequest([
                 'timeout' => 10,
             ]);
 
             $response = $client->get($url);
 
-            // API returns plain number (balance)
-            $balance = trim($response->getBody());
+            // API returns plain number
+            $this->data['balance'] = trim($response->getBody());
         } catch (\Throwable $e) {
-            $balance = 'API Error';
+            $this->data['balance'] = 'API Error';
         }
 
-        // 👉 Load View (AdminLTE / normal view)
-        return view('dashboard/sms_balance', [
-            'balance' => $balance
-        ]);
+        // ✅ SAME return style as marksheet_view
+        return view('dashboard/sms_balance', $this->data);
     }
 
 
