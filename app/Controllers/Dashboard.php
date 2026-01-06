@@ -2143,11 +2143,14 @@ class Dashboard extends Controller
             'year'      => $year
         ];
 
-        if ($view) {
-            $this->saveRankingFromResult($data);
-        } else {
-            return view('dashboard/test_result_single_exam', $data);
-        }
+        echo "<pre>";
+        print_r($data);
+        echo "<pre>";
+        // if ($view) {
+        //     $this->saveRankingFromResult($data);
+        // } else {
+        //     return view('dashboard/test_result_single_exam', $data);
+        // }
     }
 
     private function saveRankingFromResult(array $data)
