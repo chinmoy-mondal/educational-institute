@@ -2065,15 +2065,21 @@ class Dashboard extends Controller
         ];
 
         foreach ($combinePairs as $pair) {
+
+            // Skip the pair if none of the indexes exist
+            if (!isset($marksheetNumeric[$pair[0]]) && !isset($marksheetNumeric[$pair[1]])) {
+                continue;
+            }
+
             $totalW = $totalM = $totalP = $totalSum = $fullMarkSum = 0;
 
             foreach ($pair as $i) {
                 if (!isset($marksheetNumeric[$i])) continue;
 
                 $row = $marksheetNumeric[$i];
-                $w = $row['exam']['written'];
-                $m = $row['exam']['mcq'];
-                $p = $row['exam']['practical'];
+                $w = $row['exam']['written'] ?? 0;
+                $m = $row['exam']['mcq'] ?? 0;
+                $p = $row['exam']['practical'] ?? 0;
                 $total = $w + $m + $p;
 
                 $marksheetNumeric[$i]['average'] = [
@@ -2087,34 +2093,45 @@ class Dashboard extends Controller
                 $totalM += $m;
                 $totalP += $p;
                 $totalSum += $total;
-                $fullMarkSum += $row['full_mark'];
+                $fullMarkSum += $row['full_mark'] ?? 0;
             }
 
-            $percentage = $fullMarkSum > 0 ? round(($totalSum / $fullMarkSum) * 100, 2) : 0;
-            $gradeInfo = $this->resultManipulation(
-                (int)$student['class'],
-                $student['section'],
-                $marksheetNumeric[$pair[0]]['subject'],
-                $totalW,
-                $totalM,
-                $totalP,
-                $percentage
-            );
+            // Only calculate grade if at least one subject exists
+            if ($fullMarkSum > 0) {
+                $percentage = round(($totalSum / $fullMarkSum) * 100, 2);
+                $firstIndex = null;
+                foreach ($pair as $i) {
+                    if (isset($marksheetNumeric[$i])) {
+                        $firstIndex = $i;
+                        break;
+                    }
+                }
 
-            foreach ($pair as $i) {
-                if (!isset($marksheetNumeric[$i])) continue;
+                $gradeInfo = $this->resultManipulation(
+                    (int)$student['class'],
+                    $student['section'],
+                    $marksheetNumeric[$firstIndex]['subject'],
+                    $totalW,
+                    $totalM,
+                    $totalP,
+                    $percentage
+                );
 
-                $marksheetNumeric[$i]['final'] = [
-                    'total_written'   => $totalW,
-                    'total_mcq'       => $totalM,
-                    'total_practical' => $totalP,
-                    'total'           => $totalSum,
-                    'full_mark'       => $fullMarkSum,
-                    'percentage'      => $percentage,
-                    'grade'           => $gradeInfo['grade'],
-                    'grade_point'     => $gradeInfo['gp'],
-                    'pass_status'     => ($percentage >= 33 ? 'Pass' : 'Fail')
-                ];
+                foreach ($pair as $i) {
+                    if (!isset($marksheetNumeric[$i])) continue;
+
+                    $marksheetNumeric[$i]['final'] = [
+                        'total_written'   => $totalW,
+                        'total_mcq'       => $totalM,
+                        'total_practical' => $totalP,
+                        'total'           => $totalSum,
+                        'full_mark'       => $fullMarkSum,
+                        'percentage'      => $percentage,
+                        'grade'           => $gradeInfo['grade'],
+                        'grade_point'     => $gradeInfo['gp'],
+                        'pass_status'     => ($percentage >= 33 ? 'Pass' : 'Fail')
+                    ];
+                }
             }
         }
 
