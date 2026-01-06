@@ -2285,11 +2285,24 @@ class Dashboard extends Controller
             return redirect()->back()->with('error', 'Missing required parameters!');
         }
 
-        if (strtolower($exam) === 'annual' || strtolower($exam) === 'annual_exam') {
+        // Define exams per class
+        $exams_by_class = [
+            6 => ['Half-Yearly', 'Annual Exam'],
+            7 => ['Half-Yearly', 'Annual Exam'],
+            8 => ['Half-Yearly', 'Annual Exam'],
+            9 => ['Half-Yearly', 'Annual Exam'],
+            10 => ['Half-Yearly', 'Pre-Test Exam', 'Test Exam', 'Annual Exam'],
+        ];
+
+        if ($exam === 'Annual Exam') {
+            // Annual exam goes to full result function
             return $this->test_result($studentId, $year, $view);
         } elseif (in_array($exam, ['Pre-Test Exam', 'Half-Yearly', 'Test Exam'])) {
+            // Other exams go to single exam function
             return $this->test_result_single_exam($studentId, $year, $exam, $view);
         }
+
+        // If exam name doesn't match any known exam
         return "no execution";
     }
 
