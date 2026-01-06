@@ -2287,8 +2287,10 @@ class Dashboard extends Controller
 
         // If Annual Exam → call full result
         if (strtolower($exam) === 'annual' || strtolower($exam) === 'annual_exam') {
+            echo "annual";
             return $this->test_result($studentId, $year, $view);
-        }
+        } else
+            echo "else";
 
         // Otherwise → single exam result
         return $this->test_result_single_exam(
@@ -2351,38 +2353,7 @@ class Dashboard extends Controller
         echo "</pre>";
     }
 
-    public function balance()
-    {
-        // Page basic data (same pattern as marksheet)
-        $this->data['title'] = 'SMS Balance';
-        $this->data['activeSection'] = 'sms';
-        $this->data['navbarItems'] = [
-            ['label' => 'SMS Balance', 'url' => base_url('sms/balance')],
-            ['label' => 'Send SMS', 'url' => base_url('sms/send')],
-        ];
 
-        // 🔐 BulkSMSDhaka API Key
-        $apiKey = '5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8';
-
-        // 🌐 API URL
-        $url = "https://bulksmsdhaka.net/api/getBalance?apikey={$apiKey}";
-
-        try {
-            $client = \Config\Services::curlrequest([
-                'timeout' => 10,
-            ]);
-
-            $response = $client->get($url);
-
-            // API returns plain number
-            $this->data['balance'] = trim($response->getBody());
-        } catch (\Throwable $e) {
-            $this->data['balance'] = 'API Error';
-        }
-
-        // ✅ SAME return style as marksheet_view
-        return view('dashboard/sms_balance', $this->data);
-    }
 
 
     public function showMarksheet()

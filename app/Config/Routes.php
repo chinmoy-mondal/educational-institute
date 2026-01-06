@@ -167,7 +167,6 @@ $routes->post('admin/attendance/save', 'Dashboard::saveAttendance');
 $routes->get('admin/teacher-attendance', 'Dashboard::teacherAttendance');
 
 
-$routes->get('sms/balance', 'Dashboard::balance');
 
 
 
