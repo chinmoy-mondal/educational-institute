@@ -2285,20 +2285,11 @@ class Dashboard extends Controller
             return redirect()->back()->with('error', 'Missing required parameters!');
         }
 
-        // If Annual Exam → call full result
         if (strtolower($exam) === 'annual' || strtolower($exam) === 'annual_exam') {
-            echo "annual";
             return $this->test_result($studentId, $year, $view);
-        } else
-            echo "else";
-
-        // Otherwise → single exam result
-        return $this->test_result_single_exam(
-            $studentId,
-            $year,
-            $exam,
-            $view
-        );
+        } elseif ($exam === 'test') {
+            return $this->test_result_single_exam($studentId, $year, $exam, $view);
+        }
     }
 
     public function updateNewRollByClass($class)
