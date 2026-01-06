@@ -3,8 +3,8 @@
 
 <style>
     /* ============================
-   PREMIUM PAGINATION STYLE
-===============================*/
+       PREMIUM PAGINATION STYLE
+    =============================== */
     .pagination {
         display: flex;
         justify-content: center;
@@ -55,22 +55,23 @@
 <div class="content">
     <div class="container-fluid">
 
+        <!-- Flash Messages -->
         <?php if (session()->getFlashdata('success')): ?>
             <div class="alert alert-success alert-dismissible fade show">
                 <?= session()->getFlashdata('success') ?>
-                <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
 
         <?php if (session()->getFlashdata('error')): ?>
             <div class="alert alert-danger alert-dismissible fade show">
                 <?= session()->getFlashdata('error') ?>
-                <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         <?php endif; ?>
 
         <!-- Filters -->
-        <div class="card shadow-sm">
+        <div class="card shadow-sm mb-3">
             <div class="card-body">
                 <form method="get" action="<?= site_url('admin/student') ?>">
                     <div class="row align-items-end">
@@ -110,7 +111,6 @@
                                 <option value="">All</option>
                                 <option value="__NULL__" <?= ($religion ?? '') === '__NULL__' ? 'selected' : '' ?>>Not
                                     Set</option>
-
                                 <?php foreach ($religions as $r): ?>
                                     <option value="<?= esc($r['religion']) ?>"
                                         <?= ($religion ?? '') === $r['religion'] ? 'selected' : '' ?>>
@@ -126,7 +126,6 @@
                                 <option value="">All</option>
                                 <option value="__NULL__" <?= ($gender ?? '') === '__NULL__' ? 'selected' : '' ?>>Not Set
                                 </option>
-
                                 <?php foreach ($genders as $g): ?>
                                     <option value="<?= esc($g['gender']) ?>"
                                         <?= ($gender ?? '') === $g['gender'] ? 'selected' : '' ?>>
@@ -177,7 +176,8 @@
                                     <td><?= esc($s['class']) ?></td>
                                     <td><?= esc($s['section']) ?></td>
                                     <td>
-                                        <div class="dropdown">
+                                        <!-- Exam Dropdown -->
+                                        <div class="dropdown d-inline-block me-1">
                                             <button class="btn btn-success btn-sm dropdown-toggle" type="button"
                                                 id="examDropdown<?= $s['id'] ?>" data-bs-toggle="dropdown"
                                                 aria-expanded="false">
@@ -196,6 +196,8 @@
                                                 <?php endforeach; ?>
                                             </ul>
                                         </div>
+
+                                        <!-- View / Delete Buttons -->
                                         <a href="<?= site_url('admin/students/view/' . $s['id']) ?>" class="btn btn-info btn-sm"
                                             target="_blank">
                                             <i class="fas fa-eye"></i> View
@@ -224,5 +226,8 @@
 
     </div>
 </div>
+
+<!-- Make sure Bootstrap 5 JS is included for dropdowns -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 
 <?= $this->endSection() ?>
