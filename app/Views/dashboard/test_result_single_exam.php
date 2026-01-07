@@ -205,7 +205,7 @@
             </thead>
 
             <tbody>
-                <?php foreach ($marksheet as $row):
+                <?php foreach ($marksheet as $id => $row):
                     $examData = $row['exam'];
                     $final    = $row['final'];
                     $subject  = $row['subject'];
