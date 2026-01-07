@@ -214,10 +214,10 @@
                     </td>
                     <td><?= $row['full_mark'] ?? 0 ?></td>
 
-                    <td><?= $examData['written'] ?></td>
-                    <td><?= $examData['mcq'] ?></td>
-                    <td><?= $examData['practical'] ?></td>
-                    <td><?= $examData['total'] ?></td>
+                    <td><?= $row['written'] ?></td>
+                    <td><?= $row['mcq'] ?></td>
+                    <td><?= $row['practical'] ?></td>
+                    <td><?= $row['total'] ?></td>
 
                     <?php if ($id == 0 || $id == 2): ?>
                     <td rowspan="2"><?= $final['total'] ?></td>
