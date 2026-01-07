@@ -164,6 +164,8 @@
         $total_fail = 0;
         $total_grade_point = 0;
 
+        $total_rows = count($marksheet); // total number of subjects
+
         function gpToGrade($gp)
         {
             if ($gp >= 5) return 'A+';
@@ -174,7 +176,6 @@
             if ($gp >= 1) return 'D';
             return 'F';
         }
-
         ?>
 
         <!-- ================= MARKS TABLE ================= -->
