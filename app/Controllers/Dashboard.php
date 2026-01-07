@@ -2149,7 +2149,7 @@ class Dashboard extends Controller
         if ($view) {
             $this->saveRankingFromResult($data);
         } else {
-            return view('dashboard/test_result_single_exam', $data);
+            // return view('dashboard/test_result_single_exam', $data);
         }
     }
 
