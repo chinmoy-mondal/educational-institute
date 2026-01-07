@@ -178,6 +178,12 @@
             if ($gp >= 1) return 'D';
             return 'F';
         }
+
+        // Define subject pairs for merging (Bangla 1+2, English 1+2)
+        $merged_subjects = [
+            ['Bangla 1st', 'Bangla 2nd'],
+            ['English 1st', 'English 2nd']
+        ];
         ?>
 
         <table>
@@ -200,49 +206,57 @@
             </thead>
 
             <tbody>
-                <?php foreach (array_values($marksheet) as $id => $row): ?>
-                    <?php
+                <?php foreach (array_values($marksheet) as $id => $row):
                     $examData = $row['exam'];
                     $final = $row['final'];
+                    $subjectName = $row['subject'];
 
-                    $isFourth = ($id == count($marksheet) - 1 && !in_array($student['class'], [6, 7, 8]));
+                    $isMerged = false;
+                    $rowspan = 1;
 
-                    if (!$isFourth) {
+                    // Check if this subject is part of a merged pair
+                    foreach ($merged_subjects as $pair) {
+                        if (in_array($subjectName, $pair)) {
+                            $isMerged = true;
+                            if ($subjectName === $pair[0]) {
+                                $rowspan = 2; // Only first of pair prints total
+                            } else {
+                                $rowspan = 0; // Second of pair: skip total
+                            }
+                            break;
+                        }
+                    }
+
+                    if (!$isMerged || $rowspan > 0) {
                         $total_subject++;
                         $total_marks += $final['total'];
                         $total_grade_point += $final['grade_point'];
-                    } else {
-                        $total_grade_point += max(0, $final['grade_point'] - 2);
                     }
 
                     if ($final['pass_status'] !== 'Pass') {
                         $total_fail++;
                     }
-                    ?>
+                ?>
                     <tr>
-                        <td><?= esc($row['subject']) ?> <?= $isFourth ? '<b>(4th)</b>' : '' ?></td>
+                        <td><?= esc($subjectName) ?> <?= $rowspan === 2 ? '<b>(Merged)</b>' : '' ?></td>
                         <td><?= $row['full_mark'] ?></td>
-
                         <td><?= $examData['written'] ?></td>
                         <td><?= $examData['mcq'] ?></td>
                         <td><?= $examData['practical'] ?></td>
                         <td><?= $examData['total'] ?></td>
 
-                        <?php if ($id == 0 || $id == 2): ?>
+                        <?php if ($rowspan === 2): ?>
                             <td rowspan="2"><?= $final['total'] ?></td>
                             <td rowspan="2"><?= $final['percentage'] ?>%</td>
                             <td rowspan="2"><?= $final['grade'] ?></td>
                             <td rowspan="2"><?= $final['grade_point'] ?></td>
-
-                        <?php elseif ($id == 1 || $id == 3): ?>
-                            <!-- merged row -->
-
+                        <?php elseif ($rowspan === 0): ?>
+                            <!-- skip for merged second subject -->
                         <?php else: ?>
                             <td><?= $final['total'] ?></td>
                             <td><?= $final['percentage'] ?>%</td>
                             <td><?= $final['grade'] ?></td>
                             <td><?= $final['grade_point'] ?></td>
-                            <td><?= $total_marks ?></td>
                         <?php endif; ?>
                     </tr>
                 <?php endforeach; ?>
