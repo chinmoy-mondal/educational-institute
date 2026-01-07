@@ -6,89 +6,83 @@
     <title>Academic Transcript</title>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
+    body {
+        font-family: Arial, sans-serif;
+    }
 
-        .marksheet-wrapper {
-            background: white;
-            padding: 24px;
-            border: 6px double goldenrod;
-            margin: auto;
-            max-width: 850px;
-            font-size: 14px;
-        }
+    .marksheet-wrapper {
+        background: white;
+        padding: 24px;
+        border: 6px double goldenrod;
+        margin: auto;
+        max-width: 850px;
+        font-size: 14px;
+    }
 
-        .school-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+    .school-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
 
-        th,
-        td {
-            border: 1px solid #000;
-            padding: 4px;
-            text-align: center;
-        }
+    th,
+    td {
+        border: 1px solid #000;
+        padding: 4px;
+        text-align: center;
+    }
 
-        .student-info td {
-            border: none;
-            text-align: left;
-        }
+    .student-info td {
+        border: none;
+        text-align: left;
+    }
 
-        .grade-table th,
-        .grade-table td {
-            font-size: 12px;
-            padding: 3px;
-        }
+    .grade-table th,
+    .grade-table td {
+        font-size: 12px;
+        padding: 3px;
+    }
 
-        .qr-img {
-            width: 120px;
-            height: 120px;
-        }
+    .qr-img {
+        width: 120px;
+        height: 120px;
+    }
 
-        @page {
-            size: A4;
-            margin: 20mm;
-        }
+    @page {
+        size: A4;
+        margin: 20mm;
+    }
 
-        @media print {
-            .no-print {
-                display: none;
-            }
+    @media print {
+        .no-print {
+            display: none;
         }
+    }
     </style>
 </head>
 
 <body>
-
     <div class="marksheet-wrapper">
 
-        <!-- SCHOOL HEADER -->
+        <!-- ================= SCHOOL HEADER ================= -->
         <div class="school-header">
             <h2>Mulgram Secondary School</h2>
             <h5>Keshabpur, Jashore</h5>
         </div>
 
-        <!-- HEADER ROW -->
         <table style="border:none;">
             <tr>
                 <td style="border:none;width:25%;">
                     <img src="<?= base_url($student['student_pic'] ?? 'public/assets/img/default.png') ?>" width="150">
                 </td>
-
                 <td style="border:none;text-align:center;width:50%;">
                     <img src="<?= base_url('public/assets/img/logo.jpg') ?>" width="60"><br>
-                    <h4 style="border-bottom:4px solid green;display:inline-block;">
-                        Academic Transcript
-                    </h4>
+                    <h4 style="border-bottom:4px solid green;display:inline-block;">Academic Transcript</h4>
                 </td>
-
                 <td style="border:none;width:25%;">
                     <table class="grade-table">
                         <tr>
@@ -136,7 +130,7 @@
             </tr>
         </table>
 
-        <!-- STUDENT INFO -->
+        <!-- ================= STUDENT INFO ================= -->
         <table class="student-info">
             <tr>
                 <td><b>Student Name:</b> <?= esc($student['student_name']) ?></td>
@@ -161,7 +155,6 @@
             </tr>
         </table>
 
-        <!-- MARKS TABLE -->
         <?php
         $total_marks = 0;
         $total_subject = 0;
@@ -179,13 +172,13 @@
             return 'F';
         }
 
-        // Define subject pairs for merging (Bangla 1+2, English 1+2)
-        $merged_subjects = [
+        $mergedPairs = [
             ['Bangla 1st', 'Bangla 2nd'],
             ['English 1st', 'English 2nd']
         ];
         ?>
 
+        <!-- ================= MARKS TABLE ================= -->
         <table>
             <thead>
                 <tr>
@@ -206,59 +199,60 @@
             </thead>
 
             <tbody>
-                <?php foreach (array_values($marksheet) as $id => $row):
+                <?php foreach ($marksheet as $row):
+
                     $examData = $row['exam'];
-                    $final = $row['final'];
-                    $subjectName = $row['subject'];
+                    $final    = $row['final'];
+                    $subject  = $row['subject'];
 
-                    $isMerged = false;
-                    $rowspan = 1;
+                    $isMerged = $isFirst = $isSecond = false;
 
-                    // Check if this subject is part of a merged pair
-                    foreach ($merged_subjects as $pair) {
-                        if (in_array($subjectName, $pair)) {
+                    foreach ($mergedPairs as $pair) {
+                        if ($subject === $pair[0]) {
                             $isMerged = true;
-                            if ($subjectName === $pair[0]) {
-                                $rowspan = 2; // Only first of pair prints total
-                            } else {
-                                $rowspan = 0; // Second of pair: skip total
-                            }
-                            break;
+                            $isFirst = true;
+                        }
+                        if ($subject === $pair[1]) {
+                            $isMerged = true;
+                            $isSecond = true;
                         }
                     }
 
-                    if (!$isMerged || $rowspan > 0) {
+                    if (!$isMerged || $isFirst) {
                         $total_subject++;
                         $total_marks += $final['total'];
                         $total_grade_point += $final['grade_point'];
-                    }
-
-                    if ($final['pass_status'] !== 'Pass') {
-                        $total_fail++;
+                        if ($final['pass_status'] !== 'Pass') $total_fail++;
                     }
                 ?>
-                    <tr>
-                        <td><?= esc($subjectName) ?> <?= $rowspan === 2 ? '<b>(Merged)</b>' : '' ?></td>
-                        <td><?= $row['full_mark'] ?></td>
-                        <td><?= $examData['written'] ?></td>
-                        <td><?= $examData['mcq'] ?></td>
-                        <td><?= $examData['practical'] ?></td>
-                        <td><?= $examData['total'] ?></td>
+                <tr>
+                    <td><?= esc($subject) ?> <?= $isMerged ? '<b>(Merged)</b>' : '' ?></td>
+                    <td><?= $row['full_mark'] ?></td>
 
-                        <?php if ($rowspan === 2): ?>
-                            <td rowspan="2"><?= $final['total'] ?></td>
-                            <td rowspan="2"><?= $final['percentage'] ?>%</td>
-                            <td rowspan="2"><?= $final['grade'] ?></td>
-                            <td rowspan="2"><?= $final['grade_point'] ?></td>
-                        <?php elseif ($rowspan === 0): ?>
-                            <!-- skip for merged second subject -->
-                        <?php else: ?>
-                            <td><?= $final['total'] ?></td>
-                            <td><?= $final['percentage'] ?>%</td>
-                            <td><?= $final['grade'] ?></td>
-                            <td><?= $final['grade_point'] ?></td>
-                        <?php endif; ?>
-                    </tr>
+                    <?php if ($isMerged): ?>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td><?= $examData['total'] ?></td>
+                    <?php else: ?>
+                    <td><?= $examData['written'] ?></td>
+                    <td><?= $examData['mcq'] ?></td>
+                    <td><?= $examData['practical'] ?></td>
+                    <td><?= $examData['total'] ?></td>
+                    <?php endif; ?>
+
+                    <?php if ($isMerged && $isFirst): ?>
+                    <td rowspan="2"><?= $final['total'] ?></td>
+                    <td rowspan="2"><?= $final['percentage'] ?>%</td>
+                    <td rowspan="2"><?= $final['grade'] ?></td>
+                    <td rowspan="2"><?= $final['grade_point'] ?></td>
+                    <?php elseif (!$isMerged): ?>
+                    <td><?= $final['total'] ?></td>
+                    <td><?= $final['percentage'] ?>%</td>
+                    <td><?= $final['grade'] ?></td>
+                    <td><?= $final['grade_point'] ?></td>
+                    <?php endif; ?>
+                </tr>
                 <?php endforeach; ?>
             </tbody>
 
@@ -273,7 +267,7 @@
             </tfoot>
         </table>
 
-        <!-- FOOTER -->
+        <!-- ================= FOOTER ================= -->
         <table style="margin-top:30px;border:none;">
             <tr>
                 <td style="border:none;"><b>Failed Subjects:</b> <?= $total_fail ?></td>
