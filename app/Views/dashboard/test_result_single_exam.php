@@ -242,6 +242,7 @@
                             <td><?= $final['percentage'] ?>%</td>
                             <td><?= $final['grade'] ?></td>
                             <td><?= $final['grade_point'] ?></td>
+                            <td><?= $total_marks ?></td>
                         <?php endif; ?>
                     </tr>
                 <?php endforeach; ?>
