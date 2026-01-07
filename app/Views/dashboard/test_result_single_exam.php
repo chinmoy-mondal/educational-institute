@@ -206,6 +206,7 @@
                         <?php
                             if ($total_rows == $id + 1) {
                                 if (in_array($student['class'], [6, 7, 8])) {
+                                $total_subject++;
                                 } else {
                                     echo "<b>(4th)</b>";
                                 }
