@@ -175,13 +175,8 @@
             return 'F';
         }
 
-        // ================== MERGE LOGIC BASED ON $id ARRAY ==================
-        // $id example: [0,2] or [1,3]
-        $useMerge = !empty(array_intersect($id, [0, 2]));
-        $noMerge  = !empty(array_intersect($id, [1, 3]));
-
-        $skipSubjects  = $useMerge ? ['Bangla 2nd', 'English 2nd'] : [];
-        $mergeSubjects = $useMerge ? ['Bangla 1st', 'English 1st'] : [];
+        $skipSubjects  = ['Bangla 2nd', 'English 2nd'];
+        $mergeSubjects = ['Bangla 1st', 'English 1st'];
         ?>
 
         <!-- ================= MARKS TABLE ================= -->
@@ -205,30 +200,26 @@
             </thead>
 
             <tbody>
-                <?php foreach ($marksheet as $id => $row):
+                <?php foreach (array_values($marksheet) as $row):
+
                     $examData = $row['exam'];
                     $final    = $row['final'];
                     $subject  = $row['subject'];
 
-                    // Skip 2nd paper ONLY if merge mode ON
-                    if ($useMerge && in_array($subject, $skipSubjects)) {
-                        continue;
-                    }
+                    $isSkip  = in_array($subject, $skipSubjects);
+                    $isMerge = in_array($subject, $mergeSubjects);
 
-                    // Count once
-                    $total_subject++;
-                    $total_marks += $final['total'];
-                    $total_grade_point += $final['grade_point'];
-                    if ($final['pass_status'] !== 'Pass') {
-                        $total_fail++;
+                    if (!$isSkip) {
+                        $total_subject++;
+                        $total_marks += $final['total'];
+                        $total_grade_point += $final['grade_point'];
+                        if ($final['pass_status'] !== 'Pass') {
+                            $total_fail++;
+                        }
                     }
                 ?>
                 <tr>
-                    <td>
-                        <?= esc($subject) ?>
-                        <?= ($useMerge && in_array($subject, $mergeSubjects)) ? '<b>(Merged)</b>' : '' ?>
-                    </td>
-
+                    <td><?= esc($subject) ?> <?= $isMerge ? '<b>(Merged)</b>' : '' ?></td>
                     <td><?= $row['full_mark'] ?></td>
 
                     <td><?= $examData['written'] ?></td>
@@ -236,10 +227,21 @@
                     <td><?= $examData['practical'] ?></td>
                     <td><?= $examData['total'] ?></td>
 
+                    <?php if ($isMerge): ?>
+                    <td rowspan="2"><?= $final['total'] ?></td>
+                    <td rowspan="2"><?= $final['percentage'] ?>%</td>
+                    <td rowspan="2"><?= $final['grade'] ?></td>
+                    <td rowspan="2"><?= $final['grade_point'] ?></td>
+
+                    <?php elseif ($isSkip): ?>
+                    <!-- skipped -->
+
+                    <?php else: ?>
                     <td><?= $final['total'] ?></td>
                     <td><?= $final['percentage'] ?>%</td>
                     <td><?= $final['grade'] ?></td>
                     <td><?= $final['grade_point'] ?></td>
+                    <?php endif; ?>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
