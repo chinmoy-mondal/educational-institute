@@ -200,26 +200,33 @@
             </thead>
 
             <tbody>
-                <?php foreach (array_values($marksheet) as $row):
+                <?php foreach ($marksheet as $row): ?>
 
+                <?php
                     $examData = $row['exam'];
                     $final    = $row['final'];
                     $subject  = $row['subject'];
 
-                    $isSkip  = in_array($subject, $skipSubjects);
-                    $isMerge = in_array($subject, $mergeSubjects);
-
-                    if (!$isSkip) {
-                        $total_subject++;
-                        $total_marks += $final['total'];
-                        $total_grade_point += $final['grade_point'];
-                        if ($final['pass_status'] !== 'Pass') {
-                            $total_fail++;
-                        }
+                    // ❌ Skip 2nd paper ONLY if merge mode ON
+                    if ($useMerge && in_array($subject, $skipSubjects)) {
+                        continue;
                     }
-                ?>
+
+                    // ✅ Count once
+                    $total_subject++;
+                    $total_marks += $final['total'];
+                    $total_grade_point += $final['grade_point'];
+
+                    if ($final['pass_status'] !== 'Pass') {
+                        $total_fail++;
+                    }
+                    ?>
                 <tr>
-                    <td><?= esc($subject) ?> <?= $isMerge ? '<b>(Merged)</b>' : '' ?></td>
+                    <td>
+                        <?= esc($subject) ?>
+                        <?= ($useMerge && in_array($subject, $mergeSubjects)) ? '<b>(Merged)</b>' : '' ?>
+                    </td>
+
                     <td><?= $row['full_mark'] ?></td>
 
                     <td><?= $examData['written'] ?></td>
@@ -227,22 +234,12 @@
                     <td><?= $examData['practical'] ?></td>
                     <td><?= $examData['total'] ?></td>
 
-                    <?php if ($isMerge): ?>
-                    <td rowspan="2"><?= $final['total'] ?></td>
-                    <td rowspan="2"><?= $final['percentage'] ?>%</td>
-                    <td rowspan="2"><?= $final['grade'] ?></td>
-                    <td rowspan="2"><?= $final['grade_point'] ?></td>
-
-                    <?php elseif ($isSkip): ?>
-                    <!-- skipped -->
-
-                    <?php else: ?>
                     <td><?= $final['total'] ?></td>
                     <td><?= $final['percentage'] ?>%</td>
                     <td><?= $final['grade'] ?></td>
                     <td><?= $final['grade_point'] ?></td>
-                    <?php endif; ?>
                 </tr>
+
                 <?php endforeach; ?>
             </tbody>
 
