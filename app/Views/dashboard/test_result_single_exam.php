@@ -24,16 +24,6 @@
         margin-bottom: 20px;
     }
 
-    .school-header h2 {
-        margin: 0;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
-
-    .school-header h5 {
-        margin: 5px 0;
-    }
-
     table {
         width: 100%;
         border-collapse: collapse;
@@ -44,7 +34,6 @@
         border: 1px solid #000;
         padding: 4px;
         text-align: center;
-        vertical-align: middle;
     }
 
     .student-info td {
@@ -56,11 +45,6 @@
     .grade-table td {
         font-size: 12px;
         padding: 3px;
-    }
-
-    .signature {
-        margin-top: 30px;
-        font-weight: bold;
     }
 
     .qr-img {
@@ -84,44 +68,102 @@
 <body>
     <div class="marksheet-wrapper">
 
-        <!-- School Header -->
+        <!-- ================= SCHOOL HEADER ================= -->
         <div class="school-header">
             <h2>Mulgram Secondary School</h2>
             <h5>Keshabpur, Jashore</h5>
         </div>
 
-        <!-- Student Info -->
-        <table class="student-info">
+        <!-- ================= HEADER ROW ================= -->
+        <table style="border:none;">
             <tr>
-                <td><strong>Student Name:</strong> <?= esc($student['student_name']) ?></td>
-            </tr>
-            <tr>
-                <td><strong>Father's Name:</strong> <?= esc($student['father_name']) ?></td>
-            </tr>
-            <tr>
-                <td><strong>Mother's Name:</strong> <?= esc($student['mother_name']) ?></td>
-            </tr>
-            <tr>
-                <td><strong>Student ID:</strong> <?= esc($student['id']) ?></td>
-                <td><strong>Exam:</strong> <?= esc($exam) ?></td>
-            </tr>
-            <tr>
-                <td><strong>Class:</strong> <?= esc($student['class']) ?></td>
-                <td><strong>Year:</strong> <?= esc($year) ?></td>
-            </tr>
-            <tr>
-                <td><strong>Roll:</strong> <?= esc($student['roll']) ?></td>
-                <td><strong>Group:</strong> <?= esc($student['section']) ?></td>
+                <td style="border:none;width:25%;">
+                    <img src="<?= base_url($student['student_pic'] ?? 'public/assets/img/default.png') ?>" width="150">
+                </td>
+
+                <td style="border:none;text-align:center;width:50%;">
+                    <img src="<?= base_url('public/assets/img/logo.jpg') ?>" width="60"><br>
+                    <h4 style="border-bottom:4px solid green;display:inline-block;">Academic Transcript</h4>
+                </td>
+
+                <td style="border:none;width:25%;">
+                    <table class="grade-table">
+                        <tr>
+                            <th>Range</th>
+                            <th>Grade</th>
+                            <th>GPA</th>
+                        </tr>
+                        <tr>
+                            <td>80-100</td>
+                            <td>A+</td>
+                            <td>5.0</td>
+                        </tr>
+                        <tr>
+                            <td>70-79</td>
+                            <td>A</td>
+                            <td>4.0</td>
+                        </tr>
+                        <tr>
+                            <td>60-69</td>
+                            <td>A-</td>
+                            <td>3.5</td>
+                        </tr>
+                        <tr>
+                            <td>50-59</td>
+                            <td>B</td>
+                            <td>3.0</td>
+                        </tr>
+                        <tr>
+                            <td>40-49</td>
+                            <td>C</td>
+                            <td>2.0</td>
+                        </tr>
+                        <tr>
+                            <td>33-39</td>
+                            <td>D</td>
+                            <td>1.0</td>
+                        </tr>
+                        <tr>
+                            <td>0-32</td>
+                            <td>F</td>
+                            <td>0.0</td>
+                        </tr>
+                    </table>
+                </td>
             </tr>
         </table>
 
-        <!-- Marks Table -->
+        <!-- ================= STUDENT INFO ================= -->
+        <table class="student-info">
+            <tr>
+                <td><b>Student Name:</b> <?= esc($student['student_name']) ?></td>
+            </tr>
+            <tr>
+                <td><b>Father's Name:</b> <?= esc($student['father_name']) ?></td>
+            </tr>
+            <tr>
+                <td><b>Mother's Name:</b> <?= esc($student['mother_name']) ?></td>
+            </tr>
+            <tr>
+                <td><b>Student ID:</b> <?= esc($student['id']) ?></td>
+                <td><b>Exam:</b> <?= esc($exam) ?></td>
+            </tr>
+            <tr>
+                <td><b>Class:</b> <?= esc($student['class']) ?></td>
+                <td><b>Year:</b> <?= esc($year) ?></td>
+            </tr>
+            <tr>
+                <td><b>Roll:</b> <?= esc($student['roll']) ?></td>
+                <td><b>Group:</b> <?= esc($student['section']) ?></td>
+            </tr>
+        </table>
+
         <?php
         $total_marks = 0;
         $total_subject = 0;
         $total_fail = 0;
         $total_grade_point = 0;
-        $merged_marks = [];
+
         function gpToGrade($gp)
         {
             if ($gp >= 5) return 'A+';
@@ -132,65 +174,81 @@
             if ($gp >= 1) return 'D';
             return 'F';
         }
+
+        $skipSubjects  = ['Bangla 2nd', 'English 2nd'];
+        $mergeSubjects = ['Bangla 1st', 'English 1st'];
         ?>
+
+        <!-- ================= MARKS TABLE ================= -->
         <table>
             <thead>
                 <tr>
-                    <th>Subject</th>
-                    <th>Full Mark</th>
-                    <th>Written</th>
-                    <th>MCQ</th>
-                    <th>Practical</th>
-                    <th>Total</th>
-                    <th>%</th>
-                    <th>Grade</th>
-                    <th>GP</th>
+                    <th rowspan="2">Subject</th>
+                    <th rowspan="2">Full Mark</th>
+                    <th colspan="4"><?= esc($exam) ?></th>
+                    <th rowspan="2">Total</th>
+                    <th rowspan="2">%</th>
+                    <th rowspan="2">Grade</th>
+                    <th rowspan="2">GP</th>
+                </tr>
+                <tr>
+                    <th>W</th>
+                    <th>M</th>
+                    <th>P</th>
+                    <th>T</th>
                 </tr>
             </thead>
+
             <tbody>
-                <?php foreach ($marksheet as $id => $row):
-                    $subject = $row['subject'];
-                    $final = $row['final'];
-                    $final_total = $final['total'];
-                    $final_percentage = $final['percentage'];
-                    $final_grade = $final['grade'];
-                    $final_gp = $final['grade_point'];
+                <?php foreach (array_values($marksheet) as $row):
 
-                    // Skip 2nd papers for table (id 1 or 3)
-                    if ($id == 1 || $id == 3) {
-                        $merged_marks[$subject] = $final_total;
-                        continue;
+                    $examData = $row['exam'];
+                    $final    = $row['final'];
+                    $subject  = $row['subject'];
+
+                    $isSkip  = in_array($subject, $skipSubjects);
+                    $isMerge = in_array($subject, $mergeSubjects);
+
+                    if (!$isSkip) {
+                        $total_subject++;
+                        $total_marks += $final['total'];
+                        $total_grade_point += $final['grade_point'];
+                        if ($final['pass_status'] !== 'Pass') {
+                            $total_fail++;
+                        }
                     }
-
-                    // Merge 2nd paper if needed (id 0 or 2)
-                    if ($id == 0 || $id == 2) {
-                        $second_id = $id + 1;
-                        $final_total += $merged_marks[$marksheet[$second_id]['subject']] ?? 0;
-                        $final_percentage = round(($final_total / $row['full_mark']) * 100, 2);
-                    }
-
-                    // Accumulate totals
-                    $total_marks += $final_total;
-                    $total_grade_point += $final_gp;
-                    $total_subject++;
-                    if ($final_gp < 1) $total_fail++;
                 ?>
                 <tr>
-                    <td><?= esc($subject) ?> <?= ($id == 0 || $id == 2) ? '<b>(Merged)</b>' : '' ?></td>
+                    <td><?= esc($subject) ?> <?= $isMerge ? '<b>(Merged)</b>' : '' ?></td>
                     <td><?= $row['full_mark'] ?></td>
-                    <td><?= $final['written'] ?></td>
-                    <td><?= $final['mcq'] ?></td>
-                    <td><?= $final['practical'] ?></td>
-                    <td><?= $final_total ?></td>
-                    <td><?= $final_percentage ?>%</td>
-                    <td><?= $final_grade ?></td>
-                    <td><?= $final_gp ?></td>
+
+                    <td><?= $examData['written'] ?></td>
+                    <td><?= $examData['mcq'] ?></td>
+                    <td><?= $examData['practical'] ?></td>
+                    <td><?= $examData['total'] ?></td>
+
+                    <?php if ($isMerge): ?>
+                    <td rowspan="2"><?= $final['total'] ?></td>
+                    <td rowspan="2"><?= $final['percentage'] ?>%</td>
+                    <td rowspan="2"><?= $final['grade'] ?></td>
+                    <td rowspan="2"><?= $final['grade_point'] ?></td>
+
+                    <?php elseif ($isSkip): ?>
+                    <!-- skipped -->
+
+                    <?php else: ?>
+                    <td><?= $final['total'] ?></td>
+                    <td><?= $final['percentage'] ?>%</td>
+                    <td><?= $final['grade'] ?></td>
+                    <td><?= $final['grade_point'] ?></td>
+                    <?php endif; ?>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
+
             <tfoot>
-                <tr style="font-weight:bold; background:#f0f0f0;">
-                    <td colspan="5">Total / GPA</td>
+                <tr style="font-weight:bold;background:#f0f0f0;">
+                    <td colspan="6">Total / GPA</td>
                     <td><?= $total_marks ?></td>
                     <td>-</td>
                     <td><?= $total_fail ? 'F' : gpToGrade($total_grade_point / $total_subject) ?></td>
@@ -199,27 +257,26 @@
             </tfoot>
         </table>
 
-        <!-- Footer -->
-        <table style="margin-top:30px; border:none;">
+        <!-- ================= FOOTER ================= -->
+        <table style="margin-top:30px;border:none;">
             <tr>
-                <td><strong>Failed Subjects:</strong> <?= $total_fail ?></td>
-                <td style="text-align:center;">
+                <td style="border:none;"><b>Failed Subjects:</b> <?= $total_fail ?></td>
+                <td style="border:none;text-align:center;">
                     <?php $url = 'https://mulss.edu.bd/student-id?q=' . $student['id']; ?>
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= urlencode($url) ?>"
-                        class="qr-img">
+                    <img class="qr-img"
+                        src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= urlencode($url) ?>">
                 </td>
             </tr>
         </table>
 
-        <!-- Signatures -->
-        <table style="margin-top:40px; border:none;">
+        <table style="margin-top:40px;border:none;">
             <tr>
-                <td style="border:none; text-align:left;">____________________<br>Head Teacher</td>
-                <td style="border:none; text-align:right;">____________________<br>Class Teacher</td>
+                <td style="border:none;text-align:left;">____________________<br>Head Teacher</td>
+                <td style="border:none;text-align:right;">____________________<br>Class Teacher</td>
             </tr>
         </table>
 
-        <div class="no-print" style="text-align:center; margin-top:20px;">
+        <div class="no-print" style="text-align:center;margin-top:20px;">
             <button onclick="window.print()">Print Marksheet</button>
         </div>
 
