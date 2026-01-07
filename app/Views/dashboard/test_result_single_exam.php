@@ -154,6 +154,7 @@
                     <td><?= $final_percentage ?>%</td>
                     <td><?= $final_grade ?></td>
                     <td><?= $final_gp ?></td>
+                    <td><?= $total_marks_sum ?></td>
                     <?php endif; ?>
 
                 </tr>
