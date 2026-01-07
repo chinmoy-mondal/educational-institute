@@ -2144,7 +2144,7 @@ class Dashboard extends Controller
         ];
 
         echo "<pre>";
-        print_r($data);
+        print_r($marksheetNumeric);
         echo "<pre>";
         // if ($view) {
         //     $this->saveRankingFromResult($data);
@@ -2454,8 +2454,8 @@ class Dashboard extends Controller
                 ->join('subjects', 'subjects.id = results.subject_id')
                 ->where([
                     'results.student_id' => $student['id'],
-                'results.exam'       => $exam,
-                'results.year'       => $year,
+                    'results.exam'       => $exam,
+                    'results.year'       => $year,
                 ])
                 ->findAll();
 
