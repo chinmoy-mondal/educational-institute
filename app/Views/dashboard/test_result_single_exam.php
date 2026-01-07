@@ -175,8 +175,13 @@
             return 'F';
         }
 
-        $skipSubjects  = ['Bangla 2nd', 'English 2nd'];
-        $mergeSubjects = ['Bangla 1st', 'English 1st'];
+        // ================== MERGE LOGIC BASED ON $id ARRAY ==================
+        // $id example: [0,2] or [1,3]
+        $useMerge = !empty(array_intersect($id, [0, 2]));
+        $noMerge  = !empty(array_intersect($id, [1, 3]));
+
+        $skipSubjects  = $useMerge ? ['Bangla 2nd', 'English 2nd'] : [];
+        $mergeSubjects = $useMerge ? ['Bangla 1st', 'English 1st'] : [];
         ?>
 
         <!-- ================= MARKS TABLE ================= -->
@@ -200,27 +205,24 @@
             </thead>
 
             <tbody>
-                <?php foreach ($marksheet as $row): ?>
-
-                <?php
+                <?php foreach ($marksheet as $row):
                     $examData = $row['exam'];
                     $final    = $row['final'];
                     $subject  = $row['subject'];
 
-                    // ❌ Skip 2nd paper ONLY if merge mode ON
+                    // Skip 2nd paper ONLY if merge mode ON
                     if ($useMerge && in_array($subject, $skipSubjects)) {
                         continue;
                     }
 
-                    // ✅ Count once
+                    // Count once
                     $total_subject++;
                     $total_marks += $final['total'];
                     $total_grade_point += $final['grade_point'];
-
                     if ($final['pass_status'] !== 'Pass') {
                         $total_fail++;
                     }
-                    ?>
+                ?>
                 <tr>
                     <td>
                         <?= esc($subject) ?>
@@ -239,7 +241,6 @@
                     <td><?= $final['grade'] ?></td>
                     <td><?= $final['grade_point'] ?></td>
                 </tr>
-
                 <?php endforeach; ?>
             </tbody>
 
