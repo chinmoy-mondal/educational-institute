@@ -302,6 +302,7 @@
                     <td><?= $final_gp ?></td>
                     <?php endif; ?>
                     <?php endforeach; ?>
+                </tr>
             </tbody>
             <tfoot>
                 <!-- Summary Row -->
