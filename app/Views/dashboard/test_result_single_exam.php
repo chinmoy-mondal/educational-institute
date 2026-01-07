@@ -214,22 +214,22 @@
                     </td>
                     <td><?= $row['full_mark'] ?? 0 ?></td>
 
-                    <td><?= $row['written'] ?></td>
-                    <td><?= $row['mcq'] ?></td>
-                    <td><?= $row['practical'] ?></td>
-                    <td><?= $row['total'] ?></td>
+                    <td><?= $row['exam']['written'] ?></td>
+                    <td><?= $row['exam']['mcq'] ?></td>
+                    <td><?= $row['exam']['practical'] ?></td>
+                    <td><?= $row['exam']['total'] ?></td>
 
                     <?php if ($id == 0 || $id == 2): ?>
-                    <td rowspan="2"><?= $final['total'] ?></td>
-                    <td rowspan="2"><?= $final['percentage'] ?>%</td>
-                    <td rowspan="2"><?= $final['grade'] ?></td>
-                    <td rowspan="2"><?= $final['grade_point'] ?></td>
+                    <td rowspan="2"><?= $row['final']['total'] ?></td>
+                    <td rowspan="2"><?= $row['final']['percentage'] ?>%</td>
+                    <td rowspan="2"><?= $row['final']['grade'] ?></td>
+                    <td rowspan="2"><?= $row['final']['grade_point'] ?></td>
 
                     <?php else: ?>
-                    <td><?= $final['total'] ?></td>
-                    <td><?= $final['percentage'] ?>%</td>
-                    <td><?= $final['grade'] ?></td>
-                    <td><?= $final['grade_point'] ?></td>
+                    <td><?= $row['final']['total'] ?></td>
+                    <td><?= $row['final']['percentage'] ?>%</td>
+                    <td><?= $row['final']['grade'] ?></td>
+                    <td><?= $row['final']['grade_point'] ?></td>
                     <?php endif; ?>
                 </tr>
                 <?php endforeach; ?>
