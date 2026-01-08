@@ -206,7 +206,7 @@
                         <?= esc($row['subject'] ?? '-') ?>
                         <?php
                             if ($total_rows == $id + 1) {
-                            if (in_array($student['class'], [6, 7, 8])) {
+                                if (in_array($student['class'], [6, 7, 8])) {
                                 } else {
                                     echo "<b>(4th)</b>";
                                 }
@@ -258,6 +258,7 @@
                     <td><?= $row['final']['grade'] ?></td>
                     <td><?= $row['final']['grade_point'] ?></td>
                     <?php endif; ?>
+                    <td><?= $$total_marks ?></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
