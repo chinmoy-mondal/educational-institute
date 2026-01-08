@@ -163,6 +163,7 @@
         $total_subject = 0;
         $total_fail = 0;
         $total_grade_point = 0;
+        $total_grade_point_without_forth = 0;
 
         $total_rows = count($marksheet); // total number of subjects
 
@@ -211,6 +212,32 @@
                                     echo "<b>(4th)</b>";
                                 }
                             }
+
+
+
+
+                            if ($id == 1 || $id == 3) {
+                            } else {
+                                $total_marks += $final_total;
+                                if ($total_rows == $id + 1) {
+                                    if (in_array($student['class'], [6, 7, 8])) {
+
+                                        $total_fail += ($final_gp) ? 0 : 1;
+                                        $total_subject++;
+                                        $total_grade_point += $final_gp;
+                                        $total_grade_point_without_forth += $final_gp;
+                                    } else {
+                                        $total_grade_point += max(0, $final_gp - 2);
+                                    }
+                                } else {
+                                    $total_fail += ($final_gp) ? 0 : 1;
+                                    $total_grade_point += $final_gp;
+                                    $total_grade_point_without_forth += $final_gp;
+                                    $total_subject++;
+                                }
+                            }
+
+
                             ?>
                     </td>
                     <td><?= $row['full_mark'] ?? 0 ?></td>
