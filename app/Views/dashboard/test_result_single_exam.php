@@ -206,7 +206,7 @@
                         <?php
                             if ($total_rows == $id + 1) {
                                 if (in_array($student['class'], [6, 7, 8])) {
-                                $total_subject++;
+                                    $total_subject++;
                                 } else {
                                     echo "<b>(4th)</b>";
                                 }
@@ -241,8 +241,8 @@
                     <td colspan="6">Total / GPA</td>
                     <td><?= $total_marks ?></td>
                     <td>-</td>
-                    <td><?= $total_fail ? 'F' : gpToGrade($total_grade_point / $total_subject) ?></td>
-                    <td><?= $total_fail ? '0.00' : number_format(min(5, $total_grade_point / $total_subject), 2) ?></td>
+                    <!-- <td><?= $total_fail ? 'F' : gpToGrade($total_grade_point / $total_subject) ?></td>
+                    <td><?= $total_fail ? '0.00' : number_format(min(5, $total_grade_point / $total_subject), 2) ?></td> -->
                 </tr>
             </tfoot>
         </table>
