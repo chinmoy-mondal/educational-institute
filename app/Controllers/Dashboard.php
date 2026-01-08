@@ -1606,6 +1606,8 @@ class Dashboard extends Controller
         // ---- Core Subjects ----
         if (str_contains($subject, 'bangla ')) return 'bangla';
         if (str_contains($subject, 'english ')) return 'english';
+        if (str_contains($subject, 'bangla-')) return 'bangla';
+        if (str_contains($subject, 'english-')) return 'english';
         if (str_contains($subject, 'physics')) return 'physics';
         if (str_contains($subject, 'chemistry')) return 'chemistry';
         if (str_contains($subject, 'biology')) return 'biology';
@@ -2089,9 +2091,9 @@ class Dashboard extends Controller
                 $practical,
                 $percentage
             );
-            echo "hello <pre>";
+            // echo "hello <pre>";
             print_r($gradeInfo);
-            echo "</pre> yes";
+            // echo "</pre> yes";
 
             //         $marksheetNumeric[] = [
             //             'subject'   => $row['subject'],
