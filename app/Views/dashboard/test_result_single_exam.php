@@ -212,9 +212,9 @@
                                 }
                             }
 
-                    if ($id == 1 || $id == 3) {
-                    } else {
-                            $total_marks += $row['final']['total'];
+                            if ($id == 1 || $id == 3) {
+                            } else {
+                                $total_marks += $row['final']['total'];
                                 if ($total_rows == $id + 1) {
                                     if (in_array($student['class'], [6, 7, 8])) {
 
@@ -255,7 +255,6 @@
                     <td><?= $row['final']['grade'] ?></td>
                     <td><?= $row['final']['grade_point'] ?></td>
                     <?php endif; ?>
-                    <td><?= $total_marks ?></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
