@@ -232,7 +232,7 @@
                                 } else {
                                 $total_fail += ($row['final']['grade_point']) ? 0 : 1;
                                 $total_grade_point += $row['final']['grade_point'];
-                                $total_grade_point_without_forth += $row['final']['grade'];
+                                $total_grade_point_without_forth += $row['final']['grade_point'];
                                     $total_subject++;
                                 }
                             }
