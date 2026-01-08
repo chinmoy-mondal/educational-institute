@@ -212,12 +212,9 @@
                                 }
                             }
 
-
-
-
-                            if ($id == 1 || $id == 3) {
-                            } else {
-                                $total_marks += $row['exam']['total'];
+                    if ($id == 1 || $id == 3) {
+                    } else {
+                            $total_marks += $row['final']['total'];
                                 if ($total_rows == $id + 1) {
                                     if (in_array($student['class'], [6, 7, 8])) {
 
