@@ -257,7 +257,6 @@
                     <td><?= $row['final']['percentage'] ?>%</td>
                     <td><?= $row['final']['grade'] ?></td>
                     <td><?= $row['final']['grade_point'] ?></td>
-                    <td><?= $total_subject ?></td>
                     <?php endif; ?>
                 </tr>
                 <?php endforeach; ?>
