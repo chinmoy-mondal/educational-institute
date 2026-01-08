@@ -222,16 +222,16 @@
                                 if ($total_rows == $id + 1) {
                                     if (in_array($student['class'], [6, 7, 8])) {
 
-                                    $total_fail += ($row['final']['grade']) ? 0 : 1;
+                                    $total_fail += ($row['final']['grade_point']) ? 0 : 1;
                                         $total_subject++;
-                                    $total_grade_point += $row['final']['grade'];
-                                    $total_grade_point_without_forth += $row['final']['grade'];
+                                    $total_grade_point += $row['final']['grade_point'];
+                                    $total_grade_point_without_forth += $row['final']['grade_point'];
                                     } else {
-                                    $total_grade_point += max(0, $row['final']['grade'] - 2);
+                                    $total_grade_point += max(0, $row['final']['grade_point'] - 2);
                                     }
                                 } else {
-                                $total_fail += ($row['final']['grade']) ? 0 : 1;
-                                $total_grade_point += $row['final']['grade'];
+                                $total_fail += ($row['final']['grade_point']) ? 0 : 1;
+                                $total_grade_point += $row['final']['grade_point'];
                                 $total_grade_point_without_forth += $row['final']['grade'];
                                     $total_subject++;
                                 }
