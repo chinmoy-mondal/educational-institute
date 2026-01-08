@@ -1658,6 +1658,12 @@ class Dashboard extends Controller
             return 'agriculture';
         }
 
+        if (
+            str_contains($subject, 'self employment and entrepreneur')
+        ) {
+            return 'self_employment_entrepreneur';
+        }
+
         // ---- Fallback ----
         return 'general';
     }
