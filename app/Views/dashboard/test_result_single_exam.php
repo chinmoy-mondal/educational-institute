@@ -226,7 +226,7 @@
                     <td rowspan="2"><?= $row['final']['grade'] ?></td>
                     <td rowspan="2"><?= $row['final']['grade_point'] ?></td>
 
-                    <?php else: ?>
+                    <?php elseif ($id > 3): ?>
                     <td><?= $row['final']['total'] ?></td>
                     <td><?= $row['final']['percentage'] ?>%</td>
                     <td><?= $row['final']['grade'] ?></td>
