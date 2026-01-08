@@ -1968,77 +1968,80 @@ class Dashboard extends Controller
         echo "Year: " . ($year ?? 'NULL') . "<br>";
         echo "Exam: " . ($exam ?? 'NULL') . "<br>";
         echo "View: " . ($view ?? 'NULL') . "<br>";
-        //     if (!$studentId || !$year || !$exam) {
-        //         return "Student ID, Year and Exam are required";
-        //     }
+        if (!$studentId || !$year || !$exam) {
+            return "Student ID, Year and Exam are required";
+        }
 
-        //     // ---------------- STUDENT ----------------
-        //     $student = $this->studentModel->find($studentId);
-        //     if (!$student) {
-        //         return "Student not found";
-        //     }
+        // ---------------- STUDENT ----------------
+        $student = $this->studentModel->find($studentId);
+        if (!$student) {
+            return "Student not found";
+        }
 
-        //     // ---------------- ASSIGNED SUBJECT ORDER ----------------
-        //     $assignSubArr = explode(',', $student['assign_sub']);
-        //     $normalSubs = [];
-        //     $optionalSub = null;
+        // ---------------- ASSIGNED SUBJECT ORDER ----------------
+        $assignSubArr = explode(',', $student['assign_sub']);
+        $normalSubs = [];
+        $optionalSub = null;
 
-        //     foreach ($assignSubArr as $sub) {
-        //         if (str_contains($sub, '*')) {
-        //             $optionalSub = (int) str_replace('*', '', $sub);
-        //         } else {
-        //             $normalSubs[] = (int) $sub;
-        //         }
-        //     }
+        foreach ($assignSubArr as $sub) {
+            if (str_contains($sub, '*')) {
+                $optionalSub = (int) str_replace('*', '', $sub);
+            } else {
+                $normalSubs[] = (int) $sub;
+            }
+        }
 
-        //     $orderedSubjects = $normalSubs;
-        //     if ($optionalSub) {
-        //         $orderedSubjects[] = $optionalSub;
-        //     }
+        $orderedSubjects = $normalSubs;
+        if ($optionalSub) {
+            $orderedSubjects[] = $optionalSub;
+        }
 
-        //     // ---------------- FETCH SINGLE EXAM RESULT ----------------
-        //     $results = $this->resultModel
-        //         ->select('results.*, subjects.subject, subjects.full_mark')
-        //         ->join('subjects', 'subjects.id = results.subject_id')
-        //         ->where([
-        //             'results.student_id' => $studentId,
-        //             'results.year'       => $year,
-        //             'results.exam'       => $exam
-        //         ])
-        //         ->findAll();
+        // ---------------- FETCH SINGLE EXAM RESULT ----------------
+        $results = $this->resultModel
+            ->select('results.*, subjects.subject, subjects.full_mark')
+            ->join('subjects', 'subjects.id = results.subject_id')
+            ->where([
+                'results.student_id' => $studentId,
+                'results.year'       => $year,
+                'results.exam'       => $exam
+            ])
+            ->findAll();
 
-        //     // ---------------- PREPARE MARKSHEET ----------------
-        //     $marksheet = [];
-        //     foreach ($results as $r) {
-        //         $marksheet[$r['subject_id']] = $r;
-        //     }
+        // ---------------- PREPARE MARKSHEET ----------------
+        $marksheet = [];
+        foreach ($results as $r) {
+            $marksheet[$r['subject_id']] = $r;
+        }
 
-        //     // ---------------- ORDER SUBJECTS ----------------
-        //     $marksheetNumeric = [];
-        //     foreach ($orderedSubjects as $sid) {
-        //         if (!isset($marksheet[$sid])) continue;
+        // ---------------- ORDER SUBJECTS ----------------
+        $marksheetNumeric = [];
+        foreach ($orderedSubjects as $sid) {
+            if (!isset($marksheet[$sid])) continue;
 
-        //         $row = $marksheet[$sid];
+            $row = $marksheet[$sid];
 
-        //         $written   = $row['written'] ?? 0;
-        //         $mcq       = $row['mcq'] ?? 0;
-        //         $practical = $row['practical'] ?? 0;
+            $written   = $row['written'] ?? 0;
+            $mcq       = $row['mcq'] ?? 0;
+            $practical = $row['practical'] ?? 0;
 
-        //         $total = $written + $mcq + $practical;
+            $total = $written + $mcq + $practical;
 
-        //         $percentage = $row['full_mark'] > 0
-        //             ? round(($total / $row['full_mark']) * 100, 2)
-        //             : 0;
+            $percentage = $row['full_mark'] > 0
+                ? round(($total / $row['full_mark']) * 100, 2)
+                : 0;
 
-        //         $gradeInfo = $this->resultManipulation(
-        //             (int)$student['class'],
-        //             $student['section'],
-        //             $row['subject'],
-        //             $written,
-        //             $mcq,
-        //             $practical,
-        //             $percentage
-        //         );
+            $gradeInfo = $this->resultManipulation(
+                (int)$student['class'],
+                $student['section'],
+                $row['subject'],
+                $written,
+                $mcq,
+                $practical,
+                $percentage
+            );
+            echo "<pre>";
+            print_r($gradeInfo);
+            echo "</pre>";
 
         //         $marksheetNumeric[] = [
         //             'subject'   => $row['subject'],
