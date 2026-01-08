@@ -258,7 +258,7 @@
                     <td><?= $row['final']['grade'] ?></td>
                     <td><?= $row['final']['grade_point'] ?></td>
                     <?php endif; ?>
-                    <td><?= $$total_marks ?></td>
+                    <td><?= $total_marks ?></td>
                 </tr>
                 <?php endforeach; ?>
             </tbody>
