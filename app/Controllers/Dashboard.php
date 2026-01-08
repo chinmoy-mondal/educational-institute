@@ -1662,11 +1662,11 @@ class Dashboard extends Controller
 
     public function resultManipulation($class, $section, $subject, $wri, $mcq, $pra, $mark)
     {
-        // echo $class . "==";
-        // echo $subject . "==";
+        echo $class . "==";
+        echo $subject . "==";
         $section = strtolower($section);
         $key     = $this->normalizeSubject($subject);
-        // echo $key . "<br>";
+        echo $key . "<br>";
 
         // ---------------- CLASS 9–10 (GENERAL) ----------------
         if (in_array($class, [9, 10]) && strpos($section, 'vocational') === false) {
