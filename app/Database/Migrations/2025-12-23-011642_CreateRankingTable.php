@@ -27,6 +27,11 @@ class CreateRankingTable extends Migration
                 'constraint' => 2,
             ],
 
+            'exam' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 50,
+            ],
+
             // Current year roll
             'new_roll' => [
                 'type'       => 'INT',

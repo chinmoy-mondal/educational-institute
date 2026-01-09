@@ -1795,7 +1795,7 @@ class Dashboard extends Controller
         return 'F';
     }
 
-    public function test_result($studentId = null, $year = null, $view = null)
+    public function test_result($studentId = null, $year = null, $exam = null, $view = null)
     {
         if (!$studentId || !$year) {
             return "Student ID and Year are required";
@@ -1841,7 +1841,7 @@ class Dashboard extends Controller
             ->where([
                 'results.student_id' => $studentId,
                 'results.year'       => $year,
-                'results.exam'       => 'Annual Exam'
+            'results.exam'       => $exam
             ])->findAll();
 
         // ---------------- MERGE ----------------
@@ -2005,7 +2005,7 @@ class Dashboard extends Controller
         $data = [
             'marksheet' => $marksheetNumeric,
             'student'   => $student,
-            'exam'      => 'Annual Exam',
+            'exam'      => $exam,
             'year'      => $year
         ];
 
@@ -2017,10 +2017,6 @@ class Dashboard extends Controller
 
     public function test_result_single_exam($studentId = null, $year = null, $exam = null, $view = null)
     {
-        // echo "Student ID: " . ($studentId ?? 'NULL') . "<br>";
-        // echo "Year: " . ($year ?? 'NULL') . "<br>";
-        // echo "Exam: " . ($exam ?? 'NULL') . "<br>";
-        // echo "View: " . ($view ?? 'NULL') . "<br>";
         if (!$studentId || !$year || !$exam) {
             return "Student ID, Year and Exam are required";
         }
@@ -2220,7 +2216,7 @@ class Dashboard extends Controller
         $exam      = $data['exam'];
         $year      = $data['year'];
 
-
+        if ($exam == 'Annual Exam') {
         $total_fail = 0;
         $total_marks_sum = 0;
         $total_subject = 0;
@@ -2273,6 +2269,7 @@ class Dashboard extends Controller
         $rankingData = [
             'student_id'        => $student['id'],
             'class'             => $student['class'],
+                'exam'             => $student['exam'],
             'new_roll'          => '',
             'student_name'      => $student['student_name'],
             'past_roll'         => $student['roll'],
@@ -2297,7 +2294,12 @@ class Dashboard extends Controller
         } else {
             $rankingData['created_at'] = date('Y-m-d H:i:s');
             $this->rankingModel->insert($rankingData);
-            // echo 'Ranking saved successfully.';
+                // echo 'Ranking saved successfully.';
+            }
+        } else {
+            echo "pppppppp<pre>";
+            print_r($data);
+            echo "</pre>";
         }
     }
 
@@ -2305,6 +2307,7 @@ class Dashboard extends Controller
     {
         $class = $this->request->getGet('class');
         $year  = $this->request->getGet('year');
+        $exam  = $this->request->getGet('exam');
 
         if (!$class || !$year) {
             return redirect()->back()->with('error', 'Class and Year are required');
@@ -2353,8 +2356,9 @@ class Dashboard extends Controller
 
         if ($exam === 'Annual Exam') {
             // Annual exam goes to full result function
-            return $this->test_result($studentId, $year, $view);
+            return $this->test_result($studentId, $year, $exam, $view);
         } elseif (in_array($exam, ['Pre-Test Exam', 'Half-Yearly', 'Test Exam'])) {
+            echo "yes=single subject";
             // Other exams go to single exam function
             return $this->test_result_single_exam($studentId, $year, $exam, $view);
         }
