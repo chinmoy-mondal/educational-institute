@@ -2445,18 +2445,18 @@ class Dashboard extends Controller
 
             if ($exam === 'Annual Exam') {
                 // Annual exam goes to full result function
-                return $this->test_result($studentId, $year, $exam, $view);
+                $this->test_result($studentId, $year, $exam, $view);
             } elseif (in_array($exam, ['Pre-Test Exam', 'Half-Yearly', 'Test Exam'])) {
                 // Other exams go to single exam function
 
                 echo "go inside single data";
-                return $this->test_result_single_exam($studentId, $year, $exam, $view);
+                $this->test_result_single_exam($studentId, $year, $exam, $view);
                 echo "get out single subject";
             }
             // $this->test_result($studentId, $year, $view);
         }
         // echo "Ranking data saved";
-        // echo $this->updateNewRollByClass($class, $section_student) ? 'New Roll also saved' : 'New Roll is not saved';
+        echo $this->updateNewRollByClass($class, $section_student) ? 'New Roll also saved' : 'New Roll is not saved';
         // // return redirect()->back()->with('success', 'Top sheet processed for all students.');
     }
 
