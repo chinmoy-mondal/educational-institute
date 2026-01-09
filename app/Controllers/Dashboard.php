@@ -1732,39 +1732,32 @@ class Dashboard extends Controller
         // ---------------- CLASS 9–10 (VOCATIONAL) ----------------
         if (in_array($class, [9, 10]) && stripos($section, 'vocational') !== false) {
 
-            // Bangla (1st + 2nd combined handled outside)
-            if ($key === 'bangla') {
-                return ($this->branchCheck($wri, 46) && $this->branchCheck($mcq, 20))
-                    ? $this->markToGrade($mark)
-                    : ['grade' => 'F', 'gp' => 0.00];
-            }
 
-            // English
-            if ($key === 'english') {
-                return $this->branchCheck($wri, 66)
+
+            // Agriculture
+            if ($key === 'agriculture') {
+                return ($this->branchCheck($wri, 15))
                     ? $this->markToGrade($mark)
                     : ['grade' => 'F', 'gp' => 0.00];
             }
 
             // ICT
-            if ($key === 'ict') {
-                return ($this->branchCheck($wri + $mcq, 7) && $this->branchCheck($pra, 8))
+            if ($key === 'computer') {
+                return ($this->branchCheck($pra, 17))
                     ? $this->markToGrade($mark)
                     : ['grade' => 'F', 'gp' => 0.00];
             }
 
             // Science subjects
-            if (in_array($key, ['physics', 'chemistry', 'biology', 'higher_math', 'agriculture'])) {
+            if (in_array($key, ['physics', 'chemistry', 'biology', 'bgs', 'self_employment_entrepreneur'])) {
 
-                return ($this->branchCheck($wri, 17)
-                    && $this->branchCheck($mcq, 8)
-                    && $this->branchCheck($pra, 8))
+                return ($this->branchCheck($wri, 10))
                     ? $this->markToGrade($mark)
                     : ['grade' => 'F', 'gp' => 0.00];
             }
 
             // Other subjects
-            return ($this->branchCheck($wri, 23) && $this->branchCheck($mcq, 10))
+            return ($this->branchCheck($wri, 20) )
                 ? $this->markToGrade($mark)
                 : ['grade' => 'F', 'gp' => 0.00];
         }
