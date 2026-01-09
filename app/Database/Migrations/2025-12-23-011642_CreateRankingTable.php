@@ -71,6 +71,7 @@ class CreateRankingTable extends Migration
                 'constraint' => '4,2',
                 'default'    => 0.00,
             ],
+            
             // Letter Grade
             'grade_letter' => [
                 'type'       => 'VARCHAR',
