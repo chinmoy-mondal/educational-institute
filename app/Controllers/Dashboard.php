@@ -1685,7 +1685,7 @@ class Dashboard extends Controller
         // echo $class . "==";
         // echo $subject . "==";
         $section = strtolower($section);
-        // echo $section . "==";
+        echo "==" . $section . "==";
         $key     = $this->normalizeSubject($subject);
         // echo $key . "<br>";
 
@@ -1730,7 +1730,7 @@ class Dashboard extends Controller
         }
 
         // ---------------- CLASS 9–10 (VOCATIONAL) ----------------
-        if (in_array($class, [9, 10]) && strpos($section, 'Vocational') === true) {
+        if (in_array($class, [9, 10]) && strpos($section, 'vocational') === true) {
 
             echo "yes inside vocational ";
 
@@ -1771,7 +1771,7 @@ class Dashboard extends Controller
                 : ['grade' => 'F', 'gp' => 0.00];
         }
 
-        if (in_array($class, [6, 7, 8]) && strpos($section, 'Vocational') === false) {
+        if (in_array($class, [6, 7, 8]) && strpos($section, 'vocational') === false) {
 
             echo "yes inside 6 to 8";
             // ---------------- CLASS 6–8 ----------------
