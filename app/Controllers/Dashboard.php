@@ -1682,8 +1682,8 @@ class Dashboard extends Controller
         // ]);
         // echo "</pre>";
 
-        // echo $class . "==";
-        echo $subject . "==";
+        echo $class . "==";
+        // echo $subject . "==";
         $section = strtolower($section);
         $key     = $this->normalizeSubject($subject);
         echo $key . "<br>";
@@ -1730,6 +1730,8 @@ class Dashboard extends Controller
 
         // ---------------- CLASS 9–10 (VOCATIONAL) ----------------
         if (in_array($class, [9, 10]) && strpos($section, 'vocational') === true) {
+
+            echo "yes inside vocational ";
 
             // Bangla (1st + 2nd combined handled outside)
             if ($key === 'bangla') {
@@ -2097,9 +2099,9 @@ class Dashboard extends Controller
                 $practical,
                 $percentage
             );
-            echo "hello <pre>";
+            echo "<pre>";
             print_r($gradeInfo);
-            echo "</pre> yes";
+            echo "</pre>";
 
             // $marksheetNumeric[] = [
             //     'subject'   => $row['subject'],
