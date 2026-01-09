@@ -2296,11 +2296,11 @@ class Dashboard extends Controller
                 ->first();
             if ($existing) {
                 $this->rankingModel->update($existing['id'], $rankingData);
-                echo 'Ranking updated successfully.';
+                echo 'Ranking updated successfully.' . '<br>';
             } else {
                 $rankingData['created_at'] = date('Y-m-d H:i:s');
                 $this->rankingModel->insert($rankingData);
-                echo 'Ranking saved successfully.';
+                echo 'Ranking saved successfully.' . '<br>';
             }
         } else {
             $full_marks = 0;
@@ -2454,7 +2454,7 @@ class Dashboard extends Controller
             // $this->test_result($studentId, $year, $view);
         }
         // echo "Ranking data saved";
-        echo $this->updateNewRollByClass($class, $section_student) ? 'New Roll also saved' : 'New Roll is not saved';
+        echo $this->updateNewRollByClass($class, $section_student) ? 'New Roll also saved' . '<br>' : 'New Roll is not saved' . '<br>';
         // // return redirect()->back()->with('success', 'Top sheet processed for all students.');
     }
 
