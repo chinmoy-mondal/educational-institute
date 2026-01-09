@@ -104,7 +104,7 @@ $routes->get('admin/show-marksheet', 'Dashboard::showMarksheet');
 
 $routes->get('admin/test_result', 'Dashboard::call_test_result');
 $routes->get('admin/topsheet', 'Dashboard::make_top_sheet');
-$routes->get('admin/update-new-roll/(:num)', 'Dashboard::updateNewRollByClass/$1');
+$routes->get('admin/update-new-roll/(:num)/(:any)', 'Dashboard::updateNewRollByClass/$1/$2');
 $routes->get('admin/print_topsheet/(:num)', 'Dashboard::print_topsheet/$1');
 $routes->get('admin/class_promote', 'Dashboard::class_promote');
 

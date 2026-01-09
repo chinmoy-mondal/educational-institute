@@ -2452,9 +2452,9 @@ class Dashboard extends Controller
             }
             // $this->test_result($studentId, $year, $view);
         }
-        echo "Ranking data saved";
-        echo $this->updateNewRollByClass($class, $section_student) ? 'New Roll also saved' : 'New Roll is not saved';
-        // return redirect()->back()->with('success', 'Top sheet processed for all students.');
+        // echo "Ranking data saved";
+        // echo $this->updateNewRollByClass($class, $section_student) ? 'New Roll also saved' : 'New Roll is not saved';
+        // // return redirect()->back()->with('success', 'Top sheet processed for all students.');
     }
 
     public function updateNewRollByClass($class, $section)
