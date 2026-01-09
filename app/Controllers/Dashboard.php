@@ -1684,8 +1684,8 @@ class Dashboard extends Controller
 
         echo $class . "==";
         // echo $subject . "==";
-        echo $section . "==";
         $section = strtolower($section);
+        echo $section . "==";
         $key     = $this->normalizeSubject($subject);
         echo $key . "<br>";
 
