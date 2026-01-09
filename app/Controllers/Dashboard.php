@@ -1920,9 +1920,11 @@ class Dashboard extends Controller
             }
 
             $percentage = $fullMarkSum > 0 ? round(($totalSum / $fullMarkSum) * 100, 2) : 0;
-            // if (!count($marksheetNumeric)) {
-            //     return "Sorry no Data found";
-            // }
+            
+            if (!count($marksheetNumeric)) {
+                return "Sorry no Data found";
+            }
+            
             $gradeInfo = $this->resultManipulation(
                 (int)$student['class'],
                 $student['section'],
@@ -1965,6 +1967,7 @@ class Dashboard extends Controller
                     ? round(($avgTotal / $row['full_mark']) * 100, 2)
                     : 0;
 
+                    
                 $gradeInfo = $this->resultManipulation(
                     (int)$student['class'],
                     $student['section'],
