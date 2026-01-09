@@ -27,6 +27,11 @@ class CreateRankingTable extends Migration
                 'constraint' => 2,
             ],
 
+            'section' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 50
+            ],
+
             'exam' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 50,

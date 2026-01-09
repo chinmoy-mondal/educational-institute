@@ -11,6 +11,7 @@ class RankingModel extends Model
     protected $allowedFields = [
         'student_id',
         'class',
+        'section',
         'exam',
         'new_roll',
         'student_name',
