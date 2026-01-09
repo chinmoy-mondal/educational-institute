@@ -2302,11 +2302,9 @@ class Dashboard extends Controller
                 ->first();
             if ($existing) {
                 $this->rankingModel->update($existing['id'], $rankingData);
-                echo 'Ranking updated successfully.' . '<br>';
             } else {
                 $rankingData['created_at'] = date('Y-m-d H:i:s');
                 $this->rankingModel->insert($rankingData);
-                echo 'Ranking saved successfully.' . '<br>';
             }
         } else {
             $full_marks = 0;
@@ -2402,11 +2400,9 @@ class Dashboard extends Controller
                 ->first();
             if ($existing) {
                 $this->rankingModel->update($existing['id'], $rankingData);
-                echo 'Ranking updated successfully.';
             } else {
                 $rankingData['created_at'] = date('Y-m-d H:i:s');
                 $this->rankingModel->insert($rankingData);
-                echo 'Ranking saved successfully.';
             }
         }
     }
@@ -2528,6 +2524,33 @@ class Dashboard extends Controller
 
     public function print_topsheet($class)
     {
+        // Class 9 & 10 → separate General and Vocational
+        if (in_array($class, [9, 10])) {
+
+            // General section
+            $generalRankings = $this->rankingModel
+                ->where('class', $class)
+                ->where('section', 'general')
+                ->orderBy('fail', 'ASC')
+                ->orderBy('total', 'DESC')
+                ->findAll();
+
+            // Vocational section
+            $vocationalRankings = $this->rankingModel
+                ->where('class', $class)
+                ->where('section', 'vocational')
+                ->orderBy('fail', 'ASC')
+                ->orderBy('total', 'DESC')
+                ->findAll();
+
+            return view('dashboard/print_topsheet', [
+                'class'               => $class,
+                'generalRankings'     => $generalRankings,
+                'vocationalRankings'  => $vocationalRankings,
+            ]);
+        }
+
+        // Class 6–8 → normal single list
         $rankings = $this->rankingModel
             ->where('class', $class)
             ->orderBy('fail', 'ASC')
@@ -2536,7 +2559,7 @@ class Dashboard extends Controller
 
         return view('dashboard/print_topsheet', [
             'class'    => $class,
-            'rankings' => $rankings
+            'rankings' => $rankings,
         ]);
     }
 

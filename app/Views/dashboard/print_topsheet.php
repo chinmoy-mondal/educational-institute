@@ -3,7 +3,6 @@
 
 <head>
     <title>Top Sheet - Class <?= esc($class) ?></title>
-
     <style>
     @page {
         size: A4;
@@ -94,34 +93,36 @@
 <body>
 
     <?php
-    // ---------------- SUMMARY CALCULATION ----------------
-    $totalStudents = count($rankings);
-    $totalPass = 0;
-    $totalFail = 0;
+    // ---------------- HELPER FUNCTION ----------------
+    function renderTopSheet($rankings, $class, $sectionTitle = null)
+    {
+        $totalStudents = count($rankings);
+        $totalPass = 0;
+        $totalFail = 0;
 
-    $gradeCount = [
-        'A+' => 0,
-        'A'  => 0,
-        'A-' => 0,
-        'B'  => 0,
-        'C'  => 0,
-        'D'  => 0,
-    ];
+        $gradeCount = [
+            'A+' => 0,
+            'A' => 0,
+            'A-' => 0,
+            'B' => 0,
+            'C' => 0,
+            'D' => 0,
+        ];
 
-    foreach ($rankings as $row) {
-        if ((int)$row['fail'] > 0) {
-            $totalFail++;
-        } else {
-            $totalPass++;
+        foreach ($rankings as $row) {
+            if ((int)$row['fail'] > 0) {
+                $totalFail++;
+            } else {
+                $totalPass++;
+            }
+
+            if (isset($gradeCount[$row['grade_letter']])) {
+                $gradeCount[$row['grade_letter']]++;
+            }
         }
 
-        if (isset($gradeCount[$row['grade_letter']])) {
-            $gradeCount[$row['grade_letter']]++;
-        }
-    }
-
-    $passPercentage = $totalStudents > 0 ? round(($totalPass / $totalStudents) * 100, 2) : 0;
-    $failPercentage = $totalStudents > 0 ? round(($totalFail / $totalStudents) * 100, 2) : 0;
+        $passPercentage = $totalStudents ? round(($totalPass / $totalStudents) * 100, 2) : 0;
+        $failPercentage = $totalStudents ? round(($totalFail / $totalStudents) * 100, 2) : 0;
     ?>
 
     <div class="sheet-wrapper">
@@ -136,20 +137,23 @@
         <!-- Title -->
         <div class="title">
             Top Sheet – Promotion from Class <?= esc($class) ?> to Class <?= esc($class + 1) ?>
+            <?php if ($sectionTitle): ?>
+            <br><span style="font-size:14px;">(<?= esc($sectionTitle) ?> Section)</span>
+            <?php endif; ?>
         </div>
 
         <!-- Main Table -->
         <table>
             <thead>
                 <tr>
-                    <th width="8%">New Roll</th>
-                    <th width="28%">Student Name</th>
-                    <th width="8%">Past Roll</th>
-                    <th width="10%">Total</th>
-                    <th width="12%">Percentage</th>
-                    <th width="8%">GPA</th>
-                    <th width="8%">Grade</th>
-                    <th width="10%">Fail</th>
+                    <th>New Roll</th>
+                    <th>Student Name</th>
+                    <th>Past Roll</th>
+                    <th>Total</th>
+                    <th>Percentage</th>
+                    <th>GPA</th>
+                    <th>Grade</th>
+                    <th>Fail</th>
                 </tr>
             </thead>
             <tbody>
@@ -168,59 +172,46 @@
             </tbody>
         </table>
 
-        <!-- RESULT SUMMARY -->
+        <!-- Result Summary -->
         <table style="margin-top:20px;">
-            <thead>
-                <tr>
-                    <th colspan="6">Result Summary</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Total Students</strong></td>
-                    <td><?= $totalStudents ?></td>
-                    <td><strong>Total Pass</strong></td>
-                    <td><?= $totalPass ?></td>
-                    <td><strong>Pass %</strong></td>
-                    <td><?= $passPercentage ?>%</td>
-                </tr>
-                <tr>
-                    <td colspan="2"></td>
-                    <td><strong>Total Fail</strong></td>
-                    <td><?= $totalFail ?></td>
-                    <td><strong>Fail %</strong></td>
-                    <td><?= $failPercentage ?>%</td>
-                </tr>
-                <tr>
-                    <td><strong>A+</strong></td>
-                    <td><?= $gradeCount['A+'] ?></td>
-                    <td><strong>A</strong></td>
-                    <td><?= $gradeCount['A'] ?></td>
-                    <td><strong>A-</strong></td>
-                    <td><?= $gradeCount['A-'] ?></td>
-                </tr>
-                <tr>
-                    <td><strong>B</strong></td>
-                    <td><?= $gradeCount['B'] ?></td>
-                    <td><strong>C</strong></td>
-                    <td><?= $gradeCount['C'] ?></td>
-                    <td><strong>D</strong></td>
-                    <td><?= $gradeCount['D'] ?></td>
-                </tr>
-            </tbody>
+            <tr>
+                <td><strong>Total Students</strong></td>
+                <td><?= $totalStudents ?></td>
+                <td><strong>Total Pass</strong></td>
+                <td><?= $totalPass ?></td>
+                <td><strong>Pass %</strong></td>
+                <td><?= $passPercentage ?>%</td>
+            </tr>
+            <tr>
+                <td colspan="2"></td>
+                <td><strong>Total Fail</strong></td>
+                <td><?= $totalFail ?></td>
+                <td><strong>Fail %</strong></td>
+                <td><?= $failPercentage ?>%</td>
+            </tr>
+            <tr>
+                <td><strong>A+</strong></td>
+                <td><?= $gradeCount['A+'] ?></td>
+                <td><strong>A</strong></td>
+                <td><?= $gradeCount['A'] ?></td>
+                <td><strong>A-</strong></td>
+                <td><?= $gradeCount['A-'] ?></td>
+            </tr>
+            <tr>
+                <td><strong>B</strong></td>
+                <td><?= $gradeCount['B'] ?></td>
+                <td><strong>C</strong></td>
+                <td><?= $gradeCount['C'] ?></td>
+                <td><strong>D</strong></td>
+                <td><?= $gradeCount['D'] ?></td>
+            </tr>
         </table>
 
         <!-- Signatures -->
         <table class="signature-table">
             <tr>
-                <td>
-                    ________________________<br>
-                    Class Teacher
-                </td>
-                <td>
-                    ________________________<br>
-                    Head Teacher
-                </td>
+                <td>________________________<br>Class Teacher</td>
+                <td>________________________<br>Head Teacher</td>
             </tr>
         </table>
 
@@ -229,6 +220,26 @@
         </div>
 
     </div>
+
+    <?php
+    } // end function
+    ?>
+
+    <!-- ---------------------- Render Sheets ---------------------- -->
+
+    <?php if (in_array($class, [9, 10])): ?>
+
+    <?php renderTopSheet($generalRankings ?? [], $class, 'General'); ?>
+
+    <div style="page-break-after: always;"></div>
+
+    <?php renderTopSheet($vocationalRankings ?? [], $class, 'Vocational'); ?>
+
+    <?php else: ?>
+
+    <?php renderTopSheet($rankings ?? [], $class); ?>
+
+    <?php endif; ?>
 
     <script>
     window.print();
