@@ -2217,6 +2217,10 @@ class Dashboard extends Controller
         $exam      = $data['exam'];
         $year      = $data['year'];
 
+        echo "<pre>";
+        print_r($marksheet);
+        echo "</pre>";
+
         if ($exam == 'Annual Exam') {
         $total_fail = 0;
         $total_marks_sum = 0;
