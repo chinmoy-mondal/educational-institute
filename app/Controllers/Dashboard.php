@@ -2370,21 +2370,21 @@ class Dashboard extends Controller
 
             // ---------- RANKING DATA ----------
             $rankingData = [
-                'student_id' => $student['id'],
-                'class' => $student['class'],
-                'section'           => (stripos($student['section'], 'vocational') !== false) ? 'vocational' : 'general',
-                'exam' => $exam,
-                'new_roll' => null,
-                'student_name' => $student['student_name'],
-                'past_roll' => $student['roll'],
-                'total' => $total_marks,
-                'percentage' => $percentage,
-                'gpa' => number_format($gpa, 2),
-                'gpa_without_forth' => number_format($gpa_without_forth, 2),
-                'grade_letter' => $grade_letter,
-                'fail' => $total_fail,
-                'year' => $year,
-                'updated_at' => date('Y-m-d H:i:s'),
+                'student_id'            => $student['id'],
+                'class'                 => $student['class'],
+                'section'               => (stripos($student['section'], 'vocational') !== false) ? 'vocational' : 'general',
+                'exam'                  => $exam,
+                'new_roll'              => null,
+                'student_name'          => $student['student_name'],
+                'past_roll'             => $student['roll'],
+                'total'                 => $total_marks,
+                'percentage'            => $percentage,
+                'gpa'                   => number_format($gpa, 2),
+                'gpa_without_forth'     => number_format($gpa_without_forth, 2),
+                'grade_letter'          => $grade_letter,
+                'fail'                  => $total_fail,
+                'year'                  => $year,
+                'updated_at'            => date('Y-m-d H:i:s'),
             ];
 
             // echo "<pre>";
@@ -2409,7 +2409,9 @@ class Dashboard extends Controller
     {
         $class = $this->request->getGet('class');
         $year  = $this->request->getGet('year');
-        $section_student  = $this->request->getGet('section');
+        $section_student = in_array($class, [9, 10])
+            ? $this->request->getGet('section')
+            : 'general';
 
         if (!$class || !$year) {
             return redirect()->back()->with('error', 'Class and Year are required');
@@ -2442,6 +2444,7 @@ class Dashboard extends Controller
             $this->test_result($studentId, $year, $view);
         }
 
+        $this->updateNewRollByClass($class, $section_student);
         // return redirect()->back()->with('success', 'Top sheet processed for all students.');
     }
 
