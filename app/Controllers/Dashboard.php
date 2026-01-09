@@ -2276,7 +2276,7 @@ class Dashboard extends Controller
                 'student_id'        => $student['id'],
                 'class'             => $student['class'],
                 'section'           => (stripos($student['section'], 'vocational') !== false) ? 'vocational' : 'general',
-                'exam'              => $student['exam'],
+                'exam'              => $exam,
                 'new_roll'          => '',
                 'student_name'      => $student['student_name'],
                 'past_roll'         => $student['roll'],
