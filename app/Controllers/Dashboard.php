@@ -1687,7 +1687,7 @@ class Dashboard extends Controller
         $section = strtolower($section);
         // echo "==" . $section . "==";
         $key     = $this->normalizeSubject($subject);
-        // echo $key . "<br>";
+        echo $key . "<br>";
 
         // ---------------- CLASS 9–10 (GENERAL) ----------------
         if (in_array($class, [9, 10]) && strpos($section, 'vocational') === false) {
@@ -2099,9 +2099,9 @@ class Dashboard extends Controller
                 $practical,
                 $percentage
             );
-            echo "<pre>";
-            print_r($gradeInfo);
-            echo "</pre>";
+            // echo "<pre>";
+            // print_r($gradeInfo);
+            // echo "</pre>";
 
             $marksheetNumeric[] = [
                 'subject'   => $row['subject'],
