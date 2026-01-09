@@ -1690,7 +1690,7 @@ class Dashboard extends Controller
         echo $key . "<br>";
 
         // ---------------- CLASS 9–10 (GENERAL) ----------------
-        if (in_array($class, [9, 10]) && strpos($section, 'vocational') === false) {
+        if (in_array($class, [9, 10]) && strpos($section, 'Vocational') === false) {
 
             // Bangla (1st + 2nd combined handled outside)
             if ($key === 'bangla') {
@@ -1730,7 +1730,7 @@ class Dashboard extends Controller
         }
 
         // ---------------- CLASS 9–10 (VOCATIONAL) ----------------
-        if (in_array($class, [9, 10]) && strpos($section, 'vocational') === true) {
+        if (in_array($class, [9, 10]) && strpos($section, 'Vocational') === true) {
 
             echo "yes inside vocational ";
 
