@@ -2453,7 +2453,7 @@ class Dashboard extends Controller
             // $this->test_result($studentId, $year, $view);
         }
 
-        // $this->updateNewRollByClass($class, $section_student);
+        $this->updateNewRollByClass($class, $section_student);
         // return redirect()->back()->with('success', 'Top sheet processed for all students.');
     }
 
