@@ -2354,7 +2354,7 @@ class Dashboard extends Controller
             }
 
             // Final grade letter
-            $grade_letter = $total_fail ? 'F' : gpToGrade($gpa);
+            $grade_letter = $total_fail ? 'F' : $this->gpToGrade($gpa);
 
             // Percentage (safe)
             $percentage = $total_subject > 0
