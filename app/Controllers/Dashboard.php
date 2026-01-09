@@ -1686,11 +1686,19 @@ class Dashboard extends Controller
         // echo $subject . "==";
         $section = strtolower($section);
         echo "==" . $section . "==";
+
+
+        if (stripos($section, 'vocational') !== false) {
+            echo 'Contains vocational';
+        } else {
+            echo 'Does not contain vocational';
+        }
+
         $key     = $this->normalizeSubject($subject);
         // echo $key . "<br>";
 
         // ---------------- CLASS 9–10 (GENERAL) ----------------
-        if (in_array($class, [9, 10]) && strpos($section, 'Vocational') === false) {
+        if (in_array($class, [9, 10]) && strpos($section, 'vocational') === false) {
             echo "inside general";
             // Bangla (1st + 2nd combined handled outside)
             if ($key === 'bangla') {
