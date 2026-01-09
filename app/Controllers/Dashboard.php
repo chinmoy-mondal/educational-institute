@@ -18,6 +18,7 @@ use App\Models\TeacherAttendanceModel;
 use App\Models\RankingModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use PhpParser\Node\Expr\Print_;
+use Symfony\Component\Stopwatch\Section;
 
 class Dashboard extends Controller
 {
@@ -1758,7 +1759,7 @@ class Dashboard extends Controller
             }
 
             // Other subjects
-            return ($this->branchCheck($wri, 20) )
+            return ($this->branchCheck($wri, 20))
                 ? $this->markToGrade($mark)
                 : ['grade' => 'F', 'gp' => 0.00];
         }
@@ -2222,58 +2223,59 @@ class Dashboard extends Controller
         // echo "</pre>";
 
         if ($exam == 'Annual Exam') {
-        $total_fail = 0;
-        $total_marks_sum = 0;
-        $total_subject = 0;
-        $total_grade_point = 0;
-        $total_grade_point_without_forth = 0;
+            $total_fail = 0;
+            $total_marks_sum = 0;
+            $total_subject = 0;
+            $total_grade_point = 0;
+            $total_grade_point_without_forth = 0;
 
-        $total_rows = count($marksheet);
+            $total_rows = count($marksheet);
 
-        foreach ($marksheet as $id => $row) {
+            foreach ($marksheet as $id => $row) {
 
-            $final = $row['final'] ?? [];
+                $final = $row['final'] ?? [];
 
-            $final_total = $final['total'] ?? 0;
-            $final_gp    = $final['grade_point'] ?? 0;
+                $final_total = $final['total'] ?? 0;
+                $final_gp    = $final['grade_point'] ?? 0;
 
-            // skip combined rows
-            if ($id == 1 || $id == 3) {
-                continue;
+                // skip combined rows
+                if ($id == 1 || $id == 3) {
+                    continue;
+                }
+
+                $total_marks_sum += $final_total;
+
+                // last subject (4th subject logic)
+                if ($total_rows == $id + 1 && !in_array($student['class'], [6, 7, 8])) {
+
+                    $total_grade_point += max(0, $final_gp - 2);
+                } else {
+
+                    $total_fail += ($final_gp > 0) ? 0 : 1;
+                    $total_grade_point += $final_gp;
+                    $total_grade_point_without_forth += $final_gp;
+                    $total_subject++;
+                }
             }
 
-            $total_marks_sum += $final_total;
+            // GPA
+            $gpa = $total_fail ? 0.00 : round(min(5, $total_grade_point / $total_subject), 2);
+            $gpa_without_forth = $total_fail ? 0.00 : round(min(5, $total_grade_point_without_forth / $total_subject), 2);
 
-            // last subject (4th subject logic)
-            if ($total_rows == $id + 1 && !in_array($student['class'], [6, 7, 8])) {
+            // Grade Letter
+            $grade_letter = $total_fail ? 'F' : $this->gpToGrade($gpa);
 
-                $total_grade_point += max(0, $final_gp - 2);
-            } else {
+            // Percentage
+            $full_marks = array_sum(array_column($marksheet, 'full_mark'));
+            $percentage = $full_marks > 0
+                ? round(($total_marks_sum / $full_marks) * 100, 2)
+                : 0;
 
-                $total_fail += ($final_gp > 0) ? 0 : 1;
-                $total_grade_point += $final_gp;
-                $total_grade_point_without_forth += $final_gp;
-                $total_subject++;
-            }
-        }
-
-        // GPA
-        $gpa = $total_fail ? 0.00 : round(min(5, $total_grade_point / $total_subject), 2);
-        $gpa_without_forth = $total_fail ? 0.00 : round(min(5, $total_grade_point_without_forth / $total_subject), 2);
-
-        // Grade Letter
-        $grade_letter = $total_fail ? 'F' : $this->gpToGrade($gpa);
-
-        // Percentage
-        $full_marks = array_sum(array_column($marksheet, 'full_mark'));
-        $percentage = $full_marks > 0
-            ? round(($total_marks_sum / $full_marks) * 100, 2)
-            : 0;
-
-        // ---------------- PREPARE DATA ----------------
-        $rankingData = [
+            // ---------------- PREPARE DATA ----------------
+            $rankingData = [
                 'student_id'        => $student['id'],
                 'class'             => $student['class'],
+                'section'           => (stripos($student['section'], 'vocational') !== false) ? 'vocational' : 'general',
                 'exam'              => $student['exam'],
                 'new_roll'          => '',
                 'student_name'      => $student['student_name'],
@@ -2286,20 +2288,19 @@ class Dashboard extends Controller
                 'fail'              => $total_fail,
                 'year'              => $year,
                 'updated_at'        => date('Y-m-d H:i:s'),
-        ];
-        // echo "{$student['id']} | {$student['class']} | {$student['roll']} | {$student['student_name']} | {$student['roll']} | {$total_marks_sum} | {$percentage}% | {$gpa} | {$gpa_without_forth} | {$grade_letter} | {$total_fail} | {$year}<br>";
-        // ---------------- INSERT OR UPDATE ----------------
-        $existing = $this->rankingModel
-            ->where(['student_id' => $student['id'], 'year' => $year])
-            ->first();
-
-        if ($existing) {
-            $this->rankingModel->update($existing['id'], $rankingData);
-            echo 'Ranking updated successfully.';
-        } else {
-            $rankingData['created_at'] = date('Y-m-d H:i:s');
-            $this->rankingModel->insert($rankingData);
-                // echo 'Ranking saved successfully.';
+            ];
+            // echo "{$student['id']} | {$student['class']} | {$student['roll']} | {$student['student_name']} | {$student['roll']} | {$total_marks_sum} | {$percentage}% | {$gpa} | {$gpa_without_forth} | {$grade_letter} | {$total_fail} | {$year}<br>";
+            // ---------------- INSERT OR UPDATE ----------------
+            $existing = $this->rankingModel
+                ->where(['student_id' => $student['id'], 'year' => $year])
+                ->first();
+            if ($existing) {
+                $this->rankingModel->update($existing['id'], $rankingData);
+                echo 'Ranking updated successfully.';
+            } else {
+                $rankingData['created_at'] = date('Y-m-d H:i:s');
+                $this->rankingModel->insert($rankingData);
+                echo 'Ranking saved successfully.';
             }
         } else {
             $full_marks = 0;
@@ -2371,6 +2372,7 @@ class Dashboard extends Controller
             $rankingData = [
                 'student_id' => $student['id'],
                 'class' => $student['class'],
+                'section'           => (stripos($student['section'], 'vocational') !== false) ? 'vocational' : 'general',
                 'exam' => $exam,
                 'new_roll' => null,
                 'student_name' => $student['student_name'],
@@ -2385,10 +2387,21 @@ class Dashboard extends Controller
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
 
-            echo "<pre>";
-            print_r($rankingData);
-            echo "</pre>";
-            // return $rankingData; // ✅ VERY IMPORTANT
+            // echo "<pre>";
+            // print_r($rankingData);
+            // echo "</pre>";
+            // ---------------- INSERT OR UPDATE ----------------
+            $existing = $this->rankingModel
+                ->where(['student_id' => $student['id'], 'year' => $year])
+                ->first();
+            if ($existing) {
+                $this->rankingModel->update($existing['id'], $rankingData);
+                echo 'Ranking updated successfully.';
+            } else {
+                $rankingData['created_at'] = date('Y-m-d H:i:s');
+                $this->rankingModel->insert($rankingData);
+                echo 'Ranking saved successfully.';
+            }
         }
     }
 
@@ -2396,19 +2409,30 @@ class Dashboard extends Controller
     {
         $class = $this->request->getGet('class');
         $year  = $this->request->getGet('year');
-        $exam  = $this->request->getGet('exam');
+        $section_student  = $this->request->getGet('section');
 
         if (!$class || !$year) {
             return redirect()->back()->with('error', 'Class and Year are required');
         }
+        if (!$section_student) {
+            return redirect()->back()->with('error', 'Section is required');
+        }
 
-        $students = $this->studentModel
-            ->where('class', $class)
-            ->where('permission', 0)
-            ->where('section NOT LIKE', '%Vocational%') // exclude vocational students
-            ->orderBy('roll', 'ASC')
-            ->findAll();
-
+        if ($section_student == 'vocational') {
+            $students = $this->studentModel
+                ->where('class', $class)
+                ->where('permission', 0)
+                ->where('section LIKE', '%Vocational%') // exclude vocational students
+                ->orderBy('roll', 'ASC')
+                ->findAll();
+        } else {
+            $students = $this->studentModel
+                ->where('class', $class)
+                ->where('permission', 0)
+                ->where('section NOT LIKE', '%Vocational%') // exclude vocational students
+                ->orderBy('roll', 'ASC')
+                ->findAll();
+        }
         foreach ($students as $student) {
             $studentId = $student['id'];
             $view = 1;
@@ -2419,6 +2443,43 @@ class Dashboard extends Controller
         }
 
         // return redirect()->back()->with('success', 'Top sheet processed for all students.');
+    }
+
+    public function updateNewRollByClass($class, $section)
+    {
+        if ($section == 'vocational') {
+            // 1️⃣ Get ordered ranking list
+            $rankings = $this->rankingModel
+                ->where('section LIKE', '%Vocational%')
+                ->where('class', $class)
+                ->orderBy('fail', 'ASC')
+                ->orderBy('total', 'DESC')
+                ->findAll();
+        } else {
+            $rankings = $this->rankingModel
+                ->where('section NOT LIKE', '%Vocational%')
+                ->where('class', $class)
+                ->orderBy('fail', 'ASC')
+                ->orderBy('total', 'DESC')
+                ->findAll();
+        }
+        if (empty($rankings)) {
+            return false;
+        }
+
+        // 2️⃣ Update new_roll serially
+        $serial = 1;
+
+        foreach ($rankings as $row) {
+            $this->rankingModel->update($row['id'], [
+                'new_roll'   => $serial,
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+
+            $serial++;
+        }
+
+        return true;
     }
 
     public function call_test_result()
@@ -2454,34 +2515,6 @@ class Dashboard extends Controller
 
         // If exam name doesn't match any known exam
         return "no execution";
-    }
-
-    public function updateNewRollByClass($class)
-    {
-        // 1️⃣ Get ordered ranking list
-        $rankings = $this->rankingModel
-            ->where('class', $class)
-            ->orderBy('fail', 'ASC')
-            ->orderBy('total', 'DESC')
-            ->findAll();
-
-        if (empty($rankings)) {
-            return false;
-        }
-
-        // 2️⃣ Update new_roll serially
-        $serial = 1;
-
-        foreach ($rankings as $row) {
-            $this->rankingModel->update($row['id'], [
-                'new_roll'   => $serial,
-                'updated_at' => date('Y-m-d H:i:s')
-            ]);
-
-            $serial++;
-        }
-
-        return true;
     }
 
     public function print_topsheet($class)
