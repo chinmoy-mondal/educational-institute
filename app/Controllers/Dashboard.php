@@ -2441,10 +2441,12 @@ class Dashboard extends Controller
             $section   = $student['section'];
 
             echo "{$studentId}  | {$section}<br>";
-            $this->test_result($studentId, $year, $view);
+
+
+            // $this->test_result($studentId, $year, $view);
         }
 
-        $this->updateNewRollByClass($class, $section_student);
+        // $this->updateNewRollByClass($class, $section_student);
         // return redirect()->back()->with('success', 'Top sheet processed for all students.');
     }
 
@@ -2497,15 +2499,6 @@ class Dashboard extends Controller
         if (!$studentId || !$year || !$exam) {
             return redirect()->back()->with('error', 'Missing required parameters!');
         }
-
-        // Define exams per class
-        $exams_by_class = [
-            6 => ['Half-Yearly', 'Annual Exam'],
-            7 => ['Half-Yearly', 'Annual Exam'],
-            8 => ['Half-Yearly', 'Annual Exam'],
-            9 => ['Half-Yearly', 'Annual Exam'],
-            10 => ['Half-Yearly', 'Pre-Test Exam', 'Test Exam', 'Annual Exam'],
-        ];
 
         if ($exam === 'Annual Exam') {
             // Annual exam goes to full result function
