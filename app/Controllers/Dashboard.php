@@ -2449,9 +2449,7 @@ class Dashboard extends Controller
             } elseif (in_array($exam, ['Pre-Test Exam', 'Half-Yearly', 'Test Exam'])) {
                 // Other exams go to single exam function
 
-                echo "go inside single data";
                 $this->test_result_single_exam($studentId, $year, $exam, $view);
-                echo "get out single subject";
             }
             // $this->test_result($studentId, $year, $view);
         }
