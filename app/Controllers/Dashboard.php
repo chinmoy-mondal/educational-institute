@@ -1686,14 +1686,6 @@ class Dashboard extends Controller
         // echo $subject . "==";
         $section = strtolower($section);
         echo "==" . $section . "==";
-
-
-        if (stripos($section, 'vocational') == true) {
-            echo 'Contains vocational';
-        } else {
-            echo 'Does not contain vocational';
-        }
-
         $key     = $this->normalizeSubject($subject);
         // echo $key . "<br>";
 
@@ -1738,7 +1730,7 @@ class Dashboard extends Controller
         }
 
         // ---------------- CLASS 9–10 (VOCATIONAL) ----------------
-        if (in_array($class, [9, 10]) && strpos($section, 'vocational') === true) {
+        if (in_array($class, [9, 10]) && stripos($section, 'vocational') !== false) {
 
             echo "yes inside vocational ";
 
