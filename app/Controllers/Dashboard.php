@@ -17,6 +17,7 @@ use App\Models\TransactionModel;
 use App\Models\TeacherAttendanceModel;
 use App\Models\RankingModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
+use PhpParser\Node\Expr\Print_;
 
 class Dashboard extends Controller
 {
@@ -2267,20 +2268,20 @@ class Dashboard extends Controller
 
         // ---------------- PREPARE DATA ----------------
         $rankingData = [
-            'student_id'        => $student['id'],
-            'class'             => $student['class'],
-                'exam'             => $student['exam'],
-            'new_roll'          => '',
-            'student_name'      => $student['student_name'],
-            'past_roll'         => $student['roll'],
-            'total'             => $total_marks_sum,
-            'percentage'        => $percentage,
-            'gpa'               => $gpa,
-            'gpa_without_forth' => $gpa_without_forth,
-            'grade_letter'      => $grade_letter,
-            'fail'              => $total_fail,
-            'year'              => $year,
-            'updated_at'        => date('Y-m-d H:i:s'),
+                'student_id'        => $student['id'],
+                'class'             => $student['class'],
+                'exam'              => $student['exam'],
+                'new_roll'          => '',
+                'student_name'      => $student['student_name'],
+                'past_roll'         => $student['roll'],
+                'total'             => $total_marks_sum,
+                'percentage'        => $percentage,
+                'gpa'               => $gpa,
+                'gpa_without_forth' => $gpa_without_forth,
+                'grade_letter'      => $grade_letter,
+                'fail'              => $total_fail,
+                'year'              => $year,
+                'updated_at'        => date('Y-m-d H:i:s'),
         ];
         // echo "{$student['id']} | {$student['class']} | {$student['roll']} | {$student['student_name']} | {$student['roll']} | {$total_marks_sum} | {$percentage}% | {$gpa} | {$gpa_without_forth} | {$grade_letter} | {$total_fail} | {$year}<br>";
         // ---------------- INSERT OR UPDATE ----------------
@@ -2297,9 +2298,91 @@ class Dashboard extends Controller
                 // echo 'Ranking saved successfully.';
             }
         } else {
-            echo "pppppppp<pre>";
-            print_r($data);
+            $total_marks = 0;
+            $total_subject = 0;
+            $total_fail = 0;
+            $total_grade_point = 0;
+            $total_grade_point_without_forth = 0;
+
+            $total_rows = count($marksheet);
+
+            foreach ($marksheet as $id => $row) {
+
+                // Detect 4th subject (last row for class 9–10)
+                $isFourthSubject = (
+                    $total_rows == $id + 1 &&
+                    !in_array($student['class'], [6, 7, 8])
+                );
+
+                // Skip combined subjects (Bangla / English papers)
+                if ($id == 1 || $id == 3) {
+                    continue;
+                }
+
+                // Total marks
+                $total_marks += $row['final']['total'];
+
+                // Class 6–8
+                if (in_array($student['class'], [6, 7, 8])) {
+
+                    $total_fail += ($row['final']['grade_point'] > 0) ? 0 : 1;
+                    $total_subject++;
+                    $total_grade_point += $row['final']['grade_point'];
+                    $total_grade_point_without_forth += $row['final']['grade_point'];
+                } else {
+                    // Class 9–10
+
+                    if ($isFourthSubject) {
+                        // 4th subject rule
+                        $total_grade_point += max(0, $row['final']['grade_point'] - 2);
+                    } else {
+                        $total_fail += ($row['final']['grade_point'] > 0) ? 0 : 1;
+                        $total_grade_point += $row['final']['grade_point'];
+                        $total_grade_point_without_forth += $row['final']['grade_point'];
+                        $total_subject++;
+                    }
+                }
+            }
+
+            // ---------- FINAL GPA ----------
+            if ($total_subject > 0) {
+                $gpa = $total_fail ? 0.00 : min(5, $total_grade_point / $total_subject);
+                $gpa_without_forth = min(5, $total_grade_point_without_forth / $total_subject);
+            } else {
+                $gpa = 0.00;
+                $gpa_without_forth = 0.00;
+            }
+
+            // Final grade letter
+            $grade_letter = $total_fail ? 'F' : gpToGrade($gpa);
+
+            // Percentage (safe)
+            $percentage = $total_subject > 0
+                ? round(($total_marks / ($total_subject * 100)) * 100, 2)
+                : 0;
+
+            // ---------- RANKING DATA ----------
+            $rankingData = [
+                'student_id' => $student['id'],
+                'class' => $student['class'],
+                'exam' => $exam,
+                'new_roll' => null,
+                'student_name' => $student['student_name'],
+                'past_roll' => $student['roll'],
+                'total' => $total_marks,
+                'percentage' => $percentage,
+                'gpa' => number_format($gpa, 2),
+                'gpa_without_forth' => number_format($gpa_without_forth, 2),
+                'grade_letter' => $grade_letter,
+                'fail' => $total_fail,
+                'year' => $year,
+                'updated_at' => date('Y-m-d H:i:s'),
+            ];
+
+            echo "<pre>";
+            print_r($rankingData);
             echo "</pre>";
+            // return $rankingData; // ✅ VERY IMPORTANT
         }
     }
 
