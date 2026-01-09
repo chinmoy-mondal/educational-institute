@@ -2409,6 +2409,7 @@ class Dashboard extends Controller
     {
         $class = $this->request->getGet('class');
         $year  = $this->request->getGet('year');
+        $exam  = $this->request->getGet('exam');
         $section_student = in_array($class, [9, 10])
             ? $this->request->getGet('section')
             : 'general';
@@ -2442,7 +2443,13 @@ class Dashboard extends Controller
 
             echo "{$studentId}  | {$section}<br>";
 
-
+            if ($exam === 'Annual Exam') {
+                // Annual exam goes to full result function
+                return $this->test_result($studentId, $year, $exam, $view);
+            } elseif (in_array($exam, ['Pre-Test Exam', 'Half-Yearly', 'Test Exam'])) {
+                // Other exams go to single exam function
+                return $this->test_result_single_exam($studentId, $year, $exam, $view);
+            }
             // $this->test_result($studentId, $year, $view);
         }
 
