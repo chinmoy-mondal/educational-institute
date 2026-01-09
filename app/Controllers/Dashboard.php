@@ -1688,7 +1688,7 @@ class Dashboard extends Controller
         echo "==" . $section . "==";
 
 
-        if (stripos($section, 'vocational') !== false) {
+        if (stripos($section, 'vocational') === true) {
             echo 'Contains vocational';
         } else {
             echo 'Does not contain vocational';
