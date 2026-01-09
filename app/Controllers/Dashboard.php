@@ -2374,7 +2374,7 @@ class Dashboard extends Controller
                 'class'                 => $student['class'],
                 'section'               => (stripos($student['section'], 'vocational') !== false) ? 'vocational' : 'general',
                 'exam'                  => $exam,
-                'new_roll'              => null,
+                'new_roll'              => '',
                 'student_name'          => $student['student_name'],
                 'past_roll'             => $student['roll'],
                 'total'                 => $total_marks,
@@ -2511,7 +2511,6 @@ class Dashboard extends Controller
             // Annual exam goes to full result function
             return $this->test_result($studentId, $year, $exam, $view);
         } elseif (in_array($exam, ['Pre-Test Exam', 'Half-Yearly', 'Test Exam'])) {
-            echo "yes=single subject";
             // Other exams go to single exam function
             return $this->test_result_single_exam($studentId, $year, $exam, $view);
         }
