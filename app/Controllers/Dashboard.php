@@ -2302,6 +2302,7 @@ class Dashboard extends Controller
                 // echo 'Ranking saved successfully.';
             }
         } else {
+            $full_marks = 0;
             $total_marks = 0;
             $total_subject = 0;
             $total_fail = 0;
@@ -2312,6 +2313,7 @@ class Dashboard extends Controller
 
             foreach ($marksheet as $id => $row) {
 
+                $full_marks += $row['full_mark'];
                 // Detect 4th subject (last row for class 9–10)
                 $isFourthSubject = (
                     $total_rows == $id + 1 &&
@@ -2362,7 +2364,7 @@ class Dashboard extends Controller
 
             // Percentage (safe)
             $percentage = $total_subject > 0
-                ? round(($total_marks / ($total_subject * 100)) * 100, 2)
+                ? round(($total_marks / ($full_marks)) * 100, 2)
                 : 0;
 
             // ---------- RANKING DATA ----------
