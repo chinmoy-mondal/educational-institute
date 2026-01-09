@@ -1685,13 +1685,13 @@ class Dashboard extends Controller
         // echo $class . "==";
         // echo $subject . "==";
         $section = strtolower($section);
-        echo "==" . $section . "==";
+        // echo "==" . $section . "==";
         $key     = $this->normalizeSubject($subject);
         // echo $key . "<br>";
 
         // ---------------- CLASS 9–10 (GENERAL) ----------------
         if (in_array($class, [9, 10]) && strpos($section, 'vocational') === false) {
-            echo "inside general";
+
             // Bangla (1st + 2nd combined handled outside)
             if ($key === 'bangla') {
                 return ($this->branchCheck($wri, 46) && $this->branchCheck($mcq, 20))
@@ -1732,8 +1732,6 @@ class Dashboard extends Controller
         // ---------------- CLASS 9–10 (VOCATIONAL) ----------------
         if (in_array($class, [9, 10]) && stripos($section, 'vocational') !== false) {
 
-            echo "yes inside vocational ";
-
             // Bangla (1st + 2nd combined handled outside)
             if ($key === 'bangla') {
                 return ($this->branchCheck($wri, 46) && $this->branchCheck($mcq, 20))
@@ -1773,7 +1771,6 @@ class Dashboard extends Controller
 
         if (in_array($class, [6, 7, 8]) && strpos($section, 'vocational') === false) {
 
-            echo "yes inside 6 to 8";
             // ---------------- CLASS 6–8 ----------------
             if (in_array($key, ['bangla', 'english'])) {
                 return $this->branchCheck($wri + $mcq + $pra, 49)
