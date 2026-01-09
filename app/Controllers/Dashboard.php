@@ -2100,30 +2100,30 @@ class Dashboard extends Controller
                 $practical,
                 $percentage
             );
-            echo "<pre>";
-            print_r($gradeInfo);
-            echo "</pre>";
+            // echo "<pre>";
+            // print_r($gradeInfo);
+            // echo "</pre>";
 
-            // $marksheetNumeric[] = [
-            //     'subject'   => $row['subject'],
-            //     'full_mark' => $row['full_mark'],
-            //     'exam'      => [
-            //         'written'   => $written,
-            //         'mcq'       => $mcq,
-            //         'practical' => $practical,
-            //         'total'     => $total
-            //     ],
-            //     'final' => [
-            //         'total_written'   => $written,
-            //         'total_mcq'       => $mcq,
-            //         'total_practical' => $practical,
-            //         'total'           => $total,
-            //         'percentage'      => $percentage,
-            //         'grade'           => $gradeInfo['grade'],
-            //         'grade_point'     => $gradeInfo['gp'],
-            //         'pass_status'     => ($percentage >= 33 ? 'Pass' : 'Fail')
-            //     ]
-            // ];
+            $marksheetNumeric[] = [
+                'subject'   => $row['subject'],
+                'full_mark' => $row['full_mark'],
+                'exam'      => [
+                    'written'   => $written,
+                    'mcq'       => $mcq,
+                    'practical' => $practical,
+                    'total'     => $total
+                ],
+                'final' => [
+                    'total_written'   => $written,
+                    'total_mcq'       => $mcq,
+                    'total_practical' => $practical,
+                    'total'           => $total,
+                    'percentage'      => $percentage,
+                    'grade'           => $gradeInfo['grade'],
+                    'grade_point'     => $gradeInfo['gp'],
+                    'pass_status'     => ($percentage >= 33 ? 'Pass' : 'Fail')
+                ]
+            ];
         }
 
         // ---------------- COMBINE PAIRS (Bangla / English) ----------------
