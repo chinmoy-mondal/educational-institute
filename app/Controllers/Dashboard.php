@@ -2097,125 +2097,125 @@ class Dashboard extends Controller
                 $practical,
                 $percentage
             );
-            echo "<pre>";
+            echo "hello <pre>";
             print_r($gradeInfo);
-            echo "</pre>";
+            echo "</pre> yes";
 
-            //     $marksheetNumeric[] = [
-            //         'subject'   => $row['subject'],
-            //         'full_mark' => $row['full_mark'],
-            //         'exam'      => [
-            //             'written'   => $written,
-            //             'mcq'       => $mcq,
-            //             'practical' => $practical,
-            //             'total'     => $total
-            //         ],
-            //         'final' => [
-            //             'total_written'   => $written,
-            //             'total_mcq'       => $mcq,
-            //             'total_practical' => $practical,
-            //             'total'           => $total,
-            //             'percentage'      => $percentage,
-            //             'grade'           => $gradeInfo['grade'],
-            //             'grade_point'     => $gradeInfo['gp'],
-            //             'pass_status'     => ($percentage >= 33 ? 'Pass' : 'Fail')
-            //         ]
-            //     ];
-            // }
-
-            // // ---------------- COMBINE PAIRS (Bangla / English) ----------------
-            // $combinePairs = [
-            //     [0, 1], // Example: Bangla 1 + Bangla 2
-            //     [2, 3]  // Example: English 1 + English 2
+            // $marksheetNumeric[] = [
+            //     'subject'   => $row['subject'],
+            //     'full_mark' => $row['full_mark'],
+            //     'exam'      => [
+            //         'written'   => $written,
+            //         'mcq'       => $mcq,
+            //         'practical' => $practical,
+            //         'total'     => $total
+            //     ],
+            //     'final' => [
+            //         'total_written'   => $written,
+            //         'total_mcq'       => $mcq,
+            //         'total_practical' => $practical,
+            //         'total'           => $total,
+            //         'percentage'      => $percentage,
+            //         'grade'           => $gradeInfo['grade'],
+            //         'grade_point'     => $gradeInfo['gp'],
+            //         'pass_status'     => ($percentage >= 33 ? 'Pass' : 'Fail')
+            //     ]
             // ];
-
-            // foreach ($combinePairs as $pair) {
-
-            //     // Skip the pair if none of the indexes exist
-            //     if (!isset($marksheetNumeric[$pair[0]]) && !isset($marksheetNumeric[$pair[1]])) {
-            //         continue;
-            //     }
-
-            //     $totalW = $totalM = $totalP = $totalSum = $fullMarkSum = 0;
-
-            //     foreach ($pair as $i) {
-            //         if (!isset($marksheetNumeric[$i])) continue;
-
-            //         $row = $marksheetNumeric[$i];
-            //         $w = $row['exam']['written'] ?? 0;
-            //         $m = $row['exam']['mcq'] ?? 0;
-            //         $p = $row['exam']['practical'] ?? 0;
-            //         $total = $w + $m + $p;
-
-            //         $marksheetNumeric[$i]['average'] = [
-            //             'written'   => $w,
-            //             'mcq'       => $m,
-            //             'practical' => $p,
-            //             'total'     => $total
-            //         ];
-
-            //         $totalW += $w;
-            //         $totalM += $m;
-            //         $totalP += $p;
-            //         $totalSum += $total;
-            //         $fullMarkSum += $row['full_mark'] ?? 0;
-            //     }
-
-            //     // Only calculate grade if at least one subject exists
-            //     if ($fullMarkSum > 0) {
-            //         $percentage = round(($totalSum / $fullMarkSum) * 100, 2);
-            //         $firstIndex = null;
-            //         foreach ($pair as $i) {
-            //             if (isset($marksheetNumeric[$i])) {
-            //                 $firstIndex = $i;
-            //                 break;
-            //             }
-            //         }
-
-            //         $gradeInfo = $this->resultManipulation(
-            //             (int)$student['class'],
-            //             $student['section'],
-            //             $marksheetNumeric[$firstIndex]['subject'],
-            //             $totalW,
-            //             $totalM,
-            //             $totalP,
-            //             $percentage
-            //         );
-
-            //         foreach ($pair as $i) {
-            //             if (!isset($marksheetNumeric[$i])) continue;
-
-            //             $marksheetNumeric[$i]['final'] = [
-            //                 'total_written'   => $totalW,
-            //                 'total_mcq'       => $totalM,
-            //                 'total_practical' => $totalP,
-            //                 'total'           => $totalSum,
-            //                 'full_mark'       => $fullMarkSum,
-            //                 'percentage'      => $percentage,
-            //                 'grade'           => $gradeInfo['grade'],
-            //                 'grade_point'     => $gradeInfo['gp'],
-            //                 'pass_status'     => ($percentage >= 33 ? 'Pass' : 'Fail')
-            //             ];
         }
-    }
-        }
+
+        // ---------------- COMBINE PAIRS (Bangla / English) ----------------
+        // $combinePairs = [
+        //     [0, 1], // Example: Bangla 1 + Bangla 2
+        //     [2, 3]  // Example: English 1 + English 2
+        // ];
+
+        // foreach ($combinePairs as $pair) {
+
+        //     // Skip the pair if none of the indexes exist
+        //     if (!isset($marksheetNumeric[$pair[0]]) && !isset($marksheetNumeric[$pair[1]])) {
+        //         continue;
+        //     }
+
+        //     $totalW = $totalM = $totalP = $totalSum = $fullMarkSum = 0;
+
+        //     foreach ($pair as $i) {
+        //         if (!isset($marksheetNumeric[$i])) continue;
+
+        //         $row = $marksheetNumeric[$i];
+        //         $w = $row['exam']['written'] ?? 0;
+        //         $m = $row['exam']['mcq'] ?? 0;
+        //         $p = $row['exam']['practical'] ?? 0;
+        //         $total = $w + $m + $p;
+
+        //         $marksheetNumeric[$i]['average'] = [
+        //             'written'   => $w,
+        //             'mcq'       => $m,
+        //             'practical' => $p,
+        //             'total'     => $total
+        //         ];
+
+        //         $totalW += $w;
+        //         $totalM += $m;
+        //         $totalP += $p;
+        //         $totalSum += $total;
+        //         $fullMarkSum += $row['full_mark'] ?? 0;
+        //     }
+
+        //     // Only calculate grade if at least one subject exists
+        //     // if ($fullMarkSum > 0) {
+        //     //     $percentage = round(($totalSum / $fullMarkSum) * 100, 2);
+        //     //     $firstIndex = null;
+        //     //     foreach ($pair as $i) {
+        //     //         if (isset($marksheetNumeric[$i])) {
+        //     //             $firstIndex = $i;
+        //     //             break;
+        //     //         }
+        //     //     }
+
+        //     //     // $gradeInfo = $this->resultManipulation(
+        //     //     //     (int)$student['class'],
+        //     //     //     $student['section'],
+        //     //     //     $marksheetNumeric[$firstIndex]['subject'],
+        //     //     //     $totalW,
+        //     //     //     $totalM,
+        //     //     //     $totalP,
+        //     //     //     $percentage
+        //     //     // );
+
+        //     //     // foreach ($pair as $i) {
+        //     //     //     if (!isset($marksheetNumeric[$i])) continue;
+
+        //     //     //     $marksheetNumeric[$i]['final'] = [
+        //     //     //         'total_written'   => $totalW,
+        //     //     //         'total_mcq'       => $totalM,
+        //     //     //         'total_practical' => $totalP,
+        //     //     //         'total'           => $totalSum,
+        //     //     //         'full_mark'       => $fullMarkSum,
+        //     //     //         'percentage'      => $percentage,
+        //     //     //         'grade'           => $gradeInfo['grade'],
+        //     //     //         'grade_point'     => $gradeInfo['gp'],
+        //     //     //         'pass_status'     => ($percentage >= 33 ? 'Pass' : 'Fail')
+        //     //     //     ];
+        //     //     // }
+        //     // }
+        // }
 
         // ---------------- VIEW / SAVE ----------------
-        $data = [
-            'marksheet' => $marksheetNumeric,
-            'student'   => $student,
-            'exam'      => $exam,
-            'year'      => $year
-        ];
+        // $data = [
+        //     'marksheet' => $marksheetNumeric,
+        //     'student'   => $student,
+        //     'exam'      => $exam,
+        //     'year'      => $year
+        // ];
 
         // echo "<pre>";
         // print_r($marksheetNumeric);
         // echo "<pre>";
-        if ($view) {
-            $this->saveRankingFromResult($data);
-        } else {
-            return view('dashboard/test_result_single_exam', $data);
-        }
+        // if ($view) {
+        //     $this->saveRankingFromResult($data);
+        // } else {
+        //     return view('dashboard/test_result_single_exam', $data);
+        // }
     }
 
     private function saveRankingFromResult(array $data)
