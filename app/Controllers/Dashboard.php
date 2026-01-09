@@ -1682,15 +1682,15 @@ class Dashboard extends Controller
         // ]);
         // echo "</pre>";
 
-        echo $class . "==";
+        // echo $class . "==";
         // echo $subject . "==";
-        $section = strtolower($section);
-        echo $section . "==";
+        // $section = strtolower($section);
+        // echo $section . "==";
         $key     = $this->normalizeSubject($subject);
-        echo $key . "<br>";
+        // echo $key . "<br>";
 
         // ---------------- CLASS 9–10 (GENERAL) ----------------
-        if (in_array($class, [9, 10]) && strpos($section, 'vocational') === false) {
+        if (in_array($class, [9, 10]) && strpos($section, 'Vocational') === false) {
 
             // Bangla (1st + 2nd combined handled outside)
             if ($key === 'bangla') {
@@ -1730,7 +1730,7 @@ class Dashboard extends Controller
         }
 
         // ---------------- CLASS 9–10 (VOCATIONAL) ----------------
-        if (in_array($class, [9, 10]) && strpos($section, 'vocational') === true) {
+        if (in_array($class, [9, 10]) && strpos($section, 'Vocational') === true) {
 
             echo "yes inside vocational ";
 
@@ -1771,7 +1771,7 @@ class Dashboard extends Controller
                 : ['grade' => 'F', 'gp' => 0.00];
         }
 
-        if (in_array($class, [6, 7, 8]) && strpos($section, 'vocational') === false) {
+        if (in_array($class, [6, 7, 8]) && strpos($section, 'Vocational') === false) {
             // ---------------- CLASS 6–8 ----------------
             if (in_array($key, ['bangla', 'english'])) {
                 return $this->branchCheck($wri + $mcq + $pra, 49)
@@ -2127,98 +2127,98 @@ class Dashboard extends Controller
         }
 
         // ---------------- COMBINE PAIRS (Bangla / English) ----------------
-        // $combinePairs = [
-        //     [0, 1], // Example: Bangla 1 + Bangla 2
-        //     [2, 3]  // Example: English 1 + English 2
-        // ];
+        $combinePairs = [
+            [0, 1], // Example: Bangla 1 + Bangla 2
+            [2, 3]  // Example: English 1 + English 2
+        ];
 
-        // foreach ($combinePairs as $pair) {
+        foreach ($combinePairs as $pair) {
 
-        //     // Skip the pair if none of the indexes exist
-        //     if (!isset($marksheetNumeric[$pair[0]]) && !isset($marksheetNumeric[$pair[1]])) {
-        //         continue;
-        //     }
+            // Skip the pair if none of the indexes exist
+            if (!isset($marksheetNumeric[$pair[0]]) && !isset($marksheetNumeric[$pair[1]])) {
+                continue;
+            }
 
-        //     $totalW = $totalM = $totalP = $totalSum = $fullMarkSum = 0;
+            $totalW = $totalM = $totalP = $totalSum = $fullMarkSum = 0;
 
-        //     foreach ($pair as $i) {
-        //         if (!isset($marksheetNumeric[$i])) continue;
+            foreach ($pair as $i) {
+                if (!isset($marksheetNumeric[$i])) continue;
 
-        //         $row = $marksheetNumeric[$i];
-        //         $w = $row['exam']['written'] ?? 0;
-        //         $m = $row['exam']['mcq'] ?? 0;
-        //         $p = $row['exam']['practical'] ?? 0;
-        //         $total = $w + $m + $p;
+                $row = $marksheetNumeric[$i];
+                $w = $row['exam']['written'] ?? 0;
+                $m = $row['exam']['mcq'] ?? 0;
+                $p = $row['exam']['practical'] ?? 0;
+                $total = $w + $m + $p;
 
-        //         $marksheetNumeric[$i]['average'] = [
-        //             'written'   => $w,
-        //             'mcq'       => $m,
-        //             'practical' => $p,
-        //             'total'     => $total
-        //         ];
+                $marksheetNumeric[$i]['average'] = [
+                    'written'   => $w,
+                    'mcq'       => $m,
+                    'practical' => $p,
+                    'total'     => $total
+                ];
 
-        //         $totalW += $w;
-        //         $totalM += $m;
-        //         $totalP += $p;
-        //         $totalSum += $total;
-        //         $fullMarkSum += $row['full_mark'] ?? 0;
-        //     }
+                $totalW += $w;
+                $totalM += $m;
+                $totalP += $p;
+                $totalSum += $total;
+                $fullMarkSum += $row['full_mark'] ?? 0;
+            }
 
-        //     // Only calculate grade if at least one subject exists
-        //     // if ($fullMarkSum > 0) {
-        //     //     $percentage = round(($totalSum / $fullMarkSum) * 100, 2);
-        //     //     $firstIndex = null;
-        //     //     foreach ($pair as $i) {
-        //     //         if (isset($marksheetNumeric[$i])) {
-        //     //             $firstIndex = $i;
-        //     //             break;
-        //     //         }
-        //     //     }
+            // Only calculate grade if at least one subject exists
+            if ($fullMarkSum > 0) {
+                $percentage = round(($totalSum / $fullMarkSum) * 100, 2);
+                $firstIndex = null;
+                foreach ($pair as $i) {
+                    if (isset($marksheetNumeric[$i])) {
+                        $firstIndex = $i;
+                        break;
+                    }
+                }
 
-        //     //     // $gradeInfo = $this->resultManipulation(
-        //     //     //     (int)$student['class'],
-        //     //     //     $student['section'],
-        //     //     //     $marksheetNumeric[$firstIndex]['subject'],
-        //     //     //     $totalW,
-        //     //     //     $totalM,
-        //     //     //     $totalP,
-        //     //     //     $percentage
-        //     //     // );
+                $gradeInfo = $this->resultManipulation(
+                    (int)$student['class'],
+                    $student['section'],
+                    $marksheetNumeric[$firstIndex]['subject'],
+                    $totalW,
+                    $totalM,
+                    $totalP,
+                    $percentage
+                );
 
-        //     //     // foreach ($pair as $i) {
-        //     //     //     if (!isset($marksheetNumeric[$i])) continue;
+                foreach ($pair as $i) {
+                    if (!isset($marksheetNumeric[$i])) continue;
 
-        //     //     //     $marksheetNumeric[$i]['final'] = [
-        //     //     //         'total_written'   => $totalW,
-        //     //     //         'total_mcq'       => $totalM,
-        //     //     //         'total_practical' => $totalP,
-        //     //     //         'total'           => $totalSum,
-        //     //     //         'full_mark'       => $fullMarkSum,
-        //     //     //         'percentage'      => $percentage,
-        //     //     //         'grade'           => $gradeInfo['grade'],
-        //     //     //         'grade_point'     => $gradeInfo['gp'],
-        //     //     //         'pass_status'     => ($percentage >= 33 ? 'Pass' : 'Fail')
-        //     //     //     ];
-        //     //     // }
-        //     // }
-        // }
+                    $marksheetNumeric[$i]['final'] = [
+                        'total_written'   => $totalW,
+                        'total_mcq'       => $totalM,
+                        'total_practical' => $totalP,
+                        'total'           => $totalSum,
+                        'full_mark'       => $fullMarkSum,
+                        'percentage'      => $percentage,
+                        'grade'           => $gradeInfo['grade'],
+                        'grade_point'     => $gradeInfo['gp'],
+                        'pass_status'     => ($percentage >= 33 ? 'Pass' : 'Fail')
+                    ];
+                }
+            }
+        }
 
         // ---------------- VIEW / SAVE ----------------
-        // $data = [
-        //     'marksheet' => $marksheetNumeric,
-        //     'student'   => $student,
-        //     'exam'      => $exam,
-        //     'year'      => $year
-        // ];
+        $data = [
+            'marksheet' => $marksheetNumeric,
+            'student'   => $student,
+            'exam'      => $exam,
+            'year'      => $year
+        ];
 
-        // echo "<pre>";
-        // print_r($marksheetNumeric);
-        // echo "<pre>";
-        // if ($view) {
-        //     $this->saveRankingFromResult($data);
-        // } else {
-        //     return view('dashboard/test_result_single_exam', $data);
-        // }
+        echo "<pre>";
+        print_r($marksheetNumeric);
+        echo "<pre>";
+        if ($view) {
+            $this->saveRankingFromResult($data);
+        } else {
+            return view('dashboard/test_result_single_exam', $data);
+        }
     }
 
     private function saveRankingFromResult(array $data)
