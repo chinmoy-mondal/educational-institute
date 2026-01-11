@@ -2573,12 +2573,22 @@ class Dashboard extends Controller
 
     public function class_promote()
     {
-        $ranking = $this->rankingModel
-            ->select('student_id, class + 1 AS class, new_roll', false) // false disables escaping
+        // STEP 1: Get students with class < 11
+        $students = $this->studentModel
+            ->select('id, class')
+            ->where('class <', 11)
             ->findAll();
-        echo "<pre>";
-        print_r($ranking);
-        echo "</pre>";
+
+        // STEP 2: Update roll from ranking table
+        // (JOIN update must be raw SQL – CI4 limitation)
+        $this->studentModel->db->query("
+                UPDATE students s
+                JOIN ranking r ON r.student_id = s.id
+                SET s.roll = r.new_roll
+            ");
+
+        // STEP 3: Debug output
+        return redirect()->to(base_url('admin/student'));
     }
 
 
