@@ -187,7 +187,7 @@
                             <td>
                                 <!-- Exam Dropdown -->
                                 <?php
-                                        $student_class = $s['class'] ?? 6;
+                                        $student_class = ($s['class'] ?? 6) - 1;
                                         $exams = $exams_by_class[$student_class] ?? ['Half-Yearly', 'Annual Exam'];
                                         ?>
                                 <div class="dropdown d-inline-block me-1">
