@@ -2096,7 +2096,7 @@ class Dashboard extends Controller
                 : 0;
 
             $gradeInfo = $this->resultManipulation(
-                (int)$student['class'],
+                (int)$student['class'] - 1,
                 $student['section'],
                 $row['subject'],
                 $written,
@@ -2180,7 +2180,7 @@ class Dashboard extends Controller
                 }
 
                 $gradeInfo = $this->resultManipulation(
-                    (int)$student['class'],
+                    (int)$student['class'] - 1,
                     $student['section'],
                     $marksheetNumeric[$firstIndex]['subject'],
                     $totalW,
