@@ -150,17 +150,22 @@ class Auth extends BaseController
 	public function sendResetLink()
 	{
 		$email = $this->request->getPost('email');
+
+		// ---------------- Check if user exists ----------------
 		$userModel = new UserModel();
 		$user = $userModel->where('email', $email)->first();
 
 		if (!$user) {
 			return redirect()->back()->with('error', 'Email not found.');
 		}
+
 		$name = $user['name'];
 
+		// ---------------- Generate reset token ----------------
 		$token = bin2hex(random_bytes(32));
 		$expires = date('Y-m-d H:i:s', time() + 300); // 5 minutes expiry
 
+		// Save token to database
 		$resetModel = new PasswordResetModel();
 		$resetModel->insert([
 			'email'      => $email,
@@ -171,26 +176,38 @@ class Auth extends BaseController
 
 		$resetLink = base_url("/reset-password/$token");
 
-		// ---------------- Use CI4 Email ----------------
+		// ---------------- Configure Email ----------------
 		$emailService = \Config\Services::email();
 
-		$emailService->setFrom('s115832mul@gmail.com', 'Mulgram Secondary School'); // replace
+		$emailService->setFrom('s115832mul@gmail.com', 'Mulgram Secondary School');
 		$emailService->setTo($email);
 		$emailService->setSubject('Password Reset Request');
-		$emailService->setMessage("
-        Hello $name,<br><br>
-        Click the link to reset your password (valid 5 minutes):<br>
-        <a href='$resetLink'>$resetLink</a><br><br>
-        If you did not request this, ignore this email.
-    ");
-		$emailService->setMailType('html'); // Important for HTML emails
 
+		// HTML email body
+		$htmlMessage = "
+        <div style='font-family: Arial, sans-serif; line-height: 1.6;'>
+            <h3>Password Reset Request</h3>
+            <p>Hello <strong>$name</strong>,</p>
+            <p>We received a request to reset your password. Click the button below to reset it. This link is valid for 5 minutes.</p>
+            <p style='text-align:center;'>
+                <a href='$resetLink' style='background-color:#007bff;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;'>Reset Password</a>
+            </p>
+            <p>If you did not request a password reset, please ignore this email.</p>
+            <hr>
+            <p style='font-size:12px;color:gray;'>Mulgram Secondary School</p>
+        </div>
+    ";
+
+		$emailService->setMessage($htmlMessage);
+		$emailService->setMailType('html');
+
+		// ---------------- Send Email ----------------
 		if ($emailService->send()) {
 			return redirect()->back()->with('success', 'Reset link has been sent to your email.');
 		} else {
-			// Debug info (optional)
-			$error = $emailService->printDebugger(['headers']);
-			return redirect()->back()->with('error', 'Failed to send email. Try again. ' . $error);
+			// Show debug info if email fails
+			$error = $emailService->printDebugger(['headers', 'subject', 'body']);
+			return redirect()->back()->with('error', 'Failed to send email. ' . $error);
 		}
 	}
 
