@@ -180,8 +180,11 @@ $monthNames = [
                                 <td align="center"><?= $i + 1 ?></td>
                                 <td>
                                     <?= esc($f['title']) ?>
-                                    <?php if (!empty($f['month']) && isset($monthNames[(int)$f['month']])): ?>
-                                        (<?= $monthNames[(int)$f['month']] ?>)
+                                    <?php
+                                    $monthIndex = isset($f['month']) ? (int)$f['month'] : 0;
+                                    if ($monthIndex > 0 && isset($monthNames[$monthIndex])):
+                                    ?>
+                                        (<?= $monthNames[$monthIndex] ?>)
                                     <?php endif; ?>
                                 </td>
                                 <td align="center">
