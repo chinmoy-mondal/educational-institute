@@ -2584,14 +2584,7 @@ class Dashboard extends Controller
 
         $year = date('Y')-1; // or any academic year
 
-        $students = [];
         foreach ($students_info as $student) {
-
-            // build $students array (no extra query)
-            $students[] = [
-                'id'    => $student['id'],
-                'class' => $student['class'],
-            ];
 
             // check if exact same backup already exists
             $exists = $this->studentBackupModel
@@ -2622,9 +2615,9 @@ class Dashboard extends Controller
         }
 
 
-        echo "<pre>";
-        print_r($students);
-        echo "</pre>";
+        // echo "<pre>";
+        // print_r($students);
+        // echo "</pre>";
 
         // // STEP 2: Update roll from ranking table
         // // (JOIN update must be raw SQL – CI4 limitation)
