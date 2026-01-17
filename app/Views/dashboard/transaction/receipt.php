@@ -140,42 +140,51 @@ $schoolPhone   = '01886007142, 01916487915';
 
     @media print {
 
-        body,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
         .page {
             width: 210mm;
             height: 297mm;
-            margin: 0;
-            padding: 0;
+            /* full A4 */
+            margin: 0 auto;
+            /* center page */
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* center horizontally */
             justify-content: flex-start;
             box-sizing: border-box;
         }
 
         .receipt {
-            width: 95%;
-            /* center horizontally with some margin */
-            height: 48%;
-            /* half of page height minus small spacing */
-            margin-bottom: 4%;
-            /* spacing between receipts */
+            width: 190mm;
+            /* centered with side margin */
+            height: 148.5mm;
+            /* EXACT half of A4 */
             background: #fffdeb;
             border: 2px solid #000;
-            padding: 8mm;
+            padding: 6mm;
             box-sizing: border-box;
+
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+
+            margin: 0;
+            /* NO GAP */
+        }
+
+        .receipt+.receipt {
+            border-top: 0;
+            /* clean middle cut line */
         }
 
         .info {
             display: flex;
             justify-content: space-between;
-            /* spread items in one line */
             flex-wrap: nowrap;
-            /* no wrapping */
             width: 100%;
         }
     }
