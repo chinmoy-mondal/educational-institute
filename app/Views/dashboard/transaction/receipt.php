@@ -25,9 +25,64 @@ $monthNames = [
 ?>
 
 <style>
-@page {
+@pag
+
+/* ================= PRINT MEDIA ================= */
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+        -webkit-print-color-adjust: exact;
+        /* ensure colors print correctly */
+    }
+
+    .container-fluid {
+        padding: 0;
+    }
+
+    .page {
+        width: 100%;
+        min-height: auto;
+    }
+
+    .receipt {
+        page-break-inside: avoid;
+        /* keep each receipt copy together */
+        min-height: auto;
+        background: #fff;
+        /* optional: avoid background colors printing if unwanted */
+        border: 2px solid #000;
+        padding: 1mm;
+        font-size: 12px;
+    }
+
+    .divider {
+        display: none;
+        /* optional: remove dashed line in print */
+    }
+
+    /* Hide anything not needed in print */
+    .no-print {
+        display: none !important;
+    }
+
+    table,
+    th,
+    td {
+        border: 1px solid #000;
+        /* ensure borders print */
+        -webkit-print-color-adjust: exact;
+    }
+
+    th {
+        background: #f1f1f1;
+        /* ensure header shading prints */
+    }
+}
+
+e {
     size: A4;
-    margin: 10mm;
+    margin: 5mm;
 }
 
 body {
