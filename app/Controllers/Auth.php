@@ -176,7 +176,7 @@ class Auth extends BaseController
 
 		$resetLink = base_url("/reset-password/$token");
 
-		// ---------------- Prepare Email ----------------
+		// ---------------- Prepare Email test----------------
 		$fromEmail = 'no-reply@notes.com.bd'; // Use your domain email
 		$fromName  = 'Jhenaidah Cadet Coaching';
 		$subject   = 'Password Reset Request';
