@@ -2613,11 +2613,16 @@ class Dashboard extends Controller
             ->where('year', $year)
             ->findAll();
 
-        echo             count($students_backup);
-        // Debug output
-        echo '<pre>';
-        print_r($students_backup);
-        echo '</pre>';
+        foreach ($students_backup as $backup) {
+
+            $studentId = $backup['student_id'];
+            $currentClass = $backup['class'];
+
+            $this->studentModel->update($studentId, [
+                'class' => $currentClass + 1, // promote
+                'roll'  => '',                 // reset roll
+            ]);
+        }
 
 
         // return redirect()->to(base_url('admin/student'))
