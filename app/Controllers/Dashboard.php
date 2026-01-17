@@ -2587,11 +2587,13 @@ class Dashboard extends Controller
         $students = [];
         foreach ($students_info as $student) {
 
+            // build $students array (no extra query)
             $students[] = [
                 'id'    => $student['id'],
                 'class' => $student['class'],
             ];
 
+            // check if exact same backup already exists
             $exists = $this->studentBackupModel
                 ->where([
                     'student_id' => $student['id'],
@@ -2603,25 +2605,20 @@ class Dashboard extends Controller
                 ])
                 ->first();
 
+            // 👉 if exists, skip this student
             if ($exists) {
-                // UPDATE
-                $this->studentBackupModel->update($exists['id'], [
-                    'roll'       => $student['roll'],
-                    'class'      => $student['class'],
-                    'section'    => $student['section'],
-                    'assign_sub' => $student['assign_sub'],
-                ]);
-            } else {
-                // INSERT
-                $this->studentBackupModel->insert([
-                    'student_id' => $student['id'],
-                    'roll'       => $student['roll'],
-                    'class'      => $student['class'],
-                    'section'    => $student['section'],
-                    'assign_sub' => $student['assign_sub'],
-                    'year'       => $year,
-                ]);
+                continue;
             }
+
+            // 👉 otherwise insert
+            $this->studentBackupModel->insert([
+                'student_id' => $student['id'],
+                'roll'       => $student['roll'],
+                'class'      => $student['class'],
+                'section'    => $student['section'],
+                'assign_sub' => $student['assign_sub'],
+                'year'       => $year,
+            ]);
         }
 
 
