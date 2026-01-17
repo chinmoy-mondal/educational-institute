@@ -23,10 +23,11 @@ $schoolPhone   = '01886007142, 01916487915';
     .page {
         width: 210mm;
         height: 297mm;
+        /* full A4 height */
         display: flex;
         flex-direction: column;
         align-items: center;
-        /* horizontally center */
+        /* center horizontally */
         justify-content: flex-start;
         padding: 0;
         box-sizing: border-box;
@@ -34,8 +35,9 @@ $schoolPhone   = '01886007142, 01916487915';
 
     .receipt {
         width: 95%;
+        /* horizontally centered */
         height: 48%;
-        /* half of A4 */
+        /* half of A4 minus spacing */
         background: #fffdeb;
         border: 2px solid #000;
         padding: 8mm;
@@ -44,7 +46,7 @@ $schoolPhone   = '01886007142, 01916487915';
         flex-direction: column;
         justify-content: space-between;
         margin-bottom: 4%;
-        /* spacing between receipts */
+        /* small spacing between receipts */
     }
 
     .copy-label {
