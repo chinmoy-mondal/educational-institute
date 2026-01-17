@@ -176,38 +176,38 @@ class Auth extends BaseController
 
 		$resetLink = base_url("/reset-password/$token");
 
-		// ---------------- Configure Email ----------------
-		$emailService = \Config\Services::email();
+		// ---------------- Prepare Email ----------------
+		$fromEmail = 'no-reply@notes.com.bd'; // Your domain email
+		$fromName  = 'Mulgram Secondary School';
+		$subject   = 'Password Reset Request';
 
-		$emailService->setFrom('s115832mul@gmail.com', 'Mulgram Secondary School');
-		$emailService->setTo($email);
-		$emailService->setSubject('Password Reset Request');
-
-		// HTML email body
 		$htmlMessage = "
-        <div style='font-family: Arial, sans-serif; line-height: 1.6;'>
-            <h3>Password Reset Request</h3>
-            <p>Hello <strong>$name</strong>,</p>
-            <p>We received a request to reset your password. Click the button below to reset it. This link is valid for 5 minutes.</p>
-            <p style='text-align:center;'>
-                <a href='$resetLink' style='background-color:#007bff;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;'>Reset Password</a>
-            </p>
-            <p>If you did not request a password reset, please ignore this email.</p>
-            <hr>
-            <p style='font-size:12px;color:gray;'>Mulgram Secondary School</p>
-        </div>
+    <div style='font-family: Arial, sans-serif; line-height: 1.6;'>
+        <h3>Password Reset Request</h3>
+        <p>Hello <strong>$name</strong>,</p>
+        <p>We received a request to reset your password. Click the button below to reset it. This link is valid for 5 minutes.</p>
+        <p style='text-align:center;'>
+            <a href='$resetLink' style='background-color:#007bff;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;'>Reset Password</a>
+        </p>
+        <p>If you did not request a password reset, please ignore this email.</p>
+        <hr>
+        <p style='font-size:12px;color:gray;'>Mulgram Secondary School</p>
+    </div>
     ";
 
-		$emailService->setMessage($htmlMessage);
-		$emailService->setMailType('html');
+		// ---------------- Email headers ----------------
+		$headers  = "From: $fromName <$fromEmail>\r\n";
+		$headers .= "Reply-To: $fromEmail\r\n";
+		$headers .= "MIME-Version: 1.0\r\n";
+		$headers .= "Content-type: text/html; charset=UTF-8\r\n";
 
-		// ---------------- Send Email ----------------
-		if ($emailService->send()) {
+		// ---------------- Send Email via PHP mail() ----------------
+		$mailSent = mail($email, $subject, $htmlMessage, $headers, "-f$fromEmail");
+
+		if ($mailSent) {
 			return redirect()->back()->with('success', 'Reset link has been sent to your email.');
 		} else {
-			// Show debug info if email fails
-			$error = $emailService->printDebugger(['headers', 'subject', 'body']);
-			return redirect()->back()->with('error', 'Failed to send email. ' . $error);
+			return redirect()->back()->with('error', 'Failed to send email via PHP mail().');
 		}
 	}
 
