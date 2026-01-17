@@ -149,6 +149,7 @@ $schoolPhone   = '01886007142, 01916487915';
 
         .receipt {
             height: 48%;
+            width: 100%;
             margin-bottom: 4%;
         }
     }
