@@ -38,12 +38,14 @@ $monthNames = [
         width: 210mm;
     }
 
+
+
     .receipt {
         width: 100%;
-        min-height: 130mm;
+        min-height: 98mm;
         background: #fffdeb;
         border: 2px solid #000;
-        padding: 8mm;
+        padding: 2mm;
         font-size: 12px;
     }
 
@@ -113,7 +115,7 @@ $monthNames = [
 
     .divider {
         border-top: 2px dashed #000;
-        margin: 8mm 0;
+        margin: 1mm 0;
     }
 
     .info {
