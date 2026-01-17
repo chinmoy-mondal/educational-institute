@@ -2581,17 +2581,21 @@ class Dashboard extends Controller
             ->select('id, class')
             ->where('class <', 11)
             ->findAll();
+        echo "<pre>";
+        print_r($students);
 
-        // STEP 2: Update roll from ranking table
-        // (JOIN update must be raw SQL – CI4 limitation)
-        $this->studentModel->db->query("
-                UPDATE students s
-                JOIN ranking r ON r.student_id = s.id
-                SET s.roll = r.new_roll
-            ");
+        echo "</pre>";
 
-        // STEP 3: Debug output
-        return redirect()->to(base_url('admin/student'));
+        // // STEP 2: Update roll from ranking table
+        // // (JOIN update must be raw SQL – CI4 limitation)
+        // $this->studentModel->db->query("
+        //         UPDATE students s
+        //         JOIN ranking r ON r.student_id = s.id
+        //         SET s.roll = r.new_roll
+        //     ");
+
+        // // STEP 3: Debug output
+        // return redirect()->to(base_url('admin/student'));
     }
 
 
