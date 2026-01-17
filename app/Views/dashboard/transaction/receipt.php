@@ -68,7 +68,7 @@ $monthNames = [
 
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        align-content: center;
         /* centers receipt content vertically inside its half */
     }
 
