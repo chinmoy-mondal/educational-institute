@@ -2671,53 +2671,53 @@ class Dashboard extends Controller
 
         // ===== Send simple email =====
         if (!empty($teacher['email'])) {
-            $email = \Config\Services::email();
+            $to      = $teacher['email'];
+            $subject = 'Payment Received Notification';
 
-            // Use just sender and receiver
-            $email->setFrom('jpsc2023hafiz@gmail.com', 'Jhenaidah Cadet Coaching'); // sender
-            $email->setTo($teacher['email']);                           // receiver
-            $email->setSubject('Payment Received Notification');
-            $email->setMessage('
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Payment Confirmation</title>
-                </head>
-                <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
-                    <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 20px auto; background-color: #ffffff; border: 1px solid #ddd; border-radius: 8px;">
-                        <tr>
-                            <td style="padding: 20px; text-align: center; background-color: #007bff; color: #ffffff; border-top-left-radius: 8px; border-top-right-radius: 8px;">
-                                <h2>Payment Confirmation</h2>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 20px; color: #333333; font-size: 16px; line-height: 1.5;">
-                                <p>Dear <strong>' . esc($teacher["name"]) . '</strong>,</p>
+            $message = '
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Payment Confirmation</title>
+    </head>
+    <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 20px auto; background-color: #ffffff; border: 1px solid #ddd; border-radius: 8px;">
+            <tr>
+                <td style="padding: 20px; text-align: center; background-color: #007bff; color: #ffffff; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+                    <h2>Payment Confirmation</h2>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 20px; color: #333333; font-size: 16px; line-height: 1.5;">
+                    <p>Dear <strong>' . esc($teacher["name"]) . '</strong>,</p>
+                    <p>We are pleased to inform you that a payment of <strong>৳ ' . number_format($payAmount, 2) . '</strong> has been successfully recorded in your account.</p>
+                    <p>Thank you for your continued contribution.</p>
+                    <p style="margin-top: 30px;">Best regards,<br>
+                    <strong>Jhenaidah Cadet Coaching</strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 15px; text-align: center; font-size: 12px; color: #888888; background-color: #f4f4f4; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
+                    &copy; ' . date('Y') . ' Jhenaidah Cadet Coaching. All rights reserved.
+                </td>
+            </tr>
+        </table>
+    </body>
+    </html>
+    ';
 
-                                <p>We are pleased to inform you that a payment of <strong>৳ ' . number_format($payAmount, 2) . '</strong> has been successfully recorded in your account.</p>
+            // Headers for HTML email
+            $headers  = "MIME-Version: 1.0\r\n";
+            $headers .= "Content-type: text/html; charset=UTF-8\r\n";
+            $headers .= "From: Jhenaidah Cadet Coaching <no-reply@notes.com.bd>\r\n";  // Your domain email
+            $headers .= "Reply-To: no-reply@notes.com.bd\r\n";
 
-                                <p>Thank you for your continued contribution.</p>
+            // Send email using mail() with -f to set envelope sender
+            $mailSent = mail($to, $subject, $message, $headers, "-fno-reply@notes.com.bd");
 
-                                <p style="margin-top: 30px;">Best regards,<br>
-                                <strong>School Administration</strong></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 15px; text-align: center; font-size: 12px; color: #888888; background-color: #f4f4f4; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
-                                &copy; ' . date('Y') . ' School Name. All rights reserved.
-                            </td>
-                        </tr>
-                    </table>
-                </body>
-                </html>
-                ');
-
-            try {
-                $email->send();
-            } catch (\Exception $e) {
-                // Log error but don’t stop the process
-                log_message('error', 'Email not sent: ' . $e->getMessage());
+            if (!$mailSent) {
+                log_message('error', 'Payment email could not be sent to ' . $to);
             }
         }
 
