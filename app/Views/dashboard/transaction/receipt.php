@@ -2,12 +2,10 @@
 <?= $this->section('content') ?>
 
 <?php
-/* ================= SCHOOL INFO (EDIT HERE ONLY) ================= */
 $schoolName    = 'Jhenaidah Cadet Coaching';
 $schoolAddress = 'রেবাংলা সড়ক, কেন্দ্রীয় গোরস্থান সংলগ্ন, ঝিনাইদহ';
 $schoolPhone   = '01886007142, 01916487915';
 
-/* ================= MONTH MAP ================= */
 $monthNames = [
     1  => 'January',
     2  => 'February',
@@ -26,34 +24,42 @@ $monthNames = [
 
 <style>
     @page {
-        size: A4;
-        margin: 10mm;
+        size: A4 portrait;
+        margin: 0;
     }
 
     body {
         font-family: "Times New Roman", serif;
+        margin: 0;
+        padding: 0;
     }
 
     .page {
         width: 210mm;
+        height: 297mm;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
     }
 
     .receipt {
         width: 100%;
-        min-height: 145mm;
-        /* half A4 */
+        height: 25%;
+        /* 1/4 of A4 page height */
         background: #fffdeb;
         border: 2px solid #000;
-        padding: 8mm;
-        font-size: 12px;
+        padding: 5mm;
         box-sizing: border-box;
-        page-break-inside: avoid;
-        /* prevent splitting across pages */
+        font-size: 11px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-bottom: 2mm;
     }
 
     .copy-label {
         text-align: right;
-        font-size: 11px;
+        font-size: 10px;
         font-weight: bold;
     }
 
@@ -62,30 +68,31 @@ $monthNames = [
     }
 
     .school-name {
-        font-size: 18px;
+        font-size: 14px;
         font-weight: bold;
         color: #b30000;
     }
 
     .school-sub {
-        font-size: 11px;
+        font-size: 9px;
     }
 
     .hr {
         border-top: 1px solid #000;
-        margin: 6px 0;
+        margin: 4px 0;
     }
 
     .info {
-        font-size: 12px;
-        line-height: 1.6;
+        font-size: 11px;
+        line-height: 1.4;
         display: flex;
         width: 100%;
+        margin-bottom: 2px;
     }
 
     .info>div {
         flex: 1;
-        padding: 5px 8px;
+        padding: 0 4px;
         box-sizing: border-box;
         white-space: nowrap;
     }
@@ -93,13 +100,15 @@ $monthNames = [
     table {
         width: 100%;
         border-collapse: collapse;
-        margin-top: 6px;
+        margin-top: 2px;
+        font-size: 10px;
     }
 
     th,
     td {
         border: 1px solid #000;
-        padding: 5px;
+        padding: 2px;
+        text-align: center;
     }
 
     th {
@@ -107,41 +116,40 @@ $monthNames = [
     }
 
     .footer {
-        margin-top: 6px;
-        font-size: 11px;
+        font-size: 10px;
     }
 
     .sign {
         display: flex;
         justify-content: space-between;
-        margin-top: 16px;
+        margin-top: 4px;
     }
 
     .note {
-        margin-top: 6px;
+        margin-top: 2px;
         border-top: 1px solid #000;
         text-align: center;
-        font-size: 10px;
+        font-size: 9px;
     }
 
-    .divider {
-        border-top: 2px dashed #000;
-        margin: 4mm 0;
-    }
-
-    /* Ensure two receipts print per page */
     @media print {
-        .receipt {
-            page-break-after: auto;
+
+        body,
+        .page {
+            margin: 0;
+            width: 210mm;
+            height: 297mm;
         }
 
-        .divider {
-            display: none;
+        .receipt {
+            page-break-inside: avoid;
+            height: 25%;
+            margin-bottom: 0;
         }
     }
 </style>
 
-<div class="container-fluid px-4 py-3">
+<div class="container-fluid px-0">
     <div class="page">
 
         <?php for ($copy = 0; $copy < 2; $copy++): ?>
@@ -154,8 +162,7 @@ $monthNames = [
                 <div class="header">
                     <div class="school-name"><?= esc($schoolName) ?></div>
                     <div class="school-sub">
-                        Address: <?= esc($schoolAddress) ?> |
-                        Phone: <?= esc($schoolPhone) ?>
+                        Address: <?= esc($schoolAddress) ?> | Phone: <?= esc($schoolPhone) ?>
                     </div>
                     <div class="school-sub"><b>Payment Receipt</b></div>
                 </div>
@@ -188,14 +195,14 @@ $monthNames = [
                     <?php if (!empty($fees)): ?>
                         <?php foreach ($fees as $i => $f): ?>
                             <tr>
-                                <td align="center"><?= $i + 1 ?></td>
+                                <td><?= $i + 1 ?></td>
                                 <td>
                                     <?= esc($f['title']) ?>
                                     <?php if (!empty($f['month']) && isset($monthNames[(int)$f['month']])): ?>
                                         (<?= $monthNames[(int)$f['month']] ?>)
                                     <?php endif; ?>
                                 </td>
-                                <td align="center">
+                                <td>
                                     <?php if ($copy === 0): ?>
                                         <?= !empty($f['paid']) ? 'Paid' : 'Due' ?>
                                     <?php else: ?>
@@ -206,18 +213,18 @@ $monthNames = [
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="3" align="center">No fees found</td>
+                            <td colspan="3">No fees found</td>
                         </tr>
                     <?php endif; ?>
 
                     <?php if ($copy === 1): ?>
                         <tr>
                             <td colspan="2" align="right"><b>Discount</b></td>
-                            <td align="right"><?= number_format($discount ?? 0, 2) ?></td>
+                            <td><?= number_format($discount ?? 0, 2) ?></td>
                         </tr>
                         <tr>
                             <td colspan="2" align="right"><b>Net Amount</b></td>
-                            <td align="right"><b><?= number_format($netAmount ?? 0, 2) ?></b></td>
+                            <td><b><?= number_format($netAmount ?? 0, 2) ?></b></td>
                         </tr>
                     <?php endif; ?>
                 </table>
@@ -235,11 +242,6 @@ $monthNames = [
                 <div class="note">All paid amounts are non-refundable.</div>
 
             </div>
-
-            <?php if ($copy === 0): ?>
-                <div class="divider"></div>
-            <?php endif; ?>
-
         <?php endfor; ?>
 
     </div>
