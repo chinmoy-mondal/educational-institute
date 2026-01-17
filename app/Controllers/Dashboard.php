@@ -16,6 +16,7 @@ use App\Models\FeesAmountModel;
 use App\Models\TransactionModel;
 use App\Models\TeacherAttendanceModel;
 use App\Models\RankingModel;
+use App\Models\StudentBackupModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use PhpParser\Node\Expr\Print_;
 use Symfony\Component\Stopwatch\Section;
@@ -25,6 +26,7 @@ class Dashboard extends Controller
     protected $userModel;
     protected $subjectModel;
     protected $studentModel;
+    protected $studentBackupModel;
     protected $resultModel;
     protected $calendarModel;
     protected $noticeModel;
@@ -45,6 +47,7 @@ class Dashboard extends Controller
         $this->userModel        = new UserModel();
         $this->subjectModel     = new SubjectModel();
         $this->studentModel     = new StudentModel();
+        $this->studentBackupModel     = new StudentBackupModel();
         $this->resultModel      = new ResultModel();
         $this->calendarModel    = new CalendarModel();
         $this->noticeModel      = new NoticeModel();
