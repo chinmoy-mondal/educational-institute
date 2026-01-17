@@ -2576,14 +2576,34 @@ class Dashboard extends Controller
 
     public function class_promote()
     {
-        // STEP 1: Get students with class < 11
-        $students = $this->studentModel
-            ->select('id, class')
+
+        $students_info = $this->studentModel
+            ->select('id, roll, class, section, assign_sub')
             ->where('class <', 11)
             ->findAll();
+
+        $year = date('Y'); // or any academic year
+
+        $students = [];
+        foreach ($students_info as $student) {
+            $students[] = [
+                'id'    => $student['id'],
+                'class' => $student['class'],
+            ];
+
+            $this->studentBackupModel->insert([
+                'student_id' => $student['id'],
+                'roll'       => $student['roll'],
+                'class'      => $student['class'],
+                'section'    => $student['section'],
+                'assign_sub' => $student['assign_sub'],
+                'year'       => $year,
+            ]);
+        }
+
+
         echo "<pre>";
         print_r($students);
-
         echo "</pre>";
 
         // // STEP 2: Update roll from ranking table
