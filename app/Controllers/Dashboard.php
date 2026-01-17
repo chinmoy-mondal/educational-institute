@@ -3331,7 +3331,7 @@ class Dashboard extends Controller
             // Ensure Bangladesh country code
             $studentPhone = '880' . ltrim($studentPhone, '0');
 
-            $message = "Dear {$student['student_name']}, your payment for {$monthName} is {$paymentStatusText}.";
+            $message = "Dear {$student['student_name']}, your payment for {$monthName} is {$paymentStatusText}. --Jhenaidah Cadet Coaching";
 
             $apiKey = "5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8";   // Replace with real API key
             $callerID = "1234";
