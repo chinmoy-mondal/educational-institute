@@ -41,10 +41,9 @@ $monthNames = [
         padding: 0;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        /* centers content vertically */
-        height: 100vh;
-        /* full viewport for print */
+        align-items: center;
+        /* centers receipts horizontally */
+        /* keep vertical flow normal */
     }
 
     .page {
@@ -53,23 +52,24 @@ $monthNames = [
         /* full A4 height */
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        /* top half / bottom half */
+        justify-content: flex-start;
+        /* keep receipts stacked top-down */
     }
 
     .receipt {
         page-break-inside: avoid;
         min-height: 145mm;
         /* half of A4 */
+        width: 180mm;
+        /* optional: fixed receipt width smaller than page */
         background: #fff;
         border: 2px solid #000;
         padding: 1mm;
         font-size: 12px;
 
-        display: flex;
-        flex-direction: column;
-        align-content: center;
-        /* centers receipt content vertically inside its half */
+        /* horizontally center */
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .divider {
