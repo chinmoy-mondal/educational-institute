@@ -128,9 +128,52 @@ $schoolPhone   = '01886007142, 01916487915';
     }
 
     /* ===== PRINT FIX ===== */
+    @page {
+        size: A4;
+        margin: 0;
+    }
+
     @media print {
+
+        html,
         body {
+            width: 210mm;
+            height: 297mm;
             margin: 0;
+            padding: 0;
+        }
+
+        /* ONE PAGE ONLY */
+        .page {
+            width: 210mm;
+            height: 297mm;
+            margin: 0;
+            padding: 0;
+
+            display: block;
+            /* 🔴 NOT FLEX */
+            page-break-after: avoid;
+        }
+
+        /* HALF PAGE */
+        .receipt {
+            width: 190mm;
+            height: 148.5mm;
+            /* EXACT HALF A4 */
+            margin: 0 auto;
+
+            padding: 6mm;
+            border: 2mm solid #000;
+            box-sizing: border-box;
+
+            background: #fffdeb;
+
+            page-break-inside: avoid;
+        }
+
+        /* remove gap */
+        .receipt+.receipt {
+            border-top: none;
         }
     }
 </style>
