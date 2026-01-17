@@ -2586,19 +2586,42 @@ class Dashboard extends Controller
 
         $students = [];
         foreach ($students_info as $student) {
+
             $students[] = [
                 'id'    => $student['id'],
                 'class' => $student['class'],
             ];
 
-            $this->studentBackupModel->insert([
-                'student_id' => $student['id'],
-                'roll'       => $student['roll'],
-                'class'      => $student['class'],
-                'section'    => $student['section'],
-                'assign_sub' => $student['assign_sub'],
-                'year'       => $year,
-            ]);
+            $exists = $this->studentBackupModel
+                ->where([
+                    'student_id' => $student['id'],
+                    'roll'       => $student['roll'],
+                    'class'      => $student['class'],
+                    'section'    => $student['section'],
+                    'assign_sub' => $student['assign_sub'],
+                    'year'       => $year,
+                ])
+                ->first();
+
+            if ($exists) {
+                // UPDATE
+                $this->studentBackupModel->update($exists['id'], [
+                    'roll'       => $student['roll'],
+                    'class'      => $student['class'],
+                    'section'    => $student['section'],
+                    'assign_sub' => $student['assign_sub'],
+                ]);
+            } else {
+                // INSERT
+                $this->studentBackupModel->insert([
+                    'student_id' => $student['id'],
+                    'roll'       => $student['roll'],
+                    'class'      => $student['class'],
+                    'section'    => $student['section'],
+                    'assign_sub' => $student['assign_sub'],
+                    'year'       => $year,
+                ]);
+            }
         }
 
 
