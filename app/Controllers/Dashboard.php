@@ -2582,7 +2582,7 @@ class Dashboard extends Controller
             ->where('class <', 11)
             ->findAll();
 
-        $year = date('Y'); // or any academic year
+        $year = date('Y')-1; // or any academic year
 
         $students = [];
         foreach ($students_info as $student) {
