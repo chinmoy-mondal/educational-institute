@@ -147,46 +147,47 @@ class Auth extends BaseController
         return view('auth/forgot_password');
     }
 
-    public function sendResetLink()
-    {
-        $email = $this->request->getPost('email');
-        $userModel = new UserModel();
-        $user = $userModel->where('email', $email)->first();
+	public function sendResetLink()
+	{
+		$email = $this->request->getPost('email');
+		$userModel = new UserModel();
+		$user = $userModel->where('email', $email)->first();
 
-        if (!$user) {
-            return redirect()->back()->with('error', 'Email not found.');
-        }
-        $name = $user['name'];
+		if (!$user) {
+			return redirect()->back()->with('error', 'Email not found.');
+		}
+		$name = $user['name'];
 
-        $token = bin2hex(random_bytes(32));
-        $expires = date('Y-m-d H:i:s', time() + 300); // 5 minutes expiry
+		$token = bin2hex(random_bytes(32));
+		$expires = date('Y-m-d H:i:s', time() + 300); // 5 minutes expiry
 
-        $resetModel = new PasswordResetModel();
-        $resetModel->insert([
-            'email'      => $email,
-            'token'      => $token,
-            'expires_at' => $expires,
-            'used'       => 0
-        ]);
+		$resetModel = new PasswordResetModel();
+		$resetModel->insert([
+			'email'      => $email,
+			'token'      => $token,
+			'expires_at' => $expires,
+			'used'       => 0
+		]);
 
-        $resetLink = base_url("/reset-password/$token");
+		$resetLink = base_url("/reset-password/$token");
 
-        // ✅ Send simple email using PHP mail()
-        $message = "
+		// ✅ Send simple email using PHP mail()
+		$message = "
         Hello $name,<br><br>
         Click the link to reset your password (valid 5 minutes):<br>
         <a href='$resetLink'>$resetLink</a><br><br>
         If you did not request this, ignore this email.
     ";
 
-        if (mail($email, "Password Reset Request", $message, "Content-type:text/html")) {
-            return redirect()->back()->with('success', 'Reset link has been sent to your email.');
-        } else {
-            return redirect()->back()->with('error', 'Failed to send email. Try again.');
-        }
-    }
+		if (mail($email, "Password Reset Request", $message, "Content-type:text/html")) {
+			return redirect()->back()->with('success', 'Reset link has been sent to your email.');
+		} else {
+			return redirect()->back()->with('error', 'Failed to send email. Try again.');
+		}
+	}
 
-    public function resetPassword($token = null)
+
+	public function resetPassword($token = null)
     {
         $resetModel = new PasswordResetModel();
         $record = $resetModel->where('token', $token)->where('used', 0)->first();
