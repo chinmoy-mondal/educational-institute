@@ -35,36 +35,47 @@ $monthNames = [
     body {
         margin: 0;
         padding: 0;
-        -webkit-print-color-adjust: exact;
-        /* ensure colors print correctly */
     }
 
     .container-fluid {
         padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        /* centers content vertically */
+        height: 100vh;
+        /* full viewport for print */
     }
 
     .page {
         width: 100%;
-        min-height: auto;
+        min-height: 297mm;
+        /* full A4 height */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        /* top half / bottom half */
     }
 
     .receipt {
         page-break-inside: avoid;
-        /* keep each receipt copy together */
-        min-height: auto;
+        min-height: 145mm;
+        /* half of A4 */
         background: #fff;
-        /* optional: avoid background colors printing if unwanted */
         border: 2px solid #000;
         padding: 1mm;
         font-size: 12px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        /* centers receipt content vertically inside its half */
     }
 
     .divider {
         display: none;
-        /* optional: remove dashed line in print */
     }
 
-    /* Hide anything not needed in print */
     .no-print {
         display: none !important;
     }
@@ -73,13 +84,11 @@ $monthNames = [
     th,
     td {
         border: 1px solid #000;
-        /* ensure borders print */
         -webkit-print-color-adjust: exact;
     }
 
     th {
         background: #f1f1f1;
-        /* ensure header shading prints */
     }
 }
 
