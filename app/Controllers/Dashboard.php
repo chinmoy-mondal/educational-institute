@@ -2576,34 +2576,28 @@ class Dashboard extends Controller
 
     public function class_promote()
     {
-
         $students_info = $this->studentModel
             ->select('id, roll, class, section, assign_sub')
             ->where('class <', 11)
             ->findAll();
 
-        $year = date('Y')-1; // or any academic year
+        $year = date('Y') - 1; // previous academic year
 
         foreach ($students_info as $student) {
 
-            // check if exact same backup already exists
-            $exists = $this->studentBackupModel
-                ->where([
-                    'student_id' => $student['id'],
-                    'roll'       => $student['roll'],
-                    'class'      => $student['class'],
-                    'section'    => $student['section'],
-                    'assign_sub' => $student['assign_sub'],
-                    'year'       => $year,
-                ])
+            // 🔍 check if this student already backed up for this year
+            $alreadyBackedUp = $this->studentBackupModel
+                ->select('id')
+                ->where('student_id', $student['id'])
+                ->where('year', $year)
                 ->first();
 
-            // 👉 if exists, skip this student
-            if ($exists) {
+            // ⛔ if exists → skip
+            if ($alreadyBackedUp) {
                 continue;
             }
 
-            // 👉 otherwise insert
+            // ✅ insert only once per year
             $this->studentBackupModel->insert([
                 'student_id' => $student['id'],
                 'roll'       => $student['roll'],
@@ -2614,21 +2608,8 @@ class Dashboard extends Controller
             ]);
         }
 
-
-        // echo "<pre>";
-        // print_r($students);
-        // echo "</pre>";
-
-        // // STEP 2: Update roll from ranking table
-        // // (JOIN update must be raw SQL – CI4 limitation)
-        // $this->studentModel->db->query("
-        //         UPDATE students s
-        //         JOIN ranking r ON r.student_id = s.id
-        //         SET s.roll = r.new_roll
-        //     ");
-
-        // // STEP 3: Debug output
-        // return redirect()->to(base_url('admin/student'));
+        // return redirect()->to(base_url('admin/student'))
+        //     ->with('success', 'Student backup completed (one-time per year).');
     }
 
 
