@@ -2624,9 +2624,18 @@ class Dashboard extends Controller
             ]);
         }
 
+        $rankings = $this->rankingModel
+            ->select('student_id, new_roll')
+            ->findAll();
 
-        // return redirect()->to(base_url('admin/student'))
-        //     ->with('success', 'Student backup completed (one-time per year).');
+        foreach ($rankings as $rank) {
+            $this->studentModel->update($rank['student_id'], [
+                'roll' => $rank['new_roll']
+            ]);
+        }
+
+        return redirect()->to(base_url('admin/student'))
+            ->with('success', 'Student backup completed (one-time per year).');
     }
 
 
