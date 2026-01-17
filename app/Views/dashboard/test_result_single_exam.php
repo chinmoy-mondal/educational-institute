@@ -149,12 +149,12 @@
                 <td><b>Exam:</b> <?= esc($exam) ?></td>
             </tr>
             <tr>
-                <td><b>Class:</b> <?= esc($student['class']) ?></td>
+                <td><b>Class:</b> <?= esc($studentBackup['class']) ?></td>
                 <td><b>Year:</b> <?= esc($year) ?></td>
             </tr>
             <tr>
-                <td><b>Roll:</b> <?= esc($student['roll']) ?></td>
-                <td><b>Group:</b> <?= esc($student['section']) ?></td>
+                <td><b>Roll:</b> <?= esc($studentBackup['roll']) ?></td>
+                <td><b>Group:</b> <?= esc($studentBackup['section']) ?></td>
             </tr>
         </table>
 
@@ -206,7 +206,7 @@
                         <?= esc($row['subject'] ?? '-') ?>
                         <?php
                             if ($total_rows == $id + 1) {
-                                if (in_array($student['class'], [6, 7, 8])) {
+                                if (in_array($studentBackup['class'], [6, 7, 8])) {
                                 } else {
                                     echo "<b>(4th)</b>";
                                 }
@@ -216,7 +216,7 @@
                             } else {
                                 $total_marks += $row['final']['total'];
                                 if ($total_rows == $id + 1) {
-                                    if (in_array($student['class'], [6, 7, 8])) {
+                                    if (in_array($studentBackup['class'], [6, 7, 8])) {
 
                                         $total_fail += ($row['final']['grade_point']) ? 0 : 1;
                                         $total_subject++;
