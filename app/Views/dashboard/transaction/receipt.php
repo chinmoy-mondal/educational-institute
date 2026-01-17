@@ -25,7 +25,10 @@ $monthNames = [
 ?>
 
 <style>
-@pag
+@page {
+    size: A4;
+    margin: 5mm;
+}
 
 /* ================= PRINT MEDIA ================= */
 @media print {
@@ -78,11 +81,6 @@ $monthNames = [
         background: #f1f1f1;
         /* ensure header shading prints */
     }
-}
-
-e {
-    size: A4;
-    margin: 5mm;
 }
 
 body {
