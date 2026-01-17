@@ -2608,6 +2608,18 @@ class Dashboard extends Controller
             ]);
         }
 
+        $students_backup = $this->studentBackupModel
+            ->select('student_id, class')
+            ->where('year', $year)
+            ->findAll();
+
+        echo             count($students_backup);
+        // Debug output
+        echo '<pre>';
+        print_r($students_backup);
+        echo '</pre>';
+
+
         // return redirect()->to(base_url('admin/student'))
         //     ->with('success', 'Student backup completed (one-time per year).');
     }
