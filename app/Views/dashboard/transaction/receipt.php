@@ -26,7 +26,7 @@ $schoolPhone   = '01886007142, 01916487915';
         display: flex;
         flex-direction: column;
         align-items: center;
-        /* center horizontally */
+        /* horizontally center */
         justify-content: flex-start;
         padding: 0;
         box-sizing: border-box;
@@ -34,19 +34,17 @@ $schoolPhone   = '01886007142, 01916487915';
 
     .receipt {
         width: 95%;
-        /* horizontally centered */
         height: 48%;
-        /* half of A4 height minus small spacing */
+        /* half of A4 */
         background: #fffdeb;
         border: 2px solid #000;
-        /* full border */
         padding: 8mm;
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         margin-bottom: 4%;
-        /* space between receipts */
+        /* spacing between receipts */
     }
 
     .copy-label {
@@ -99,11 +97,22 @@ $schoolPhone   = '01886007142, 01916487915';
     td {
         border: 1px solid #000;
         padding: 3px 5px;
-        text-align: center;
     }
 
     th {
         background: #f1f1f1;
+        text-align: center;
+    }
+
+    td:nth-child(2) {
+        text-align: left;
+        /* Fee Category left-aligned */
+    }
+
+    td:nth-child(1),
+    td:nth-child(3) {
+        text-align: center;
+        /* SL and Amount/Status center-aligned */
     }
 
     .footer {
