@@ -45,7 +45,7 @@ $monthNames = [
     .receipt {
         width: 100%;
         height: 25%;
-        /* 1/4 of A4 page height */
+        /* 1/4 of A4 */
         background: #fffdeb;
         border: 2px solid #000;
         padding: 5mm;
@@ -55,6 +55,7 @@ $monthNames = [
         flex-direction: column;
         justify-content: space-between;
         margin-bottom: 2mm;
+        /* space between student & institute copy */
     }
 
     .copy-label {
@@ -88,13 +89,17 @@ $monthNames = [
         display: flex;
         width: 100%;
         margin-bottom: 2px;
+        flex-wrap: wrap;
+        /* wrap if content is too long */
     }
 
     .info>div {
-        flex: 1;
+        flex: 1 1 50%;
+        /* wrap if needed */
         padding: 0 4px;
         box-sizing: border-box;
-        white-space: nowrap;
+        white-space: normal;
+        /* allow line break */
     }
 
     table {
@@ -117,6 +122,8 @@ $monthNames = [
 
     .footer {
         font-size: 10px;
+        word-wrap: break-word;
+        /* make sure text fits */
     }
 
     .sign {
@@ -130,6 +137,7 @@ $monthNames = [
         border-top: 1px solid #000;
         text-align: center;
         font-size: 9px;
+        word-wrap: break-word;
     }
 
     @media print {
@@ -144,7 +152,7 @@ $monthNames = [
         .receipt {
             page-break-inside: avoid;
             height: 25%;
-            margin-bottom: 0;
+            margin-bottom: 2mm;
         }
     }
 </style>
@@ -239,7 +247,9 @@ $monthNames = [
                     <span>Depositor Signature</span>
                 </div>
 
-                <div class="note">All paid amounts are non-refundable.</div>
+                <div class="note">
+                    All paid amounts are non-refundable.
+                </div>
 
             </div>
         <?php endfor; ?>
