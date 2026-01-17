@@ -24,7 +24,7 @@ $monthNames = [
 ];
 ?>
 
-<!-- <style>
+<style>
     @page {
         size: A4;
         margin: 10mm;
@@ -128,7 +128,7 @@ $monthNames = [
         box-sizing: border-box;
         white-space: nowrap;
     }
-</style> -->
+</style>
 
 <div class="container-fluid px-4 py-3">
     <div class="page">
