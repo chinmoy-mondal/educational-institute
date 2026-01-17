@@ -42,7 +42,7 @@ $monthNames = [
 
     .receipt {
         width: 100%;
-        min-height: 98mm;
+        min-height: 85mm;
         background: #fffdeb;
         border: 2px solid #000;
         padding: 2mm;
@@ -126,7 +126,7 @@ $monthNames = [
     .info>div {
         flex: 1;
         /* equal width */
-        padding: 5px 8px;
+        padding: 0px 8px;
         box-sizing: border-box;
         white-space: nowrap;
     }
