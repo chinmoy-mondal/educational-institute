@@ -217,7 +217,7 @@
                                         <?php foreach ($exams as $exam): ?>
                                         <li>
                                             <a class="dropdown-item" target="_blank"
-                                                href="<?= site_url('admin/test_result') ?>?student_id=<?= $s['id'] ?>&year=<?= date('Y') ?>&exam=<?= urlencode($exam) ?>">
+                                                href="<?= site_url('admin/test_result') ?>?student_id=<?= $s['id'] ?>&year=<?= date('Y') - 1 ?>&exam=<?= urlencode($exam) ?>">
                                                 <?= esc($exam) ?>
                                             </a>
                                         </li>
