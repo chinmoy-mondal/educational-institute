@@ -2046,8 +2046,18 @@ class Dashboard extends Controller
             return "Student not found";
         }
 
+        // ---------------- STUDENT BACKUP ----------------
+        $studentBackup = $this->studentBackupModel
+            ->where('student_id', $studentId)
+            ->where('year', $year)
+            ->first();
+
+        if (!$studentBackup) {
+            return "Student backup not found";
+        }
+
         // ---------------- ASSIGNED SUBJECT ORDER ----------------
-        $assignSubArr = explode(',', $student['assign_sub']);
+        $assignSubArr = explode(',', $studentBackup['assign_sub']);
         $normalSubs = [];
         $optionalSub = null;
 
@@ -2099,8 +2109,8 @@ class Dashboard extends Controller
                 : 0;
 
             $gradeInfo = $this->resultManipulation(
-                (int)$student['class'],
-                $student['section'],
+                (int)$studentBackup['class'],
+                $studentBackup['section'],
                 $row['subject'],
                 $written,
                 $mcq,
@@ -2183,8 +2193,8 @@ class Dashboard extends Controller
                 }
 
                 $gradeInfo = $this->resultManipulation(
-                    (int)$student['class'],
-                    $student['section'],
+                    (int)$studentBackup['class'],
+                    $studentBackup['section'],
                     $marksheetNumeric[$firstIndex]['subject'],
                     $totalW,
                     $totalM,
@@ -2212,10 +2222,11 @@ class Dashboard extends Controller
 
         // ---------------- VIEW / SAVE ----------------
         $data = [
-            'marksheet' => $marksheetNumeric,
-            'student'   => $student,
-            'exam'      => $exam,
-            'year'      => $year
+            'marksheet'     => $marksheetNumeric,
+            'student'       => $student,
+            'studentBackup' => $studentBackup,
+            'exam'          => $exam,
+            'year'          => $year
         ];
 
         // echo "<pre>";
@@ -2230,10 +2241,11 @@ class Dashboard extends Controller
 
     private function saveRankingFromResult(array $data)
     {
-        $marksheet = $data['marksheet'];
-        $student   = $data['student'];
-        $exam      = $data['exam'];
-        $year      = $data['year'];
+        $marksheet      = $data['marksheet'];
+        $student        = $data['student'];
+        $studentBackup  = $data['studentBackup'];
+        $exam           = $data['exam'];
+        $year           = $data['year'];
 
         // echo "<pre>";
         // print_r($marksheet);
