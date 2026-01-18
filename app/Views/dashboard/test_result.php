@@ -171,13 +171,13 @@
                 </td>
             </tr>
             <tr>
-                <td><strong>Class:</strong> : <?= esc($student['class']) ?></td>
+                <td><strong>Class:</strong> : <?= esc($studentBackup['class']) ?></td>
                 <td><strong>Year:</strong> : <?= $year ?> </td>
             </tr>
             <tr>
-                <td><strong>Roll:</strong> : <?= esc($student['roll']) ?>
+                <td><strong>Roll:</strong> : <?= esc($studentBackup['roll']) ?>
                 </td>
-                <td><strong>Group:</strong> : <?= esc($student['section']) ?></td>
+                <td><strong>Group:</strong> : <?= esc($studentBackup['section']) ?></td>
             </tr>
         </table>
 
@@ -222,7 +222,7 @@
                     <td><?= esc($row['subject'] ?? '-') ?>
                         <?php
                             if ($total_rows == $id + 1) {
-                                if (in_array($student['class'], [6, 7, 8])) {
+                                if (in_array($studentBackup['class'], [6, 7, 8])) {
                                 } else {
                                     echo "<b>(4th)</b>";
                                 }
@@ -271,7 +271,7 @@
                         } else {
                             $total_marks_sum += $final_total;
                             if ($total_rows == $id + 1) {
-                                if (in_array($student['class'], [6, 7, 8])) {
+                                if (in_array($studentBackup['class'], [6, 7, 8])) {
 
                                     $total_fail += ($final_gp) ? 0 : 1;
                                     $total_subject++;
