@@ -34,20 +34,20 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="<?= base_url('home/welcome'); ?>">Welcome Message</a></li>
                         <li><a class="dropdown-item" href="<?= base_url('home/history'); ?>">Our History</a></li>
-                        <li><a class="dropdown-item" href="<?= base_url('home/mission'); ?>">Mission & Vision</a></li>
+                        <!-- <li><a class="dropdown-item" href="<?= base_url('home/mission'); ?>">Mission & Vision</a></li> -->
                         <li><a class="dropdown-item" href="<?= base_url('home/staff'); ?>">Faculty & Staff</a></li>
                     </ul>
                 </li>
 
                 <!-- Academics -->
-                <li class="nav-item dropdown">
+                <!-- <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Academics</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Curriculum</a></li>
                         <li><a class="dropdown-item" href="<?= base_url('subjects'); ?>">Subjects</a></li>
                         <li><a class="dropdown-item" href="<?= base_url('public-calendar'); ?>">Calendar</a></li>
                     </ul>
-                </li>
+                </li> -->
 
 
 
@@ -57,7 +57,7 @@
                 </li>
 
                 <!-- Students -->
-                <li class="nav-item dropdown">
+                <!-- <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Students</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="<?= base_url('student'); ?>">Student Portal</a></li>
@@ -66,16 +66,16 @@
                         <li><a class="dropdown-item" href="<?= base_url('attendanceStats'); ?>">Attendance
                                 Statistics</a></li>
                     </ul>
-                </li>
+                </li> -->
 
                 <!-- Events -->
-                <li class="nav-item dropdown">
+                <!-- <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Exam</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="<?= base_url('print-admit-form'); ?>">Exams & Results</a>
                         </li>
                     </ul>
-                </li>
+                </li> -->
 
                 <!-- Contact -->
                 <li class="nav-item">

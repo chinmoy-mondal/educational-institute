@@ -11,18 +11,18 @@ $routes->get('/', 'Home::index');
 $routes->get('home', 'Home::index');
 $routes->get('home/welcome', 'Home::welcome');
 $routes->get('home/history', 'Home::history');
-$routes->get('home/mission', 'Home::mission');
+// $routes->get('home/mission', 'Home::mission');
 $routes->get('home/staff', 'Home::staff');
 $routes->get('user-id', 'Home::userProfile');
 $routes->get('user', 'User::index');
-$routes->get('print-admit-form', 'Home::admit_print_view');
+// $routes->get('print-admit-form', 'Home::admit_print_view');
 $routes->post('print-admit', 'Home::printAdmit');
-$routes->get('student', 'Home::student');
-$routes->get('student_stat', 'Home::student_stat');
-$routes->get('student-id', 'Home::studentById');
-$routes->get('idcard/(:num)', 'Home::idCard/$1');
+// $routes->get('student', 'Home::student');
+// $routes->get('student_stat', 'Home::student_stat');
+// $routes->get('student-id', 'Home::studentById');
+// $routes->get('idcard/(:num)', 'Home::idCard/$1');
 $routes->get('teacher_idcard/(:num)', 'Home::teacher_idcard/$1');
-$routes->get('attendance', 'Home::attendance');
+// $routes->get('attendance', 'Home::attendance');
 $routes->get('notice', 'Home::notice');
 
 $routes->get('contain', 'Contain::index');
@@ -32,8 +32,8 @@ $routes->get('result', 'Home::result');
 $routes->get('courses', 'Home::courses');
 $routes->get('contact', 'Home::contact');
 $routes->get('apply', 'Home::apply');
-$routes->get('subjects', 'Home::subjects');
-$routes->get('attendanceStats', 'Home::attendanceStats');
+// $routes->get('subjects', 'Home::subjects');
+// $routes->get('attendanceStats', 'Home::attendanceStats');
 $routes->get('course-details/(:num)', 'Home::courseDetails/$1');
 $routes->get('activity-details/(:num)', 'Home::activityDetails/$1');
 
@@ -156,8 +156,8 @@ $routes->get('/user_permit/(:num)', 'Dashboard::user_permit/$1');
 $routes->get('/user_delete/(:num)', 'Dashboard::user_delete/$1');
 $routes->get('generate-id-cards', 'IdCardGenerator::generate');
 
-$routes->get('public-calendar', 'PublicCalendar::index');
-$routes->get('public-calendar/events', 'PublicCalendar::events');
+// $routes->get('public-calendar', 'PublicCalendar::index');
+// $routes->get('public-calendar/events', 'PublicCalendar::events');
 
 
 $routes->match(['get', 'post'], 'admin/attendance/calendar', 'Dashboard::attendanceCalendar');
