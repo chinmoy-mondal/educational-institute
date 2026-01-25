@@ -147,44 +147,69 @@ class Auth extends BaseController
         return view('auth/forgot_password');
     }
 
-    public function sendResetLink()
-    {
-        $email = $this->request->getPost('email');
-        $userModel = new UserModel();
-        $user = $userModel->where('email', $email)->first();
+	public function sendResetLink()
+	{
+		$email = $this->request->getPost('email');
 
-        if (!$user) {
-            return redirect()->back()->with('error', 'Email not found.');
-        }
-        $name = $user['name'];
+		// ---------------- Check if user exists ----------------
+		$userModel = new UserModel();
+		$user = $userModel->where('email', $email)->first();
 
-        $token = bin2hex(random_bytes(32));
-        $expires = date('Y-m-d H:i:s', time() + 300); // 5 minutes expiry
+		if (!$user) {
+			return redirect()->back()->with('error', 'Email not found.');
+		}
 
-        $resetModel = new PasswordResetModel();
-        $resetModel->insert([
-            'email'      => $email,
-            'token'      => $token,
-            'expires_at' => $expires,
-            'used'       => 0
-        ]);
+		$name = $user['name'];
 
-        $resetLink = base_url("/reset-password/$token");
+		// ---------------- Generate reset token ----------------
+		$token = bin2hex(random_bytes(32));
+		$expires = date('Y-m-d H:i:s', time() + 300); // 5 minutes expiry
 
-        // ✅ Send simple email using PHP mail()
-        $message = "
-        Hello $name,<br><br>
-        Click the link to reset your password (valid 5 minutes):<br>
-        <a href='$resetLink'>$resetLink</a><br><br>
-        If you did not request this, ignore this email.
+		// Save token to database
+		$resetModel = new PasswordResetModel();
+		$resetModel->insert([
+			'email'      => $email,
+			'token'      => $token,
+			'expires_at' => $expires,
+			'used'       => 0
+		]);
+
+		$resetLink = base_url("/reset-password/$token");
+
+		// ---------------- Prepare Email ----------------
+		$fromEmail = 'no-reply@notes.com.bd'; // Your domain email
+		$fromName  = 'Jhenaidah Public School & Collage';
+		$subject   = 'Password Reset Request';
+
+		$htmlMessage = "
+    <div style='font-family: Arial, sans-serif; line-height: 1.6;'>
+        <h3>Password Reset Request</h3>
+        <p>Hello <strong>$name</strong>,</p>
+        <p>We received a request to reset your password. Click the button below to reset it. This link is valid for 5 minutes.</p>
+        <p style='text-align:center;'>
+            <a href='$resetLink' style='background-color:#007bff;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;'>Reset Password</a>
+        </p>
+        <p>If you did not request a password reset, please ignore this email.</p>
+        <hr>
+        <p style='font-size:12px;color:gray;'>Mulgram Secondary School</p>
+    </div>
     ";
 
-        if (mail($email, "Password Reset Request", $message, "Content-type:text/html")) {
-            return redirect()->back()->with('success', 'Reset link has been sent to your email.');
-        } else {
-            return redirect()->back()->with('error', 'Failed to send email. Try again.');
-        }
-    }
+		// ---------------- Email headers ----------------
+		$headers  = "From: $fromName <$fromEmail>\r\n";
+		$headers .= "Reply-To: $fromEmail\r\n";
+		$headers .= "MIME-Version: 1.0\r\n";
+		$headers .= "Content-type: text/html; charset=UTF-8\r\n";
+
+		// ---------------- Send Email via PHP mail() ----------------
+		$mailSent = mail($email, $subject, $htmlMessage, $headers, "-f$fromEmail");
+
+		if ($mailSent) {
+			return redirect()->back()->with('success', 'Reset link has been sent to your email.');
+		} else {
+			return redirect()->back()->with('error', 'Failed to send email via PHP mail().');
+		}
+	}
 
     public function resetPassword($token = null)
     {
