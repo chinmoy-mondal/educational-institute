@@ -2557,11 +2557,31 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
+        // Logged-in user account_status
+        $user_id = $this->session->get('user_id') ?? 0;
+        $account_status = 0;
+        if ($user_id > 0) {
+            $user = $this->userModel->select('account_status')->find($user_id);
+            if ($user) {
+                $account_status = $user['account_status'];
+            }
+        }
+
         // Fetch teachers
-        $teachers = $this->userModel
-            ->where('account_status !=', 0)
-            ->orderBy('position', 'ASC')
-            ->findAll();
+        // 🔹 Fetch teachers based on permission
+        if ($account_status > 1) {
+            // Admin / Accountant → all teachers
+            $teachers = $this->userModel
+                ->where('account_status !=', 0)
+                ->orderBy('position', 'ASC')
+                ->findAll();
+        } else {
+            // Teacher → only his own account
+            $teachers = $this->userModel
+                ->where('id', $user_id)
+                ->where('account_status !=', 0)
+                ->findAll();
+        }
 
         // ===== Earnings calculation =====
         $builder = $this->transactionModel->builder();
@@ -2604,15 +2624,7 @@ class Dashboard extends Controller
             $t['unpaid']     = $t['total_earned'] - $t['total_paid'];
         }
 
-        // Logged-in user account_status
-        $user_id = $this->session->get('user_id') ?? 0;
-        $account_status = 0;
-        if ($user_id > 0) {
-            $user = $this->userModel->select('account_status')->find($user_id);
-            if ($user) {
-                $account_status = $user['account_status'];
-            }
-        }
+
 
         $this->data['teachers'] = $teachers;
         $this->data['account_status'] = $account_status;
