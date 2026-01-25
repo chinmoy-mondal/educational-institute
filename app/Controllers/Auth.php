@@ -165,7 +165,7 @@ class Auth extends BaseController
 		$token = bin2hex(random_bytes(32));
 		$expires = date('Y-m-d H:i:s', time() + 300); // 5 minutes expiry
 
-		// ---------------- Save token to database ----------------
+		// Save token to database
 		$resetModel = new PasswordResetModel();
 		$resetModel->insert([
 			'email'      => $email,
@@ -176,9 +176,9 @@ class Auth extends BaseController
 
 		$resetLink = base_url("/reset-password/$token");
 
-		// ---------------- Prepare Email test----------------
-		$fromEmail = 'no-reply@notes.com.bd'; // Use your domain email
-		$fromName  = 'Jhenaidah Cadet Coaching';
+		// ---------------- Prepare Email ----------------
+		$fromEmail = 'no-reply@notes.com.bd'; // Your domain email
+		$fromName  = 'Jhenaidah Public School & Collage';
 		$subject   = 'Password Reset Request';
 
 		$htmlMessage = "
@@ -191,7 +191,7 @@ class Auth extends BaseController
         </p>
         <p>If you did not request a password reset, please ignore this email.</p>
         <hr>
-        <p style='font-size:12px;color:gray;'>Jhenaidah Cadet Coaching</p>
+        <p style='font-size:12px;color:gray;'>Mulgram Secondary School</p>
     </div>
     ";
 
@@ -201,13 +201,13 @@ class Auth extends BaseController
 		$headers .= "MIME-Version: 1.0\r\n";
 		$headers .= "Content-type: text/html; charset=UTF-8\r\n";
 
-		// ---------------- Send Email ----------------
-		$mailSent = mail($email, $subject, $htmlMessage, $headers, "-f$fromEmail"); // <- -f ensures correct sender
+		// ---------------- Send Email via PHP mail() ----------------
+		$mailSent = mail($email, $subject, $htmlMessage, $headers, "-f$fromEmail");
 
 		if ($mailSent) {
 			return redirect()->back()->with('success', 'Reset link has been sent to your email.');
 		} else {
-			return redirect()->back()->with('error', 'Failed to send email. Please check your server email settings.');
+			return redirect()->back()->with('error', 'Failed to send email via PHP mail().');
 		}
 	}
 
