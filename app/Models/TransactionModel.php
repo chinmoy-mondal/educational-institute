@@ -15,8 +15,11 @@ class TransactionModel extends Model
         'receiver_id',
         'receiver_name',
         'amount',
+        'discount',
+        'month',
         'purpose',
         'description',
+        'payment_status',
         'status',
         'activity' // new field
     ];

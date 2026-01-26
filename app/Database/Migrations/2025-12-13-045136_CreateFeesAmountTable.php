@@ -1,0 +1,68 @@
+<?php
+
+namespace App\Database\Migrations;
+
+use CodeIgniter\Database\Migration;
+
+class CreateFeesAmountTable extends Migration
+{
+    public function up()
+    {
+        $this->forge->addField([
+            'id' => [
+                'type'           => 'INT',
+                'unsigned'       => true,
+                'auto_increment' => true,
+            ],
+
+            'class' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 50,
+            ],
+
+            'section' => [
+                'type'       => 'VARCHAR',
+                'constraint' => 20,
+                'null'       => false,
+                'after'      => 'class',
+                'collation'  => 'utf8mb4_unicode_ci',
+            ],
+
+            'title_id' => [
+                'type'     => 'INT',
+                'unsigned' => true,
+            ],
+
+            'unit' => [
+                'type'       => 'TINYINT',
+                'constraint' => 2,
+                'null'       => true,
+                'comment'    => 'Unit (1–12)',
+            ],
+
+            'fees' => [
+                'type'       => 'DECIMAL',
+                'constraint' => '10,2',
+                'default'    => 0.00,
+            ],
+
+            'created_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+
+            'updated_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+        ]);
+
+        $this->forge->addKey('id', true);
+        $this->forge->createTable('fees_amount');
+    }
+
+    public function down()
+    {
+        $this->forge->dropTable('fees_amount');
+    }
+}
