@@ -11,12 +11,11 @@
                 <select name="class" class="form-select" onchange="this.form.submit()">
                     <option value="">ক্লাস নির্বাচন করুন</option>
 
-                    <?php for ($i = 6; $i <= 10; $i++): ?>
-                    <option value="<?= $i ?>" <?= ($selectedClass == $i) ? 'selected' : '' ?>>
-                        Class <?= $i ?>
+                    <?php foreach ($classes as $c): ?>
+                    <option value="<?= esc($c['class']) ?>" <?= ($selectedClass == $c['class']) ? 'selected' : '' ?>>
+                        Class <?= esc($c['class']) ?>
                     </option>
-                    <?php endfor; ?>
-
+                    <?php endforeach; ?>
                 </select>
             </div>
         </div>
@@ -104,7 +103,7 @@
     <?php else: ?>
 
     <div class="alert alert-warning">
-        অনুগ্রহ করে একটি <strong>শাখা</strong> নির্বাচন করুন।
+        অনুগ্রহ করে একটি <strong>শ্রেণি</strong> নির্বাচন করুন।
     </div>
 
     <?php endif; ?>

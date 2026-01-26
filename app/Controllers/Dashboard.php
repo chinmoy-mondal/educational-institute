@@ -3130,6 +3130,15 @@ class Dashboard extends Controller
             }
         }
 
+        $classes = $this->studentModel
+            ->select('class')
+            ->distinct()
+            ->where('class IS NOT NULL')
+            ->orderBy('CAST(class as UNSIGNED)', 'ASC')
+            ->findAll();
+
+
+        $this->data['classes']          = $classes;
         $this->data['selectedClass']    = $class;
         $this->data['existingAmounts']  = $existingAmounts;
         $this->data['existingUnits']    = $existingUnits;
