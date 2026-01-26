@@ -2487,7 +2487,7 @@ class Dashboard extends Controller
             $senderDeposits[$row['sender_id']] = $row['total_deposit'];
         }
 
-        $this->data['senderDeposits'] = $senderDeposits; // ✅ pass to view
+        $this->data['senderDeposits'] = $senderDeposits; // ✅ pass to view 1
 
         // ✅ Dropdown options
         $this->data['classes'] = $this->studentModel->select('class')->distinct()->orderBy('class', 'ASC')->get()->getResultArray();
