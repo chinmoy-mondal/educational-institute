@@ -904,6 +904,14 @@ class Dashboard extends Controller
         $religion = $this->request->getGet('religion');
         $gender   = $this->request->getGet('gender'); // ✅ separate variable
 
+        // Distinct classes
+        $classes = $this->studentModel
+            ->select('class')
+            ->distinct()
+            ->where('class IS NOT NULL')
+            ->orderBy('CAST(class as UNSIGNED)', 'ASC')
+            ->findAll();
+
         // Distinct religions
         $religions = $this->studentModel
             ->select('religion')
@@ -971,10 +979,13 @@ class Dashboard extends Controller
             ['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
             ['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
         ];
+
+
         $this->data['students']   = $students;
         $this->data['pager']      = $this->studentModel->pager;
         $this->data['q']          = $q;
         $this->data['class']      = $class;
+        $this->data['classes']    = $classes;
         $this->data['section']    = $section;
         $this->data['sections']   = $sections;
         $this->data['religion']   = $religion;
