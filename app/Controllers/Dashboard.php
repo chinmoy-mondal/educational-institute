@@ -3102,10 +3102,9 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        // ✅ ONLY SECTION
-        $section = $this->request->getGet('section');
-
-        $this->data['selectedSection'] = $section;
+        // ✅ ONLY Class
+        $class = $this->request->getGet('class');
+        $this->data['selectedClass'] = $class;
 
         // Fee titles
         $this->data['titles'] = $this->feesModel->findAll();
@@ -3115,9 +3114,9 @@ class Dashboard extends Controller
         $existingUpdates = [];
         $totalAmount     = 0;
 
-        if ($section) {
+        if ($class) {
             $amounts = $this->feesAmountModel
-                ->where('section', $section)
+                ->where('class', $class)
                 ->findAll();
 
             foreach ($amounts as $a) {
@@ -3131,22 +3130,23 @@ class Dashboard extends Controller
             }
         }
 
-        $this->data['existingAmounts'] = $existingAmounts;
-        $this->data['existingUnits']   = $existingUnits;
-        $this->data['existingUpdates'] = $existingUpdates;
-        $this->data['totalAmount']     = $totalAmount;
+        $this->data['selectedClass']    = $class;
+        $this->data['existingAmounts']  = $existingAmounts;
+        $this->data['existingUnits']    = $existingUnits;
+        $this->data['existingUpdates']  = $existingUpdates;
+        $this->data['totalAmount']      = $totalAmount;
 
         return view('dashboard/transaction/set_fees', $this->data);
     }
 
     public function save_fees()
     {
-        $section   = $this->request->getPost('section');
+        $class = $this->request->getPost('class');
         $feesData  = $this->request->getPost('fees');
         $unitsData = $this->request->getPost('unit');
 
-        if (!$section) {
-            return redirect()->back()->with('error', 'Please select a section before saving.');
+        if (!$class) {
+            return redirect()->back()->with('error', 'Please select a class before saving.');
         }
 
         if (empty($feesData)) {
@@ -3164,7 +3164,7 @@ class Dashboard extends Controller
             $unit = $unitsData[$title_id] ?? null;
 
             $existing = $this->feesAmountModel
-                ->where('section', $section)
+                ->where('class', $class)
                 ->where('title_id', $title_id)
                 ->first();
 
@@ -3178,7 +3178,7 @@ class Dashboard extends Controller
             } else {
                 // INSERT
                 $amountModel->insert([
-                    'section'    => $section,
+                    'class' => $class,
                     'title_id'   => $title_id,
                     'fees'       => $amount,
                     'unit'       => $unit,

@@ -7,19 +7,18 @@
     <!-- Select Section Only -->
     <form method="get" action="<?= base_url('admin/set_fees') ?>" class="mb-4">
         <div class="row g-2 align-items-center">
-
             <div class="col-md-4">
-                <select name="section" class="form-select" onchange="this.form.submit()">
-                    <option value="">শাখা নির্বাচন করুন</option>
-                    <option value="আবাসিক" <?= ($selectedSection == 'আবাসিক') ? 'selected' : '' ?>>
-                        আবাসিক
+                <select name="class" class="form-select" onchange="this.form.submit()">
+                    <option value="">ক্লাস নির্বাচন করুন</option>
+
+                    <?php for ($i = 6; $i <= 10; $i++): ?>
+                    <option value="<?= $i ?>" <?= ($selectedClass == $i) ? 'selected' : '' ?>>
+                        Class <?= $i ?>
                     </option>
-                    <option value="অনাবাসিক" <?= ($selectedSection == 'অনাবাসিক') ? 'selected' : '' ?>>
-                        অনাবাসিক
-                    </option>
+                    <?php endfor; ?>
+
                 </select>
             </div>
-
         </div>
     </form>
 
@@ -27,12 +26,12 @@
 
     <!-- Fees Setup Form -->
     <form method="post" action="<?= base_url('admin/save_fees') ?>">
-        <input type="hidden" name="section" value="<?= esc($selectedSection) ?>">
+        <input type="hidden" name="class" value="<?= esc($selectedClass) ?>">
 
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
                 <strong>
-                    Fees for <?= esc($selectedSection) ?>
+                    Fees for Class <?= esc($selectedClass) ?>
                 </strong>
             </div>
 
@@ -97,7 +96,7 @@
     <!-- Total Amount -->
     <div class="alert alert-info mt-3">
         <strong>
-            Total Fees (<?= esc($selectedSection) ?>):
+            Total Fees (Class <?= esc($selectedClass) ?>):
         </strong>
         <?= number_format($totalAmount, 2) ?> ৳
     </div>
