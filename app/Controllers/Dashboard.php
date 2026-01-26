@@ -2357,7 +2357,7 @@ class Dashboard extends Controller
         return view('dashboard/transaction_dashboard', $this->data);
     }
 
-    public function tec_pay()
+public function tec_pay()
     {
         $this->data['title'] = 'Teacher Earnings';
         $this->data['activeSection'] = 'accounts';
@@ -2370,34 +2370,81 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        // Fetch teachers sorted by position
-        $teachers = $this->userModel
-            ->where('account_status !=', 0)
-            ->orderBy('position', 'ASC') // sort by position ascending
-            ->findAll();
-
-        foreach ($teachers as &$t) {
-            // Sum only "earn" transactions (status=0) for this teacher
-            $t['total_earned'] = $this->transactionModel
-                ->selectSum('amount')
-                ->where('receiver_id', $t['id'])
-                ->where('status', 0)      // only earn
-                ->where('activity', 0)    // not paid
-                ->first()['amount'] ?? 0;
-
-            // Optional: sum only unpaid (same as total_earned if same filter)
-            $t['unpaid'] = $this->transactionModel
-                ->selectSum('amount')
-                ->where('receiver_id', $t['id'])
-                ->where('status', 0)
-                ->where('activity', 0)   // not paid
-                ->first()['amount'] ?? 0;
+        // Logged-in user account_status
+        $user_id = $this->session->get('user_id') ?? 0;
+        $account_status = 0;
+        if ($user_id > 0) {
+            $user = $this->userModel->select('account_status')->find($user_id);
+            if ($user) {
+                $account_status = $user['account_status'];
+            }
         }
 
-        $this->data['teachers'] = $teachers;
+        // Fetch teachers
+        // 🔹 Fetch teachers based on permission
+        if ($account_status > 1) {
+            // Admin / Accountant → all teachers
+            $teachers = $this->userModel
+                ->where('account_status !=', 0)
+                ->orderBy('position', 'ASC')
+                ->findAll();
+        } else {
+            // Teacher → only his own account
+            $teachers = $this->userModel
+                ->where('id', $user_id)
+                ->where('account_status !=', 0)
+                ->findAll();
+        }
 
-        return view('dashboard/tec_pay', $this->data);
+        // ===== Earnings calculation =====
+        $builder = $this->transactionModel->builder();
+
+        $subQuery = $builder
+            ->select('
+            receiver_id,
+            transaction_id,
+            SUM(amount) AS amount_sum,
+            MAX(discount) AS discount_once
+        ')
+            ->where('status', 0)
+            ->where('activity', 0)
+            ->groupBy('receiver_id, transaction_id')
+            ->getCompiledSelect();
+
+        $finalBuilder = $this->transactionModel->builder("($subQuery) t");
+
+        $totals = $finalBuilder
+            ->select('
+            receiver_id,
+            SUM(amount_sum - discount_once) AS total_earned
+        ')
+            ->groupBy('receiver_id')
+            ->get()
+            ->getResultArray();
+
+        $earnMap = array_column($totals, 'total_earned', 'receiver_id');
+
+        foreach ($teachers as &$t) {
+            $t['total_earned'] = $earnMap[$t['id']] ?? 0;
+
+            // Fetch total already paid
+            $paid = $this->userCollectionsPayModel
+                ->select('SUM(amount_paid) as total_paid')
+                ->where('user_id', $t['id'])
+                ->first();
+
+            $t['total_paid'] = $paid['total_paid'] ?? 0;
+            $t['unpaid']     = $t['total_earned'] - $t['total_paid'];
+        }
+
+
+
+        $this->data['teachers'] = $teachers;
+        $this->data['account_status'] = $account_status;
+
+        return view('dashboard/transaction/tec_pay', $this->data);
     }
+
 
     public function reset_amount($teacher_id)
     {
