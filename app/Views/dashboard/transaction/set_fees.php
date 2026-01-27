@@ -12,8 +12,8 @@
                     <option value="">ক্লাস নির্বাচন করুন</option>
 
                     <?php foreach ($classes as $c): ?>
-                    <option value="<?= esc($c['class']) ?>" <?= ($selectedClass == $c['class']) ? 'selected' : '' ?>>
-                        Class <?= esc($c['class']) ?>
+                    <option value="<?= esc($c) ?>" <?= ($selectedClass == $c) ? 'selected' : '' ?>>
+                        Class <?= esc($c) ?>
                     </option>
                     <?php endforeach; ?>
                 </select>
