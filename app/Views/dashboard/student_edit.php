@@ -33,8 +33,19 @@
           <div class="row mt-3">
             <div class="col-md-4">
               <label>Section</label>
-              <input type="text" name="section" class="form-control" value="<?= esc($student['section']) ?>">
+              <select name="section" class="form-control">
+                <option value="">Select Section</option>
+
+                <?php foreach ($sections as $sec): ?>
+                  <option value="<?= esc($sec['section']) ?>"
+                    <?= $student['section'] === $sec['section'] ? 'selected' : '' ?>>
+                    <?= esc($sec['section']) ?>
+                  </option>
+                <?php endforeach; ?>
+
+              </select>
             </div>
+
             <div class="col-md-4">
               <label>Board ID</label>
               <input type="text" name="esif" class="form-control" value="<?= esc($student['esif']) ?>">

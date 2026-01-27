@@ -2933,7 +2933,10 @@ class Dashboard extends Controller
             ['label' => 'Add Student', 'url' => base_url('student_create')],
             ['label' => 'Edit Student', 'url' => current_url()],
         ];
+        $sections = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
+        
         $this->data['student'] = $student;
+        $this->data['sections'] = $sections;
 
         return view('dashboard/student_edit', $this->data);
     }
