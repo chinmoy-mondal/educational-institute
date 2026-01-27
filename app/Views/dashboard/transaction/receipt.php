@@ -3,7 +3,7 @@
 
 <?php
 /* ================= SCHOOL INFO (EDIT HERE ONLY) ================= */
-$schoolName    = 'Jhenaidah Cadet Coaching';
+$schoolName    = 'Jhenaidah Public School & Collage';
 $schoolAddress = 'রেবাংলা সড়ক, কেন্দ্রীয় গোরস্থান সংলগ্ন, ঝিনাইদহ';
 $schoolPhone   = '01886007142, 01916487915';
 

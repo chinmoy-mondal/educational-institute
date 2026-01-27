@@ -3360,15 +3360,15 @@ class Dashboard extends Controller
             $apiKey = "5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8";   // Replace with real API key
             $callerID = "1234";
 
-            $smsUrl = "https://bulksmsdhaka.net/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
+            // $smsUrl = "https://bulksmsdhaka.net/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
 
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $smsUrl);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-            $response = curl_exec($ch);
-            $error = curl_error($ch);
-            curl_close($ch);
+            // $ch = curl_init();
+            // curl_setopt($ch, CURLOPT_URL, $smsUrl);
+            // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            // curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            // $response = curl_exec($ch);
+            // $error = curl_error($ch);
+            // curl_close($ch);
 
             // ---------- LOG SMS ----------
             $this->smsLogModel->insert([
