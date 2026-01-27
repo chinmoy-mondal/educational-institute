@@ -1551,7 +1551,7 @@ class Dashboard extends Controller
         // $studentModel = new \App\Models\StudentModel();
         // $resultModel = new \App\Models\ResultModel();
 
-        $students = $studentModel
+        $students = $this->studentModel
             ->select('id, roll, student_name') // include 'name' here
             ->where('class', $class)
             ->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
@@ -1560,7 +1560,7 @@ class Dashboard extends Controller
         $finalData = [];
 
         foreach ($students as $student) {
-            $results = $resultModel
+            $results = $this->resultModel
                 ->where('student_id', $student['id'])
                 ->where('exam', $exam)
                 ->where('year', $year)
@@ -3357,18 +3357,18 @@ class Dashboard extends Controller
 
             $message = "Dear {$student['student_name']}, your payment for {$monthName} is {$paymentStatusText}. --Jhenaidah Cadet Coaching";
 
-            $apiKey = "5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8";   // Replace with real API key
+            $apiKey = " ";   // 5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8
             $callerID = "1234";
 
-            // $smsUrl = "https://bulksmsdhaka.net/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
+            $smsUrl = ""; //"https://bulksmsdhaka.net/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
 
-            // $ch = curl_init();
-            // curl_setopt($ch, CURLOPT_URL, $smsUrl);
-            // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            // curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-            // $response = curl_exec($ch);
-            // $error = curl_error($ch);
-            // curl_close($ch);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $smsUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            $response = curl_exec($ch);
+            $error = curl_error($ch);
+            curl_close($ch);
 
             // ---------- LOG SMS ----------
             $this->smsLogModel->insert([
