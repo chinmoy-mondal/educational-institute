@@ -1495,8 +1495,8 @@ class Dashboard extends Controller
         $exam  = $this->request->getGet('exam') ?? 'Half Yearly';
         $year  = $this->request->getGet('year') ?? date('Y');
 
-        $studentModel = new \App\Models\StudentModel();
-        $resultModel = new \App\Models\ResultModel();
+        // $studentModel = new \App\Models\StudentModel();
+        // $resultModel = new \App\Models\ResultModel();
 
         $students = $studentModel
             ->select('id, roll, student_name') // include 'name' here
@@ -1523,83 +1523,83 @@ class Dashboard extends Controller
         return $finalData;
     }
 
-    public function downloadCSV()
-    {
-        helper('text');
+    // public function downloadCSV()
+    // {
+    //     helper('text');
 
-        // Example: load your finalData array from your model or session
-        $finalData = $this->getTabulationData(); // <-- Replace with actual data fetch logic
-        $subjectList = [];
+    //     // Example: load your finalData array from your model or session
+    //     $finalData = $this->getTabulationData(); // <-- Replace with actual data fetch logic
+    //     $subjectList = [];
 
-        // Get unique subject names
-        foreach ($finalData as $student) {
-            foreach ($student['results'] as $res) {
-                if (!in_array($res['subject'], $subjectList)) {
-                    $subjectList[] = $res['subject'];
-                }
-            }
-        }
+    //     // Get unique subject names
+    //     foreach ($finalData as $student) {
+    //         foreach ($student['results'] as $res) {
+    //             if (!in_array($res['subject'], $subjectList)) {
+    //                 $subjectList[] = $res['subject'];
+    //             }
+    //         }
+    //     }
 
-        // Set CSV headers
-        $headers = ['Roll', 'Name'];
-        foreach ($subjectList as $subject) {
-            $headers[] = "$subject - W";
-            $headers[] = "$subject - MCQ";
-            $headers[] = "$subject - Prac";
-            $headers[] = "$subject - Total";
-        }
-        $headers[] = 'Total Marks';
+    //     // Set CSV headers
+    //     $headers = ['Roll', 'Name'];
+    //     foreach ($subjectList as $subject) {
+    //         $headers[] = "$subject - W";
+    //         $headers[] = "$subject - MCQ";
+    //         $headers[] = "$subject - Prac";
+    //         $headers[] = "$subject - Total";
+    //     }
+    //     $headers[] = 'Total Marks';
 
-        // Set headers for CSV download
-        $filename = 'tabulation_sheet_' . date('Ymd_His') . '.csv';
+    //     // Set headers for CSV download
+    //     $filename = 'tabulation_sheet_' . date('Ymd_His') . '.csv';
 
-        // Start streaming the CSV
-        header("Content-Description: File Transfer");
-        header("Content-Disposition: attachment; filename=$filename");
-        header("Content-Type: application/csv");
+    //     // Start streaming the CSV
+    //     header("Content-Description: File Transfer");
+    //     header("Content-Disposition: attachment; filename=$filename");
+    //     header("Content-Type: application/csv");
 
-        $file = fopen('php://output', 'w');
+    //     $file = fopen('php://output', 'w');
 
-        // Write header row
-        fputcsv($file, $headers);
+    //     // Write header row
+    //     fputcsv($file, $headers);
 
-        // Write each student's result row
-        foreach ($finalData as $student) {
-            $row = [];
-            $row[] = $student['roll'];
-            $row[] = $student['name'];
+    //     // Write each student's result row
+    //     foreach ($finalData as $student) {
+    //         $row = [];
+    //         $row[] = $student['roll'];
+    //         $row[] = $student['name'];
 
-            $subjectMap = [];
-            foreach ($student['results'] as $res) {
-                $subjectMap[$res['subject']] = $res;
-            }
+    //         $subjectMap = [];
+    //         foreach ($student['results'] as $res) {
+    //             $subjectMap[$res['subject']] = $res;
+    //         }
 
-            $totalMarks = 0;
+    //         $totalMarks = 0;
 
-            foreach ($subjectList as $subject) {
-                $written = $subjectMap[$subject]['written'] ?? '';
-                $mcq = $subjectMap[$subject]['mcq'] ?? '';
-                $practical = $subjectMap[$subject]['practical'] ?? '';
-                $total = $subjectMap[$subject]['total'] ?? '';
+    //         foreach ($subjectList as $subject) {
+    //             $written = $subjectMap[$subject]['written'] ?? '';
+    //             $mcq = $subjectMap[$subject]['mcq'] ?? '';
+    //             $practical = $subjectMap[$subject]['practical'] ?? '';
+    //             $total = $subjectMap[$subject]['total'] ?? '';
 
-                $row[] = $written;
-                $row[] = $mcq;
-                $row[] = $practical;
-                $row[] = $total;
+    //             $row[] = $written;
+    //             $row[] = $mcq;
+    //             $row[] = $practical;
+    //             $row[] = $total;
 
-                if (is_numeric($total)) {
-                    $totalMarks += $total;
-                }
-            }
+    //             if (is_numeric($total)) {
+    //                 $totalMarks += $total;
+    //             }
+    //         }
 
-            $row[] = $totalMarks;
+    //         $row[] = $totalMarks;
 
-            fputcsv($file, $row);
-        }
+    //         fputcsv($file, $row);
+    //     }
 
-        fclose($file);
-        exit;
-    }
+    //     fclose($file);
+    //     exit;
+    // }
 
     public function selectMarksheetForm()
     {
