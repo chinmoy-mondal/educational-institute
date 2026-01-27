@@ -3106,6 +3106,17 @@ class Dashboard extends Controller
         $class = $this->request->getGet('class');
         $this->data['selectedClass'] = $class;
 
+        $classes = $this->studentModel
+            ->select('class')
+            ->distinct()
+            ->orderBy('CAST(class AS UNSIGNED)', 'ASC')
+            ->findAll();
+
+
+        echo "<pre>";
+        print_r($classes);
+        echo "</pre>";
+
         // Fee titles
         $this->data['titles'] = $this->feesModel->findAll();
 
@@ -3130,15 +3141,10 @@ class Dashboard extends Controller
             }
         }
 
-        $classes = $this->studentModel
-            ->select('class')
-            ->distinct()
-            ->where('class IS NOT NULL')
-            ->orderBy('CAST(class as UNSIGNED)', 'ASC')
-            ->findAll();
 
 
-        $this->data['classes']          = $classes;
+        $this->data['classes'] = array_column($classes, 'class');
+
         $this->data['selectedClass']    = $class;
         $this->data['existingAmounts']  = $existingAmounts;
         $this->data['existingUnits']    = $existingUnits;
