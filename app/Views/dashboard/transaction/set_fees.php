@@ -2,18 +2,17 @@
 <?= $this->section('content') ?>
 
 <div class="container-fluid">
-    <h4 class="mb-4">Student Fees Setup (Section Wise)</h4>
+    <h4 class="mb-4">Student Fees Setup</h4>
 
-    <!-- Select Section Only -->
+    <!-- Select Class -->
     <form method="get" action="<?= base_url('admin/set_fees') ?>" class="mb-4">
         <div class="row g-2 align-items-center">
             <div class="col-md-4">
                 <select name="class" class="form-select" onchange="this.form.submit()">
-                    <option value="">ক্লাস নির্বাচন করুন</option>
-
-                    <?php foreach ($classes as $c): ?>
-                    <option value="<?= esc($c) ?>" <?= ($selectedClass == $c) ? 'selected' : '' ?>>
-                        Class <?= esc($c) ?>
+                    <option value="">Select Class</option>
+                    <?php foreach ($classes as $classOption): ?>
+                    <option value="<?= esc($classOption) ?>" <?= ($selectedClass == $classOption) ? 'selected' : '' ?>>
+                        Class <?= esc($classOption) ?>
                     </option>
                     <?php endforeach; ?>
                 </select>
@@ -21,17 +20,14 @@
         </div>
     </form>
 
-    <?php if (!empty($selectedSection)): ?>
-
+    <?php if (!empty($selectedClass)): ?>
     <!-- Fees Setup Form -->
     <form method="post" action="<?= base_url('admin/save_fees') ?>">
         <input type="hidden" name="class" value="<?= esc($selectedClass) ?>">
 
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
-                <strong>
-                    Fees for Class <?= esc($selectedClass) ?>
-                </strong>
+                <strong>Fees for Class <?= esc($selectedClass) ?></strong>
             </div>
 
             <div class="card-body">
@@ -51,32 +47,36 @@
                         <tr>
                             <td><?= $sl++ ?></td>
                             <td><?= esc($t['title']) ?></td>
-
-                            <!-- Unit -->
-                            <td style="width:120px;">
+                            <td style="width: 120px;">
                                 <select name="unit[<?= $t['id'] ?>]" class="form-select form-select-sm">
                                     <option value="">Select</option>
-                                    <?php foreach ([1, 2, 3, 4, 6, 12] as $u): ?>
-                                    <option value="<?= $u ?>"
-                                        <?= (isset($existingUnits[$t['id']]) && $existingUnits[$t['id']] == $u) ? 'selected' : '' ?>>
-                                        <?= $u ?>
-                                    </option>
-                                    <?php endforeach; ?>
+                                    <option value="1"
+                                        <?= (isset($existingUnits[$t['id']]) && $existingUnits[$t['id']] == '1') ? 'selected' : '' ?>>
+                                        1</option>
+                                    <option value="2"
+                                        <?= (isset($existingUnits[$t['id']]) && $existingUnits[$t['id']] == '2') ? 'selected' : '' ?>>
+                                        2</option>
+                                    <option value="3"
+                                        <?= (isset($existingUnits[$t['id']]) && $existingUnits[$t['id']] == '3') ? 'selected' : '' ?>>
+                                        3</option>
+                                    <option value="4"
+                                        <?= (isset($existingUnits[$t['id']]) && $existingUnits[$t['id']] == '4') ? 'selected' : '' ?>>
+                                        4</option>
+                                    <option value="6"
+                                        <?= (isset($existingUnits[$t['id']]) && $existingUnits[$t['id']] == '6') ? 'selected' : '' ?>>
+                                        6</option>
+                                    <option value="12"
+                                        <?= (isset($existingUnits[$t['id']]) && $existingUnits[$t['id']] == '12') ? 'selected' : '' ?>>
+                                        12</option>
                                 </select>
                             </td>
-
-                            <!-- Amount -->
                             <td>
                                 <input type="number" name="fees[<?= $t['id'] ?>]" class="form-control form-control-sm"
-                                    placeholder="Enter amount"
-                                    value="<?= isset($existingAmounts[$t['id']]) ? esc($existingAmounts[$t['id']]) : '' ?>">
+                                    value="<?= isset($existingAmounts[$t['id']]) ? esc($existingAmounts[$t['id']]) : '' ?>"
+                                    placeholder="Enter amount">
                             </td>
-
-                            <!-- Updated -->
                             <td>
-                                <?= isset($existingUpdates[$t['id']])
-                                            ? date('d M, Y h:i A', strtotime($existingUpdates[$t['id']]))
-                                            : '-' ?>
+                                <?= isset($existingUpdates[$t['id']]) ? date('d M, Y h:i A', strtotime($existingUpdates[$t['id']])) : '-' ?>
                             </td>
                         </tr>
                         <?php endforeach; ?>
@@ -92,20 +92,16 @@
         </div>
     </form>
 
-    <!-- Total Amount -->
+    <!-- ✅ Show Total Amount -->
+    <?php if (!empty($selectedClass)): ?>
     <div class="alert alert-info mt-3">
-        <strong>
-            Total Fees (Class <?= esc($selectedClass) ?>):
-        </strong>
+        <strong>Total Fees for Class <?= esc($selectedClass) ?>:</strong>
         <?= number_format($totalAmount, 2) ?> ৳
     </div>
+    <?php endif; ?>
 
     <?php else: ?>
-
-    <div class="alert alert-warning">
-        অনুগ্রহ করে একটি <strong>শ্রেণি</strong> নির্বাচন করুন।
-    </div>
-
+    <div class="alert alert-warning">Please select a class to view and set fees.</div>
     <?php endif; ?>
 </div>
 
