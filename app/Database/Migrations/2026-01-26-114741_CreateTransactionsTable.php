@@ -20,7 +20,6 @@ class CreateTransactionsTable extends Migration
             'transaction_id' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 100,
-                'unique'     => true,
                 'null'       => false,
             ],
 
@@ -56,6 +55,18 @@ class CreateTransactionsTable extends Migration
                 'default'    => '0.00',
             ],
 
+            'discount' => [   // NEW FIELD
+                'type'       => 'DECIMAL',
+                'constraint' => '10,2',
+                'default'    => '0.00',
+            ],
+
+            'month' => [     // NEW FIELD
+                'type'       => 'VARCHAR',
+                'constraint' => 2,
+                'null'       => true,
+            ],
+
             'purpose' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 150,
@@ -65,6 +76,13 @@ class CreateTransactionsTable extends Migration
             'description' => [
                 'type' => 'TEXT',
                 'null' => true,
+            ],
+
+            'payment_status' => [
+                'type'       => 'TINYINT',
+                'constraint' => 1,
+                'default'    => 0, // 0 = not paid, 1 = paid
+                'comment'    => '0=Not Paid, 1=Paid',
             ],
 
             'status' => [

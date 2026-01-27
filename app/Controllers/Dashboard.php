@@ -14,6 +14,9 @@ use App\Models\AttendanceModel;
 use App\Models\FeesModel;
 use App\Models\FeesAmountModel;
 use App\Models\TransactionModel;
+use App\Models\StudentDiscountModel;
+use App\Models\SmsLogModel;
+use App\Models\UserCollectionsPayModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Dashboard extends Controller
@@ -29,23 +32,29 @@ class Dashboard extends Controller
     protected $feesModel;
     protected $feesAmountModel;
     protected $transactionModel;
+    protected $studentDiscountModel;
+    protected $smsLogModel;
+    protected $userCollectionsPayModel;
 
     protected $session;
     protected $data;
 
     public function __construct()
     {
-        $this->userModel         = new UserModel();
-        $this->subjectModel      = new SubjectModel();
-        $this->studentModel      = new StudentModel();
-        $this->resultModel       = new ResultModel();
-        $this->calendarModel       = new CalendarModel();
-        $this->noticeModel       = new NoticeModel();
-        $this->markingModel     = new MarkingOpenModel();
-        $this->attendanceModel     = new AttendanceModel();
-        $this->feesModel         = new FeesModel();
-        $this->feesAmountModel     = new FeesAmountModel();
-        $this->transactionModel = new TransactionModel();
+        $this->userModel            = new UserModel();
+        $this->subjectModel         = new SubjectModel();
+        $this->studentModel         = new StudentModel();
+        $this->resultModel          = new ResultModel();
+        $this->calendarModel        = new CalendarModel();
+        $this->noticeModel          = new NoticeModel();
+        $this->markingModel         = new MarkingOpenModel();
+        $this->attendanceModel      = new AttendanceModel();
+        $this->feesModel            = new FeesModel();
+        $this->feesAmountModel      = new FeesAmountModel();
+        $this->transactionModel     = new TransactionModel();
+        $this->studentDiscountModel = new StudentDiscountModel();
+        $this->smsLogModel          = new SmsLogModel();
+        $this->userCollectionsPayModel          = new UserCollectionsPayModel();
 
 
         $this->session       = session();
@@ -126,8 +135,8 @@ class Dashboard extends Controller
         $this->data['navbarItems'] = [
             ['label' => 'Dashboard', 'url' => base_url('dashboard')],
             ['label' => 'Calendar', 'url' => base_url('calendar')],
-            ['label' => 'Result', 'url' => base_url('ad-result')],
-            ['label' => 'Accounts', 'url' => base_url('accounts')],
+            ['label' => 'Result', 'url' => base_url('admin/tabulation_form')],
+            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
         ];
         $this->data['total_students'] = $this->studentModel->where('account_status', 0)->countAll();
         $this->data['total_users'] = $this->userModel->where('account_status !=', 0)->countAllResults();
@@ -163,12 +172,25 @@ class Dashboard extends Controller
         $this->data['givenSubjects'] = count($given_subjects);
         $this->data['totalSubjects'] = count($total_subjects);
         // ✅ Total Income (status = 1 means approved or received)
-        $totalIncome = $this->transactionModel
-            ->selectSum('amount')
+        $incomeRow = $this->transactionModel
+            ->selectSum('amount', 'total')
             ->where('status', 0)
             ->get()
-            ->getRow()
-            ->amount ?? 0;
+            ->getRowArray();
+
+        $totalIncomeRaw = $incomeRow['total'] ?? 0;
+        $discountRow = db_connect()->query("
+            SELECT SUM(discount) AS total_discount
+            FROM (
+                SELECT transaction_id, MAX(discount) AS discount
+                FROM transactions
+                WHERE status = 0
+                GROUP BY transaction_id
+            ) d
+        ")->getRowArray();
+
+        $totalDiscount = $discountRow['total_discount'] ?? 0;
+        $totalIncome = $totalIncomeRaw - $totalDiscount;
 
         // ✅ Total Cost (status = 0 means pending or expense)
         $totalCost = $this->transactionModel
@@ -181,6 +203,15 @@ class Dashboard extends Controller
         // ✅ Assign to $this->data for the view
         $this->data['total_income'] = (float) $totalIncome;
         $this->data['total_cost']   = (float) $totalCost;
+
+        $smsList  = $this->smsLogModel->findAll();
+
+        $totalSms = count(array_filter($smsList, function ($row) {
+            return $row['status'] == 1;
+        }));
+
+        $this->data['smsList']  = $smsList;
+        $this->data['smsTotal'] = $totalSms;
 
         return view('dashboard/index', $this->data);
     }
@@ -799,34 +830,43 @@ class Dashboard extends Controller
         helper(['form']);
 
         $rules = [
-            'student_name' => 'required',
-            'roll'         => 'required|numeric',
-            'class'        => 'required',
+            'student_name' => 'permit_empty',
+            'roll'         => 'permit_empty|numeric',
+            'class'        => 'permit_empty',
             'section'      => 'permit_empty',
-            'esif'         => 'required',
-            'father_name'  => 'required',
-            'mother_name'  => 'required',
-            'dob'          => 'required|valid_date',
-            'gender'       => 'required',
-            'phone'        => 'required',
-            'student_pic'  => 'uploaded[student_pic]|is_image[student_pic]',
-            'birth_registration_number' => 'required',
-            'father_nid_number'         => 'required',
-            'mother_nid_number'         => 'required',
+            'esif'         => 'permit_empty',
+            'father_name'  => 'permit_empty',
+            'mother_name'  => 'permit_empty',
+            'dob'          => 'permit_empty|valid_date',
+            'gender'       => 'permit_empty',
+            'phone'        => 'permit_empty',
+            'student_pic'               => 'permit_empty',
+            'birth_registration_number' => 'permit_empty',
+            'father_nid_number'         => 'permit_empty',
+            'mother_nid_number'         => 'permit_empty',
+            'address'                   => 'permit_empty',
         ];
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        // Handle student picture
+        // Optional student picture
         $file = $this->request->getFile('student_pic');
+        $filePath = null;
 
         if ($file && $file->isValid() && !$file->hasMoved()) {
+            // Validate image ONLY if uploaded
+            if (!in_array($file->getMimeType(), ['image/png', 'image/jpg', 'image/jpeg'])) {
+                return redirect()->back()->withInput()->with(
+                    'errors',
+                    ['student_pic' => 'Only JPG, JPEG, PNG images are allowed']
+                );
+            }
+
             $fileName = $file->getRandomName();
             $file->move('uploads/students', $fileName);
-        } else {
-            return redirect()->back()->withInput()->with('errors', ['student_pic' => 'File upload failed.']);
+            $filePath = 'uploads/students/' . $fileName;
         }
 
         // Prepare student data
@@ -841,16 +881,18 @@ class Dashboard extends Controller
             'dob'          => $this->request->getPost('dob'),
             'gender'       => $this->request->getPost('gender'),
             'phone'        => $this->request->getPost('phone'),
-            'student_pic'  => 'uploads/students/' . $fileName,
+            'student_pic'  => $filePath, // NULL if not uploaded
             'birth_registration_number' => $this->request->getPost('birth_registration_number'),
             'father_nid_number'         => $this->request->getPost('father_nid_number'),
             'mother_nid_number'         => $this->request->getPost('mother_nid_number'),
+            'address'         => $this->request->getPost('address'),
         ];
 
-        // Save to DB
         $this->studentModel->insert($data);
 
-        return redirect()->to(site_url('admin/student/create'))->with('success', 'Student registered successfully!');
+        return redirect()
+            ->to(site_url('admin/student/create'))
+            ->with('success', 'Student registered successfully!');
     }
 
     public function student()
@@ -861,6 +903,14 @@ class Dashboard extends Controller
         $section  = $this->request->getGet('section');
         $religion = $this->request->getGet('religion');
         $gender   = $this->request->getGet('gender'); // ✅ separate variable
+
+        // Distinct classes
+        $classes = $this->studentModel
+            ->select('class')
+            ->distinct()
+            ->where('class IS NOT NULL')
+            ->orderBy('CAST(class as UNSIGNED)', 'ASC')
+            ->findAll();
 
         // Distinct religions
         $religions = $this->studentModel
@@ -929,10 +979,13 @@ class Dashboard extends Controller
             ['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
             ['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
         ];
+
+
         $this->data['students']   = $students;
         $this->data['pager']      = $this->studentModel->pager;
         $this->data['q']          = $q;
         $this->data['class']      = $class;
+        $this->data['classes']    = $classes;
         $this->data['section']    = $section;
         $this->data['sections']   = $sections;
         $this->data['religion']   = $religion;
@@ -1766,9 +1819,6 @@ class Dashboard extends Controller
 
     public function viewStudent($id)
     {
-        $this->studentModel = new StudentModel();
-        $this->subjectModel = new SubjectModel();
-
         $student = $this->studentModel->find($id);
 
         if (!$student) {
@@ -1804,13 +1854,16 @@ class Dashboard extends Controller
         }
 
         // ✅ Step 4: Pass to view
-        $this->data['title'] = 'Student Details';
+
+        $this->data['title']         = 'Student Management';
         $this->data['activeSection'] = 'student';
-        $this->data['navbarItems'] = [
-            ['label' => 'Student List', 'url' => base_url('ad-student')],
-            ['label' => 'Add Student', 'url' => base_url('student_create')],
-            ['label' => 'View Student', 'url' => current_url()],
+        $this->data['navbarItems']   = [
+            ['label' => 'Student List', 'url' => base_url('admin/student')],
+            ['label' => 'Add Student', 'url' => base_url('admin/student/create')],
+            ['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
+            ['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
         ];
+
         $this->data['student'] = $student;
         $this->data['subjectsStr'] = $subject_str_id;
         $this->data['subjects'] = $subjects;
@@ -2271,93 +2324,238 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        $this->data['transactions'] = $this->transactionModel->orderBy('created_at', 'DESC')->findAll();
+        // ================= ALL TRANSACTIONS =================
+        $this->data['transactions'] = $this->transactionModel
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
 
-        // Totals
-        $totalEarnRow = $this->transactionModel->where('status', 0)->selectSum('amount')->get()->getRowArray();
-        $totalCostRow = $this->transactionModel->where('status', 1)->selectSum('amount')->get()->getRowArray();
+        // ================= TOTAL EARN (RAW AMOUNT) =================
+        $totalEarnRow = $this->transactionModel
+            ->where('status', 0)
+            ->selectSum('amount')
+            ->get()
+            ->getRowArray();
 
-        $this->data['totalEarn'] = $totalEarnRow['amount'] ?? 0;
-        $this->data['totalCost'] = $totalCostRow['amount'] ?? 0;
+        $totalEarnAmount = $totalEarnRow['amount'] ?? 0;
+
+        // ================= TOTAL DISCOUNT (ONLY ONCE PER TRANSACTION_ID) =================
+        $discountRow = db_connect()->query("
+        SELECT SUM(discount) AS total_discount FROM (
+            SELECT transaction_id, MAX(discount) AS discount
+            FROM transactions
+            WHERE status = 0
+            GROUP BY transaction_id
+        ) t
+    ")->getRowArray();
+
+        $totalDiscount = $discountRow['total_discount'] ?? 0;
+
+        // ================= TOTAL COST =================
+        $totalCostRow = $this->transactionModel
+            ->where('status', 1)
+            ->selectSum('amount')
+            ->get()
+            ->getRowArray();
+
+        $totalCost = $totalCostRow['amount'] ?? 0;
+
+        // ================= FINAL TOTALS =================
+        $this->data['totalEarn'] = $totalEarnAmount - $totalDiscount;
+        $this->data['totalCost'] = $totalCost;
+        $this->data['totalDiscount'] = $totalDiscount;
+        $this->data['netProfit'] = ($totalEarnAmount - $totalDiscount) - $totalCost;
 
         $builder = db_connect()->table('transactions');
 
-
-        /* -------------------------------------------------------
-       ⭐ TODAY REPORT — HOURLY EARN VS COST
-    ------------------------------------------------------- */
+        /* ================= ⭐ TODAY REPORT — HOURLY EARN VS COST ================= */
         $today = date('Y-m-d');
 
-        $todayData = $builder
-            ->select("
-            HOUR(created_at) as hour,
-            SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) as earn,
-            SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) as cost
-        ")
-            ->where('DATE(created_at)', $today)
-            ->groupBy('HOUR(created_at)')
-            ->orderBy('HOUR(created_at)', 'ASC')
-            ->get()
-            ->getResultArray();
+        $todayData = db_connect()->query("
+    SELECT
+        HOUR(created_at) AS hour,
 
-        // Hour labels (e.g., 0,1,2...)
-        $this->data['todayLabels'] = array_map(fn($d) => $d['hour'] . ":00", $todayData);
-        $this->data['todayEarns'] = array_map('floatval', array_column($todayData, 'earn'));
-        $this->data['todayCosts'] = array_map('floatval', array_column($todayData, 'cost'));
+        -- total earn
+        SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
 
+        -- total cost
+        SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
 
+        -- discount counted ONCE per transaction per hour
+        (
+            SELECT SUM(d.discount)
+            FROM (
+                SELECT transaction_id, MAX(discount) AS discount
+                FROM transactions t2
+                WHERE status = 0
+                  AND DATE(created_at) = '$today'
+                  AND HOUR(created_at) = HOUR(t1.created_at)
+                GROUP BY transaction_id
+            ) d
+        ) AS discount
 
-        /* -------------------------------------------------------
-       ⭐ CURRENT MONTH DAILY REPORT
-    ------------------------------------------------------- */
+    FROM transactions t1
+    WHERE DATE(created_at) = '$today'
+    GROUP BY HOUR(created_at)
+    ORDER BY HOUR(created_at)
+")->getResultArray();
+
+        // Prepare labels and values
+        $this->data['todayLabels'] = array_map(fn($d) => $d['hour'] . ':00', $todayData);
+        $this->data['todayEarns']  = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $todayData);
+        $this->data['todayCosts']  = array_map(fn($d) => floatval($d['cost']), $todayData);
+        /* ================= ⭐ CURRENT MONTH DAILY REPORT ================= */
         $monthStart = date('Y-m-01');
-        $monthEnd = date('Y-m-t');
+        $monthEnd   = date('Y-m-t');
 
-        $currentMonthData = $builder
-            ->select("
-            DATE(created_at) as date,
-            SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) as earn,
-            SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) as cost
-        ")
-            ->where('created_at >=', $monthStart)
-            ->where('created_at <=', $monthEnd)
-            ->groupBy('DATE(created_at)')
-            ->orderBy('DATE(created_at)', 'ASC')
-            ->get()
-            ->getResultArray();
+        $currentMonthData = db_connect()->query("
+            SELECT 
+                DATE(created_at) AS date,
+
+                SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
+                SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
+
+                (
+                    SELECT SUM(d.discount)
+                    FROM (
+                        SELECT transaction_id, MAX(discount) AS discount
+                        FROM transactions t2
+                        WHERE t2.status = 0
+                        AND DATE(t2.created_at) = DATE(t1.created_at)
+                        GROUP BY transaction_id
+                    ) d
+                ) AS discount
+
+            FROM transactions t1
+            WHERE created_at BETWEEN '$monthStart' AND '$monthEnd'
+            GROUP BY DATE(created_at)
+            ORDER BY DATE(created_at)
+        ")->getResultArray();
 
         $this->data['dailyLabels'] = array_column($currentMonthData, 'date');
-        $this->data['dailyEarns'] = array_map('floatval', array_column($currentMonthData, 'earn'));
-        $this->data['dailyCosts'] = array_map('floatval', array_column($currentMonthData, 'cost'));
+        $this->data['dailyEarns']  = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $currentMonthData);
+        $this->data['dailyCosts']  = array_map(fn($d) => floatval($d['cost']), $currentMonthData);
 
+        /* ================= ⭐ YEARLY MONTHLY SUMMARY ================= */
+        $year = date('Y');
 
-        /* -------------------------------------------------------
-       ⭐ YEARLY MONTHLY SUMMARY
-    ------------------------------------------------------- */
-        $yearData = $builder
-            ->select("
-            MONTH(created_at) as month,
-            SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) as earn,
-            SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) as cost
-        ")
-            ->where('YEAR(created_at)', date('Y'))
-            ->groupBy('MONTH(created_at)')
-            ->orderBy('MONTH(created_at)', 'ASC')
-            ->get()
-            ->getResultArray();
+        $yearData = db_connect()->query("
+            SELECT 
+                MONTH(created_at) AS month,
+
+                SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
+                SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
+
+                (
+                    SELECT SUM(d.discount)
+                    FROM (
+                        SELECT transaction_id, MAX(discount) AS discount
+                        FROM transactions t2
+                        WHERE t2.status = 0
+                        AND YEAR(t2.created_at) = $year
+                        AND MONTH(t2.created_at) = MONTH(t1.created_at)
+                        GROUP BY transaction_id
+                    ) d
+                ) AS discount
+
+            FROM transactions t1
+            WHERE YEAR(created_at) = $year
+            GROUP BY MONTH(created_at)
+            ORDER BY MONTH(created_at)
+        ")->getResultArray();
 
         $this->data['monthLabels'] = array_map(
             fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)),
             $yearData
         );
 
-        $this->data['monthEarns'] = array_map('floatval', array_column($yearData, 'earn'));
-        $this->data['monthCosts'] = array_map('floatval', array_column($yearData, 'cost'));
+        $this->data['monthEarns'] = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $yearData);
+        $this->data['monthCosts'] = array_map(fn($d) => floatval($d['cost']), $yearData);
 
-        return view('dashboard/transaction_dashboard', $this->data);
+        return view('dashboard/transaction/transaction_dashboard', $this->data);
     }
 
-public function tec_pay()
+    // public function tec_pay()
+    // {
+    //     $this->data['title'] = 'Teacher Earnings';
+    //     $this->data['activeSection'] = 'accounts';
+
+    //     $this->data['navbarItems'] = [
+    //         ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+    //         ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+    //         ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+    //         ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+    //         ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+    //     ];
+
+
+    //     // Fetch teachers
+    //     $teachers = $this->userModel
+    //         ->where('account_status !=', 0)
+    //         ->orderBy('position', 'ASC')
+    //         ->findAll();
+
+    //     // ===== Earnings calculation (discount-safe) =====
+    //     $builder = $this->transactionModel->builder();
+
+    //     $subQuery = $builder
+    //         ->select('
+    //         receiver_id,
+    //         transaction_id,
+    //         SUM(amount) AS amount_sum,
+    //         MAX(discount) AS discount_once
+    //     ')
+    //         ->where('status', 0)
+    //         ->where('activity', 0)
+    //         ->groupBy('receiver_id, transaction_id')
+    //         ->getCompiledSelect();
+
+    //     $finalBuilder = $this->transactionModel->builder("($subQuery) t");
+
+    //     $totals = $finalBuilder
+    //         ->select('
+    //         receiver_id,
+    //         SUM(amount_sum - discount_once) AS total_earned
+    //     ')
+    //         ->groupBy('receiver_id')
+    //         ->get()
+    //         ->getResultArray();
+
+    //     $earnMap = array_column($totals, 'total_earned', 'receiver_id');
+
+    //     foreach ($teachers as &$t) {
+    //         $t['total_earned'] = $earnMap[$t['id']] ?? 0;
+    //         $t['unpaid']       = $t['total_earned'];
+    //     }
+
+
+    //     // Get logged-in user ID from session
+    //     $user_id = $this->session->get('user_id') ?? 0;
+
+    //     // Load TeacherModel (or UserModel)
+    //     $teacherModel = $this->userModel;
+
+    //     // Fetch account_status for this user
+    //     $account_status = 0; // default
+    //     if ($user_id > 0) {
+    //         $user = $teacherModel->select('account_status')->find($user_id);
+    //         if ($user) {
+    //             $account_status = $user['account_status'];
+    //         }
+    //     }
+
+    //     $builder = $this->userCollectionsPayModel
+    //         ->select('user_id, user_name, SUM(amount_paid) as total_paid, COUNT(id) as total_payments')
+    //         ->groupBy('user_id, user_name')
+    //         ->findAll();
+
+
+    //     $this->data['teachers'] = $teachers;
+    //     $this->data['account_status'] = $account_status;
+
+    //     return view('dashboard/transaction/tec_pay', $this->data);
+    // }
+
+    public function tec_pay()
     {
         $this->data['title'] = 'Teacher Earnings';
         $this->data['activeSection'] = 'accounts';
@@ -2445,18 +2643,108 @@ public function tec_pay()
         return view('dashboard/transaction/tec_pay', $this->data);
     }
 
+    // public function reset_amount($teacher_id = null)
+    // {
+    //     $request = $this->request;
+    //     $payAmount = $request->getPost('pay_amount');
 
-    public function reset_amount($teacher_id)
+    //     if (!$teacher_id || !$payAmount) {
+    //         return redirect()->back()->with('error', 'Invalid data!');
+    //     }
+
+    //     $teacher = $this->userModel->find($teacher_id);
+
+    //     if (!$teacher) {
+    //         return redirect()->back()->with('error', 'Teacher not found!');
+    //     }
+
+    //     // Insert into the user_collections_pay table
+    //     $this->userCollectionsPayModel->insert([
+    //         'user_id'     => $teacher['id'],
+    //         'user_name'   => $teacher['name'],
+    //         'amount_paid' => $payAmount,
+    //         'created_at'  => date('Y-m-d H:i:s')
+    //     ]);
+
+    //     return redirect()->back()->with('success', 'Payment recorded successfully!');
+    // }
+
+    public function reset_amount($teacher_id = null)
     {
-        // Update all unpaid earn transactions for this teacher to mark as paid
-        $this->transactionModel
-            ->where('receiver_id', $teacher_id)
-            ->where('status', 0)      // only earn
-            ->where('activity', 0)    // only not paid
-            ->set(['activity' => 1])
-            ->update();
+        $request = $this->request;
+        $payAmount = $request->getPost('pay_amount');
 
-        return redirect()->back()->with('success', 'Teacher earnings marked as paid.');
+        if (!$teacher_id || !$payAmount || $payAmount <= 0) {
+            return redirect()->back()->with('error', 'Invalid data!');
+        }
+
+        $teacher = $this->userModel->find($teacher_id);
+
+        if (!$teacher) {
+            return redirect()->back()->with('error', 'Teacher not found!');
+        }
+
+        // Insert into the user_collections_pay table
+        $this->userCollectionsPayModel->insert([
+            'user_id'     => $teacher['id'],
+            'user_name'   => $teacher['name'],
+            'amount_paid' => $payAmount,
+            'created_at'  => date('Y-m-d H:i:s')
+        ]);
+
+        // ===== Send simple email =====
+        if (!empty($teacher['email'])) {
+            $to      = $teacher['email'];
+            $subject = 'Payment Received Notification';
+
+            $message = '
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Payment Confirmation</title>
+    </head>
+    <body style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 20px auto; background-color: #ffffff; border: 1px solid #ddd; border-radius: 8px;">
+            <tr>
+                <td style="padding: 20px; text-align: center; background-color: #007bff; color: #ffffff; border-top-left-radius: 8px; border-top-right-radius: 8px;">
+                    <h2>Payment Confirmation</h2>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 20px; color: #333333; font-size: 16px; line-height: 1.5;">
+                    <p>Dear <strong>' . esc($teacher["name"]) . '</strong>,</p>
+                    <p>We are pleased to inform you that a payment of <strong>৳ ' . number_format($payAmount, 2) . '</strong> has been successfully recorded in your account.</p>
+                    <p>Thank you for your continued contribution.</p>
+                    <p style="margin-top: 30px;">Best regards,<br>
+                    <strong>Jhenaidah Cadet Coaching</strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 15px; text-align: center; font-size: 12px; color: #888888; background-color: #f4f4f4; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
+                    &copy; ' . date('Y') . ' Jhenaidah Cadet Coaching. All rights reserved.
+                </td>
+            </tr>
+        </table>
+    </body>
+    </html>
+    ';
+
+            // Headers for HTML email
+            $headers  = "MIME-Version: 1.0\r\n";
+            $headers .= "Content-type: text/html; charset=UTF-8\r\n";
+            $headers .= "From: Jhenaidah Cadet Coaching <no-reply@notes.com.bd>\r\n";  // Your domain email
+            $headers .= "Reply-To: no-reply@notes.com.bd\r\n";
+
+            // Send email using mail() with -f to set envelope sender
+            $mailSent = mail($to, $subject, $message, $headers, "-fno-reply@notes.com.bd");
+
+            if (!$mailSent) {
+                log_message('error', 'Payment email could not be sent to ' . $to);
+            }
+        }
+
+        return redirect()->back()->with('success', "Payment of ৳ " . number_format($payAmount, 2) . " recorded successfully!");
     }
 
     public function std_pay()
@@ -2474,12 +2762,11 @@ public function tec_pay()
 
         $builder = $this->studentModel->builder();
 
-        // ✅ Get search/filter values
-        $search = $this->request->getGet('search');
-        $class = $this->request->getGet('class');
+        /* Get search & section */
+        $search  = $this->request->getGet('search');
         $section = $this->request->getGet('section');
 
-        // ✅ Apply search (roll, ID, or name)
+        /* Search: roll / ID / name */
         if ($search) {
             $builder->groupStart()
                 ->like('roll', $search)
@@ -2488,64 +2775,302 @@ public function tec_pay()
                 ->groupEnd();
         }
 
-        // ✅ Apply class & section filters
-        if ($class) {
-            $builder->where('class', $class);
-        }
+        /* Section filter only (আবাসিক / অনাবাসিক) */
         if ($section) {
             $builder->where('section', $section);
         }
 
-        // ✅ Get results
+        /* Students list */
         $this->data['students'] = $builder
             ->orderBy('student_name', 'ASC')
             ->get()
             ->getResultArray();
 
-
-
-        // Load total fees per class
-        $this->data['fees_summary'] = $this->feesAmountModel
-            ->select('class, SUM(fees) AS total_fees')
-            ->groupBy('class')
-            ->orderBy('class', 'ASC')
+        $feesSummary = $this->feesAmountModel
+            ->select('section, SUM(CASE WHEN unit = 0 THEN fees ELSE fees * unit END) AS total_fees')
+            ->groupBy('section')
+            ->orderBy('section', 'ASC')
             ->get()
             ->getResultArray();
 
-        // Convert fees_summary into an easy-to-lookup array: [class => total_fees]
-        $classFees = [];
-        foreach ($this->data['fees_summary'] as $row) {
-            $classFees[$row['class']] = $row['total_fees'];
+        $sectionFees = [];
+        foreach ($feesSummary as $row) {
+            $section = trim($row['section']);
+            $sectionFees[$section] = (float)$row['total_fees'];
         }
+        $this->data['sectionFees'] = $sectionFees;
 
-        $this->data['classFees'] = $classFees; // ✅ pass to view
-
-        // Load total deposit money per sender
-        $this->data['fees_deposit'] = $this->transactionModel
+        $feesDeposit = $this->transactionModel
             ->select('sender_id, sender_name, SUM(amount) AS total_deposit')
             ->groupBy('sender_id, sender_name')
             ->orderBy('sender_name', 'ASC')
             ->get()
             ->getResultArray();
 
-        // Convert fees_deposit into an easy-to-lookup array: [sender_id => total_deposit]
         $senderDeposits = [];
-        foreach ($this->data['fees_deposit'] as $row) {
-            $senderDeposits[$row['sender_id']] = $row['total_deposit'];
+        foreach ($feesDeposit as $row) {
+            $senderDeposits[$row['sender_id']] = (float)$row['total_deposit'];
         }
+        $this->data['senderDeposits'] = $senderDeposits;
 
-        $this->data['senderDeposits'] = $senderDeposits; // ✅ pass to view 1
+        $sections = $this->studentModel
+            ->select('section')
+            ->distinct()
+            ->orderBy('section', 'ASC')
+            ->get()
+            ->getResultArray();
 
-        // ✅ Dropdown options
-        $this->data['classes'] = $this->studentModel->select('class')->distinct()->orderBy('class', 'ASC')->get()->getResultArray();
-        $this->data['sections'] = $this->studentModel->select('section')->distinct()->orderBy('section', 'ASC')->get()->getResultArray();
+        $this->data['sections'] = array_column($sections, 'section');
 
-        // ✅ Pass search values to view
+        /* Pass values to view */
         $this->data['search'] = $search;
-        $this->data['selectedClass'] = $class;
         $this->data['selectedSection'] = $section;
 
-        return view('dashboard/std_pay', $this->data);
+        return view('dashboard/transaction/std_pay', $this->data);
+    }
+
+
+    public function receipt($transactionId)
+    {
+        $this->data['title'] = 'Payment Receipt';
+        $this->data['activeSection'] = 'accounts';
+
+        $this->data['navbarItems'] = [
+            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+        ];
+
+        // Fetch all transactions with this ID
+        $transactions = $this->transactionModel
+            ->where('transaction_id', $transactionId)
+            ->findAll();
+
+        if (empty($transactions)) {
+            return redirect()->to(base_url('admin/transactions'))
+                ->with('error', 'Receipt not found.');
+        }
+
+        $first = $transactions[0];
+
+        // Fetch student info
+        $studentId = $first['sender_id'] ?? null;
+        $student   = $studentId ? $this->studentModel->find($studentId) : [];
+
+        $this->data['student'] = [
+            'student_name' => $student['student_name'] ?? $first['sender_name'] ?? '',
+            'id'           => $studentId ?? '',
+            'roll'        => $student['roll'] ??  '',
+            'section'      => $student['section'] ?? $first['student_section'] ?? '',
+        ];
+
+        // Receiver info
+        $this->data['receiver'] = [
+            'name' => $first['receiver_name'] ?? ''
+        ];
+
+        $this->data['transaction_id'] = $transactionId;
+        $this->data['date'] = $first['created_at'] ?? date('Y-m-d');
+
+        // Month names for display
+        $monthNames = [
+            1  => 'January',
+            2  => 'February',
+            3  => 'March',
+            4  => 'April',
+            5  => 'May',
+            6  => 'June',
+            7  => 'July',
+            8  => 'August',
+            9  => 'September',
+            10 => 'October',
+            11 => 'November',
+            12 => 'December'
+        ];
+
+        $fees = [];
+        $totalPaid = 0;
+        $discountApplied = false;
+        $discount = 0;
+
+        foreach ($transactions as $t) {
+            $amount = floatval($t['amount'] ?? 0);
+            // Apply discount only once (first transaction with discount)
+            if (!$discountApplied && !empty($t['discount'])) {
+                $discount = floatval($t['discount']);
+                $discountApplied = true;
+            }
+            // Convert month number to month name
+            $monthName = isset($monthNames[intval($t['month'])]) ? $monthNames[intval($t['month'])] : '';
+
+            $fees[] = [
+                'title'  => $t['purpose'] ?? '',
+                'month'  => $monthName,
+                'amount' => $amount,
+                'paid'   => ($t['payment_status'] ?? 0) == 1 ? true : false
+            ];
+
+            $totalPaid += $amount;
+        }
+
+        $this->data['fees'] = $fees;
+        $this->data['discount'] = $discount ?? 0;
+        $this->data['totalAmount'] = $totalPaid;
+        $this->data['netAmount'] = $totalPaid - ($discount ?? 0);
+
+        // Load receipt view
+        return view('dashboard/transaction/receipt', $this->data);
+    }
+
+    public function studentPaymentReport()
+    {
+
+        $this->data['title'] = 'Today Student Payment Report';
+        $this->data['activeSection'] = 'reports';
+        $this->data['navbarItems'] = [
+            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+        ];
+
+        // ---------------- SQL QUERY (TODAY ONLY) ----------------
+        $sql = "
+        SELECT sender_name, receiver_name, month, total_pay, total_discount, net_amount
+        FROM (
+            SELECT
+                sender_name,
+                receiver_name,
+                month,
+                SUM(amount) AS total_pay,
+                SUM(discount) AS total_discount,
+                SUM(amount) - SUM(discount) AS net_amount,
+                0 AS sort_order
+            FROM (
+                SELECT
+                    transaction_id,
+                    sender_name,
+                    receiver_name,
+                    month,
+                    SUM(amount) AS amount,
+                    MAX(discount) AS discount
+                FROM transactions
+                WHERE status = 0
+                  AND DATE(created_at) = CURDATE()
+                GROUP BY transaction_id, sender_name, receiver_name, month
+            ) t
+            GROUP BY sender_name, receiver_name, month
+
+            UNION ALL
+
+            SELECT
+                'TOTAL' AS sender_name,
+                '' AS receiver_name,
+                '' AS month,
+                SUM(amount) AS total_pay,
+                SUM(discount) AS total_discount,
+                SUM(amount) - SUM(discount) AS net_amount,
+                1 AS sort_order
+            FROM (
+                SELECT
+                    transaction_id,
+                    SUM(amount) AS amount,
+                    MAX(discount) AS discount
+                FROM transactions
+                WHERE status = 0
+                  AND DATE(created_at) = CURDATE()
+                GROUP BY transaction_id
+            ) x
+        ) final_table
+        ORDER BY sort_order ASC, net_amount DESC
+    ";
+
+        $this->data['report'] = db_connect()->query($sql)->getResultArray();
+
+        return view('dashboard/transaction/student_payment_report', $this->data);
+    }
+
+    public function sms_log()
+    {
+        $this->data['title'] = 'Student Payment';
+        $this->data['activeSection'] = 'payments';
+
+        $this->data['navbarItems'] = [
+            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+        ];
+
+        // Optional filter: status
+        $selectedStatus = $this->request->getGet('status');
+        $this->data['selectedStatus'] = $selectedStatus;
+
+        // Base query
+        $query = $this->smsLogModel->orderBy('id', 'DESC');
+
+        if ($selectedStatus !== null && $selectedStatus !== '') {
+            $query->where('status', $selectedStatus);
+        }
+
+        // Fetch SMS records
+        $this->data['smsList'] = $query->findAll();
+
+        // Total sent SMS (status=1)
+        $this->data['smsTotal'] = $this->smsLogModel
+            ->where('status', 1)
+            ->countAllResults();
+
+        // Total failed SMS (status=0)
+        $this->data['smsFailed'] = $this->smsLogModel
+            ->where('status', 0)
+            ->countAllResults();
+
+        return view('dashboard/transaction/sms_log', $this->data);
+    }
+
+    public function resendFailedSms()
+    {
+        $failedSms = $this->smsLogModel->where('status', 0)->findAll();
+
+        $resendCount = 0;
+        foreach ($failedSms as $sms) {
+            $studentPhone = $sms['phone_number'] ?? '';
+            if (!$studentPhone) continue;
+
+            // Ensure Bangladesh country code
+            $studentPhone = '880' . ltrim($studentPhone, '0');
+            $message = $sms['message'];
+
+            $apiKey = "5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8"; // Replace with real API key
+            $callerID = "1234";
+
+            $smsUrl = "https://bulksmsdhaka.net/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $smsUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            $response = curl_exec($ch);
+            $error = curl_error($ch);
+            curl_close($ch);
+
+            // Update SMS log status if sent successfully
+            if (!$error) {
+                $this->smsLogModel->update($sms['id'], [
+                    'status' => 1,
+                    'updated_at' => date('Y-m-d H:i:s')
+                ]);
+                $resendCount++;
+            }
+        }
+
+        session()->setFlashdata('success', "$resendCount SMS(es) resent successfully.");
+        return redirect()->to(base_url('admin/sms-log'));
     }
 
     public function pay_stat()
@@ -2561,7 +3086,7 @@ public function tec_pay()
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        return view('dashboard/pay_stat', $this->data);
+        // return view('dashboard/transaction/pay_stat', $this->data);
     }
 
     public function set_fees()
@@ -2680,125 +3205,186 @@ public function tec_pay()
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-
-        // ✅ Load models
-        // $studentModel = new \App\Models\StudentModel();
-        // $feesModel = new \App\Models\FeesModel();
-        // $feesAmountModel = new \App\Models\FeesAmountModel();
-        // $userModel = new \App\Models\UserModel();
-
-        // 🧍 Get student info
+        // 🧍 Student
         $student = $this->studentModel->find($id);
         if (!$student) {
             return redirect()->back()->with('error', 'Student not found.');
         }
 
-        // 🎓 Get all fees titles
+        $student_discount = $this->studentDiscountModel
+            ->where('student_id', $id)
+            ->first();
+
+
+
+        // 🎓 Fee titles
         $fees = $this->feesModel->findAll();
 
-        // 💰 Get class-wise fee amounts
-        $classFees = $this->feesAmountModel->where('class', $student['class'])->findAll();
+        // 💰 SECTION-wise fees ONLY (✅ class removed)
+        $sectionFees = $this->feesAmountModel
+            ->where('section', trim($student['section'])) // আবাসিক / অনাবাসিক
+            ->findAll();
 
-        // 🧾 Map fee amounts properly using title_id
+        // 🧾 Map fee & unit
         $feeAmounts = [];
-        foreach ($classFees as $f) {
-            $feeAmounts[$f['title_id']] = $f['fees'];
-            $feeUnit[$f['title_id']] = $f['unit'];
+        $feeUnit    = [];
+
+        foreach ($sectionFees as $f) {
+            $feeAmounts[$f['title_id']] = (float) $f['fees'];
+            $feeUnit[$f['title_id']]    = (int) $f['unit'];
         }
 
-        // 👨‍🏫 Receiver (default admin)
-        $userId = $this->session->get('user_id');
+        // 👨‍🏫 Receiver
+        $userId   = session()->get('user_id');
         $receiver = $this->userModel->find($userId);
 
-        // 📦 Prepare data for view
-        $this->data['student'] = $student;
-        $this->data['fees'] = $fees;
-        $this->data['feeAmounts'] = $feeAmounts;
-        $this->data['feeUnit'] = $feeUnit;
-        $this->data['receiver'] = $receiver;
+        $payments = $this->transactionModel
+            ->where('sender_id', $id)
+            ->orderBy('created_at', 'DESC')
+            ->findAll();
 
-        return view('dashboard/payStudentRequest', $this->data);
+        // ✅ Calculate total paid
+        $totalPaid = array_sum(array_column($payments, 'amount'));
+        $totalDiscount = array_sum(array_column($payments, 'discount'));
+
+
+        // 📦 Send to view
+        $this->data['student']          = $student;
+        $this->data['fees']             = $fees;
+        $this->data['feeAmounts']       = $feeAmounts;
+        $this->data['feeUnit']          = $feeUnit;
+        $this->data['receiver']         = $receiver;
+        $this->data['pay_history']      = $payments;
+        $this->data['student_discount'] = $student_discount['amount'] ?? 0;
+        $this->data['totalPaid'] = $totalPaid;
+        $this->data['totalDiscount'] = $totalDiscount;
+
+        return view('dashboard/transaction/payStudentRequest', $this->data);
     }
 
-    public function submitStudentPayment()
+    public function studentPayment()
     {
-        $studentId  = $this->request->getPost('student_id');
-        $receiverId = $this->request->getPost('receiver_id');
-        $amounts    = $this->request->getPost('amount');
-        $feeIds     = $this->request->getPost('fee_id');
+        $request = $this->request;
+
+        // ---------- INPUT ----------
+        $studentId     = $request->getPost('student_id');
+        $receiverId    = $request->getPost('receiver_id');
+        $discount      = floatval($request->getPost('discount') ?? 0);
+        $monthNumber   = intval($request->getPost('month') ?? date('m')); // get as number
+        $paymentStatus = intval($request->getPost('payment_status'));      // 1 = paid | 0 = due
+
+        $feeIds  = $request->getPost('fee_id') ?? [];
+        $amounts = $request->getPost('amount') ?? [];
 
         $student  = $this->studentModel->find($studentId);
         $receiver = $this->userModel->find($receiverId);
 
-        if (!$student || !$receiver) {
-            return redirect()->back()->with('error', 'Invalid student or receiver.');
+        // ---------- TOTAL ----------
+        $totalAmount = 0;
+        foreach ($amounts as $amt) {
+            $totalAmount += floatval($amt);
         }
 
-        if (empty($amounts) || empty($feeIds)) {
-            return redirect()->back()->with('error', 'No payment data provided.');
-        }
+        // ---------- TRANSACTION ID ----------
+        $transactionId = 'TX-' . date('YmdHis') . rand(100, 999);
 
-        $successCount = 0;
-        $errorMessages = [];
+        // ---------- MONTH NAMES ----------
+        $monthNames = [
+            1  => 'January',
+            2  => 'February',
+            3  => 'March',
+            4  => 'April',
+            5  => 'May',
+            6  => 'June',
+            7  => 'July',
+            8  => 'August',
+            9  => 'September',
+            10 => 'October',
+            11 => 'November',
+            12 => 'December',
+        ];
+        $monthName = $monthNames[$monthNumber] ?? 'Unknown';
 
+        // ---------- PAYMENT STATUS TEXT ----------
+        $paymentStatusText = $paymentStatus ? 'paid' : 'due';
+
+        // ---------- INSERT TRANSACTIONS ----------
         foreach ($feeIds as $index => $feeId) {
-            $amount = $amounts[$index] ?? 0;
-            if ($amount <= 0) {
-                continue;
-            }
 
-            // Get maximum allowed for this fee for the student's class
-            $feeMax = $this->feesAmountModel
-                ->where('class', $student['class'])
-                ->where('title_id', $feeId)
-                ->first();
-            $maxAmount = $feeMax['unit'] * $feeMax['fees'] ?? 0;
+            $amount = floatval($amounts[$index] ?? 0);
+            if ($amount <= 0) continue;
 
-            // Calculate total already paid by this student for this fee
-            $feeTitle = $this->feesModel->find($feeId)['title'] ?? 'Unknown Fee';
-            $totalPaid = $this->transactionModel
-                ->where('sender_id', $student['id'])
-                ->where('purpose', $feeTitle)
-                ->select('SUM(amount) as paid')
-                ->first();
-            $paidAmount = $totalPaid['paid'] ?? 0;
-
-            if ($paidAmount >= $maxAmount) {
-                $errorMessages[] = "Sorry, maximum payment for '{$feeTitle}' already received.";
-                continue;
-            }
-
-            // Prevent overpayment
-            if ($paidAmount + $amount > $maxAmount) {
-                $amount = $maxAmount - $paidAmount;
-            }
+            $feeTitleRow = $this->feesModel->find($feeId);
+            $feeTitle = $feeTitleRow['title'] ?? 'Fee';
 
             $this->transactionModel->insert([
-                'transaction_id' => uniqid('TXN'),
-                'sender_id'      => $student['id'],
-                'sender_name'    => $student['student_name'],
-                'receiver_id'    => $receiver['id'],
-                'receiver_name'  => $receiver['name'],
+                'transaction_id' => $transactionId,
+                'sender_id'      => $studentId,
+                'sender_name'    => $student['student_name'] ?? '',
+                'receiver_id'    => $receiverId,
+                'receiver_name'  => $receiver['name'] ?? '',
                 'amount'         => $amount,
+                'discount'       => $discount,
+                'month'          => $monthNumber,
                 'purpose'        => $feeTitle,
-                'description'    => 'Educational fees payment request',
-                'status'         => 0,
+                'description'    => "Payment for {$feeTitle}",
+                'status'         => 0,          // pending
+                'activity'       => 0,          // extra tracking
+                'payment_status' => $paymentStatus
             ]);
-
-            $successCount++;
         }
 
-        // Send messages separately
-        if ($successCount > 0) {
-            session()->setFlashdata('success', "$successCount payment request(s) submitted successfully.");
+        // ---------- SAVE DISCOUNT ----------
+        if ($request->getPost('apply_discount')) {
+            $existingDiscount = $this->studentDiscountModel->where('student_id', $studentId)->first();
+            if ($existingDiscount) {
+                $this->studentDiscountModel->update($existingDiscount['id'], [
+                    'amount' => $discount,
+                ]);
+            } else {
+                $this->studentDiscountModel->insert([
+                    'student_id' => $studentId,
+                    'amount'     => $discount,
+                ]);
+            }
         }
 
-        if (!empty($errorMessages)) {
-            session()->setFlashdata('error', implode(' ', $errorMessages));
+        // ---------- SEND SMS ----------
+        $studentPhone = $student['phone'] ?? '';
+        if ($studentPhone) {
+            // Ensure Bangladesh country code
+            $studentPhone = '880' . ltrim($studentPhone, '0');
+
+            $message = "Dear {$student['student_name']}, your payment for {$monthName} is {$paymentStatusText}. --Jhenaidah Cadet Coaching";
+
+            $apiKey = "5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8";   // Replace with real API key
+            $callerID = "1234";
+
+            $smsUrl = "https://bulksmsdhaka.net/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $smsUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            $response = curl_exec($ch);
+            $error = curl_error($ch);
+            curl_close($ch);
+
+            // ---------- LOG SMS ----------
+            $this->smsLogModel->insert([
+                'student_name' => $student['student_name'],
+                'phone_number' => $studentPhone,
+                'message'      => $message,
+                'status'       => $error ? 0 : 1,
+                'created_at'   => date('Y-m-d H:i:s'),
+            ]);
         }
 
-        return redirect()->to(base_url('admin/std_pay'));
+        // ---------- REDIRECT TO RECEIPT ----------
+        return redirect()->to(base_url('admin/receipt/' . $transactionId));
     }
+
+
 
     public function studentPaymentHistory($studentId)
     {
@@ -2826,12 +3412,13 @@ public function tec_pay()
 
         // ✅ Calculate total paid
         $totalPaid = array_sum(array_column($payments, 'amount'));
+        $totalDiscount = array_sum(array_column($payments, 'discount'));
 
         // ✅ Pass data to view
         $this->data['student']   = $student;
         $this->data['payments']  = $payments;
-        $this->data['totalPaid'] = $totalPaid;
+        $this->data['totalPaid'] = $totalPaid - $totalDiscount;
 
-        return view('dashboard/student_payment_history', $this->data);
+        return view('dashboard/transaction/student_payment_history', $this->data);
     }
 }
