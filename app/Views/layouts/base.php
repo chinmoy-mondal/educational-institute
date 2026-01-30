@@ -19,165 +19,165 @@
     <link rel="stylesheet" href="<?= base_url('public/adminlte/dist/css/adminlte.min.css'); ?>">
 
     <style>
-    /* General */
-    body {
-        font-family: 'Roboto', sans-serif;
-        background-color: #f8f9fa;
-    }
+        /* General */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+        }
 
-    a {
-        text-decoration: none;
-    }
+        a {
+            text-decoration: none;
+        }
 
-    .btn-custom {
-        background-color: #007bff;
-        color: #fff;
-        border-radius: 5px;
-        transition: 0.3s;
-    }
+        .btn-custom {
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
 
-    .btn-custom:hover {
-        background-color: #0056b3;
-    }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
 
-    /* Navbar */
-    .navbar {
-        background-color: #0d6efd;
-    }
+        /* Navbar */
+        .navbar {
+            background-color: #0d6efd;
+        }
 
-    .navbar-brand {
-        color: #fff;
-        font-weight: 700;
-        font-size: 1.5rem;
-    }
+        .navbar-brand {
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
 
-    .navbar-nav .nav-link {
-        color: #fff !important;
-        margin-left: 15px;
-    }
+        .navbar-nav .nav-link {
+            color: #fff !important;
+            margin-left: 15px;
+        }
 
-    .navbar-nav .nav-link:hover {
-        color: #ffc107 !important;
-    }
+        .navbar-nav .nav-link:hover {
+            color: #ffc107 !important;
+        }
 
-    /* Hero Section */
-    .hero {
-        background: url('<?= base_url("public/assets/img/tech-banner.jpg"); ?>') center/cover no-repeat;
-        height: 90vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        color: #fff;
-        text-align: center;
-    }
+        /* Hero Section */
+        .hero {
+            background: url('<?= base_url("public/assets/img/tech-banner.jpg"); ?>') center/cover no-repeat;
+            height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            color: #fff;
+            text-align: center;
+        }
 
-    .hero::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-    }
+        .hero::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
 
-    .hero-content {
-        position: relative;
-        z-index: 2;
-    }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
 
-    .hero-content h1 {
-        font-size: 3rem;
-        font-weight: 700;
-    }
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: 700;
+        }
 
-    .hero-content p {
-        font-size: 1.2rem;
-        margin-bottom: 1.5rem;
-    }
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
 
-    /* Services Section */
-    .services {
-        padding: 80px 0;
-    }
+        /* Services Section */
+        .services {
+            padding: 80px 0;
+        }
 
-    .service-card {
-        background: #fff;
-        border-radius: 15px;
-        padding: 30px 20px;
-        text-align: center;
-        transition: transform 0.3s, box-shadow 0.3s;
-    }
+        .service-card {
+            background: #fff;
+            border-radius: 15px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
 
-    .service-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    }
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
 
-    .service-card i {
-        font-size: 3rem;
-        color: #007bff;
-        margin-bottom: 15px;
-    }
+        .service-card i {
+            font-size: 3rem;
+            color: #007bff;
+            margin-bottom: 15px;
+        }
 
-    .service-card h5 {
-        font-weight: 600;
-        margin-bottom: 10px;
-    }
+        .service-card h5 {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
 
-    /* Portfolio / Projects */
-    .portfolio {
-        padding: 80px 0;
-        background-color: #f8f9fa;
-    }
+        /* Portfolio / Projects */
+        .portfolio {
+            padding: 80px 0;
+            background-color: #f8f9fa;
+        }
 
-    .portfolio-card {
-        position: relative;
-        overflow: hidden;
-        border-radius: 15px;
-        transition: transform 0.3s;
-    }
+        .portfolio-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            transition: transform 0.3s;
+        }
 
-    .portfolio-card img {
-        width: 100%;
-        border-radius: 15px;
-    }
+        .portfolio-card img {
+            width: 100%;
+            border-radius: 15px;
+        }
 
-    .portfolio-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 123, 255, 0.7);
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        transition: 0.3s;
-        text-align: center;
-    }
+        .portfolio-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 123, 255, 0.7);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: 0.3s;
+            text-align: center;
+        }
 
-    .portfolio-card:hover .portfolio-overlay {
-        opacity: 1;
-    }
+        .portfolio-card:hover .portfolio-overlay {
+            opacity: 1;
+        }
 
-    /* Footer */
-    footer {
-        background-color: #0d6efd;
-        color: #fff;
-        padding: 30px 0;
-    }
+        /* Footer */
+        footer {
+            background-color: #0d6efd;
+            color: #fff;
+            padding: 30px 0;
+        }
 
-    footer a {
-        color: #ffc107;
-    }
+        footer a {
+            color: #ffc107;
+        }
 
-    footer a:hover {
-        text-decoration: underline;
-    }
+        footer a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
@@ -224,7 +224,7 @@
         </div>
     </footer>
 
-    <!-- Scripts -->
+    <!-- Scripts test-->
     <script src="<?= base_url('public/assets/js/bootstrap.bundle.min.js'); ?>"></script>
 </body>
 
