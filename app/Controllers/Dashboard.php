@@ -171,7 +171,7 @@ class Dashboard extends Controller
         // Count teachers safely
         $this->data['givenSubjects'] = count($given_subjects);
         $this->data['totalSubjects'] = count($total_subjects);
-
+        // new
         $user_id = $this->session->get('user_id') ?? 0;
         if ($user_id > 0) {
             // ✅ Total Income (status = 1 means approved or received)
