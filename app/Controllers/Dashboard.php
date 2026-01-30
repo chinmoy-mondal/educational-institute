@@ -250,7 +250,7 @@ class Dashboard extends Controller
                 ->where('status', 1); // expense
 
             if ($user_id > 0) {
-                $costQuery->where('user_id', $user_id);
+                $costQuery->where('receiver_id', $user_id);
             }
 
             $totalCost = $costQuery->get()->getRowArray()['total'] ?? 0;
