@@ -171,15 +171,20 @@ class Dashboard extends Controller
         // Count teachers safely
         $this->data['givenSubjects'] = count($given_subjects);
         $this->data['totalSubjects'] = count($total_subjects);
-        // ✅ Total Income (status = 1 means approved or received)
-        $incomeRow = $this->transactionModel
-            ->selectSum('amount', 'total')
-            ->where('status', 0)
-            ->get()
-            ->getRowArray();
 
-        $totalIncomeRaw = $incomeRow['total'] ?? 0;
-        $discountRow = db_connect()->query("
+        $user_id = $this->session->get('user_id') ?? 0;
+        if ($user_id > 0) {
+            // ✅ Total Income (status = 1 means approved or received)
+            $incomeRow = $this->transactionModel
+                ->selectSum('amount', 'total')
+                ->where('status', 0)
+                ->get()
+                ->getRowArray();
+
+            // need to work
+
+            $totalIncomeRaw = $incomeRow['total'] ?? 0;
+            $discountRow = db_connect()->query("
             SELECT SUM(discount) AS total_discount
             FROM (
                 SELECT transaction_id, MAX(discount) AS discount
@@ -189,16 +194,54 @@ class Dashboard extends Controller
             ) d
         ")->getRowArray();
 
-        $totalDiscount = $discountRow['total_discount'] ?? 0;
-        $totalIncome = $totalIncomeRaw - $totalDiscount;
+            $totalDiscount = $discountRow['total_discount'] ?? 0;
+            $totalIncome = $totalIncomeRaw - $totalDiscount;
 
-        // ✅ Total Cost (status = 0 means pending or expense)
-        $totalCost = $this->transactionModel
-            ->selectSum('amount')
-            ->where('status', 1)
-            ->get()
-            ->getRow()
-            ->amount ?? 0;
+            // ✅ Total Cost (status = 0 means pending or expense)
+            $totalCost = $this->transactionModel
+                ->selectSum('amount')
+                ->where('status', 1)
+                ->get()
+                ->getRow()
+                ->amount ?? 0;
+        } else {
+            // ✅ Total Income (status = 1 means approved or received)
+            $incomeQuery = $this->transactionModel
+                ->selectSum('amount', 'total')
+                ->where('status', 0);
+
+            if ($user_id > 0) {
+                $incomeQuery->where('receiver_id', $user_id);
+            }
+
+            $incomeRow = $incomeQuery->get()->getRowArray();
+            $totalIncomeRaw = $incomeRow['total'] ?? 0;
+
+
+            $discountRow = db_connect()->query("
+            SELECT SUM(discount) AS total_discount
+            FROM (
+                SELECT transaction_id, MAX(discount) AS discount
+                FROM transactions
+                WHERE status = 0 AND receiver_id = " . (int)$user_id . "
+                GROUP BY transaction_id
+            ) d
+        ")->getRowArray();
+
+            $totalDiscount = $discountRow['total_discount'] ?? 0;
+            $totalIncome = $totalIncomeRaw - $totalDiscount;
+
+            // ✅ Total Cost (status = 0 means pending or expense)
+            $costQuery = $this->transactionModel
+                ->selectSum('amount', 'total')
+                ->where('status', 1); // expense
+
+            if ($user_id > 0) {
+                $costQuery->where('user_id', $user_id);
+            }
+
+            $totalCost = $costQuery->get()->getRowArray()['total'] ?? 0;
+        }
 
         // ✅ Assign to $this->data for the view
         $this->data['total_income'] = (float) $totalIncome;
