@@ -2352,6 +2352,8 @@ class Dashboard extends Controller
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
             ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+			['label' => 'Salary', 'url' => base_url('admin/salary')],
+			['label' => 'Cost', 'url' => base_url('admin/cost')],
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
@@ -2506,86 +2508,6 @@ class Dashboard extends Controller
         return view('dashboard/transaction/transaction_dashboard', $this->data);
     }
 
-    // public function tec_pay()
-    // {
-    //     $this->data['title'] = 'Teacher Earnings';
-    //     $this->data['activeSection'] = 'accounts';
-
-    //     $this->data['navbarItems'] = [
-    //         ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-    //         ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-    //         ['label' => 'Students', 'url' => base_url('admin/std_pay')],
-    //         ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-    //         ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
-    //     ];
-
-
-    //     // Fetch teachers
-    //     $teachers = $this->userModel
-    //         ->where('account_status !=', 0)
-    //         ->orderBy('position', 'ASC')
-    //         ->findAll();
-
-    //     // ===== Earnings calculation (discount-safe) =====
-    //     $builder = $this->transactionModel->builder();
-
-    //     $subQuery = $builder
-    //         ->select('
-    //         receiver_id,
-    //         transaction_id,
-    //         SUM(amount) AS amount_sum,
-    //         MAX(discount) AS discount_once
-    //     ')
-    //         ->where('status', 0)
-    //         ->where('activity', 0)
-    //         ->groupBy('receiver_id, transaction_id')
-    //         ->getCompiledSelect();
-
-    //     $finalBuilder = $this->transactionModel->builder("($subQuery) t");
-
-    //     $totals = $finalBuilder
-    //         ->select('
-    //         receiver_id,
-    //         SUM(amount_sum - discount_once) AS total_earned
-    //     ')
-    //         ->groupBy('receiver_id')
-    //         ->get()
-    //         ->getResultArray();
-
-    //     $earnMap = array_column($totals, 'total_earned', 'receiver_id');
-
-    //     foreach ($teachers as &$t) {
-    //         $t['total_earned'] = $earnMap[$t['id']] ?? 0;
-    //         $t['unpaid']       = $t['total_earned'];
-    //     }
-
-
-    //     // Get logged-in user ID from session
-    //     $user_id = $this->session->get('user_id') ?? 0;
-
-    //     // Load TeacherModel (or UserModel)
-    //     $teacherModel = $this->userModel;
-
-    //     // Fetch account_status for this user
-    //     $account_status = 0; // default
-    //     if ($user_id > 0) {
-    //         $user = $teacherModel->select('account_status')->find($user_id);
-    //         if ($user) {
-    //             $account_status = $user['account_status'];
-    //         }
-    //     }
-
-    //     $builder = $this->userCollectionsPayModel
-    //         ->select('user_id, user_name, SUM(amount_paid) as total_paid, COUNT(id) as total_payments')
-    //         ->groupBy('user_id, user_name')
-    //         ->findAll();
-
-
-    //     $this->data['teachers'] = $teachers;
-    //     $this->data['account_status'] = $account_status;
-
-    //     return view('dashboard/transaction/tec_pay', $this->data);
-    // }
 
     public function tec_pay()
     {
@@ -2596,6 +2518,8 @@ class Dashboard extends Controller
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
             ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+			['label' => 'Salary', 'url' => base_url('admin/salary')],
+			['label' => 'Cost', 'url' => base_url('admin/cost')],
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
@@ -2788,6 +2712,8 @@ class Dashboard extends Controller
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
             ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+			['label' => 'Salary', 'url' => base_url('admin/salary')],
+			['label' => 'Cost', 'url' => base_url('admin/cost')],
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
@@ -3104,6 +3030,16 @@ class Dashboard extends Controller
         session()->setFlashdata('success', "$resendCount SMS(es) resent successfully.");
         return redirect()->to(base_url('admin/sms-log'));
     }
+
+	public function cost()
+	{
+		return "cost";
+	}	
+	
+	public function salary()
+	{
+		return "cost";
+	}
 
     public function pay_stat()
     {
