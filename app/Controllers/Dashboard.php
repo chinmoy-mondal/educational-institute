@@ -173,6 +173,7 @@ class Dashboard extends Controller
         $this->data['totalSubjects'] = count($total_subjects);
         // new
         $user_id = $this->session->get('user_id') ?? 0;
+        echo $user_id . "==check id";
         if ($user_id > 0) {
             // ✅ Total Income (status = 1 means approved or received)
             $incomeRow = $this->transactionModel
