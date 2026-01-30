@@ -171,10 +171,22 @@ class Dashboard extends Controller
         // Count teachers safely
         $this->data['givenSubjects'] = count($given_subjects);
         $this->data['totalSubjects'] = count($total_subjects);
-        // new
+
+
+
         $user_id = $this->session->get('user_id') ?? 0;
-        echo $user_id . "==check id";
+        $account_status = 0;
         if ($user_id > 0) {
+            $user = $this->userModel->select('account_status')->find($user_id);
+            if ($user) {
+                $account_status = $user['account_status'];
+            }
+        }
+
+        // Fetch teachers
+        // 🔹 Fetch teachers based on permission
+        if ($account_status > 1) {
+            // Admin / Accountant → all teachers
             // ✅ Total Income (status = 1 means approved or received)
             $incomeRow = $this->transactionModel
                 ->selectSum('amount', 'total')
@@ -206,7 +218,7 @@ class Dashboard extends Controller
                 ->getRow()
                 ->amount ?? 0;
         } else {
-            // ✅ Total Income (status = 1 means approved or received)
+            // Teacher → only his own account
             $incomeQuery = $this->transactionModel
                 ->selectSum('amount', 'total')
                 ->where('status', 0);
@@ -243,6 +255,9 @@ class Dashboard extends Controller
 
             $totalCost = $costQuery->get()->getRowArray()['total'] ?? 0;
         }
+
+
+
 
         // ✅ Assign to $this->data for the view
         $this->data['total_income'] = (float) $totalIncome;
