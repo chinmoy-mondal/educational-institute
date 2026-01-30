@@ -4,183 +4,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mulgram Secondary School</title>
+    <title><?= $title ?? 'TechNova Solutions'; ?></title>
 
-    <link rel="stylesheet" href="<?= base_url('public/assets/css/bootstrap.min.css'); ?>">
-    <script src="<?= base_url('public/assets/js/bootstrap.bundle.min.js') ?>"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
-
-
-    <script src="https://kit.fontawesome.com/cbc3035612.js" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="<?= base_url('public/assets/css/bootstrap.min.css'); ?>">
+
+    <!-- AdminLTE CSS for frontend components -->
+    <link rel="stylesheet" href="<?= base_url('public/adminlte/dist/css/adminlte.min.css'); ?>">
+
     <style>
-        /* First Line (Contact & Social) */
-        .top-bar {
-            background: #007bff;
-            color: white;
-            padding: 5px 0;
-            font-size: 14px;
-        }
+    /* General */
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f8f9fa;
+    }
 
-        .top-bar a {
-            color: white;
-            margin: 0 10px;
-            text-decoration: none;
-        }
+    a {
+        text-decoration: none;
+    }
 
-        /* Second Line (Logo & Navigation) */
-        .navbar {
-            background: white;
-            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-        }
+    .btn-custom {
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 5px;
+        transition: 0.3s;
+    }
 
-        .navbar-brand {
-            font-weight: bold;
-            font-size: 22px;
-        }
+    .btn-custom:hover {
+        background-color: #0056b3;
+    }
 
-        .navbar-brand img {
-            width: 60px;
-            /* Set logo width */
-            height: auto;
-            /* Maintain aspect ratio */
-            margin-right: 10px;
-            /* Space between logo and text */
-        }
+    /* Navbar */
+    .navbar {
+        background-color: #0d6efd;
+    }
 
-        .navbar-toggler {
-            border: none;
-        }
+    .navbar-brand {
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
 
-        /* Fixed Positioning */
-        .fixed-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-        }
+    .navbar-nav .nav-link {
+        color: #fff !important;
+        margin-left: 15px;
+    }
 
-        .image-container img {
-            background-color: #f8f9fa;
-            padding: 10px;
-            border-radius: 10px;
-            height: 300px;
-        }
+    .navbar-nav .nav-link:hover {
+        color: #ffc107 !important;
+    }
 
-        .welcome-text {
-            text-align: justify;
-        }
+    /* Hero Section */
+    .hero {
+        background: url('<?= base_url("public/assets/img/tech-banner.jpg"); ?>') center/cover no-repeat;
+        height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        color: #fff;
+        text-align: center;
+    }
 
-        /* Push content down to avoid overlap */
-        .content {
-            margin-top: 150px;
-            /* Adjust based on navbar height */
-        }
+    .hero::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+    }
 
-        .course-card {
-            border: 2px solid #ddd;
-            /* Light border around the card */
-            border-radius: 15px;
-            /* Rounded corners */
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            /* Light shadow for depth */
-            text-align: center;
-            background-color: #fff;
-            /* White background for the card */
-            overflow: hidden;
-            /* Ensure the image is clipped to the rounded corners */
-            position: relative;
-            /* For background-image positioning */
-        }
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
 
-        .course-card img {
-            width: 100%;
-            /* Ensure the image fills the container */
-            height: 100px;
-            /* Fixed height */
-            object-fit: cover;
-            /* Cover the space without stretching */
-            border-radius: 15px;
-            /* Round the image corners */
-            margin-bottom: 15px;
-            /* Space below the image */
-        }
+    .hero-content h1 {
+        font-size: 3rem;
+        font-weight: 700;
+    }
 
-        /* Optional background image for the card */
-        .course-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: url('<?= base_url('public/assets/img/ima1.jpg'); ?>');
-            /* Replace with your background image */
-            background-size: cover;
-            background-position: center;
-            opacity: 0.1;
-            /* Light opacity for subtle background image */
-            border-radius: 15px;
-            /* Ensure the background image has rounded corners */
-            z-index: -1;
-            /* Place the background behind the content */
-        }
+    .hero-content p {
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+    }
 
-        .btn-light-custom {
-            background-color: #28a745;
-            /* Lighter green (adjust as needed) */
-            border: 1px solid #28a745;
-            /* Matching border color */
-            color: white;
-        }
+    /* Services Section */
+    .services {
+        padding: 80px 0;
+    }
 
-        .btn-light-custom:hover {
-            background-color: #6fda6a;
-            /* A softer hover color */
-            border-color: #6fda6a;
-            /* Border color on hover */
-            color: white;
-        }
+    .service-card {
+        background: #fff;
+        border-radius: 15px;
+        padding: 30px 20px;
+        text-align: center;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
 
-        .nav-item {
-            margin-left: 20px;
-            /* Adjust left spacing */
-        }
+    .service-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
 
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            .top-bar {
-                font-size: 12px;
-                text-align: center;
-            }
+    .service-card i {
+        font-size: 3rem;
+        color: #007bff;
+        margin-bottom: 15px;
+    }
 
-            .top-bar .d-flex {
-                flex-direction: column;
-                gap: 5px;
-            }
+    .service-card h5 {
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
 
-            .navbar-brand img {
-                width: 50px;
-                /* Smaller logo on mobile */
-            }
+    /* Portfolio / Projects */
+    .portfolio {
+        padding: 80px 0;
+        background-color: #f8f9fa;
+    }
 
-            .content {
-                margin-top: 120px;
-                /* Extra space for small screens */
-            }
-        }
+    .portfolio-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px;
+        transition: transform 0.3s;
+    }
+
+    .portfolio-card img {
+        width: 100%;
+        border-radius: 15px;
+    }
+
+    .portfolio-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 123, 255, 0.7);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: 0.3s;
+        text-align: center;
+    }
+
+    .portfolio-card:hover .portfolio-overlay {
+        opacity: 1;
+    }
+
+    /* Footer */
+    footer {
+        background-color: #0d6efd;
+        color: #fff;
+        padding: 30px 0;
+    }
+
+    footer a {
+        color: #ffc107;
+    }
+
+    footer a:hover {
+        text-decoration: underline;
+    }
     </style>
 </head>
 
 <body>
 
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="<?= base_url(); ?>">TechNova</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navMenu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="<?= base_url(); ?>">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#portfolio">Projects</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-outline-light ms-3"
+                            href="<?= base_url('login'); ?>">Login</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-    <?= $this->rendersection("content") ?>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Innovative Software Solutions</h1>
+            <p>We create cutting-edge applications, embedded systems, and custom software for businesses.</p>
+            <a href="#services" class="btn btn-custom">Our Services</a>
+        </div>
+    </section>
 
+    <!-- Main Content -->
+    <main class="content">
+        <?= $this->renderSection('content'); ?>
+    </main>
 
+    <!-- Footer -->
+    <footer class="text-center">
+        <div class="container">
+            <p>&copy; <?= date('Y'); ?> TechNova Solutions. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="<?= base_url('public/assets/js/bootstrap.bundle.min.js'); ?>"></script>
 </body>
 
 </html>
