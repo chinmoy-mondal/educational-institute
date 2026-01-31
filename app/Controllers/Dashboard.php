@@ -2368,6 +2368,7 @@ class Dashboard extends Controller
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
             ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_due')],
 			['label' => 'Salary', 'url' => base_url('admin/salary')],
 			['label' => 'Cost', 'url' => base_url('admin/cost')],
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
@@ -2533,6 +2534,7 @@ class Dashboard extends Controller
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
             ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_due')],
 			['label' => 'Salary', 'url' => base_url('admin/salary')],
 			['label' => 'Cost', 'url' => base_url('admin/cost')],
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
@@ -2701,6 +2703,7 @@ class Dashboard extends Controller
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
             ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_due')],
 			['label' => 'Salary', 'url' => base_url('admin/salary')],
 			['label' => 'Cost', 'url' => base_url('admin/cost')],
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
@@ -2786,6 +2789,7 @@ class Dashboard extends Controller
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
             ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_due')],
             ['label' => 'Salary', 'url' => base_url('admin/salary')],
             ['label' => 'Cost', 'url' => base_url('admin/cost')],
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
@@ -2882,6 +2886,7 @@ class Dashboard extends Controller
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
             ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_due')],
             ['label' => 'Salary', 'url' => base_url('admin/salary')],
             ['label' => 'Cost', 'url' => base_url('admin/cost')],
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
@@ -2953,6 +2958,7 @@ class Dashboard extends Controller
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
             ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_due')],
             ['label' => 'Salary', 'url' => base_url('admin/salary')],
             ['label' => 'Cost', 'url' => base_url('admin/cost')],
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
@@ -3035,6 +3041,7 @@ class Dashboard extends Controller
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
             ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_due')],
             ['label' => 'Salary', 'url' => base_url('admin/salary')],
             ['label' => 'Cost', 'url' => base_url('admin/cost')],
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
@@ -3053,6 +3060,7 @@ class Dashboard extends Controller
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
             ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_due')],
             ['label' => 'Salary', 'url' => base_url('admin/salary')],
             ['label' => 'Cost', 'url' => base_url('admin/cost')],
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
@@ -3081,6 +3089,12 @@ class Dashboard extends Controller
             ->findAll();
 
         return view('dashboard/transaction/salary_form', $this->data);
+    }
+
+    public function std_due()
+    {
+        // $id;
+        return "echo";
     }
 
     public function pay_salary()
@@ -3160,6 +3174,7 @@ class Dashboard extends Controller
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
             ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_due')],
             ['label' => 'Salary', 'url' => base_url('admin/salary')],
             ['label' => 'Cost', 'url' => base_url('admin/cost')],
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
@@ -3178,6 +3193,7 @@ class Dashboard extends Controller
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
             ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_due')],
             ['label' => 'Salary', 'url' => base_url('admin/salary')],
             ['label' => 'Cost', 'url' => base_url('admin/cost')],
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
@@ -3282,6 +3298,7 @@ class Dashboard extends Controller
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
             ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_due')],
             ['label' => 'Salary', 'url' => base_url('admin/salary')],
             ['label' => 'Cost', 'url' => base_url('admin/cost')],
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
@@ -3479,6 +3496,7 @@ class Dashboard extends Controller
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
             ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_due')],
             ['label' => 'Salary', 'url' => base_url('admin/salary')],
             ['label' => 'Cost', 'url' => base_url('admin/cost')],
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],

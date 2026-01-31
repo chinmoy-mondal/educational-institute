@@ -135,6 +135,7 @@ $routes->get('admin/transactions', 'Dashboard::transactionDashboard');
 $routes->get('admin/tec_pay', 'Dashboard::tec_pay');
 $routes->post('admin/reset_amount/(:num)', 'Dashboard::reset_amount/$1');
 $routes->get('admin/std_pay', 'Dashboard::std_pay');
+$routes->get('admin/std_due', 'Dashboard::std_due');
 $routes->get('admin/salary', 'Dashboard::salary_form');
 $routes->post('admin/pay_salary', 'Dashboard::pay_salary');
 $routes->get('admin/cost', 'Dashboard::cost');
