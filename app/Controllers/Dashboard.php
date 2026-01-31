@@ -2477,7 +2477,6 @@ class Dashboard extends Controller
 
         $builder = db_connect()->table('transactions');
 
-        /* ================= ⭐ TODAY REPORT — HOURLY EARN VS COST ================= */
         $today = date('Y-m-d');
 
         $todayUserCondition = ($account_status > 1)
@@ -2488,58 +2487,51 @@ class Dashboard extends Controller
             ? ''
             : " AND t2.sender_id = $user_id ";
 
-        $todayRaw = db_connect()->query("
+        $todayData = db_connect()->query("
     SELECT
         HOUR(t1.created_at) AS hour,
+
+        -- earn
         SUM(CASE WHEN t1.status = 0 THEN t1.amount ELSE 0 END) AS earn,
+
+        -- cost
         SUM(CASE WHEN t1.status = 1 THEN t1.amount ELSE 0 END) AS cost,
+
+        -- discount counted once per transaction
         (
             SELECT SUM(d.discount)
             FROM (
-                SELECT transaction_id, MAX(discount) AS discount
+                SELECT t2.transaction_id, t2.discount
                 FROM transactions t2
                 WHERE t2.status = 0
                   AND DATE(t2.created_at) = '$today'
                   $todayDiscountCondition
-                GROUP BY transaction_id
+                GROUP BY t2.transaction_id
+                ORDER BY t2.created_at ASC
             ) d
         ) AS discount
+
     FROM transactions t1
     WHERE DATE(t1.created_at) = '$today'
     $todayUserCondition
     GROUP BY HOUR(t1.created_at)
+    ORDER BY HOUR(t1.created_at)
 ")->getResultArray();
 
-        /* Normalize hours 0–23 */
-        $hourly = array_fill(0, 24, [
-            'earn' => 0,
-            'cost' => 0,
-            'discount' => 0
-        ]);
-
-        foreach ($todayRaw as $row) {
-            $h = (int) $row['hour'];
-            $hourly[$h] = [
-                'earn'     => (float) $row['earn'],
-                'cost'     => (float) $row['cost'],
-                'discount' => (float) $row['discount']
-            ];
-        }
-
-        /* Chart-ready data (CORRECT ORDER) */
+        /* Prepare chart data */
         $this->data['todayLabels'] = array_map(
-            fn($h) => str_pad($h, 2, '0', STR_PAD_LEFT) . ':00',
-            array_keys($hourly)
+            fn($d) => $d['hour'] . ':00',
+            $todayData
         );
 
         $this->data['todayEarns'] = array_map(
-            fn($d) => $d['earn'] - $d['discount'],
-            $hourly
+            fn($d) => max(0, (float) ($d['earn'] - $d['discount'])), // prevent negative
+            $todayData
         );
 
         $this->data['todayCosts'] = array_map(
-            fn($d) => $d['cost'],
-            $hourly
+            fn($d) => (float) $d['cost'],
+            $todayData
         );
         /* ================= ⭐ CURRENT MONTH DAILY REPORT ================= */
         $monthStart = date('Y-m-01');
@@ -2610,13 +2602,13 @@ class Dashboard extends Controller
                 (
                     SELECT SUM(d.discount)
                     FROM (
-                        SELECT discount
+                        SELECT transaction_id, MAX(discount) AS discount
                         FROM transactions t2
                         WHERE t2.status = 0
-                        AND DATE(t2.created_at) = DATE(t1.created_at)
-                        $monthUserCondition
+                        AND YEAR(t2.created_at) = $year
+                        AND MONTH(t2.created_at) = MONTH(t1.created_at)
+                        $yearDiscountCondition
                         GROUP BY transaction_id
-                        HAVING t2.created_at = MIN(t2.created_at)
                     ) d
                 ) AS discount
 
