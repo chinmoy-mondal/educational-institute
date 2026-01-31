@@ -2457,6 +2457,7 @@ class Dashboard extends Controller
         /* ================= ⭐ CURRENT MONTH DAILY REPORT ================= */
         $monthStart = date('Y-m-01');
         $monthEnd   = date('Y-m-t');
+        echo "end month=" . $monthEnd;
 
         $currentMonthData = db_connect()->query("
             SELECT 
