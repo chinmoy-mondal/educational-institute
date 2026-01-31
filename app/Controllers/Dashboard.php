@@ -2461,21 +2461,18 @@ class Dashboard extends Controller
         $monthEnd   = date('Y-m-t');
 
         $currentMonthData = db_connect()->query("
-    SELECT 
+    SELECT
         DATE(t1.created_at) AS date,
         SUM(CASE WHEN t1.status = 0 THEN t1.amount ELSE 0 END) AS earn,
         SUM(CASE WHEN t1.status = 1 THEN t1.amount ELSE 0 END) AS cost,
-        (
-            SELECT SUM(d.discount)
-            FROM (
-                SELECT transaction_id, MAX(discount) AS discount
-                FROM transactions t2
-                WHERE t2.status = 0
-                AND DATE(t2.created_at) = DATE(t1.created_at)
-                GROUP BY transaction_id
-            ) d
-        ) AS discount
+        SUM(d.discount) AS discount
     FROM transactions t1
+    LEFT JOIN (
+        SELECT transaction_id, DATE(created_at) AS tx_date, MAX(discount) AS discount
+        FROM transactions
+        WHERE status = 0
+        GROUP BY transaction_id, DATE(created_at)
+    ) d ON t1.transaction_id = d.transaction_id AND DATE(t1.created_at) = d.tx_date
     WHERE t1.created_at BETWEEN '$monthStart' AND '$monthEnd'
     GROUP BY DATE(t1.created_at)
     ORDER BY DATE(t1.created_at)
