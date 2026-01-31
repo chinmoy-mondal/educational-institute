@@ -3086,12 +3086,10 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        $userModel = new UserModel();
 
-        // ✅ All teachers only
-        $this->data['teachers'] = $userModel
+        $this->data['teachers'] = $this->userModel
             ->where('role', 'teacher')
-            ->where('account_status', 'active') // optional
+            ->where('account_status !=', 0)   // ✅ NOT equal to 0
             ->orderBy('name', 'ASC')
             ->findAll();
 
