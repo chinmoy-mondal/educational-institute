@@ -2524,7 +2524,6 @@ class Dashboard extends Controller
         return view('dashboard/transaction/transaction_dashboard', $this->data);
     }
 
-
     public function tec_pay()
     {
         $this->data['title'] = 'Teacher Earnings';
@@ -2614,32 +2613,6 @@ class Dashboard extends Controller
 
         return view('dashboard/transaction/tec_pay', $this->data);
     }
-
-    // public function reset_amount($teacher_id = null)
-    // {
-    //     $request = $this->request;
-    //     $payAmount = $request->getPost('pay_amount');
-
-    //     if (!$teacher_id || !$payAmount) {
-    //         return redirect()->back()->with('error', 'Invalid data!');
-    //     }
-
-    //     $teacher = $this->userModel->find($teacher_id);
-
-    //     if (!$teacher) {
-    //         return redirect()->back()->with('error', 'Teacher not found!');
-    //     }
-
-    //     // Insert into the user_collections_pay table
-    //     $this->userCollectionsPayModel->insert([
-    //         'user_id'     => $teacher['id'],
-    //         'user_name'   => $teacher['name'],
-    //         'amount_paid' => $payAmount,
-    //         'created_at'  => date('Y-m-d H:i:s')
-    //     ]);
-
-    //     return redirect()->back()->with('success', 'Payment recorded successfully!');
-    // }
 
     public function reset_amount($teacher_id = null)
     {
@@ -3094,6 +3067,61 @@ class Dashboard extends Controller
             ->findAll();
 
         return view('dashboard/transaction/salary_form', $this->data);
+    }
+
+    public function pay_salary()
+    {
+        $teacherId = $this->request->getPost('teacher_id');
+        $amount    = $this->request->getPost('amount');
+        $month     = $this->request->getPost('month');
+
+        if (!$teacherId || !$amount || !$month) {
+            return redirect()->back()->with('error', 'Invalid salary data');
+        }
+
+        // 🔑 Logged-in user (sender)
+        $senderId = $this->session->get('user_id') ?? 0;
+
+        if ($senderId <= 0) {
+            return redirect()->back()->with('error', 'Unauthorized access');
+        }
+
+        $sender = $this->userModel->find($senderId);
+        if (!$sender || (int) $sender['account_status'] <= 1) {
+            return redirect()->back()->with('error', 'You are not an admin');
+        }
+
+        // 👤 Teacher (receiver)
+        $teacher = $this->userModel->find($teacherId);
+        if (!$teacher) {
+            return redirect()->back()->with('error', 'Teacher not found');
+        }
+
+        $transactionId = 'SAL-' . date('YmdHis') . rand(100, 999);
+
+
+        $this->transactionModel->insert([
+            'transaction_id' => $transactionId,
+
+            // Sender (Admin)
+            'sender_id'      => $sender['id'],
+            'sender_name'    => $sender['name'],
+
+            // Receiver (Teacher)
+            'receiver_id'    => $teacher['id'],
+            'receiver_name'  => $teacher['name'],
+
+            'amount'         => $amount,
+            'discount'       => 0,
+            'month'          => $month,
+            'purpose'        => 'salary',
+            'description'    => 'Salary paid for ' . date('F Y', strtotime($month)),
+            'payment_status' => 'paid',
+            'status'         => 1, // cost
+            'activity'       => 'Teacher Salary Payment',
+        ]);
+
+        return redirect()->back()->with('success', 'Salary paid successfully');
     }
 
     public function pay_stat()
