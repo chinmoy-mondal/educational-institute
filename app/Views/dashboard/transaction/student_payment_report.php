@@ -26,26 +26,26 @@
                 </thead>
                 <tbody>
                     <?php foreach ($report as $row): ?>
-                    <tr>
-                        <td><?= esc($row['sender_name']) ?></td>
-                        <td><?= esc($row['receiver_name']) ?></td>
-                        <td><?= esc($row['month']) ?></td>
-                        <td class="text-end"><?= number_format($row['total_pay'], 2) ?></td>
-                        <td class="text-end"><?= number_format($row['total_discount'], 2) ?></td>
-                        <td class="text-end <?= ($row['net_amount'] < 0) ? 'text-danger' : 'text-success' ?>">
-                            <?= number_format($row['net_amount'], 2) ?>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td><?= esc($row['sender_name']) ?></td>
+                            <td><?= esc($row['receiver_name']) ?></td>
+                            <td><?= esc($row['month']) ?></td>
+                            <td class="text-end"><?= number_format($row['total_pay'], 2) ?></td>
+                            <td class="text-end"><?= number_format($row['total_discount'], 2) ?></td>
+                            <td class="text-end <?= ($row['net_amount'] < 0) ? 'text-danger' : 'text-success' ?>">
+                                <?= number_format($row['net_amount'], 2) ?>
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
 
-                <?php if (!empty($report)): ?>
+                <!-- <?php if (!empty($report)): ?>
                 <tfoot class="table-secondary fw-bold text-end">
                     <?php
-                        $totalPay = array_sum(array_column($report, 'total_pay'));
-                        $totalDiscount = array_sum(array_column($report, 'total_discount'));
-                        $totalNet = array_sum(array_column($report, 'net_amount'));
-                        ?>
+                            $totalPay = array_sum(array_column($report, 'total_pay'));
+                            $totalDiscount = array_sum(array_column($report, 'total_discount'));
+                            $totalNet = array_sum(array_column($report, 'net_amount'));
+                    ?>
                     <tr>
                         <td colspan="3" class="text-center">TOTAL</td>
                         <td><?= number_format($totalPay, 2) ?></td>
@@ -54,7 +54,7 @@
                             <?= number_format($totalNet, 2) ?></td>
                     </tr>
                 </tfoot>
-                <?php endif; ?>
+                <?php endif; ?> -->
             </table>
         </div>
     </div>
@@ -62,23 +62,23 @@
 
 <!-- Print-friendly styles -->
 <style>
-@media print {
-    body * {
-        visibility: hidden;
-    }
+    @media print {
+        body * {
+            visibility: hidden;
+        }
 
-    #paymentReportTable,
-    #paymentReportTable * {
-        visibility: visible;
-    }
+        #paymentReportTable,
+        #paymentReportTable * {
+            visibility: visible;
+        }
 
-    #paymentReportTable {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
+        #paymentReportTable {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
     }
-}
 </style>
 
 <?= $this->endSection() ?>
