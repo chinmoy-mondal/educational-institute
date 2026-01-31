@@ -3143,7 +3143,7 @@ class Dashboard extends Controller
             'month'          => $month,
             'purpose'        => 'salary-' . $section,
             'description'    => $description,
-            'payment_status' => 'paid',
+            'payment_status' => 1, // 1 for paid 0 for not paid
             'status'         => 1, // cost
             'activity'       => 'Teacher Salary Payment',
         ]);
