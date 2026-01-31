@@ -3148,7 +3148,7 @@ class Dashboard extends Controller
             'activity'       => 'Teacher Salary Payment',
         ]);
 
-        return redirect()->back()->with('success', 'Salary paid successfully');
+        return redirect()->to(base_url('admin/transactions'))->with('success', 'Salary paid successfully');
     }
 
     public function pay_stat()
