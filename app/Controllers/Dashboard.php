@@ -2610,13 +2610,13 @@ class Dashboard extends Controller
                 (
                     SELECT SUM(d.discount)
                     FROM (
-                        SELECT transaction_id, MAX(discount) AS discount
+                        SELECT discount
                         FROM transactions t2
                         WHERE t2.status = 0
-                        AND YEAR(t2.created_at) = $year
-                        AND MONTH(t2.created_at) = MONTH(t1.created_at)
-                        $yearDiscountCondition
+                        AND DATE(t2.created_at) = DATE(t1.created_at)
+                        $monthUserCondition
                         GROUP BY transaction_id
+                        HAVING t2.created_at = MIN(t2.created_at)
                     ) d
                 ) AS discount
 
