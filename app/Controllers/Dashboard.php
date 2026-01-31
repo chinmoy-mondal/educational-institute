@@ -2454,38 +2454,68 @@ class Dashboard extends Controller
         $this->data['todayLabels'] = array_map(fn($d) => $d['hour'] . ':00', $todayData);
         $this->data['todayEarns']  = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $todayData);
         $this->data['todayCosts']  = array_map(fn($d) => floatval($d['cost']), $todayData);
+
+
         /* ================= ⭐ CURRENT MONTH DAILY REPORT ================= */
         $monthStart = date('Y-m-01');
         $monthEnd   = date('Y-m-t');
-        echo "end month=" . $monthEnd;
 
         $currentMonthData = db_connect()->query("
-            SELECT 
-                DATE(created_at) AS date,
+    SELECT 
+        DATE(t1.created_at) AS date,
+        SUM(CASE WHEN t1.status = 0 THEN t1.amount ELSE 0 END) AS earn,
+        SUM(CASE WHEN t1.status = 1 THEN t1.amount ELSE 0 END) AS cost,
+        (
+            SELECT SUM(d.discount)
+            FROM (
+                SELECT transaction_id, MAX(discount) AS discount
+                FROM transactions t2
+                WHERE t2.status = 0
+                AND DATE(t2.created_at) = DATE(t1.created_at)
+                GROUP BY transaction_id
+            ) d
+        ) AS discount
+    FROM transactions t1
+    WHERE t1.created_at BETWEEN '$monthStart' AND '$monthEnd'
+    GROUP BY DATE(t1.created_at)
+    ORDER BY DATE(t1.created_at)
+")->getResultArray();
 
-                SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
-                SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
+        /* ================= Generate all dates for the month ================= */
+        $allDates = [];
+        $current = strtotime($monthStart);
+        $end = strtotime($monthEnd);
 
-                (
-                    SELECT SUM(d.discount)
-                    FROM (
-                        SELECT transaction_id, MAX(discount) AS discount
-                        FROM transactions t2
-                        WHERE t2.status = 0
-                        AND DATE(t2.created_at) = DATE(t1.created_at)
-                        GROUP BY transaction_id
-                    ) d
-                ) AS discount
+        while ($current <= $end) {
+            $allDates[] = date('Y-m-d', $current);
+            $current = strtotime('+1 day', $current);
+        }
 
-            FROM transactions t1
-            WHERE created_at BETWEEN '$monthStart' AND '$monthEnd'
-            GROUP BY DATE(created_at)
-            ORDER BY DATE(created_at)
-        ")->getResultArray();
+        /* ================= Map query results ================= */
+        $earnMap = [];
+        $costMap = [];
 
-        $this->data['dailyLabels'] = array_column($currentMonthData, 'date');
-        $this->data['dailyEarns']  = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $currentMonthData);
-        $this->data['dailyCosts']  = array_map(fn($d) => floatval($d['cost']), $currentMonthData);
+        foreach ($currentMonthData as $d) {
+            $earnMap[$d['date']] = floatval($d['earn'] - $d['discount']);
+            $costMap[$d['date']] = floatval($d['cost']);
+        }
+
+        /* ================= Fill missing dates with 0 ================= */
+        $dailyLabels = [];
+        $dailyEarns = [];
+        $dailyCosts = [];
+
+        foreach ($allDates as $date) {
+            $dailyLabels[] = $date;
+            $dailyEarns[] = $earnMap[$date] ?? 0;
+            $dailyCosts[] = $costMap[$date] ?? 0;
+        }
+
+        /* ================= Pass to view ================= */
+        $this->data['dailyLabels'] = $dailyLabels;
+        $this->data['dailyEarns']  = $dailyEarns;
+        $this->data['dailyCosts']  = $dailyCosts;
+
 
         /* ================= ⭐ YEARLY MONTHLY SUMMARY ================= */
         $year = date('Y');
