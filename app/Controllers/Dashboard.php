@@ -3094,6 +3094,7 @@ class Dashboard extends Controller
     public function std_due()
     {
         // $id;
+        echo "dfsdf";
         return "echo";
     }
 
