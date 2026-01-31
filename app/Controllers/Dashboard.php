@@ -3093,9 +3093,13 @@ class Dashboard extends Controller
 
     public function std_due()
     {
-        // $id;
-        echo "dfsdf";
-        return "echo";
+        $fees = $this->feesAmountModel->findAll();
+
+        // For debugging (see data on screen)
+        echo '<pre>';
+        print_r($fees);
+        echo '</pre>';
+        exit;
     }
 
     public function pay_salary()
