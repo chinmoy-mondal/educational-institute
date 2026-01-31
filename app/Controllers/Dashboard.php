@@ -2488,50 +2488,58 @@ class Dashboard extends Controller
             ? ''
             : " AND t2.sender_id = $user_id ";
 
-        $todayData = db_connect()->query("
-                SELECT
-                    HOUR(t1.created_at) AS hour,
+        $todayRaw = db_connect()->query("
+    SELECT
+        HOUR(t1.created_at) AS hour,
+        SUM(CASE WHEN t1.status = 0 THEN t1.amount ELSE 0 END) AS earn,
+        SUM(CASE WHEN t1.status = 1 THEN t1.amount ELSE 0 END) AS cost,
+        (
+            SELECT SUM(d.discount)
+            FROM (
+                SELECT transaction_id, MAX(discount) AS discount
+                FROM transactions t2
+                WHERE t2.status = 0
+                  AND DATE(t2.created_at) = '$today'
+                  $todayDiscountCondition
+                GROUP BY transaction_id
+            ) d
+        ) AS discount
+    FROM transactions t1
+    WHERE DATE(t1.created_at) = '$today'
+    $todayUserCondition
+    GROUP BY HOUR(t1.created_at)
+")->getResultArray();
 
-                    -- earn
-                    SUM(CASE WHEN t1.status = 0 THEN t1.amount ELSE 0 END) AS earn,
+        /* Normalize hours 0–23 */
+        $hourly = array_fill(0, 24, [
+            'earn' => 0,
+            'cost' => 0,
+            'discount' => 0
+        ]);
 
-                    -- cost
-                    SUM(CASE WHEN t1.status = 1 THEN t1.amount ELSE 0 END) AS cost,
+        foreach ($todayRaw as $row) {
+            $h = (int) $row['hour'];
+            $hourly[$h] = [
+                'earn'     => (float) $row['earn'],
+                'cost'     => (float) $row['cost'],
+                'discount' => (float) $row['discount']
+            ];
+        }
 
-                    -- discount counted once per transaction
-                    (
-                        SELECT SUM(d.discount)
-                        FROM (
-                            SELECT transaction_id, MAX(discount) AS discount
-                            FROM transactions t2
-                            WHERE t2.status = 0
-                            AND DATE(t2.created_at) = '$today'
-                            $todayDiscountCondition
-                            GROUP BY transaction_id
-                        ) d
-                    ) AS discount
-
-                FROM transactions t1
-                WHERE DATE(t1.created_at) = '$today'
-                $todayUserCondition
-                GROUP BY HOUR(t1.created_at)
-                ORDER BY HOUR(t1.created_at)
-            ")->getResultArray();
-
-        /* Prepare chart data */
+        /* Chart-ready data (CORRECT ORDER) */
         $this->data['todayLabels'] = array_map(
-            fn($d) => $d['hour'] . ':00',
-            $todayData
+            fn($h) => str_pad($h, 2, '0', STR_PAD_LEFT) . ':00',
+            array_keys($hourly)
         );
 
         $this->data['todayEarns'] = array_map(
-            fn($d) => (float) ($d['earn'] - $d['discount']),
-            $todayData
+            fn($d) => $d['earn'] - $d['discount'],
+            $hourly
         );
 
         $this->data['todayCosts'] = array_map(
-            fn($d) => (float) $d['cost'],
-            $todayData
+            fn($d) => $d['cost'],
+            $hourly
         );
         /* ================= ⭐ CURRENT MONTH DAILY REPORT ================= */
         $monthStart = date('Y-m-01');
