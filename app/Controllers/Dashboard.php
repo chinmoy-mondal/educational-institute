@@ -3093,35 +3093,32 @@ class Dashboard extends Controller
 
     public function std_due()
     {
-        // get month from GET, default = current month
-        $month = (int) ($this->request->getGet('m') ?? date('n'));
-
-        if ($month < 1 || $month > 12) {
-            $month = date('n'); // safety fallback
-        }
-
-        $fees = $this->feesAmountModel->findAll();
+        $fees  = $this->feesAmountModel->findAll();
+        $month = (int) ($this->request->getGet('month') ?? date('n')); // 1–12
 
         $sectionTotals = [];
 
         foreach ($fees as $f) {
             $section = trim($f['section']);
             $unit    = (int) $f['unit'];
-            $amount  = (float) $f['fees'];
+            $fee     = (float) $f['fees'];
 
             if ($unit <= 0) continue;
 
             $interval = 12 / $unit;
 
-            if ($month == 1 || (($month - 1) % $interval == 0)) {
-                $sectionTotals[$section] = ($sectionTotals[$section] ?? 0) + $amount;
+            // calculate cumulative total till current month
+            for ($m = 1; $m <= $month; $m++) {
+
+                if ($m === 1 || (($m - 1) % $interval === 0)) {
+                    $sectionTotals[$section] = ($sectionTotals[$section] ?? 0) + $fee;
+                }
             }
         }
 
-        echo '<pre>';
-        echo "Month: $month\n";
+        echo "Month: {$month}<pre>";
         print_r($sectionTotals);
-        echo '</pre>';
+        echo "</pre>";
         exit;
     }
 
