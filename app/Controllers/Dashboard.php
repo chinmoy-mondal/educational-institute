@@ -3088,6 +3088,7 @@ class Dashboard extends Controller
         $teacherId = $this->request->getPost('teacher_id');
         $amount    = $this->request->getPost('amount');
         $month     = $this->request->getPost('month');
+        $section = $this->request->getPost('section');
 
         if (!$teacherId || !$amount || !$month) {
             return redirect()->back()->with('error', 'Invalid salary data');
@@ -3114,6 +3115,18 @@ class Dashboard extends Controller
         $transactionId = 'SAL-' . date('YmdHis') . rand(100, 999);
 
 
+        $monthNumber = $this->request->getPost('month'); // '01' to '12'
+
+        // Get current year
+        $currentYear = date('Y');
+
+        // Convert month number to full month name
+        $monthName = date('F', mktime(0, 0, 0, $monthNumber, 1));
+
+        // Description with current year
+        $description = 'Salary paid for ' . $monthName . ' ' . $currentYear;
+
+
         $this->transactionModel->insert([
             'transaction_id' => $transactionId,
 
@@ -3128,8 +3141,8 @@ class Dashboard extends Controller
             'amount'         => $amount,
             'discount'       => 0,
             'month'          => $month,
-            'purpose'        => 'salary',
-            'description'    => 'Salary paid for ' . date('F Y', strtotime($month)),
+            'purpose'        => 'salary-' . $section,
+            'description'    => $description,
             'payment_status' => 'paid',
             'status'         => 1, // cost
             'activity'       => 'Teacher Salary Payment',
