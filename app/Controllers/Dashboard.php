@@ -3093,7 +3093,7 @@ class Dashboard extends Controller
             ->orderBy('name', 'ASC')
             ->findAll();
 
-        return view('dashboard/salary/salary_form', $this->data);
+        return view('dashboard/transaction/salary_form', $this->data);
     }
 
     public function pay_stat()
