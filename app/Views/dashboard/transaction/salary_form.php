@@ -39,9 +39,29 @@
                                 <input type="number" name="amount" class="form-control form-control-sm"
                                     placeholder="Amount" required>
 
-                                <!-- Month -->
-                                <input type="month" name="month" class="form-control form-control-sm" required>
-
+                                <!-- Month Dropdown (only month, no year) -->
+                                <select name="month" class="form-control form-control-sm" required>
+                                    <option value="">Select Month</option>
+                                    <?php
+                                                $months = [
+                                                    '01' => 'January',
+                                                    '02' => 'February',
+                                                    '03' => 'March',
+                                                    '04' => 'April',
+                                                    '05' => 'May',
+                                                    '06' => 'June',
+                                                    '07' => 'July',
+                                                    '08' => 'August',
+                                                    '09' => 'September',
+                                                    '10' => 'October',
+                                                    '11' => 'November',
+                                                    '12' => 'December',
+                                                ];
+                                                foreach ($months as $num => $name):
+                                                ?>
+                                    <option value="<?= $num ?>"><?= $name ?></option>
+                                    <?php endforeach; ?>
+                                </select>
                                 <!-- Section -->
                                 <select name="section" class="form-control form-control-sm" required>
                                     <option value="">Select Section</option>
