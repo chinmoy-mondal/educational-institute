@@ -171,15 +171,33 @@ class Dashboard extends Controller
         // Count teachers safely
         $this->data['givenSubjects'] = count($given_subjects);
         $this->data['totalSubjects'] = count($total_subjects);
-        // ✅ Total Income (status = 1 means approved or received)
-        $incomeRow = $this->transactionModel
-            ->selectSum('amount', 'total')
-            ->where('status', 0)
-            ->get()
-            ->getRowArray();
 
-        $totalIncomeRaw = $incomeRow['total'] ?? 0;
-        $discountRow = db_connect()->query("
+
+
+        $user_id = $this->session->get('user_id') ?? 0;
+        $account_status = 0;
+        if ($user_id > 0) {
+            $user = $this->userModel->select('account_status')->find($user_id);
+            if ($user) {
+                $account_status = $user['account_status'];
+            }
+        }
+
+        // Fetch teachers
+        // 🔹 Fetch teachers based on permission
+        if ($account_status > 1) {
+            // Admin / Accountant → all teachers
+            // ✅ Total Income (status = 1 means approved or received)
+            $incomeRow = $this->transactionModel
+                ->selectSum('amount', 'total')
+                ->where('status', 0)
+                ->get()
+                ->getRowArray();
+
+            // need to work
+
+            $totalIncomeRaw = $incomeRow['total'] ?? 0;
+            $discountRow = db_connect()->query("
             SELECT SUM(discount) AS total_discount
             FROM (
                 SELECT transaction_id, MAX(discount) AS discount
@@ -189,16 +207,57 @@ class Dashboard extends Controller
             ) d
         ")->getRowArray();
 
-        $totalDiscount = $discountRow['total_discount'] ?? 0;
-        $totalIncome = $totalIncomeRaw - $totalDiscount;
+            $totalDiscount = $discountRow['total_discount'] ?? 0;
+            $totalIncome = $totalIncomeRaw - $totalDiscount;
 
-        // ✅ Total Cost (status = 0 means pending or expense)
-        $totalCost = $this->transactionModel
-            ->selectSum('amount')
-            ->where('status', 1)
-            ->get()
-            ->getRow()
-            ->amount ?? 0;
+            // ✅ Total Cost (status = 0 means pending or expense)
+            $totalCost = $this->transactionModel
+                ->selectSum('amount')
+                ->where('status', 1)
+                ->get()
+                ->getRow()
+                ->amount ?? 0;
+        } else {
+            // Teacher → only his own account
+            $incomeQuery = $this->transactionModel
+                ->selectSum('amount', 'total')
+                ->where('status', 0);
+
+            if ($user_id > 0) {
+                $incomeQuery->where('receiver_id', $user_id);
+            }
+
+            $incomeRow = $incomeQuery->get()->getRowArray();
+            $totalIncomeRaw = $incomeRow['total'] ?? 0;
+
+
+            $discountRow = db_connect()->query("
+            SELECT SUM(discount) AS total_discount
+            FROM (
+                SELECT transaction_id, MAX(discount) AS discount
+                FROM transactions
+                WHERE status = 0 AND receiver_id = " . (int)$user_id . "
+                GROUP BY transaction_id
+            ) d
+        ")->getRowArray();
+
+            $totalDiscount = $discountRow['total_discount'] ?? 0;
+            $totalIncome = $totalIncomeRaw - $totalDiscount;
+
+            // ✅ Total Cost (status = 0 means pending or expense)
+            $costQuery = $this->transactionModel
+                ->selectSum('amount', 'total')
+                ->where('status', 1); // expense
+
+            if ($user_id > 0) {
+                $costQuery->where('receiver_id', $user_id);
+            }
+
+            $totalCost = $costQuery->get()->getRowArray()['total'] ?? 0;
+        }
+
+
+
 
         // ✅ Assign to $this->data for the view
         $this->data['total_income'] = (float) $totalIncome;
@@ -2474,87 +2533,6 @@ class Dashboard extends Controller
         return view('dashboard/transaction/transaction_dashboard', $this->data);
     }
 
-    // public function tec_pay()
-    // {
-    //     $this->data['title'] = 'Teacher Earnings';
-    //     $this->data['activeSection'] = 'accounts';
-
-    //     $this->data['navbarItems'] = [
-    //         ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-    //         ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-    //         ['label' => 'Students', 'url' => base_url('admin/std_pay')],
-    //         ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-    //         ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
-    //     ];
-
-
-    //     // Fetch teachers
-    //     $teachers = $this->userModel
-    //         ->where('account_status !=', 0)
-    //         ->orderBy('position', 'ASC')
-    //         ->findAll();
-
-    //     // ===== Earnings calculation (discount-safe) =====
-    //     $builder = $this->transactionModel->builder();
-
-    //     $subQuery = $builder
-    //         ->select('
-    //         receiver_id,
-    //         transaction_id,
-    //         SUM(amount) AS amount_sum,
-    //         MAX(discount) AS discount_once
-    //     ')
-    //         ->where('status', 0)
-    //         ->where('activity', 0)
-    //         ->groupBy('receiver_id, transaction_id')
-    //         ->getCompiledSelect();
-
-    //     $finalBuilder = $this->transactionModel->builder("($subQuery) t");
-
-    //     $totals = $finalBuilder
-    //         ->select('
-    //         receiver_id,
-    //         SUM(amount_sum - discount_once) AS total_earned
-    //     ')
-    //         ->groupBy('receiver_id')
-    //         ->get()
-    //         ->getResultArray();
-
-    //     $earnMap = array_column($totals, 'total_earned', 'receiver_id');
-
-    //     foreach ($teachers as &$t) {
-    //         $t['total_earned'] = $earnMap[$t['id']] ?? 0;
-    //         $t['unpaid']       = $t['total_earned'];
-    //     }
-
-
-    //     // Get logged-in user ID from session
-    //     $user_id = $this->session->get('user_id') ?? 0;
-
-    //     // Load TeacherModel (or UserModel)
-    //     $teacherModel = $this->userModel;
-
-    //     // Fetch account_status for this user
-    //     $account_status = 0; // default
-    //     if ($user_id > 0) {
-    //         $user = $teacherModel->select('account_status')->find($user_id);
-    //         if ($user) {
-    //             $account_status = $user['account_status'];
-    //         }
-    //     }
-
-    //     $builder = $this->userCollectionsPayModel
-    //         ->select('user_id, user_name, SUM(amount_paid) as total_paid, COUNT(id) as total_payments')
-    //         ->groupBy('user_id, user_name')
-    //         ->findAll();
-
-
-    //     $this->data['teachers'] = $teachers;
-    //     $this->data['account_status'] = $account_status;
-
-    //     return view('dashboard/transaction/tec_pay', $this->data);
-    // }
-
     public function tec_pay()
     {
         $this->data['title'] = 'Teacher Earnings';
@@ -2564,6 +2542,8 @@ class Dashboard extends Controller
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
             ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Salary', 'url' => base_url('admin/salary')],
+            ['label' => 'Cost', 'url' => base_url('admin/cost')],
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
@@ -2642,32 +2622,6 @@ class Dashboard extends Controller
 
         return view('dashboard/transaction/tec_pay', $this->data);
     }
-
-    // public function reset_amount($teacher_id = null)
-    // {
-    //     $request = $this->request;
-    //     $payAmount = $request->getPost('pay_amount');
-
-    //     if (!$teacher_id || !$payAmount) {
-    //         return redirect()->back()->with('error', 'Invalid data!');
-    //     }
-
-    //     $teacher = $this->userModel->find($teacher_id);
-
-    //     if (!$teacher) {
-    //         return redirect()->back()->with('error', 'Teacher not found!');
-    //     }
-
-    //     // Insert into the user_collections_pay table
-    //     $this->userCollectionsPayModel->insert([
-    //         'user_id'     => $teacher['id'],
-    //         'user_name'   => $teacher['name'],
-    //         'amount_paid' => $payAmount,
-    //         'created_at'  => date('Y-m-d H:i:s')
-    //     ]);
-
-    //     return redirect()->back()->with('success', 'Payment recorded successfully!');
-    // }
 
     public function reset_amount($teacher_id = null)
     {
@@ -2829,6 +2783,111 @@ class Dashboard extends Controller
         return view('dashboard/transaction/std_pay', $this->data);
     }
 
+    public function salary_form()
+    {
+        $this->data['title'] = 'Teacher Salary';
+        $this->data['activeSection'] = 'accounts';
+
+        $this->data['navbarItems'] = [
+            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Salary', 'url' => base_url('admin/salary')],
+            ['label' => 'Cost', 'url' => base_url('admin/cost')],
+            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+        ];
+
+        // 🔑 Logged-in user
+        $senderId = $this->session->get('user_id') ?? 0;
+
+        $this->data['canPaySalary'] = false;
+
+        if ($senderId > 0) {
+            $sender = $this->userModel->select('id, account_status, name')->find($senderId);
+            if ($sender && (int) $sender['account_status'] > 1) {
+                $this->data['canPaySalary'] = true;
+                $this->data['sender'] = $sender;
+            }
+        }
+
+        $this->data['sections'] = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
+        // 👤 Fetch teachers
+        $this->data['teachers'] = $this->userModel
+            ->where('role', 'teacher')
+            ->where('account_status !=', 0)
+            ->orderBy('name', 'ASC')
+            ->findAll();
+
+        return view('dashboard/transaction/salary_form', $this->data);
+    }
+
+    public function pay_salary()
+    {
+        $teacherId = $this->request->getPost('teacher_id');
+        $amount    = $this->request->getPost('amount');
+        $month     = $this->request->getPost('month');
+
+        if (!$teacherId || !$amount || !$month) {
+            return redirect()->back()->with('error', 'Invalid salary data');
+        }
+
+        // 🔑 Logged-in user (sender)
+        $senderId = $this->session->get('user_id') ?? 0;
+
+        if ($senderId <= 0) {
+            return redirect()->back()->with('error', 'Unauthorized access');
+        }
+
+        $sender = $this->userModel->find($senderId);
+        if (!$sender || (int) $sender['account_status'] <= 1) {
+            return redirect()->back()->with('error', 'You are not an admin');
+        }
+
+        // 👤 Teacher (receiver)
+        $teacher = $this->userModel->find($teacherId);
+        if (!$teacher) {
+            return redirect()->back()->with('error', 'Teacher not found');
+        }
+
+        $transactionId = 'SAL-' . date('YmdHis') . rand(100, 999);
+
+
+        $monthNumber = $this->request->getPost('month'); // '01' to '12'
+
+        // Get current year
+        $currentYear = date('Y');
+
+        // Convert month number to full month name
+        $monthName = date('F', mktime(0, 0, 0, $monthNumber, 1));
+
+        // Description with current year
+        $description = 'Salary paid for ' . $monthName . ' ' . $currentYear;
+
+
+        $this->transactionModel->insert([
+            'transaction_id' => $transactionId,
+
+            // Sender (Admin)
+            'sender_id'      => $sender['id'],
+            'sender_name'    => $sender['name'],
+
+            // Receiver (Teacher)
+            'receiver_id'    => $teacher['id'],
+            'receiver_name'  => $teacher['name'],
+
+            'amount'         => $amount,
+            'discount'       => 0,
+            'month'          => $month,
+            'purpose'        => 'salary-' . $section,
+            'description'    => $description,
+            'payment_status' => 1, // 1 for paid 0 for not paid
+            'status'         => 1, // cost
+            'activity'       => 'Teacher Salary Payment',
+        ]);
+
+        return redirect()->to(base_url('admin/transactions'))->with('success', 'Salary paid successfully');
+    }
 
     public function receipt($transactionId)
     {
