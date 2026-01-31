@@ -3220,16 +3220,16 @@ class Dashboard extends Controller
         // 🎓 Fee titles
         $fees = $this->feesModel->findAll();
 
-        // 💰 SECTION-wise fees ONLY (✅ class removed)
-        $sectionFees = $this->feesAmountModel
-            ->where('section', trim($student['section'])) // আবাসিক / অনাবাসিক
+        // 💰 CLASS-wise fees ONLY
+        $classFees = $this->feesAmountModel
+            ->where('class', trim($student['class']))  // filter by class
             ->findAll();
 
-        // 🧾 Map fee & unit
+        // 🧾 Map fee & unit for the class
         $feeAmounts = [];
         $feeUnit    = [];
 
-        foreach ($sectionFees as $f) {
+        foreach ($classFees as $f) {
             $feeAmounts[$f['title_id']] = (float) $f['fees'];
             $feeUnit[$f['title_id']]    = (int) $f['unit'];
         }
