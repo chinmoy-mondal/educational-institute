@@ -39,12 +39,12 @@
                     <?php endforeach; ?>
                 </tbody>
 
-                <?php if (!empty($report)): ?>
+                <!-- <?php if (!empty($report)): ?>
                     <tfoot class="table-secondary fw-bold text-end">
                         <?php
-                        $totalPay = array_sum(array_column($report, 'total_pay'));
-                        $totalDiscount = array_sum(array_column($report, 'total_discount'));
-                        $totalNet = array_sum(array_column($report, 'net_amount'));
+                            $totalPay = array_sum(array_column($report, 'total_pay'));
+                            $totalDiscount = array_sum(array_column($report, 'total_discount'));
+                            $totalNet = array_sum(array_column($report, 'net_amount'));
                         ?>
                         <tr>
                             <td colspan="3" class="text-center">TOTAL</td>
@@ -54,7 +54,7 @@
                                 <?= number_format($totalNet, 2) ?></td>
                         </tr>
                     </tfoot>
-                <?php endif; ?>
+                <?php endif; ?> -->
             </table>
         </div>
     </div>
