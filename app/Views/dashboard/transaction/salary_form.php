@@ -14,7 +14,7 @@
                         <th>Designation</th>
                         <th>Subject</th>
                         <th>Phone</th>
-                        <th width="320">Salary Payment</th>
+                        <th width="420">Salary Payment</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,24 +28,36 @@
                         <td><?= esc($t['subject']) ?></td>
                         <td><?= esc($t['phone']) ?></td>
 
-                        <!-- 🔽 Salary Form per Teacher -->
+                        <!-- 🔽 Salary Form / Permission Check -->
                         <td>
+                            <?php if (!empty($canPaySalary) && $canPaySalary): ?>
                             <form method="post" action="<?= base_url('admin/pay_salary') ?>" class="d-flex gap-2">
-
                                 <?= csrf_field() ?>
-
                                 <input type="hidden" name="teacher_id" value="<?= $t['id'] ?>">
 
+                                <!-- Amount -->
                                 <input type="number" name="amount" class="form-control form-control-sm"
                                     placeholder="Amount" required>
 
+                                <!-- Month -->
                                 <input type="month" name="month" class="form-control form-control-sm" required>
 
-                                <button type="submit" class="btn btn-sm btn-success">
-                                    Pay
-                                </button>
+                                <!-- Section -->
+                                <select name="section" class="form-control form-control-sm" required>
+                                    <option value="">Select Section</option>
+                                    <?php if (!empty($sections)): ?>
+                                    <?php foreach ($sections as $sec): ?>
+                                    <option value="<?= esc($sec['section']) ?>"><?= esc($sec['section']) ?></option>
+                                    <?php endforeach ?>
+                                    <?php endif; ?>
+                                </select>
 
+                                <!-- Submit -->
+                                <button type="submit" class="btn btn-sm btn-success">Pay</button>
                             </form>
+                            <?php else: ?>
+                            <span class="badge bg-danger">You are not allowed</span>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php endforeach ?>

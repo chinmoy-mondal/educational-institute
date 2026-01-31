@@ -3059,10 +3059,24 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
+        // 🔑 Logged-in user
+        $senderId = $this->session->get('user_id') ?? 0;
 
+        $this->data['canPaySalary'] = false;
+
+        if ($senderId > 0) {
+            $sender = $this->userModel->select('id, account_status, name')->find($senderId);
+            if ($sender && (int) $sender['account_status'] > 1) {
+                $this->data['canPaySalary'] = true;
+                $this->data['sender'] = $sender;
+            }
+        }
+
+        $this->data['sections'] = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
+        // 👤 Fetch teachers
         $this->data['teachers'] = $this->userModel
             ->where('role', 'teacher')
-            ->where('account_status !=', 0)   // ✅ NOT equal to 0
+            ->where('account_status !=', 0)
             ->orderBy('name', 'ASC')
             ->findAll();
 
