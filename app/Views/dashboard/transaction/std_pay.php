@@ -83,7 +83,7 @@
                         <th>Roll</th>
                         <th>ID</th>
                         <th>Student Name</th>
-                        <th>Section</th>
+                        <th>Class</th>
                         <th>Total Amount</th>
                         <th>Amount Paid</th>
                         <th>Due Amount</th>
@@ -105,7 +105,7 @@
                         <td><?= esc($s['roll']) ?></td>
                         <td><?= esc($s['id']) ?></td>
                         <td><?= esc($s['student_name']) ?></td>
-                        <td><?= esc($s['section']) ?></td>
+                        <td><?= esc($s['class']) ?></td>
                         <td class="text-end">৳ <?= number_format($total, 2) ?></td>
                         <td class="text-end">৳ <?= number_format($paid, 2) ?></td>
                         <td class="text-end">৳ <?= number_format($due, 2) ?></td>
