@@ -2764,7 +2764,7 @@ class Dashboard extends Controller
 
         /* Get search & section */
         $search  = $this->request->getGet('search');
-        $section = $this->request->getGet('section');
+        $class = $this->request->getGet('class'); // fetch class from GET
 
         /* Search: roll / ID / name */
         if ($search) {
@@ -2775,9 +2775,9 @@ class Dashboard extends Controller
                 ->groupEnd();
         }
 
-        /* Section filter only (আবাসিক / অনাবাসিক) */
-        if ($section) {
-            $builder->where('section', $section);
+        /* Class filter only */
+        if ($class) {
+            $builder->where('class', $class);  // use 'class' column instead of 'section'
         }
 
         /* Students list */
@@ -2813,14 +2813,14 @@ class Dashboard extends Controller
         }
         $this->data['senderDeposits'] = $senderDeposits;
 
-        $sections = $this->studentModel
-            ->select('section')
+        $classes = $this->studentModel
+            ->select('class')
             ->distinct()
-            ->orderBy('section', 'ASC')
+            ->orderBy('class', 'ASC')
             ->get()
             ->getResultArray();
 
-        $this->data['sections'] = array_column($sections, 'section');
+        $this->data['classes'] = array_column($classes, 'class');
 
         /* Pass values to view */
         $this->data['search'] = $search;
