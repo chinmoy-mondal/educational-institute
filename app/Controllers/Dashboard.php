@@ -2883,7 +2883,7 @@ class Dashboard extends Controller
             'amount'         => $amount,
             'discount'       => 0,
             'month'          => $month,
-            'purpose'        => 'salary-' . $section,
+            'purpose'        => 'salary',
             'description'    => $description,
             'payment_status' => 1, // 1 for paid 0 for not paid
             'status'         => 1, // cost
