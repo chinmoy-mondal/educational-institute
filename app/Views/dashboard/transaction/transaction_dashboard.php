@@ -9,6 +9,8 @@
         </div>
     </div>
 
+    <?php if (($account_status ?? 0) > 1): ?>
+
     <!-- ✅ Summary Cards -->
     <div class="row g-3 mb-4">
         <!-- 💰 Total Earn -->
@@ -94,6 +96,7 @@
         </div>
 
     </div>
+    <?php endif; ?>
 
     <!-- ✅ All Transactions Table -->
     <div class="card shadow-sm border-0">

@@ -2375,6 +2375,18 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
+        $user_id = $this->session->get('user_id') ?? 0;
+        $account_status = 0;
+        if ($user_id > 0) {
+            $user = $this->userModel->select('account_status')->find($user_id);
+            if ($user) {
+                $account_status = $user['account_status'];
+            }
+        }
+
+        $this->data['account_status'] = $account_status;
+
+
         // ================= ALL TRANSACTIONS =================
         $this->data['transactions'] = $this->transactionModel
             ->orderBy('created_at', 'DESC')
