@@ -97,17 +97,17 @@
                             $sectionName = trim($s['section']);
                             $total = $sectionFees[$sectionName] ?? 0;  // Total fees per section
 
-                        $total_per_month = ($sectionName == 'আবাসিক') ? $accommodation : $not_accommodation;
+                            $total_per_month = ($sectionName == 'আবাসিক') ? $accommodation : $not_accommodation;
                             $paid  = $senderDeposits[$s['id']] ?? 0;   // Amount paid by student
-                        $due   = $total_per_month - $paid;                   // Remaining due
-                    ?>
+                            $due   = $total_per_month - $paid;                   // Remaining due
+                            ?>
                     <tr>
                         <td><?= $i++ ?></td>
                         <td><?= esc($s['roll']) ?></td>
                         <td><?= esc($s['id']) ?></td>
                         <td><?= esc($s['student_name']) ?></td>
                         <td><?= esc($s['section']) ?></td>
-                        <td class="text-end">৳ <?= number_format($total, 2) ?></td>
+                        <td class="text-end">৳ <?= number_format($total_per_month, 2) ?></td>
                         <td class="text-end">৳ <?= number_format($paid, 2) ?></td>
                         <td class="text-end">৳ <?= number_format($due, 2) ?></td>
                         <td class="text-center">
