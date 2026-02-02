@@ -207,7 +207,7 @@ class Home extends BaseController
 			echo "no result found";
 		}
 
-		$student['school_name'] = "MULGRAM SECONDARY SCHOOL";
+		$student['school_name'] = "Jhenaidah Public School & Collage";
 		$student['eiin'] = "EIIN-115832";
 		$student['school_name'] = "MULGRAM SECONDARY SCHOOL";
 		$student['logo'] = base_url('public/assets/img/logo.jpg');
