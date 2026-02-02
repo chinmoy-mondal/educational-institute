@@ -2805,8 +2805,7 @@ class Dashboard extends Controller
             }
         }
 
-        echo "Month: {$month}<pre>";
-        print_r($sectionTotals);
+
 
 
         $this->data['not_accommodation'] = $sectionTotals['অনাবাসিক'];
