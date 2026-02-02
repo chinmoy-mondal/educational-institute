@@ -2782,6 +2782,37 @@ class Dashboard extends Controller
             ->get()
             ->getResultArray();
 
+        $fees  = $this->feesAmountModel->findAll();
+        $month = 1; // 1–12
+
+        $sectionTotals = [];
+
+        foreach ($fees as $f) {
+            $section = trim($f['section']);
+            $unit    = (int) $f['unit'];
+            $fee     = (float) $f['fees'];
+
+            if ($unit <= 0) continue;
+
+            $interval = 12 / $unit;
+
+            // calculate cumulative total till current month
+            for ($m = 1; $m <= $month; $m++) {
+
+                if ($m === 1 || (($m - 1) % $interval === 0)) {
+                    $sectionTotals[$section] = ($sectionTotals[$section] ?? 0) + $fee;
+                }
+            }
+        }
+
+        echo "Month: {$month}<pre>";
+        print_r($sectionTotals);
+
+
+        $this->data['not_accommodation'] = $sectionTotals['অনাবাসিক'];
+        $this->data['accommodation']     = $sectionTotals['আবাসিক'];
+
+
         $this->data['sections'] = array_column($sections, 'section');
 
         /* Pass values to view */
