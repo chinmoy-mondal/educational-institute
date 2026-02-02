@@ -99,7 +99,7 @@
 
                         $total_per_month = ($sectionName == 'আবাসিক') ? $accommodation : $not_accommodation;
                             $paid  = $senderDeposits[$s['id']] ?? 0;   // Amount paid by student
-                        $due   = $total - $total_per_month;                   // Remaining due
+                        $due   = $total_per_month - $paid;                   // Remaining due
                     ?>
                     <tr>
                         <td><?= $i++ ?></td>

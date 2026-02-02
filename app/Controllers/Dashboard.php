@@ -2783,6 +2783,8 @@ class Dashboard extends Controller
             ->getResultArray();
 
         $fees  = $this->feesAmountModel->findAll();
+
+
         $month = 1; // 1–12
 
         $sectionTotals = [];
