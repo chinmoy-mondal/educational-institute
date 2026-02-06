@@ -3137,33 +3137,51 @@ class Dashboard extends Controller
 
     public function std_due()
     {
-        $fees  = $this->feesAmountModel->findAll();
-        $month = (int) ($this->request->getGet('month') ?? date('n')); // 1–12
+        // $fees  = $this->feesAmountModel->findAll();
+        // $month = (int) ($this->request->getGet('month') ?? date('n')); // 1–12
 
-        $sectionTotals = [];
+        // $sectionTotals = [];
 
-        foreach ($fees as $f) {
-            $section = trim($f['section']);
-            $unit    = (int) $f['unit'];
-            $fee     = (float) $f['fees'];
+        // foreach ($fees as $f) {
+        //     $section = trim($f['section']);
+        //     $unit    = (int) $f['unit'];
+        //     $fee     = (float) $f['fees'];
 
-            if ($unit <= 0) continue;
+        //     if ($unit <= 0) continue;
 
-            $interval = 12 / $unit;
+        //     $interval = 12 / $unit;
 
-            // calculate cumulative total till current month
-            for ($m = 1; $m <= $month; $m++) {
+        //     // calculate cumulative total till current month
+        //     for ($m = 1; $m <= $month; $m++) {
 
-                if ($m === 1 || (($m - 1) % $interval === 0)) {
-                    $sectionTotals[$section] = ($sectionTotals[$section] ?? 0) + $fee;
-                }
-            }
-        }
+        //         if ($m === 1 || (($m - 1) % $interval === 0)) {
+        //             $sectionTotals[$section] = ($sectionTotals[$section] ?? 0) + $fee;
+        //         }
+        //     }
+        // }
 
-        echo "Month: {$month}<pre>";
-        print_r($sectionTotals);
+        // echo "Month: {$month}<pre>";
+        // print_r($sectionTotals);
+        // echo "</pre>";
+        // exit;
+
+
+
+        $startDate = '2026-02-03 22:17:48';
+        $endDate   = '2026-02-05 23:59:59';
+        $receiver  = 'MD. ROKONUZZAMAN';
+
+        $transactions = $this->transactionModel
+            ->where('created_at >=', $startDate)
+            ->where('created_at <=', $endDate)
+            ->where('receiver_name', $receiver) // filter by receiver
+            ->orderBy('created_at', 'ASC')
+            ->findAll();
+
+
+        echo "<pre>";
+        print_r($transactions);
         echo "</pre>";
-        exit;
     }
 
     public function pay_salary()
