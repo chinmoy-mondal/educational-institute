@@ -3205,7 +3205,8 @@ foreach ($transactions as $txn) {
 $totalAmount = 0;
 $totalDiscount = 0;
 
-// Display table
+        // Display table
+        echo "Transaction from" . $startDate . " to " . $endDate . "<br>";
 echo "<table border='1' cellpadding='5' cellspacing='0'>";
 echo "<tr>
         <th>Date</th>
