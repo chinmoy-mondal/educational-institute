@@ -3167,24 +3167,22 @@ class Dashboard extends Controller
 
 
 
-        $startDate = '2026-02-03 22:17:48';
-        $endDate   = '2026-02-05 23:59:59';
-        $receiver  = 'MD. ROKONUZZAMAN';
+        <?php
+$startDate = '2026-02-03 22:17:48';
+$endDate   = '2026-02-05 23:59:59';
+$receiver  = 'MD. ROKONUZZAMAN';
 
-        $startDate = '2026-02-03 22:17:48';
-        $endDate   = '2026-02-05 23:59:59';
-        $receiver  = 'MD. ROKONUZZAMAN';
+// Fetch transactions
+$transactions = $this->transactionModel
+    ->where('created_at >=', $startDate)
+    ->where('created_at <=', $endDate)
+    ->where('receiver_name', $receiver)
+    ->orderBy('created_at', 'ASC')
+    ->findAll();
 
-        // Fetch transactions
-        $transactions = $this->transactionModel
-            ->where('created_at >=', $startDate)
-            ->where('created_at <=', $endDate)
-            ->where('receiver_name', $receiver)
-            ->orderBy('created_at', 'ASC')
-            ->findAll();
-
-        $seenTransactionIds = [];
-        $totalAmount = 0;
+$seenTransactionIds = [];
+$totalAmount = 0;
+$totalDiscount = 0;
 
         echo "<table border='1' cellpadding='5' cellspacing='0'>";
         echo "<tr>
@@ -3201,11 +3199,12 @@ class Dashboard extends Controller
         foreach ($transactions as $txn) {
             $transactionId = $txn['transaction_id'];
 
-            // If this transaction_id is seen first time, use discount, else 0
+            // Only the first occurrence of transaction_id uses discount
             $discount = 0;
             if (!in_array($transactionId, $seenTransactionIds)) {
                 $discount = $txn['discount'];
                 $seenTransactionIds[] = $transactionId;
+                $totalDiscount += $discount;
             }
 
             $totalAmount += $txn['amount'];
@@ -3222,10 +3221,22 @@ class Dashboard extends Controller
           </tr>";
         }
 
-        // Total row
+        // Net calculation
+        $netAmount = $totalAmount - $totalDiscount;
+
         echo "<tr>
-        <td colspan='3'><strong>Total</strong></td>
-        <td colspan='5'><strong>{$totalAmount}</strong></td>
+        <td colspan='3'><strong>Total Amount</strong></td>
+        <td colspan='5'>{$totalAmount}</td>
+      </tr>";
+
+        echo "<tr>
+        <td colspan='3'><strong>Total Discount</strong></td>
+        <td colspan='5'>{$totalDiscount}</td>
+      </tr>";
+
+        echo "<tr>
+        <td colspan='3'><strong>Net Amount</strong></td>
+        <td colspan='5'>{$netAmount}</td>
       </tr>";
 
         echo "</table>";
