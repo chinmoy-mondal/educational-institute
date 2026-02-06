@@ -3166,9 +3166,7 @@ class Dashboard extends Controller
         // exit;
 
 
-
-
-        $startDate = '2026-02-03 22:17:48';
+$startDate = '2026-02-03 22:17:48';
 $endDate   = '2026-02-05 23:59:59';
 $receiver  = 'MD. ROKONUZZAMAN';
 
@@ -3180,66 +3178,79 @@ $transactions = $this->transactionModel
     ->orderBy('created_at', 'ASC')
     ->findAll();
 
-$seenTransactionIds = [];
+// Group transactions by transaction_id
+$grouped = [];
+foreach ($transactions as $txn) {
+    $tid = $txn['transaction_id'];
+
+    if (!isset($grouped[$tid])) {
+        $grouped[$tid] = [
+            'transaction_id' => $tid,
+            'created_at' => $txn['created_at'],
+            'sender_name' => $txn['sender_name'],
+            'receiver_name' => $txn['receiver_name'],
+            'purpose' => $txn['purpose'],
+            'month' => $txn['month'],
+            'description' => $txn['description'],
+            'amount_sum' => $txn['amount'],      // start sum
+            'discount' => $txn['discount'],      // first occurrence
+        ];
+    } else {
+        // Sum the amounts if multiple records with same transaction_id
+        $grouped[$tid]['amount_sum'] += $txn['amount'];
+    }
+}
+
+// Initialize totals
 $totalAmount = 0;
 $totalDiscount = 0;
 
-        echo "<table border='1' cellpadding='5' cellspacing='0'>";
-        echo "<tr>
+// Display table
+echo "<table border='1' cellpadding='5' cellspacing='0'>";
+echo "<tr>
+        <th>Date</th>
         <th>Transaction ID</th>
-        <th>Sender Name</th>
-        <th>Receiver Name</th>
+        <th>Sender</th>
+        <th>Receiver</th>
+        <th>Purpose</th>
+        <th>Month</th>
+        <th>Description</th>
         <th>Amount</th>
         <th>Discount</th>
-        <th>Month</th>
-        <th>Purpose</th>
-        <th>Description</th>
+        <th>Net Amount</th>
       </tr>";
 
-        foreach ($transactions as $txn) {
-            $transactionId = $txn['transaction_id'];
+foreach ($grouped as $txn) {
+    $net = $txn['amount_sum'] - $txn['discount'];
+    $totalAmount += $txn['amount_sum'];
+    $totalDiscount += $txn['discount'];
 
-            // Only the first occurrence of transaction_id uses discount
-            $discount = 0;
-            if (!in_array($transactionId, $seenTransactionIds)) {
-                $discount = $txn['discount'];
-                $seenTransactionIds[] = $transactionId;
-                $totalDiscount += $discount;
-            }
-
-            $totalAmount += $txn['amount'];
-
-            echo "<tr>
+    echo "<tr>
+            <td>{$txn['created_at']}</td>
             <td>{$txn['transaction_id']}</td>
             <td>{$txn['sender_name']}</td>
             <td>{$txn['receiver_name']}</td>
-            <td>{$txn['amount']}</td>
-            <td>{$discount}</td>
-            <td>{$txn['month']}</td>
             <td>{$txn['purpose']}</td>
+            <td>{$txn['month']}</td>
             <td>{$txn['description']}</td>
+            <td>{$txn['amount_sum']}</td>
+            <td>{$txn['discount']}</td>
+            <td>{$net}</td>
           </tr>";
-        }
+}
 
-        // Net calculation
-        $netAmount = $totalAmount - $totalDiscount;
-
-        echo "<tr>
-        <td colspan='3'><strong>Total Amount</strong></td>
-        <td colspan='5'>{$totalAmount}</td>
+// Total row
+$grandNet = $totalAmount - $totalDiscount;
+echo "<tr>
+        <td colspan='7'><strong>Total</strong></td>
+        <td><strong>{$totalAmount}</strong></td>
+        <td><strong>{$totalDiscount}</strong></td>
+        <td><strong>{$grandNet}</strong></td>
       </tr>";
 
-        echo "<tr>
-        <td colspan='3'><strong>Total Discount</strong></td>
-        <td colspan='5'>{$totalDiscount}</td>
-      </tr>";
+echo "</table>";
 
-        echo "<tr>
-        <td colspan='3'><strong>Net Amount</strong></td>
-        <td colspan='5'>{$netAmount}</td>
-      </tr>";
-
-        echo "</table>";
+        
     }
 
     public function pay_salary()
