@@ -3171,17 +3171,64 @@ class Dashboard extends Controller
         $endDate   = '2026-02-05 23:59:59';
         $receiver  = 'MD. ROKONUZZAMAN';
 
+        $startDate = '2026-02-03 22:17:48';
+        $endDate   = '2026-02-05 23:59:59';
+        $receiver  = 'MD. ROKONUZZAMAN';
+
+        // Fetch transactions
         $transactions = $this->transactionModel
             ->where('created_at >=', $startDate)
             ->where('created_at <=', $endDate)
-            ->where('receiver_name', $receiver) // filter by receivers
+            ->where('receiver_name', $receiver)
             ->orderBy('created_at', 'ASC')
             ->findAll();
 
+        $seenTransactionIds = [];
+        $totalAmount = 0;
 
-        echo "<pre>";
-        print_r($transactions);
-        echo "</pre>";
+        echo "<table border='1' cellpadding='5' cellspacing='0'>";
+        echo "<tr>
+        <th>Transaction ID</th>
+        <th>Sender Name</th>
+        <th>Receiver Name</th>
+        <th>Amount</th>
+        <th>Discount</th>
+        <th>Month</th>
+        <th>Purpose</th>
+        <th>Description</th>
+      </tr>";
+
+        foreach ($transactions as $txn) {
+            $transactionId = $txn['transaction_id'];
+
+            // If this transaction_id is seen first time, use discount, else 0
+            $discount = 0;
+            if (!in_array($transactionId, $seenTransactionIds)) {
+                $discount = $txn['discount'];
+                $seenTransactionIds[] = $transactionId;
+            }
+
+            $totalAmount += $txn['amount'];
+
+            echo "<tr>
+            <td>{$txn['transaction_id']}</td>
+            <td>{$txn['sender_name']}</td>
+            <td>{$txn['receiver_name']}</td>
+            <td>{$txn['amount']}</td>
+            <td>{$discount}</td>
+            <td>{$txn['month']}</td>
+            <td>{$txn['purpose']}</td>
+            <td>{$txn['description']}</td>
+          </tr>";
+        }
+
+        // Total row
+        echo "<tr>
+        <td colspan='3'><strong>Total</strong></td>
+        <td colspan='5'><strong>{$totalAmount}</strong></td>
+      </tr>";
+
+        echo "</table>";
     }
 
     public function pay_salary()
