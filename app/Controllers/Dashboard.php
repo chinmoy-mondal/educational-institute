@@ -3174,7 +3174,7 @@ class Dashboard extends Controller
         $transactions = $this->transactionModel
             ->where('created_at >=', $startDate)
             ->where('created_at <=', $endDate)
-            ->where('receiver_name', $receiver) // filter by receiver
+            ->where('receiver_name', $receiver) // filter by receivers
             ->orderBy('created_at', 'ASC')
             ->findAll();
 
