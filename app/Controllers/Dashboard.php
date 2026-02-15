@@ -3143,11 +3143,14 @@ class Dashboard extends Controller
 
         for ($month = 1; $month <= 12; $month++) {
 
+            $fees  = $this->feesAmountModel->findAll();
+            $month = (int) ($this->request->getGet('month') ?? date('n')); // 1–12
+
             $sectionTotals = [];
 
             foreach ($fees as $f) {
 
-                $section = trim($f['section']);
+                $section = trim($f['section']); // অনাবাসিক / আবাসিক
                 $unit    = (int) $f['unit'];
                 $fee     = (float) $f['fees'];
 
@@ -3155,21 +3158,18 @@ class Dashboard extends Controller
 
                 $interval = 12 / $unit;
 
-                for ($m = 1; $m <= $month; $m++) {
+                // Check if this month is a payment month
+                if ($month === 1 || (($month - 1) % $interval === 0)) {
 
-                    if ($m === 1 || (($m - 1) % $interval === 0)) {
-                        $sectionTotals[$section] = ($sectionTotals[$section] ?? 0) + $fee;
-                    }
+                    $sectionTotals[$section] =
+                        ($sectionTotals[$section] ?? 0) + $fee;
                 }
             }
 
-            $allMonthTotals[$month] = $sectionTotals;
-        }
-
-        echo "<pre>";
-        print_r($allMonthTotals);
-        echo "</pre>";
-        exit;
+            echo "Month: {$month}<pre>";
+            print_r($sectionTotals);
+            echo "</pre>";
+            exit;
 
 
         // $startDate = '2026-02-03 22:17:48';
