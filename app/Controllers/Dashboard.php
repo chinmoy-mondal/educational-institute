@@ -3137,40 +3137,33 @@ class Dashboard extends Controller
 
     public function std_due()
     {
-        $fees = $this->feesAmountModel->findAll();
+        $fees  = $this->feesAmountModel->findAll();
+        $month = (int) ($this->request->getGet('month') ?? date('n')); // 1–12
 
-        $allMonthTotals = []; // store 1–12 month totals
+        $sectionTotals = [];
 
-        for ($month = 1; $month <= 12; $month++) {
+        foreach ($fees as $f) {
 
-            $fees  = $this->feesAmountModel->findAll();
-            $month = (int) ($this->request->getGet('month') ?? date('n')); // 1–12
+            $section = trim($f['section']); // অনাবাসিক / আবাসিক
+            $unit    = (int) $f['unit'];
+            $fee     = (float) $f['fees'];
 
-            $sectionTotals = [];
+            if ($unit <= 0) continue;
 
-            foreach ($fees as $f) {
+            $interval = 12 / $unit;
 
-                $section = trim($f['section']); // অনাবাসিক / আবাসিক
-                $unit    = (int) $f['unit'];
-                $fee     = (float) $f['fees'];
+            // Check if this month is a payment month
+            if ($month === 1 || (($month - 1) % $interval === 0)) {
 
-                if ($unit <= 0) continue;
-
-                $interval = 12 / $unit;
-
-                // Check if this month is a payment month
-                if ($month === 1 || (($month - 1) % $interval === 0)) {
-
-                    $sectionTotals[$section] =
-                        ($sectionTotals[$section] ?? 0) + $fee;
-                }
+                $sectionTotals[$section] =
+                    ($sectionTotals[$section] ?? 0) + $fee;
             }
+        }
 
-            echo "Month: {$month}<pre>";
-            print_r($sectionTotals);
-            echo "</pre>";
-            exit;
-
+        echo "Month: {$month}<pre>";
+        print_r($sectionTotals);
+        echo "</pre>";
+        exit;
 
         // $startDate = '2026-02-03 22:17:48';
         // $endDate   = '2026-02-05 23:59:59';
