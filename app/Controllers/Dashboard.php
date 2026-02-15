@@ -3137,40 +3137,42 @@ class Dashboard extends Controller
 
     public function std_due()
     {
-        $fees  = $this->feesAmountModel->findAll();
-        $month = (int) ($this->request->getGet('month') ?? date('n')); // 1–12
+        $fees = $this->feesAmountModel->findAll();
 
-        $totals = [];
+        $allMonths = [];
 
-        foreach ($fees as $f) {
+        for ($month = 1; $month <= 12; $month++) {
 
-            $section = trim($f['section']); // অনাবাসিক / আবাসিক
-            $unit    = (int) $f['unit'];
-            $fee     = (float) $f['fees'];
+            foreach ($fees as $f) {
 
-            if ($unit <= 0) continue;
+                $section = trim($f['section']);
+                $unit    = (int) $f['unit'];
+                $fee     = (float) $f['fees'];
 
-            $interval = 12 / $unit;
+                if ($unit <= 0) continue;
 
-            for ($m = 1; $m <= $month; $m++) {
+                $interval = 12 / $unit;
 
-                if ($m === 1 || (($m - 1) % $interval === 0)) {
+                for ($m = 1; $m <= $month; $m++) {
 
-                    // Cumulative total
-                    $totals[$section]['cumulative'] =
-                        ($totals[$section]['cumulative'] ?? 0) + $fee;
+                    if ($m === 1 || (($m - 1) % $interval === 0)) {
 
-                    // Only selected month
-                    if ($m == $month) {
-                        $totals[$section]['current'] =
-                            ($totals[$section]['current'] ?? 0) + $fee;
+                        // cumulative
+                        $allMonths[$month][$section]['cumulative'] =
+                            ($allMonths[$month][$section]['cumulative'] ?? 0) + $fee;
+
+                        // current month only
+                        if ($m == $month) {
+                            $allMonths[$month][$section]['current'] =
+                                ($allMonths[$month][$section]['current'] ?? 0) + $fee;
+                        }
                     }
                 }
             }
         }
 
         echo "<pre>";
-        print_r($totals);
+        print_r($allMonths);
         echo "</pre>";
         exit;
 
