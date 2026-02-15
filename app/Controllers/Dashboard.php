@@ -3137,121 +3137,121 @@ class Dashboard extends Controller
 
     public function std_due()
     {
-        // $fees  = $this->feesAmountModel->findAll();
-        // $month = (int) ($this->request->getGet('month') ?? date('n')); // 1–12
+        $fees  = $this->feesAmountModel->findAll();
+        $month = (int) ($this->request->getGet('month') ?? date('n')); // 1–12
 
-        // $sectionTotals = [];
+        $sectionTotals = [];
 
-        // foreach ($fees as $f) {
-        //     $section = trim($f['section']);
-        //     $unit    = (int) $f['unit'];
-        //     $fee     = (float) $f['fees'];
+        foreach ($fees as $f) {
+            $section = trim($f['section']);
+            $unit    = (int) $f['unit'];
+            $fee     = (float) $f['fees'];
 
-        //     if ($unit <= 0) continue;
+            if ($unit <= 0) continue;
 
-        //     $interval = 12 / $unit;
+            $interval = 12 / $unit;
 
-        //     // calculate cumulative total till current month
-        //     for ($m = 1; $m <= $month; $m++) {
+            // calculate cumulative total till current month
+            for ($m = 1; $m <= $month; $m++) {
 
-        //         if ($m === 1 || (($m - 1) % $interval === 0)) {
-        //             $sectionTotals[$section] = ($sectionTotals[$section] ?? 0) + $fee;
-        //         }
+                if ($m === 1 || (($m - 1) % $interval === 0)) {
+                    $sectionTotals[$section] = ($sectionTotals[$section] ?? 0) + $fee;
+                }
+            }
+        }
+
+        echo "Month: {$month}<pre>";
+        print_r($sectionTotals);
+        echo "</pre>";
+        exit;
+
+
+        // $startDate = '2026-02-03 22:17:48';
+        // $endDate   = '2026-02-05 23:59:59';
+        // $receiver  = 'MD. ROKONUZZAMAN';
+
+        // // Fetch transactions
+        // $transactions = $this->transactionModel
+        //     ->where('created_at >=', $startDate)
+        //     ->where('created_at <=', $endDate)
+        //     ->where('receiver_name', $receiver)
+        //     ->orderBy('created_at', 'ASC')
+        //     ->findAll();
+
+        // // Group transactions by transaction_id
+        // $grouped = [];
+        // foreach ($transactions as $txn) {
+        //     $tid = $txn['transaction_id'];
+
+        //     if (!isset($grouped[$tid])) {
+        //         $grouped[$tid] = [
+        //             'transaction_id' => $tid,
+        //             'created_at' => $txn['created_at'],
+        //             'sender_name' => $txn['sender_name'],
+        //             'receiver_name' => $txn['receiver_name'],
+        //             'purpose' => $txn['purpose'],
+        //             'month' => $txn['month'],
+        //             'description' => $txn['description'],
+        //             'amount_sum' => $txn['amount'],      // start sum
+        //             'discount' => $txn['discount'],      // first occurrence
+        //         ];
+        //     } else {
+        //         // Sum the amounts if multiple records with same transaction_id
+        //         $grouped[$tid]['amount_sum'] += $txn['amount'];
         //     }
         // }
 
-        // echo "Month: {$month}<pre>";
-        // print_r($sectionTotals);
-        // echo "</pre>";
-        // exit;
+        // // Initialize totals
+        // $totalAmount = 0;
+        // $totalDiscount = 0;
+
+        //         // Display table
+        //         echo "Transaction from" . $startDate . " to " . $endDate . "<br>";
+        // echo "<table border='1' cellpadding='5' cellspacing='0'>";
+        // echo "<tr>
+        //         <th>Date</th>
+        //         <th>Transaction ID</th>
+        //         <th>Sender</th>
+        //         <th>Receiver</th>
+        //         <th>Purpose</th>
+        //         <th>Month</th>
+        //         <th>Description</th>
+        //         <th>Amount</th>
+        //         <th>Discount</th>
+        //         <th>Net Amount</th>
+        //       </tr>";
+
+        // foreach ($grouped as $txn) {
+        //     $net = $txn['amount_sum'] - $txn['discount'];
+        //     $totalAmount += $txn['amount_sum'];
+        //     $totalDiscount += $txn['discount'];
+
+        //     echo "<tr>
+        //             <td>{$txn['created_at']}</td>
+        //             <td>{$txn['transaction_id']}</td>
+        //             <td>{$txn['sender_name']}</td>
+        //             <td>{$txn['receiver_name']}</td>
+        //             <td>{$txn['purpose']}</td>
+        //             <td>{$txn['month']}</td>
+        //             <td>{$txn['description']}</td>
+        //             <td>{$txn['amount_sum']}</td>
+        //             <td>{$txn['discount']}</td>
+        //             <td>{$net}</td>
+        //           </tr>";
+        // }
+
+        // // Total row
+        // $grandNet = $totalAmount - $totalDiscount;
+        // echo "<tr>
+        //         <td colspan='7'><strong>Total</strong></td>
+        //         <td><strong>{$totalAmount}</strong></td>
+        //         <td><strong>{$totalDiscount}</strong></td>
+        //         <td><strong>{$grandNet}</strong></td>
+        //       </tr>";
+
+        // echo "</table>";
 
 
-$startDate = '2026-02-03 22:17:48';
-$endDate   = '2026-02-05 23:59:59';
-$receiver  = 'MD. ROKONUZZAMAN';
-
-// Fetch transactions
-$transactions = $this->transactionModel
-    ->where('created_at >=', $startDate)
-    ->where('created_at <=', $endDate)
-    ->where('receiver_name', $receiver)
-    ->orderBy('created_at', 'ASC')
-    ->findAll();
-
-// Group transactions by transaction_id
-$grouped = [];
-foreach ($transactions as $txn) {
-    $tid = $txn['transaction_id'];
-
-    if (!isset($grouped[$tid])) {
-        $grouped[$tid] = [
-            'transaction_id' => $tid,
-            'created_at' => $txn['created_at'],
-            'sender_name' => $txn['sender_name'],
-            'receiver_name' => $txn['receiver_name'],
-            'purpose' => $txn['purpose'],
-            'month' => $txn['month'],
-            'description' => $txn['description'],
-            'amount_sum' => $txn['amount'],      // start sum
-            'discount' => $txn['discount'],      // first occurrence
-        ];
-    } else {
-        // Sum the amounts if multiple records with same transaction_id
-        $grouped[$tid]['amount_sum'] += $txn['amount'];
-    }
-}
-
-// Initialize totals
-$totalAmount = 0;
-$totalDiscount = 0;
-
-        // Display table
-        echo "Transaction from" . $startDate . " to " . $endDate . "<br>";
-echo "<table border='1' cellpadding='5' cellspacing='0'>";
-echo "<tr>
-        <th>Date</th>
-        <th>Transaction ID</th>
-        <th>Sender</th>
-        <th>Receiver</th>
-        <th>Purpose</th>
-        <th>Month</th>
-        <th>Description</th>
-        <th>Amount</th>
-        <th>Discount</th>
-        <th>Net Amount</th>
-      </tr>";
-
-foreach ($grouped as $txn) {
-    $net = $txn['amount_sum'] - $txn['discount'];
-    $totalAmount += $txn['amount_sum'];
-    $totalDiscount += $txn['discount'];
-
-    echo "<tr>
-            <td>{$txn['created_at']}</td>
-            <td>{$txn['transaction_id']}</td>
-            <td>{$txn['sender_name']}</td>
-            <td>{$txn['receiver_name']}</td>
-            <td>{$txn['purpose']}</td>
-            <td>{$txn['month']}</td>
-            <td>{$txn['description']}</td>
-            <td>{$txn['amount_sum']}</td>
-            <td>{$txn['discount']}</td>
-            <td>{$net}</td>
-          </tr>";
-}
-
-// Total row
-$grandNet = $totalAmount - $totalDiscount;
-echo "<tr>
-        <td colspan='7'><strong>Total</strong></td>
-        <td><strong>{$totalAmount}</strong></td>
-        <td><strong>{$totalDiscount}</strong></td>
-        <td><strong>{$grandNet}</strong></td>
-      </tr>";
-
-echo "</table>";
-
-        
     }
 
     public function pay_salary()
