@@ -3138,7 +3138,7 @@ class Dashboard extends Controller
     public function std_due()
     {
         $fees  = $this->feesAmountModel->findAll();
-        $month = (int) ($this->request->getGet('month') ?? date('n')); // 1–12
+        $month = (int) ($this->request->getGet('month') ?? date('n')); // 1–12 new 
 
         $sectionTotals = [];
 
