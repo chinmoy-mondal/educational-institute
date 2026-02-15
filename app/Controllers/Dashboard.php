@@ -3137,31 +3137,37 @@ class Dashboard extends Controller
 
     public function std_due()
     {
-        $fees  = $this->feesAmountModel->findAll();
-        $month = (int) ($this->request->getGet('month') ?? date('n')); // 1–12 new 
+        $fees = $this->feesAmountModel->findAll();
 
-        $sectionTotals = [];
+        $allMonthTotals = []; // store 1–12 month totals
 
-        foreach ($fees as $f) {
-            $section = trim($f['section']);
-            $unit    = (int) $f['unit'];
-            $fee     = (float) $f['fees'];
+        for ($month = 1; $month <= 12; $month++) {
 
-            if ($unit <= 0) continue;
+            $sectionTotals = [];
 
-            $interval = 12 / $unit;
+            foreach ($fees as $f) {
 
-            // calculate cumulative total till current month
-            for ($m = 1; $m <= $month; $m++) {
+                $section = trim($f['section']);
+                $unit    = (int) $f['unit'];
+                $fee     = (float) $f['fees'];
 
-                if ($m === 1 || (($m - 1) % $interval === 0)) {
-                    $sectionTotals[$section] = ($sectionTotals[$section] ?? 0) + $fee;
+                if ($unit <= 0) continue;
+
+                $interval = 12 / $unit;
+
+                for ($m = 1; $m <= $month; $m++) {
+
+                    if ($m === 1 || (($m - 1) % $interval === 0)) {
+                        $sectionTotals[$section] = ($sectionTotals[$section] ?? 0) + $fee;
+                    }
                 }
             }
+
+            $allMonthTotals[$month] = $sectionTotals;
         }
 
-        echo "Month: {$month}<pre>";
-        print_r($sectionTotals);
+        echo "<pre>";
+        print_r($allMonthTotals);
         echo "</pre>";
         exit;
 
