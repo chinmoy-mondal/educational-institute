@@ -3140,7 +3140,7 @@ class Dashboard extends Controller
         $fees  = $this->feesAmountModel->findAll();
         $month = (int) ($this->request->getGet('month') ?? date('n')); // 1–12
 
-        $sectionTotals = [];
+        $totals = [];
 
         foreach ($fees as $f) {
 
@@ -3152,16 +3152,25 @@ class Dashboard extends Controller
 
             $interval = 12 / $unit;
 
-            // Check if this month is a payment month
-            if ($month === 1 || (($month - 1) % $interval === 0)) {
+            for ($m = 1; $m <= $month; $m++) {
 
-                $sectionTotals[$section] =
-                    ($sectionTotals[$section] ?? 0) + $fee;
+                if ($m === 1 || (($m - 1) % $interval === 0)) {
+
+                    // Cumulative total
+                    $totals[$section]['cumulative'] =
+                        ($totals[$section]['cumulative'] ?? 0) + $fee;
+
+                    // Only selected month
+                    if ($m == $month) {
+                        $totals[$section]['current'] =
+                            ($totals[$section]['current'] ?? 0) + $fee;
+                    }
+                }
             }
         }
 
-        echo "Month: {$month}<pre>";
-        print_r($sectionTotals);
+        echo "<pre>";
+        print_r($totals);
         echo "</pre>";
         exit;
 
