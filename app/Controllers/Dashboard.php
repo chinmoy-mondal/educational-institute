@@ -3171,6 +3171,54 @@ class Dashboard extends Controller
             }
         }
 
+        $this->data['all_month_fees'] = $allMonths;
+
+        $this->data['teachers'] = $this->userModel
+            ->where('role', 'teacher')
+            ->where('account_status !=', 0)
+            ->orderBy('name', 'ASC')
+            ->findAll();
+
+        // return view('dashboard/transaction/salary_form', $this->data);
+
+    }
+
+    public function transaction_custome_date()
+    {
+        $fees = $this->feesAmountModel->findAll();
+
+        $allMonths = [];
+
+        for ($month = 1; $month <= 12; $month++) {
+
+            foreach ($fees as $f) {
+
+                $section = trim($f['section']);
+                $unit    = (int) $f['unit'];
+                $fee     = (float) $f['fees'];
+
+                if ($unit <= 0) continue;
+
+                $interval = 12 / $unit;
+
+                for ($m = 1; $m <= $month; $m++) {
+
+                    if ($m === 1 || (($m - 1) % $interval === 0)) {
+
+                        // cumulative
+                        $allMonths[$month][$section]['cumulative'] =
+                            ($allMonths[$month][$section]['cumulative'] ?? 0) + $fee;
+
+                        // current month only
+                        if ($m == $month) {
+                            $allMonths[$month][$section]['current'] =
+                                ($allMonths[$month][$section]['current'] ?? 0) + $fee;
+                        }
+                    }
+                }
+            }
+        }
+
         echo "<pre>";
         print_r($allMonths);
         echo "</pre>";
