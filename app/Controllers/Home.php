@@ -207,9 +207,8 @@ class Home extends BaseController
 			echo "no result found";
 		}
 
-		$student['school_name'] = "MULGRAM SECONDARY SCHOOL";
-		$student['eiin'] = "EIIN-115832";
-		$student['school_name'] = "MULGRAM SECONDARY SCHOOL";
+		$student['school_name'] = env('school.name');
+		$student['eiin'] = "EIIN-" . env('school.eiin');
 		$student['logo'] = base_url('public/assets/img/logo.jpg');
 		$student['signature'] = base_url('public/assets/img/sign.png');
 
@@ -225,9 +224,8 @@ class Home extends BaseController
 			echo "no result found";
 		}
 
-		$user['school_name'] = "MULGRAM SECONDARY SCHOOL";
-		$user['eiin'] = "EIIN-115832";
-		$user['school_name'] = "MULGRAM SECONDARY SCHOOL";
+		$user['school_name'] = env('school.name');
+		$user['eiin'] = "EIIN-" . env('school.eiin');
 		$user['logo'] = base_url('public/assets/img/logo.jpg');
 		$user['signature'] = base_url('public/assets/img/sign.png');
 
