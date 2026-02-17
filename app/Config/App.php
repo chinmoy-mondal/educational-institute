@@ -18,6 +18,10 @@ class App extends BaseConfig
      */
     public string $baseURL = 'http://dsmfss.edu.bd/';
 
+    public string $schoolName = 'My School Name';
+    public string $schoolLogo = '/assets/images/logo.png';
+    public string $headSignature = '/assets/images/head_signature.png';
+
     /**
      * Allowed Hostnames in the Site URL other than the hostname in the baseURL.
      * If you want to accept multiple Hostnames, set this.
