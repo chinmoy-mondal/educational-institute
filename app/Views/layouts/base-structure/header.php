@@ -26,7 +26,7 @@
 
             <!-- Mobile Short Name -->
             <span class="fs-6 d-inline d-md-none">
-                DSMFSS
+                Dattanagar S.M.F. Secondary School
             </span>
 
         </a>
