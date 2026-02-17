@@ -5,9 +5,9 @@
             <!-- Contact Info -->
             <div class="col-md-4">
                 <h5>Contact Us</h5>
-                <p>Dattanagar, Maheshpur, Jhenaidah</p>
-                <p>Email: s116691@gmail.com</p>
-                <p>Phone: +8801309116691</p>
+                <p><?= esc(env('school.address')) ?></p>
+                <p>Email: <?= esc(env('school.email')) ?></p>
+                <p>Phone: <?= esc(env('school.phone')) ?></p>
             </div>
 
             <!-- Quick Links -->

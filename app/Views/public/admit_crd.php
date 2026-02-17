@@ -157,7 +157,7 @@
                     <td>
                         <div style="font-size:16px; font-weight:bold; line-height:1.5;">
                             <?= esc(env('school.name')) ?><br>
-                            Keshabpur, Jashore<br>
+                            <?= esc(env('school.address')) ?><br>
                             <strong>ADMIT CARD</strong><br>
                             <?= esc($studentData['exam'] ?? 'Exam') ?> - <?= esc($studentData['year'] ?? date('Y')) ?>
                         </div>
