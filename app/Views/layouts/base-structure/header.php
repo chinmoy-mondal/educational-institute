@@ -15,11 +15,23 @@
 <!--  Second Line: Logo, Institute Name & Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark  bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="<?= base_url(''); ?>">
-            <img src="<?= base_url('public/assets/img/logo.jpg'); ?>" height="40">
-            <span class="fs-6"><?= esc(env('school.name')) ?></span>
+        <a class="navbar-brand d-flex align-items-center p-0 me-2" href="<?= base_url(''); ?>">
+
+            <img src="<?= base_url('public/assets/img/logo.jpg'); ?>" height="35" class="me-1">
+
+            <!-- Desktop Name -->
+            <span class="fs-6 d-none d-md-inline">
+                <?= esc(env('school.name')) ?>
+            </span>
+
+            <!-- Mobile Short Name -->
+            <span class="fs-6 d-inline d-md-none">
+                DSMFSS
+            </span>
+
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+        <button class="navbar-toggler p-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
 
