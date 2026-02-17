@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= esc(env('school.name')) ?></title>
+    <title>Mulgram Secondary School</title>
 
-    <link rel="stylesheet" href="<?= base_url('assets/css/bootstrap.min.css'); ?>">
-    <script src="<?= base_url('assets/js/bootstrap.bundle.min.js') ?>"></script>
+    <link rel="stylesheet" href="<?= base_url('public/assets/css/bootstrap.min.css'); ?>">
+    <script src="<?= base_url('public/assets/js/bootstrap.bundle.min.js') ?>"></script>
 
 
 

@@ -16,7 +16,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark  bg-dark">
     <div class="container">
         <a class="navbar-brand" href="<?= base_url(''); ?>"><img
-                src="<?= base_url('public/assets/img/logo.jpg'); ?>"><?= esc(env('school.name')) ?></a>
+                src="<?= base_url('public/assets/img/logo.jpg'); ?>">Mulgram Secondary School</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
