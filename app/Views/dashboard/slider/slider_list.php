@@ -50,7 +50,11 @@
                             <tr>
                                 <td><?= $i++ ?></td>
                                 <td><?= esc($slider['title']) ?></td>
-                                <td><?= esc($slider['caption']) ?></td>
+                                <td>
+                                    <?= strlen($slider['caption']) > 200
+                                                ? esc(substr($slider['caption'], 0, 200)) . '...'
+                                                : esc($slider['caption']) ?>
+                                </td>
                                 <td>
                                     <?php if (!empty($slider['image'])): ?>
                                     <img src="<?= base_url('uploads/sliders/' . $slider['image']) ?>" alt="Slider"
