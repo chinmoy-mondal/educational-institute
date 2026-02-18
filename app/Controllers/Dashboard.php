@@ -4090,7 +4090,7 @@ class Dashboard extends Controller
             ['label' => 'Add Slider', 'url' => current_url()],
         ];
 
-        return view('dashboard/slider_form', $this->data);
+        return view('dashboard/slider/slider_form', $this->data);
     }
 
     // Save new slider
@@ -4144,7 +4144,7 @@ class Dashboard extends Controller
                 ->with('error', 'Slider not found');
         }
 
-        return view('dashboard/slider_form_edit', $this->data);
+        return view('dashboard/slider/slider_form_edit', $this->data);
     }
 
     // Update existing slider
