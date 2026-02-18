@@ -82,12 +82,10 @@
                         <td><?= esc($p['purpose']) ?></td>
                         <td><?= esc($p['description']) ?></td>
                         <td>
-                            <?php if ($p['status'] === 'approved'): ?>
-                            <span class="badge bg-success">Approved</span>
-                            <?php elseif ($p['status'] === 'pending'): ?>
-                            <span class="badge bg-warning text-dark">Pending</span>
+                            <?php if ($p['status'] == 0): ?>
+                            <span class="badge bg-success">Earn</span>
                             <?php else: ?>
-                            <span class="badge bg-danger">Rejected</span>
+                            <span class="badge bg-danger">Cost</span>
                             <?php endif; ?>
                         </td>
                         <td><?= date('d M, Y h:i A', strtotime($p['created_at'])) ?></td>
