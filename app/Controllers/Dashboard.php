@@ -3848,7 +3848,7 @@ class Dashboard extends Controller
             ['label' => 'Welcome', 'url' => base_url('admin/welcome-message')],
         ];
 
-        return view('dashboard/student_payment_history', $this->data);
+        return view('dashboard/welcome_message_form', $this->data);
     }
 
     public function teacherAttendance()
