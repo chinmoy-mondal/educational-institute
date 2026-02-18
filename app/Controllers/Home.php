@@ -209,7 +209,7 @@ class Home extends BaseController
 
 		$student['school_name'] = env('school.name');
 		$student['eiin'] = "EIIN-" . env('school.eiin');
-		$student['phone'] = env('school.phone');
+		$student['ins_phone'] = env('school.phone');
 		$student['email'] = env('school.email');
 		$student['address'] = env('school.address');
 		$student['logo'] = base_url('public/assets/img/logo.jpg');
@@ -230,7 +230,7 @@ class Home extends BaseController
 		$user['school_name'] = env('school.name');
 		$user['eiin'] = "EIIN-" . env('school.eiin');
 
-		$user['phone'] = env('school.phone');
+		$user['ins_phone'] = env('school.phone');
 		$user['email'] = env('school.email');
 		$user['address'] = env('school.address');
 

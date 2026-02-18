@@ -113,7 +113,7 @@ body {
             <h4 class="text-center fw-bold text-white">Emergency Contact</h4>
             <div class="text-white small px-3 mx-auto" ">
 	  <div class=" mb-1">
-                <i class="fas fa-phone me-2"></i> <?= esc($user['phone']) ?>
+                <i class="fas fa-phone me-2"></i> <?= esc($user['ins_phone']) ?>
             </div>
             <div class="mb-1">
                 <i class="fas fa-envelope me-2"></i> <?= esc($user['email']) ?>
