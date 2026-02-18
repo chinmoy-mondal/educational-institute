@@ -3872,7 +3872,7 @@ class Dashboard extends Controller
 
     public function saveWelcomeMessage()
     {
-        $id = $this->request->getPost('id');
+        $id     = $this->request->getPost('id');
         $status = $this->request->getPost('status');
 
         $data = [
@@ -3889,42 +3889,19 @@ class Dashboard extends Controller
             $data['photo'] = $newName;
         }
 
-        // ✅ If setting this record as ACTIVE
+        // ✅ If this record should be ACTIVE
         if ($status == 1) {
-
-            // Make all other records inactive
-            $this->welcomeMessageModel
-                ->where('id !=', $id ?? 0)
-                ->set(['status' => 0])
-                ->update();
+            // Make ALL records inactive first
+            $this->welcomeMessageModel->set(['status' => 0])->update();
         }
 
+        // Insert or Update
         if ($id) {
             $this->welcomeMessageModel->update($id, $data);
             session()->setFlashdata('success', 'Welcome Message Updated Successfully');
         } else {
             $this->welcomeMessageModel->insert($data);
             session()->setFlashdata('success', 'Welcome Message Added Successfully');
-        }
-
-        // ✅ If editing and setting status = 0
-        if ($id && $status == 0) {
-
-            // Delete all other inactive records except current one
-            $inactiveMessages = $this->welcomeMessageModel
-                ->where('status', 0)
-                ->where('id !=', $id)
-                ->findAll();
-
-            foreach ($inactiveMessages as $msg) {
-
-                // Delete image
-                if (!empty($msg['photo']) && file_exists(FCPATH . 'uploads/welcome/' . $msg['photo'])) {
-                    unlink(FCPATH . 'uploads/welcome/' . $msg['photo']);
-                }
-
-                $this->welcomeMessageModel->delete($msg['id']);
-            }
         }
 
         return redirect()->to(base_url('admin/welcomeMessages'));
