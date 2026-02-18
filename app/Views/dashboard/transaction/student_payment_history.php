@@ -75,17 +75,23 @@
                         $i = 1;
                         $shownTransactions = []; // Track displayed transaction IDs
                         foreach ($payments as $p):
-                            if (in_array($p['transaction_id'], $shownTransactions)) {
-                                continue; // Skip duplicates
+                            $isDuplicate = in_array($p['transaction_id'], $shownTransactions);
+                            if (!$isDuplicate) {
+                                $shownTransactions[] = $p['transaction_id']; // Mark this transaction as shown
                             }
-                            $shownTransactions[] = $p['transaction_id']; // Mark this transaction as shown
                         ?>
                     <tr>
                         <td><?= $i++ ?></td>
                         <td><?= esc($p['transaction_id']) ?></td>
                         <td><?= esc($p['receiver_name']) ?></td>
                         <td><?= number_format($p['amount'], 2) ?></td>
-                        <td><?= number_format($p['discount'], 2) ?></td>
+                        <td>
+                            <?php if ($isDuplicate): ?>
+                            <del><?= number_format($p['discount'], 2) ?></del>
+                            <?php else: ?>
+                            <?= number_format($p['discount'], 2) ?>
+                            <?php endif; ?>
+                        </td>
                         <td><?= esc($p['purpose']) ?></td>
                         <td><?= esc($p['description']) ?></td>
                         <td>
