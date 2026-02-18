@@ -17,6 +17,7 @@ use App\Models\TransactionModel;
 use App\Models\TeacherAttendanceModel;
 use App\Models\RankingModel;
 use App\Models\StudentBackupModel;
+use App\Models\WelcomeMessageModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use PhpParser\Node\Expr\Print_;
 use Symfony\Component\Stopwatch\Section;
@@ -35,7 +36,7 @@ class Dashboard extends Controller
     protected $feesModel;
     protected $feesAmountModel;
     protected $transactionModel;
-    protected $welcomeModel;
+    protected $welcomeMessageModel;
     protected $teacherAttendanceModel;
     protected $rankingModel;
 
@@ -56,9 +57,9 @@ class Dashboard extends Controller
         $this->feesModel        = new FeesModel();
         $this->feesAmountModel  = new FeesAmountModel();
         $this->transactionModel = new TransactionModel();
-        $this->welcomeModel     = new TransactionModel();
+        $this->welcomeMessageModel    = new WelcomeMessageModel();
         $this->teacherAttendanceModel = new TeacherAttendanceModel();
-        $this->rankingModel = new RankingModel();
+        $this->rankingModel           = new RankingModel();
 
 
         $this->session       = session();
@@ -3850,7 +3851,7 @@ class Dashboard extends Controller
         ];
 
         // Fetch all welcome messages (Newest first)
-        $this->data['welcomeMessages'] = $this->welcomeModel
+        $this->data['welcomeMessages'] = $this->welcomeMessageModel
             ->orderBy('id', 'DESC')
             ->findAll();
 
@@ -3863,7 +3864,7 @@ class Dashboard extends Controller
         $this->data['activeSection'] = 'welcome_message';
 
         if ($id) {
-            $this->data['welcome'] = $this->welcomeModel->find($id);
+            $this->data['welcome'] = $this->welcomeMessageModel->find($id);
         }
 
         return view('dashboard/welcome_message_form', $this->data);
@@ -3888,10 +3889,10 @@ class Dashboard extends Controller
         }
 
         if ($id) {
-            $this->welcomeModel->update($id, $data);
+            $this->welcomeMessageModel->update($id, $data);
             session()->setFlashdata('success', 'Welcome Message Updated Successfully');
         } else {
-            $this->welcomeModel->insert($data);
+            $this->welcomeMessageModel->insert($data);
             session()->setFlashdata('success', 'Welcome Message Added Successfully');
         }
 
