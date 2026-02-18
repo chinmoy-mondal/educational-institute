@@ -63,7 +63,7 @@
                                 </td>
 
                                 <!-- Title -->
-                                <td><?= esc($message['title']) ?></td>
+                                <td><?= esc($message['title'] ?? '') ?></td>
 
                                 <!-- Short Message Preview -->
                                 <td>
