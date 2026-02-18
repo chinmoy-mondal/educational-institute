@@ -881,7 +881,7 @@ class Dashboard extends Controller
             'dob'          => 'required|valid_date',
             'gender'       => 'required',
             'phone'        => 'required',
-            'student_pic'  => 'uploaded[student_pic]|is_image[student_pic]',
+            'student_pic'  => 'permit_empty',
             'birth_registration_number' => 'required',
             'father_nid_number'         => 'required',
             'mother_nid_number'         => 'required',
