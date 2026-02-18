@@ -8,6 +8,9 @@
 
     <!-- Carousel Items -->
     <div class="carousel-inner">
+        <?php
+        $maxLength = 131; // Maximum characters in caption
+        ?>
         <?php if (!empty($sliders)): ?>
         <?php foreach ($sliders as $index => $slider): ?>
         <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
@@ -15,7 +18,10 @@
                 style="background-image: url('<?= base_url('uploads/sliders/' . $slider['image']); ?>');">
                 <div class="carousel-caption custom-caption">
                     <h2><?= esc($slider['title']) ?></h2>
-                    <p><?= esc(strlen($slider['caption']) > 200 ? substr($slider['caption'], 0, 200) . '...' : $slider['caption']) ?>
+                    <p>
+                        <?= esc(strlen($slider['caption']) > $maxLength
+                                    ? substr($slider['caption'], 0, $maxLength) . '...'
+                                    : $slider['caption']) ?>
                     </p>
                     <a href="#" class="btn btn-light btn-custom">Learn More</a>
                 </div>
