@@ -2785,7 +2785,7 @@ class Dashboard extends Controller
         $fees  = $this->feesAmountModel->findAll();
 
 
-        $month = 2; // 1–12
+        $month = date('n'); // 1–12
 
         $sectionTotals = [];
 
