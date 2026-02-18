@@ -71,8 +71,15 @@
                 </thead>
                 <tbody>
                     <?php if (!empty($payments)): ?>
-                    <?php $i = 1;
-                        foreach ($payments as $p): ?>
+                    <?php
+                        $i = 1;
+                        $shownTransactions = []; // Track displayed transaction IDs
+                        foreach ($payments as $p):
+                            if (in_array($p['transaction_id'], $shownTransactions)) {
+                                continue; // Skip duplicates
+                            }
+                            $shownTransactions[] = $p['transaction_id']; // Mark this transaction as shown
+                        ?>
                     <tr>
                         <td><?= $i++ ?></td>
                         <td><?= esc($p['transaction_id']) ?></td>
@@ -93,7 +100,7 @@
                     <?php endforeach; ?>
                     <?php else: ?>
                     <tr>
-                        <td colspan="8" class="text-center text-muted">No transaction history found.</td>
+                        <td colspan="9" class="text-center text-muted">No transaction history found.</td>
                     </tr>
                     <?php endif; ?>
                 </tbody>
