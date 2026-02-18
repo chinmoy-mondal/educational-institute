@@ -9,7 +9,7 @@
     <!-- Carousel Items -->
     <div class="carousel-inner">
         <?php
-        $maxLength = 100; // Maximum characters in caption
+        $maxLength = 80; // Maximum characters in caption
         ?>
         <?php if (!empty($sliders)): ?>
         <?php foreach ($sliders as $index => $slider): ?>
