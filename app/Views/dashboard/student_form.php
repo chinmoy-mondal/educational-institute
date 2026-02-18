@@ -34,7 +34,7 @@
                                 value="<?= old('student_name') ?>" required>
                         </div>
                         <div class="col-md-2">
-                            <label>Section (Only for Class 9 & 10)</label>
+                            <label>Section</label>
                             <select name="section" class="form-control">
                                 <option value="">Select Section</option>
 
@@ -62,21 +62,16 @@
 
                     <div class="row mt-3">
                         <div class="col-md-6">
-                            <label>Section (optional, only for Class 9 & 10)</label>
-                            <select name="section" class="form-control">
-                                <option value="">Select Section</option>
-                                <option value="n/a" <?= old('section') == 'n/a' ? 'selected' : '' ?>>N/A</option>
+                            <label>Group (optional, only for Class 9 & 10)</label>
+                            <select name="group" class="form-control">
+                                <option value="">Select Group</option>
+                                <option value="n/a" <?= old('group') == 'n/a' ? 'selected' : '' ?>>N/A</option>
                                 <option value="General - Science"
-                                    <?= old('section') == 'General - Science' ? 'selected' : '' ?>>General → Science
+                                    <?= old('group') == 'General - Science' ? 'selected' : '' ?>>General → Science
                                 </option>
-                                <option value="General - Arts"
-                                    <?= old('section') == 'General - Arts' ? 'selected' : '' ?>>General → Arts</option>
-                                <option value="Vocational - Food Processing and Preservation"
-                                    <?= old('section') == 'Vocational - Food Processing and Preservation' ? 'selected' : '' ?>>
-                                    Vocational → Food Processing and Preservation</option>
-                                <option value="Vocational - IT Support and IoT Basics"
-                                    <?= old('section') == 'Vocational - IT Support and IoT Basics' ? 'selected' : '' ?>>
-                                    Vocational → IT Support and IoT Basics</option>
+                                <option value="General - Humanities"
+                                    <?= old('group') == 'General - Humanities' ? 'selected' : '' ?>>General → Humanities
+                                </option>
                             </select>
                         </div>
 
