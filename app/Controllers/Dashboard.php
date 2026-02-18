@@ -3172,6 +3172,9 @@ class Dashboard extends Controller
         }
 
         $this->data['all_month_fees'] = $allMonths;
+        echo "<pre>";
+        print_r($allMonths);
+        echo "</pre>";
 
         $this->data['teachers'] = $this->userModel
             ->where('role', 'teacher')
