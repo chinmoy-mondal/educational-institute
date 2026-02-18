@@ -3839,6 +3839,19 @@ class Dashboard extends Controller
         return view('dashboard/student_payment_history', $this->data);
     }
 
+    public function welcome_message()
+    {
+        $this->data['title'] = 'Welcome message';
+        $this->data['activeSection'] = 'welcome_message';
+
+        $this->data['navbarItems'] = [
+            ['label' => 'Welcome', 'url' => base_url('admin/welcome-message')],
+        ];
+
+
+        return view('dashboard/student_payment_history', $this->data);
+    }
+
     public function teacherAttendance()
     {
         // Filters
