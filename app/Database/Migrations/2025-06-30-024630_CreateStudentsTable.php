@@ -13,6 +13,7 @@ class CreateStudentsTable extends Migration
             'student_name'              => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => false],
             'roll'                      => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => false],
             'class'                     => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => false],
+            'group'                     => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => false],
             'section'                   => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => false],
             'esif'                      => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => true],
             'father_name'               => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],

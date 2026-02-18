@@ -906,6 +906,7 @@ class Dashboard extends Controller
             'student_name' => $this->request->getPost('student_name'),
             'roll'         => $this->request->getPost('roll'),
             'class'        => $this->request->getPost('class'),
+            'group'        => $this->request->getPost('group'),
             'section'      => $this->request->getPost('section'),
             'esif'         => $this->request->getPost('esif'),
             'father_name'  => $this->request->getPost('father_name'),
