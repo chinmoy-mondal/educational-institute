@@ -4052,4 +4052,151 @@ class Dashboard extends Controller
 
         return view('dashboard/teacher_attendance', $this->data);
     }
+
+    // Show all sliders
+    public function sliders()
+    {
+        $this->data['title'] = 'Slider List';
+        $this->data['activeSection'] = 'slider';
+        $this->data['navbarItems'] = [
+            ['label' => 'Slider List', 'url' => current_url()],
+            ['label' => 'Add Slider', 'url' => base_url('admin/sliderForm')],
+        ];
+
+        $this->data['sliders'] = $this->sliderModel
+            ->orderBy('id', 'DESC')
+            ->findAll();
+
+        return view('dashboard/slider_list', $this->data);
+    }
+
+    // Show add form
+    public function sliderForm()
+    {
+        $this->data['title'] = 'Slider Form';
+        $this->data['activeSection'] = 'slider';
+        $this->data['navbarItems'] = [
+            ['label' => 'Slider List', 'url' => base_url('admin/sliders')],
+            ['label' => 'Add Slider', 'url' => current_url()],
+        ];
+
+        return view('dashboard/slider_form', $this->data);
+    }
+
+    // Save new slider
+    public function saveSlider()
+    {
+        $status = $this->request->getPost('status');
+
+        $data = [
+            'title'      => $this->request->getPost('title'),
+            'caption'    => $this->request->getPost('caption'),
+            'status'     => $status,
+            'created_at' => date('Y-m-d H:i:s'),
+        ];
+
+        // Handle image upload
+        $file = $this->request->getFile('image');
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $newName = $file->getRandomName();
+            $file->move('uploads/sliders', $newName);
+            $data['image'] = $newName;
+        }
+
+        // ✅ If active → make others inactive
+        if ($status == 1) {
+            $this->sliderModel
+                ->where('id >', 0)
+                ->set(['status' => 0])
+                ->update();
+        }
+
+        $this->sliderModel->insert($data);
+
+        return redirect()->to('admin/sliders')
+            ->with('success', 'Slider added successfully!');
+    }
+
+    // Edit form
+    public function editSlider($id)
+    {
+        $this->data['title'] = 'Edit Slider';
+        $this->data['activeSection'] = 'slider';
+        $this->data['navbarItems'] = [
+            ['label' => 'Slider List', 'url' => base_url('admin/sliders')],
+            ['label' => 'Edit Slider', 'url' => current_url()],
+        ];
+
+        $this->data['slider'] = $this->sliderModel->find($id);
+
+        if (!$this->data['slider']) {
+            return redirect()->to('admin/sliders')
+                ->with('error', 'Slider not found');
+        }
+
+        return view('dashboard/slider_form_edit', $this->data);
+    }
+
+    // Update existing slider
+    public function updateSlider($id)
+    {
+        $slider = $this->sliderModel->find($id);
+
+        if (!$slider) {
+            return redirect()->to('admin/sliders')
+                ->with('error', 'Slider not found');
+        }
+
+        $status = $this->request->getPost('status');
+
+        $data = [
+            'title'   => $this->request->getPost('title'),
+            'caption' => $this->request->getPost('caption'),
+            'status'  => $status,
+        ];
+
+        // Image update
+        $file = $this->request->getFile('image');
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+
+            if (!empty($slider['image']) && file_exists('uploads/sliders/' . $slider['image'])) {
+                unlink('uploads/sliders/' . $slider['image']);
+            }
+
+            $newName = $file->getRandomName();
+            $file->move('uploads/sliders', $newName);
+            $data['image'] = $newName;
+        }
+
+        // ✅ If active → make others inactive
+        if ($status == 1) {
+            $this->sliderModel
+                ->where('id !=', $id)
+                ->set(['status' => 0])
+                ->update();
+        }
+
+        $this->sliderModel->update($id, $data);
+
+        return redirect()->to('admin/sliders')
+            ->with('success', 'Slider updated successfully!');
+    }
+
+    // Delete slider
+    public function deleteSlider($id)
+    {
+        $slider = $this->sliderModel->find($id);
+
+        if ($slider) {
+
+            if (!empty($slider['image']) && file_exists('uploads/sliders/' . $slider['image'])) {
+                unlink('uploads/sliders/' . $slider['image']);
+            }
+
+            $this->sliderModel->delete($id);
+        }
+
+        return redirect()->to('admin/sliders')
+            ->with('success', 'Slider deleted successfully!');
+    }
 }
