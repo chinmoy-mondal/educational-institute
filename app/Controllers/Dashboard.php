@@ -18,6 +18,7 @@ use App\Models\TeacherAttendanceModel;
 use App\Models\RankingModel;
 use App\Models\StudentBackupModel;
 use App\Models\WelcomeMessageModel;
+use App\Models\SliderModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 use PhpParser\Node\Expr\Print_;
 use Symfony\Component\Stopwatch\Section;
@@ -39,6 +40,8 @@ class Dashboard extends Controller
     protected $welcomeMessageModel;
     protected $teacherAttendanceModel;
     protected $rankingModel;
+    protected $sliderModel;
+
 
     protected $session;
     protected $data;
@@ -60,6 +63,7 @@ class Dashboard extends Controller
         $this->welcomeMessageModel    = new WelcomeMessageModel();
         $this->teacherAttendanceModel = new TeacherAttendanceModel();
         $this->rankingModel           = new RankingModel();
+        $this->sliderModel            = new SliderModel();
 
 
         $this->session       = session();
