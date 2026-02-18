@@ -9,12 +9,41 @@ use App\Models\CalendarModel;
 use App\Models\AttendanceModel;
 use App\Models\NoticeModel;
 use App\Models\WelcomeMessageModel;
+use App\Models\SliderModel;
 
 class Home extends BaseController
 {
+	protected $subjectModel;
+	protected $studentModel;
+	protected $userModel;
+	protected $calendarModel;
+	protected $attendanceModel;
+	protected $noticeModel;
+	protected $welcomeMessageModel;
+	protected $sliderModel; // <-- Add this
+	protected $data = [];
+
+	public function __construct()
+	{
+		$this->subjectModel = new SubjectModel();
+		$this->studentModel = new StudentModel();
+		$this->userModel = new UserModel();
+		$this->calendarModel = new CalendarModel();
+		$this->attendanceModel = new AttendanceModel();
+		$this->noticeModel = new NoticeModel();
+		$this->welcomeMessageModel = new WelcomeMessageModel();
+		$this->sliderModel = new SliderModel(); // <-- Initialize
+	}
+
 	public function index()
 	{
-		return view('public/home');
+		// Load active sliders only
+		$this->data['sliders'] = $this->sliderModel
+			->where('status', 1)
+			->orderBy('id', 'DESC')
+			->findAll();
+
+		return view('public/home', $this->data);
 	}
 
 	public function welcome()

@@ -1,4 +1,3 @@
-
 <!-- Bootstrap Carousel -->
 <div id="indicatorCarousel" class="carousel slide" data-bs-ride="carousel">
     <!-- Indicators -->
@@ -9,9 +8,25 @@
 
     <!-- Carousel Items -->
     <div class="carousel-inner">
-        <!-- Slide 1 -->
+        <?php if (!empty($sliders)): ?>
+        <?php foreach ($sliders as $index => $slider): ?>
+        <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
+            <div class="slider-container"
+                style="background-image: url('<?= base_url('uploads/sliders/' . $slider['image']); ?>');">
+                <div class="carousel-caption custom-caption">
+                    <h2><?= esc($slider['title']) ?></h2>
+                    <p><?= esc(strlen($slider['caption']) > 200 ? substr($slider['caption'], 0, 200) . '...' : $slider['caption']) ?>
+                    </p>
+                    <a href="#" class="btn btn-light btn-custom">Learn More</a>
+                </div>
+            </div>
+        </div>
+        <?php endforeach; ?>
+        <?php else: ?>
+        <!-- Default slide if no sliders found -->
         <div class="carousel-item active">
-            <div class="slider-container" style="background-image: url('<?= base_url('public/assets/img/ima1.jpg'); ?>');">
+            <div class="slider-container"
+                style="background-image: url('<?= base_url('public/assets/img/ima1.jpg'); ?>');">
                 <div class="carousel-caption custom-caption">
                     <h2>Welcome</h2>
                     <p>We provide quality education and empower students for a brighter future.</p>
@@ -19,17 +34,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- Slide 2 -->
-        <div class="carousel-item">
-            <div class="slider-container" style="background-image: url('<?= base_url('public/assets/img/ima2.jpg'); ?>');">
-                <div class="carousel-caption custom-caption">
-                    <h2>Shape Your Future</h2>
-                    <p>Explore diverse learning opportunities and build a strong foundation for success.</p>
-                    <a href="#" class="btn btn-light btn-custom">Discover More</a>
-                </div>
-            </div>
-        </div>
+        <?php endif; ?>
     </div>
 
     <!-- Controls -->
@@ -43,38 +48,39 @@
 
 <!-- Styles -->
 <style>
-    .slider-container {
-        height: 400px; /* Adjust height as needed */
-        background-size: cover;
-        background-position: center;
-        position: relative;
-    }
+.slider-container {
+    height: 400px;
+    /* Adjust height as needed */
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
 
-    .custom-caption {
-        background-color: rgba(0, 0, 0, 0.7);
-        padding: 20px;
-        border-radius: 10px;
-        display: inline-block;
-        text-align: left;
-        max-width: 350px;
-        position: absolute;
-        top: 50%;
-        left: 30px;
-        transform: translateY(-50%);
-    }
+.custom-caption {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    display: inline-block;
+    text-align: left;
+    max-width: 350px;
+    position: absolute;
+    top: 50%;
+    left: 30px;
+    transform: translateY(-50%);
+}
 
-    .custom-caption h2,
-    .custom-caption p {
-        margin-bottom: 10px;
-    }
+.custom-caption h2,
+.custom-caption p {
+    margin-bottom: 10px;
+}
 
-    .btn-custom {
-        background-color: rgba(255, 255, 255, 0.8);
-        color: #000;
-        font-weight: bold;
-    }
+.btn-custom {
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #000;
+    font-weight: bold;
+}
 
-    .btn-custom:hover {
-        background-color: white;
-    }
+.btn-custom:hover {
+    background-color: white;
+}
 </style>
