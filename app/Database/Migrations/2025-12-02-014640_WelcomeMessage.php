@@ -19,6 +19,11 @@ class WelcomeMessage extends Migration
                 'constraint' => '255',
                 'null'       => true
             ],
+            'status' => [
+                'type'       => 'TINYINT',
+                'constraint' => 1,
+                'default'    => 0,
+            ],
             'photo' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '255',
