@@ -3742,8 +3742,24 @@ class Dashboard extends Controller
             ->findAll();
 
         // ✅ Calculate total paid
-        $totalPaid = array_sum(array_column($payments, 'amount'));
-        $totalDiscount = array_sum(array_column($payments, 'discount'));
+        // ✅ Calculate total paid
+        $totalPaid = 0;
+        $discountsByTransaction = [];
+
+        foreach ($payments as $payment) {
+
+            // Sum all amounts normally
+            $totalPaid += $payment['amount'];
+
+            // Store discount only once per transaction_id
+            $transactionId = $payment['transaction_id'];
+
+            if (!isset($discountsByTransaction[$transactionId])) {
+                $discountsByTransaction[$transactionId] = $payment['discount'];
+            }
+        }
+
+        $totalDiscount = array_sum($discountsByTransaction);
 
         // ✅ Pass data to view
         $this->data['student']   = $student;
