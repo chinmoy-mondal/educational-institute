@@ -3862,6 +3862,10 @@ class Dashboard extends Controller
     {
         $this->data['title'] = $id ? 'Edit Welcome Message' : 'Add Welcome Message';
         $this->data['activeSection'] = 'welcome_message';
+        $this->data['navbarItems'] = [
+            ['label' => 'Welcome Messages', 'url' => base_url('admin/welcome-message')],
+            ['label' => 'Add Welcome Message', 'url' => current_url()],
+        ];
 
         if ($id) {
             $this->data['welcome'] = $this->welcomeMessageModel->find($id);
