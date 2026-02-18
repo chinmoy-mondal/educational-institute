@@ -173,14 +173,13 @@ $routes->post('admin/attendance/save', 'Dashboard::saveAttendance');
 
 $routes->get('admin/teacher-attendance', 'Dashboard::teacherAttendance');
 
-
-
-
-
-
-// $routes->get('drug', 'Health::drugs');
-// $routes->get('prescription', 'Health::prescription');
-// $routes->get('search-drugs', 'Health::searchDrugs');
+// Slider Routes
+$routes->get('admin/sliders', 'Dashboard::sliders');
+$routes->get('admin/sliderForm', 'Dashboard::sliderForm');
+$routes->post('admin/saveSlider', 'Dashboard::saveSlider');
+$routes->get('admin/editSlider/(:num)', 'Dashboard::editSlider/$1');
+$routes->post('admin/updateSlider/(:num)', 'Dashboard::updateSlider/$1');
+$routes->get('admin/deleteSlider/(:num)', 'Dashboard::deleteSlider/$1');
 
 
 $routes->set404Override(function () {

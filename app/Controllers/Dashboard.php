@@ -136,6 +136,12 @@ class Dashboard extends Controller
                 'section' => 'welcome_message'
             ],
             [
+                'label' => 'Slider',
+                'url' => base_url('admin/sliders'),
+                'icon' => 'fas fa-image',
+                'activeSection' => 'slider'
+            ],
+            [
                 'label' => 'Teacher Attendance',
                 'url' => base_url('admin/teacher-attendance'),
                 'icon' => 'fas fa-user-tie',
@@ -4071,7 +4077,7 @@ class Dashboard extends Controller
             ->orderBy('id', 'DESC')
             ->findAll();
 
-        return view('dashboard/slider_list', $this->data);
+        return view('dashboard/slider/slider_list', $this->data);
     }
 
     // Show add form
