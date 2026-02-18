@@ -3873,19 +3873,30 @@ class Dashboard extends Controller
     public function saveWelcomeMessage()
     {
         $id = $this->request->getPost('id');
+        $status = $this->request->getPost('status');
 
         $data = [
             'title'   => $this->request->getPost('title'),
             'message' => $this->request->getPost('message'),
-            'status'  => $this->request->getPost('status'),
+            'status'  => $status,
         ];
 
         // Handle Photo Upload
         $photo = $this->request->getFile('photo');
         if ($photo && $photo->isValid() && !$photo->hasMoved()) {
             $newName = $photo->getRandomName();
-            $photo->move('uploads/welcome/', $newName);
+            $photo->move(FCPATH . 'uploads/welcome/', $newName);
             $data['photo'] = $newName;
+        }
+
+        // ✅ If setting this record as ACTIVE
+        if ($status == 1) {
+
+            // Make all other records inactive
+            $this->welcomeMessageModel
+                ->where('id !=', $id ?? 0)
+                ->set(['status' => 0])
+                ->update();
         }
 
         if ($id) {
@@ -3894,6 +3905,26 @@ class Dashboard extends Controller
         } else {
             $this->welcomeMessageModel->insert($data);
             session()->setFlashdata('success', 'Welcome Message Added Successfully');
+        }
+
+        // ✅ If editing and setting status = 0
+        if ($id && $status == 0) {
+
+            // Delete all other inactive records except current one
+            $inactiveMessages = $this->welcomeMessageModel
+                ->where('status', 0)
+                ->where('id !=', $id)
+                ->findAll();
+
+            foreach ($inactiveMessages as $msg) {
+
+                // Delete image
+                if (!empty($msg['photo']) && file_exists(FCPATH . 'uploads/welcome/' . $msg['photo'])) {
+                    unlink(FCPATH . 'uploads/welcome/' . $msg['photo']);
+                }
+
+                $this->welcomeMessageModel->delete($msg['id']);
+            }
         }
 
         return redirect()->to(base_url('admin/welcomeMessages'));
