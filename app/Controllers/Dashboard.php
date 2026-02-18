@@ -4171,13 +4171,6 @@ class Dashboard extends Controller
             $data['image'] = $newName;
         }
 
-        // ✅ If active → make others inactive
-        if ($status == 1) {
-            $this->sliderModel
-                ->where('id !=', $id)
-                ->set(['status' => 0])
-                ->update();
-        }
 
         $this->sliderModel->update($id, $data);
 
