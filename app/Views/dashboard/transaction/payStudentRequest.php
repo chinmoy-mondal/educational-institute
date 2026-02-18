@@ -145,7 +145,8 @@
 
                     <!-- LEFT: Submit Button -->
                     <div>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary"
+                            onclick="return confirm('Are you sure you want to confirm this payment?')">
                             Confirm Payment
                         </button>
                     </div>

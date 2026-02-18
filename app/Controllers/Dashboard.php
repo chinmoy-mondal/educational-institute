@@ -3183,6 +3183,7 @@ class Dashboard extends Controller
 
     }
 
+    // two date summation
     public function transaction_custome_date()
     {
         $fees = $this->feesAmountModel->findAll();
