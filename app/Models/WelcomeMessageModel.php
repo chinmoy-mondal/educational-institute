@@ -17,8 +17,7 @@ class WelcomeMessageModel extends Model
         'title',
         'photo',
         'message',
-        'created_at',
-        'updated_at',
+        'status',      // ✅ added
     ];
 
     protected $useTimestamps = true;

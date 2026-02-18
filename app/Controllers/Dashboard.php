@@ -3849,8 +3849,10 @@ class Dashboard extends Controller
             ['label' => 'Add Welcome Message', 'url' => base_url('admin/welcomeMessageForm')],
         ];
 
-        // Fetch all welcome messages, newest first
-        $this->data['welcomeMessages'] = $this->welcomeModel->orderBy('id', 'DESC')->findAll();
+        // Fetch all welcome messages (Newest first)
+        $this->data['welcomeMessages'] = $this->welcomeModel
+            ->orderBy('id', 'DESC')
+            ->findAll();
 
         return view('dashboard/welcome_message_list', $this->data);
     }
