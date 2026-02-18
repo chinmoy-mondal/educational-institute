@@ -3899,6 +3899,27 @@ class Dashboard extends Controller
         return redirect()->to(base_url('admin/welcomeMessages'));
     }
 
+    public function deleteWelcomeMessage($id)
+    {
+        $welcome = $this->welcomeMessageModel->find($id);
+
+        if (!$welcome) {
+            session()->setFlashdata('error', 'Welcome Message Not Found');
+            return redirect()->back();
+        }
+
+        // Delete image if exists
+        if (!empty($welcome['photo']) && file_exists(FCPATH . 'uploads/welcome/' . $welcome['photo'])) {
+            unlink(FCPATH . 'uploads/welcome/' . $welcome['photo']);
+        }
+
+        $this->welcomeMessageModel->delete($id);
+
+        session()->setFlashdata('success', 'Welcome Message Deleted Successfully');
+
+        return redirect()->to(base_url('admin/welcomeMessages'));
+    }
+
     public function teacherAttendance()
     {
         // Filters

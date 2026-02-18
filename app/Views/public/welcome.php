@@ -47,8 +47,7 @@
                     <p>No welcome message available.</p>
 
                     <?php endif; ?>
-                    <h5 class="fw-bold mt-3">- [Head Sir's Name]</h5>
-                    <p class="fst-italic">Head of School</p>
+
                 </div>
             </div>
         </div>

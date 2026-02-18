@@ -127,6 +127,7 @@ $routes->get('admin/welcomeMessages', 'Dashboard::welcomeMessages');
 $routes->get('admin/welcomeMessageForm', 'Dashboard::welcomeMessageForm');
 $routes->get('admin/editWelcomeMessage/(:num)', 'Dashboard::welcomeMessageForm/$1');
 $routes->post('admin/saveWelcomeMessage', 'Dashboard::saveWelcomeMessage');
+$routes->get('admin/deleteWelcomeMessage/(:num)', 'Dashboard::deleteWelcomeMessage/$1');
 
 $routes->group('admin', function ($routes) {
     $routes->get('student/create', 'Dashboard::createStudentForm');
