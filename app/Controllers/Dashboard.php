@@ -3889,10 +3889,21 @@ class Dashboard extends Controller
             $data['photo'] = $newName;
         }
 
-        // ✅ If this record should be ACTIVE
         if ($status == 1) {
-            // Make ALL records inactive first
-            $this->welcomeMessageModel->set(['status' => 0])->update();
+
+            if ($id) {
+                // Editing → make all OTHER records inactive
+                $this->welcomeMessageModel
+                    ->where('id !=', $id)
+                    ->set(['status' => 0])
+                    ->update();
+            } else {
+                // Inserting new → make ALL existing inactive
+                $this->welcomeMessageModel
+                    ->where('id >', 0)   // safe condition
+                    ->set(['status' => 0])
+                    ->update();
+            }
         }
 
         // Insert or Update
