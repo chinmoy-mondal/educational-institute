@@ -4120,7 +4120,7 @@ class Dashboard extends Controller
             ->with('success', 'Slider added successfully!');
     }
 
-    // Edit form
+    // Edit form update
     public function editSlider($id)
     {
         $this->data['title'] = 'Edit Slider';
