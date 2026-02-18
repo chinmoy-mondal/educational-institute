@@ -8,6 +8,7 @@ use App\Models\UserModel;
 use App\Models\CalendarModel;
 use App\Models\AttendanceModel;
 use App\Models\NoticeModel;
+use App\Models\WelcomeMessageModel;
 
 class Home extends BaseController
 {
@@ -18,8 +19,17 @@ class Home extends BaseController
 
 	public function welcome()
 	{
-		return view('public/welcome');
+		$welcomeModel = new WelcomeMessageModel();
+
+		// Get only active message (latest one)
+		$data['welcome'] = $welcomeModel
+			->where('status', 1)
+			->orderBy('id', 'DESC')
+			->first();
+
+		return view('public/welcome', $data);
 	}
+
 	public function history()
 	{
 		return view('public/history');
