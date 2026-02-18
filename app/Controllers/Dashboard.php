@@ -139,7 +139,7 @@ class Dashboard extends Controller
                 'label' => 'Slider',
                 'url' => base_url('admin/sliders'),
                 'icon' => 'fas fa-image',
-                'activeSection' => 'slider'
+                'section' => 'slider'
             ],
             [
                 'label' => 'Teacher Attendance',
