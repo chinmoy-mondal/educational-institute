@@ -123,6 +123,11 @@ $routes->get('admin/stAssaginSubView', 'Dashboard::stAssaginSubView');
 $routes->post('admin/assignStudentsSubjects', 'Dashboard::assignStudentsSubjects');
 $routes->get('admin/welcome-message', 'Dashboard::welcomeMessages');
 
+$routes->get('admin/welcomeMessages', 'Dashboard::welcomeMessages');
+$routes->get('admin/welcomeMessageForm', 'Dashboard::welcomeMessageForm');
+$routes->get('admin/editWelcomeMessage/(:num)', 'Dashboard::welcomeMessageForm/$1');
+$routes->post('admin/saveWelcomeMessage', 'Dashboard::saveWelcomeMessage');
+
 $routes->group('admin', function ($routes) {
     $routes->get('student/create', 'Dashboard::createStudentForm');
     $routes->post('students/save', 'Dashboard::saveStudent');

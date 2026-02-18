@@ -1,102 +1,72 @@
 <?= $this->extend('layouts/admin') ?>
-<?= $this->section('content') ?>
+<?= $this->section("content") ?>
 
-<div class="content-wrapper">
-
-    <!-- Page Header -->
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-12">
-                    <h1><i class="fas fa-handshake"></i> Welcome Message</h1>
-                </div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="card card-primary card-outline shadow">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-handshake"></i> <?= isset($welcome) ? 'Edit' : 'Add' ?> Welcome Message
+                </h3>
             </div>
-        </div>
-    </section>
 
-    <!-- Main content -->
-    <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                
-                <!-- Form Column (Left side, full width on md+) -->
-                <div class="col-md-12">
-                    <div class="card card-primary shadow-sm">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <i class="fas fa-edit"></i> Edit Welcome Message
-                            </h3>
-                        </div>
+            <form action="<?= base_url('admin/saveWelcomeMessage') ?>" method="post" enctype="multipart/form-data">
+                <div class="card-body">
 
-                        <form action="<?= base_url('admin/welcome-message/save') ?>" method="post" enctype="multipart/form-data">
-                            <?= csrf_field() ?>
+                    <?php if (isset($welcome)): ?>
+                    <input type="hidden" name="id" value="<?= $welcome['id'] ?>">
+                    <?php endif; ?>
 
-                            <div class="card-body">
-
-                                <!-- Title -->
-                                <div class="form-group">
-                                    <label>Title <span class="text-danger">*</span></label>
-                                    <input type="text" name="title" class="form-control form-control-lg"
-                                        value="<?= !empty($welcome['title']) ? $welcome['title'] : '' ?>" required>
-                                </div>
-
-                                <!-- Existing Photo -->
-                                <div class="form-group">
-                                    <label>Photo</label><br>
-                                    <?php if (!empty($welcome['photo'])): ?>
-                                        <img src="<?= base_url('uploads/welcome/' . $welcome['photo']); ?>"
-                                            width="180" class="rounded mb-2 shadow">
-                                    <?php endif; ?>
-                                    <input type="file" name="photo" class="form-control form-control-lg">
-                                    <small class="text-muted">Upload JPG or PNG photo of Principal/Head</small>
-                                </div>
-
-                                <!-- Rich Text Message -->
-                                <div class="form-group">
-                                    <label>Message <span class="text-danger">*</span></label>
-                                    <textarea id="editor" name="message" class="form-control">
-                                        <?= !empty($welcome['message']) ? $welcome['message'] : '' ?>
-                                    </textarea>
-                                </div>
-
-                            </div>
-
-                            <div class="card-footer text-left">
-                                <button type="submit" class="btn btn-primary btn-lg">
-                                    <i class="fas fa-save"></i> Save Message
-                                </button>
-                                <button type="reset" class="btn btn-warning btn-lg">
-                                    <i class="fas fa-undo"></i> Reset
-                                </button>
-                            </div>
-
-                        </form>
-
+                    <!-- Title -->
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" name="title" class="form-control" value="<?= $welcome['title'] ?? '' ?>"
+                            required>
                     </div>
+
+                    <!-- Photo -->
+                    <div class="form-group mt-3">
+                        <label>Photo</label>
+                        <input type="file" name="photo" class="form-control">
+
+                        <?php if (!empty($welcome['photo'])): ?>
+                        <div class="mt-2">
+                            <img src="<?= base_url('uploads/welcome/' . $welcome['photo']) ?>" width="100"
+                                style="border-radius:5px;">
+                        </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Message -->
+                    <div class="form-group mt-3">
+                        <label>Message</label>
+                        <textarea name="message" rows="5" class="form-control"
+                            required><?= $welcome['message'] ?? '' ?></textarea>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="form-group mt-3">
+                        <label>Status</label>
+                        <select name="status" class="form-control">
+                            <option value="1" <?= (isset($welcome) && $welcome['status'] == 1) ? 'selected' : '' ?>>
+                                Active</option>
+                            <option value="0" <?= (isset($welcome) && $welcome['status'] == 0) ? 'selected' : '' ?>>
+                                Inactive</option>
+                        </select>
+                    </div>
+
                 </div>
-            </div>
+
+                <div class="card-footer text-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                    <a href="<?= base_url('admin/welcomeMessages') ?>" class="btn btn-secondary">Back</a>
+                </div>
+            </form>
+
         </div>
-    </section>
-</div>
+    </div>
+</section>
 
 <?= $this->endSection() ?>
-
-<!-- TinyMCE -->
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-<script>
-tinymce.init({
-    selector: '#editor',
-    height: 450,
-    menubar: true,
-    plugins: [
-        'advlist autolink lists link image charmap print preview anchor',
-        'searchreplace visualblocks code fullscreen',
-        'insertdatetime media table paste help wordcount codesample emoticons'
-    ],
-    toolbar: 'undo redo | styleselect | bold italic underline strikethrough forecolor backcolor | ' +
-             'alignleft aligncenter alignright alignjustify | ' +
-             'bullist numlist outdent indent | link image media table codesample emoticons | ' +
-             'removeformat | fullscreen preview code',
-    content_style: 'body { font-family:Arial,sans-serif; font-size:14px }'
-});
-</script>

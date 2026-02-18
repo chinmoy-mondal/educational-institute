@@ -3857,6 +3857,47 @@ class Dashboard extends Controller
         return view('dashboard/welcome_message_list', $this->data);
     }
 
+    public function welcomeMessageForm($id = null)
+    {
+        $this->data['title'] = $id ? 'Edit Welcome Message' : 'Add Welcome Message';
+        $this->data['activeSection'] = 'welcome_message';
+
+        if ($id) {
+            $this->data['welcome'] = $this->welcomeModel->find($id);
+        }
+
+        return view('dashboard/welcome_message_form', $this->data);
+    }
+
+    public function saveWelcomeMessage()
+    {
+        $id = $this->request->getPost('id');
+
+        $data = [
+            'title'   => $this->request->getPost('title'),
+            'message' => $this->request->getPost('message'),
+            'status'  => $this->request->getPost('status'),
+        ];
+
+        // Handle Photo Upload
+        $photo = $this->request->getFile('photo');
+        if ($photo && $photo->isValid() && !$photo->hasMoved()) {
+            $newName = $photo->getRandomName();
+            $photo->move('uploads/welcome/', $newName);
+            $data['photo'] = $newName;
+        }
+
+        if ($id) {
+            $this->welcomeModel->update($id, $data);
+            session()->setFlashdata('success', 'Welcome Message Updated Successfully');
+        } else {
+            $this->welcomeModel->insert($data);
+            session()->setFlashdata('success', 'Welcome Message Added Successfully');
+        }
+
+        return redirect()->to(base_url('admin/welcomeMessages'));
+    }
+
     public function teacherAttendance()
     {
         // Filters
