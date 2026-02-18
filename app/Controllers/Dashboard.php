@@ -3172,10 +3172,19 @@ class Dashboard extends Controller
         }
 
         $this->data['all_month_fees'] = $allMonths;
-        echo "<pre>";
-        print_r($allMonths);
-        echo "</pre>";
 
+        // echo "<pre>";
+        // print_r($allMonths);
+        // echo "</pre>";
+
+        $this->data['students'] = $this->studentModel
+            ->where('permission', '0')
+            ->orderBy('student_name', 'ASC')
+            ->findAll();
+
+        echo "<pre>";
+        print_r($this->data['students']);
+        echo "</pre>";
         $this->data['teachers'] = $this->userModel
             ->where('role', 'teacher')
             ->where('account_status !=', 0)
