@@ -56,6 +56,7 @@ class Dashboard extends Controller
         $this->feesModel        = new FeesModel();
         $this->feesAmountModel  = new FeesAmountModel();
         $this->transactionModel = new TransactionModel();
+        $this->welcomeModel     = new TransactionModel();
         $this->teacherAttendanceModel = new TeacherAttendanceModel();
         $this->rankingModel = new RankingModel();
 
@@ -3839,16 +3840,19 @@ class Dashboard extends Controller
         return view('dashboard/student_payment_history', $this->data);
     }
 
-    public function welcome_message()
+    public function welcomeMessages()
     {
-        $this->data['title'] = 'Welcome message';
+        $this->data['title'] = 'Welcome Message List';
         $this->data['activeSection'] = 'welcome_message';
-
         $this->data['navbarItems'] = [
-            ['label' => 'Welcome', 'url' => base_url('admin/welcome-message')],
+            ['label' => 'Welcome Messages', 'url' => current_url()],
+            ['label' => 'Add Welcome Message', 'url' => base_url('admin/welcomeMessageForm')],
         ];
 
-        return view('dashboard/welcome_message_form', $this->data);
+        // Fetch all welcome messages, newest first
+        $this->data['welcomeMessages'] = $this->welcomeModel->orderBy('id', 'DESC')->findAll();
+
+        return view('dashboard/welcome_message_list', $this->data);
     }
 
     public function teacherAttendance()
