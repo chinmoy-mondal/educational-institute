@@ -2718,6 +2718,7 @@ class Dashboard extends Controller
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
             ['label' => 'Students', 'url' => base_url('admin/std_pay')],
             ['label' => 'Due', 'url' => base_url('admin/std_due')],
+            ['label' => 'Report', 'url' => base_url('admin/pay_report')],
 			['label' => 'Salary', 'url' => base_url('admin/salary')],
 			['label' => 'Cost', 'url' => base_url('admin/cost')],
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
@@ -2746,6 +2747,7 @@ class Dashboard extends Controller
 
         /* Students list */
         $this->data['students'] = $builder
+            ->where('permission', 0)
             ->orderBy('student_name', 'ASC')
             ->get()
             ->getResultArray();
