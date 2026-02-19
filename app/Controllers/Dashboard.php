@@ -3276,11 +3276,10 @@ class Dashboard extends Controller
 
         // ===== Get Payment Summary =====
         $paymentSummary = [];
-        $studentsPayments = $this->db->table('transactions') // change table name if different
+        $studentsPayments = $this->transactionModel
             ->select('student_id, amount, discount, id')
             ->orderBy('id', 'ASC') // first discount
-            ->get()
-            ->getResultArray();
+            ->findAll();
 
         foreach ($studentsPayments as $p) {
             $sid = $p['student_id'];
