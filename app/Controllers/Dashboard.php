@@ -3282,7 +3282,7 @@ class Dashboard extends Controller
             ->findAll();
 
         foreach ($studentsPayments as $p) {
-            $sid = $p['student_id'];
+            $sid = $p['sender_id'];
 
             // Paid = sum of all amounts
             $paymentSummary[$sid]['paid'] = ($paymentSummary[$sid]['paid'] ?? 0) + $p['amount'];
