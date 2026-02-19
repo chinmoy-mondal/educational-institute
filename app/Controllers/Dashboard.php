@@ -3260,23 +3260,27 @@ class Dashboard extends Controller
         }
         $this->data['students'] = $students;
 
-        // ===== Payment Summary (all payments up to selected month) =====
+        // ===== Payment Summary (cumulative) =====
         $paymentSummary = [];
+        $usedTransactionIds = []; // track discount counted per transaction
+
         $studentsPayments = $this->transactionModel
-            ->select('sender_id, amount, discount, id, month')
+            ->select('transaction_id, sender_id, amount, discount, month')
             ->where('month <=', $selectedMonth)
-            ->orderBy('id', 'ASC') // first discount
+            ->orderBy('id', 'ASC') // ensures first discount is used
             ->findAll();
 
         foreach ($studentsPayments as $p) {
             $sid = $p['sender_id'];
+            $tid = $p['transaction_id'];
 
             // Paid = sum of amounts up to selected month
             $paymentSummary[$sid]['paid'] = ($paymentSummary[$sid]['paid'] ?? 0) + $p['amount'];
 
-            // Discount = only first transaction discount
-            if (!isset($paymentSummary[$sid]['discount'])) {
-                $paymentSummary[$sid]['discount'] = $p['discount'] ?? 0;
+            // Discount = sum of first discount per transaction
+            if (!in_array($tid, $usedTransactionIds)) {
+                $paymentSummary[$sid]['discount'] = ($paymentSummary[$sid]['discount'] ?? 0) + ($p['discount'] ?? 0);
+                $usedTransactionIds[] = $tid; // mark this transaction as counted
             }
         }
 
