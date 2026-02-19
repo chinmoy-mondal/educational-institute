@@ -3202,6 +3202,11 @@ class Dashboard extends Controller
 
     }
 
+    public function pay_report()
+    {
+        return "we are working here";
+    }
+
     // two date summation
     public function transaction_custome_date()
     {
