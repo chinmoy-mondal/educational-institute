@@ -3,45 +3,39 @@
 
 <div class="container-fluid py-4">
 
-    <h3 class="fw-bold text-danger mb-4">💰 Student Due List</h3>
+    <h3 class="fw-bold text-danger mb-4">💰 Student Due List (Month:
+        <?= date('F', mktime(0, 0, 0, $selectedMonth, 1)) ?>)</h3>
 
     <!-- ================= FILTER CARD ================= -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <form method="get">
+            <form method="get" class="row g-3">
 
-                <div class="row">
-
-                    <!-- Month Select -->
-                    <div class="col-md-4">
-                        <label class="form-label">Select Month</label>
-                        <select name="month" class="form-control">
-                            <?php for ($m = 1; $m <= 12; $m++): ?>
-                            <option value="<?= $m ?>" <?= ($selectedMonth == $m) ? 'selected' : '' ?>>
-                                <?= date('F', mktime(0, 0, 0, $m, 1)) ?>
-                            </option>
-                            <?php endfor; ?>
-                        </select>
-                    </div>
-
-                    <!-- Section Select -->
-                    <div class="col-md-4">
-                        <label class="form-label">Select Section</label>
-                        <select name="section" class="form-control">
-                            <option value="all">All</option>
-                            <option value="আবাসিক" <?= ($selectedSection == 'আবাসিক') ? 'selected' : '' ?>>আবাসিক
-                            </option>
-                            <option value="অনাবাসিক" <?= ($selectedSection == 'অনাবাসিক') ? 'selected' : '' ?>>অনাবাসিক
-                            </option>
-                        </select>
-                    </div>
-
-                    <!-- Filter Button -->
-                    <div class="col-md-4 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary w-100">🔍 Filter</button>
-                    </div>
-
+                <div class="col-md-4">
+                    <label class="form-label">Select Month</label>
+                    <select name="month" class="form-control">
+                        <?php for ($m = 1; $m <= 12; $m++): ?>
+                        <option value="<?= $m ?>" <?= ($selectedMonth == $m) ? 'selected' : '' ?>>
+                            <?= date('F', mktime(0, 0, 0, $m, 1)) ?>
+                        </option>
+                        <?php endfor; ?>
+                    </select>
                 </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Select Section</label>
+                    <select name="section" class="form-control">
+                        <option value="all" <?= ($selectedSection == 'all') ? 'selected' : '' ?>>All</option>
+                        <option value="আবাসিক" <?= ($selectedSection == 'আবাসিক') ? 'selected' : '' ?>>আবাসিক</option>
+                        <option value="অনাবাসিক" <?= ($selectedSection == 'অনাবাসিক') ? 'selected' : '' ?>>অনাবাসিক
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">🔍 Filter</button>
+                </div>
+
             </form>
         </div>
     </div>
@@ -49,12 +43,11 @@
     <!-- ================= DUE TABLE ================= -->
     <div class="card shadow-sm">
         <div class="card-body table-responsive">
-
             <table class="table table-bordered table-hover">
                 <thead class="table-dark text-center">
                     <tr>
                         <th>#</th>
-                        <th>Student ID</th> <!-- New Column -->
+                        <th>Student ID</th>
                         <th>Student Name</th>
                         <th>Class</th>
                         <th>Section</th>
@@ -66,45 +59,36 @@
                 </thead>
 
                 <tbody>
-                    <?php if (!empty($students)) : ?>
-                    <?php $i = 1; ?>
+                    <?php if (!empty($students)): $i = 1; ?>
                     <?php foreach ($students as $std):
-                            $section = trim($std['section']);
-                            $studentId = $std['id'];
+                            $sid = $std['id'];
+                            $sec = trim($std['section']);
 
-                            $totalFee = $all_month_fees[$selectedMonth][$section]['cumulative'] ?? 0;
-                            $paid     = $paymentSummary[$studentId]['paid'] ?? 0;
-                            $discount = $paymentSummary[$studentId]['discount'] ?? 0;
-                            $netDue   = $totalFee - ($paid + $discount);
+                            $totalFee = $monthFees[$sec] ?? 0;
+                            $paid = $paymentSummary[$sid]['paid'] ?? 0;
+                            $discount = $paymentSummary[$sid]['discount'] ?? 0;
+                            $netDue = $totalFee - ($paid + $discount);
                         ?>
-
                     <tr class="text-center">
                         <td><?= $i++ ?></td>
-                        <td><?= esc($studentId) ?></td> <!-- Student ID displayed -->
+                        <td><?= esc($sid) ?></td>
                         <td class="text-start"><?= esc($std['student_name']) ?></td>
                         <td><?= esc($std['class']) ?></td>
-                        <td><?= esc($section) ?></td>
-
+                        <td><?= esc($sec) ?></td>
                         <td class="text-danger fw-bold">৳ <?= number_format($totalFee, 2) ?></td>
                         <td class="text-success fw-bold">৳ <?= number_format($paid, 2) ?></td>
                         <td class="text-warning fw-bold">৳ <?= number_format($discount, 2) ?></td>
-                        <td class="<?= $netDue > 0 ? 'text-danger' : 'text-success' ?> fw-bold">
-                            ৳ <?= number_format($netDue, 2) ?>
-                        </td>
+                        <td class="<?= $netDue > 0 ? 'text-danger' : 'text-success' ?> fw-bold">৳
+                            <?= number_format($netDue, 2) ?></td>
                     </tr>
-
                     <?php endforeach; ?>
                     <?php else: ?>
                     <tr>
-                        <td colspan="9" class="text-center text-danger">
-                            No students found
-                        </td>
+                        <td colspan="9" class="text-center text-danger">No students found</td>
                     </tr>
                     <?php endif; ?>
                 </tbody>
-
             </table>
-
         </div>
     </div>
 

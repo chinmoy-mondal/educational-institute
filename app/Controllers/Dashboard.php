@@ -3206,7 +3206,7 @@ class Dashboard extends Controller
 
     public function std_due()
     {
-        $this->data['title'] = 'Due list';
+        $this->data['title'] = 'Due List';
         $this->data['activeSection'] = 'accounts';
 
         $this->data['navbarItems'] = [
@@ -3222,13 +3222,13 @@ class Dashboard extends Controller
         ];
 
         // ===== Get Filters =====
-        $selectedMonth   = $this->request->getGet('month') ?? date('n');
+        $selectedMonth   = (int) ($this->request->getGet('month') ?? date('n'));
         $selectedSection = $this->request->getGet('section') ?? 'all';
 
         $this->data['selectedMonth']   = $selectedMonth;
         $this->data['selectedSection'] = $selectedSection;
 
-        // ===== Calculate Current Month Fees =====
+        // ===== Calculate Current Month Fees per Section =====
         $fees = $this->feesAmountModel->findAll();
         $monthFees = [];
 
@@ -3262,8 +3262,8 @@ class Dashboard extends Controller
         $paymentSummary = [];
         $studentsPayments = $this->transactionModel
             ->select('sender_id, amount, discount, id, month')
-            ->orderBy('id', 'ASC') // first discount
             ->where('month', $selectedMonth)
+            ->orderBy('id', 'ASC') // first discount
             ->findAll();
 
         foreach ($studentsPayments as $p) {
