@@ -33,6 +33,14 @@
                     </select>
                 </div>
 
+                <div class="col-md-4">
+                    <label class="form-label">Show Type</label>
+                    <select name="due_type" class="form-control">
+                        <option value="all" <?= ($dueType == 'all') ? 'selected' : '' ?>>All Students</option>
+                        <option value="due" <?= ($dueType == 'due') ? 'selected' : '' ?>>Only Due (Net > 0)</option>
+                    </select>
+                </div>
+
                 <div class="col-md-4 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary w-100">🔍 Filter</button>
                 </div>
@@ -52,11 +60,11 @@
                         <th>Student Name</th>
                         <th>Class</th>
                         <th>Section</th>
-                        <th class="text-danger">Total Fee</th>
-                        <th class="text-muted">Paid</th>
-                        <th class="text-warning">Discount</th>
-                        <th class="text-success">Get</th>
-                        <th class="text-primary">Net Due</th>
+                        <th>Total Fee</th>
+                        <th>Paid</th>
+                        <th>Discount</th>
+                        <th>Get</th>
+                        <th>Net Due</th>
                     </tr>
                 </thead>
 
