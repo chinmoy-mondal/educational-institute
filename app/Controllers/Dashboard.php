@@ -4096,7 +4096,7 @@ class Dashboard extends Controller
     // Save new slider
     public function saveSlider()
     {
-        $status = $this->request->getPost('status');
+        $status = $this->request->getPost('status') ?? 0;
 
         $data = [
             'title'      => $this->request->getPost('title'),
