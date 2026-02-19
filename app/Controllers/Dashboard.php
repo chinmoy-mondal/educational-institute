@@ -3189,14 +3189,15 @@ class Dashboard extends Controller
             ->orderBy('student_name', 'ASC')
             ->findAll();
 
-        echo "<pre>";
-        print_r($this->data['students']);
-        echo "</pre>";
+        // echo "<pre>";
+        // print_r($this->data['students']);
+        // echo "</pre>";
         $this->data['teachers'] = $this->userModel
             ->where('role', 'teacher')
             ->where('account_status !=', 0)
             ->orderBy('name', 'ASC')
             ->findAll();
+        return view('dashboard/transaction/std_due_list', $this->data);
 
         // return view('dashboard/transaction/salary_form', $this->data);
 
