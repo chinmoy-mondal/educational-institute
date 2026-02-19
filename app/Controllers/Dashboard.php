@@ -3239,17 +3239,12 @@ class Dashboard extends Controller
                 $fee     = (float) $f['fees'];
 
                 if ($unit <= 0) continue;
-
                 $interval = 12 / $unit;
 
                 for ($m = 1; $m <= $month; $m++) {
                     if ($m === 1 || (($m - 1) % $interval === 0)) {
-
-                        // cumulative
                         $allMonths[$month][$section]['cumulative'] =
                             ($allMonths[$month][$section]['cumulative'] ?? 0) + $fee;
-
-                        // current month only
                         if ($m == $month) {
                             $allMonths[$month][$section]['current'] =
                                 ($allMonths[$month][$section]['current'] ?? 0) + $fee;
@@ -3260,31 +3255,31 @@ class Dashboard extends Controller
         }
         $this->data['all_month_fees'] = $allMonths;
 
-        // ===== Get Active Students =====
+        // ===== Get Students =====
         $students = $this->studentModel
             ->where('permission', '0')
             ->orderBy('student_name', 'ASC')
             ->findAll();
 
-        // ===== Section Filter =====
         if ($selectedSection != 'all') {
-            $students = array_filter($students, function ($std) use ($selectedSection) {
-                return trim($std['section']) == $selectedSection;
-            });
+            $students = array_filter($students, fn($std) => trim($std['section']) == $selectedSection);
         }
         $this->data['students'] = $students;
 
-        // ===== Get Payment Summary =====
+        // ===== Payment Summary using Model =====
+        $this->transactionModel = new \App\Models\TransactionModel();
+
         $paymentSummary = [];
-        $studentsPayments = $this->transactionModel
-            ->select('sender_id, amount, discount, id')
-            ->orderBy('id', 'ASC') // first discount
+
+        // Get all transactions ordered by ID (first transaction first)
+        $allPayments = $this->transactionModel
+            ->orderBy('id', 'ASC')
             ->findAll();
 
-        foreach ($studentsPayments as $p) {
-            $sid = $p['sender_id'];
+        foreach ($allPayments as $p) {
+            $sid = $p['student_id'];
 
-            // Paid = sum of all amounts
+            // Paid = sum of all transaction amounts
             $paymentSummary[$sid]['paid'] = ($paymentSummary[$sid]['paid'] ?? 0) + $p['amount'];
 
             // Discount = only first transaction discount
@@ -3292,6 +3287,7 @@ class Dashboard extends Controller
                 $paymentSummary[$sid]['discount'] = $p['discount'] ?? 0;
             }
         }
+
         $this->data['paymentSummary'] = $paymentSummary;
 
         return view('dashboard/transaction/std_due_list', $this->data);
