@@ -3,8 +3,9 @@
 
 <div class="container-fluid py-4">
 
-    <h3 class="fw-bold text-danger mb-4">💰 Student Due List (Month:
-        <?= date('F', mktime(0, 0, 0, $selectedMonth, 1)) ?>)</h3>
+    <h3 class="fw-bold text-danger mb-4">
+        💰 Student Due List (Cumulative up to <?= date('F', mktime(0, 0, 0, $selectedMonth, 1)) ?>)
+    </h3>
 
     <!-- ================= FILTER CARD ================= -->
     <div class="card shadow-sm mb-4">

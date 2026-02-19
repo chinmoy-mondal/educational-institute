@@ -3228,9 +3228,9 @@ class Dashboard extends Controller
         $this->data['selectedMonth']   = $selectedMonth;
         $this->data['selectedSection'] = $selectedSection;
 
-        // ===== Calculate Current Month Fees per Section =====
+        // ===== Calculate Cumulative Fees up to Selected Month =====
         $fees = $this->feesAmountModel->findAll();
-        $monthFees = [];
+        $cumulativeFees = [];
 
         foreach ($fees as $f) {
             $section = trim($f['section']);
@@ -3241,11 +3241,13 @@ class Dashboard extends Controller
 
             $interval = 12 / $unit;
 
-            if ($selectedMonth === 1 || (($selectedMonth - 1) % $interval === 0)) {
-                $monthFees[$section] = ($monthFees[$section] ?? 0) + $fee;
+            for ($m = 1; $m <= $selectedMonth; $m++) {
+                if ($m === 1 || (($m - 1) % $interval === 0)) {
+                    $cumulativeFees[$section] = ($cumulativeFees[$section] ?? 0) + $fee;
+                }
             }
         }
-        $this->data['monthFees'] = $monthFees;
+        $this->data['monthFees'] = $cumulativeFees;
 
         // ===== Get Active Students =====
         $students = $this->studentModel
@@ -3258,18 +3260,18 @@ class Dashboard extends Controller
         }
         $this->data['students'] = $students;
 
-        // ===== Payment Summary for Selected Month =====
+        // ===== Payment Summary (all payments up to selected month) =====
         $paymentSummary = [];
         $studentsPayments = $this->transactionModel
             ->select('sender_id, amount, discount, id, month')
-            ->where('month', $selectedMonth)
+            ->where('month <=', $selectedMonth)
             ->orderBy('id', 'ASC') // first discount
             ->findAll();
 
         foreach ($studentsPayments as $p) {
             $sid = $p['sender_id'];
 
-            // Paid = sum of amounts for this month
+            // Paid = sum of amounts up to selected month
             $paymentSummary[$sid]['paid'] = ($paymentSummary[$sid]['paid'] ?? 0) + $p['amount'];
 
             // Discount = only first transaction discount
