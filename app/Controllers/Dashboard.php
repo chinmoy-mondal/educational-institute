@@ -3228,34 +3228,27 @@ class Dashboard extends Controller
         $this->data['selectedMonth']   = $selectedMonth;
         $this->data['selectedSection'] = $selectedSection;
 
-        // ===== Calculate Monthly Fees =====
+        // ===== Calculate Fees =====
         $fees = $this->feesAmountModel->findAll();
-        $allMonths = [];
+        $monthFees = []; // only current month
 
-        for ($month = 1; $month <= 12; $month++) {
-            foreach ($fees as $f) {
-                $section = trim($f['section']);
-                $unit    = (int) $f['unit'];
-                $fee     = (float) $f['fees'];
+        foreach ($fees as $f) {
+            $section = trim($f['section']);
+            $unit    = (int) $f['unit'];
+            $fee     = (float) $f['fees'];
 
-                if ($unit <= 0) continue;
-                $interval = 12 / $unit;
+            if ($unit <= 0) continue;
 
-                for ($m = 1; $m <= $month; $m++) {
-                    if ($m === 1 || (($m - 1) % $interval === 0)) {
-                        $allMonths[$month][$section]['cumulative'] =
-                            ($allMonths[$month][$section]['cumulative'] ?? 0) + $fee;
-                        if ($m == $month) {
-                            $allMonths[$month][$section]['current'] =
-                                ($allMonths[$month][$section]['current'] ?? 0) + $fee;
-                        }
-                    }
-                }
+            $interval = 12 / $unit;
+
+            // check if this month is applicable
+            if ($selectedMonth === 1 || (($selectedMonth - 1) % $interval === 0)) {
+                $monthFees[$section] = ($monthFees[$section] ?? 0) + $fee;
             }
         }
-        $this->data['all_month_fees'] = $allMonths;
+        $this->data['monthFees'] = $monthFees;
 
-        // ===== Get Students =====
+        // ===== Get Active Students =====
         $students = $this->studentModel
             ->where('permission', '0')
             ->orderBy('student_name', 'ASC')
@@ -3266,28 +3259,28 @@ class Dashboard extends Controller
         }
         $this->data['students'] = $students;
 
-        // ===== Payment Summary using Model =====
-        $this->transactionModel = new \App\Models\TransactionModel();
-
+        // ===== Payment Summary for Current Month =====
         $paymentSummary = [];
-
-        // Get all transactions ordered by ID (first transaction first)
-        $allPayments = $this->transactionModel
+        $studentsPayments = $this->transactionModel
+            ->select('sender_id, amount, discount, id, MONTH(created_at) as month')
             ->orderBy('id', 'ASC')
             ->findAll();
 
-        foreach ($allPayments as $p) {
-            $sid = $p['student_id'];
+        foreach ($studentsPayments as $p) {
+            $sid = $p['sender_id'];
+            $txMonth = (int) date('n', strtotime($p['created_at']));
 
-            // Paid = sum of all transaction amounts
+            // only include payments for the selected month
+            if ($txMonth !== (int)$selectedMonth) continue;
+
+            // Paid = sum of all amounts this month
             $paymentSummary[$sid]['paid'] = ($paymentSummary[$sid]['paid'] ?? 0) + $p['amount'];
 
-            // Discount = only first transaction discount
+            // Discount = only first transaction discount this month
             if (!isset($paymentSummary[$sid]['discount'])) {
                 $paymentSummary[$sid]['discount'] = $p['discount'] ?? 0;
             }
         }
-
         $this->data['paymentSummary'] = $paymentSummary;
 
         return view('dashboard/transaction/std_due_list', $this->data);

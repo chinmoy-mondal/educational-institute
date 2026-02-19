@@ -29,20 +29,16 @@
                         <label class="form-label">Select Section</label>
                         <select name="section" class="form-control">
                             <option value="all">All</option>
-                            <option value="আবাসিক" <?= ($selectedSection == 'আবাসিক') ? 'selected' : '' ?>>
-                                আবাসিক
+                            <option value="আবাসিক" <?= ($selectedSection == 'আবাসিক') ? 'selected' : '' ?>>আবাসিক
                             </option>
-                            <option value="অনাবাসিক" <?= ($selectedSection == 'অনাবাসিক') ? 'selected' : '' ?>>
-                                অনাবাসিক
+                            <option value="অনাবাসিক" <?= ($selectedSection == 'অনাবাসিক') ? 'selected' : '' ?>>অনাবাসিক
                             </option>
                         </select>
                     </div>
 
                     <!-- Filter Button -->
                     <div class="col-md-4 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary w-100">
-                            🔍 Filter
-                        </button>
+                        <button type="submit" class="btn btn-primary w-100">🔍 Filter</button>
                     </div>
 
                 </div>
@@ -58,6 +54,7 @@
                 <thead class="table-dark text-center">
                     <tr>
                         <th>#</th>
+                        <th>Student ID</th> <!-- New Column -->
                         <th>Student Name</th>
                         <th>Class</th>
                         <th>Section</th>
@@ -69,7 +66,6 @@
                 </thead>
 
                 <tbody>
-
                     <?php if (!empty($students)) : ?>
                     <?php $i = 1; ?>
                     <?php foreach ($students as $std):
@@ -84,6 +80,7 @@
 
                     <tr class="text-center">
                         <td><?= $i++ ?></td>
+                        <td><?= esc($studentId) ?></td> <!-- Student ID displayed -->
                         <td class="text-start"><?= esc($std['student_name']) ?></td>
                         <td><?= esc($std['class']) ?></td>
                         <td><?= esc($section) ?></td>
@@ -99,12 +96,11 @@
                     <?php endforeach; ?>
                     <?php else: ?>
                     <tr>
-                        <td colspan="8" class="text-center text-danger">
+                        <td colspan="9" class="text-center text-danger">
                             No students found
                         </td>
                     </tr>
                     <?php endif; ?>
-
                 </tbody>
 
             </table>
