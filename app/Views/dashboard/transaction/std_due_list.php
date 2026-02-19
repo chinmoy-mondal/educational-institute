@@ -55,6 +55,7 @@
                         <th class="text-danger">Total Fee</th>
                         <th class="text-success">Paid</th>
                         <th class="text-warning">Discount</th>
+                        <th class="text-warning">Get</th>
                         <th class="text-primary">Net Due</th>
                     </tr>
                 </thead>
@@ -68,7 +69,8 @@
                             $totalFee = $monthFees[$sec] ?? 0;
                             $paid = $paymentSummary[$sid]['paid'] ?? 0;
                             $discount = $paymentSummary[$sid]['discount'] ?? 0;
-                            $netDue = $totalFee - ($paid + $discount);
+                            $get = $paid - $discount;
+                            $netDue = $totalFee - $paid;
                         ?>
                     <tr class="text-center">
                         <td><?= $i++ ?></td>
@@ -79,6 +81,7 @@
                         <td class="text-danger fw-bold">৳ <?= number_format($totalFee, 2) ?></td>
                         <td class="text-success fw-bold">৳ <?= number_format($paid, 2) ?></td>
                         <td class="text-warning fw-bold">৳ <?= number_format($discount, 2) ?></td>
+                        <td class="text-warning fw-bold">৳ <?= number_format($get, 2) ?></td>
                         <td class="<?= $netDue > 0 ? 'text-danger' : 'text-success' ?> fw-bold">৳
                             <?= number_format($netDue, 2) ?></td>
                     </tr>
