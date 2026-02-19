@@ -3224,6 +3224,7 @@ class Dashboard extends Controller
         // ===== Get Filters =====
         $selectedMonth   = (int) ($this->request->getGet('month') ?? date('n'));
         $selectedSection = $this->request->getGet('section') ?? 'all';
+        $dueType         = $this->request->getGet('due_type') ?? 'due';
 
         $this->data['selectedMonth']   = $selectedMonth;
         $this->data['selectedSection'] = $selectedSection;
@@ -3284,6 +3285,7 @@ class Dashboard extends Controller
             }
         }
 
+        $this->data['dueType']         = $dueType;
         $this->data['paymentSummary'] = $paymentSummary;
 
         return view('dashboard/transaction/std_due_list', $this->data);
