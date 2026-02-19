@@ -12,7 +12,7 @@
         <div class="card-body">
             <form method="get" class="row g-3">
 
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label">Select Month</label>
                     <select name="month" class="form-control">
                         <?php for ($m = 1; $m <= 12; $m++): ?>
@@ -23,7 +23,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label">Select Section</label>
                     <select name="section" class="form-control">
                         <option value="all" <?= ($selectedSection == 'all') ? 'selected' : '' ?>>All</option>
@@ -33,7 +33,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <label class="form-label">Show Type</label>
                     <select name="due_type" class="form-control">
                         <option value="all" <?= ($dueType == 'all') ? 'selected' : '' ?>>All Students</option>
@@ -41,7 +41,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-4 d-flex align-items-end">
+                <div class="col-md-3 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary w-100">🔍 Filter</button>
                 </div>
 
