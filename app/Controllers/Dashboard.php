@@ -3233,9 +3233,7 @@ class Dashboard extends Controller
         $allMonths = [];
 
         for ($month = 1; $month <= 12; $month++) {
-
             foreach ($fees as $f) {
-
                 $section = trim($f['section']);
                 $unit    = (int) $f['unit'];
                 $fee     = (float) $f['fees'];
@@ -3245,14 +3243,13 @@ class Dashboard extends Controller
                 $interval = 12 / $unit;
 
                 for ($m = 1; $m <= $month; $m++) {
-
                     if ($m === 1 || (($m - 1) % $interval === 0)) {
 
                         // cumulative
                         $allMonths[$month][$section]['cumulative'] =
                             ($allMonths[$month][$section]['cumulative'] ?? 0) + $fee;
 
-                        // current month
+                        // current month only
                         if ($m == $month) {
                             $allMonths[$month][$section]['current'] =
                                 ($allMonths[$month][$section]['current'] ?? 0) + $fee;
@@ -3261,7 +3258,6 @@ class Dashboard extends Controller
                 }
             }
         }
-
         $this->data['all_month_fees'] = $allMonths;
 
         // ===== Get Active Students =====
@@ -3276,15 +3272,28 @@ class Dashboard extends Controller
                 return trim($std['section']) == $selectedSection;
             });
         }
-
         $this->data['students'] = $students;
 
-        // ===== Teachers (if needed later) =====
-        $this->data['teachers'] = $this->userModel
-            ->where('role', 'teacher')
-            ->where('account_status !=', 0)
-            ->orderBy('name', 'ASC')
-            ->findAll();
+        // ===== Get Payment Summary =====
+        $paymentSummary = [];
+        $studentsPayments = $this->db->table('transactions') // change table name if different
+            ->select('student_id, amount, discount, id')
+            ->orderBy('id', 'ASC') // first discount
+            ->get()
+            ->getResultArray();
+
+        foreach ($studentsPayments as $p) {
+            $sid = $p['student_id'];
+
+            // Paid = sum of all amounts
+            $paymentSummary[$sid]['paid'] = ($paymentSummary[$sid]['paid'] ?? 0) + $p['amount'];
+
+            // Discount = only first transaction discount
+            if (!isset($paymentSummary[$sid]['discount'])) {
+                $paymentSummary[$sid]['discount'] = $p['discount'] ?? 0;
+            }
+        }
+        $this->data['paymentSummary'] = $paymentSummary;
 
         return view('dashboard/transaction/std_due_list', $this->data);
     }

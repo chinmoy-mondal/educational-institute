@@ -38,7 +38,7 @@
                         </select>
                     </div>
 
-                    <!-- Button -->
+                    <!-- Filter Button -->
                     <div class="col-md-4 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary w-100">
                             🔍 Filter
@@ -46,7 +46,6 @@
                     </div>
 
                 </div>
-
             </form>
         </div>
     </div>
@@ -62,8 +61,10 @@
                         <th>Student Name</th>
                         <th>Class</th>
                         <th>Section</th>
-                        <th class="text-danger">Cumulative Due</th>
-                        <th class="text-primary">Current Month</th>
+                        <th class="text-danger">Total Fee</th>
+                        <th class="text-success">Paid</th>
+                        <th class="text-warning">Discount</th>
+                        <th class="text-primary">Net Due</th>
                     </tr>
                 </thead>
 
@@ -72,11 +73,13 @@
                     <?php if (!empty($students)) : ?>
                     <?php $i = 1; ?>
                     <?php foreach ($students as $std):
-
                             $section = trim($std['section']);
+                            $studentId = $std['id'];
 
-                            $cumulative = $all_month_fees[$selectedMonth][$section]['cumulative'] ?? 0;
-                            $current    = $all_month_fees[$selectedMonth][$section]['current'] ?? 0;
+                            $totalFee = $all_month_fees[$selectedMonth][$section]['cumulative'] ?? 0;
+                            $paid     = $paymentSummary[$studentId]['paid'] ?? 0;
+                            $discount = $paymentSummary[$studentId]['discount'] ?? 0;
+                            $netDue   = $totalFee - ($paid + $discount);
                         ?>
 
                     <tr class="text-center">
@@ -85,19 +88,18 @@
                         <td><?= esc($std['class']) ?></td>
                         <td><?= esc($section) ?></td>
 
-                        <td class="text-danger fw-bold">
-                            ৳ <?= number_format($cumulative, 2) ?>
-                        </td>
-
-                        <td class="text-primary fw-bold">
-                            ৳ <?= number_format($current, 2) ?>
+                        <td class="text-danger fw-bold">৳ <?= number_format($totalFee, 2) ?></td>
+                        <td class="text-success fw-bold">৳ <?= number_format($paid, 2) ?></td>
+                        <td class="text-warning fw-bold">৳ <?= number_format($discount, 2) ?></td>
+                        <td class="<?= $netDue > 0 ? 'text-danger' : 'text-success' ?> fw-bold">
+                            ৳ <?= number_format($netDue, 2) ?>
                         </td>
                     </tr>
 
                     <?php endforeach; ?>
                     <?php else: ?>
                     <tr>
-                        <td colspan="6" class="text-center text-danger">
+                        <td colspan="8" class="text-center text-danger">
                             No students found
                         </td>
                     </tr>
