@@ -5,49 +5,73 @@
 
     <h3 class="fw-bold text-danger mb-4">💰 Student Due List</h3>
 
-    <!-- Month Selector -->
+    <!-- ================= FILTER CARD ================= -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
             <form method="get">
+
                 <div class="row">
+
+                    <!-- Month Select -->
                     <div class="col-md-4">
-                        <label>Select Month</label>
-                        <select name="month" class="form-control" onchange="this.form.submit()">
+                        <label class="form-label">Select Month</label>
+                        <select name="month" class="form-control">
                             <?php for ($m = 1; $m <= 12; $m++): ?>
-                            <option value="<?= $m ?>" <?= (($_GET['month'] ?? date('n')) == $m) ? 'selected' : '' ?>>
+                            <option value="<?= $m ?>" <?= ($selectedMonth == $m) ? 'selected' : '' ?>>
                                 <?= date('F', mktime(0, 0, 0, $m, 1)) ?>
                             </option>
                             <?php endfor; ?>
                         </select>
                     </div>
+
+                    <!-- Section Select -->
+                    <div class="col-md-4">
+                        <label class="form-label">Select Section</label>
+                        <select name="section" class="form-control">
+                            <option value="all">All</option>
+                            <option value="আবাসিক" <?= ($selectedSection == 'আবাসিক') ? 'selected' : '' ?>>
+                                আবাসিক
+                            </option>
+                            <option value="অনাবাসিক" <?= ($selectedSection == 'অনাবাসিক') ? 'selected' : '' ?>>
+                                অনাবাসিক
+                            </option>
+                        </select>
+                    </div>
+
+                    <!-- Button -->
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            🔍 Filter
+                        </button>
+                    </div>
+
                 </div>
+
             </form>
         </div>
     </div>
 
-    <?php
-    $selectedMonth = $_GET['month'] ?? date('n');
-    ?>
-
-    <!-- Student Due Table -->
+    <!-- ================= DUE TABLE ================= -->
     <div class="card shadow-sm">
         <div class="card-body table-responsive">
 
             <table class="table table-bordered table-hover">
-                <thead class="table-dark">
+                <thead class="table-dark text-center">
                     <tr>
                         <th>#</th>
                         <th>Student Name</th>
                         <th>Class</th>
                         <th>Section</th>
-                        <th>Cumulative Due</th>
-                        <th>Current Month</th>
+                        <th class="text-danger">Cumulative Due</th>
+                        <th class="text-primary">Current Month</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <?php if (!empty($students)): ?>
-                    <?php foreach ($students as $key => $std):
+
+                    <?php if (!empty($students)) : ?>
+                    <?php $i = 1; ?>
+                    <?php foreach ($students as $std):
 
                             $section = trim($std['section']);
 
@@ -55,14 +79,16 @@
                             $current    = $all_month_fees[$selectedMonth][$section]['current'] ?? 0;
                         ?>
 
-                    <tr>
-                        <td><?= $key + 1 ?></td>
-                        <td><?= esc($std['student_name']) ?></td>
+                    <tr class="text-center">
+                        <td><?= $i++ ?></td>
+                        <td class="text-start"><?= esc($std['student_name']) ?></td>
                         <td><?= esc($std['class']) ?></td>
                         <td><?= esc($section) ?></td>
+
                         <td class="text-danger fw-bold">
                             ৳ <?= number_format($cumulative, 2) ?>
                         </td>
+
                         <td class="text-primary fw-bold">
                             ৳ <?= number_format($current, 2) ?>
                         </td>
@@ -76,6 +102,7 @@
                         </td>
                     </tr>
                     <?php endif; ?>
+
                 </tbody>
 
             </table>

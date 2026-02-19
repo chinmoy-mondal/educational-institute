@@ -3142,6 +3142,68 @@ class Dashboard extends Controller
         return view('dashboard/transaction/salary_form', $this->data);
     }
 
+    // public function std_due()
+    // {
+
+    //     $fees = $this->feesAmountModel->findAll();
+
+    //     $allMonths = [];
+
+    //     for ($month = 1; $month <= 12; $month++) {
+
+    //         foreach ($fees as $f) {
+
+    //             $section = trim($f['section']);
+    //             $unit    = (int) $f['unit'];
+    //             $fee     = (float) $f['fees'];
+
+    //             if ($unit <= 0) continue;
+
+    //             $interval = 12 / $unit;
+
+    //             for ($m = 1; $m <= $month; $m++) {
+
+    //                 if ($m === 1 || (($m - 1) % $interval === 0)) {
+
+    //                     // cumulative
+    //                     $allMonths[$month][$section]['cumulative'] =
+    //                         ($allMonths[$month][$section]['cumulative'] ?? 0) + $fee;
+
+    //                     // current month only
+    //                     if ($m == $month) {
+    //                         $allMonths[$month][$section]['current'] =
+    //                             ($allMonths[$month][$section]['current'] ?? 0) + $fee;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     $this->data['all_month_fees'] = $allMonths;
+
+    //     // echo "<pre>";
+    //     // print_r($allMonths);
+    //     // echo "</pre>";
+
+    //     $this->data['students'] = $this->studentModel
+    //         ->where('permission', '0')
+    //         ->orderBy('student_name', 'ASC')
+    //         ->findAll();
+
+    //     // echo "<pre>";
+    //     // print_r($this->data['students']);
+    //     // echo "</pre>";
+    //     $this->data['teachers'] = $this->userModel
+    //         ->where('role', 'teacher')
+    //         ->where('account_status !=', 0)
+    //         ->orderBy('name', 'ASC')
+    //         ->findAll();
+    //     return view('dashboard/transaction/std_due_list', $this->data);
+
+    //     // return view('dashboard/transaction/salary_form', $this->data);
+
+    // }
+
     public function std_due()
     {
         $this->data['title'] = 'Due list';
@@ -3158,9 +3220,16 @@ class Dashboard extends Controller
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
-        
-        $fees = $this->feesAmountModel->findAll();
 
+        // ===== Get Filters =====
+        $selectedMonth   = $this->request->getGet('month') ?? date('n');
+        $selectedSection = $this->request->getGet('section') ?? 'all';
+
+        $this->data['selectedMonth']   = $selectedMonth;
+        $this->data['selectedSection'] = $selectedSection;
+
+        // ===== Calculate Monthly Fees =====
+        $fees = $this->feesAmountModel->findAll();
         $allMonths = [];
 
         for ($month = 1; $month <= 12; $month++) {
@@ -3183,7 +3252,7 @@ class Dashboard extends Controller
                         $allMonths[$month][$section]['cumulative'] =
                             ($allMonths[$month][$section]['cumulative'] ?? 0) + $fee;
 
-                        // current month only
+                        // current month
                         if ($m == $month) {
                             $allMonths[$month][$section]['current'] =
                                 ($allMonths[$month][$section]['current'] ?? 0) + $fee;
@@ -3195,27 +3264,29 @@ class Dashboard extends Controller
 
         $this->data['all_month_fees'] = $allMonths;
 
-        // echo "<pre>";
-        // print_r($allMonths);
-        // echo "</pre>";
-
-        $this->data['students'] = $this->studentModel
+        // ===== Get Active Students =====
+        $students = $this->studentModel
             ->where('permission', '0')
             ->orderBy('student_name', 'ASC')
             ->findAll();
 
-        // echo "<pre>";
-        // print_r($this->data['students']);
-        // echo "</pre>";
+        // ===== Section Filter =====
+        if ($selectedSection != 'all') {
+            $students = array_filter($students, function ($std) use ($selectedSection) {
+                return trim($std['section']) == $selectedSection;
+            });
+        }
+
+        $this->data['students'] = $students;
+
+        // ===== Teachers (if needed later) =====
         $this->data['teachers'] = $this->userModel
             ->where('role', 'teacher')
             ->where('account_status !=', 0)
             ->orderBy('name', 'ASC')
             ->findAll();
+
         return view('dashboard/transaction/std_due_list', $this->data);
-
-        // return view('dashboard/transaction/salary_form', $this->data);
-
     }
 
     public function pay_report()
