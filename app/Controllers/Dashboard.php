@@ -3379,7 +3379,7 @@ class Dashboard extends Controller
             $paid     = $paymentSummary[$sid]['paid'] ?? 0;
             $discount = $paymentSummary[$sid]['discount'] ?? 0;
 
-            $netDue = $totalFee - ($paid + $discount);
+            $netDue = $totalFee - $paid;
 
             // Skip if only due selected
             if ($dueType === 'due' && $netDue <= 0) {
