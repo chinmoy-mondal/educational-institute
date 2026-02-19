@@ -3277,7 +3277,7 @@ class Dashboard extends Controller
         // ===== Get Payment Summary =====
         $paymentSummary = [];
         $studentsPayments = $this->transactionModel
-            ->select('student_id, amount, discount, id')
+            ->select('sender_id, amount, discount, id')
             ->orderBy('id', 'ASC') // first discount
             ->findAll();
 
