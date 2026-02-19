@@ -73,6 +73,7 @@
                         <th>Discount</th>
                         <th>Get</th>
                         <th>Net Due</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
 
@@ -109,6 +110,12 @@
                         <td class="text-success fw-bold">৳ <?= number_format($get, 2) ?></td>
                         <td class="<?= $netDue > 0 ? 'text-danger' : 'text-success' ?> fw-bold">৳
                             <?= number_format($netDue, 2) ?></td>
+                        <td>
+                            <a href="<?= base_url('admin/studentPaymentHistory/' . esc($s['id'])) ?>"
+                                class="btn btn-sm btn-info">
+                                <i class="fas fa-history"></i> History
+                            </a>
+                        </td>
                     </tr>
                     <?php endforeach; ?>
                     <?php else: ?>
