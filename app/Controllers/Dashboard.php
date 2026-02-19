@@ -3361,6 +3361,7 @@ class Dashboard extends Controller
         fputcsv($output, [
             'Student ID',
             'Student Name',
+            'Phone',
             'Class',
             'Section',
             'Total Fee',
@@ -3389,6 +3390,7 @@ class Dashboard extends Controller
             fputcsv($output, [
                 $sid,
                 $std['student_name'],
+                $std['phone'],
                 $std['class'],
                 $sec,
                 number_format($totalFee, 2, '.', ''),
