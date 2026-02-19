@@ -3228,9 +3228,9 @@ class Dashboard extends Controller
         $this->data['selectedMonth']   = $selectedMonth;
         $this->data['selectedSection'] = $selectedSection;
 
-        // ===== Calculate Fees =====
+        // ===== Calculate Current Month Fees =====
         $fees = $this->feesAmountModel->findAll();
-        $monthFees = []; // only current month
+        $monthFees = [];
 
         foreach ($fees as $f) {
             $section = trim($f['section']);
@@ -3241,7 +3241,6 @@ class Dashboard extends Controller
 
             $interval = 12 / $unit;
 
-            // check if this month is applicable
             if ($selectedMonth === 1 || (($selectedMonth - 1) % $interval === 0)) {
                 $monthFees[$section] = ($monthFees[$section] ?? 0) + $fee;
             }
@@ -3259,28 +3258,26 @@ class Dashboard extends Controller
         }
         $this->data['students'] = $students;
 
-        // ===== Payment Summary for Current Month =====
+        // ===== Payment Summary for Selected Month =====
         $paymentSummary = [];
         $studentsPayments = $this->transactionModel
-            ->select('sender_id, amount, discount, id, MONTH(created_at) as month')
-            ->orderBy('id', 'ASC')
+            ->select('sender_id, amount, discount, id, month')
+            ->orderBy('id', 'ASC') // first discount
+            ->where('month', $selectedMonth)
             ->findAll();
 
         foreach ($studentsPayments as $p) {
             $sid = $p['sender_id'];
-            $txMonth = (int) date('n', strtotime($p['created_at']));
 
-            // only include payments for the selected month
-            if ($txMonth !== (int)$selectedMonth) continue;
-
-            // Paid = sum of all amounts this month
+            // Paid = sum of amounts for this month
             $paymentSummary[$sid]['paid'] = ($paymentSummary[$sid]['paid'] ?? 0) + $p['amount'];
 
-            // Discount = only first transaction discount this month
+            // Discount = only first transaction discount
             if (!isset($paymentSummary[$sid]['discount'])) {
                 $paymentSummary[$sid]['discount'] = $p['discount'] ?? 0;
             }
         }
+
         $this->data['paymentSummary'] = $paymentSummary;
 
         return view('dashboard/transaction/std_due_list', $this->data);
