@@ -37,7 +37,7 @@
                     <label class="form-label">Show Type</label>
                     <select name="due_type" class="form-control">
                         <option value="all" <?= ($dueType == 'all') ? 'selected' : '' ?>>All Students</option>
-                        <option value="due" <?= ($dueType == 'due') ? 'selected' : '' ?>>Only Due (Net > 0)</option>
+                        <option value="due" <?= ($dueType == 'due') ? 'selected' : '' ?>>Only Due</option>
                     </select>
                 </div>
 
@@ -79,6 +79,10 @@
                             $discount = $paymentSummary[$sid]['discount'] ?? 0;
                             $get = $paid - $discount;
                             $netDue = $totalFee - $paid;
+
+                            if ($dueType == 'due' && $netDue <= 0) {
+                                continue;
+                            }
                         ?>
                     <tr class="text-center">
                         <td><?= $i++ ?></td>
