@@ -3291,6 +3291,117 @@ class Dashboard extends Controller
         return view('dashboard/transaction/std_due_list', $this->data);
     }
 
+    public function std_due_csv()
+    {
+        $selectedMonth   = (int) ($this->request->getGet('month') ?? date('n'));
+        $selectedSection = $this->request->getGet('section') ?? 'all';
+        $dueType         = $this->request->getGet('due_type') ?? 'due';
+
+        // ===== Calculate Cumulative Fees =====
+        $fees = $this->feesAmountModel->findAll();
+        $cumulativeFees = [];
+
+        foreach ($fees as $f) {
+            $section = trim($f['section']);
+            $unit    = (int) $f['unit'];
+            $fee     = (float) $f['fees'];
+
+            if ($unit <= 0) continue;
+
+            $interval = 12 / $unit;
+
+            for ($m = 1; $m <= $selectedMonth; $m++) {
+                if ($m === 1 || (($m - 1) % $interval === 0)) {
+                    $cumulativeFees[$section] = ($cumulativeFees[$section] ?? 0) + $fee;
+                }
+            }
+        }
+
+        // ===== Students =====
+        $students = $this->studentModel
+            ->where('permission', '0')
+            ->orderBy('student_name', 'ASC')
+            ->findAll();
+
+        if ($selectedSection != 'all') {
+            $students = array_filter($students, fn($std) => trim($std['section']) == $selectedSection);
+        }
+
+        // ===== Payment Summary =====
+        $paymentSummary = [];
+        $usedTransactionIds = [];
+
+        $studentsPayments = $this->transactionModel
+            ->select('transaction_id, sender_id, amount, discount, month')
+            ->where('month <=', $selectedMonth)
+            ->orderBy('id', 'ASC')
+            ->findAll();
+
+        foreach ($studentsPayments as $p) {
+            $sid = $p['sender_id'];
+            $tid = $p['transaction_id'];
+
+            $paymentSummary[$sid]['paid'] =
+                ($paymentSummary[$sid]['paid'] ?? 0) + $p['amount'];
+
+            if (!in_array($tid, $usedTransactionIds)) {
+                $paymentSummary[$sid]['discount'] =
+                    ($paymentSummary[$sid]['discount'] ?? 0) + ($p['discount'] ?? 0);
+                $usedTransactionIds[] = $tid;
+            }
+        }
+
+        // ===== CSV Headers =====
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=student_due_list.csv');
+
+        $output = fopen('php://output', 'w');
+
+        // Column Headers
+        fputcsv($output, [
+            'Student ID',
+            'Student Name',
+            'Class',
+            'Section',
+            'Total Fee',
+            'Paid',
+            'Discount',
+            'Net Due'
+        ]);
+
+        // ===== Data Rows =====
+        foreach ($students as $std) {
+
+            $sid = $std['id'];
+            $sec = trim($std['section']);
+
+            $totalFee = $cumulativeFees[$sec] ?? 0;
+            $paid     = $paymentSummary[$sid]['paid'] ?? 0;
+            $discount = $paymentSummary[$sid]['discount'] ?? 0;
+
+            $netDue = $totalFee - ($paid + $discount);
+
+            // Skip if only due selected
+            if ($dueType === 'due' && $netDue <= 0) {
+                continue;
+            }
+
+            fputcsv($output, [
+                $sid,
+                $std['student_name'],
+                $std['class'],
+                $sec,
+                number_format($totalFee, 2, '.', ''),
+                number_format($paid, 2, '.', ''),
+                number_format($discount, 2, '.', ''),
+                number_format($netDue, 2, '.', '')
+            ]);
+        }
+
+        fclose($output);
+        exit;
+    }
+
     public function pay_report()
     {
         $this->data['title'] = 'Payment Report';

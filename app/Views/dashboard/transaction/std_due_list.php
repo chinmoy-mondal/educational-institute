@@ -51,6 +51,13 @@
 
     <!-- ================= DUE TABLE ================= -->
     <div class="card shadow-sm">
+        <!-- Download Button -->
+        <div class="card-header d-flex justify-content-end">
+            <a href="<?= base_url('admin/std_due_csv?month=' . $selectedMonth . '&section=' . $selectedSection . '&due_type=' . ($dueType ?? 'due')) ?>"
+                class="btn btn-success">
+                ⬇ Download CSV
+            </a>
+        </div>
         <div class="card-body table-responsive">
             <table class="table table-bordered table-hover">
                 <thead class="table-dark text-center">
