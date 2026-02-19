@@ -65,6 +65,7 @@
                         <th>#</th>
                         <th>Student ID</th>
                         <th>Student Name</th>
+                        <th>Phone</th>
                         <th>Class</th>
                         <th>Section</th>
                         <th>Total Fee</th>
@@ -95,6 +96,11 @@
                         <td><?= $i++ ?></td>
                         <td><?= esc($sid) ?></td>
                         <td class="text-start"><?= esc($std['student_name']) ?></td>
+                        <td class="text-start">
+                            <a href="tel:<?= esc($std['phone']) ?>">
+                                <?= esc($std['phone']) ?>
+                            </a>
+                        </td>
                         <td><?= esc($std['class']) ?></td>
                         <td><?= esc($sec) ?></td>
                         <td class="text-danger fw-bold">৳ <?= number_format($totalFee, 2) ?></td>
