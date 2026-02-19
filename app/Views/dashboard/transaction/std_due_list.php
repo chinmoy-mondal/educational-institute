@@ -112,7 +112,7 @@
                             <?= number_format($netDue, 2) ?></td>
                         <td>
                             <a href="<?= base_url('admin/studentPaymentHistory/' . esc($sid)) ?>"
-                                class="btn btn-sm btn-info">
+                                class="btn btn-sm btn-info">target="_blank"
                                 <i class="fas fa-history"></i> History
                             </a>
                         </td>
