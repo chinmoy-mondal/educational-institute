@@ -36,8 +36,10 @@
                     <tr class="text-center">
                         <th>#</th>
                         <th>Teacher Name</th>
+                        <?php if (empty($account_status) || $account_status <= 1): ?>
                         <th>Total Earned (৳)</th>
                         <th>Total Paid (৳)</th>
+                        <?php endif; ?>
                         <th>Unpaid (৳)</th>
                         <th>Pay Amount</th>
                         <th>Action</th>
@@ -50,8 +52,10 @@
                     <tr class="text-center">
                         <td><?= $i++ ?></td>
                         <td class="text-left"><?= esc($t['name']) ?></td>
+                        <?php if (empty($account_status) || $account_status <= 1): ?>
                         <td class="decimal-align">৳ <?= number_format($t['total_earned'], 2) ?></td>
                         <td class="decimal-align">৳ <?= number_format($t['total_paid'], 2) ?></td>
+                        <?php endif; ?>
                         <td class="decimal-align">৳ <?= number_format($t['unpaid'], 2) ?></td>
 
                         <?php if (!empty($account_status) && $account_status > 1): ?>
