@@ -68,7 +68,8 @@
                                     value="<?= $t['unpaid'] > 0 ? number_format($t['unpaid'], 2, '.', '') : '0.00' ?>">
                             </td>
                             <td>
-                                <button type="submit" class="btn btn-sm btn-success">
+                                <button type="submit" class="btn btn-sm btn-success"
+                                    onclick="return confirm('Are you sure you want to pay this amount?')">
                                     Pay <i class="fas fa-check"></i>
                                 </button>
                             </td>
