@@ -19,6 +19,8 @@ use App\Models\RankingModel;
 use App\Models\StudentBackupModel;
 use App\Models\WelcomeMessageModel;
 use App\Models\SliderModel;
+use App\Models\RfidLogModel;
+
 use CodeIgniter\Exceptions\PageNotFoundException;
 use PhpParser\Node\Expr\Print_;
 use Symfony\Component\Stopwatch\Section;
@@ -41,7 +43,7 @@ class Dashboard extends Controller
     protected $teacherAttendanceModel;
     protected $rankingModel;
     protected $sliderModel;
-
+    protected $rfidLogModel;
 
     protected $session;
     protected $data;
@@ -64,6 +66,7 @@ class Dashboard extends Controller
         $this->teacherAttendanceModel = new TeacherAttendanceModel();
         $this->rankingModel           = new RankingModel();
         $this->sliderModel            = new SliderModel();
+        $this->rfidLogModel           = new RfidLogModel();
 
 
         $this->session       = session();
@@ -4195,9 +4198,20 @@ class Dashboard extends Controller
         return redirect()->to('admin/sliders')
             ->with('success', 'Slider deleted successfully!');
     }
-    
+
     public function card_request()
     {
-        
+        $uid = $this->request->getPost('uid');
+
+        if (empty($uid)) {
+            return "No Card ID";
+        }
+
+        $this->rfidLogModel->insert([
+            'card_id'   => $uid,
+            'scan_time' => date('Y-m-d H:i:s')
+        ]);
+
+        return "Card Saved";
     }
 }
