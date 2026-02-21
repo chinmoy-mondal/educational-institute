@@ -10,6 +10,7 @@ use App\Models\AttendanceModel;
 use App\Models\NoticeModel;
 use App\Models\WelcomeMessageModel;
 use App\Models\SliderModel;
+use App\Models\RfidLogModel;
 
 class Home extends BaseController
 {
@@ -21,18 +22,20 @@ class Home extends BaseController
 	protected $noticeModel;
 	protected $welcomeMessageModel;
 	protected $sliderModel; // <-- Add this
+	protected $rfidLogModel;
 	protected $data = [];
 
 	public function __construct()
 	{
-		$this->subjectModel = new SubjectModel();
-		$this->studentModel = new StudentModel();
-		$this->userModel = new UserModel();
-		$this->calendarModel = new CalendarModel();
-		$this->attendanceModel = new AttendanceModel();
-		$this->noticeModel = new NoticeModel();
-		$this->welcomeMessageModel = new WelcomeMessageModel();
-		$this->sliderModel = new SliderModel(); // <-- Initialize
+		$this->subjectModel 		= new SubjectModel();
+		$this->studentModel 		= new StudentModel();
+		$this->userModel 			= new UserModel();
+		$this->calendarModel 		= new CalendarModel();
+		$this->attendanceModel 		= new AttendanceModel();
+		$this->noticeModel 			= new NoticeModel();
+		$this->welcomeMessageModel 	= new WelcomeMessageModel();
+		$this->sliderModel 			= new SliderModel(); // <-- Initialize
+		$this->rfidLogModel         = new RfidLogModel();
 	}
 
 	public function index()
@@ -566,5 +569,38 @@ class Home extends BaseController
 		];
 
 		return view('public/attendance_stats', $data);
+	}
+
+	public function card_request()
+	{
+		$uid = $this->request->getGet('uid'); // changed to getGet()
+
+		if (empty($uid)) {
+			return $this->response->setBody("No Card ID");
+		}
+
+		// Check if card already exists
+		$existing = $this->rfidLogModel
+			->where('card_id', $uid)
+			->first();
+
+		if ($existing) {
+
+			// UPDATE existing card
+			$this->rfidLogModel->update($existing['id'], [
+				'scan_time' => date('Y-m-d H:i:s')
+			]);
+
+			return $this->response->setBody("Card Updated");
+		} else {
+
+			// INSERT new card
+			$this->rfidLogModel->insert([
+				'card_id'   => $uid,
+				'scan_time' => date('Y-m-d H:i:s')
+			]);
+
+			return $this->response->setBody("Card Saved");
+		}
 	}
 }

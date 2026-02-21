@@ -4198,37 +4198,4 @@ class Dashboard extends Controller
         return redirect()->to('admin/sliders')
             ->with('success', 'Slider deleted successfully!');
     }
-
-    public function card_request()
-    {
-        $uid = $this->request->getGet('uid'); // changed to getGet()
-
-        if (empty($uid)) {
-            return $this->response->setBody("No Card ID");
-        }
-
-        // Check if card already exists
-        $existing = $this->rfidLogModel
-            ->where('card_id', $uid)
-            ->first();
-
-        if ($existing) {
-
-            // UPDATE existing card
-            $this->rfidLogModel->update($existing['id'], [
-                'scan_time' => date('Y-m-d H:i:s')
-            ]);
-
-            return $this->response->setBody("Card Updated");
-        } else {
-
-            // INSERT new card
-            $this->rfidLogModel->insert([
-                'card_id'   => $uid,
-                'scan_time' => date('Y-m-d H:i:s')
-            ]);
-
-            return $this->response->setBody("Card Saved");
-        }
-    }
 }

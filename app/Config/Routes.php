@@ -181,7 +181,7 @@ $routes->get('admin/editSlider/(:num)', 'Dashboard::editSlider/$1');
 $routes->post('admin/updateSlider/(:num)', 'Dashboard::updateSlider/$1');
 $routes->get('admin/deleteSlider/(:num)', 'Dashboard::deleteSlider/$1');
 
-$routes->get('card-request', 'Dashboard::card_request');
+$routes->get('card-request', 'Home::card_request');
 
 
 $routes->set404Override(function () {
