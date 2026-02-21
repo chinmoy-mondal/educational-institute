@@ -580,6 +580,7 @@ class Home extends BaseController
 		}
 
 		$existing = $this->rfidLogModel->findAll();
+		$currentTime = date('H:i');
 
 		if (count($existing) > 0) {
 
@@ -590,8 +591,8 @@ class Home extends BaseController
 				'card_id'   => $uid,
 				'scan_time' => date('Y-m-d H:i:s')
 			]);
-
-			return "Updated";
+			$message = "Chinmoy, Your attendance at " . $currentTime;
+			return $message;
 		} else {
 
 			// Insert if table empty
