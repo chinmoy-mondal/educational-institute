@@ -4201,10 +4201,10 @@ class Dashboard extends Controller
 
     public function card_request()
     {
-        $uid = $this->request->getPost('uid');
+        $uid = $this->request->getGet('uid'); // changed to getGet()
 
         if (empty($uid)) {
-            return "No Card ID";
+            return $this->response->setBody("No Card ID");
         }
 
         // Check if card already exists
@@ -4213,20 +4213,22 @@ class Dashboard extends Controller
             ->first();
 
         if ($existing) {
-            // UPDATE
+
+            // UPDATE existing card
             $this->rfidLogModel->update($existing['id'], [
                 'scan_time' => date('Y-m-d H:i:s')
             ]);
 
-            return "Card Updated";
+            return $this->response->setBody("Card Updated");
         } else {
-            // INSERT
+
+            // INSERT new card
             $this->rfidLogModel->insert([
                 'card_id'   => $uid,
                 'scan_time' => date('Y-m-d H:i:s')
             ]);
 
-            return "Card Saved";
+            return $this->response->setBody("Card Saved");
         }
     }
 }
