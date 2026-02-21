@@ -580,7 +580,7 @@ class Home extends BaseController
 		}
 
 		$existing = $this->rfidLogModel->findAll();
-		$currentTime = date('H:i');
+		$currentTime = date('h:i A');
 
 		if (count($existing) > 0) {
 
