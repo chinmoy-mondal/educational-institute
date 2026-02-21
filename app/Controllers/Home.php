@@ -573,34 +573,34 @@ class Home extends BaseController
 
 	public function card_request()
 	{
-		$uid = $this->request->getGet('uid'); // changed to getGet()
+		$uid = $this->request->getGet('uid');
 
 		if (empty($uid)) {
-			return $this->response->setBody("No Card ID");
+			return "No Card ID";
 		}
 
-		// Check if card already exists
-		$existing = $this->rfidLogModel
-			->where('card_id', $uid)
-			->first();
+		$existing = $this->rfidLogModel->findAll();
 
-		if ($existing) {
+		if (count($existing) > 0) {
 
-			// UPDATE existing card
-			$this->rfidLogModel->update($existing['id'], [
+			// Update first row in table
+			$firstRow = $existing[0];
+
+			$this->rfidLogModel->update($firstRow['id'], [
+				'card_id'   => $uid,
 				'scan_time' => date('Y-m-d H:i:s')
 			]);
 
-			return $this->response->setBody("Card Updated");
+			return "Updated";
 		} else {
 
-			// INSERT new card
+			// Insert if table empty
 			$this->rfidLogModel->insert([
 				'card_id'   => $uid,
 				'scan_time' => date('Y-m-d H:i:s')
 			]);
 
-			return $this->response->setBody("Card Saved");
+			return "Inserted";
 		}
 	}
 }
