@@ -4207,11 +4207,26 @@ class Dashboard extends Controller
             return "No Card ID";
         }
 
-        $this->rfidLogModel->insert([
-            'card_id'   => $uid,
-            'scan_time' => date('Y-m-d H:i:s')
-        ]);
+        // Check if card already exists
+        $existing = $this->rfidLogModel
+            ->where('card_id', $uid)
+            ->first();
 
-        return "Card Saved";
+        if ($existing) {
+            // UPDATE
+            $this->rfidLogModel->update($existing['id'], [
+                'scan_time' => date('Y-m-d H:i:s')
+            ]);
+
+            return "Card Updated";
+        } else {
+            // INSERT
+            $this->rfidLogModel->insert([
+                'card_id'   => $uid,
+                'scan_time' => date('Y-m-d H:i:s')
+            ]);
+
+            return "Card Saved";
+        }
     }
 }
