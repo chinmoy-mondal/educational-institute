@@ -591,7 +591,7 @@ class Home extends BaseController
 				'card_id'   => $uid,
 				'scan_time' => date('Y-m-d H:i:s')
 			]);
-			$message = "Chinmoy, Your attendance at " . $currentTime;
+			$message = "Chinmoy, present at " . $currentTime;
 			return $message;
 		} else {
 
