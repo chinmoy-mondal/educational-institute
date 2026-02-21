@@ -4195,4 +4195,9 @@ class Dashboard extends Controller
         return redirect()->to('admin/sliders')
             ->with('success', 'Slider deleted successfully!');
     }
+    
+    public function card_request()
+    {
+        
+    }
 }
