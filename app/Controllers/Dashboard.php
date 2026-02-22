@@ -310,21 +310,22 @@ class Dashboard extends Controller
 
     public function updateCard($id)
     {
-        $rfidRow = $this->rfidLogModel->find(1);
-        echo "test<pre>";
-        print_r($rfidRow);
-        echo "</pre>";
+        echo "hello";
+        // $rfidRow = $this->rfidLogModel->find(1);
+        // echo "test<pre>";
+        // print_r($rfidRow);
+        // echo "</pre>";
 
-        if (!$rfidRow || empty($rfidRow['rfid'])) {
-            return redirect()->back()->with('error', 'Card number not found');
-        }
-        echo "result = ", $rfidRow['rfid'];
-        $this->userModel->update($id, [
-            'rfid' => $rfidRow['rfid']  // ✅ only single value
-        ]);
+        // if (!$rfidRow || empty($rfidRow['rfid'])) {
+        //     return redirect()->back()->with('error', 'Card number not found');
+        // }
+        // echo "result = ", $rfidRow['rfid'];
+        // $this->userModel->update($id, [
+        //     'rfid' => $rfidRow['rfid']  // ✅ only single value
+        // ]);
 
-        return redirect()->to(base_url('profile_id/' . $id))
-            ->with('success', 'Card updated successfully');
+        // return redirect()->to(base_url('profile_id/' . $id))
+        //     ->with('success', 'Card updated successfully');
     }
 
     public function restrict($id)
