@@ -70,6 +70,7 @@ $routes->get('profile/edit/(:num)', 'Dashboard::edit_profile_view/$1');
 $routes->post('admin/user/update/(:num)', 'Dashboard::update_user/$1');
 $routes->get('profile_id/(:num)', 'Dashboard::profile_id/$1');
 $routes->get('profile/update-card/(:num)', 'Dashboard::updateCard/$1');
+$routes->get('student/update-card/(:num)', 'Dashboard::studentUpdateCard/$1');
 $routes->get('restrict/(:num)', 'Dashboard::restrict/$1');
 
 
