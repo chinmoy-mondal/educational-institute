@@ -31,6 +31,7 @@ class StudentModel extends Model
         'religion',
         'blood_group',
         'assign_sub',
+        'rfid',
         'permission',
         'created_at',
         'updated_at'

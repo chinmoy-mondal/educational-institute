@@ -289,13 +289,13 @@ class Dashboard extends Controller
         // Convert assigned subject IDs to subject names as an array
         $assignedSubjects = [];
         if (!empty($teacher['assagin_sub'])) {
-            $subjectModel = new \App\Models\SubjectModel();
+            // $subjectModel = new \App\Models\SubjectModel();
 
             // Handle multiple subjects (comma-separated IDs)
             $subjectIds = explode(',', $teacher['assagin_sub']);
 
             foreach ($subjectIds as $subId) {
-                $sub = $subjectModel->where('id', trim($subId))->first();
+                $sub = $this->subjectModel->where('id', trim($subId))->first();
                 if ($sub) {
                     $assignedSubjects[] = $sub['subject'];
                 }
