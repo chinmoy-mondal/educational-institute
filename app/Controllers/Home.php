@@ -601,6 +601,8 @@ class Home extends BaseController
 		}
 
 
+		$message = "no data found";
+
 		$student = $this->studentModel
 			->where('rfid', $uid)
 			->first();
@@ -609,8 +611,14 @@ class Home extends BaseController
 			// student found
 			$message = $student['student_name'] . ", present at " . $currentTime;
 		} else {
-			// no student with this RFID
-			$message = "no data found";
+			$user = $this->userModel
+				->where('rfid', $uid)
+				->first();
+			if ($user) {
+				$message = $user['student_name'] . ", present at " . $currentTime;
+			} else {
+				$message = "no data found";
+			}
 		}
 
 
