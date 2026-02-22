@@ -607,6 +607,43 @@ class Home extends BaseController
 		$user    = $this->userModel->where('rfid', $uid)->first();
 
 		if ($student) {
+
+			$studentId = $student['id'];
+
+			// Check today's attendance count
+			$todayStart = date('Y-m-d 00:00:00');
+			$todayEnd   = date('Y-m-d 23:59:59');
+
+			$attendanceList = $this->attendanceModel
+				->where('student_id', $studentId)
+				->where('created_at >=', $todayStart)
+				->where('created_at <=', $todayEnd)
+				->findAll();
+
+			$count = count($attendanceList);
+
+			// CASE 1: No record → A
+			if ($count == 0) {
+
+				$this->attendanceModel->insert([
+					'student_id' => $studentId,
+					'rfid'       => $uid,
+					'remark'     => 'A',
+					'created_at' => date('Y-m-d H:i:s')
+				]);
+			}
+
+			// CASE 2: One record → L
+			elseif ($count == 1) {
+
+				$this->attendanceModel->insert([
+					'student_id' => $studentId,
+					'rfid'       => $uid,
+					'remark'     => 'L',
+					'created_at' => date('Y-m-d H:i:s')
+				]);
+			}
+
 			$message = $student['student_name'] . ", present at " . $currentTime;
 		} else if ($user) {
 			$message = $user['name'] . ", present at " . $currentTime;
