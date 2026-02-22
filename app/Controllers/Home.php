@@ -651,7 +651,7 @@ class Home extends BaseController
 
 			// If name longer than 16 → cut it
 			if (strlen($student_name) > 16) {
-				$name = substr($student_name, 0, 16);
+				$student_name = substr($student_name, 0, 16);
 			}
 			// If name shorter than 16 → pad with spaces
 			elseif (strlen($student_name) < 16) {
