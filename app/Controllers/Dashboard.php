@@ -312,10 +312,8 @@ class Dashboard extends Controller
     {
         echo "hello";
         $rfidRow = $this->rfidLogModel->find(1);
-        echo "test<pre>";
-        print_r($rfidRow);
-        echo "</pre>";
 
+        echo "card=" . $rfidRow['card_id'];
         // if (!$rfidRow || empty($rfidRow['rfid'])) {
         //     return redirect()->back()->with('error', 'Card number not found');
         // }
