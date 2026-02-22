@@ -333,7 +333,7 @@ class Dashboard extends Controller
         }
 
         $this->studentModel->update($id, [
-            'rfid' => $rfidRow['card_id']  // ✅ only single value
+            'rfid' => $rfidRow['card_id']  // ✅ only single valuesdf 
         ]);
 
         return redirect()->to(base_url('profile_id/' . $id))
