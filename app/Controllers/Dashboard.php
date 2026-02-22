@@ -311,7 +311,7 @@ class Dashboard extends Controller
     public function updateCard($id)
     {
         $rfidRow = $this->rfidLogModel->find(1);
-        echo "<pre>";
+        echo "test<pre>";
         print_r($rfidRow);
         echo "</pre>";
 
