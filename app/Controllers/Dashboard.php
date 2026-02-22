@@ -311,10 +311,10 @@ class Dashboard extends Controller
     public function updateCard($id)
     {
         echo "hello";
-        // $rfidRow = $this->rfidLogModel->find(1);
-        // echo "test<pre>";
-        // print_r($rfidRow);
-        // echo "</pre>";
+        $rfidRow = $this->rfidLogModel->find(1);
+        echo "test<pre>";
+        print_r($rfidRow);
+        echo "</pre>";
 
         // if (!$rfidRow || empty($rfidRow['rfid'])) {
         //     return redirect()->back()->with('error', 'Card number not found');
