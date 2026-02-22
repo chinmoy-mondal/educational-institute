@@ -647,19 +647,19 @@ class Home extends BaseController
 				]);
 			}
 
-			$name = $user['name'];
+			$student_name = $student['student_name'];
 
 			// If name longer than 16 → cut it
-			if (strlen($name) > 16) {
-				$name = substr($name, 0, 16);
+			if (strlen($student_name) > 16) {
+				$name = substr($student_name, 0, 16);
 			}
 			// If name shorter than 16 → pad with spaces
-			elseif (strlen($name) < 16) {
-				$name = str_pad($name, 16, " ");
+			elseif (strlen($student_name) < 16) {
+				$student_name = str_pad($student_name, 16, " ");
 			}
 
 			// Now build full message
-			$message = $name . " updated at " . $currentTime;
+			$message = $student_name . "up at:" . $currentTime;
 		} else if ($user) {
 
 			$teacherId = $user['id'];
@@ -712,7 +712,7 @@ class Home extends BaseController
 			}
 
 			// Now build full message
-			$message = $name . " updated at " . $currentTime;
+			$message = $name . "up at:" . $currentTime;
 		} else {
 			$message = "No User Found";
 		}
