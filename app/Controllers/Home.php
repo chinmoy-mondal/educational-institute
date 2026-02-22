@@ -7,6 +7,7 @@ use App\Models\StudentModel;
 use App\Models\UserModel;
 use App\Models\CalendarModel;
 use App\Models\AttendanceModel;
+use App\Models\TeacherAttendanceModel;
 use App\Models\NoticeModel;
 use App\Models\WelcomeMessageModel;
 use App\Models\SliderModel;
@@ -19,6 +20,7 @@ class Home extends BaseController
 	protected $userModel;
 	protected $calendarModel;
 	protected $attendanceModel;
+	protected $teacherAttendanceModel;
 	protected $noticeModel;
 	protected $welcomeMessageModel;
 	protected $sliderModel; // <-- Add this
@@ -32,6 +34,7 @@ class Home extends BaseController
 		$this->userModel 			= new UserModel();
 		$this->calendarModel 		= new CalendarModel();
 		$this->attendanceModel 		= new AttendanceModel();
+		$this->teacherAttendanceModel 		= new TeacherAttendanceModel();
 		$this->noticeModel 			= new NoticeModel();
 		$this->welcomeMessageModel 	= new WelcomeMessageModel();
 		$this->sliderModel 			= new SliderModel(); // <-- Initialize
@@ -644,11 +647,74 @@ class Home extends BaseController
 				]);
 			}
 
-			$message = $student['student_name'] . ", present at " . $currentTime;
+			$name = $user['name'];
+
+			// If name longer than 16 → cut it
+			if (strlen($name) > 16) {
+				$name = substr($name, 0, 16);
+			}
+			// If name shorter than 16 → pad with spaces
+			elseif (strlen($name) < 16) {
+				$name = str_pad($name, 16, " ");
+			}
+
+			// Now build full message
+			$message = $name . " updated at " . $currentTime;
 		} else if ($user) {
-			$message = $user['name'] . ", present at " . $currentTime;
+
+			$teacherId = $user['id'];
+
+			// Today range
+			$todayStart = date('Y-m-d 00:00:00');
+			$todayEnd   = date('Y-m-d 23:59:59');
+
+			// Get today's attendance
+			$attendanceList = $this->teacherAttendanceModel
+				->where('teacher_id', $teacherId)
+				->where('created_at >=', $todayStart)
+				->where('created_at <=', $todayEnd)
+				->orderBy('created_at', 'ASC')
+				->findAll();
+
+			$count = count($attendanceList);
+
+			// CASE 1: No record → A
+			if ($count == 0) {
+
+				$this->teacherAttendanceModel->insert([
+					'teacher_id' => $teacherId,
+					'rfid'       => $uid,
+					'remark'     => 'A',
+					'created_at' => date('Y-m-d H:i:s')
+				]);
+			}
+
+			// CASE 2: One record → L
+			elseif ($count == 1) {
+
+				$this->teacherAttendanceModel->insert([
+					'teacher_id' => $teacherId,
+					'rfid'       => $uid,
+					'remark'     => 'L',
+					'created_at' => date('Y-m-d H:i:s')
+				]);
+			}
+
+			$name = $user['name'];
+
+			// If name longer than 16 → cut it
+			if (strlen($name) > 16) {
+				$name = substr($name, 0, 16);
+			}
+			// If name shorter than 16 → pad with spaces
+			elseif (strlen($name) < 16) {
+				$name = str_pad($name, 16, " ");
+			}
+
+			// Now build full message
+			$message = $name . " updated at " . $currentTime;
 		} else {
-			$message = "no data found";
+			$message = "No User Found";
 		}
 
 		return $message;
