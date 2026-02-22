@@ -310,14 +310,14 @@ class Dashboard extends Controller
 
     public function updateCard($id)
     {
-        $card_number = $this->request->getPost('card_number');
+        $rfid = $this->rfidLogModel->find(1);
 
-        if (empty($card_number)) {
+        if (empty($rfid)) {
             return redirect()->back()->with('error', 'Card number is required');
         }
 
         $this->userModel->update($id, [
-            'card_number' => $card_number
+            'rfid' => $rfid   // ✅ changed here
         ]);
 
         return redirect()->to(base_url('profile_id/' . $id))

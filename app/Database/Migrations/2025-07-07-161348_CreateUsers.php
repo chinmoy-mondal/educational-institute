@@ -15,6 +15,7 @@ class CreateUsersTable extends Migration
             'designation'    => ['type' => 'VARCHAR', 'constraint' => 100],
             'subject'        => ['type' => 'VARCHAR', 'constraint' => 100, 'null' => true],
             'assagin_sub'    => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true], // store comma-separated assigned subjects
+            'rfid'           => ['type' => 'VARCHAR', 'constraint' => 50,  'null' => true],
             'gender'         => ['type' => 'ENUM', 'constraint' => ['Male', 'Female', 'Others']],
             'dob'            => ['type' => 'DATE', 'null' => true], // Date of birth
             'joining_date'   => ['type' => 'DATE', 'null' => true],
