@@ -659,7 +659,7 @@ class Home extends BaseController
 			}
 
 			// Now build full message
-			$message = $student_name . "up at:" . $currentTime;
+			$message = $student_name . "UP AT:" . $currentTime;
 		} else if ($user) {
 
 			$teacherId = $user['id'];
@@ -712,7 +712,7 @@ class Home extends BaseController
 			}
 
 			// Now build full message
-			$message = $name . "up at:" . $currentTime;
+			$message = $name . "UP AT:" . $currentTime;
 		} else {
 			$message = "No User Found";
 		}
