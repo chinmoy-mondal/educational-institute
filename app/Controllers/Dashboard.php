@@ -336,7 +336,7 @@ class Dashboard extends Controller
             'rfid' => $rfidRow['card_id']  // ✅ only single valuesdf 
         ]);
 
-        return redirect()->to(base_url('profile_id/' . $id))
+        return redirect()->to(base_url('admin/students/view/' . $id))
             ->with('success', 'Card updated successfully');
     }
 
