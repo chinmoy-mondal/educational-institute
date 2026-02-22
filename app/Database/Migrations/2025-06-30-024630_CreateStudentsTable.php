@@ -27,6 +27,7 @@ class CreateStudentsTable extends Migration
             'religion'                  => ['type' => 'VARCHAR', 'constraint' => 30, 'null' => true],
             'blood_group'               => ['type' => 'VARCHAR', 'constraint' => 5, 'null' => true],
             'assign_sub'                => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => true],
+            'rfid'                      => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => true],
             'permission'                => ['type' => 'TINYINT', 'constraint' => 1, 'default' => 0, 'null' => false],
             'created_at'                => ['type' => 'DATETIME', 'null' => true],
             'updated_at'                => ['type' => 'DATETIME', 'null' => true],
