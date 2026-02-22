@@ -308,6 +308,22 @@ class Dashboard extends Controller
         return view('dashboard/profile', $this->data);
     }
 
+    public function updateCard($id)
+    {
+        $card_number = $this->request->getPost('card_number');
+
+        if (empty($card_number)) {
+            return redirect()->back()->with('error', 'Card number is required');
+        }
+
+        $this->userModel->update($id, [
+            'card_number' => $card_number
+        ]);
+
+        return redirect()->to(base_url('profile_id/' . $id))
+            ->with('success', 'Card updated successfully');
+    }
+
     public function restrict($id)
     {
         if (!$this->session->get('isLoggedIn')) {
