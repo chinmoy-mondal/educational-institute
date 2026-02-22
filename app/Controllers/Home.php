@@ -610,7 +610,7 @@ class Home extends BaseController
 			$message = $student['student_name'] . ", present at " . $currentTime;
 		} else {
 			// no student with this RFID
-			echo "No student found with this RFID";
+			$message = "no data found";
 		}
 
 
