@@ -591,8 +591,6 @@ class Home extends BaseController
 				'card_id'   => $uid,
 				'scan_time' => date('Y-m-d H:i:s')
 			]);
-			$message = "Chinmoy, present at " . $currentTime;
-			return $message;
 		} else {
 
 			// Insert if table empty
@@ -600,8 +598,22 @@ class Home extends BaseController
 				'card_id'   => $uid,
 				'scan_time' => date('Y-m-d H:i:s')
 			]);
-
-			return "Inserted";
 		}
+
+
+		$student = $this->studentModel
+			->where('rfid', $uid)
+			->first();
+
+		if ($student) {
+			// student found
+			$message = $student['student_name'] . ", present at " . $currentTime;
+		} else {
+			// no student with this RFID
+			echo "No student found with this RFID";
+		}
+
+
+		return $message;
 	}
 }
