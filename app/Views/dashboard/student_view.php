@@ -63,7 +63,7 @@
                                     class="btn btn-success btn-sm mt-2">
                                     <i class="fas fa-edit"></i> Edit Profile
                                 </a>
-                                <a href="<?= site_url('student/update-card/' . $user['id']) ?>"
+                                <a href="<?= site_url('student/update-card/' . $student['id']) ?>"
                                     class="btn btn-warning btn-sm mt-2"
                                     onclick="return confirm('Are you sure you want to add/update this card?');">
                                     <i class="fas fa-id-card"></i> Add Card
