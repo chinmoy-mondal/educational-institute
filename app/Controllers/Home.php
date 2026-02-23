@@ -348,8 +348,8 @@ class Home extends BaseController
 
 	public function attendance()
 	{
-		// $studentModel = new \App\Models\StudentModel();
-		// $attendanceModel = new \App\Models\AttendanceModel();
+		$studentModel = new \App\Models\StudentModel();
+		$attendanceModel = new \App\Models\AttendanceModel();
 
 		// ✅ GET filters
 		$selectedClass   = $this->request->getGet('class');
@@ -357,7 +357,7 @@ class Home extends BaseController
 		$selectedSection = $this->request->getGet('section'); // <-- renamed for clarity
 
 		// ✅ Base query: only active students (permission = 0)
-		$builder = $this->studentModel->where('permission', 0);
+		$builder = $studentModel->where('permission', 0);
 
 		// ✅ Filter by class (if selected)
 		if (!empty($selectedClass)) {
@@ -381,7 +381,7 @@ class Home extends BaseController
 			->findAll();
 
 		// ✅ Distinct classes for dropdown
-		$classes = $this->studentModel
+		$classes = $studentModel
 			->select('class')
 			->distinct()
 			->orderBy('CAST(class AS UNSIGNED)', 'ASC')
@@ -399,64 +399,29 @@ class Home extends BaseController
 		}
 
 		// ✅ Fetch attendance records for the month
-		$attendanceData = $this->attendanceModel
+		$attendanceData = $attendanceModel
 			->where('created_at >=', $selectedMonth . '-01 00:00:00')
 			->where('created_at <=', $selectedMonth . '-' . $numDays . ' 23:59:59')
 			->findAll();
 
 		// ✅ Map attendance by student and date
 		$attendanceMap = [];
-
-		$schoolStart = '10:00:00';
-		$schoolEnd   = '16:00:00';
-
 		foreach ($attendanceData as $record) {
-
-			$tid  = $record['teacher_id'];
+			$studentId = $record['student_id'];
 			$date = date('Y-m-d', strtotime($record['created_at']));
-			$time = date('H:i:s', strtotime($record['created_at']));
-
-			if (!isset($attendanceMap[$tid][$date])) {
-				$attendanceMap[$tid][$date] = [
+			if (!isset($attendanceMap[$studentId][$date])) {
+				$attendanceMap[$studentId][$date] = [
 					'arrival' => null,
-					'leave'   => null,
-					'remark'  => 'A'
+					'leave' => null,
+					'remarks' => []
 				];
 			}
-
-			// Save punch times
 			if ($record['remark'] === 'A') {
-				$attendanceMap[$tid][$date]['arrival'] = $time;
+				$attendanceMap[$studentId][$date]['arrival'] = $record['created_at'];
+			} elseif ($record['remark'] === 'L') {
+				$attendanceMap[$studentId][$date]['leave'] = $record['created_at'];
 			}
-
-			if ($record['remark'] === 'L') {
-				$attendanceMap[$tid][$date]['leave'] = $time;
-			}
-		}
-
-
-		// 🔎 Final Status Calculation
-		foreach ($attendanceMap as $tid => $dates) {
-			foreach ($dates as $date => $data) {
-
-				$arrival = $data['arrival'];
-				$leave   = $data['leave'];
-
-				if (!$arrival || !$leave) {
-					$attendanceMap[$tid][$date]['remark'] = 'A';
-					continue;
-				}
-
-				if ($arrival <= $schoolStart && $leave >= $schoolEnd) {
-					$attendanceMap[$tid][$date]['remark'] = 'P';
-				} elseif ($arrival <= $schoolStart && $leave < $schoolEnd) {
-					$attendanceMap[$tid][$date]['remark'] = 'E';
-				} elseif ($arrival > $schoolStart && $leave >= $schoolEnd) {
-					$attendanceMap[$tid][$date]['remark'] = 'L';
-				} else {
-					$attendanceMap[$tid][$date]['remark'] = 'L/E';
-				}
-			}
+			$attendanceMap[$studentId][$date]['remarks'][] = $record['remark'];
 		}
 
 		// ✅ Pass everything to the view

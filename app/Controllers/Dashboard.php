@@ -3991,34 +3991,29 @@ class Dashboard extends Controller
 
     public function teacherAttendance()
     {
-        // Filters
-        $selectedMonth = $this->request->getGet('month') ?? date('Y-m');
+        $selectedMonth   = $this->request->getGet('month') ?? date('Y-m');
         $selectedTeacher = $this->request->getGet('teacher');
 
-        // Page setup
         $this->data['title'] = 'Teacher Attendance';
         $this->data['activeSection'] = 'teacher_attendance';
-        $this->data['navbarItems'] = [
-            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
-            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
-        ];
 
-        // Teacher list (all with account_status > 0)
-        $allTeachers = $this->userModel->where('account_status >', 0)->orderBy('position', 'ASC')->findAll();
-
-        // Filtered teacher list
+        // ✅ All Active Teachers
         $builder = $this->userModel->where('account_status >', 0);
+
         if (!empty($selectedTeacher)) {
             $builder->where('id', $selectedTeacher);
         }
-        $teacherList = $builder->orderBy('position', 'ASC')->findAll();
 
-        // Build days of the month
+        $teachers = $builder->orderBy('position', 'ASC')->findAll();
+        $allTeachers = $this->userModel
+            ->where('account_status >', 0)
+            ->orderBy('position', 'ASC')
+            ->findAll();
+
+        // ✅ Build Month Days
         $daysInMonth = [];
         $numDays = date('t', strtotime($selectedMonth . '-01'));
+
         for ($d = 1; $d <= $numDays; $d++) {
             $date = $selectedMonth . '-' . sprintf("%02d", $d);
             $daysInMonth[] = [
@@ -4027,20 +4022,23 @@ class Dashboard extends Controller
             ];
         }
 
-        // Fetch teacher attendance for month
+        // ✅ Fetch Attendance Records
         $attendanceData = $this->teacherAttendanceModel
             ->where('created_at >=', $selectedMonth . '-01 00:00:00')
             ->where('created_at <=', $selectedMonth . '-' . $numDays . ' 23:59:59')
             ->findAll();
 
-        echo "hi<pre>";
-        print_r($attendanceData);
-        echo "</pre>";
-
-        // Map attendance by teacher + date
         $attendanceMap = [];
 
+        $schoolStart = '10:00:00';
+        $schoolEnd   = '16:00:00';
+
+        // -------------------------
+        // STORE ARRIVAL & LEAVE
+        // -------------------------
         foreach ($attendanceData as $record) {
+
+            if (!isset($record['teacher_id'])) continue;
 
             $tid  = $record['teacher_id'];
             $date = date('Y-m-d', strtotime($record['created_at']));
@@ -4054,49 +4052,63 @@ class Dashboard extends Controller
                 ];
             }
 
-            // School time range
-            $schoolStart = '10:00:00';
-            $schoolEnd   = '16:00:00';
-
-            // Only accept valid time range
-            if ($time >= $schoolStart && $time <= $schoolEnd) {
-
-                if ($record['remark'] === 'A') {
-                    $attendanceMap[$tid][$date]['arrival'] = $record['created_at'];
-                }
-
-                if ($record['remark'] === 'L') {
-                    $attendanceMap[$tid][$date]['leave'] = $record['created_at'];
-                }
+            if ($record['remark'] === 'A') {
+                $attendanceMap[$tid][$date]['arrival'] = $time;
             }
 
-            // Final decision
-            if (
-                !empty($attendanceMap[$tid][$date]['arrival']) &&
-                !empty($attendanceMap[$tid][$date]['leave'])
-            ) {
-                $attendanceMap[$tid][$date]['remark'] = 'P';
+            if ($record['remark'] === 'L') {
+                $attendanceMap[$tid][$date]['leave'] = $time;
             }
         }
 
-        // Fill missing days with Absent or Holiday
-        foreach ($allTeachers as $t) {
+        // -------------------------
+        // FINAL STATUS CALCULATION
+        // -------------------------
+        foreach ($attendanceMap as $tid => $dates) {
+            foreach ($dates as $date => $data) {
+
+                $arrival = $data['arrival'];
+                $leave   = $data['leave'];
+
+                if (!$arrival || !$leave) {
+                    $attendanceMap[$tid][$date]['remark'] = 'A';
+                    continue;
+                }
+
+                if ($arrival <= $schoolStart && $leave >= $schoolEnd) {
+                    $attendanceMap[$tid][$date]['remark'] = 'P';
+                } elseif ($arrival <= $schoolStart && $leave < $schoolEnd) {
+                    $attendanceMap[$tid][$date]['remark'] = 'E';
+                } elseif ($arrival > $schoolStart && $leave >= $schoolEnd) {
+                    $attendanceMap[$tid][$date]['remark'] = 'L';
+                } else {
+                    $attendanceMap[$tid][$date]['remark'] = 'L/E';
+                }
+            }
+        }
+
+        // -------------------------
+        // FILL MISSING DAYS
+        // -------------------------
+        foreach ($allTeachers as $teacher) {
             foreach ($daysInMonth as $day) {
+
                 $date = $day['date'];
                 $dayName = $day['day'];
+                $tid = $teacher['id'];
 
-                if (!isset($attendanceMap[$t['id']][$date])) {
-                    $attendanceMap[$t['id']][$date] = [
-                        'remark' => in_array($dayName, ['Fri', 'Sat']) ? 'H' : 'A',
+                if (!isset($attendanceMap[$tid][$date])) {
+
+                    $attendanceMap[$tid][$date] = [
                         'arrival' => null,
-                        'leave' => null
+                        'leave'   => null,
+                        'remark'  => in_array($dayName, ['Fri', 'Sat']) ? 'H' : 'A'
                     ];
                 }
             }
         }
 
-        // Pass data to view
-        $this->data['teachers'] = $teacherList;
+        $this->data['teachers'] = $teachers;
         $this->data['allTeachers'] = $allTeachers;
         $this->data['selectedTeacher'] = $selectedTeacher;
         $this->data['selectedMonth'] = $selectedMonth;
