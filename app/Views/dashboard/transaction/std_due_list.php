@@ -66,7 +66,7 @@
                         <th>Student ID</th>
                         <th>Student Name</th>
                         <th>Phone</th>
-                        <th>Class</th>
+                        <th>Index</th>
                         <th>Section</th>
                         <th>Total Fee</th>
                         <th>Paid</th>
@@ -102,7 +102,7 @@
                                 <?= esc($std['phone']) ?>
                             </a>
                         </td>
-                        <td><?= esc($std['class']) ?></td>
+                        <td><?= esc($std['roll']) ?></td>
                         <td><?= esc($sec) ?></td>
                         <td class="text-danger fw-bold">৳ <?= number_format($totalFee, 2) ?></td>
                         <td class="text-muted fw-bold">৳ <?= number_format($paid, 2) ?></td>
