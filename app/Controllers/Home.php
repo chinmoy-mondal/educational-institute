@@ -348,8 +348,8 @@ class Home extends BaseController
 
 	public function attendance()
 	{
-		$studentModel = new \App\Models\StudentModel();
-		$attendanceModel = new \App\Models\AttendanceModel();
+		// $studentModel = new \App\Models\StudentModel();
+		// $attendanceModel = new \App\Models\AttendanceModel();
 
 		// ✅ GET filters
 		$selectedClass   = $this->request->getGet('class');
@@ -357,7 +357,7 @@ class Home extends BaseController
 		$selectedSection = $this->request->getGet('section'); // <-- renamed for clarity
 
 		// ✅ Base query: only active students (permission = 0)
-		$builder = $studentModel->where('permission', 0);
+		$builder = $this->studentModel->where('permission', 0);
 
 		// ✅ Filter by class (if selected)
 		if (!empty($selectedClass)) {
@@ -381,7 +381,7 @@ class Home extends BaseController
 			->findAll();
 
 		// ✅ Distinct classes for dropdown
-		$classes = $studentModel
+		$classes = $this->studentModel
 			->select('class')
 			->distinct()
 			->orderBy('CAST(class AS UNSIGNED)', 'ASC')
@@ -399,7 +399,7 @@ class Home extends BaseController
 		}
 
 		// ✅ Fetch attendance records for the month
-		$attendanceData = $attendanceModel
+		$attendanceData = $this->attendanceModel
 			->where('created_at >=', $selectedMonth . '-01 00:00:00')
 			->where('created_at <=', $selectedMonth . '-' . $numDays . ' 23:59:59')
 			->findAll();

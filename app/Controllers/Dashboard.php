@@ -4033,6 +4033,10 @@ class Dashboard extends Controller
             ->where('created_at <=', $selectedMonth . '-' . $numDays . ' 23:59:59')
             ->findAll();
 
+        echo "hi<pre>";
+        print_r($attendanceData);
+        echo "</pre>";
+
         // Map attendance by teacher + date
         $attendanceMap = [];
         foreach ($attendanceData as $record) {
