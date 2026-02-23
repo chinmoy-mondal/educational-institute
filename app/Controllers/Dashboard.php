@@ -4042,30 +4042,35 @@ class Dashboard extends Controller
 
         foreach ($attendanceData as $record) {
 
-            if (!isset($record['teacher_id'])) continue;
-
             $tid  = $record['teacher_id'];
             $date = date('Y-m-d', strtotime($record['created_at']));
-            $remark = $record['remark'];
+            $time = date('H:i:s', strtotime($record['created_at']));
 
             if (!isset($attendanceMap[$tid][$date])) {
                 $attendanceMap[$tid][$date] = [
                     'arrival' => null,
                     'leave'   => null,
-                    'remark'  => 'A' // default Absent
+                    'remark'  => 'A'
                 ];
             }
 
-            // Direct mapping from DB
-            if ($remark === 'A') {
-                $attendanceMap[$tid][$date]['arrival'] = $record['created_at'];
+            // School time range
+            $schoolStart = '10:00:00';
+            $schoolEnd   = '16:00:00';
+
+            // Only accept valid time range
+            if ($time >= $schoolStart && $time <= $schoolEnd) {
+
+                if ($record['remark'] === 'A') {
+                    $attendanceMap[$tid][$date]['arrival'] = $record['created_at'];
+                }
+
+                if ($record['remark'] === 'L') {
+                    $attendanceMap[$tid][$date]['leave'] = $record['created_at'];
+                }
             }
 
-            if ($remark === 'L') {
-                $attendanceMap[$tid][$date]['leave'] = $record['created_at'];
-            }
-
-            // If both exist → Present
+            // Final decision
             if (
                 !empty($attendanceMap[$tid][$date]['arrival']) &&
                 !empty($attendanceMap[$tid][$date]['leave'])
