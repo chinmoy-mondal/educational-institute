@@ -4070,7 +4070,20 @@ class Dashboard extends Controller
                 $arrival = $data['arrival'];
                 $leave   = $data['leave'];
 
-                if (!$arrival || !$leave) {
+                // If only arrival exists
+                if ($arrival && !$leave) {
+                    $attendanceMap[$tid][$date]['remark'] = 'R';
+                    continue;
+                }
+
+                // If only leave exists
+                if (!$arrival && $leave) {
+                    $attendanceMap[$tid][$date]['remark'] = 'P';
+                    continue;
+                }
+
+                // If no punch at all
+                if (!$arrival && !$leave) {
                     $attendanceMap[$tid][$date]['remark'] = 'A';
                     continue;
                 }
