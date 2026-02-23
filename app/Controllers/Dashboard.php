@@ -4039,40 +4039,38 @@ class Dashboard extends Controller
 
         // Map attendance by teacher + date
         $attendanceMap = [];
+
         foreach ($attendanceData as $record) {
+
             if (!isset($record['teacher_id'])) continue;
 
-            $tid = $record['teacher_id'];
+            $tid  = $record['teacher_id'];
             $date = date('Y-m-d', strtotime($record['created_at']));
-            $time = date('H:i:s', strtotime($record['created_at']));
+            $remark = $record['remark'];
 
             if (!isset($attendanceMap[$tid][$date])) {
                 $attendanceMap[$tid][$date] = [
                     'arrival' => null,
                     'leave'   => null,
-                    'remark'  => 'A', // default Absent
+                    'remark'  => 'A' // default Absent
                 ];
             }
 
-            // Morning → arrival, Afternoon → leave
-            if ($time <= '12:00:00') {
-                $attendanceMap[$tid][$date]['arrival'] = $record['remark'];
-            } else {
-                $attendanceMap[$tid][$date]['leave'] = $record['remark'];
+            // Direct mapping from DB
+            if ($remark === 'A') {
+                $attendanceMap[$tid][$date]['arrival'] = $record['created_at'];
             }
 
-            // Determine final remark
-            $arrival = $attendanceMap[$tid][$date]['arrival'];
-            $leave   = $attendanceMap[$tid][$date]['leave'];
+            if ($remark === 'L') {
+                $attendanceMap[$tid][$date]['leave'] = $record['created_at'];
+            }
 
-            if ($arrival === 'Present' || $leave === 'Present') {
+            // If both exist → Present
+            if (
+                !empty($attendanceMap[$tid][$date]['arrival']) &&
+                !empty($attendanceMap[$tid][$date]['leave'])
+            ) {
                 $attendanceMap[$tid][$date]['remark'] = 'P';
-            } elseif ($arrival === 'Late' || $leave === 'Late') {
-                $attendanceMap[$tid][$date]['remark'] = 'L';
-            } elseif ($arrival === 'Leave' || $leave === 'Leave') {
-                $attendanceMap[$tid][$date]['remark'] = 'E';
-            } else {
-                $attendanceMap[$tid][$date]['remark'] = 'A';
             }
         }
 
