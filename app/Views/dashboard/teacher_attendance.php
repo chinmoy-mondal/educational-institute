@@ -72,15 +72,16 @@
                                         $dayName = $day['day'];
                                         $attendance = $attendanceMap[$t['id']][$date] ?? null;
 
+                                        // Default status
+                                        $status = $attendance['remark'] ?? 'A';
+                                        $tooltip = '';
+
                                         // Holiday on Fri/Sat
-                                        if ($dayName === 'Fri' || $dayName === 'Sat') {
+                                        if (in_array($dayName, ['Fri', 'Sat'])) {
                                             $status = 'H';
                                             $tooltip = 'Holiday';
                                         } else {
-                                            $status = $attendance['remark'] ?? 'A';
-                                            $tooltip = '';
-
-                                            // Calculate L/E if both arrival and leave exist
+                                            // Special case: Late/Early
                                             $arrivalSec = isset($attendance['arrival']) ? strtotime($date . ' ' . $attendance['arrival']) : null;
                                             $leaveSec   = isset($attendance['leave']) ? strtotime($date . ' ' . $attendance['leave']) : null;
                                             $tenAM  = strtotime($date . ' 10:00:00');
@@ -97,6 +98,7 @@
                                         if ($status !== 'H') $totalDays++;
                                         if ($status === 'P') $presentCount++;
 
+                                        // Badge for six codes only
                                         $badge = match ($status) {
                                             'P' => 'bg-success',
                                             'A' => 'bg-secondary',
@@ -104,13 +106,13 @@
                                             'E' => 'bg-info text-dark',
                                             'L/E' => 'bg-primary',
                                             'H' => 'bg-danger',
-                                            'R' => 'bg-warning',          // <- add this line
-                                            'IN' => 'bg-info',            // optional for IN punch
-                                            'OUT' => 'bg-info',           // optional for OUT punch
                                             default => 'bg-secondary'
                                         };
                                         ?>
-                                        <td><span class="badge <?= $badge ?>" title="<?= esc($tooltip) ?>"><?= $status ?></span>
+                                        <td>
+                                            <span class="badge <?= $badge ?>" title="<?= esc($tooltip) ?>">
+                                                <?= $status ?>
+                                            </span>
                                         </td>
                                     <?php endforeach; ?>
                                     <td><strong><?= $totalDays ?></strong></td>
