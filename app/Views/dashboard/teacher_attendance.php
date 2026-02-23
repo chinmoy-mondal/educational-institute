@@ -73,40 +73,55 @@
                                         $dayName = $day['day'];
                                         $attendance = $attendanceMap[$t['id']][$date] ?? null;
 
-                                        // Default status
-                                        $status = $attendance['remark'] ?? 'A';
-                                        $tooltip = '';
+                                    // Default values
+                                    $status = 'A';
+                                    $tooltip = 'Absent';
 
                                         // Holiday on Fri/Sat
                                         if (in_array($dayName, ['Fri', 'Sat'])) {
                                             $status = 'H';
                                             $tooltip = 'Holiday';
                                         } else {
-                                            // Special case: Late/Early
-                                            $arrivalSec = isset($attendance['arrival']) ? strtotime($date . ' ' . $attendance['arrival']) : null;
-                                            $leaveSec   = isset($attendance['leave']) ? strtotime($date . ' ' . $attendance['leave']) : null;
+                                        $arrival = $attendance['arrival'] ?? null;
+                                        $leave   = $attendance['leave'] ?? null;
+
+                                        if ($arrival && $leave) {
                                             $tenAM  = strtotime($date . ' 10:00:00');
                                             $fourPM = strtotime($date . ' 16:00:00');
+                                            $arrivalSec = strtotime($date . ' ' . $arrival);
+                                            $leaveSec   = strtotime($date . ' ' . $leave);
 
-                                            if ($arrivalSec && $leaveSec) {
-                                                if ($arrivalSec > $tenAM && $leaveSec < $fourPM) {
-                                                    $status = 'L/E';
-                                                    $tooltip = 'Late/Early';
+                                            $tooltip = "Arrival: $arrival | Leave: $leave";
+
+                                            if ($arrivalSec <= $tenAM && $leaveSec >= $fourPM) {
+                                                $status = 'P';
+                                            } elseif ($arrivalSec <= $tenAM && $leaveSec < $fourPM) {
+                                                $status = 'E';
+                                            } elseif ($arrivalSec > $tenAM && $leaveSec >= $fourPM) {
+                                                $status = 'L';
+                                            } elseif ($arrivalSec > $tenAM && $leaveSec < $fourPM) {
+                                                $status = 'L/E';
                                                 }
+                                        } elseif ($arrival && !$leave) {
+                                            $status = 'C';
+                                            $tooltip = "Arrival: $arrival | Leave: -";
+                                        } elseif (!$arrival && $leave) {
+                                            $status = 'Left';
+                                            $tooltip = "Arrival: - | Leave: $leave";
                                             }
                                         }
 
-                                        if ($status !== 'H') $totalDays++;
-                                        if ($status === 'P') $presentCount++;
+                                    if (!in_array($status, ['H'])) $totalDays++;
+                                    if (in_array($status, ['P', 'C'])) $presentCount++;
 
-                                        // Badge for six codes only
-                                        $badge = match ($status) {
+                                    $badge = match ($status) {
                                             'P' => 'bg-success',
                                             'C' => 'bg-success',
                                             'A' => 'bg-secondary',
                                             'L' => 'bg-warning text-dark',
                                             'E' => 'bg-info text-dark',
                                             'L/E' => 'bg-primary',
+                                        'Left' => 'bg-info text-dark',
                                             'H' => 'bg-danger',
                                             default => 'bg-secondary'
                                         };
