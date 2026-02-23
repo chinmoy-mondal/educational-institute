@@ -104,14 +104,19 @@
                                             'E' => 'bg-info text-dark',
                                             'L/E' => 'bg-primary',
                                             'H' => 'bg-danger',
+                                            'R' => 'bg-warning',          // <- add this line
+                                            'IN' => 'bg-info',            // optional for IN punch
+                                            'OUT' => 'bg-info',           // optional for OUT punch
                                             default => 'bg-secondary'
                                         };
                                         ?>
-                                        <td><span class="badge <?= $badge ?>" title="<?= esc($tooltip) ?>"><?= $status ?></span></td>
+                                        <td><span class="badge <?= $badge ?>" title="<?= esc($tooltip) ?>"><?= $status ?></span>
+                                        </td>
                                     <?php endforeach; ?>
                                     <td><strong><?= $totalDays ?></strong></td>
                                     <td><strong><?= $presentCount ?></strong></td>
-                                    <td><strong><?= $totalDays ? round(($presentCount / $totalDays) * 100) : 0 ?>%</strong></td>
+                                    <td><strong><?= $totalDays ? round(($presentCount / $totalDays) * 100) : 0 ?>%</strong>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
