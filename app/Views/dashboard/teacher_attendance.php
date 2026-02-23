@@ -34,6 +34,7 @@
                 <!-- Legend -->
                 <div class="mb-3">
                     <span class="badge bg-success">P = Present</span>
+                    <span class="badge bg-success">R = Reach Today</span>
                     <span class="badge bg-secondary">A = Absent</span>
                     <span class="badge bg-warning text-dark">L = Late</span>
                     <span class="badge bg-info text-dark">E = Leave</span>
@@ -101,6 +102,7 @@
                                         // Badge for six codes only
                                         $badge = match ($status) {
                                             'P' => 'bg-success',
+                                            'R' => 'bg-success',
                                             'A' => 'bg-secondary',
                                             'L' => 'bg-warning text-dark',
                                             'E' => 'bg-info text-dark',
