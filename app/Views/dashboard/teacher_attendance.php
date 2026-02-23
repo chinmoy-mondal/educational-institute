@@ -17,9 +17,9 @@
                         <select name="teacher" class="form-control">
                             <option value="">All Teachers</option>
                             <?php foreach ($allTeachers as $t): ?>
-                                <option value="<?= $t['id'] ?>" <?= ($selectedTeacher == $t['id']) ? 'selected' : '' ?>>
-                                    <?= esc($t['name']) ?>
-                                </option>
+                            <option value="<?= $t['id'] ?>" <?= ($selectedTeacher == $t['id']) ? 'selected' : '' ?>>
+                                <?= esc($t['name']) ?>
+                            </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -34,7 +34,7 @@
                 <!-- Legend -->
                 <div class="mb-3">
                     <span class="badge bg-success">P = Present</span>
-                    <span class="badge bg-success">R = Reach Today</span>
+                    <span class="badge bg-success">C = Checked In</span>
                     <span class="badge bg-secondary">A = Absent</span>
                     <span class="badge bg-warning text-dark">L = Late</span>
                     <span class="badge bg-info text-dark">E = Leave</span>
@@ -49,10 +49,10 @@
                             <tr>
                                 <th>Teacher Name</th>
                                 <?php foreach ($daysInMonth as $day): ?>
-                                    <th title="<?= $day['date'] ?>">
-                                        <?= $day['day'] ?><br>
-                                        <?= date('d', strtotime($day['date'])) ?>
-                                    </th>
+                                <th title="<?= $day['date'] ?>">
+                                    <?= $day['day'] ?><br>
+                                    <?= date('d', strtotime($day['date'])) ?>
+                                </th>
                                 <?php endforeach; ?>
                                 <th>Total Days</th>
                                 <th>Present</th>
@@ -61,14 +61,14 @@
                         </thead>
                         <tbody>
                             <?php foreach ($teachers as $t): ?>
-                                <?php
+                            <?php
                                 $presentCount = 0;
                                 $totalDays = 0;
                                 ?>
-                                <tr>
-                                    <td class="text-left"><?= esc($t['name']) ?></td>
-                                    <?php foreach ($daysInMonth as $day): ?>
-                                        <?php
+                            <tr>
+                                <td class="text-left"><?= esc($t['name']) ?></td>
+                                <?php foreach ($daysInMonth as $day): ?>
+                                <?php
                                         $date = $day['date'];
                                         $dayName = $day['day'];
                                         $attendance = $attendanceMap[$t['id']][$date] ?? null;
@@ -102,7 +102,7 @@
                                         // Badge for six codes only
                                         $badge = match ($status) {
                                             'P' => 'bg-success',
-                                            'R' => 'bg-success',
+                                            'C' => 'bg-success',
                                             'A' => 'bg-secondary',
                                             'L' => 'bg-warning text-dark',
                                             'E' => 'bg-info text-dark',
@@ -111,17 +111,17 @@
                                             default => 'bg-secondary'
                                         };
                                         ?>
-                                        <td>
-                                            <span class="badge <?= $badge ?>" title="<?= esc($tooltip) ?>">
-                                                <?= $status ?>
-                                            </span>
-                                        </td>
-                                    <?php endforeach; ?>
-                                    <td><strong><?= $totalDays ?></strong></td>
-                                    <td><strong><?= $presentCount ?></strong></td>
-                                    <td><strong><?= $totalDays ? round(($presentCount / $totalDays) * 100) : 0 ?>%</strong>
-                                    </td>
-                                </tr>
+                                <td>
+                                    <span class="badge <?= $badge ?>" title="<?= esc($tooltip) ?>">
+                                        <?= $status ?>
+                                    </span>
+                                </td>
+                                <?php endforeach; ?>
+                                <td><strong><?= $totalDays ?></strong></td>
+                                <td><strong><?= $presentCount ?></strong></td>
+                                <td><strong><?= $totalDays ? round(($presentCount / $totalDays) * 100) : 0 ?>%</strong>
+                                </td>
+                            </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>

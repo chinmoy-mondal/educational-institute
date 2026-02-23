@@ -4072,7 +4072,7 @@ class Dashboard extends Controller
 
                 // If only arrival exists
                 if ($arrival && !$leave) {
-                    $attendanceMap[$tid][$date]['remark'] = 'R';
+                    $attendanceMap[$tid][$date]['remark'] = 'C';
                     continue;
                 }
 
