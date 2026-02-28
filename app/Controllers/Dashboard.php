@@ -3103,13 +3103,11 @@ class Dashboard extends Controller
 
 
 
-        // Get cost history with type names
-        // Get cost history with type names
+        // Get cost history excluding salaries
         $this->data['costs'] = $this->transactionModel
-            ->select('transactions.*, cost_types.type_name')
-            ->join('cost_types', 'cost_types.id = transactions.cost_type_id', 'left')
-            ->where('transactions.type', 'cost') // only costs
-            ->orderBy('transactions.cost_date', 'DESC')
+            ->where('status', 1)             // only active records
+            ->notLike('purpose', 'salary')   // exclude any purpose containing "salary"
+            ->orderBy('cost_date', 'DESC')
             ->findAll();
 
         // Get all cost types for the dropdown
