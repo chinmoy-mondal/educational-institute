@@ -3123,6 +3123,7 @@ class Dashboard extends Controller
 
         // Handle POST (Add new cost type)
         if ($this->request->getMethod() === 'post') {
+            echo "post working=" . $typeName;
             $typeName = trim($this->request->getPost('type_name'));
 
             if ($typeName === '') {
