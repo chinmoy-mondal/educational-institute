@@ -141,6 +141,7 @@ $routes->get('admin/pay_report', 'Dashboard::pay_report');
 $routes->get('admin/salary', 'Dashboard::salary_form');
 $routes->post('admin/pay_salary', 'Dashboard::pay_salary');
 $routes->get('admin/cost', 'Dashboard::cost');
+$routes->post('admin/add_cost_type', 'Dashboard::costType');
 $routes->get('admin/pay_stat', 'Dashboard::pay_stat');
 $routes->get('admin/set_fees', 'Dashboard::set_fees');
 $routes->post('admin/save_fees', 'Dashboard::save_fees');

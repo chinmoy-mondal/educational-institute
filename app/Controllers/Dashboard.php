@@ -17,6 +17,7 @@ use App\Models\TransactionModel;
 use App\Models\StudentDiscountModel;
 use App\Models\SmsLogModel;
 use App\Models\UserCollectionsPayModel;
+use App\Models\CostTypeModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Dashboard extends Controller
@@ -35,6 +36,7 @@ class Dashboard extends Controller
     protected $studentDiscountModel;
     protected $smsLogModel;
     protected $userCollectionsPayModel;
+    protected $costTypeModel;
 
     protected $session;
     protected $data;
@@ -54,7 +56,8 @@ class Dashboard extends Controller
         $this->transactionModel     = new TransactionModel();
         $this->studentDiscountModel = new StudentDiscountModel();
         $this->smsLogModel          = new SmsLogModel();
-        $this->userCollectionsPayModel          = new UserCollectionsPayModel();
+        $this->userCollectionsPayModel = new UserCollectionsPayModel();
+        $this->costTypeModel        = new CostTypeModel();
 
 
         $this->session       = session();
@@ -3099,6 +3102,46 @@ class Dashboard extends Controller
         ];
 
         return view('dashboard/transaction/cost', $this->data);
+    }
+
+    public function costType()
+    {
+        $this->data['title'] = 'Cost Type Management';
+        $this->data['activeSection'] = 'accounts';
+
+        $this->data['navbarItems'] = [
+            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Due', 'url' => base_url('admin/std_due')],
+            ['label' => 'Report', 'url' => base_url('admin/pay_report')],
+            ['label' => 'Salary', 'url' => base_url('admin/salary')],
+            ['label' => 'Cost', 'url' => base_url('admin/cost')],
+            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+        ];
+
+        // Handle POST (Add new cost type)
+        if ($this->request->getMethod() === 'post') {
+            $typeName = trim($this->request->getPost('type_name'));
+
+            if ($typeName === '') {
+                return redirect()->back()->with('error', 'Cost type cannot be empty');
+            }
+
+            // Prevent duplicate
+            if ($this->costTypeModel->where('type_name', $typeName)->first()) {
+                return redirect()->back()->with('error', 'Cost type already exists');
+            }
+
+            $this->costTypeModel->insert(['type_name' => $typeName]);
+            return redirect()->back()->with('success', 'Cost type added successfully');
+        }
+
+        // Load all cost types
+        $this->data['costTypes'] = $this->costTypeModel->orderBy('id', 'ASC')->findAll();
+
+        return view('dashboard/transaction/costType', $this->data);
     }
 
     public function salary_form()
