@@ -3121,33 +3121,33 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-
-        if ($this->request->getMethod() === 'post') {
-
-            $typeName = trim($this->request->getPost('type_name'));
-
-            if ($typeName === '') {
-                return redirect()->back()->with('error', 'Cost type cannot be empty');
-            }
-
-            // Prevent duplicate
-            if ($this->costTypeModel->where('type_name', $typeName)->first()) {
-                return redirect()->back()->with('error', 'Cost type already exists');
-            }
-
-            // Insert
-            $this->costTypeModel->insert([
-                'type_name' => $typeName
-            ]);
-
-            return redirect()->to('admin/cost_type')->with('success', 'Cost type added successfully');
-        }
-
+        // Load all cost types
         $this->data['costTypes'] = $this->costTypeModel
             ->orderBy('id', 'ASC')
             ->findAll();
 
         return view('dashboard/transaction/costType', $this->data);
+    }
+
+    public function save_cost_type()
+    {
+        $typeName = trim($this->request->getPost('type_name'));
+
+        if ($typeName === '') {
+            return redirect()->back()->with('error', 'Cost type cannot be empty');
+        }
+
+        // Prevent duplicate
+        if ($this->costTypeModel->where('type_name', $typeName)->first()) {
+            return redirect()->back()->with('error', 'Cost type already exists');
+        }
+
+        // Insert into database
+        $this->costTypeModel->insert([
+            'type_name' => $typeName
+        ]);
+
+        return redirect()->to('admin/cost_type')->with('success', 'Cost type added successfully');
     }
 
     public function delete_cost_type($id)

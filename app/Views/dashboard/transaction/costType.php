@@ -42,7 +42,8 @@
                 </h3>
             </div>
 
-            <form method="post" action="<?= base_url('admin/cost_type') ?>">
+            <!-- Updated form action to point to save_cost_type() -->
+            <form method="post" action="<?= base_url('admin/save_cost_type') ?>">
                 <?= csrf_field() ?>
                 <div class="card-body">
                     <div class="form-group">
