@@ -3108,7 +3108,7 @@ class Dashboard extends Controller
         $this->data['costs'] = $this->transactionModel
             ->select('transactions.*, cost_types.type_name')
             ->join('cost_types', 'cost_types.id = transactions.cost_type_id', 'left')
-            ->where('transactions.type', 'cost') // optional, if your table stores multiple types
+            ->where('transactions.type', 'cost') // only costs
             ->orderBy('transactions.cost_date', 'DESC')
             ->findAll();
 
