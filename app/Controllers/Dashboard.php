@@ -3226,6 +3226,9 @@ class Dashboard extends Controller
         $selectedSection = $this->request->getGet('section') ?? 'all';
         $dueType         = $this->request->getGet('due_type') ?? 'due';
 
+
+        echo "selected month =" . $selectedMonth;
+
         $this->data['selectedMonth']   = $selectedMonth;
         $this->data['selectedSection'] = $selectedSection;
 
