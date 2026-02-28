@@ -42,7 +42,8 @@
                 </h3>
             </div>
 
-            <form method="post" action="<?= base_url('admin/cost_type') ?>" id="costTypeForm">
+            <form method="post" action="<?= base_url('admin/cost_type') ?>">
+                <?= csrf_field() ?>
                 <div class="card-body">
                     <div class="form-group">
                         <label>Cost Type Name</label>
