@@ -3227,7 +3227,6 @@ class Dashboard extends Controller
         $dueType         = $this->request->getGet('due_type') ?? 'due';
 
 
-        echo "selected month =" . $selectedMonth;
 
         $this->data['selectedMonth']   = $selectedMonth;
         $this->data['selectedSection'] = $selectedSection;
@@ -3279,7 +3278,6 @@ class Dashboard extends Controller
             $tid = $p['transaction_id'];
 
             // Paid = sum of amounts up to selected month
-            echo "amount = ". $sid." ====" . $p['amount'] . "<br>";
             $paymentSummary[$sid]['paid'] = ($paymentSummary[$sid]['paid'] ?? 0) + $p['amount'];
 
             // Discount = sum of first discount per transaction
