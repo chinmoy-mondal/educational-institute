@@ -3132,23 +3132,23 @@ class Dashboard extends Controller
     public function save_cost_type()
     {
         $typeName = trim($this->request->getPost('type_name'));
-        echo "hello" . $typeName;
 
-        // if ($typeName === '') {
-        //     return redirect()->back()->with('error', 'Cost type cannot be empty');
-        // }
 
-        // // Prevent duplicate
-        // if ($this->costTypeModel->where('type_name', $typeName)->first()) {
-        //     return redirect()->back()->with('error', 'Cost type already exists');
-        // }
+        if ($typeName === '') {
+            return redirect()->back()->with('error', 'Cost type cannot be empty');
+        }
 
-        // // Insert into database
-        // $this->costTypeModel->insert([
-        //     'type_name' => $typeName
-        // ]);
+        // Prevent duplicate
+        if ($this->costTypeModel->where('type_name', $typeName)->first()) {
+            return redirect()->back()->with('error', 'Cost type already exists');
+        }
 
-        // return redirect()->to('admin/cost_type')->with('success', 'Cost type added successfully');
+        // Insert into database
+        $this->costTypeModel->insert([
+            'type_name' => $typeName
+        ]);
+
+        return redirect()->to('admin/cost_type')->with('success', 'Cost type added successfully');
     }
 
     public function delete_cost_type($id)
