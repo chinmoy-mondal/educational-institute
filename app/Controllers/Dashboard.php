@@ -3279,6 +3279,7 @@ class Dashboard extends Controller
             $tid = $p['transaction_id'];
 
             // Paid = sum of amounts up to selected month
+            echo "amount = " . $p['amount'] . "<br>";
             $paymentSummary[$sid]['paid'] = ($paymentSummary[$sid]['paid'] ?? 0) + $p['amount'];
 
             // Discount = sum of first discount per transaction
