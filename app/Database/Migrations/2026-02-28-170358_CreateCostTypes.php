@@ -17,8 +17,13 @@ class CreateCostTypes extends Migration
             'type_name' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 100,
+                'null'       => false,
             ],
             'created_at' => [
+                'type' => 'DATETIME',
+                'null' => true,
+            ],
+            'updated_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
             ],
