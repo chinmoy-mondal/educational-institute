@@ -3132,7 +3132,7 @@ class Dashboard extends Controller
     public function save_cost_type()
     {
         $typeName = trim($this->request->getPost('type_name'));
-        echo "hello";
+        echo "hello" . $typeName;
 
         // if ($typeName === '') {
         //     return redirect()->back()->with('error', 'Cost type cannot be empty');
