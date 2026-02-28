@@ -3121,9 +3121,9 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        // Handle POST (Add new cost type)
+
         if ($this->request->getMethod() === 'post') {
-            echo "post working=" . $typeName;
+
             $typeName = trim($this->request->getPost('type_name'));
 
             if ($typeName === '') {
@@ -3135,14 +3135,31 @@ class Dashboard extends Controller
                 return redirect()->back()->with('error', 'Cost type already exists');
             }
 
-            $this->costTypeModel->insert(['type_name' => $typeName]);
-            return redirect()->back()->with('success', 'Cost type added successfully');
+            // Insert
+            $this->costTypeModel->insert([
+                'type_name' => $typeName
+            ]);
+
+            return redirect()->to('admin/cost_type')->with('success', 'Cost type added successfully');
         }
 
-        // Load all cost types
-        $this->data['costTypes'] = $this->costTypeModel->orderBy('id', 'ASC')->findAll();
+        $this->data['costTypes'] = $this->costTypeModel
+            ->orderBy('id', 'ASC')
+            ->findAll();
 
         return view('dashboard/transaction/costType', $this->data);
+    }
+
+    public function delete_cost_type($id)
+    {
+        $costType = $this->costTypeModel->find($id);
+
+        if (!$costType) {
+            return redirect()->back()->with('error', 'Cost type not found');
+        }
+
+        $this->costTypeModel->delete($id);
+        return redirect()->back()->with('success', 'Cost type deleted successfully');
     }
 
     public function salary_form()

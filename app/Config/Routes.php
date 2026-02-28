@@ -141,7 +141,9 @@ $routes->get('admin/pay_report', 'Dashboard::pay_report');
 $routes->get('admin/salary', 'Dashboard::salary_form');
 $routes->post('admin/pay_salary', 'Dashboard::pay_salary');
 $routes->get('admin/cost', 'Dashboard::cost');
-$routes->match(['get', 'post'], 'admin/cost_type', 'Dashboard::cost_type');
+$routes->get('admin/cost_type', 'Dashboard::cost_type');   // Show form/list
+$routes->post('admin/cost_type', 'Dashboard::cost_type');  // Handle form submission
+$routes->get('admin/cost_type/delete/(:num)', 'Dashboard::delete_cost_type/$1');
 $routes->get('admin/pay_stat', 'Dashboard::pay_stat');
 $routes->get('admin/set_fees', 'Dashboard::set_fees');
 $routes->post('admin/save_fees', 'Dashboard::save_fees');

@@ -47,11 +47,11 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label>Cost Type Name</label>
-                        <input type="text" name="type_name" id="type_name" class="form-control"
-                            placeholder="Electricity / Repair" required>
+                        <input type="text" name="type_name" class="form-control" placeholder="Electricity / Repair"
+                            required>
                     </div>
 
-                    <button type="submit" class="btn btn-success" id="saveBtn" disabled>
+                    <button type="submit" class="btn btn-success">
                         <i class="fas fa-save"></i> Save
                     </button>
                 </div>
@@ -72,6 +72,7 @@
                         <tr>
                             <th width="60">#</th>
                             <th>Type Name</th>
+                            <th width="100">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -80,11 +81,19 @@
                         <tr>
                             <td><?= $i + 1 ?></td>
                             <td><?= esc($type['type_name']) ?></td>
+                            <td>
+                                <!-- Delete Button -->
+                                <a href="<?= base_url('admin/cost_type/delete/' . $type['id']) ?>"
+                                    class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Are you sure you want to delete this cost type?')">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
                         </tr>
                         <?php endforeach; ?>
                         <?php else: ?>
                         <tr>
-                            <td colspan="2" class="text-center text-muted">
+                            <td colspan="3" class="text-center text-muted">
                                 No cost types added yet
                             </td>
                         </tr>
@@ -96,21 +105,5 @@
 
     </div>
 </section>
-
-<!-- JS: Activate button + prevent double submit -->
-<script>
-const input = document.getElementById('type_name');
-const saveBtn = document.getElementById('saveBtn');
-const form = document.getElementById('costTypeForm');
-
-input.addEventListener('input', function() {
-    saveBtn.disabled = this.value.trim() === '';
-});
-
-form.addEventListener('submit', function() {
-    saveBtn.disabled = true;
-    saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
-});
-</script>
 
 <?= $this->endSection() ?>
