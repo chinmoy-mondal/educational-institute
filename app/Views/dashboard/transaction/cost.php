@@ -17,6 +17,14 @@
             </div>
         </div>
 
+        <!-- Flash Messages -->
+        <?php if (session()->getFlashdata('error')): ?>
+        <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
+        <?php endif; ?>
+        <?php if (session()->getFlashdata('success')): ?>
+        <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
+        <?php endif; ?>
+
         <!-- Cost Entry Card -->
         <div class="card card-primary card-outline">
             <div class="card-header">
@@ -27,9 +35,9 @@
 
             <form method="post" action="">
                 <div class="card-body">
-
                     <div class="row">
 
+                        <!-- Date -->
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Date</label>
@@ -37,21 +45,35 @@
                             </div>
                         </div>
 
+                        <!-- Cost Type -->
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Cost Purpose</label>
-                                <input type="text" name="purpose" class="form-control"
-                                    placeholder="Electricity / Repair / Stationery">
+                                <label>Cost Type
+                                    <a href="<?= base_url('admin/cost_type') ?>" target="_blank"
+                                        class="btn btn-sm btn-info ml-2">
+                                        <i class="fas fa-plus"></i> Add Type
+                                    </a>
+                                </label>
+                                <select name="cost_type_id" class="form-control" required>
+                                    <option value="">-- Select Cost Type --</option>
+                                    <?php if (!empty($cost_types)): ?>
+                                    <?php foreach ($cost_types as $type): ?>
+                                    <option value="<?= $type['id'] ?>"><?= $type['type_name'] ?></option>
+                                    <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </select>
                             </div>
                         </div>
 
+                        <!-- Amount -->
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Amount</label>
-                                <input type="number" name="amount" class="form-control" placeholder="0">
+                                <input type="number" name="amount" class="form-control" placeholder="0" required>
                             </div>
                         </div>
 
+                        <!-- Save Button -->
                         <div class="col-md-2 d-flex align-items-end">
                             <button type="submit" class="btn btn-primary btn-block">
                                 <i class="fas fa-save"></i> Save
@@ -59,7 +81,6 @@
                         </div>
 
                     </div>
-
                 </div>
             </form>
         </div>
@@ -78,16 +99,27 @@
                         <tr>
                             <th>#</th>
                             <th>Date</th>
-                            <th>Purpose</th>
+                            <th>Cost Type</th>
                             <th>Amount</th>
                         </tr>
                     </thead>
                     <tbody>
+                        <?php if (!empty($costs)): ?>
+                        <?php foreach ($costs as $i => $cost): ?>
+                        <tr>
+                            <td><?= $i + 1 ?></td>
+                            <td><?= $cost['cost_date'] ?></td>
+                            <td><?= $cost['type_name'] ?? 'N/A' ?></td>
+                            <td><?= number_format($cost['amount'], 2) ?></td>
+                        </tr>
+                        <?php endforeach; ?>
+                        <?php else: ?>
                         <tr>
                             <td colspan="4" class="text-center text-muted">
                                 No cost records found
                             </td>
                         </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>

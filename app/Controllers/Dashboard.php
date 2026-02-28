@@ -3101,6 +3101,20 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
+
+
+        // Get cost history with type names
+        // Get cost history with type names
+        $this->data['costs'] = $this->transactionModel
+            ->select('transactions.*, cost_types.type_name')
+            ->join('cost_types', 'cost_types.id = transactions.cost_type_id', 'left')
+            ->where('transactions.type', 'cost') // optional, if your table stores multiple types
+            ->orderBy('transactions.cost_date', 'DESC')
+            ->findAll();
+
+        // Get all cost types for the dropdown
+        $this->data['cost_types'] = $this->costTypeModel->findAll();
+
         return view('dashboard/transaction/cost', $this->data);
     }
 
