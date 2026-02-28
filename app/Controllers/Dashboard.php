@@ -3104,7 +3104,7 @@ class Dashboard extends Controller
         return view('dashboard/transaction/cost', $this->data);
     }
 
-    public function costType()
+    public function cost_type()
     {
         $this->data['title'] = 'Cost Type Management';
         $this->data['activeSection'] = 'accounts';
