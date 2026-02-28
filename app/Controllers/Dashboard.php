@@ -3081,9 +3081,9 @@ class Dashboard extends Controller
         return redirect()->to(base_url('admin/sms-log'));
     }
 
-	public function cost()
-	{
-        $this->data['title'] = 'Transaction Dashboard';
+    public function cost()
+    {
+        $this->data['title'] = 'Cost Dashboard';
         $this->data['activeSection'] = 'accounts';
 
         $this->data['navbarItems'] = [
@@ -3098,7 +3098,7 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        // return view('dashboard/transaction/pay_stat', $this->data);
+        return view('dashboard/transaction/cost', $this->data);
     }
 
     public function salary_form()
