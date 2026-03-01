@@ -127,7 +127,7 @@
                         <?php foreach ($costs as $i => $cost): ?>
                         <tr>
                             <td><?= $i + 1 ?></td>
-                            <td><?= $cost['cost_date'] ?></td>
+                            <td><?= $cost['created_at'] ?></td>
                             <td><?= $cost['type_name'] ?? 'N/A' ?></td>
                             <td><?= number_format($cost['amount'], 2) ?></td>
                         </tr>
