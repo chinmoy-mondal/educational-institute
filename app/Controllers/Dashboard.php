@@ -3154,7 +3154,7 @@ class Dashboard extends Controller
         }
 
         // Generate unique transaction ID
-        $transactionId = 'CST-' . date('YmdHis') . '-' . random_int(100, 999);
+        $transactionId = 'CST-' . date('YmdHis') . random_int(100, 999);
 
         // Month name (from current date)
         $monthName = date('n');
