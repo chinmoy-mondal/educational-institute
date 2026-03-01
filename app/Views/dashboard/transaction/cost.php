@@ -42,7 +42,7 @@
                         <!-- Add Type Button -->
                         <div class="col-md-1">
                             <div class="form-group">
-                                <label>&nbsp;</label>
+                                <label>Add Type</label>
                                 <a href="<?= base_url('admin/cost_type') ?>" target="_blank"
                                     class="btn btn-info btn-block">
                                     <i class="fas fa-plus"></i>
