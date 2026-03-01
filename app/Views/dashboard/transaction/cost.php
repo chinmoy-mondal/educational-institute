@@ -25,7 +25,7 @@
         <div class="alert alert-success"><?= session()->getFlashdata('success') ?></div>
         <?php endif; ?>
 
-        <!-- Cost Entry Card -->
+        <!-- Cost Entry -->
         <div class="card card-primary card-outline">
             <div class="card-header">
                 <h3 class="card-title">
@@ -35,19 +35,12 @@
 
             <form method="post" action="<?= base_url('admin/cost/save') ?>">
                 <?= csrf_field() ?>
+
                 <div class="card-body">
                     <div class="row">
 
-                        <!-- Date -->
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label>Date</label>
-                                <input type="date" name="cost_date" class="form-control" value="<?= date('Y-m-d') ?>">
-                            </div>
-                        </div>
-
                         <!-- Cost Type -->
-                        <div class="col-md-2">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label>Cost Type</label>
                                 <select name="cost_type_id" class="form-control" required>
@@ -72,12 +65,12 @@
                             </div>
                         </div>
 
-                        <!-- sender -->
+                        <!-- Receiver -->
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Receiver</label>
-                                <input type="text" name="receiver" class="form-control"
-                                    placeholder="Receiver Name (Bkash, Nagad, Chinmoy..)">
+                                <input type="text" name="receiver_name" class="form-control"
+                                    placeholder="Bkash / Nagad / Chinmoy">
                             </div>
                         </div>
 
@@ -85,17 +78,26 @@
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Amount</label>
-                                <input type="number" name="amount" class="form-control" placeholder="0" required>
+                                <input type="number" name="amount" class="form-control" required>
                             </div>
                         </div>
 
-                        <!-- Save Button -->
-                        <div class="col-md-2">
+                        <!-- Save -->
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label>&nbsp;</label>
                                 <button type="submit" class="btn btn-primary btn-block">
-                                    <i class="fas fa-save"></i> Save
+                                    <i class="fas fa-save"></i> Save Cost
                                 </button>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea name="description" class="form-control" rows="2"
+                                    placeholder="Payment details / notes"></textarea>
                             </div>
                         </div>
 
@@ -104,7 +106,7 @@
             </form>
         </div>
 
-        <!-- Cost List -->
+        <!-- Cost History -->
         <div class="card card-secondary card-outline">
             <div class="card-header">
                 <h3 class="card-title">
@@ -119,6 +121,7 @@
                             <th>#</th>
                             <th>Date</th>
                             <th>Cost Type</th>
+                            <th>Description</th>
                             <th>Amount</th>
                         </tr>
                     </thead>
@@ -127,14 +130,15 @@
                         <?php foreach ($costs as $i => $cost): ?>
                         <tr>
                             <td><?= $i + 1 ?></td>
-                            <td><?= $cost['created_at'] ?></td>
-                            <td><?= $cost['type_name'] ?? 'N/A' ?></td>
+                            <td><?= date('d-m-Y', strtotime($cost['created_at'])) ?></td>
+                            <td><?= esc($cost['purpose']) ?></td>
+                            <td><?= esc($cost['description'] ?? '-') ?></td>
                             <td><?= number_format($cost['amount'], 2) ?></td>
                         </tr>
                         <?php endforeach; ?>
                         <?php else: ?>
                         <tr>
-                            <td colspan="4" class="text-center text-muted">
+                            <td colspan="5" class="text-center text-muted">
                                 No cost records found
                             </td>
                         </tr>
