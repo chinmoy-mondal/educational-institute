@@ -60,15 +60,14 @@
                             </div>
                         </div>
 
-                        <!-- Add Type -->
+                        <!-- Add Type Button -->
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>&nbsp;</label>
                                 <a href="<?= base_url('admin/cost_type') ?>" target="_blank"
-                                    class="btn btn-sm btn-info ml-2">
+                                    class="btn btn-info btn-block">
                                     <i class="fas fa-plus"></i> Add Type
                                 </a>
-
                             </div>
                         </div>
 
