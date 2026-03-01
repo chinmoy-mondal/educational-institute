@@ -42,7 +42,7 @@
                         <!-- Add Type Button -->
                         <div class="col-md-1">
                             <div class="form-group">
-                                <label>Add Type</label>
+                                <label>Add</label>
                                 <a href="<?= base_url('admin/cost_type') ?>" target="_blank"
                                     class="btn btn-info btn-block">
                                     <i class="fas fa-plus"></i>
@@ -120,6 +120,7 @@
                         <tr>
                             <th>#</th>
                             <th>Date</th>
+                            <th>Created By</th>
                             <th>Cost Type</th>
                             <th>Description</th>
                             <th>Amount</th>
@@ -131,6 +132,7 @@
                         <tr>
                             <td><?= $i + 1 ?></td>
                             <td><?= date('d-m-Y', strtotime($cost['created_at'])) ?></td>
+                            <td><?= esc($cost['sender_name']) ?></td>
                             <td><?= esc($cost['purpose']) ?></td>
                             <td><?= esc($cost['description'] ?? '-') ?></td>
                             <td><?= number_format($cost['amount'], 2) ?></td>

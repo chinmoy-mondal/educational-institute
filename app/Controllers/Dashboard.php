@@ -3111,10 +3111,12 @@ class Dashboard extends Controller
 
 
 
-        // Get cost history excluding salaries
+        // Get cost history for current month excluding salaries
         $this->data['costs'] = $this->transactionModel
-            ->where('status', 1)             // only active records
-            ->notLike('purpose', 'salary')
+            ->where('status', 1)                   // only active records
+            ->notLike('purpose', 'salary')         // exclude salary
+            ->where('created_at >=', date('Y-m-01 00:00:00'))
+            ->where('created_at <=', date('Y-m-t 23:59:59'))
             ->findAll();
 
         // Get all cost types for the dropdown
