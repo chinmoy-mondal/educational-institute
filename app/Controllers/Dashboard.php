@@ -3125,11 +3125,11 @@ class Dashboard extends Controller
 
     public function saveCost()
     {
-        $costDate   = $this->request->getPost('cost_date');
-        $typeId     = $this->request->getPost('cost_type_id');
-        $amount     = $this->request->getPost('amount');
+        $typeId = $this->request->getPost('cost_type_id');
+        $amount = $this->request->getPost('amount');
 
-        if (!$costDate || !$typeId || !$amount || $amount <= 0) {
+        // Basic validation
+        if (!$typeId || !$amount || $amount <= 0) {
             return redirect()->back()
                 ->withInput()
                 ->with('error', 'Invalid cost data');
@@ -3139,7 +3139,11 @@ class Dashboard extends Controller
         $userId   = session()->get('user_id');
         $userName = session()->get('user_name');
 
-        // Get cost type name
+        if (!$userId) {
+            return redirect()->back()->with('error', 'User not logged in');
+        }
+
+        // Get cost type
         $costTypeModel = new CostTypeModel();
         $costType = $costTypeModel->find($typeId);
 
@@ -3147,11 +3151,11 @@ class Dashboard extends Controller
             return redirect()->back()->with('error', 'Invalid cost type');
         }
 
-        // Generate transaction ID
-        $transactionId = 'COST-' . date('Ymd') . '-' . rand(1000, 9999);
+        // Generate unique transaction ID
+        $transactionId = 'COST-' . date('YmdHis') . '-' . random_int(100, 999);
 
-        // Month name
-        $monthName = date('F', strtotime($costDate));
+        // Month name (from current date)
+        $monthName = date('F');
 
         $transactionModel = new TransactionModel();
 
@@ -3166,8 +3170,8 @@ class Dashboard extends Controller
 
             'amount'         => $amount,
             'discount'       => 0,
-            'month'          => $monthName,
 
+            'month'          => $monthName,
             'purpose'        => $costType['type_name'],
             'description'    => 'Payment',
 
