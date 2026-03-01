@@ -3127,6 +3127,8 @@ class Dashboard extends Controller
     {
         $typeId = $this->request->getPost('cost_type_id');
         $amount = $this->request->getPost('amount');
+        $receiver_name = $this->request->getPost('receiver_name');
+        $description = $this->request->getPost('description');
 
         // Basic validation
         if (!$typeId || !$amount || $amount <= 0) {
@@ -3152,10 +3154,10 @@ class Dashboard extends Controller
         }
 
         // Generate unique transaction ID
-        $transactionId = 'COST-' . date('YmdHis') . '-' . random_int(100, 999);
+        $transactionId = 'CST-' . date('YmdHis') . '-' . random_int(100, 999);
 
         // Month name (from current date)
-        $monthName = date('F');
+        $monthName = date('n');
 
         $transactionModel = new TransactionModel();
 
@@ -3166,18 +3168,18 @@ class Dashboard extends Controller
             'sender_name'    => $userName,
 
             'receiver_id'    => null,
-            'receiver_name'  => null,
+            'receiver_name'  => $receiver_name,
 
             'amount'         => $amount,
             'discount'       => 0,
 
             'month'          => $monthName,
-            'purpose'        => $costType['type_name'],
-            'description'    => 'Payment',
+            'purpose'        => 'cost-' . $costType['type_name'],
+            'description'    => 'Cost for ' . $description,
 
             'payment_status' => 1,
             'status'         => 1,
-            'activity'       => 'cost',
+            'activity'       => 0,
         ]);
 
         return redirect()->to(base_url('admin/cost'))
