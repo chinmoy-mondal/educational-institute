@@ -2392,7 +2392,15 @@ class Dashboard extends Controller
 
 
         // ================= ALL TRANSACTIONS =================
+        // $this->data['transactions'] = $this->transactionModel
+        //     ->orderBy('created_at', 'DESC')
+        //     ->findAll();
+        $monthStart = date('Y-m-01 00:00:00');
+        $monthEnd   = date('Y-m-t 23:59:59');
+
         $this->data['transactions'] = $this->transactionModel
+            ->where('created_at >=', $monthStart)
+            ->where('created_at <=', $monthEnd)
             ->orderBy('created_at', 'DESC')
             ->findAll();
 
