@@ -38,7 +38,7 @@
                     <div class="row">
 
                         <!-- Date -->
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label>Date</label>
                                 <input type="date" name="cost_date" class="form-control" value="<?= date('Y-m-d') ?>">
@@ -46,15 +46,9 @@
                         </div>
 
                         <!-- Cost Type -->
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
-                                <label>
-                                    Cost Type
-                                    <a href="<?= base_url('admin/cost_type') ?>" target="_blank"
-                                        class="btn btn-sm btn-info ml-2">
-                                        <i class="fas fa-plus"></i> Add Type
-                                    </a>
-                                </label>
+
                                 <select name="cost_type_id" class="form-control" required>
                                     <option value="">-- Select Cost Type --</option>
                                     <?php foreach ($cost_types ?? [] as $type): ?>
@@ -63,6 +57,20 @@
                                     </option>
                                     <?php endforeach; ?>
                                 </select>
+                            </div>
+                        </div>
+
+                        <!-- Add Type -->
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>
+                                    Cost Type
+                                    <a href="<?= base_url('admin/cost_type') ?>" target="_blank"
+                                        class="btn btn-sm btn-info ml-2">
+                                        <i class="fas fa-plus"></i> Add Type
+                                    </a>
+                                </label>
+
                             </div>
                         </div>
 
