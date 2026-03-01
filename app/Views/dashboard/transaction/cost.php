@@ -39,6 +39,17 @@
                 <div class="card-body">
                     <div class="row">
 
+                        <!-- Add Type Button -->
+                        <div class="col-md-1">
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <a href="<?= base_url('admin/cost_type') ?>" target="_blank"
+                                    class="btn btn-info btn-block">
+                                    <i class="fas fa-plus"></i>
+                                </a>
+                            </div>
+                        </div>
+
                         <!-- Cost Type -->
                         <div class="col-md-3">
                             <div class="form-group">
@@ -51,17 +62,6 @@
                                     </option>
                                     <?php endforeach; ?>
                                 </select>
-                            </div>
-                        </div>
-
-                        <!-- Add Type Button -->
-                        <div class="col-md-1">
-                            <div class="form-group">
-                                <label>&nbsp;</label>
-                                <a href="<?= base_url('admin/cost_type') ?>" target="_blank"
-                                    class="btn btn-info btn-block">
-                                    <i class="fas fa-plus"></i>
-                                </a>
                             </div>
                         </div>
 
