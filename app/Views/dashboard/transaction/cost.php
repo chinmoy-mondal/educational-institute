@@ -76,7 +76,8 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Receiver</label>
-                                <input type="text" name="receiver" class="form-control" placeholder="0">
+                                <input type="text" name="receiver" class="form-control"
+                                    placeholder="Receiver Name (Bkash, Nagad, Chinmoy..)">
                             </div>
                         </div>
 
