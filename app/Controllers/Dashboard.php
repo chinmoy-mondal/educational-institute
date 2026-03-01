@@ -3129,21 +3129,51 @@ class Dashboard extends Controller
         $typeId     = $this->request->getPost('cost_type_id');
         $amount     = $this->request->getPost('amount');
 
-        // Basic validation
         if (!$costDate || !$typeId || !$amount || $amount <= 0) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'All fields are required and amount must be greater than zero');
+                ->with('error', 'Invalid cost data');
         }
+
+        // Logged-in user
+        $userId   = session()->get('user_id');
+        $userName = session()->get('user_name');
+
+        // Get cost type name
+        $costTypeModel = new CostTypeModel();
+        $costType = $costTypeModel->find($typeId);
+
+        if (!$costType) {
+            return redirect()->back()->with('error', 'Invalid cost type');
+        }
+
+        // Generate transaction ID
+        $transactionId = 'COST-' . date('Ymd') . '-' . rand(1000, 9999);
+
+        // Month name
+        $monthName = date('F', strtotime($costDate));
 
         $transactionModel = new TransactionModel();
 
         $transactionModel->insert([
-            'cost_date'   => $costDate,
-            'cost_type_id' => $typeId,
-            'amount'      => $amount,
-            'purpose'     => 'cost',
-            'status'      => 1,
+            'transaction_id' => $transactionId,
+
+            'sender_id'      => $userId,
+            'sender_name'    => $userName,
+
+            'receiver_id'    => null,
+            'receiver_name'  => null,
+
+            'amount'         => $amount,
+            'discount'       => 0,
+            'month'          => $monthName,
+
+            'purpose'        => $costType['type_name'],
+            'description'    => 'Payment',
+
+            'payment_status' => 1,
+            'status'         => 1,
+            'activity'       => 'cost',
         ]);
 
         return redirect()->to(base_url('admin/cost'))
