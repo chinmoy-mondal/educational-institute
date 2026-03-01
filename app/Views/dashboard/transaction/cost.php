@@ -33,7 +33,8 @@
                 </h3>
             </div>
 
-            <form method="post" action="">
+            <form method="post" action="<?= base_url('admin/cost/save') ?>">
+                <?= csrf_field() ?>
                 <div class="card-body">
                     <div class="row">
 
@@ -46,7 +47,7 @@
                         </div>
 
                         <!-- Cost Type -->
-                        <div class="col-md-4">
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label>Cost Type</label>
                                 <select name="cost_type_id" class="form-control" required>
@@ -71,8 +72,16 @@
                             </div>
                         </div>
 
-                        <!-- Amount -->
+                        <!-- sender -->
                         <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Receiver</label>
+                                <input type="text" name="receiver" class="form-control" placeholder="0">
+                            </div>
+                        </div>
+
+                        <!-- Amount -->
+                        <div class="col-md-2">
                             <div class="form-group">
                                 <label>Amount</label>
                                 <input type="number" name="amount" class="form-control" placeholder="0" required>

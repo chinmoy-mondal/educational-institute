@@ -3123,6 +3123,33 @@ class Dashboard extends Controller
         return view('dashboard/transaction/cost', $this->data);
     }
 
+    public function saveCost()
+    {
+        $costDate   = $this->request->getPost('cost_date');
+        $typeId     = $this->request->getPost('cost_type_id');
+        $amount     = $this->request->getPost('amount');
+
+        // Basic validation
+        if (!$costDate || !$typeId || !$amount || $amount <= 0) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'All fields are required and amount must be greater than zero');
+        }
+
+        $transactionModel = new TransactionModel();
+
+        $transactionModel->insert([
+            'cost_date'   => $costDate,
+            'cost_type_id' => $typeId,
+            'amount'      => $amount,
+            'purpose'     => 'cost',
+            'status'      => 1,
+        ]);
+
+        return redirect()->to(base_url('admin/cost'))
+            ->with('success', 'Cost saved successfully');
+    }
+
     public function cost_type()
     {
         $this->data['title'] = 'Cost Type Management';
