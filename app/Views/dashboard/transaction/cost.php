@@ -46,7 +46,7 @@
                         </div>
 
                         <!-- Cost Type -->
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Cost Type</label>
                                 <select name="cost_type_id" class="form-control" required>
@@ -61,7 +61,7 @@
                         </div>
 
                         <!-- Add Type Button -->
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                             <div class="form-group">
                                 <label>&nbsp;</label>
                                 <a href="<?= base_url('admin/cost_type') ?>" target="_blank"
