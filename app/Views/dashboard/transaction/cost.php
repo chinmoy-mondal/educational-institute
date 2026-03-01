@@ -48,7 +48,8 @@
                         <!-- Cost Type -->
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Cost Type
+                                <label>
+                                    Cost Type
                                     <a href="<?= base_url('admin/cost_type') ?>" target="_blank"
                                         class="btn btn-sm btn-info ml-2">
                                         <i class="fas fa-plus"></i> Add Type
@@ -56,11 +57,11 @@
                                 </label>
                                 <select name="cost_type_id" class="form-control" required>
                                     <option value="">-- Select Cost Type --</option>
-                                    <?php if (!empty($cost_types)): ?>
-                                    <?php foreach ($cost_types as $type): ?>
-                                    <option value="<?= $type['id'] ?>"><?= $type['type_name'] ?></option>
+                                    <?php foreach ($cost_types ?? [] as $type): ?>
+                                    <option value="<?= $type['id'] ?>">
+                                        <?= esc($type['type_name']) ?>
+                                    </option>
                                     <?php endforeach; ?>
-                                    <?php endif; ?>
                                 </select>
                             </div>
                         </div>
@@ -74,10 +75,13 @@
                         </div>
 
                         <!-- Save Button -->
-                        <div class="col-md-2 d-flex align-items-end">
-                            <button type="submit" class="btn btn-primary btn-block">
-                                <i class="fas fa-save"></i> Save
-                            </button>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fas fa-save"></i> Save
+                                </button>
+                            </div>
                         </div>
 
                     </div>
