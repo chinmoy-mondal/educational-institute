@@ -3247,6 +3247,46 @@ class Dashboard extends Controller
         return redirect()->back()->with('success', 'Cost type deleted successfully');
     }
 
+    public function salary()
+    {
+        $this->data['title'] = 'Salary Transactions';
+        $this->data['activeSection'] = 'accounts';
+
+        $this->data['navbarItems'] = [
+            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Due', 'url' => base_url('admin/std_due')],
+            ['label' => 'Report', 'url' => base_url('admin/pay_report')],
+            ['label' => 'Salary', 'url' => base_url('admin/salary')],
+            ['label' => 'Cost', 'url' => base_url('admin/cost')],
+            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+        ];
+
+        // Fetch all salary transactions
+        $rows = $this->transactionModel
+            ->select('user_name, amount, cost_date') // Make sure user_name column exists
+            ->where('status', 1)
+            ->like('transaction_id', 'SAL') // Only SAL transactions
+            ->orderBy('cost_date', 'ASC')
+            ->findAll();
+
+        // Group by Month and User
+        $salaryData = [];
+        foreach ($rows as $row) {
+            $month = date('F Y', strtotime($row['cost_date'])); // e.g., "March 2026"
+            $user  = $row['user_name'];
+
+            // Sum salary per user per month
+            $salaryData[$month][$user] = ($salaryData[$month][$user] ?? 0) + $row['amount'];
+        }
+
+        $this->data['salaryData'] = $salaryData;
+
+        return view('dashboard/transaction/salary', $this->data);
+    }
+
     public function salary_form()
     {
         $this->data['title'] = 'Teacher Salary';
@@ -3287,68 +3327,6 @@ class Dashboard extends Controller
 
         return view('dashboard/transaction/salary_form', $this->data);
     }
-
-    // public function std_due()
-    // {
-
-    //     $fees = $this->feesAmountModel->findAll();
-
-    //     $allMonths = [];
-
-    //     for ($month = 1; $month <= 12; $month++) {
-
-    //         foreach ($fees as $f) {
-
-    //             $section = trim($f['section']);
-    //             $unit    = (int) $f['unit'];
-    //             $fee     = (float) $f['fees'];
-
-    //             if ($unit <= 0) continue;
-
-    //             $interval = 12 / $unit;
-
-    //             for ($m = 1; $m <= $month; $m++) {
-
-    //                 if ($m === 1 || (($m - 1) % $interval === 0)) {
-
-    //                     // cumulative
-    //                     $allMonths[$month][$section]['cumulative'] =
-    //                         ($allMonths[$month][$section]['cumulative'] ?? 0) + $fee;
-
-    //                     // current month only
-    //                     if ($m == $month) {
-    //                         $allMonths[$month][$section]['current'] =
-    //                             ($allMonths[$month][$section]['current'] ?? 0) + $fee;
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     $this->data['all_month_fees'] = $allMonths;
-
-    //     // echo "<pre>";
-    //     // print_r($allMonths);
-    //     // echo "</pre>";
-
-    //     $this->data['students'] = $this->studentModel
-    //         ->where('permission', '0')
-    //         ->orderBy('student_name', 'ASC')
-    //         ->findAll();
-
-    //     // echo "<pre>";
-    //     // print_r($this->data['students']);
-    //     // echo "</pre>";
-    //     $this->data['teachers'] = $this->userModel
-    //         ->where('role', 'teacher')
-    //         ->where('account_status !=', 0)
-    //         ->orderBy('name', 'ASC')
-    //         ->findAll();
-    //     return view('dashboard/transaction/std_due_list', $this->data);
-
-    //     // return view('dashboard/transaction/salary_form', $this->data);
-
-    // }
 
     public function std_due()
     {
