@@ -3266,7 +3266,7 @@ class Dashboard extends Controller
 
         // Fetch all salary transactions
         $rows = $this->transactionModel
-            ->select('user_name, amount, cost_date') // Make sure user_name column exists
+            ->select('receiver_name, amount, created_at') // Make sure user_name column exists
             ->where('status', 1)
             ->like('transaction_id', 'SAL') // Only SAL transactions
             ->orderBy('cost_date', 'ASC')
@@ -3275,8 +3275,8 @@ class Dashboard extends Controller
         // Group by Month and User
         $salaryData = [];
         foreach ($rows as $row) {
-            $month = date('F Y', strtotime($row['cost_date'])); // e.g., "March 2026"
-            $user  = $row['user_name'];
+            $month = date('F Y', strtotime($row['created_at'])); // e.g., "March 2026"
+            $user  = $row['receiver_name'];
 
             // Sum salary per user per month
             $salaryData[$month][$user] = ($salaryData[$month][$user] ?? 0) + $row['amount'];
