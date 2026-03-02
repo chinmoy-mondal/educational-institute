@@ -1,73 +1,77 @@
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
 
-<section class="content">
-    <div class="container-fluid">
+<div class="container-fluid">
+    <h3 class="mb-3"><?= $title ?></h3>
 
-        <!-- Page Title -->
-        <div class="row mb-3">
-            <div class="col-12 d-flex justify-content-between align-items-center">
-                <h3><?= $title ?></h3>
-                <!-- Optional: Button to refresh or add new salary -->
-                <a href="<?= base_url('admin/salary') ?>" class="btn btn-primary">
-                    <i class="fas fa-sync-alt"></i> Refresh
-                </a>
-            </div>
+    <div class="card">
+        <div class="card-body table-responsive">
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th>Teacher</th>
+                        <?php
+                        $months = [
+                            1 => 'Jan',
+                            2 => 'Feb',
+                            3 => 'Mar',
+                            4 => 'Apr',
+                            5 => 'May',
+                            6 => 'Jun',
+                            7 => 'Jul',
+                            8 => 'Aug',
+                            9 => 'Sep',
+                            10 => 'Oct',
+                            11 => 'Nov',
+                            12 => 'Dec'
+                        ];
+                        foreach ($months as $m) {
+                            echo "<th>$m</th>";
+                        }
+                        ?>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($salaryData as $teacher => $monthsData): ?>
+                    <?php $teacherTotal = 0; ?>
+                    <tr>
+                        <td><?= esc($teacher) ?></td>
+                        <?php for ($m = 1; $m <= 12; $m++): ?>
+                        <?php
+                                $amount = $monthsData[$m] ?? 0;
+                                $teacherTotal += $amount;
+                                ?>
+                        <td class="text-right"><?= number_format($amount, 2) ?></td>
+                        <?php endfor; ?>
+                        <td class="text-right font-weight-bold"><?= number_format($teacherTotal, 2) ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot class="bg-secondary text-white">
+                    <tr>
+                        <th>Total</th>
+                        <?php
+                        // Column totals
+                        for ($m = 1; $m <= 12; $m++) {
+                            $colTotal = 0;
+                            foreach ($salaryData as $teacher => $monthsData) {
+                                $colTotal += $monthsData[$m] ?? 0;
+                            }
+                            echo "<th class='text-right'>" . number_format($colTotal, 2) . "</th>";
+                        }
+                        // Grand total
+                        $grandTotal = 0;
+                        foreach ($salaryData as $teacher => $monthsData) {
+                            $grandTotal += array_sum($monthsData);
+                        }
+                        echo "<th class='text-right'>" . number_format($grandTotal, 2) . "</th>";
+                        ?>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
-
-        <?php $grandTotal = 0; ?>
-
-        <!-- Loop Through Each Month -->
-        <?php foreach ($salaryData as $month => $users): ?>
-        <?php $monthTotal = 0; ?>
-        <div class="card card-primary mb-4 shadow-sm">
-            <div class="card-header">
-                <h5 class="card-title mb-0"><?= $month ?></h5>
-            </div>
-
-            <div class="card-body p-0">
-                <table class="table table-bordered table-striped mb-0">
-                    <thead class="bg-light">
-                        <tr>
-                            <th>User</th>
-                            <th class="text-right">Amount (৳)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($users as $user => $amount): ?>
-                        <?php $monthTotal += $amount; ?>
-                        <tr>
-                            <td><?= esc($user) ?></td>
-                            <td class="text-right"><?= number_format($amount, 2) ?></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                    <tfoot class="bg-secondary text-white">
-                        <tr>
-                            <th>Total</th>
-                            <th class="text-right"><?= number_format($monthTotal, 2) ?></th>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-        </div>
-
-        <?php $grandTotal += $monthTotal; ?>
-        <?php endforeach; ?>
-
-        <!-- Grand Total -->
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="card bg-success shadow">
-                    <div class="card-body text-center">
-                        <h4 class="mb-2">Total Salary Paid</h4>
-                        <h2>৳ <?= number_format($grandTotal, 2) ?></h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
-</section>
+</div>
 
 <?= $this->endSection() ?>

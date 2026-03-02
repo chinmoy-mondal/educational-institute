@@ -3266,25 +3266,23 @@ class Dashboard extends Controller
 
         // Fetch all salary transactions
         $rows = $this->transactionModel
-            ->select('receiver_name, amount, created_at') // Make sure user_name column exists
+            ->select('receiver_name, amount, created_at')
             ->where('status', 1)
             ->like('transaction_id', 'SAL') // Only SAL transactions
             ->orderBy('created_at', 'ASC')
             ->findAll();
 
-        // Group by Month and User
+        // Prepare yearly salary pivot
         $salaryData = [];
         foreach ($rows as $row) {
-            $month = date('F Y', strtotime($row['created_at'])); // e.g., "March 2026"
-            $user  = $row['receiver_name'];
-
-            // Sum salary per user per month
-            $salaryData[$month][$user] = ($salaryData[$month][$user] ?? 0) + $row['amount'];
+            $teacher = $row['receiver_name'];
+            $month = date('n', strtotime($row['created_at'])); // 1-12
+            $salaryData[$teacher][$month] = ($salaryData[$teacher][$month] ?? 0) + $row['amount'];
         }
 
         $this->data['salaryData'] = $salaryData;
 
-        return view('dashboard/transaction/salary', $this->data);
+        return view('dashboard/transaction/salary_yearly', $this->data);
     }
 
     public function salary_form()
