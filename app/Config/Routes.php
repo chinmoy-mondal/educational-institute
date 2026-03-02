@@ -138,6 +138,7 @@ $routes->get('admin/std_pay', 'Dashboard::std_pay');
 $routes->get('admin/std_due', 'Dashboard::std_due');
 $routes->get('admin/std_due_csv', 'Dashboard::std_due_csv');
 $routes->get('admin/pay_report', 'Dashboard::pay_report');
+$routes->get('admin/salary_report', 'Dashboard::salary');
 $routes->get('admin/salary', 'Dashboard::salary_form');
 $routes->post('admin/pay_salary', 'Dashboard::pay_salary');
 $routes->get('admin/cost', 'Dashboard::cost');

@@ -4,6 +4,11 @@
 <div class="container-fluid">
     <h4 class="mb-3">Teacher Salary List</h4>
 
+    <!-- 🔹 Button to call salary() route -->
+    <a href="<?= base_url('admin/salary_report') ?>" class="btn btn-primary">
+        <i class="fas fa-money-bill-wave"></i> View All Salary
+    </a>
+
     <div class="card">
         <div class="card-body table-responsive">
             <table class="table table-bordered table-striped align-middle">
@@ -44,15 +49,15 @@
                                     <option value="">Select Month</option>
                                     <?php
                                                 $months = [
-                                        '1' => 'January',
-                                        '2' => 'February',
-                                        '3' => 'March',
-                                        '4' => 'April',
-                                        '5' => 'May',
-                                        '6' => 'June',
-                                        '7' => 'July',
-                                        '8' => 'August',
-                                        '9' => 'September',
+                                                    '1' => 'January',
+                                                    '2' => 'February',
+                                                    '3' => 'March',
+                                                    '4' => 'April',
+                                                    '5' => 'May',
+                                                    '6' => 'June',
+                                                    '7' => 'July',
+                                                    '8' => 'August',
+                                                    '9' => 'September',
                                                     '10' => 'October',
                                                     '11' => 'November',
                                                     '12' => 'December',
