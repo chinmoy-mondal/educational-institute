@@ -3269,7 +3269,7 @@ class Dashboard extends Controller
             ->select('receiver_name, amount, created_at') // Make sure user_name column exists
             ->where('status', 1)
             ->like('transaction_id', 'SAL') // Only SAL transactions
-            ->orderBy('cost_date', 'ASC')
+            ->orderBy('created_at', 'ASC')
             ->findAll();
 
         // Group by Month and User
