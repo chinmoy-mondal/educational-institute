@@ -3282,7 +3282,7 @@ class Dashboard extends Controller
 
         $this->data['salaryData'] = $salaryData;
 
-        return view('dashboard/transaction/salary_yearly', $this->data);
+        return view('dashboard/transaction/salary', $this->data);
     }
 
     public function salary_form()
