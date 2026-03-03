@@ -179,7 +179,15 @@
                             ?>
                         <?php foreach ($students as $s): ?>
                         <tr>
-                            <td><?= esc($s['id']) ?></td>
+                            <td>
+                                <?= esc($s['id']) ?>
+
+                                <?php if (!empty($s['rfid'])): ?>
+                                <i class="fas fa-id-card" title="Card No: <?= esc($s['rfid']) ?>"
+                                    style="margin-left:8px; color:#007bff; cursor:pointer;">
+                                </i>
+                                <?php endif; ?>
+                            </td>
                             <td><?= esc($s['student_name']) ?></td>
                             <td><?= esc($s['roll']) ?></td>
                             <td><?= esc($s['class']) ?></td>
