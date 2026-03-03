@@ -49,7 +49,16 @@
                             <?php if (!empty($users)): ?>
                             <?php foreach ($users as $user): ?>
                             <tr>
-                                <td><?= esc($user['position']) ?></td>
+                                <td>
+                                    <?php if (!empty($user['rfid'])): ?>
+                                    <i class="fas fa-id-card" title="NFC: <?= esc($user['rfid']) ?>"
+                                        style="margin-right:8px; color:#007bff; cursor:pointer;">
+                                    </i>
+                                    <?php endif; ?>
+
+                                    <?= esc($user['position']) ?>
+                                </td>
+
                                 <td class="text-center">
                                     <img src="<?= !empty($user['picture'])
                                   ? $user['picture']
@@ -59,11 +68,6 @@
 
                                 <td>
                                     <?= esc($user['name']) ?>
-                                    <?php if (!empty($user['rfid'])): ?>
-                                    <i class="fas fa-id-card" title="NFC: <?= esc($user['rfid']) ?>"
-                                        style="margin-left:8px; color:#007bff; cursor:pointer;">
-                                    </i>
-                                    <?php endif; ?>
                                 </td>
                                 <td><?= esc($user['designation']) ?></td>
                                 <td><?= esc($user['subject']) ?></td>
