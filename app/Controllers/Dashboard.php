@@ -3319,7 +3319,7 @@ class Dashboard extends Controller
         $this->data['sections'] = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
         // 👤 Fetch teachers
         $this->data['teachers'] = $this->userModel
-            ->where('role', 'teacher')
+            // ->where('role', 'teacher')
             ->where('account_status !=', 0)
             ->orderBy('name', 'ASC')
             ->findAll();
