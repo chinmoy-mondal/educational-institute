@@ -3277,6 +3277,7 @@ class Dashboard extends Controller
         foreach ($rows as $row) {
             $teacher = $row['receiver_name'];
             $month = date('n', strtotime($row['created_at'])); // 1-12
+            $month = ($month == 1) ? 12 : $month - 1;
             $salaryData[$teacher][$month] = ($salaryData[$teacher][$month] ?? 0) + $row['amount'];
         }
 
