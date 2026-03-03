@@ -59,9 +59,9 @@
 
                                 <td>
                                     <?= esc($user['name']) ?>
-
+                                    <br>
                                     <?php if (!empty($user['rfid'])): ?>
-                                    <i class="fas fa-id-card" title="RFID: <?= esc($user['rfid']) ?>"
+                                    <i class="fas fa-id-card" title="NFC: <?= esc($user['rfid']) ?>"
                                         style="margin-left:8px; color:#007bff; cursor:pointer;">
                                     </i>
                                     <?php endif; ?>
