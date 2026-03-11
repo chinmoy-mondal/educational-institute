@@ -266,13 +266,48 @@ class Dashboard extends Controller
         $this->data['total_income'] = (float) $totalIncome;
         $this->data['total_cost']   = (float) $totalCost;
 
-        $smsList  = $this->smsLogModel->findAll();
+        // $smsList  = $this->smsLogModel->findAll();
 
-        $totalSms = count(array_filter($smsList, function ($row) {
-            return $row['status'] == 1;
-        }));
+        // $totalSms = count(array_filter($smsList, function ($row) {
+        //     return $row['status'] == 1;
+        // }));
 
-        $this->data['smsList']  = $smsList;
+        // $this->data['smsList']  = $smsList;
+        // $this->data['smsTotal'] = $totalSms;
+        $smsList = $this->smsLogModel->findAll();
+
+        $totalSms = 0;
+
+        foreach ($smsList as $row) {
+            if ($row['status'] == 1) {
+
+                $message = $row['message'];
+
+                $length = mb_strlen($message, 'UTF-8');
+
+                // Check if Unicode
+                if (preg_match('/[^\x00-\x7F]/', $message)) {
+
+                    // Unicode SMS
+                    if ($length <= 70) {
+                        $segments = 1;
+                    } else {
+                        $segments = ceil($length / 67);
+                    }
+                } else {
+
+                    // Normal GSM SMS
+                    if ($length <= 160) {
+                        $segments = 1;
+                    } else {
+                        $segments = ceil($length / 153);
+                    }
+                }
+
+                $totalSms += $segments;
+            }
+        }
+
         $this->data['smsTotal'] = $totalSms;
 
         return view('dashboard/index', $this->data);
