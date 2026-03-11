@@ -1,6 +1,42 @@
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
 
+<!-- Pagination CSS -->
+<style>
+    /* Card footer styling for pagination */
+    .card-footer.pagination-footer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f8f9fa;
+        padding: 15px 0;
+        border-top: 1px solid #dee2e6;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+        border-radius: 0 0 8px 8px;
+    }
+
+    /* Pagination buttons styling */
+    .pagination .page-item .page-link {
+        border-radius: 5px;
+        margin: 0 3px;
+        color: #007bff;
+        border: 1px solid #dee2e6;
+        padding: 5px 12px;
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: #007bff;
+        color: #fff;
+        border-color: #007bff;
+    }
+
+    .pagination .page-item .page-link:hover {
+        background-color: #0069d9;
+        color: #fff;
+        border-color: #0062cc;
+    }
+</style>
+
 <div class="container-fluid">
     <h4 class="mb-4">SMS History</h4>
 
@@ -91,42 +127,8 @@
                     </tbody>
                 </table>
             </div>
-            <div class="card-footer" style="
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f8f9fa;
-    padding: 15px 0;
-    border-top: 1px solid #dee2e6;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-    border-radius: 0 0 8px 8px;
-">
-
-                <style>
-                    /* Pagination buttons styling */
-                    .pagination .page-item .page-link {
-                        border-radius: 5px;
-                        margin: 0 3px;
-                        color: #007bff;
-                        border: 1px solid #dee2e6;
-                        padding: 5px 12px;
-                    }
-
-                    .pagination .page-item.active .page-link {
-                        background-color: #007bff;
-                        color: #fff;
-                        border-color: #007bff;
-                    }
-
-                    .pagination .page-item .page-link:hover {
-                        background-color: #0069d9;
-                        color: #fff;
-                        border-color: #0062cc;
-                    }
-                </style>
-
+            <div class="card-footer pagination-footer">
                 <?= $pager->links() ?>
-
             </div>
         </div>
 
