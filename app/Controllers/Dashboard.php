@@ -1051,12 +1051,17 @@ class Dashboard extends Controller
             }
         }
 
+        // Pagination setup
+        $perPage = 20;
+
+        // Apply ordering first
+        $builder = $builder->orderBy('CAST(class as UNSIGNED) ASC')
+            ->orderBy('CAST(roll as UNSIGNED) ASC');
+
+        // Fetch paginated students
+        $students = $builder->paginate($perPage);   // like $smsList = $query->paginate(20)
+
         $total = $builder->countAllResults(false);
-        $perPage  = 20;
-        $students = $builder
-            ->orderBy('CAST(class as UNSIGNED) ASC')
-            ->orderBy('CAST(roll as UNSIGNED) ASC')
-            ->paginate($perPage, 'bootstrap');
 
         $sections = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
 

@@ -1,5 +1,57 @@
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
+<!-- Pagination CSS -->
+<style>
+	/* Pagination wrapper */
+	.pagination {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		list-style: none;
+		padding-left: 0;
+		margin: 0;
+		flex-wrap: wrap;
+	}
+
+	/* Each page item */
+	.pagination li {
+		margin: 0 3px;
+	}
+
+	/* Page links as buttons */
+	.pagination li a {
+		display: block;
+		padding: 6px 14px;
+		border: 1px solid #dee2e6;
+		border-radius: 5px;
+		color: #007bff;
+		text-decoration: none;
+		transition: all 0.3s ease;
+	}
+
+	/* Hover effect */
+	.pagination li a:hover {
+		background-color: #0069d9;
+		color: #fff;
+		border-color: #0062cc;
+	}
+
+	/* Active page */
+	.pagination li.active a {
+		background-color: #007bff;
+		color: #fff;
+		border-color: #007bff;
+		cursor: default;
+	}
+
+	/* Disabled page (optional) */
+	.pagination li.disabled a {
+		color: #6c757d;
+		pointer-events: none;
+		background-color: #e9ecef;
+		border-color: #dee2e6;
+	}
+</style>
 
 <div class="content-header">
 	<div class="container-fluid">
@@ -40,7 +92,8 @@
 						<div class="col-md-2">
 							<div class="form-group">
 								<label for="search">Search</label>
-								<input type="text" name="q" id="search" class="form-control" placeholder="Name, Roll, or ID" value="<?= esc($q ?? '') ?>">
+								<input type="text" name="q" id="search" class="form-control"
+									placeholder="Name, Roll, or ID" value="<?= esc($q ?? '') ?>">
 							</div>
 						</div>
 						<div class="col-md-2">
@@ -49,7 +102,8 @@
 								<select name="class" id="class" class="form-control">
 									<option value="" <?= ($class ?? '') === '' ? 'selected' : '' ?>>All Classes</option>
 									<?php for ($i = 6; $i <= 10; $i++): ?>
-										<option value="<?= $i ?>" <?= ($class ?? '') == $i ? 'selected' : '' ?>>Class <?= $i ?></option>
+										<option value="<?= $i ?>" <?= ($class ?? '') == $i ? 'selected' : '' ?>>Class
+											<?= $i ?></option>
 									<?php endfor; ?>
 								</select>
 							</div>
@@ -58,9 +112,11 @@
 							<div class="form-group">
 								<label for="section">Section</label>
 								<select name="section" id="section" class="form-control">
-									<option value="" <?= ($section ?? '') === '' ? 'selected' : '' ?>>All Sections</option>
+									<option value="" <?= ($section ?? '') === '' ? 'selected' : '' ?>>All Sections
+									</option>
 									<?php foreach ($sections as $sec): ?>
-										<option value="<?= esc($sec['section']) ?>" <?= ($section ?? '') === $sec['section'] ? 'selected' : '' ?>>
+										<option value="<?= esc($sec['section']) ?>"
+											<?= ($section ?? '') === $sec['section'] ? 'selected' : '' ?>>
 											<?= esc($sec['section']) ?>
 										</option>
 									<?php endforeach; ?>
@@ -71,11 +127,14 @@
 							<div class="form-group">
 								<label for="religion">Religion</label>
 								<select name="religion" id="religion" class="form-control">
-									<option value="" <?= ($religion ?? '') === '' ? 'selected' : '' ?>>All Religions</option>
-									<option value="__NULL__" <?= ($religion ?? '') === '__NULL__' ? 'selected' : '' ?>>Not Set</option> <!-- ✅ New Option -->
+									<option value="" <?= ($religion ?? '') === '' ? 'selected' : '' ?>>All Religions
+									</option>
+									<option value="__NULL__" <?= ($religion ?? '') === '__NULL__' ? 'selected' : '' ?>>
+										Not Set</option> <!-- ✅ New Option -->
 
 									<?php foreach ($religions as $r): ?>
-										<option value="<?= esc($r['religion']) ?>" <?= ($religion ?? '') === $r['religion'] ? 'selected' : '' ?>>
+										<option value="<?= esc($r['religion']) ?>"
+											<?= ($religion ?? '') === $r['religion'] ? 'selected' : '' ?>>
 											<?= esc(ucfirst($r['religion'])) ?>
 										</option>
 									<?php endforeach; ?>
@@ -86,11 +145,14 @@
 							<div class="form-group">
 								<label for="gender">Gender</label>
 								<select name="gender" id="gender" class="form-control">
-									<option value="" <?= ($gender ?? '') === '' ? 'selected' : '' ?>>All Genders</option>
-									<option value="__NULL__" <?= ($gender ?? '') === '__NULL__' ? 'selected' : '' ?>>Not Set</option> <!-- ✅ New Option -->
+									<option value="" <?= ($gender ?? '') === '' ? 'selected' : '' ?>>All Genders
+									</option>
+									<option value="__NULL__" <?= ($gender ?? '') === '__NULL__' ? 'selected' : '' ?>>Not
+										Set</option> <!-- ✅ New Option -->
 
 									<?php foreach ($genders as $g): ?>
-										<option value="<?= esc($g['gender']) ?>" <?= ($gender ?? '') === $g['gender'] ? 'selected' : '' ?>>
+										<option value="<?= esc($g['gender']) ?>"
+											<?= ($gender ?? '') === $g['gender'] ? 'selected' : '' ?>>
 											<?= esc(ucfirst($g['gender'])) ?>
 										</option>
 									<?php endforeach; ?>
@@ -136,7 +198,8 @@
 									<td><?= esc($s['class']) ?></td>
 									<td><?= esc($s['section']) ?></td>
 									<td>
-										<a href="<?= site_url('admin/students/view/' . $s['id']) ?>" class="btn btn-info btn-sm" target="_blank">
+										<a href="<?= site_url('admin/students/view/' . $s['id']) ?>" class="btn btn-info btn-sm"
+											target="_blank">
 											<i class="fas fa-eye"></i> View
 										</a>
 										<a href="<?= site_url('admin/students/delete/' . $s['id']) ?>"
@@ -159,11 +222,9 @@
 		<?php endif ?>
 
 		<!-- Pagination -->
-		<?php if (!empty($pager)): ?>
-			<div class="mt-3">
-				<?= $pager->only(['q', 'class', 'section'])->links('bootstrap') ?>
-			</div>
-		<?php endif ?>
+		<div class="card-footer pagination-footer">
+			<?= $pager->links() ?>
+		</div>
 
 	</div>
 </div>
