@@ -4,7 +4,7 @@
 <?php
 /* ================= SCHOOL INFO (EDIT HERE ONLY) ================= */
 $schoolName    = 'Jhenaidah Cadet Coaching';
-$schoolAddress = 'রেবাংলা সড়ক, কেন্দ্রীয় গোরস্থান সংলগ্ন, ঝিনাইদহ';
+$schoolAddress = 'শের এ বাংলা সড়ক, কেন্দ্রীয় গোরস্থান সংলগ্ন, ঝিনাইদহ';
 $schoolPhone   = '01886007142, 01916487915';
 
 /* ================= MONTH MAP ================= */
