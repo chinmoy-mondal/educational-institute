@@ -91,7 +91,16 @@
                     </tbody>
                 </table>
             </div>
-            <div class="card-footer">
+            <div class="card-footer" style="
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding: 15px 0;
+    border-top: 1px solid #dee2e6;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    border-radius: 0 0 8px 8px;
+">
                 <?= $pager->links() ?>
             </div>
         </div>
