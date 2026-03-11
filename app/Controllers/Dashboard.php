@@ -3074,15 +3074,35 @@ class Dashboard extends Controller
         // Fetch SMS records
         $this->data['smsList'] = $query->findAll();
 
-        // Total sent SMS (status=1)
-        $this->data['smsTotal'] = $this->smsLogModel
-            ->where('status', 1)
-            ->countAllResults();
+        $smsList = $query->findAll();
+        $this->data['smsList'] = $smsList;
 
-        // Total failed SMS (status=0)
-        $this->data['smsFailed'] = $this->smsLogModel
-            ->where('status', 0)
-            ->countAllResults();
+        $totalSms = 0;
+        $failedSms = 0;
+
+        foreach ($smsList as $row) {
+
+            $message = $row['message'];   // your SMS text column
+            $length = mb_strlen($message, 'UTF-8');
+
+            // detect unicode
+            $isUnicode = preg_match('/[^\x00-\x7F]/', $message);
+
+            if ($isUnicode) {
+                $segments = ($length <= 70) ? 1 : ceil($length / 67);
+            } else {
+                $segments = ($length <= 160) ? 1 : ceil($length / 153);
+            }
+
+            if ($row['status'] == 1) {
+                $totalSms += $segments;
+            } else {
+                $failedSms += $segments;
+            }
+        }
+
+        $this->data['smsTotal'] = $totalSms;
+        $this->data['smsFailed'] = $failedSms;
 
         return view('dashboard/transaction/sms_log', $this->data);
     }
