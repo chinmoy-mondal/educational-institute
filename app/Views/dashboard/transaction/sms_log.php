@@ -3,37 +3,54 @@
 
 <!-- Pagination CSS -->
 <style>
-    /* Card footer styling for pagination */
-    .card-footer.pagination-footer {
+    /* Pagination wrapper */
+    .pagination {
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: #f8f9fa;
-        padding: 15px 0;
-        border-top: 1px solid #dee2e6;
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
-        border-radius: 0 0 8px 8px;
+        list-style: none;
+        padding-left: 0;
+        margin: 0;
+        flex-wrap: wrap;
     }
 
-    /* Pagination buttons styling */
-    .pagination .page-item .page-link {
-        border-radius: 5px;
+    /* Each page item */
+    .pagination li {
         margin: 0 3px;
-        color: #007bff;
+    }
+
+    /* Page links as buttons */
+    .pagination li a {
+        display: block;
+        padding: 6px 14px;
         border: 1px solid #dee2e6;
-        padding: 5px 12px;
+        border-radius: 5px;
+        color: #007bff;
+        text-decoration: none;
+        transition: all 0.3s ease;
     }
 
-    .pagination .page-item.active .page-link {
-        background-color: #007bff;
-        color: #fff;
-        border-color: #007bff;
-    }
-
-    .pagination .page-item .page-link:hover {
+    /* Hover effect */
+    .pagination li a:hover {
         background-color: #0069d9;
         color: #fff;
         border-color: #0062cc;
+    }
+
+    /* Active page */
+    .pagination li.active a {
+        background-color: #007bff;
+        color: #fff;
+        border-color: #007bff;
+        cursor: default;
+    }
+
+    /* Disabled page (optional) */
+    .pagination li.disabled a {
+        color: #6c757d;
+        pointer-events: none;
+        background-color: #e9ecef;
+        border-color: #dee2e6;
     }
 </style>
 
