@@ -3072,6 +3072,9 @@ class Dashboard extends Controller
         }
 
         // Fetch SMS records
+        $allSms = $this->smsLogModel->findAll();
+
+        // Fetch sms for pagination
         $smsList = $query->paginate(20);
         $this->data['smsList'] = $smsList;
         $this->data['pager'] = $this->smsLogModel->pager;
@@ -3079,7 +3082,7 @@ class Dashboard extends Controller
         $totalSms = 0;
         $failedSms = 0;
 
-        foreach ($smsList as $row) {
+        foreach ($allSms as $row) {
 
             $message = $row['message'];
             $length = mb_strlen($message, 'UTF-8');
