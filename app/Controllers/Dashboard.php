@@ -3072,20 +3072,18 @@ class Dashboard extends Controller
         }
 
         // Fetch SMS records
-        $this->data['smsList'] = $query->findAll();
-
-        $smsList = $query->findAll();
+        $smsList = $query->paginate(20);
         $this->data['smsList'] = $smsList;
+        $this->data['pager'] = $this->smsLogModel->pager;
 
         $totalSms = 0;
         $failedSms = 0;
 
         foreach ($smsList as $row) {
 
-            $message = $row['message'];   // your SMS text column
+            $message = $row['message'];
             $length = mb_strlen($message, 'UTF-8');
 
-            // detect unicode
             $isUnicode = preg_match('/[^\x00-\x7F]/', $message);
 
             if ($isUnicode) {
