@@ -2525,7 +2525,7 @@ class Dashboard extends Controller
             $view = 1;
             $section   = $student['section'];
 
-            echo "{$studentId}  | {$section}<br>";
+            echo "{$studentId}  | {$section} | {$year}  | {$exam} <br>";
 
             if ($exam === 'Annual Exam') {
                 // Annual exam goes to full result function
