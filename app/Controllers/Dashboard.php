@@ -1517,7 +1517,7 @@ class Dashboard extends Controller
             ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
             ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
             ['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
-            ['label' => 'Print Top Sheet', 'url' => base_url('admin/select-marksheet')],
+            ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
         ];
 
         $this->data['classes']  = $classes;
@@ -1538,7 +1538,7 @@ class Dashboard extends Controller
             ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
             ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
             ['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
-            ['label' => 'Print Top Sheet', 'url' => base_url('admin/select-marksheet')],
+            ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
         ];
 
 
@@ -1633,7 +1633,7 @@ class Dashboard extends Controller
             ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
             ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
             ['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
-            ['label' => 'Print Top Sheet', 'url' => base_url('admin/select-marksheet')],
+            ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
         ];
         $this->data['classes']       = $classes;
         $this->data['sections']      = $sections;
@@ -2752,7 +2752,7 @@ class Dashboard extends Controller
             ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
             ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
             ['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
-            ['label' => 'Print Top Sheet', 'url' => base_url('admin/select-marksheet')],
+            ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
         ];
 
         $request = service('request');
