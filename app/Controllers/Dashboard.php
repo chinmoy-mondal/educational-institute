@@ -2721,11 +2721,26 @@ class Dashboard extends Controller
             ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
             ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
             ['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
-            ['label' => 'Print Top Sheet', 'url' => base_url('admin/select-marksheet')],
+            ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
         ];
 
 
         return view('dashboard/topsheet_form', $this->data);
+    }
+
+    public function print_topsheet_form()
+    {
+        $this->data['title'] = 'Marksheet';
+        $this->data['activeSection'] = 'result';
+        $this->data['navbarItems'] = [
+            ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
+            ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
+            ['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
+            ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
+        ];
+
+
+        return view('dashboard/print_topsheet_form', $this->data);
     }
 
 
