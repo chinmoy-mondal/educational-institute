@@ -2538,17 +2538,19 @@ class Dashboard extends Controller
             // $this->test_result($studentId, $year, $view);
         }
         // echo "Ranking data saved";
-        echo $this->updateNewRollByClass($class, $section_student) ? 'New Roll also saved' . '<br>' : 'New Roll is not saved' . '<br>';
+        echo $this->updateNewRollByClass($class, $year, $exam, $section_student) ? 'New Roll also saved' . '<br>' : 'New Roll is not saved' . '<br>';
         // // return redirect()->back()->with('success', 'Top sheet processed for all students.');
     }
 
-    public function updateNewRollByClass($class, $section)
+    public function updateNewRollByClass($class, $year, $exam, $section)
     {
         if ($section == 'vocational') {
             // 1️⃣ Get ordered ranking list
             $rankings = $this->rankingModel
                 ->where('section LIKE', '%Vocational%')
                 ->where('class', $class)
+                ->where('year', $year)
+                ->where('exam', $exam)
                 ->orderBy('fail', 'ASC')
                 ->orderBy('total', 'DESC')
                 ->findAll();
@@ -2556,6 +2558,8 @@ class Dashboard extends Controller
             $rankings = $this->rankingModel
                 ->where('section NOT LIKE', '%Vocational%')
                 ->where('class', $class)
+                ->where('year', $year)
+                ->where('exam', $exam)
                 ->orderBy('fail', 'ASC')
                 ->orderBy('total', 'DESC')
                 ->findAll();
