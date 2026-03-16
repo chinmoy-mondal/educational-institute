@@ -2502,7 +2502,7 @@ class Dashboard extends Controller
             return redirect()->back()->with('error', 'Class and Year are required');
         }
 
-        $exam_db = $this->markingModel->where('exam', $exam)->first();
+        $exam_db = $this->markingModel->where('exam_name', $exam)->first();
 
         $status = $exam_db['status'] ?? null;
 
@@ -2513,41 +2513,41 @@ class Dashboard extends Controller
         }
 
 
-        // if (!$section_student) {
-        //     return redirect()->back()->with('error', 'Section is required');
-        // }
+        if (!$section_student) {
+            return redirect()->back()->with('error', 'Section is required');
+        }
 
-        // if ($section_student == 'vocational') {
-        //     $students = $this->studentModel
-        //         ->where('class', $class)
-        //         ->where('permission', 0)
-        //         ->where('section LIKE', '%Vocational%') // exclude vocational students
-        //         ->orderBy('roll', 'ASC')
-        //         ->findAll();
-        // } else {
-        //     $students = $this->studentModel
-        //         ->where('class', $class)
-        //         ->where('permission', 0)
-        //         ->where('section NOT LIKE', '%Vocational%') // exclude vocational students
-        //         ->orderBy('roll', 'ASC')
-        //         ->findAll();
-        // }
-        // foreach ($students as $student) {
-        //     $studentId = $student['id'];
-        //     $view = 1;
-        //     $section   = $student['section'];
+        if ($section_student == 'vocational') {
+            $students = $this->studentModel
+                ->where('class', $class)
+                ->where('permission', 0)
+                ->where('section LIKE', '%Vocational%') // exclude vocational students
+                ->orderBy('roll', 'ASC')
+                ->findAll();
+        } else {
+            $students = $this->studentModel
+                ->where('class', $class)
+                ->where('permission', 0)
+                ->where('section NOT LIKE', '%Vocational%') // exclude vocational students
+                ->orderBy('roll', 'ASC')
+                ->findAll();
+        }
+        foreach ($students as $student) {
+            $studentId = $student['id'];
+            $view = 1;
+            $section   = $student['section'];
 
-        //     echo "{$studentId}  | {$section} | {$year}  | {$exam} <br>";
+            echo "{$studentId}  | {$section} | {$year}  | {$exam} <br>";
 
-        //     if ($exam === 'Annual Exam') {
-        //         // Annual exam goes to full result function
-        //         $this->test_result($studentId, $year, $exam, $view);
-        //     } elseif (in_array($exam, ['Pre-Test Exam', 'Half-Yearly', 'Test Exam'])) {
-        //         // Other exams go to single exam function
-        //         $this->test_result_single_exam($studentId, $year, $exam, $view);
-        //     }
-        // }
-        // echo $this->updateNewRollByClass($class, $year, $exam, $section_student) ? 'New Roll also saved' . '<br>' : 'New Roll is not saved' . '<br>';
+            if ($exam === 'Annual Exam') {
+                // Annual exam goes to full result function
+                $this->test_result($studentId, $year, $exam, $view);
+            } elseif (in_array($exam, ['Pre-Test Exam', 'Half-Yearly', 'Test Exam'])) {
+                // Other exams go to single exam function
+                $this->test_result_single_exam($studentId, $year, $exam, $view);
+            }
+        }
+        echo $this->updateNewRollByClass($class, $year, $exam, $section_student) ? 'New Roll also saved' . '<br>' : 'New Roll is not saved' . '<br>';
     }
 
     public function updateNewRollByClass($class, $year, $exam, $section)
