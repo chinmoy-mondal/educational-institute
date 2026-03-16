@@ -2783,6 +2783,7 @@ class Dashboard extends Controller
         $this->data['class'] = $this->studentModel
             ->select('class')
             ->distinct()
+            ->where('class <=', 10)  // <-- skip classes greater than 10
             ->orderBy('class', 'ASC')
             ->findAll();
 
@@ -2803,6 +2804,7 @@ class Dashboard extends Controller
         $this->data['class'] = $this->studentModel
             ->select('class')
             ->distinct()
+            ->where('class <=', 10)  // <-- skip classes greater than 10
             ->orderBy('class', 'ASC')
             ->findAll();
 
