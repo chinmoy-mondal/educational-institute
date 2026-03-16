@@ -2501,6 +2501,18 @@ class Dashboard extends Controller
         if (!$class || !$year) {
             return redirect()->back()->with('error', 'Class and Year are required');
         }
+
+        $exam_db = $this->markingModel->where('exam', $exam)->first();
+
+        $status = $exam_db['status'] ?? null;
+
+        if ($status == 'open') {
+            echo "yes";
+        } else {
+            echo "no";
+        }
+
+
         if (!$section_student) {
             return redirect()->back()->with('error', 'Section is required');
         }
@@ -2532,14 +2544,10 @@ class Dashboard extends Controller
                 $this->test_result($studentId, $year, $exam, $view);
             } elseif (in_array($exam, ['Pre-Test Exam', 'Half-Yearly', 'Test Exam'])) {
                 // Other exams go to single exam function
-
                 $this->test_result_single_exam($studentId, $year, $exam, $view);
             }
-            // $this->test_result($studentId, $year, $view);
         }
-        // echo "Ranking data saved";
         echo $this->updateNewRollByClass($class, $year, $exam, $section_student) ? 'New Roll also saved' . '<br>' : 'New Roll is not saved' . '<br>';
-        // // return redirect()->back()->with('success', 'Top sheet processed for all students.');
     }
 
     public function updateNewRollByClass($class, $year, $exam, $section)
@@ -2715,7 +2723,7 @@ class Dashboard extends Controller
 
     public function topsheet_form()
     {
-        $this->data['title'] = 'Marksheet';
+        $this->data['title'] = 'Top Sheet';
         $this->data['activeSection'] = 'result';
         $this->data['navbarItems'] = [
             ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
@@ -2730,7 +2738,7 @@ class Dashboard extends Controller
 
     public function print_topsheet_form()
     {
-        $this->data['title'] = 'Marksheet';
+        $this->data['title'] = 'Top Sheet';
         $this->data['activeSection'] = 'result';
         $this->data['navbarItems'] = [
             ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
