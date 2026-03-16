@@ -105,11 +105,13 @@ $routes->get('admin/show-marksheet', 'Dashboard::showMarksheet');
 
 
 $routes->get('admin/test_result', 'Dashboard::call_test_result');
+
 $routes->get('admin/topsheet_form', 'Dashboard::topsheet_form');
-$routes->get('admin/print_topsheet_form', 'Dashboard::print_topsheet_form');
 $routes->get('admin/topsheet', 'Dashboard::make_top_sheet');
-// $routes->get('admin/update-new-roll/(:num)/(:any)', 'Dashboard::updateNewRollByClass/$1/$2'); No need to call. function make_top_sheet automatically call this 
+
+$routes->get('admin/print_topsheet_form', 'Dashboard::print_topsheet_form');
 $routes->get('admin/print_topsheet/(:num)', 'Dashboard::print_topsheet/$1');
+
 $routes->get('admin/class_promote', 'Dashboard::class_promote');
 
 

@@ -9,7 +9,8 @@
                 <h3 class="card-title">Make Top Sheet</h3>
             </div>
 
-            <form action="<?= base_url('admin/print_topsheet') ?>" method="get">
+            <form action="<?= base_url('admin/print_topsheet') ?>" method="get"
+                onsubmit="this.action='<?= base_url('admin/print_topsheet') ?>/' + this.class.value;">
                 <div class="card-body">
 
                     <div class="row justify-content-center">
@@ -36,7 +37,6 @@
                         Make Top Sheet
                     </button>
                 </div>
-
             </form>
         </div>
 
