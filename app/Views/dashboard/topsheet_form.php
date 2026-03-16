@@ -4,6 +4,22 @@
 <section class="content">
     <div class="container-fluid">
 
+        <!-- Success Message -->
+        <?php if (session()->getFlashdata('success')): ?>
+        <div class="alert alert-success alert-dismissible fade show">
+            <?= session()->getFlashdata('success') ?>
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+        <?php endif; ?>
+
+        <!-- Error Message -->
+        <?php if (session()->getFlashdata('error')): ?>
+        <div class="alert alert-danger alert-dismissible fade show">
+            <?= session()->getFlashdata('error') ?>
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+        <?php endif; ?>
+
         <div class="card card-primary">
             <div class="card-header">
                 <h3 class="card-title">Make Top Sheet</h3>

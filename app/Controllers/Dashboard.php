@@ -2506,7 +2506,7 @@ class Dashboard extends Controller
 
         $status = $exam_db['status'] ?? null;
 
-        if ($status == 'closed') {
+        if ($exam_db == null || $status == 'closed') {
             return redirect()->back()->with('error', 'Sorry this exam is not open yet');
         }
 
