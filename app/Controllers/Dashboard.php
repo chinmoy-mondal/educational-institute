@@ -2494,9 +2494,28 @@ class Dashboard extends Controller
         $class = $this->request->getGet('class');
         $year  = $this->request->getGet('year');
         $exam  = $this->request->getGet('exam');
-        $section_student = in_array($class, [9, 10])
-            ? $this->request->getGet('section')
-            : 'general';
+        $section_student = in_array($class, [9, 10]) ? $this->request->getGet('section') : 'general';
+
+        // Get logged-in user ID
+        $user_id = $this->session->get('user_id') ?? 0;
+
+        // Default account status
+        $account_status = 0;
+
+        if ($user_id > 0) {
+            // Fetch only the account_status column
+            $user = $this->userModel->select('account_status')->find($user_id);
+
+            if (!empty($user)) {
+                $account_status = (int) $user['account_status'];
+                if ($account_status < 2)
+                    return redirect()->back()->with('error', 'Sorry, you are not permitted to perform this action');
+            } else {
+                return redirect()->back()->with('error', 'Sorry, you are not permitted to perform this action');
+            }
+        } else {
+            return redirect()->back()->with('error', 'Sorry, you are not permitted to perform this action');
+        }
 
         if (!$class || !$year) {
             return redirect()->back()->with('error', 'Class and Year are required');
@@ -2657,6 +2676,38 @@ class Dashboard extends Controller
 
     public function class_promote()
     {
+        // Get logged-in user ID
+        $user_id = $this->session->get('user_id') ?? 0;
+
+        // Default account status
+        $account_status = 0;
+
+        if ($user_id > 0) {
+            // Fetch only the account_status column
+            $user = $this->userModel->select('account_status')->find($user_id);
+
+            if (!empty($user)) {
+                $account_status = (int) $user['account_status'];
+                if ($account_status < 2)
+                    return redirect()->back()->with('error', 'Sorry, you are not permitted to perform this action');
+            } else {
+                return redirect()->back()->with('error', 'Sorry, you are not permitted to perform this action');
+            }
+        } else {
+            return redirect()->back()->with('error', 'Sorry, you are not permitted to perform this action');
+        }
+
+        $exam_db = $this->markingModel
+            ->where('exam_name', 'Annual Exam')
+            ->where('exam_name', 'Test Exam')
+            ->first();
+
+        $status = $exam_db['status'] ?? null;
+
+        if ($exam_db == null || $status == 'closed') {
+            return redirect()->back()->with('error', 'Sorry this exam is not open yet');
+        }
+
         $students_info = $this->studentModel
             ->select('id, roll, class, section, assign_sub')
             ->where('class <', 11)
