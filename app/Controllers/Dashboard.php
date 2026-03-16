@@ -2780,7 +2780,11 @@ class Dashboard extends Controller
             ['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
             ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
         ];
-
+        $this->data['class'] = $this->studentModel
+            ->select('class')
+            ->distinct()
+            ->orderBy('class', 'ASC')
+            ->findAll();
 
         return view('dashboard/topsheet_form', $this->data);
     }
@@ -2796,6 +2800,11 @@ class Dashboard extends Controller
             ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
         ];
 
+        $this->data['class'] = $this->studentModel
+            ->select('class')
+            ->distinct()
+            ->orderBy('class', 'ASC')
+            ->findAll();
 
         return view('dashboard/print_topsheet_form', $this->data);
     }

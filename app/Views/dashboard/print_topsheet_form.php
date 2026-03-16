@@ -9,8 +9,7 @@
                 <h3 class="card-title">Make Top Sheet</h3>
             </div>
 
-            <form action="" method="get"
-                onsubmit="this.action='<?= base_url('admin/print_topsheet') ?>/' + this.class.value;">
+            <form action="<?= base_url('admin/print_topsheet') ?>" method="get">
                 <div class="card-body">
 
                     <div class="row justify-content-center">
@@ -21,9 +20,9 @@
                                 <label>Select Class</label>
                                 <select name="class" class="form-control" required>
                                     <option value="">Select Class</option>
-                                    <?php for ($i = 6; $i <= 10; $i++): ?>
-                                    <option value="<?= $i ?>">Class <?= $i ?></option>
-                                    <?php endfor; ?>
+                                    <?php foreach ($class as $c): ?>
+                                    <option value="<?= $c['class'] ?>">Class <?= $c['class'] ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>

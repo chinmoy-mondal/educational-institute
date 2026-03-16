@@ -36,9 +36,9 @@
                                 <label>Class</label>
                                 <select name="class" class="form-control" required>
                                     <option value="">Select Class</option>
-                                    <?php for ($i = 6; $i <= 10; $i++): ?>
-                                    <option value="<?= $i ?>"><?= $i ?></option>
-                                    <?php endfor; ?>
+                                    <?php foreach ($class as $c): ?>
+                                    <option value="<?= $c['class'] ?>">Class <?= $c['class'] ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
