@@ -110,7 +110,7 @@ $routes->get('admin/topsheet_form', 'Dashboard::topsheet_form');
 $routes->get('admin/topsheet', 'Dashboard::make_top_sheet');
 
 $routes->get('admin/print_topsheet_form', 'Dashboard::print_topsheet_form');
-$routes->get('admin/print_topsheet/(:num)', 'Dashboard::print_topsheet/$1');
+$routes->get('admin/print_topsheet', 'Dashboard::print_topsheet');
 
 $routes->get('admin/class_promote', 'Dashboard::class_promote');
 

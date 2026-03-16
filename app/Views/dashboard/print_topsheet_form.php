@@ -9,34 +9,18 @@
                 <h3 class="card-title">Make Top Sheet</h3>
             </div>
 
-            <form action="<?= base_url('admin/print_topsheet') ?>" method="get"
-                onsubmit="this.action='<?= base_url('admin/print_topsheet') ?>/' + this.class.value;">
-                <div class="card-body">
-
-                    <div class="row justify-content-center">
-
-                        <!-- Class -->
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <label>Select Class</label>
-                                <select name="class" class="form-control" required>
-                                    <option value="">Select Class</option>
-                                    <?php foreach ($class as $c): ?>
-                                    <option value="<?= $c['class'] ?>">Class <?= $c['class'] ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </div>
-
-                    </div>
-
+            <form action="<?= base_url('admin/print_topsheet') ?>" method="get">
+                <div class="form-group">
+                    <label>Select Class</label>
+                    <select name="class" class="form-control" required>
+                        <option value="">Select Class</option>
+                        <?php foreach ($class as $c): ?>
+                        <option value="<?= $c['class'] ?>">Class <?= $c['class'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
-                <div class="card-footer text-center">
-                    <button type="submit" class="btn btn-success">
-                        Make Top Sheet
-                    </button>
-                </div>
+                <button type="submit" class="btn btn-success">Make Top Sheet</button>
             </form>
         </div>
 

@@ -2633,8 +2633,14 @@ class Dashboard extends Controller
         return "no execution";
     }
 
-    public function print_topsheet($class)
+    public function print_topsheet()
     {
+        $class = $this->request->getGet('class');
+
+        if (!$class) {
+            return redirect()->back()->with('error', 'Please select a class');
+        }
+
         // Class 9 & 10 → separate General and Vocational
         if (in_array($class, [9, 10])) {
 
