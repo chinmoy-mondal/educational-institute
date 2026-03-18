@@ -586,7 +586,7 @@ class Dashboard extends Controller
             ['name' => 'Victory Day', 'date' => '2026-12-16', 'desc' => 'National Holiday'],
         ];
 
-        return view('admin/holiday', $this->data);
+        return view('dashboard/holiday/holiday_list', $this->data);
     }
 
     public function teachers()
