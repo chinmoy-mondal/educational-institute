@@ -568,6 +568,20 @@ class Dashboard extends Controller
         return $this->response->setJSON(['status' => 'success']);
     }
 
+    public function holiday()
+    {
+        $this->data['title'] = 'Calendar';
+        $this->data['activeSection'] = 'calendar';
+
+        // Common navbar and sidebar for all views
+        $this->data['navbarItems'] = [
+            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
+        ];
+
+        echo "under construciton";        // return view('admin/holiday'); // your view file
+    }
+
     public function teachers()
     {
 

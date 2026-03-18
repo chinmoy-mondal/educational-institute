@@ -80,6 +80,8 @@ $routes->post('calendar/add', 'Dashboard::addEvent');
 $routes->post('calendar/update', 'Dashboard::updateEvent');
 $routes->post('calendar/delete', 'Dashboard::deleteEvent');
 
+$routes->get('admin/holiday', 'Dashboard::holiday');
+
 $routes->get('ad_teacher_list', 'Dashboard::teachers');
 $routes->get('mark_given_teacher_list', 'Dashboard::teachers_mark_given');
 $routes->post('admin/updatePosition/(:num)', 'Dashboard::updatePosition/$1');
