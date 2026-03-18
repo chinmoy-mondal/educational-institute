@@ -579,7 +579,14 @@ class Dashboard extends Controller
             ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
         ];
 
-        echo "under construciton";        // return view('admin/holiday'); // your view file
+        // Sample static data (later connect DB)
+        $this->data['holidays'] = [
+            ['name' => 'Eid-ul-Fitr', 'date' => '2026-03-31', 'desc' => 'Eid Festival'],
+            ['name' => 'Independence Day', 'date' => '2026-03-26', 'desc' => 'National Holiday'],
+            ['name' => 'Victory Day', 'date' => '2026-12-16', 'desc' => 'National Holiday'],
+        ];
+
+        return view('admin/holiday', $this->data);
     }
 
     public function teachers()
