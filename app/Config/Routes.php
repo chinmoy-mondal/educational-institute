@@ -81,9 +81,13 @@ $routes->post('calendar/update', 'Dashboard::updateEvent');
 $routes->post('calendar/delete', 'Dashboard::deleteEvent');
 
 $routes->get('admin/holiday', 'Dashboard::holiday');
+
 $routes->get('admin/holiday/add', 'Dashboard::addHolidayForm');
 $routes->post('admin/holiday/add', 'Dashboard::saveHoliday');
+
 $routes->get('admin/holiday/edit/(:num)', 'Dashboard::editHoliday/$1');
+$routes->post('admin/holiday/update/(:num)', 'Dashboard::updateHoliday/$1');
+
 $routes->get('admin/holiday/delete/(:num)', 'Dashboard::deleteHoliday/$1');
 
 $routes->get('ad_teacher_list', 'Dashboard::teachers');
