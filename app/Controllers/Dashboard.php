@@ -662,6 +662,16 @@ class Dashboard extends Controller
 
     public function editHoliday($id)
     {
+
+        $this->data['title'] = 'Calendar';
+        $this->data['activeSection'] = 'calendar';
+
+        // Common navbar and sidebar for all views
+        $this->data['navbarItems'] = [
+            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
+        ];
+
         $this->data['holiday'] = $this->holidayModel->find($id);
 
         if (!$this->data['holiday']) {
