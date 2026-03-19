@@ -20,6 +20,7 @@ use App\Models\StudentBackupModel;
 use App\Models\WelcomeMessageModel;
 use App\Models\SliderModel;
 use App\Models\RfidLogModel;
+use App\Models\HolidayModel;
 
 use CodeIgniter\Exceptions\PageNotFoundException;
 use PhpParser\Node\Expr\Print_;
@@ -44,6 +45,7 @@ class Dashboard extends Controller
     protected $rankingModel;
     protected $sliderModel;
     protected $rfidLogModel;
+    protected $holidayModel;
 
     protected $session;
     protected $data;
@@ -67,6 +69,7 @@ class Dashboard extends Controller
         $this->rankingModel           = new RankingModel();
         $this->sliderModel            = new SliderModel();
         $this->rfidLogModel           = new RfidLogModel();
+        $this->holidayModel           = new HolidayModel();
 
 
         $this->session       = session();
@@ -587,6 +590,80 @@ class Dashboard extends Controller
         ];
 
         return view('dashboard/holiday/holiday_list', $this->data);
+    }
+
+    public function addHolidayForm()
+    {
+        $this->data['title'] = 'Calendar';
+        $this->data['activeSection'] = 'calendar';
+
+        // Common navbar and sidebar for all views
+        $this->data['navbarItems'] = [
+            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
+        ];
+
+        return view('dashboard/holiday/add_holiday', $this->data);
+    }
+
+    public function saveHoliday()
+    {
+        // $holidayModel = new \App\Models\HolidayModel();
+
+        // ✅ Validation rules
+        $rules = [
+            'name' => 'required|min_length[3]',
+            'start_date' => 'required|valid_date',
+            'end_date' => 'required|valid_date',
+        ];
+
+        // Custom error messages (optional)
+        $messages = [
+            'name' => [
+                'required' => 'Holiday name is required'
+            ],
+            'start_date' => [
+                'required' => 'Start date is required'
+            ],
+            'end_date' => [
+                'required' => 'End date is required'
+            ]
+        ];
+
+        // ✅ Validate
+        if (!$this->validate($rules, $messages)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', implode('<br>', $this->validator->getErrors()));
+        }
+
+        $start = $this->request->getPost('start_date');
+        $end   = $this->request->getPost('end_date');
+
+        // ✅ Date logic check
+        if ($end < $start) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'End date must be greater than or equal to Start date');
+        }
+
+        // ✅ Insert Data
+        try {
+            $this->holidayModel->insert([
+                'name'       => $this->request->getPost('name'),
+                'start_date' => $start,
+                'end_date'   => $end,
+                'desc'       => $this->request->getPost('desc'),
+            ]);
+
+            return redirect()->to(base_url('admin/holiday'))
+                ->with('success', 'Holiday Added Successfully');
+        } catch (\Exception $e) {
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Something went wrong: ' . $e->getMessage());
+        }
     }
 
     public function teachers()
