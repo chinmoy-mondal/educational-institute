@@ -47,6 +47,8 @@
                     <tbody>
                         <?php if (!empty($holidays)): ?>
                         <?php $i = 1; ?>
+                        <?php $grandTotal = 0; ?>
+
                         <?php foreach ($holidays as $h): ?>
                         <tr>
                             <td><?= $i++ ?></td>
@@ -54,12 +56,15 @@
                             <td><?= esc($h['start_date']) ?></td>
                             <td><?= esc($h['end_date']) ?></td>
 
-                            <!-- Auto Days Count -->
+                            <!-- Days Calculation -->
                             <td>
                                 <?php
                                         $start = new DateTime($h['start_date']);
                                         $end   = new DateTime($h['end_date']);
-                                        echo $start->diff($end)->days + 1;
+                                        $days  = $start->diff($end)->days + 1;
+
+                                        echo $days;
+                                        $grandTotal += $days;
                                         ?>
                             </td>
 
@@ -78,6 +83,13 @@
                             </td>
                         </tr>
                         <?php endforeach; ?>
+
+                        <!-- ✅ Grand Total Row -->
+                        <tr style="background:#f4f6f9; font-weight:bold;">
+                            <td colspan="4" class="text-right">Total Holiday Days</td>
+                            <td><?= $grandTotal ?></td>
+                            <td colspan="2"></td>
+                        </tr>
 
                         <?php else: ?>
                         <tr>
