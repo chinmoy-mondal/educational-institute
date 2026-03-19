@@ -669,7 +669,7 @@ class Dashboard extends Controller
                 ->with('error', 'Holiday not found');
         }
 
-        $this->data['holiday'] = $holidayModel->find($id);
+        $this->data['holiday'] = $this->holidayModel->find($id);
         return view('dashboard/holiday/add_holiday', $this->data);
     }
 
