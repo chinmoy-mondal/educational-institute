@@ -699,6 +699,24 @@ class Dashboard extends Controller
             ->with('success', 'Holiday Updated Successfully');
     }
 
+    public function deleteHoliday($id)
+    {
+
+        // Check if holiday exists
+        $holiday = $this->holidayModel->find($id);
+
+        if (!$holiday) {
+            return redirect()->to(base_url('admin/holiday'))
+                ->with('error', 'Holiday not found!');
+        }
+
+        // Delete the record
+        $this->holidayModel->delete($id);
+
+        return redirect()->to(base_url('admin/holiday'))
+            ->with('success', 'Holiday deleted successfully!');
+    }
+
     public function teachers()
     {
 
