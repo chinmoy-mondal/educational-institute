@@ -603,7 +603,6 @@ class Dashboard extends Controller
 
     public function saveHoliday()
     {
-        // $holidayModel = new \App\Models\HolidayModel();
 
         // ✅ Validation rules
         $rules = [
@@ -659,6 +658,35 @@ class Dashboard extends Controller
                 ->withInput()
                 ->with('error', 'Something went wrong: ' . $e->getMessage());
         }
+    }
+
+    public function editHoliday($id)
+    {
+        $this->data['holiday'] = $this->holidayModel->find($id);
+
+        if (!$this->data['holiday']) {
+            return redirect()->to(base_url('admin/holiday'))
+                ->with('error', 'Holiday not found');
+        }
+
+        $this->data['holiday'] = $holidayModel->find($id);
+        return view('dashboard/holiday/add_holiday', $this->data);
+    }
+
+    public function updateHoliday($id)
+    {
+        $data = [
+            'name'       => $this->request->getPost('name'),
+            'start_date' => $this->request->getPost('start_date'),
+            'end_date'   => $this->request->getPost('end_date'),
+            'desc'       => $this->request->getPost('desc'),
+            'updated_at' => date('Y-m-d H:i:s'),
+        ];
+
+        $this->holidayModel->update($id, $data);
+
+        return redirect()->to(base_url('admin/holiday'))
+            ->with('success', 'Holiday Updated Successfully');
     }
 
     public function teachers()
