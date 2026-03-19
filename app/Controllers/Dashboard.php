@@ -582,12 +582,7 @@ class Dashboard extends Controller
             ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
         ];
 
-        // Sample static data (later connect DB)
-        $this->data['holidays'] = [
-            ['name' => 'Eid-ul-Fitr', 'date' => '2026-03-31', 'desc' => 'Eid Festival'],
-            ['name' => 'Independence Day', 'date' => '2026-03-26', 'desc' => 'National Holiday'],
-            ['name' => 'Victory Day', 'date' => '2026-12-16', 'desc' => 'National Holiday'],
-        ];
+        $this->data['holidays'] = $this->holidayModel->orderBy('start_date', 'ASC')->findAll();
 
         return view('dashboard/holiday/holiday_list', $this->data);
     }
