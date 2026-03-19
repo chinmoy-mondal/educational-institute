@@ -11,7 +11,7 @@
         </div>
         <?php endif; ?>
 
-        <div class="card card-primary">
+        <div class="card card-primary  mt-3 mb-3">
             <div class="card-header">
                 <h3 class="card-title">Add Holiday</h3>
             </div>

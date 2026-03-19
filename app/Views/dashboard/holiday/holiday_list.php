@@ -20,7 +20,7 @@
         <?php endif; ?>
 
         <!-- Add Button -->
-        <a href="<?= base_url('admin/holiday/add') ?>" class="btn btn-primary mb-3">
+        <a href="<?= base_url('admin/holiday/add') ?>" class="btn btn-primary mt-3 mb-3">
             <i class="fas fa-plus"></i> Add Holiday
         </a>
 
