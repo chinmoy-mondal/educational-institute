@@ -4,17 +4,23 @@
 <div class="container-fluid">
 
     <!-- HEADER ACTION -->
-    <div class="d-flex justify-content-between mb-2">
+    <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
 
         <!-- ADD NEW BUTTON -->
-        <a href="<?= base_url('admin/exam-routine/create') ?>" class="btn btn-success mt-4 mb-3">
+        <a href="<?= base_url('admin/exam-routine/create') ?>" class="btn btn-success">
             + Add New
         </a>
 
-        <!-- SEARCH -->
+        <!-- SEARCH FILTER -->
         <form method="get" action="<?= current_url() ?>" class="d-flex">
+
+            <!-- EXAM NAME -->
             <input type="text" name="search" value="<?= $_GET['search'] ?? '' ?>"
-                class="form-control form-control-sm mr-2" placeholder="Search...">
+                class="form-control form-control-sm mr-2" placeholder="Exam Name">
+
+            <!-- DATE -->
+            <input type="date" name="date" value="<?= $_GET['date'] ?? '' ?>" class="form-control form-control-sm mr-2">
+
             <button class="btn btn-primary btn-sm">Search</button>
         </form>
 

@@ -478,12 +478,27 @@ class Dashboard extends Controller
             ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
         ];
 
-        // Subjects (for subject name display)
+        // Subjects
         $this->data['subjects'] = $this->subjectModel->findAll();
 
-        // Exam Events Only
-        $this->data['events'] = $this->calendarModel
-            ->where('category', 'Exam')
+        // Get search input
+        $search = $this->request->getGet('search');
+
+        $builder = $this->calendarModel;
+
+        // Always filter Exam category
+        $builder->where('category', 'Exam');
+
+        // Apply search (exam name OR date)
+        if (!empty($search)) {
+            $builder->groupStart()
+                ->like('category', $search)      // exam name
+                ->orLike('start_date', $search)  // date
+                ->groupEnd();
+        }
+
+        // Final data
+        $this->data['events'] = $builder
             ->orderBy('start_date', 'ASC')
             ->findAll();
 
