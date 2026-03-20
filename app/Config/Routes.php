@@ -73,6 +73,8 @@ $routes->get('profile/update-card/(:num)', 'Dashboard::updateCard/$1');
 $routes->get('student/update-card/(:num)', 'Dashboard::studentUpdateCard/$1');
 $routes->get('restrict/(:num)', 'Dashboard::restrict/$1');
 
+#Exam routine
+$routes->get('admin/exam-routine', 'Dashboard::exam_routine');
 
 $routes->get('calendar', 'Dashboard::calendar');
 $routes->get('calendar/events', 'Dashboard::events');

@@ -466,110 +466,18 @@ class Dashboard extends Controller
         }
     }
 
-    public function calendar()
+    public function exam_routine()
     {
-        $this->data['title'] = 'Calendar';
-        $this->data['activeSection'] = 'calendar';
+        $this->data['title'] = 'Exam Routine';
 
-        // Common navbar and sidebar for all views
-        $this->data['navbarItems'] = [
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
-            ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
-        ];
+        $this->data['events'] = $this->calendarModel
+            ->where('category', 'Exam')
+            ->orderBy('start_date', 'ASC')
+            ->findAll();
 
-        $user = [
-            'name' => $this->session->get('name'),
-            'email' => $this->session->get('email'),
-            'phone' => $this->session->get('phone'),
-            'role' => $this->session->get('role')
-        ];
-
-        $subjects = $this->subjectModel->findAll();
-
-        $this->data['user'] = $user;
-        $this->data['subjects'] = $subjects;
-
-        return view('dashboard/calendar', $this->data);
+        return view('dashboard/exam/exam_routine', $this->data);
     }
 
-    public function events()
-    {
-        $events = $this->calendarModel->findAll();
-
-        $data = array_map(function ($event) {
-            $hasTime = strpos($event['end_date'], 'T') !== false;
-
-            $endDate = $hasTime
-                ? $event['end_date']
-                : date('Y-m-d', strtotime($event['end_date'] . ' +1 day'));
-
-            return [
-                'id'          => $event['id'],
-                'title'       => $event['title'],
-                'start'       => $event['start_date'],
-                'end'         => $endDate,
-                'color'       => $event['color'],
-                'description' => $event['description'],
-                'category'    => $event['category'],     // ✅ added
-                'subcategory' => $event['subcategory'],  // ✅ added
-                'class'       => $event['class'],        // ✅ added
-                'subject'     => $event['subject'],      // ✅ added
-                'allDay'      => true
-            ];
-        }, $events);
-
-        return $this->response->setJSON($data);
-    }
-
-    public function addEvent()
-    {
-        $data = [
-            'title'       => $this->request->getPost('title'),
-            'description' => $this->request->getPost('description'),
-            'start_date'  => $this->request->getPost('start_date'),
-            'start_time'  => $this->request->getPost('start_time'),
-            'end_date'    => $this->request->getPost('end_date'),
-            'end_time'    => $this->request->getPost('end_time'),
-            'color'       => $this->request->getPost('color') ?? '#007bff',
-            'category'    => $this->request->getPost('category'),
-            'subcategory' => $this->request->getPost('subcategory'),
-            'class'       => $this->request->getPost('class'),
-            'subject'     => $this->request->getPost('subject')
-        ];
-
-        $this->calendarModel->save($data);
-        return $this->response->setJSON(['status' => 'success']);
-    }
-
-    public function updateEvent()
-    {
-        $id = $this->request->getPost('id');
-
-        $data = [
-            'title'       => $this->request->getPost('title'),
-            'description' => $this->request->getPost('description'),
-            'start_date'  => $this->request->getPost('start_date'),
-            'start_time'  => $this->request->getPost('start_time'),
-            'end_date'    => $this->request->getPost('end_date'),
-            'end_time'    => $this->request->getPost('end_time'),
-            'color'       => $this->request->getPost('color') ?? '#007bff',
-            'category'    => $this->request->getPost('category'),
-            'subcategory' => $this->request->getPost('subcategory'),
-            'class'       => $this->request->getPost('class'),
-            'subject'     => $this->request->getPost('subject')
-        ];
-
-        $this->calendarModel->update($id, $data);
-        return $this->response->setJSON(['status' => 'success']);
-    }
-
-    public function deleteEvent()
-    {
-
-        $this->calendarModel->delete($this->request->getPost('id'));
-
-        return $this->response->setJSON(['status' => 'success']);
-    }
 
     public function holiday()
     {
