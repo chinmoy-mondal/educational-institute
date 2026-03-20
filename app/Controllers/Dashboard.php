@@ -3366,6 +3366,32 @@ class Dashboard extends Controller
         return redirect()->to('admin/notices')->with('success', 'Notice deleted successfully!');
     }
 
+    public function calendar()
+    {
+        $this->data['title'] = 'Calendar';
+        $this->data['activeSection'] = 'calendar';
+
+        // Common navbar and sidebar for all views
+        $this->data['navbarItems'] = [
+            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
+        ];
+
+        $user = [
+            'name' => $this->session->get('name'),
+            'email' => $this->session->get('email'),
+            'phone' => $this->session->get('phone'),
+            'role' => $this->session->get('role')
+        ];
+
+        $subjects = $this->subjectModel->findAll();
+
+        $this->data['user'] = $user;
+        $this->data['subjects'] = $subjects;
+
+        return view('dashboard/calendar', $this->data);
+    }
+
     public function attendanceCalendar()
     {
         $this->data['title'] = 'Attendance';
