@@ -469,7 +469,7 @@ class Dashboard extends Controller
     public function exam_routine()
     {
         $this->data['title'] = 'Exam Routine';
-        $this->data['activeSection'] = 'exam_routine';
+        $this->data['activeSection'] = 'calendar';
 
         // Navbar
         $this->data['navbarItems'] = [
@@ -478,10 +478,10 @@ class Dashboard extends Controller
             ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
         ];
 
-        // ✅ ADD THIS (IMPORTANT)
+        // Subjects (for subject name display)
         $this->data['subjects'] = $this->subjectModel->findAll();
 
-        // Events
+        // Exam Events Only
         $this->data['events'] = $this->calendarModel
             ->where('category', 'Exam')
             ->orderBy('start_date', 'ASC')
@@ -489,7 +489,6 @@ class Dashboard extends Controller
 
         return view('dashboard/exam/exam_routine', $this->data);
     }
-
 
     public function holiday()
     {
@@ -499,6 +498,7 @@ class Dashboard extends Controller
         // Common navbar and sidebar for all views
         $this->data['navbarItems'] = [
             ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Exam Routine', 'url' => base_url('admin/exam-routine')],
             ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
         ];
 
