@@ -7,7 +7,7 @@
     <div class="d-flex justify-content-between mb-2">
 
         <!-- ADD NEW BUTTON -->
-        <a href="<?= base_url('admin/exam-routine/create') ?>" class="btn btn-success  mt-3 mb-3">
+        <a href="<?= base_url('admin/exam-routine/create') ?>" class="btn btn-success mt-4 mb-3">
             + Add New
         </a>
 
