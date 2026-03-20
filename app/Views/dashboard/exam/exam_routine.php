@@ -14,37 +14,48 @@
 
                 <input type="hidden" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>">
                 <input type="hidden" name="category" value="Exam">
+                <input type="hidden" name="color" value="#dc3545">
 
                 <div class="row">
 
+                    <!-- CLASS -->
                     <div class="col-md-2">
                         <select name="class" class="form-control" required>
                             <option value="">Class</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
+                            <?php for ($i = 6; $i <= 10; $i++): ?>
+                            <option value="<?= $i ?>">Class <?= $i ?></option>
+                            <?php endfor; ?>
                         </select>
                     </div>
 
+                    <!-- SUBJECT -->
                     <div class="col-md-3">
-                        <input type="text" name="title" class="form-control" placeholder="Exam Name (e.g. Math)"
-                            required>
+                        <select name="subject" class="form-control" required>
+                            <option value="">Select Subject</option>
+                            <?php foreach ($subjects as $sub): ?>
+                            <option value="<?= $sub['id'] ?>">
+                                <?= $sub['class'] ?> - <?= $sub['subject'] ?>
+                            </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
 
+                    <!-- DATE -->
                     <div class="col-md-2">
                         <input type="date" name="start_date" class="form-control" required>
                     </div>
 
+                    <!-- START TIME -->
                     <div class="col-md-2">
                         <input type="time" name="start_time" class="form-control" required>
                     </div>
 
+                    <!-- END TIME -->
                     <div class="col-md-2">
                         <input type="time" name="end_time" class="form-control" required>
                     </div>
 
+                    <!-- BUTTON -->
                     <div class="col-md-1">
                         <button class="btn btn-success btn-block">Add</button>
                     </div>
@@ -64,52 +75,91 @@
         <div class="card-body table-responsive">
 
             <table class="table table-bordered table-hover">
-                <thead>
+                <thead class="bg-light">
                     <tr>
                         <th>ID</th>
                         <th>Class</th>
                         <th>Subject</th>
                         <th>Date</th>
                         <th>Time</th>
-                        <th width="200">Action</th>
+                        <th width="280">Action</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <?php foreach ($events as $e): ?>
                     <tr>
-                        <td><?= $e['id'] ?></td>
-                        <td><?= $e['class'] ?></td>
-                        <td><?= esc($e['title']) ?></td>
-                        <td><?= $e['start_date'] ?></td>
-                        <td><?= $e['start_time'] ?> - <?= $e['end_time'] ?></td>
 
-                        <td>
+                        <form action="<?= base_url('calendar/update') ?>" method="post">
 
-                            <!-- EDIT -->
-                            <form action="<?= base_url('calendar/update') ?>" method="post"
-                                style="display:inline-block;">
-                                <input type="hidden" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>">
+                            <td>
+                                <?= $e['id'] ?>
                                 <input type="hidden" name="id" value="<?= $e['id'] ?>">
-
-                                <input type="text" name="title" value="<?= esc($e['title']) ?>" style="width:90px">
-                                <input type="date" name="start_date" value="<?= $e['start_date'] ?>">
-
-                                <button class="btn btn-primary btn-sm">Update</button>
-                            </form>
-
-                            <!-- DELETE -->
-                            <form action="<?= base_url('calendar/delete') ?>" method="post"
-                                style="display:inline-block;">
                                 <input type="hidden" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>">
-                                <input type="hidden" name="id" value="<?= $e['id'] ?>">
+                                <input type="hidden" name="category" value="Exam">
+                            </td>
 
-                                <button class="btn btn-danger btn-sm" onclick="return confirm('Delete this exam?')">
-                                    Delete
+                            <!-- CLASS -->
+                            <td>
+                                <select name="class" class="form-control form-control-sm">
+                                    <?php for ($i = 6; $i <= 10; $i++): ?>
+                                    <option value="<?= $i ?>" <?= ($e['class'] == $i ? 'selected' : '') ?>>
+                                        <?= $i ?>
+                                    </option>
+                                    <?php endfor; ?>
+                                </select>
+                            </td>
+
+                            <!-- SUBJECT -->
+                            <td>
+                                <select name="subject" class="form-control form-control-sm">
+                                    <?php foreach ($subjects as $sub): ?>
+                                    <option value="<?= $sub['id'] ?>"
+                                        <?= ($e['subject'] == $sub['id'] ? 'selected' : '') ?>>
+                                        <?= $sub['subject'] ?>
+                                    </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+
+                            <!-- DATE -->
+                            <td>
+                                <input type="date" name="start_date" value="<?= $e['start_date'] ?>"
+                                    class="form-control form-control-sm">
+                            </td>
+
+                            <!-- TIME -->
+                            <td>
+                                <div class="d-flex">
+                                    <input type="time" name="start_time" value="<?= $e['start_time'] ?>"
+                                        class="form-control form-control-sm me-1">
+
+                                    <input type="time" name="end_time" value="<?= $e['end_time'] ?>"
+                                        class="form-control form-control-sm">
+                                </div>
+                            </td>
+
+                            <!-- ACTION -->
+                            <td>
+
+                                <button class="btn btn-primary btn-sm">
+                                    Update
                                 </button>
-                            </form>
+
+                        </form>
+
+                        <!-- DELETE -->
+                        <form action="<?= base_url('calendar/delete') ?>" method="post" style="display:inline-block;">
+                            <input type="hidden" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>">
+                            <input type="hidden" name="id" value="<?= $e['id'] ?>">
+
+                            <button class="btn btn-danger btn-sm" onclick="return confirm('Delete this exam?')">
+                                Delete
+                            </button>
+                        </form>
 
                         </td>
+
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
