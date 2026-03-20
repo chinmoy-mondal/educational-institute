@@ -3374,6 +3374,7 @@ class Dashboard extends Controller
         // Common navbar and sidebar for all views
         $this->data['navbarItems'] = [
             ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Exam Routine', 'url' => base_url('admin/exam-routine')],
             ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
         ];
 
