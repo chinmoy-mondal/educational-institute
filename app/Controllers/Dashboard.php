@@ -486,15 +486,12 @@ class Dashboard extends Controller
 
         $builder = $this->calendarModel;
 
-        // Always filter Exam category
+        // Only Exam
         $builder->where('category', 'Exam');
 
-        // Apply search (exam name OR date)
+        // ✅ Search ONLY by date
         if (!empty($search)) {
-            $builder->groupStart()
-                ->like('category', $search)      // exam name
-                ->orLike('start_date', $search)  // date
-                ->groupEnd();
+            $builder->like('start_date', $search);
         }
 
         // Final data
