@@ -468,15 +468,20 @@ class Dashboard extends Controller
 
     public function exam_routine()
     {
-        $this->data['title'] = 'Calendar';
-        $this->data['activeSection'] = 'calendar';
+        $this->data['title'] = 'Exam Routine';
+        $this->data['activeSection'] = 'exam_routine';
 
-        // Common navbar and sidebar for all views
+        // Navbar
         $this->data['navbarItems'] = [
             ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Exam Routine', 'url' => base_url('admin/exam-routine')],
             ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
         ];
 
+        // ✅ ADD THIS (IMPORTANT)
+        $this->data['subjects'] = $this->subjectModel->findAll();
+
+        // Events
         $this->data['events'] = $this->calendarModel
             ->where('category', 'Exam')
             ->orderBy('start_date', 'ASC')
