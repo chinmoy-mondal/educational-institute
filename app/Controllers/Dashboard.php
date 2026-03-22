@@ -761,6 +761,19 @@ class Dashboard extends Controller
         $this->data['remainingLeaves'] = $remainingLeaves;
         $this->data['totalAllowedLeaves'] = $totalAllowedLeaves;
 
+
+
+
+        if (!empty($id)) {
+
+            $userId = session()->get('user_id');
+            $leave = $this->leaveModel->find($id);
+
+            if ($userId != $leave['user_id']) {
+                return redirect()->back()->with('error', 'You are not allowed to delete this leave');
+            }
+        }
+
         return view('dashboard/leave/leave_form', $this->data);
     }
 
