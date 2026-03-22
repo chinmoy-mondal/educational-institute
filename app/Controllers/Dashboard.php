@@ -474,6 +474,7 @@ class Dashboard extends Controller
         // Navbar
         $this->data['navbarItems'] = [
             ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Holiday List', 'url' => base_url('admin/leave')],
             ['label' => 'Exam Routine', 'url' => base_url('admin/exam-routine')],
             ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
         ];
@@ -510,6 +511,7 @@ class Dashboard extends Controller
         // Common navbar and sidebar for all views
         $this->data['navbarItems'] = [
             ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Holiday List', 'url' => base_url('admin/leave')],
             ['label' => 'Exam Routine', 'url' => base_url('admin/exam-routine')],
             ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
         ];
@@ -652,8 +654,18 @@ class Dashboard extends Controller
     // leave form
     public function leave()
     {
-        $data['title'] = 'Leave Management';
-        return view('dashboard/leave_form', $data);
+        $this->data['title'] = 'Calendar';
+        $this->data['activeSection'] = 'calendar';
+
+        // Common navbar and sidebar for all views
+        $this->data['navbarItems'] = [
+            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Holiday List', 'url' => base_url('admin/leave')],
+            ['label' => 'Exam Routine', 'url' => base_url('admin/exam-routine')],
+            ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
+        ];
+
+        return view('dashboard/leave/leave_form', $data);
     }
 
     public function saveLeave()
@@ -3410,6 +3422,7 @@ class Dashboard extends Controller
         // Common navbar and sidebar for all views
         $this->data['navbarItems'] = [
             ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Holiday List', 'url' => base_url('admin/leave')],
             ['label' => 'Exam Routine', 'url' => base_url('admin/exam-routine')],
             ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
         ];
