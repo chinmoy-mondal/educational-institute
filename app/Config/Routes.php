@@ -107,7 +107,7 @@ $routes->post('admin/leave/save', 'Dashboard::saveLeave');
 $routes->get('admin/leave/delete/(:num)', 'Dashboard::deleteLeave/$1');
 
 // 👉 Approve
-$routes->get('admin/leave/status/(:num)/Approved', 'Dashboard::approve/$1');
+$routes->get('admin/leave/approved/(:num)', 'Dashboard::approve_leave/$1');
 
 $routes->get('ad_teacher_list', 'Dashboard::teachers');
 $routes->get('mark_given_teacher_list', 'Dashboard::teachers_mark_given');

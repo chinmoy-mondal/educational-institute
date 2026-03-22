@@ -161,7 +161,7 @@
                             <!-- APPROVE (ADMIN ONLY) -->
                             <?php if (($loginUser['account_status'] ?? 0) > 1): ?>
 
-                            <a href="<?= base_url('admin/leave/status/' . $leave['id'] . '/Approved') ?>"
+                            <a href="<?= base_url('admin/leave/approved/' . $leave['id'] ) ?>"
                                 class="btn btn-success btn-sm">
                                 Approve
                             </a>
