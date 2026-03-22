@@ -19,28 +19,45 @@
 
             <div class="card-body">
 
-                <!-- Leave Type -->
-                <div class="form-group">
-                    <label>Leave Type</label>
-                    <select name="leave_type" class="form-control" required>
-                        <option value="">Select Leave Type</option>
-                        <option value="Casual">Casual Leave</option>
-                        <option value="Sick">Sick Leave</option>
-                        <option value="Emergency">Emergency Leave</option>
-                        <option value="Other">Other</option>
-                    </select>
+                <!-- ONE LINE: Leave Type, From Date, To Date -->
+                <div class="row">
+
+                    <!-- Leave Type -->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Leave Type</label>
+                            <select name="leave_type" class="form-control" required>
+                                <option value="">Select Leave Type</option>
+                                <option value="Casual">Casual Leave</option>
+                                <option value="Sick">Sick Leave</option>
+                                <option value="Emergency">Emergency Leave</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- From Date -->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>From Date</label>
+                            <input type="date" name="from_date" id="from_date" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- To Date -->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>To Date</label>
+                            <input type="date" name="to_date" id="to_date" class="form-control" required>
+                        </div>
+                    </div>
+
                 </div>
 
-                <!-- From Date -->
+                <!-- Total Days (Auto) -->
                 <div class="form-group">
-                    <label>From Date</label>
-                    <input type="date" name="from_date" class="form-control" required>
-                </div>
-
-                <!-- To Date -->
-                <div class="form-group">
-                    <label>To Date</label>
-                    <input type="date" name="to_date" class="form-control" required>
+                    <label>Total Days</label>
+                    <input type="text" id="total_days" class="form-control" readonly>
                 </div>
 
                 <!-- Reason -->
@@ -72,5 +89,30 @@
     </div>
 
 </div>
+
+<!-- AUTO CALCULATE TOTAL DAYS -->
+<script>
+document.getElementById('from_date').addEventListener('change', calculateDays);
+document.getElementById('to_date').addEventListener('change', calculateDays);
+
+function calculateDays() {
+    let from = document.getElementById('from_date').value;
+    let to = document.getElementById('to_date').value;
+
+    if (from && to) {
+        let fromDate = new Date(from);
+        let toDate = new Date(to);
+
+        let timeDiff = toDate - fromDate;
+        let days = (timeDiff / (1000 * 60 * 60 * 24)) + 1;
+
+        if (days >= 0) {
+            document.getElementById('total_days').value = days + " day(s)";
+        } else {
+            document.getElementById('total_days').value = "Invalid date";
+        }
+    }
+}
+</script>
 
 <?= $this->endSection() ?>
