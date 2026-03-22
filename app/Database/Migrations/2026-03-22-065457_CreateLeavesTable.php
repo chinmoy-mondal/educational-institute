@@ -19,11 +19,11 @@ class CreateLeavesTable extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => '50',
             ],
-            'from_date' => [
-                'type' => 'DATE',
+            'from_datetime' => [
+                'type' => 'DATETIME',
             ],
-            'to_date' => [
-                'type' => 'DATE',
+            'to_datetime' => [
+                'type' => 'DATETIME',
             ],
             'reason' => [
                 'type' => 'TEXT',
