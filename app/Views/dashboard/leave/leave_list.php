@@ -141,34 +141,32 @@
                         <!-- ACTION -->
                         <td>
 
-                            <!-- EDIT / DELETE -->
-                            <?php if ($leave['status'] != 'Approved'): ?>
+                            <!-- 🚫 APPROVED → NO BUTTONS -->
+                            <?php if ($leave['status'] == 'Approved'): ?>
 
+                            <span class="text-muted">No actions</span>
+
+                            <?php else: ?>
+
+                            <!-- EDIT / DELETE -->
                             <a href="<?= base_url('admin/leave/edit/' . $leave['id']) ?>"
                                 class="btn btn-info btn-sm">Edit</a>
 
                             <a href="<?= base_url('admin/leave/delete/' . $leave['id']) ?>"
                                 class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
 
-                            <?php else: ?>
-
-                            <button class="btn btn-info btn-sm" disabled>Edit</button>
-                            <button class="btn btn-danger btn-sm" disabled>Delete</button>
-
-                            <?php endif; ?>
-
-                            <!-- APPROVE / REJECT -->
-                            <?php if (($loginUser['account_status'] ?? 0) > 1 && $leave['status'] != 'Approved'): ?>
+                            <!-- APPROVE (ONLY ADMIN) -->
+                            <?php if (($loginUser['account_status'] ?? 0) > 1): ?>
 
                             <a href="<?= base_url('admin/leave/status/' . $leave['id'] . '/Approved') ?>"
                                 class="btn btn-success btn-sm">Approve</a>
 
-                            <a href="<?= base_url('admin/leave/status/' . $leave['id'] . '/Rejected') ?>"
-                                class="btn btn-warning btn-sm">Reject</a>
+                            <?php endif; ?>
 
                             <?php endif; ?>
 
                         </td>
+
                     </tr>
 
                     <?php endforeach; ?>
