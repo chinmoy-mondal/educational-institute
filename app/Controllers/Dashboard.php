@@ -770,7 +770,7 @@ class Dashboard extends Controller
             $leave = $this->leaveModel->find($id);
 
             if ($userId != $leave['user_id']) {
-                return redirect()->back()->with('error', 'You are not allowed to delete this leave');
+                return redirect()->back()->with('error', 'You are not allowed to edit this leave');
             }
         }
 
