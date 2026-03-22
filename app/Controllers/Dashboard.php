@@ -477,9 +477,9 @@ class Dashboard extends Controller
         // Navbar
         $this->data['navbarItems'] = [
             ['label' => 'Calendar', 'url' => base_url('calendar')],
-            ['label' => 'Holiday List', 'url' => base_url('admin/leave')],
-            ['label' => 'Exam Routine', 'url' => base_url('admin/exam-routine')],
-            ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
+            ['label' => 'Leave', 'url' => base_url('admin/leave')],
+            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
+            ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
         ];
 
         // Subjects
@@ -514,9 +514,9 @@ class Dashboard extends Controller
         // Common navbar and sidebar for all views
         $this->data['navbarItems'] = [
             ['label' => 'Calendar', 'url' => base_url('calendar')],
-            ['label' => 'Holiday List', 'url' => base_url('admin/leave')],
-            ['label' => 'Exam Routine', 'url' => base_url('admin/exam-routine')],
-            ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
+            ['label' => 'Leave', 'url' => base_url('admin/leave')],
+            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
+            ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
         ];
 
         $this->data['holidays'] = $this->holidayModel->orderBy('start_date', 'ASC')->findAll();
@@ -658,9 +658,19 @@ class Dashboard extends Controller
 
     public function leaveList()
     {
-        $model = new \App\Models\LeaveModel();
 
-        $data['leaves'] = $model->orderBy('id', 'DESC')->findAll();
+        $this->data['title'] = 'Calendar';
+        $this->data['activeSection'] = 'calendar';
+
+        // Common navbar and sidebar for all views
+        $this->data['navbarItems'] = [
+            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Leave', 'url' => base_url('admin/leave')],
+            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
+            ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
+        ];
+
+        $data['leaves'] = $this->leaveModel->orderBy('id', 'DESC')->findAll();
 
         return view('dashboard/leave/leave_list', $data);
     }
@@ -673,9 +683,9 @@ class Dashboard extends Controller
         // Common navbar and sidebar for all views
         $this->data['navbarItems'] = [
             ['label' => 'Calendar', 'url' => base_url('calendar')],
-            ['label' => 'Holiday List', 'url' => base_url('admin/leave')],
-            ['label' => 'Exam Routine', 'url' => base_url('admin/exam-routine')],
-            ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
+            ['label' => 'Leave', 'url' => base_url('admin/leave')],
+            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
+            ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
         ];
 
         return view('dashboard/leave/leave_form', $this->data);
@@ -3433,9 +3443,9 @@ class Dashboard extends Controller
         // Common navbar and sidebar for all views
         $this->data['navbarItems'] = [
             ['label' => 'Calendar', 'url' => base_url('calendar')],
-            ['label' => 'Holiday List', 'url' => base_url('admin/leave')],
-            ['label' => 'Exam Routine', 'url' => base_url('admin/exam-routine')],
-            ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
+            ['label' => 'Leave', 'url' => base_url('admin/leave')],
+            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
+            ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
         ];
 
         $user = [
