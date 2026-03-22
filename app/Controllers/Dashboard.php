@@ -661,7 +661,7 @@ class Dashboard extends Controller
         $this->data['title'] = 'Calendar';
         $this->data['activeSection'] = 'calendar';
 
-        // Common navbar and sidebar for all views
+        // Navbar
         $this->data['navbarItems'] = [
             ['label' => 'Calendar', 'url' => base_url('calendar')],
             ['label' => 'Leave', 'url' => base_url('admin/leave')],
@@ -669,7 +669,32 @@ class Dashboard extends Controller
             ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
         ];
 
-        $this->data['leaves'] = $this->leaveModel->orderBy('id', 'DESC')->findAll();
+        $search = $this->request->getGet('search');
+        $status = $this->request->getGet('status');
+
+        // 🔥 Join users table
+        $this->leaveModel
+            ->select('leaves.*, users.name as user_name')
+            ->join('users', 'users.id = leaves.user_id', 'left');
+
+        // 🔍 Search
+        if ($search) {
+            $this->leaveModel->groupStart()
+                ->like('leaves.reason', $search)
+                ->orLike('leaves.leave_type', $search)
+                ->orLike('users.name', $search)
+                ->groupEnd();
+        }
+
+        // 🔽 Filter by status
+        if ($status) {
+            $this->leaveModel->where('leaves.status', $status);
+        }
+
+        // 🔥 Order
+        $this->data['leaves'] = $this->leaveModel
+            ->orderBy('leaves.id', 'DESC')
+            ->findAll();
 
         return view('dashboard/leave/leave_list', $this->data);
     }
@@ -679,13 +704,40 @@ class Dashboard extends Controller
         $this->data['title'] = 'Calendar';
         $this->data['activeSection'] = 'calendar';
 
-        // Common navbar and sidebar for all views
         $this->data['navbarItems'] = [
             ['label' => 'Calendar', 'url' => base_url('calendar')],
             ['label' => 'Leave', 'url' => base_url('admin/leave')],
             ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
             ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
         ];
+
+        $userId = session()->get('user_id');
+
+        $userModel = new UserModel();
+        $leaveModel = new LeaveModel();
+
+        // 🔥 Get user
+        $user = $userModel->find($userId);
+
+        if (!$user) {
+            return redirect()->to('admin/leave')
+                ->with('error', 'User not found or not logged in');
+        }
+
+        // 🔥 Count approved leaves
+        $usedLeaves = $leaveModel
+            ->where('user_id', $userId)
+            ->where('status', 'Approved')
+            ->countAllResults();
+
+        $totalAllowedLeaves = 20;
+        $remainingLeaves = $totalAllowedLeaves - $usedLeaves;
+
+        // Pass data to view
+        $this->data['user'] = $user;
+        $this->data['usedLeaves'] = $usedLeaves;
+        $this->data['remainingLeaves'] = $remainingLeaves;
+        $this->data['totalAllowedLeaves'] = $totalAllowedLeaves;
 
         return view('dashboard/leave/leave_form', $this->data);
     }

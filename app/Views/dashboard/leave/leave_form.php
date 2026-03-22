@@ -8,7 +8,17 @@
         <h4>Apply for Leave</h4>
     </div>
 
-    <!-- LEAVE FORM -->
+    <!-- USER INFO + BALANCE -->
+    <div class="alert alert-info">
+        <strong>Name:</strong> <?= esc($user['name']) ?> |
+        <strong>Email:</strong> <?= esc($user['email']) ?> <br>
+
+        <strong>Total Allowed:</strong> <?= $totalAllowedLeaves ?> |
+        <strong>Used:</strong> <?= $usedLeaves ?> |
+        <strong>Remaining:</strong> <?= $remainingLeaves ?>
+    </div>
+
+    <!-- FORM -->
     <div class="card card-primary">
         <div class="card-header">
             <h3 class="card-title">Leave Application Form</h3>
@@ -19,7 +29,9 @@
 
             <div class="card-body">
 
-                <!-- ONE ROW -->
+                <!-- USER ID (IMPORTANT) -->
+                <input type="hidden" name="user_id" value="<?= esc($user['id']) ?>">
+
                 <div class="row">
 
                     <!-- Leave Type -->
@@ -27,7 +39,7 @@
                         <div class="form-group">
                             <label>Leave Type</label>
                             <select name="leave_type" class="form-control" required>
-                                <option value="">Select Leave Type</option>
+                                <option value="">Select</option>
                                 <option value="Casual">Casual Leave</option>
                                 <option value="Sick">Sick Leave</option>
                                 <option value="Emergency">Emergency Leave</option>
@@ -36,7 +48,7 @@
                         </div>
                     </div>
 
-                    <!-- From Date & Time -->
+                    <!-- From -->
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>From Date & Time</label>
@@ -45,7 +57,7 @@
                         </div>
                     </div>
 
-                    <!-- To Date & Time -->
+                    <!-- To -->
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>To Date & Time</label>
@@ -54,10 +66,10 @@
                         </div>
                     </div>
 
-                    <!-- Total Days -->
+                    <!-- Duration -->
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label>Total Days</label>
+                            <label>Total Duration</label>
                             <input type="text" id="total_days" class="form-control" readonly>
                         </div>
                     </div>
@@ -67,8 +79,7 @@
                 <!-- Reason -->
                 <div class="form-group">
                     <label>Reason</label>
-                    <textarea name="reason" class="form-control" rows="4" placeholder="Enter reason..."
-                        required></textarea>
+                    <textarea name="reason" class="form-control" rows="4" required></textarea>
                 </div>
 
                 <!-- Status -->
@@ -76,14 +87,12 @@
                     <label>Status</label>
                     <select name="status" class="form-control">
                         <option value="Pending">Pending</option>
-                        <option value="Approved">Approved</option>
-                        <option value="Rejected">Rejected</option>
                     </select>
                 </div>
 
             </div>
 
-            <!-- SUBMIT -->
+            <!-- BUTTON -->
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Submit Leave</button>
                 <a href="<?= base_url('admin/leave') ?>" class="btn btn-secondary">Back</a>
@@ -94,7 +103,7 @@
 
 </div>
 
-<!-- AUTO CALCULATE TOTAL DAYS (WITH TIME) -->
+<!-- AUTO CALCULATION -->
 <script>
 function calculateDays() {
     let from = document.getElementById('from_datetime').value;
@@ -116,17 +125,9 @@ function calculateDays() {
 
             let result = "";
 
-            if (days > 0) {
-                result += days + " day(s) ";
-            }
-
-            if (hours > 0) {
-                result += hours + " hour(s) ";
-            }
-
-            if (minutes > 0) {
-                result += minutes + " minute(s)";
-            }
+            if (days > 0) result += days + " day(s) ";
+            if (hours > 0) result += hours + " hour(s) ";
+            if (minutes > 0) result += minutes + " minute(s)";
 
             document.getElementById('total_days').value = result.trim();
 

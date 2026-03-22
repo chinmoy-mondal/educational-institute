@@ -15,6 +15,11 @@ class CreateLeavesTable extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
+            'user_id' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+                'unsigned'   => true,
+            ],
             'leave_type' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '50',

@@ -3,7 +3,7 @@
 
 <div class="container-fluid">
 
-    <!-- SUCCESS MESSAGE -->
+    <!-- SUCCESS -->
     <?php if (session()->getFlashdata('success')): ?>
     <div class="alert alert-success alert-dismissible fade show">
         <?= session()->getFlashdata('success') ?>
@@ -11,7 +11,7 @@
     </div>
     <?php endif; ?>
 
-    <!-- ERROR MESSAGE -->
+    <!-- ERROR -->
     <?php if (session()->getFlashdata('error')): ?>
     <div class="alert alert-danger alert-dismissible fade show">
         <?= session()->getFlashdata('error') ?>
@@ -23,10 +23,53 @@
     <div class="d-flex justify-content-between mb-3">
         <h4>Leave List</h4>
 
-        <!-- NEW APPLICATION BUTTON -->
         <a href="<?= base_url('admin/leave_form') ?>" class="btn btn-primary">
             + New Application
         </a>
+    </div>
+
+    <!-- FILTER -->
+    <div class="card mb-3">
+        <div class="card-body">
+
+            <form method="get" class="row">
+
+                <!-- SEARCH -->
+                <div class="col-md-4">
+                    <input type="text" name="search" class="form-control" placeholder="Search user, type, reason..."
+                        value="<?= esc($_GET['search'] ?? '') ?>">
+                </div>
+
+                <!-- STATUS -->
+                <div class="col-md-3">
+                    <select name="status" class="form-control">
+                        <option value="">All Status</option>
+                        <option value="Pending" <?= (($_GET['status'] ?? '') == 'Pending') ? 'selected' : '' ?>>Pending
+                        </option>
+                        <option value="Approved" <?= (($_GET['status'] ?? '') == 'Approved') ? 'selected' : '' ?>>
+                            Approved</option>
+                        <option value="Rejected" <?= (($_GET['status'] ?? '') == 'Rejected') ? 'selected' : '' ?>>
+                            Rejected</option>
+                        <option value="Cancelled" <?= (($_GET['status'] ?? '') == 'Cancelled') ? 'selected' : '' ?>>
+                            Cancelled</option>
+                    </select>
+                </div>
+
+                <!-- BUTTON -->
+                <div class="col-md-2">
+                    <button class="btn btn-primary btn-block">Filter</button>
+                </div>
+
+                <!-- RESET -->
+                <div class="col-md-2">
+                    <a href="<?= base_url('admin/leave') ?>" class="btn btn-secondary btn-block">
+                        Reset
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
     </div>
 
     <!-- TABLE -->
@@ -41,7 +84,8 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Leave Type</th>
+                        <th>User Name</th>
+                        <th>Type</th>
                         <th>From</th>
                         <th>To</th>
                         <th>Reason</th>
@@ -56,37 +100,41 @@
 
                     <?php if (!empty($leaves)): ?>
                     <?php foreach ($leaves as $leave): ?>
+
                     <tr>
                         <td><?= $i++ ?></td>
 
+                        <!-- USER NAME -->
+                        <td><?= esc($leave['user_name'] ?? 'N/A') ?></td>
+
                         <td><?= esc($leave['leave_type']) ?></td>
 
-                        <td>
-                            <?= date('d M Y, h:i A', strtotime($leave['from_datetime'])) ?>
-                        </td>
+                        <td><?= date('d M Y, h:i A', strtotime($leave['from_datetime'])) ?></td>
 
-                        <td>
-                            <?= date('d M Y, h:i A', strtotime($leave['to_datetime'])) ?>
-                        </td>
+                        <td><?= date('d M Y, h:i A', strtotime($leave['to_datetime'])) ?></td>
 
                         <td><?= esc($leave['reason']) ?></td>
 
                         <!-- STATUS -->
                         <td>
-                            <?php if ($leave['status'] == 'Approved'): ?>
-                            <span class="badge bg-success">Approved</span>
-                            <?php elseif ($leave['status'] == 'Rejected'): ?>
-                            <span class="badge bg-danger">Rejected</span>
-                            <?php elseif ($leave['status'] == 'Cancelled'): ?>
-                            <span class="badge bg-secondary">Cancelled</span>
-                            <?php else: ?>
-                            <span class="badge bg-warning">Pending</span>
-                            <?php endif; ?>
+                            <?php
+                                    switch ($leave['status']) {
+                                        case 'Approved':
+                                            echo '<span class="badge badge-success">Approved</span>';
+                                            break;
+                                        case 'Rejected':
+                                            echo '<span class="badge badge-danger">Rejected</span>';
+                                            break;
+                                        case 'Cancelled':
+                                            echo '<span class="badge badge-secondary">Cancelled</span>';
+                                            break;
+                                        default:
+                                            echo '<span class="badge badge-warning">Pending</span>';
+                                    }
+                                    ?>
                         </td>
 
-                        <td>
-                            <?= date('d M Y', strtotime($leave['created_at'])) ?>
-                        </td>
+                        <td><?= date('d M Y', strtotime($leave['created_at'])) ?></td>
 
                         <!-- ACTION -->
                         <td>
@@ -100,14 +148,16 @@
                             </a>
                         </td>
                     </tr>
+
                     <?php endforeach; ?>
                     <?php else: ?>
+
                     <tr>
-                        <td colspan="8" class="text-center">
-                            No leave found
-                        </td>
+                        <td colspan="9" class="text-center">No leave found</td>
                     </tr>
+
                     <?php endif; ?>
+
                 </tbody>
             </table>
 
