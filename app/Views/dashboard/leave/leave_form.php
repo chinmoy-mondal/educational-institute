@@ -19,11 +19,11 @@
 
             <div class="card-body">
 
-                <!-- ONE LINE: Leave Type, From Date, To Date -->
+                <!-- ONE ROW -->
                 <div class="row">
 
                     <!-- Leave Type -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label>Leave Type</label>
                             <select name="leave_type" class="form-control" required>
@@ -36,28 +36,32 @@
                         </div>
                     </div>
 
-                    <!-- From Date -->
-                    <div class="col-md-4">
+                    <!-- From Date & Time -->
+                    <div class="col-md-3">
                         <div class="form-group">
-                            <label>From Date</label>
-                            <input type="date" name="from_date" id="from_date" class="form-control" required>
+                            <label>From Date & Time</label>
+                            <input type="datetime-local" name="from_datetime" id="from_datetime" class="form-control"
+                                required>
                         </div>
                     </div>
 
-                    <!-- To Date -->
-                    <div class="col-md-4">
+                    <!-- To Date & Time -->
+                    <div class="col-md-3">
                         <div class="form-group">
-                            <label>To Date</label>
-                            <input type="date" name="to_date" id="to_date" class="form-control" required>
+                            <label>To Date & Time</label>
+                            <input type="datetime-local" name="to_datetime" id="to_datetime" class="form-control"
+                                required>
                         </div>
                     </div>
 
-                </div>
+                    <!-- Total Days -->
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Total Days</label>
+                            <input type="text" id="total_days" class="form-control" readonly>
+                        </div>
+                    </div>
 
-                <!-- Total Days (Auto) -->
-                <div class="form-group">
-                    <label>Total Days</label>
-                    <input type="text" id="total_days" class="form-control" readonly>
                 </div>
 
                 <!-- Reason -->
@@ -90,29 +94,31 @@
 
 </div>
 
-<!-- AUTO CALCULATE TOTAL DAYS -->
+<!-- AUTO CALCULATE TOTAL DAYS (WITH TIME) -->
 <script>
-document.getElementById('from_date').addEventListener('change', calculateDays);
-document.getElementById('to_date').addEventListener('change', calculateDays);
-
 function calculateDays() {
-    let from = document.getElementById('from_date').value;
-    let to = document.getElementById('to_date').value;
+    let from = document.getElementById('from_datetime').value;
+    let to = document.getElementById('to_datetime').value;
 
     if (from && to) {
         let fromDate = new Date(from);
         let toDate = new Date(to);
 
-        let timeDiff = toDate - fromDate;
-        let days = (timeDiff / (1000 * 60 * 60 * 24)) + 1;
+        let diff = toDate - fromDate;
 
-        if (days >= 0) {
-            document.getElementById('total_days').value = days + " day(s)";
+        if (diff >= 0) {
+            let hours = diff / (1000 * 60 * 60);
+            let days = hours / 24;
+
+            document.getElementById('total_days').value = days.toFixed(2) + " day(s)";
         } else {
-            document.getElementById('total_days').value = "Invalid date";
+            document.getElementById('total_days').value = "Invalid";
         }
     }
 }
+
+document.getElementById('from_datetime').addEventListener('change', calculateDays);
+document.getElementById('to_datetime').addEventListener('change', calculateDays);
 </script>
 
 <?= $this->endSection() ?>
