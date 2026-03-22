@@ -82,13 +82,7 @@
                     <textarea name="reason" class="form-control" rows="4" required></textarea>
                 </div>
 
-                <!-- Status -->
-                <div class="form-group">
-                    <label>Status</label>
-                    <select name="status" class="form-control">
-                        <option value="Pending">Pending</option>
-                    </select>
-                </div>
+
 
             </div>
 

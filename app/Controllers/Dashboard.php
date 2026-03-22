@@ -745,6 +745,7 @@ class Dashboard extends Controller
     public function saveLeave()
     {
         $data = [
+            'user_id'       => $this->request->getPost('user_id'), // ✅ ADD THIS
             'leave_type'    => $this->request->getPost('leave_type'),
             'from_datetime' => $this->request->getPost('from_datetime'),
             'to_datetime'   => $this->request->getPost('to_datetime'),
