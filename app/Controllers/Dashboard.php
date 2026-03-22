@@ -658,7 +658,6 @@ class Dashboard extends Controller
 
     public function leaveList()
     {
-
         $this->data['title'] = 'Calendar';
         $this->data['activeSection'] = 'calendar';
 
@@ -670,12 +669,12 @@ class Dashboard extends Controller
             ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
         ];
 
-        $data['leaves'] = $this->leaveModel->orderBy('id', 'DESC')->findAll();
+        $this->data['leaves'] = $this->leaveModel->orderBy('id', 'DESC')->findAll();
 
-        return view('dashboard/leave/leave_list', $data);
+        return view('dashboard/leave/leave_list', $this->data);
     }
 
-    public function leave()
+    public function leave_form()
     {
         $this->data['title'] = 'Calendar';
         $this->data['activeSection'] = 'calendar';

@@ -95,7 +95,7 @@ $routes->get('admin/holiday/delete/(:num)', 'Dashboard::deleteHoliday/$1');
 
 // Leave
 $routes->get('admin/leave', 'Dashboard::leaveList');
-$routes->get('admin/leave', 'Dashboard::leave');
+$routes->get('admin/leave_form', 'Dashboard::leave_form');
 $routes->post('admin/leave/save', 'Dashboard::saveLeave');
 
 $routes->get('ad_teacher_list', 'Dashboard::teachers');

@@ -20,14 +20,16 @@
     <?php endif; ?>
 
     <!-- HEADER -->
-    <div class="mb-3 d-flex justify-content-between">
+    <div class="d-flex justify-content-between mb-3">
         <h4>Leave List</h4>
-        <a href="<?= base_url('admin/leave/create') ?>" class="btn btn-primary">
-            + Apply Leave
+
+        <!-- NEW APPLICATION BUTTON -->
+        <a href="<?= base_url('admin/leave_form') ?>" class="btn btn-primary">
+            + New Application
         </a>
     </div>
 
-    <!-- TABLE CARD -->
+    <!-- TABLE -->
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">All Leave Records</h3>
@@ -51,12 +53,13 @@
 
                 <tbody>
                     <?php $i = 1; ?>
+
                     <?php if (!empty($leaves)): ?>
                     <?php foreach ($leaves as $leave): ?>
                     <tr>
                         <td><?= $i++ ?></td>
 
-                        <td><?= $leave['leave_type'] ?></td>
+                        <td><?= esc($leave['leave_type']) ?></td>
 
                         <td>
                             <?= date('d M Y, h:i A', strtotime($leave['from_datetime'])) ?>
@@ -66,14 +69,16 @@
                             <?= date('d M Y, h:i A', strtotime($leave['to_datetime'])) ?>
                         </td>
 
-                        <td><?= $leave['reason'] ?></td>
+                        <td><?= esc($leave['reason']) ?></td>
 
-                        <!-- STATUS BADGE -->
+                        <!-- STATUS -->
                         <td>
                             <?php if ($leave['status'] == 'Approved'): ?>
                             <span class="badge bg-success">Approved</span>
                             <?php elseif ($leave['status'] == 'Rejected'): ?>
                             <span class="badge bg-danger">Rejected</span>
+                            <?php elseif ($leave['status'] == 'Cancelled'): ?>
+                            <span class="badge bg-secondary">Cancelled</span>
                             <?php else: ?>
                             <span class="badge bg-warning">Pending</span>
                             <?php endif; ?>
@@ -90,7 +95,7 @@
                             </a>
 
                             <a href="<?= base_url('admin/leave/delete/' . $leave['id']) ?>"
-                                class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete this?')">
+                                class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
                                 Delete
                             </a>
                         </td>
