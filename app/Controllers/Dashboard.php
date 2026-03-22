@@ -856,7 +856,7 @@ class Dashboard extends Controller
 
         // 🚫 Check permission
         if (($loginUser['account_status'] ?? 0) <= 1) {
-            return redirect()->back()->with('error', 'You are not allowed to approve leave');
+            return redirect()->back()->with('error', 'You are not allowed to approve leave=' . $loginUser['account_status']);
         }
 
         // 🔍 Get leave
