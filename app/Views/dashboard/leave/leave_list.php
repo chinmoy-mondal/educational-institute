@@ -108,7 +108,6 @@
                     <tr>
                         <td><?= $i++ ?></td>
 
-                        <!-- USER NAME -->
                         <td><?= esc($leave['user_name'] ?? 'N/A') ?></td>
 
                         <td><?= esc($leave['leave_type']) ?></td>
@@ -123,17 +122,18 @@
 
                         <!-- STATUS -->
                         <td>
-                            <?php
-                                    if ($leave['status'] == 'Approved') {
-                                        echo '<span class="badge badge-success">Approved</span>';
-                                    } elseif ($leave['status'] == 'Rejected') {
-                                        echo '<span class="badge badge-danger">Rejected</span>';
-                                    } elseif ($leave['status'] == 'Cancelled') {
-                                        echo '<span class="badge badge-secondary">Cancelled</span>';
-                                    } else {
-                                        echo '<span class="badge badge-warning">Pending</span>';
-                                    }
-                                    ?>
+                            <?php if ($leave['status'] == 'Approved'): ?>
+                            <span class="badge badge-success">Approved</span>
+
+                            <?php elseif ($leave['status'] == 'Rejected'): ?>
+                            <span class="badge badge-danger">Rejected</span>
+
+                            <?php elseif ($leave['status'] == 'Cancelled'): ?>
+                            <span class="badge badge-secondary">Cancelled</span>
+
+                            <?php else: ?>
+                            <span class="badge badge-warning">Pending</span>
+                            <?php endif; ?>
                         </td>
 
                         <td><?= date('d M Y', strtotime($leave['created_at'])) ?></td>
@@ -141,25 +141,30 @@
                         <!-- ACTION -->
                         <td>
 
-                            <!-- 🚫 APPROVED → NO BUTTONS -->
                             <?php if ($leave['status'] == 'Approved'): ?>
 
                             <span class="text-muted">No actions</span>
 
                             <?php else: ?>
 
-                            <!-- EDIT / DELETE -->
-                            <a href="<?= base_url('admin/leave/edit/' . $leave['id']) ?>"
-                                class="btn btn-info btn-sm">Edit</a>
+                            <!-- EDIT -->
+                            <a href="<?= base_url('admin/leave_form/' . $leave['id']) ?>" class="btn btn-info btn-sm">
+                                Edit
+                            </a>
 
+                            <!-- DELETE -->
                             <a href="<?= base_url('admin/leave/delete/' . $leave['id']) ?>"
-                                class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
+                                class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
+                                Delete
+                            </a>
 
-                            <!-- APPROVE (ONLY ADMIN) -->
+                            <!-- APPROVE (ADMIN ONLY) -->
                             <?php if (($loginUser['account_status'] ?? 0) > 1): ?>
 
                             <a href="<?= base_url('admin/leave/status/' . $leave['id'] . '/Approved') ?>"
-                                class="btn btn-success btn-sm">Approve</a>
+                                class="btn btn-success btn-sm">
+                                Approve
+                            </a>
 
                             <?php endif; ?>
 

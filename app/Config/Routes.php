@@ -95,8 +95,19 @@ $routes->get('admin/holiday/delete/(:num)', 'Dashboard::deleteHoliday/$1');
 
 // Leave
 $routes->get('admin/leave', 'Dashboard::leaveList');
-$routes->get('admin/leave_form', 'Dashboard::leave_form');
+
+// 👉 Create / Edit form (same form)
+$routes->get('admin/leave_form', 'Dashboard::leave_form');              // Add
+$routes->get('admin/leave_form/(:num)', 'Dashboard::leave_form/$1');    // Edit
+
+// 👉 Save (Insert + Update)
 $routes->post('admin/leave/save', 'Dashboard::saveLeave');
+
+// 👉 Delete
+$routes->get('admin/leave/delete/(:num)', 'Dashboard::deleteLeave/$1');
+
+// 👉 Approve
+$routes->get('admin/leave/status/(:num)/Approved', 'Dashboard::approve/$1');
 
 $routes->get('ad_teacher_list', 'Dashboard::teachers');
 $routes->get('mark_given_teacher_list', 'Dashboard::teachers_mark_given');

@@ -5,7 +5,7 @@
 
     <!-- PAGE HEADER -->
     <div class="mb-3">
-        <h4>Apply for Leave</h4>
+        <h4><?= isset($leave) ? 'Edit Leave' : 'Apply for Leave' ?></h4>
     </div>
 
     <!-- USER INFO + BALANCE -->
@@ -21,16 +21,21 @@
     <!-- FORM -->
     <div class="card card-primary">
         <div class="card-header">
-            <h3 class="card-title">Leave Application Form</h3>
+            <h3 class="card-title">
+                <?= isset($leave) ? 'Update Leave Form' : 'Leave Application Form' ?>
+            </h3>
         </div>
 
         <form action="<?= base_url('admin/leave/save') ?>" method="post">
             <?= csrf_field() ?>
 
-            <div class="card-body">
+            <!-- 🔴 IMPORTANT: ID for update -->
+            <input type="hidden" name="id" value="<?= $leave['id'] ?? '' ?>">
 
-                <!-- USER ID (IMPORTANT) -->
-                <input type="hidden" name="user_id" value="<?= esc($user['id']) ?>">
+            <!-- USER ID -->
+            <input type="hidden" name="user_id" value="<?= esc($user['id']) ?>">
+
+            <div class="card-body">
 
                 <div class="row">
 
@@ -40,10 +45,27 @@
                             <label>Leave Type</label>
                             <select name="leave_type" class="form-control" required>
                                 <option value="">Select</option>
-                                <option value="Casual">Casual Leave</option>
-                                <option value="Sick">Sick Leave</option>
-                                <option value="Emergency">Emergency Leave</option>
-                                <option value="Other">Other</option>
+
+                                <option value="Casual"
+                                    <?= (isset($leave) && $leave['leave_type'] == 'Casual') ? 'selected' : '' ?>>
+                                    Casual Leave
+                                </option>
+
+                                <option value="Sick"
+                                    <?= (isset($leave) && $leave['leave_type'] == 'Sick') ? 'selected' : '' ?>>
+                                    Sick Leave
+                                </option>
+
+                                <option value="Emergency"
+                                    <?= (isset($leave) && $leave['leave_type'] == 'Emergency') ? 'selected' : '' ?>>
+                                    Emergency Leave
+                                </option>
+
+                                <option value="Other"
+                                    <?= (isset($leave) && $leave['leave_type'] == 'Other') ? 'selected' : '' ?>>
+                                    Other
+                                </option>
+
                             </select>
                         </div>
                     </div>
@@ -53,6 +75,7 @@
                         <div class="form-group">
                             <label>From Date & Time</label>
                             <input type="datetime-local" name="from_datetime" id="from_datetime" class="form-control"
+                                value="<?= isset($leave) ? date('Y-m-d\TH:i', strtotime($leave['from_datetime'])) : '' ?>"
                                 required>
                         </div>
                     </div>
@@ -62,6 +85,7 @@
                         <div class="form-group">
                             <label>To Date & Time</label>
                             <input type="datetime-local" name="to_datetime" id="to_datetime" class="form-control"
+                                value="<?= isset($leave) ? date('Y-m-d\TH:i', strtotime($leave['to_datetime'])) : '' ?>"
                                 required>
                         </div>
                     </div>
@@ -79,16 +103,18 @@
                 <!-- Reason -->
                 <div class="form-group">
                     <label>Reason</label>
-                    <textarea name="reason" class="form-control" rows="4" required></textarea>
+                    <textarea name="reason" class="form-control" rows="4"
+                        required><?= $leave['reason'] ?? '' ?></textarea>
                 </div>
-
-
 
             </div>
 
             <!-- BUTTON -->
             <div class="card-footer">
-                <button type="submit" class="btn btn-primary">Submit Leave</button>
+                <button type="submit" class="btn btn-primary">
+                    <?= isset($leave) ? 'Update Leave' : 'Submit Leave' ?>
+                </button>
+
                 <a href="<?= base_url('admin/leave') ?>" class="btn btn-secondary">Back</a>
             </div>
 
@@ -133,6 +159,9 @@ function calculateDays() {
 
 document.getElementById('from_datetime').addEventListener('change', calculateDays);
 document.getElementById('to_datetime').addEventListener('change', calculateDays);
+
+// Run once on page load (for edit mode)
+calculateDays();
 </script>
 
 <?= $this->endSection() ?>

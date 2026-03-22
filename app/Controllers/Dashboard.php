@@ -705,9 +705,9 @@ class Dashboard extends Controller
         return view('dashboard/leave/leave_list', $this->data);
     }
 
-    public function leave_form()
+    public function leave_form($id = null)
     {
-        $this->data['title'] = 'Calendar';
+        $this->data['title'] = 'Leave Form';
         $this->data['activeSection'] = 'calendar';
 
         $this->data['navbarItems'] = [
@@ -722,7 +722,6 @@ class Dashboard extends Controller
         $userModel = new UserModel();
         $leaveModel = new LeaveModel();
 
-        // 🔥 Get user
         $user = $userModel->find($userId);
 
         if (!$user) {
@@ -730,7 +729,26 @@ class Dashboard extends Controller
                 ->with('error', 'User not found or not logged in');
         }
 
-        // 🔥 Count approved leaves
+        // 🔥 DEFAULT
+        $leave = null;
+
+        // 🔥 IF EDIT MODE
+        if ($id) {
+            $leave = $leaveModel->find($id);
+
+            if (!$leave) {
+                return redirect()->to('admin/leave')
+                    ->with('error', 'Leave not found');
+            }
+
+            // 🚫 BLOCK EDIT IF APPROVED
+            if ($leave['status'] == 'Approved') {
+                return redirect()->to('admin/leave')
+                    ->with('error', 'Approved leave cannot be edited');
+            }
+        }
+
+        // 🔥 Count leaves
         $usedLeaves = $leaveModel
             ->where('user_id', $userId)
             ->where('status', 'Approved')
@@ -739,8 +757,9 @@ class Dashboard extends Controller
         $totalAllowedLeaves = 20;
         $remainingLeaves = $totalAllowedLeaves - $usedLeaves;
 
-        // Pass data to view
+        // Pass data
         $this->data['user'] = $user;
+        $this->data['leave'] = $leave; // 👈 important
         $this->data['usedLeaves'] = $usedLeaves;
         $this->data['remainingLeaves'] = $remainingLeaves;
         $this->data['totalAllowedLeaves'] = $totalAllowedLeaves;
@@ -750,18 +769,137 @@ class Dashboard extends Controller
 
     public function saveLeave()
     {
+        $id = $this->request->getPost('id');
+
         $data = [
-            'user_id'       => $this->request->getPost('user_id'), // ✅ ADD THIS
+            'user_id'       => $this->request->getPost('user_id'),
             'leave_type'    => $this->request->getPost('leave_type'),
             'from_datetime' => $this->request->getPost('from_datetime'),
             'to_datetime'   => $this->request->getPost('to_datetime'),
             'reason'        => $this->request->getPost('reason'),
-            'status'        => $this->request->getPost('status') ?: 'Pending',
+            'updated_at'    => date('Y-m-d H:i:s'),
         ];
+
+        // 🔥 If ID exists → UPDATE
+        if ($id) {
+            $leave = $this->leaveModel->find($id);
+
+            // 🚫 Block if approved
+            if ($leave['status'] == 'Approved') {
+                return redirect()->back()->with('error', 'Approved leave cannot be updated');
+            }
+
+            $this->leaveModel->update($id, $data);
+
+            return redirect()->to('admin/leave')
+                ->with('success', 'Leave updated successfully');
+        }
+
+        // 🔥 Else → INSERT
+        $data['status'] = 'Pending';
 
         $this->leaveModel->insert($data);
 
-        return redirect()->to('admin/leave')->with('success', 'Leave Submitted Successfully');
+        return redirect()->to('admin/leave')
+            ->with('success', 'Leave submitted successfully');
+    }
+
+    public function update_leave($id)
+    {
+        // 🔍 Get existing leave
+        $leave = $this->leaveModel->find($id);
+
+        // 🚫 If not found
+        if (!$leave) {
+            return redirect()->back()->with('error', 'Leave not found');
+        }
+
+        // 🚫 BLOCK if already approved
+        if ($leave['status'] == 'Approved') {
+            return redirect()->back()->with('error', 'Approved leave cannot be updated');
+        }
+
+        // 🔍 Validation (optional but recommended)
+        $rules = [
+            'leave_type'    => 'required',
+            'from_datetime' => 'required',
+            'to_datetime'   => 'required',
+            'reason'        => 'required|min_length[5]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Validation failed');
+        }
+
+        // 🔄 Prepare data
+        $data = [
+            'leave_type'     => $this->request->getPost('leave_type'),
+            'from_datetime'  => $this->request->getPost('from_datetime'),
+            'to_datetime'    => $this->request->getPost('to_datetime'),
+            'reason'         => $this->request->getPost('reason'),
+            'updated_at'     => date('Y-m-d H:i:s'),
+        ];
+
+        // 💾 Update
+        $this->leaveModel->update($id, $data);
+
+        return redirect()->to(base_url('admin/leave'))
+            ->with('success', 'Leave updated successfully');
+    }
+
+    public function approve($id)
+    {
+        // 🔐 Get logged-in user
+        $loginUser = session()->get('user');
+
+        // 🚫 Check permission
+        if (($loginUser['account_status'] ?? 0) <= 1) {
+            return redirect()->back()->with('error', 'You are not allowed to approve leave');
+        }
+
+        // 🔍 Get leave
+        $leave = $this->leaveModel->find($id);
+
+        // 🚫 Check if already approved
+        if (!$leave) {
+            return redirect()->back()->with('error', 'Leave not found');
+        }
+
+        if ($leave['status'] == 'Approved') {
+            return redirect()->back()->with('error', 'Already approved');
+        }
+
+        // ✅ Update status
+        $this->leaveModel->update($id, [
+            'status'     => 'Approved',
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+
+        return redirect()->to(base_url('admin/leave'))
+            ->with('success', 'Leave approved successfully');
+    }
+
+    public function edit_leave($id)
+    {
+        $leave = $this->leaveModel->find($id);
+
+        if (!$leave) {
+            return redirect()->to(base_url('admin/leave'))
+                ->with('error', 'Leave not found');
+        }
+
+        // 🚫 Block editing if approved
+        if ($leave['status'] == 'Approved') {
+            return redirect()->to(base_url('admin/leave'))
+                ->with('error', 'Approved leave cannot be edited');
+        }
+
+        $this->data['title'] = 'Edit Leave';
+        $this->data['leave'] = $leave;
+
+        return view('dashboard/leave/edit_leave_form', $this->data);
     }
 
     public function teachers()
