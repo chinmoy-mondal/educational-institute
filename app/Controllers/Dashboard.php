@@ -698,7 +698,7 @@ class Dashboard extends Controller
 
         // 🔥 Get data
         $this->data['leaves'] = $builder
-            ->where('leaves.status', 'Pending') // 👈 only pending
+            // ->where('leaves.status', 'Pending') // 👈 only pending
             ->orderBy('leaves.id', 'DESC')
             ->findAll();
 
