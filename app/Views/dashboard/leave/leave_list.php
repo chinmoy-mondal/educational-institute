@@ -34,13 +34,11 @@
 
             <form method="get" class="row">
 
-                <!-- SEARCH -->
                 <div class="col-md-4">
                     <input type="text" name="search" class="form-control" placeholder="Search user, type, reason..."
                         value="<?= esc($_GET['search'] ?? '') ?>">
                 </div>
 
-                <!-- STATUS -->
                 <div class="col-md-3">
                     <select name="status" class="form-control">
                         <option value="">All Status</option>
@@ -55,12 +53,10 @@
                     </select>
                 </div>
 
-                <!-- BUTTON -->
                 <div class="col-md-2">
                     <button class="btn btn-primary btn-block">Filter</button>
                 </div>
 
-                <!-- RESET -->
                 <div class="col-md-2">
                     <a href="<?= base_url('admin/leave') ?>" class="btn btn-secondary btn-block">
                         Reset
@@ -88,6 +84,7 @@
                         <th>Type</th>
                         <th>From</th>
                         <th>To</th>
+                        <th>Duration</th>
                         <th>Reason</th>
                         <th>Status</th>
                         <th>Created At</th>
@@ -96,10 +93,20 @@
                 </thead>
 
                 <tbody>
+
                     <?php $i = 1; ?>
 
                     <?php if (!empty($leaves)): ?>
                     <?php foreach ($leaves as $leave): ?>
+
+                    <?php
+                            // Duration calculation
+                            $from = new DateTime($leave['from_datetime']);
+                            $to = new DateTime($leave['to_datetime']);
+                            $diff = $from->diff($to);
+
+                            $duration = $diff->d . 'd ' . $diff->h . 'h ' . $diff->i . 'm';
+                            ?>
 
                     <tr>
                         <td><?= $i++ ?></td>
@@ -113,23 +120,22 @@
 
                         <td><?= date('d M Y, h:i A', strtotime($leave['to_datetime'])) ?></td>
 
+                        <!-- DURATION -->
+                        <td><?= $duration ?></td>
+
                         <td><?= esc($leave['reason']) ?></td>
 
                         <!-- STATUS -->
                         <td>
                             <?php
-                                    switch ($leave['status']) {
-                                        case 'Approved':
-                                            echo '<span class="badge badge-success">Approved</span>';
-                                            break;
-                                        case 'Rejected':
-                                            echo '<span class="badge badge-danger">Rejected</span>';
-                                            break;
-                                        case 'Cancelled':
-                                            echo '<span class="badge badge-secondary">Cancelled</span>';
-                                            break;
-                                        default:
-                                            echo '<span class="badge badge-warning">Pending</span>';
+                                    if ($leave['status'] == 'Approved') {
+                                        echo '<span class="badge badge-success">Approved</span>';
+                                    } elseif ($leave['status'] == 'Rejected') {
+                                        echo '<span class="badge badge-danger">Rejected</span>';
+                                    } elseif ($leave['status'] == 'Cancelled') {
+                                        echo '<span class="badge badge-secondary">Cancelled</span>';
+                                    } else {
+                                        echo '<span class="badge badge-warning">Pending</span>';
                                     }
                                     ?>
                         </td>
@@ -138,14 +144,34 @@
 
                         <!-- ACTION -->
                         <td>
-                            <a href="<?= base_url('admin/leave/edit/' . $leave['id']) ?>" class="btn btn-sm btn-info">
-                                Edit
-                            </a>
+
+                            <!-- EDIT & DELETE -->
+                            <?php if ($leave['status'] != 'Approved'): ?>
+
+                            <a href="<?= base_url('admin/leave/edit/' . $leave['id']) ?>"
+                                class="btn btn-info btn-sm">Edit</a>
 
                             <a href="<?= base_url('admin/leave/delete/' . $leave['id']) ?>"
-                                class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
-                                Delete
-                            </a>
+                                class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
+
+                            <?php else: ?>
+
+                            <button class="btn btn-info btn-sm" disabled>Edit</button>
+                            <button class="btn btn-danger btn-sm" disabled>Delete</button>
+
+                            <?php endif; ?>
+
+                            <!-- APPROVE / REJECT (ADMIN ONLY) -->
+                            <?php if (($user['account_status'] ?? 0) > 1 && $leave['status'] != 'Approved'): ?>
+
+                            <a href="<?= base_url('admin/leave/status/' . $leave['id'] . '/Approved') ?>"
+                                class="btn btn-success btn-sm">Approve</a>
+
+                            <a href="<?= base_url('admin/leave/status/' . $leave['id'] . '/Rejected') ?>"
+                                class="btn btn-warning btn-sm">Reject</a>
+
+                            <?php endif; ?>
+
                         </td>
                     </tr>
 
@@ -153,7 +179,7 @@
                     <?php else: ?>
 
                     <tr>
-                        <td colspan="9" class="text-center">No leave found</td>
+                        <td colspan="10" class="text-center">No leave found</td>
                     </tr>
 
                     <?php endif; ?>

@@ -672,27 +672,27 @@ class Dashboard extends Controller
         $search = $this->request->getGet('search');
         $status = $this->request->getGet('status');
 
-        // 🔥 Join users table
-        $this->leaveModel
+        // 🔥 Create fresh builder
+        $builder = $this->leaveModel
             ->select('leaves.*, users.name as user_name')
             ->join('users', 'users.id = leaves.user_id', 'left');
 
         // 🔍 Search
-        if ($search) {
-            $this->leaveModel->groupStart()
+        if (!empty($search)) {
+            $builder->groupStart()
                 ->like('leaves.reason', $search)
                 ->orLike('leaves.leave_type', $search)
                 ->orLike('users.name', $search)
                 ->groupEnd();
         }
 
-        // 🔽 Filter by status
-        if ($status) {
-            $this->leaveModel->where('leaves.status', $status);
+        // 🔽 Status filter
+        if (!empty($status)) {
+            $builder->where('leaves.status', $status);
         }
 
-        // 🔥 Order
-        $this->data['leaves'] = $this->leaveModel
+        // 🔥 Order + fetch
+        $this->data['leaves'] = $builder
             ->orderBy('leaves.id', 'DESC')
             ->findAll();
 
