@@ -719,9 +719,6 @@ class Dashboard extends Controller
 
         $userId = session()->get('user_id');
 
-        // $userModel = new UserModel();
-        // $leaveModel = new LeaveModel();
-
         $user = $this->userModel->find($userId);
 
         if (!$user) {
@@ -804,7 +801,6 @@ class Dashboard extends Controller
             ->with('success', 'Leave submitted successfully');
     }
 
-
     public function approve_leave($id)
     {
         $userId = session()->get('user_id');
@@ -836,6 +832,42 @@ class Dashboard extends Controller
 
         return redirect()->to(base_url('admin/leave'))
             ->with('success', 'Leave approved successfully');
+    }
+
+    public function deleteLeave($id)
+    {
+        if (!$id) {
+            return redirect()->back()->with('error', 'Invalid ID');
+        }
+
+        // Get leave
+        $leave = $this->leaveModel->find($id);
+
+        if (!$leave) {
+            return redirect()->back()->with('error', 'Leave not found');
+        }
+
+        // Get logged in user
+        $userId = session()->get('user_id');
+        $loginUser = $this->userModel->find($userId);
+
+        if (!$loginUser) {
+            return redirect()->back()->with('error', 'User not found');
+        }
+
+        // 🔐 ADMIN CHECK
+        if (($loginUser['account_status'] ?? 0) <= 1) {
+
+            // ❌ Not admin → only own leave allowed
+            if ($loginUser['id'] != $leave['user_id']) {
+                return redirect()->back()->with('error', 'You are not allowed to delete this leave');
+            }
+        }
+
+        // ✅ Delete
+        $this->leaveModel->delete($id);
+
+        return redirect()->back()->with('success', 'Leave deleted successfully');
     }
 
     public function teachers()
