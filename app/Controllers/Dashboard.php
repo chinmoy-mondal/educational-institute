@@ -669,10 +669,15 @@ class Dashboard extends Controller
             ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
         ];
 
+        // 🔥 Logged-in user
+        $userId = session()->get('user_id');
+        $this->data['loginUser'] = $this->userModel->find($userId);
+
+        // 🔍 Filters
         $search = $this->request->getGet('search');
         $status = $this->request->getGet('status');
 
-        // 🔥 Create fresh builder
+        // 🔥 Fresh Builder
         $builder = $this->leaveModel
             ->select('leaves.*, users.name as user_name')
             ->join('users', 'users.id = leaves.user_id', 'left');
@@ -691,7 +696,7 @@ class Dashboard extends Controller
             $builder->where('leaves.status', $status);
         }
 
-        // 🔥 Order + fetch
+        // 🔥 Get data
         $this->data['leaves'] = $builder
             ->orderBy('leaves.id', 'DESC')
             ->findAll();

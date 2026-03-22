@@ -58,9 +58,7 @@
                 </div>
 
                 <div class="col-md-2">
-                    <a href="<?= base_url('admin/leave') ?>" class="btn btn-secondary btn-block">
-                        Reset
-                    </a>
+                    <a href="<?= base_url('admin/leave') ?>" class="btn btn-secondary btn-block">Reset</a>
                 </div>
 
             </form>
@@ -100,7 +98,6 @@
                     <?php foreach ($leaves as $leave): ?>
 
                     <?php
-                            // Duration calculation
                             $from = new DateTime($leave['from_datetime']);
                             $to = new DateTime($leave['to_datetime']);
                             $diff = $from->diff($to);
@@ -120,7 +117,6 @@
 
                         <td><?= date('d M Y, h:i A', strtotime($leave['to_datetime'])) ?></td>
 
-                        <!-- DURATION -->
                         <td><?= $duration ?></td>
 
                         <td><?= esc($leave['reason']) ?></td>
@@ -145,7 +141,7 @@
                         <!-- ACTION -->
                         <td>
 
-                            <!-- EDIT & DELETE -->
+                            <!-- EDIT / DELETE -->
                             <?php if ($leave['status'] != 'Approved'): ?>
 
                             <a href="<?= base_url('admin/leave/edit/' . $leave['id']) ?>"
@@ -161,8 +157,8 @@
 
                             <?php endif; ?>
 
-                            <!-- APPROVE / REJECT (ADMIN ONLY) -->
-                            <?php if (($user['account_status'] ?? 0) > 1 && $leave['status'] != 'Approved'): ?>
+                            <!-- APPROVE / REJECT -->
+                            <?php if (($loginUser['account_status'] ?? 0) > 1 && $leave['status'] != 'Approved'): ?>
 
                             <a href="<?= base_url('admin/leave/status/' . $leave['id'] . '/Approved') ?>"
                                 class="btn btn-success btn-sm">Approve</a>
