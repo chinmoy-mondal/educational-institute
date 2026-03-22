@@ -21,6 +21,7 @@ use App\Models\WelcomeMessageModel;
 use App\Models\SliderModel;
 use App\Models\RfidLogModel;
 use App\Models\HolidayModel;
+use App\Models\LeaveModel;
 
 use CodeIgniter\Exceptions\PageNotFoundException;
 use PhpParser\Node\Expr\Print_;
@@ -46,6 +47,7 @@ class Dashboard extends Controller
     protected $sliderModel;
     protected $rfidLogModel;
     protected $holidayModel;
+    protected $leaveModel;
 
     protected $session;
     protected $data;
@@ -70,6 +72,7 @@ class Dashboard extends Controller
         $this->sliderModel            = new SliderModel();
         $this->rfidLogModel           = new RfidLogModel();
         $this->holidayModel           = new HolidayModel();
+        $this->leaveModel             = new LeaveModel();
 
 
         $this->session       = session();
@@ -670,17 +673,15 @@ class Dashboard extends Controller
 
     public function saveLeave()
     {
-        $model = new \App\Models\LeaveModel();
-
         $data = [
-            'leave_type' => $this->request->getPost('leave_type'),
-            'from_date'  => $this->request->getPost('from_date'),
-            'to_date'    => $this->request->getPost('to_date'),
-            'reason'     => $this->request->getPost('reason'),
-            'status'     => $this->request->getPost('status'),
+            'leave_type'    => $this->request->getPost('leave_type'),
+            'from_datetime' => $this->request->getPost('from_datetime'),
+            'to_datetime'   => $this->request->getPost('to_datetime'),
+            'reason'        => $this->request->getPost('reason'),
+            'status'        => $this->request->getPost('status') ?: 'Pending',
         ];
 
-        $model->insert($data);
+        $this->leaveModel->insert($data);
 
         return redirect()->to('admin/leave')->with('success', 'Leave Submitted Successfully');
     }

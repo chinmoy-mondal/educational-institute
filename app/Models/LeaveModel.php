@@ -11,10 +11,10 @@ class LeaveModel extends Model
 
     protected $allowedFields = [
         'leave_type',
-        'from_date',
-        'to_date',
+        'from_datetime',
+        'to_datetime',
         'reason',
-        'status' //  Pending        Approved        Rejected        Cancelled
+        'status' // Pending, Approved, Rejected, Cancelled
     ];
 
     protected $useTimestamps = true;
