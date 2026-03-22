@@ -665,7 +665,7 @@ class Dashboard extends Controller
             ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
         ];
 
-        return view('dashboard/leave/leave_form', $data);
+        return view('dashboard/leave/leave_form', $this->data);
     }
 
     public function saveLeave()
