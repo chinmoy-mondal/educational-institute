@@ -94,6 +94,7 @@ $routes->post('admin/holiday/update/(:num)', 'Dashboard::updateHoliday/$1');
 $routes->get('admin/holiday/delete/(:num)', 'Dashboard::deleteHoliday/$1');
 
 // Leave
+$routes->get('admin/leave', 'Dashboard::leaveList');
 $routes->get('admin/leave', 'Dashboard::leave');
 $routes->post('admin/leave/save', 'Dashboard::saveLeave');
 

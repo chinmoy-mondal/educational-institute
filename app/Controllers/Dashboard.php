@@ -655,6 +655,16 @@ class Dashboard extends Controller
     }
 
     // leave form
+
+    public function leaveList()
+    {
+        $model = new \App\Models\LeaveModel();
+
+        $data['leaves'] = $model->orderBy('id', 'DESC')->findAll();
+
+        return view('dashboard/leave/leave_list', $data);
+    }
+
     public function leave()
     {
         $this->data['title'] = 'Calendar';
