@@ -649,6 +649,30 @@ class Dashboard extends Controller
             ->with('success', 'Holiday deleted successfully!');
     }
 
+    // leave form
+    public function leave()
+    {
+        $data['title'] = 'Leave Management';
+        return view('dashboard/leave_form', $data);
+    }
+
+    public function saveLeave()
+    {
+        $model = new \App\Models\LeaveModel();
+
+        $data = [
+            'leave_type' => $this->request->getPost('leave_type'),
+            'from_date'  => $this->request->getPost('from_date'),
+            'to_date'    => $this->request->getPost('to_date'),
+            'reason'     => $this->request->getPost('reason'),
+            'status'     => $this->request->getPost('status'),
+        ];
+
+        $model->insert($data);
+
+        return redirect()->to('admin/leave')->with('success', 'Leave Submitted Successfully');
+    }
+
     public function teachers()
     {
 
