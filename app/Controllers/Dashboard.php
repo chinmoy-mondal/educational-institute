@@ -719,10 +719,10 @@ class Dashboard extends Controller
 
         $userId = session()->get('user_id');
 
-        $userModel = new UserModel();
-        $leaveModel = new LeaveModel();
+        // $userModel = new UserModel();
+        // $leaveModel = new LeaveModel();
 
-        $user = $userModel->find($userId);
+        $user = $this->userModel->find($userId);
 
         if (!$user) {
             return redirect()->to('admin/leave')
@@ -734,7 +734,7 @@ class Dashboard extends Controller
 
         // 🔥 IF EDIT MODE
         if ($id) {
-            $leave = $leaveModel->find($id);
+            $leave = $this->leaveModel->find($id);
 
             if (!$leave) {
                 return redirect()->to('admin/leave')
@@ -749,7 +749,7 @@ class Dashboard extends Controller
         }
 
         // 🔥 Count leaves
-        $usedLeaves = $leaveModel
+        $usedLeaves = $this->leaveModel
             ->where('user_id', $userId)
             ->where('status', 'Approved')
             ->countAllResults();
@@ -807,12 +807,13 @@ class Dashboard extends Controller
 
     public function approve_leave($id)
     {
-        // 🔐 Get logged-in user
-        $loginUser = session()->get('user');
+        $userId = session()->get('user_id');
+
+        $loginUser = $this->userModel->find($userId);
 
         // 🚫 Check permission
         if (($loginUser['account_status'] ?? 0) <= 1) {
-            return redirect()->back()->with('error', 'You are not allowed to approve leave=' . $loginUser['account_status']);
+            return redirect()->back()->with('error', 'You are not allowed to approve leave');
         }
 
         // 🔍 Get leave
