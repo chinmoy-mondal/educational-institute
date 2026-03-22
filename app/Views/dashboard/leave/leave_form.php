@@ -107,10 +107,29 @@ function calculateDays() {
         let diff = toDate - fromDate;
 
         if (diff >= 0) {
-            let hours = diff / (1000 * 60 * 60);
-            let days = hours / 24;
 
-            document.getElementById('total_days').value = days.toFixed(2) + " day(s)";
+            let totalHours = diff / (1000 * 60 * 60);
+
+            let days = Math.floor(totalHours / 24);
+            let hours = Math.floor(totalHours % 24);
+            let minutes = Math.floor((totalHours * 60) % 60);
+
+            let result = "";
+
+            if (days > 0) {
+                result += days + " day(s) ";
+            }
+
+            if (hours > 0) {
+                result += hours + " hour(s) ";
+            }
+
+            if (minutes > 0) {
+                result += minutes + " minute(s)";
+            }
+
+            document.getElementById('total_days').value = result.trim();
+
         } else {
             document.getElementById('total_days').value = "Invalid";
         }
