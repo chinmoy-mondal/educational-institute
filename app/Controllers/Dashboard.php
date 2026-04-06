@@ -2824,13 +2824,27 @@ class Dashboard extends Controller
             ->get()
             ->getResultArray();
 
+        // $senderDeposits = [];
+        // foreach ($feesDeposit as $row) {
+        //     $senderDeposits[$row['sender_id']] = (float)$row['total_deposit'];
+        // }
+        // echo "<pre>";
+        // print_r($feesDeposit);
+        // echo "</pre>";
+
         $senderDeposits = [];
+
         foreach ($feesDeposit as $row) {
-            $senderDeposits[$row['sender_id']] = (float)$row['total_deposit'];
+            $id = $row['sender_id'];
+            $amount = (float)$row['total_deposit'];
+
+            if (!isset($senderDeposits[$id])) {
+                $senderDeposits[$id] = 0;
+            }
+
+            $senderDeposits[$id] += $amount;
         }
-        echo "<pre>";
-        print_r($feesDeposit);
-        echo "</pre>";
+
         $this->data['senderDeposits'] = $senderDeposits;
 
         $sections = $this->studentModel
