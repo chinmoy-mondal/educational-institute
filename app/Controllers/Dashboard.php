@@ -2828,6 +2828,9 @@ class Dashboard extends Controller
         foreach ($feesDeposit as $row) {
             $senderDeposits[$row['sender_id']] = (float)$row['total_deposit'];
         }
+        echo "<pre>";
+        print_r($senderDeposits);
+        echo "</pre>";
         $this->data['senderDeposits'] = $senderDeposits;
 
         $sections = $this->studentModel
