@@ -2829,7 +2829,7 @@ class Dashboard extends Controller
             $senderDeposits[$row['sender_id']] = (float)$row['total_deposit'];
         }
         echo "<pre>";
-        print_r($senderDeposits);
+        print_r($feesDeposit);
         echo "</pre>";
         $this->data['senderDeposits'] = $senderDeposits;
 
