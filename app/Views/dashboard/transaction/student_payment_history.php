@@ -82,7 +82,12 @@
                         ?>
                     <tr>
                         <td><?= $i++ ?></td>
-                        <td><?= esc($p['transaction_id']) ?></td>
+                        <td>
+                            <a href="<?= site_url('admin/receipt/' . esc($p['transaction_id'])) ?>" target="_blank"
+                                style="text-decoration: underline;">
+                                <?= esc($p['transaction_id']) ?>
+                            </a>
+                        </td>
                         <td><?= esc($p['receiver_name']) ?></td>
                         <td><?= number_format($p['amount'], 2) ?></td>
                         <td>
