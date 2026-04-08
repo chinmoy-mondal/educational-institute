@@ -3,45 +3,75 @@
 
 <div class="container-fluid py-4">
 
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">📅 Generate Payment Report</h5>
+    <!-- Page Title -->
+    <div class="mb-3">
+        <h3 class="text-primary fw-bold">
+            <i class="fas fa-file-invoice-dollar"></i> Payment Report
+        </h3>
+        <p class="text-muted mb-0">Generate report based on date and transaction type</p>
+    </div>
+
+    <!-- Card -->
+    <div class="card card-outline card-primary shadow-sm">
+        <div class="card-header">
+            <h5 class="mb-0">
+                <i class="fas fa-calendar-alt"></i> Generate Payment Report
+            </h5>
         </div>
 
         <div class="card-body">
             <form action="<?= base_url('admin/pay_report_result') ?>" method="post">
 
-                <div class="row">
+                <div class="row g-3">
 
+                    <!-- Start Date -->
                     <div class="col-md-3">
-                        <label>Start Date</label>
-                        <input type="date" name="start_date" class="form-control" required>
+                        <label class="form-label fw-semibold">Start Date</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar-day"></i>
+                            </span>
+                            <input type="date" name="start_date" class="form-control" required>
+                        </div>
                     </div>
 
+                    <!-- End Date -->
                     <div class="col-md-3">
-                        <label>End Date</label>
-                        <input type="date" name="end_date" class="form-control" required>
+                        <label class="form-label fw-semibold">End Date</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-calendar-check"></i>
+                            </span>
+                            <input type="date" name="end_date" class="form-control" required>
+                        </div>
                     </div>
 
+                    <!-- Transaction Type -->
                     <div class="col-md-3">
-                        <label>Transaction Type</label>
-                        <select name="type" class="form-control">
-                            <option value="all">All</option>
-                            <option value="student">Student Payment</option>
-                            <option value="teacher">Teacher Payment</option>
-                            <option value="salary">Salary</option>
-                            <option value="cost">Cost/Expense</option>
-                        </select>
+                        <label class="form-label fw-semibold">Transaction Type</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-exchange-alt"></i>
+                            </span>
+                            <select name="type" class="form-control">
+                                <option value="all">All Transactions</option>
+                                <option value="student">Student Payment</option>
+                                <option value="teacher">Teacher Payment</option>
+                                <option value="salary">Salary</option>
+                                <option value="cost">Cost / Expense</option>
+                            </select>
+                        </div>
                     </div>
 
-                    <div class="col-md-3">
-                        <label> </label>
-                        <button class="btn btn-success w-100 mt-3">
-                            🔍 Generate Report
+                    <!-- Button -->
+                    <div class="col-md-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-success w-100">
+                            <i class="fas fa-search"></i> Generate Report
                         </button>
                     </div>
 
                 </div>
+
             </form>
         </div>
     </div>
