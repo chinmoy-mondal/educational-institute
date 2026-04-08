@@ -3,14 +3,6 @@
 
 <div class="container-fluid py-4">
 
-    <!-- Page Title -->
-    <div class="mb-3">
-        <h3 class="text-primary fw-bold">
-            <i class="fas fa-file-invoice-dollar"></i> Payment Report
-        </h3>
-        <p class="text-muted mb-0">Generate report based on date and transaction type</p>
-    </div>
-
     <!-- Card -->
     <div class="card card-outline card-primary shadow-sm">
         <div class="card-header">
