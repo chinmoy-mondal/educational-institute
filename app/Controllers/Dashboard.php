@@ -3628,6 +3628,7 @@ class Dashboard extends Controller
         $start_date = $this->request->getGet('start_date');
         $end_date   = $this->request->getGet('end_date');
         $type       = $this->request->getGet('type');
+
         echo $start_date . "==" . $end_date . "==" . $type;
 
         $this->data['report'] = [];
