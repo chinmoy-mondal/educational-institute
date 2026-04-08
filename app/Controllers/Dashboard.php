@@ -3628,28 +3628,29 @@ class Dashboard extends Controller
         $start_date = $this->request->getGet('start_date');
         $end_date   = $this->request->getGet('end_date');
         $type       = $this->request->getGet('type');
+        echo $start_date . "==" . $end_date . "==" . $type;
 
         $this->data['report'] = [];
 
-        if ($start_date && $end_date) {
+        // if ($start_date && $end_date) {
 
-            $db = \Config\Database::connect();
-            $builder = $db->table('transactions'); // your table
+        //     $db = \Config\Database::connect();
+        //     $builder = $db->table('transactions'); // your table
 
-            $builder->where('date >=', $start_date);
-            $builder->where('date <=', $end_date);
+        //     $builder->where('date >=', $start_date);
+        //     $builder->where('date <=', $end_date);
 
-            if ($type && $type != 'all') {
-                $builder->where('type', $type);
-            }
+        //     if ($type && $type != 'all') {
+        //         $builder->where('type', $type);
+        //     }
 
-            $this->data['report'] = $builder->orderBy('date', 'DESC')->get()->getResultArray();
-        }
+        //     $this->data['report'] = $builder->orderBy('date', 'DESC')->get()->getResultArray();
+        // }
 
-        // Optional Download Trigger
-        if ($this->request->getGet('download')) {
-            return view('dashboard/transaction/pay_report_pdf', $this->data);
-        }
+        // // Optional Download Trigger
+        // if ($this->request->getGet('download')) {
+        //     return view('dashboard/transaction/pay_report_pdf', $this->data);
+        // }
 
         return view('dashboard/transaction/pay_report_form', $this->data);
     }
