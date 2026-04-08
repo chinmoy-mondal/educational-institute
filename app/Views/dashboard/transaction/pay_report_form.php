@@ -35,6 +35,7 @@
                     </div>
 
                     <div class="col-md-3">
+                        <label> </label>
                         <button class="btn btn-success w-100 mt-3">
                             🔍 Generate Report
                         </button>
