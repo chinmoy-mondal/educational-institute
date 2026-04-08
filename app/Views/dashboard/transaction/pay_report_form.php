@@ -13,17 +13,17 @@
 
                 <div class="row">
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label>Start Date</label>
                         <input type="date" name="start_date" class="form-control" required>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label>End Date</label>
                         <input type="date" name="end_date" class="form-control" required>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label>Transaction Type</label>
                         <select name="type" class="form-control">
                             <option value="all">All</option>
@@ -34,12 +34,13 @@
                         </select>
                     </div>
 
+                    <div class="col-md-3">
+                        <button class="btn btn-success w-100 mt-3">
+                            🔍 Generate Report
+                        </button>
+                    </div>
+
                 </div>
-
-                <button class="btn btn-success w-100 mt-3">
-                    🔍 Generate Report
-                </button>
-
             </form>
         </div>
     </div>
