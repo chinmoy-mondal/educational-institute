@@ -12,7 +12,9 @@
         </div>
 
         <div class="card-body">
-            <form action="<?= base_url('admin/pay_report_result') ?>" method="post">
+
+            <!-- FORM -->
+            <form method="get" action="<?= base_url('admin/pay_report') ?>">
 
                 <div class="row g-3">
 
@@ -23,7 +25,8 @@
                             <span class="input-group-text">
                                 <i class="fas fa-calendar-day"></i>
                             </span>
-                            <input type="date" name="start_date" class="form-control" required>
+                            <input type="date" name="start_date" value="<?= $_GET['start_date'] ?? '' ?>"
+                                class="form-control" required>
                         </div>
                     </div>
 
@@ -34,7 +37,8 @@
                             <span class="input-group-text">
                                 <i class="fas fa-calendar-check"></i>
                             </span>
-                            <input type="date" name="end_date" class="form-control" required>
+                            <input type="date" name="end_date" value="<?= $_GET['end_date'] ?? '' ?>"
+                                class="form-control" required>
                         </div>
                     </div>
 
@@ -47,10 +51,14 @@
                             </span>
                             <select name="type" class="form-control">
                                 <option value="all">All Transactions</option>
-                                <option value="student">Student Payment</option>
-                                <option value="teacher">Teacher Payment</option>
-                                <option value="salary">Salary</option>
-                                <option value="cost">Cost / Expense</option>
+                                <option value="student" <?= (($_GET['type'] ?? '') == 'student') ? 'selected' : '' ?>>
+                                    Student Payment</option>
+                                <option value="teacher" <?= (($_GET['type'] ?? '') == 'teacher') ? 'selected' : '' ?>>
+                                    Teacher Payment</option>
+                                <option value="salary" <?= (($_GET['type'] ?? '') == 'salary') ? 'selected' : '' ?>>
+                                    Salary</option>
+                                <option value="cost" <?= (($_GET['type'] ?? '') == 'cost') ? 'selected' : '' ?>>Cost /
+                                    Expense</option>
                             </select>
                         </div>
                     </div>
@@ -67,6 +75,66 @@
             </form>
         </div>
     </div>
+
+    <!-- REPORT SECTION -->
+    <?php if (!empty($report)): ?>
+
+    <div class="card mt-4">
+        <div class="card-header bg-success text-white d-flex justify-content-between">
+            <h5 class="mb-0">📊 Report Result</h5>
+
+            <!-- Download -->
+            <a href="<?= current_url() . '?' . http_build_query($_GET) ?>&download=1" class="btn btn-light btn-sm">
+                📥 Download
+            </a>
+        </div>
+
+        <div class="card-body table-responsive">
+
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                        <th>Note</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <?php $total = 0; ?>
+                    <?php foreach ($report as $key => $row): ?>
+                    <tr>
+                        <td><?= $key + 1 ?></td>
+                        <td><?= $row['date'] ?></td>
+                        <td><?= ucfirst($row['type']) ?></td>
+                        <td><?= number_format($row['amount'], 2) ?></td>
+                        <td><?= $row['note'] ?? '-' ?></td>
+                    </tr>
+                    <?php $total += $row['amount']; ?>
+                    <?php endforeach; ?>
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th colspan="3" class="text-end">Total</th>
+                        <th colspan="2"><?= number_format($total, 2) ?></th>
+                    </tr>
+                </tfoot>
+
+            </table>
+
+        </div>
+    </div>
+
+    <?php elseif (isset($_GET['start_date'])): ?>
+
+    <div class="alert alert-warning mt-4">
+        No data found for selected filters.
+    </div>
+
+    <?php endif; ?>
 
 </div>
 

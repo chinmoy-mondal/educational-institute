@@ -3624,6 +3624,33 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
+        // GET values
+        $start_date = $this->request->getGet('start_date');
+        $end_date   = $this->request->getGet('end_date');
+        $type       = $this->request->getGet('type');
+
+        $this->data['report'] = [];
+
+        if ($start_date && $end_date) {
+
+            $db = \Config\Database::connect();
+            $builder = $db->table('transactions'); // your table
+
+            $builder->where('date >=', $start_date);
+            $builder->where('date <=', $end_date);
+
+            if ($type && $type != 'all') {
+                $builder->where('type', $type);
+            }
+
+            $this->data['report'] = $builder->orderBy('date', 'DESC')->get()->getResultArray();
+        }
+
+        // Optional Download Trigger
+        if ($this->request->getGet('download')) {
+            return view('dashboard/transaction/pay_report_pdf', $this->data);
+        }
+
         return view('dashboard/transaction/pay_report_form', $this->data);
     }
 
