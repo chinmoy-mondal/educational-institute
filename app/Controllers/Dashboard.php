@@ -3633,25 +3633,26 @@ class Dashboard extends Controller
 
         $this->data['report'] = [];
 
-        // if ($start_date && $end_date) {
+        if ($start_date && $end_date) {
 
-        //     $db = \Config\Database::connect();
-        //     $builder = $db->table('transactions'); // your table
+            $model = new TransactionModel();
 
-        //     $builder->where('date >=', $start_date);
-        //     $builder->where('date <=', $end_date);
+            // IMPORTANT: add time for full day coverage
+            $start = $start_date . ' 00:00:00';
+            $end   = $end_date . ' 23:59:59';
 
-        //     if ($type && $type != 'all') {
-        //         $builder->where('type', $type);
-        //     }
+            $builder = $model->where('created_at >=', $start)
+                ->where('created_at <=', $end);
 
-        //     $this->data['report'] = $builder->orderBy('date', 'DESC')->get()->getResultArray();
-        // }
+            // ✅ Filter by type using "activity"
+            // if ($type && $type != 'all') {
+            //     $builder->where('activity', $type);
+            // }
 
-        // // Optional Download Trigger
-        // if ($this->request->getGet('download')) {
-        //     return view('dashboard/transaction/pay_report_pdf', $this->data);
-        // }
+            $this->data['report'] = $builder
+                ->orderBy('created_at', 'DESC')
+                ->findAll();
+        }
 
         return view('dashboard/transaction/pay_report_form', $this->data);
     }
