@@ -97,28 +97,56 @@
                         <th>#</th>
                         <th>Date</th>
                         <th>Type</th>
+                        <th>Sender</th>
+                        <th>Receiver</th>
                         <th>Amount</th>
-                        <th>Note</th>
+                        <th>Description</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <?php $total = 0; ?>
+
+                    <?php
+                        $typeLabels = [
+                            'student' => 'Student Payment',
+                            'teacher' => 'Teacher Payment',
+                            'salary'  => 'Salary',
+                            'cost'    => 'Expense'
+                        ];
+                        ?>
+
                     <?php foreach ($report as $key => $row): ?>
                     <tr>
                         <td><?= $key + 1 ?></td>
-                        <td><?= $row['date'] ?></td>
-                        <td><?= ucfirst($row['type']) ?></td>
-                        <td><?= number_format($row['amount'], 2) ?></td>
-                        <td><?= $row['note'] ?? '-' ?></td>
+
+                        <!-- ✅ FIXED DATE -->
+                        <td><?= date('d M Y', strtotime($row['created_at'])) ?></td>
+
+                        <!-- ✅ FIXED TYPE -->
+                        <td><?= $typeLabels[$row['activity']] ?? ucfirst($row['activity']) ?></td>
+
+                        <!-- EXTRA INFO -->
+                        <td><?= $row['sender_name'] ?? '-' ?></td>
+                        <td><?= $row['receiver_name'] ?? '-' ?></td>
+
+                        <!-- ✅ AMOUNT WITH DISCOUNT -->
+                        <td>
+                            <?= number_format(($row['amount'] - ($row['discount'] ?? 0)), 2) ?>
+                        </td>
+
+                        <!-- ✅ DESCRIPTION -->
+                        <td><?= $row['description'] ?? '-' ?></td>
                     </tr>
-                    <?php $total += $row['amount']; ?>
+
+                    <?php $total += ($row['amount'] - ($row['discount'] ?? 0)); ?>
                     <?php endforeach; ?>
+
                 </tbody>
 
                 <tfoot>
                     <tr>
-                        <th colspan="3" class="text-end">Total</th>
+                        <th colspan="5" class="text-end">Total</th>
                         <th colspan="2"><?= number_format($total, 2) ?></th>
                     </tr>
                 </tfoot>
