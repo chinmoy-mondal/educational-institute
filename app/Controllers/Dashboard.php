@@ -3628,6 +3628,8 @@ class Dashboard extends Controller
         $start_date = $this->request->getGet('start_date');
         $end_date   = $this->request->getGet('end_date');
         $type       = $this->request->getGet('type');
+        $teacher_name       = $this->request->getGet('teacher_name');
+        echo "Type = " . $type . " = " . $teacher_name;
 
 
         $this->data['teacherList'] = $this->transactionModel
