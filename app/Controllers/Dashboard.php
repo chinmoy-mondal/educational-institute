@@ -3623,14 +3623,14 @@ class Dashboard extends Controller
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
-
+        dd($this->request->getGet());
         // GET values
         $start_date = $this->request->getGet('start_date');
         $end_date   = $this->request->getGet('end_date');
         $type       = $this->request->getGet('type');
         $teacher_name       = $this->request->getGet('teacher_name');
         echo "Type = " . $type . " = " . $teacher_name;
-        dd($this->request->getGet());
+
 
 
         $this->data['teacherList'] = $this->transactionModel
