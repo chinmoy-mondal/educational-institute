@@ -80,12 +80,12 @@
                                 <option value="">All Teachers</option>
 
                                 <?php if (!empty($teacherList)): ?>
-                                    <?php foreach ($teacherList as $t): ?>
-                                        <option value="<?= esc($t['receiver_name']) ?>"
-                                            <?= (($_GET['teacher_name'] ?? '') == $t['receiver_name']) ? 'selected' : '' ?>>
-                                            <?= esc($t['receiver_name']) ?>
-                                        </option>
-                                    <?php endforeach; ?>
+                                <?php foreach ($teacherList as $t): ?>
+                                <option value="<?= esc($t['receiver_name']) ?>"
+                                    <?= (($_GET['teacher_name'] ?? '') == $t['receiver_name']) ? 'selected' : '' ?>>
+                                    <?= esc($t['receiver_name']) ?>
+                                </option>
+                                <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>
 
@@ -108,81 +108,149 @@
     <!-- REPORT SECTION -->
     <?php if (!empty($report)): ?>
 
-        <div class="card mt-4">
-            <div class="card-header bg-success text-white d-flex justify-content-between">
-                <h5 class="mb-0">📊 Report Result</h5>
+    <div class="card mt-4">
+        <div class="card-header bg-success text-white d-flex justify-content-between">
+            <h5 class="mb-0">📊 Report Result</h5>
 
-                <a href="<?= current_url() . '?' . http_build_query($_GET) ?>&download=1" class="btn btn-light btn-sm">
-                    📥 Download
-                </a>
-            </div>
-
-            <div class="card-body table-responsive">
-
-                <table class="table table-bordered table-striped">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>#</th>
-                            <th>Date</th>
-                            <th>Type</th>
-                            <th>Sender</th>
-                            <th>Receiver</th>
-                            <th>Amount</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        <?php $total = 0; ?>
-
-                        <?php
-                        $typeLabels = [
-                            'student' => 'Student Payment',
-                            'teacher' => 'Teacher Payment',
-                            'salary'  => 'Salary',
-                            'cost'    => 'Expense'
-                        ];
-                        ?>
-
-                        <?php foreach ($report as $key => $row): ?>
-                            <tr>
-                                <td><?= $key + 1 ?></td>
-
-                                <td><?= date('d M Y', strtotime($row['created_at'])) ?></td>
-
-                                <td><?= $typeLabels[$row['activity']] ?? ucfirst($row['activity']) ?></td>
-
-                                <td><?= $row['sender_name'] ?? '-' ?></td>
-                                <td><?= $row['receiver_name'] ?? '-' ?></td>
-
-                                <td>
-                                    <?= number_format(($row['amount'] - ($row['discount'] ?? 0)), 2) ?>
-                                </td>
-
-                                <td><?= $row['description'] ?? '-' ?></td>
-                            </tr>
-
-                            <?php $total += ($row['amount'] - ($row['discount'] ?? 0)); ?>
-                        <?php endforeach; ?>
-                    </tbody>
-
-                    <tfoot>
-                        <tr>
-                            <th colspan="5" class="text-end">Total</th>
-                            <th colspan="2"><?= number_format($total, 2) ?></th>
-                        </tr>
-                    </tfoot>
-
-                </table>
-
-            </div>
+            <a href="<?= current_url() . '?' . http_build_query($_GET) ?>&download=1" class="btn btn-light btn-sm">
+                📥 Download
+            </a>
         </div>
+
+        <div class="card-body table-responsive">
+
+            <table class="table table-striped align-middle mb-0">
+
+                <thead class="table-dark text-center">
+                    <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Transaction ID</th>
+                        <th>Sender</th>
+                        <th>Receiver</th>
+                        <th>Type</th>
+                        <th>Amount (৳)</th>
+                        <th>Discount (৳)</th>
+                        <th>Month</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <?php if (!empty($transactions)): ?>
+
+                    <?php
+                            $i = 1;
+                            $seenDiscount = [];
+                            ?>
+
+                    <?php foreach ($transactions as $t): ?>
+
+                    <?php
+                                $tid = $t['transaction_id'] ?? '-';
+                                $discount = floatval($t['discount'] ?? 0);
+
+                                // discount logic (avoid duplicate display per transaction)
+                                if ($discount > 0) {
+                                    if (isset($seenDiscount[$tid])) {
+                                        $discountText = '<span class="text-muted"><strike>' . number_format($discount, 2) . '</strike></span>';
+                                    } else {
+                                        $discountText = number_format($discount, 2);
+                                        $seenDiscount[$tid] = true;
+                                    }
+                                } else {
+                                    $discountText = '-';
+                                }
+
+                                // type label fix (cleaner than status check)
+                                $type = $t['activity'] ?? '';
+                                $typeLabels = [
+                                    'student' => 'Student Payment',
+                                    'teacher' => 'Teacher Payment',
+                                    'salary'  => 'Salary',
+                                    'cost'    => 'Expense'
+                                ];
+                                ?>
+
+                    <tr>
+
+                        <!-- # -->
+                        <td class="text-center"><?= $i++ ?></td>
+
+                        <!-- Date -->
+                        <td class="text-center">
+                            <?= date('d M Y', strtotime($t['created_at'])) ?>
+                        </td>
+
+                        <!-- Transaction ID -->
+                        <td class="text-center">
+                            <a href="<?= site_url('admin/receipt/' . esc($tid)) ?>" target="_blank"
+                                class="text-decoration-underline">
+                                <?= esc($tid) ?>
+                            </a>
+                        </td>
+
+                        <!-- Sender -->
+                        <td><?= esc($t['sender_name'] ?? '-') ?></td>
+
+                        <!-- Receiver -->
+                        <td><?= esc($t['receiver_name'] ?? '-') ?></td>
+
+                        <!-- Type -->
+                        <td class="text-center">
+                            <span class="badge bg-info text-dark">
+                                <?= $typeLabels[$type] ?? ucfirst($type) ?>
+                            </span>
+                        </td>
+
+                        <!-- Amount -->
+                        <td
+                            class="fw-bold text-center <?= ($t['status'] ?? 0) == 0 ? 'text-success' : 'text-danger' ?>">
+                            <?= number_format($t['amount'] ?? 0, 2) ?>
+                        </td>
+
+                        <!-- Discount -->
+                        <td class="text-center">
+                            <?= $discountText ?>
+                        </td>
+
+                        <!-- Month -->
+                        <td class="text-center">
+                            <?= esc($t['month'] ?? date('F', strtotime($t['created_at']))) ?>
+                        </td>
+
+                        <!-- Description -->
+                        <td>
+                            <?= esc($t['description'] ?? '-') ?>
+                        </td>
+
+                    </tr>
+
+                    <?php endforeach; ?>
+
+                    <?php else: ?>
+
+                    <tr>
+                        <td colspan="10" class="text-center text-muted">
+                            No transactions found.
+                        </td>
+                    </tr>
+
+                    <?php endif; ?>
+
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
 
     <?php elseif (isset($_GET['start_date'])): ?>
 
-        <div class="alert alert-warning mt-4">
-            No data found for selected filters.
-        </div>
+    <div class="alert alert-warning mt-4">
+        No data found for selected filters.
+    </div>
 
     <?php endif; ?>
 
@@ -190,25 +258,25 @@
 
 <!-- ================= JS ================= -->
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
 
-        const typeSelect = document.getElementById("transactionType");
-        const teacherField = document.getElementById("teacherField");
+    const typeSelect = document.getElementById("transactionType");
+    const teacherField = document.getElementById("teacherField");
 
-        function toggleTeacherField() {
-            if (typeSelect.value === "teacher") {
-                teacherField.classList.remove("d-none");
-            } else {
-                teacherField.classList.add("d-none");
-            }
+    function toggleTeacherField() {
+        if (typeSelect.value === "teacher") {
+            teacherField.classList.remove("d-none");
+        } else {
+            teacherField.classList.add("d-none");
         }
+    }
 
-        // initial load
-        toggleTeacherField();
+    // initial load
+    toggleTeacherField();
 
-        // on change
-        typeSelect.addEventListener("change", toggleTeacherField);
-    });
+    // on change
+    typeSelect.addEventListener("change", toggleTeacherField);
+});
 </script>
 
 <?= $this->endSection() ?>
