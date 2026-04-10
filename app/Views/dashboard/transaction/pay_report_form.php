@@ -170,9 +170,14 @@
                                 <td><?= $row['receiver_name'] ?? '-' ?></td>
 
                                 <!-- Type -->
-                                <td
-                                    class="fw-bold text-center <?= ($row['status'] ?? 0) == 0 ? 'text-success' : 'text-danger' ?>">
-                                    <?= number_format($row['amount'] ?? 0, 2) ?>
+                                <td class="text-center">
+
+                                    <?php if (($row['status'] ?? 0) == 0): ?>
+                                        <span class="badge bg-success">Earn</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-danger">Cost</span>
+                                    <?php endif; ?>
+
                                 </td>
 
                                 <!-- Amount -->
