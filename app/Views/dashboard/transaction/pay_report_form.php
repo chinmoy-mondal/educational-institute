@@ -6,17 +6,15 @@
     <!-- ================= HEADER ================= -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h3 class="fw-bold text-primary mb-1">Payment Analytics</h3>
-            <small class="text-muted">Filter and analyze financial transactions</small>
+            <h3 class="fw-bold text-primary mb-1">💰 Payment Analytics</h3>
+            <small class="text-muted">Financial overview and report analysis</small>
         </div>
     </div>
 
-    <!-- ================= FILTER CARD ================= -->
-    <div class="card shadow-sm border-0 mb-4">
+    <!-- ================= FILTER ================= -->
+    <div class="card border-0 shadow-sm mb-4">
         <div class="card-header bg-primary text-white">
-            <h6 class="mb-0">
-                <i class="fas fa-filter me-1"></i> Report Filter
-            </h6>
+            <strong>Report Filter</strong>
         </div>
 
         <div class="card-body">
@@ -25,36 +23,32 @@
 
                 <div class="row g-3">
 
-                    <!-- Start -->
                     <div class="col-md-3">
-                        <label class="form-label fw-semibold">Start Date</label>
+                        <label class="form-label">Start Date</label>
                         <input type="date" name="start_date" value="<?= $_GET['start_date'] ?? '' ?>"
-                            class="form-control shadow-sm" required>
+                            class="form-control" required>
                     </div>
 
-                    <!-- End -->
                     <div class="col-md-3">
-                        <label class="form-label fw-semibold">End Date</label>
-                        <input type="date" name="end_date" value="<?= $_GET['end_date'] ?? '' ?>"
-                            class="form-control shadow-sm" required>
+                        <label class="form-label">End Date</label>
+                        <input type="date" name="end_date" value="<?= $_GET['end_date'] ?? '' ?>" class="form-control"
+                            required>
                     </div>
 
-                    <!-- Type -->
                     <div class="col-md-3">
-                        <label class="form-label fw-semibold">Type</label>
-                        <select name="type" class="form-select shadow-sm">
+                        <label class="form-label">Type</label>
+                        <select name="type" class="form-select">
                             <option value="all">All</option>
-                            <option value="student">Student Payment</option>
-                            <option value="teacher">Teacher Payment</option>
+                            <option value="student">Student</option>
+                            <option value="teacher">Teacher</option>
                             <option value="salary">Salary</option>
                             <option value="cost">Expense</option>
                         </select>
                     </div>
 
-                    <!-- Button -->
                     <div class="col-md-3 d-flex align-items-end">
-                        <button class="btn btn-success w-100 shadow-sm">
-                            <i class="fas fa-search me-1"></i> Generate Report
+                        <button class="btn btn-success w-100">
+                            Generate Report
                         </button>
                     </div>
 
@@ -65,72 +59,73 @@
         </div>
     </div>
 
-    <!-- ================= REPORT ================= -->
+    <!-- ================= SUMMARY (LIKE YOUR DASHBOARD) ================= -->
     <?php if (!empty($report)): ?>
 
-        <!-- 🔥 SUMMARY BAR -->
+        <?php
+        $total = 0;
+        foreach ($report as $r) {
+            $total += ($r['amount'] - ($r['discount'] ?? 0));
+        }
+        ?>
+
         <div class="row g-3 mb-4">
 
-            <?php
-            $total = 0;
-            foreach ($report as $r) {
-                $total += ($r['amount'] - ($r['discount'] ?? 0));
-            }
-            ?>
-
             <div class="col-md-4">
-                <div class="card border-0 shadow-sm bg-success bg-opacity-10">
+                <div class="card border-0 shadow-sm bg-success bg-gradient text-white">
                     <div class="card-body">
-                        <small class="text-muted">Total Records</small>
-                        <h4 class="fw-bold mb-0"><?= count($report) ?></h4>
+                        <h6>Total Records</h6>
+                        <h3><?= count($report) ?></h3>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-4">
-                <div class="card border-0 shadow-sm bg-info bg-opacity-10">
+                <div class="card border-0 shadow-sm bg-info bg-gradient text-white">
                     <div class="card-body">
-                        <small class="text-muted">Total Amount</small>
-                        <h4 class="fw-bold mb-0">৳ <?= number_format($total, 2) ?></h4>
+                        <h6>Total Amount</h6>
+                        <h3>৳ <?= number_format($total, 2) ?></h3>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-4">
-                <div class="card border-0 shadow-sm bg-warning bg-opacity-10">
+                <div class="card border-0 shadow-sm bg-primary bg-gradient text-white">
                     <div class="card-body">
-                        <small class="text-muted">Report Status</small>
-                        <h4 class="fw-bold mb-0 text-success">Active</h4>
+                        <h6>Status</h6>
+                        <h3>Active</h3>
                     </div>
                 </div>
             </div>
 
         </div>
 
-        <!-- ================= TABLE CARD ================= -->
-        <div class="card shadow-sm border-0">
+        <!-- ================= TABLE ================= -->
+        <div class="card border-0 shadow-sm">
 
-            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-                <h6 class="mb-0">Transaction Report</h6>
+            <div class="card-header bg-dark text-white d-flex justify-content-between">
+                <strong>Transaction Report</strong>
 
                 <a href="<?= current_url() . '?' . http_build_query($_GET) ?>&download=1" class="btn btn-light btn-sm">
-                    <i class="fas fa-download me-1"></i> Export
+                    Export
                 </a>
             </div>
 
+            <!-- 🔥 IMPORTANT: scroll body -->
             <div class="card-body p-0">
 
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
+                <div class="table-responsive" style="max-height: 70vh; overflow-y:auto;">
 
-                        <thead class="table-dark text-center">
+                    <table class="table table-hover table-striped mb-0 align-middle">
+
+                        <thead class="table-light sticky-top bg-light">
                             <tr>
                                 <th>#</th>
                                 <th>Date</th>
                                 <th>Type</th>
                                 <th>Sender</th>
                                 <th>Receiver</th>
-                                <th>Amount</th>
+                                <th class="text-end">Amount</th>
                                 <th>Description</th>
                             </tr>
                         </thead>
@@ -139,21 +134,21 @@
 
                             <?php
                             $typeLabels = [
-                                'student' => 'Student Payment',
-                                'teacher' => 'Teacher Payment',
+                                'student' => 'Student',
+                                'teacher' => 'Teacher',
                                 'salary'  => 'Salary',
                                 'cost'    => 'Expense'
                             ];
                             ?>
 
-                            <?php foreach ($report as $key => $row): ?>
+                            <?php foreach ($report as $i => $row): ?>
                                 <tr>
-                                    <td class="text-center"><?= $key + 1 ?></td>
+                                    <td><?= $i + 1 ?></td>
 
                                     <td><?= date('d M Y', strtotime($row['created_at'])) ?></td>
 
                                     <td>
-                                        <span class="badge bg-primary">
+                                        <span class="badge bg-secondary">
                                             <?= $typeLabels[$row['activity']] ?? ucfirst($row['activity']) ?>
                                         </span>
                                     </td>
@@ -161,7 +156,7 @@
                                     <td><?= $row['sender_name'] ?? '-' ?></td>
                                     <td><?= $row['receiver_name'] ?? '-' ?></td>
 
-                                    <td class="fw-bold text-success">
+                                    <td class="text-end fw-bold text-success">
                                         ৳ <?= number_format(($row['amount'] - ($row['discount'] ?? 0)), 2) ?>
                                     </td>
 
@@ -182,15 +177,17 @@
                         </tfoot>
 
                     </table>
+
                 </div>
 
             </div>
+
         </div>
 
     <?php elseif (isset($_GET['start_date'])): ?>
 
-        <div class="alert alert-warning shadow-sm">
-            No transactions found for selected filters.
+        <div class="alert alert-warning mt-4">
+            No transactions found.
         </div>
 
     <?php endif; ?>
