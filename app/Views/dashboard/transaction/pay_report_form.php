@@ -170,10 +170,9 @@
                                 <td><?= $row['receiver_name'] ?? '-' ?></td>
 
                                 <!-- Type -->
-                                <td>
-                                    <span class="badge bg-info text-dark">
-                                        <?= $typeLabels[$row['activity']] ?? ucfirst($row['activity']) ?>
-                                    </span>
+                                <td
+                                    class="fw-bold text-center <?= ($row['status'] ?? 0) == 0 ? 'text-success' : 'text-danger' ?>">
+                                    <?= number_format($row['amount'] ?? 0, 2) ?>
                                 </td>
 
                                 <!-- Amount -->
