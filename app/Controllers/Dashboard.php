@@ -3631,6 +3631,7 @@ class Dashboard extends Controller
         $teacher_name       = $this->request->getGet('teacher_name');
 
         echo "Type = " . $type;
+        echo "teacher = " . $teacher_name;
 
 
 
