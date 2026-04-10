@@ -3629,7 +3629,6 @@ class Dashboard extends Controller
         $end_date   = $this->request->getGet('end_date');
         $type       = $this->request->getGet('type');
 
-        echo $start_date . "==" . $end_date . "==" . $type;
 
         $this->data['report'] = [];
 
@@ -3643,7 +3642,7 @@ class Dashboard extends Controller
 
             $builder = $model->where('created_at >=', $start)
                 ->where('created_at <=', $end);
-
+            echo "type =" . $type;
             // ✅ Filter by type using "activity"
             // if ($type && $type != 'all') {
             //     $builder->where('activity', $type);
