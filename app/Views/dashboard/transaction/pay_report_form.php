@@ -138,17 +138,15 @@
 
                     <tbody>
                         <?php $total = 0; ?>
-
-                        <?php
-                        $typeLabels = [
-                            'student' => 'Student Payment',
-                            'teacher' => 'Teacher Payment',
-                            'salary'  => 'Salary',
-                            'cost'    => 'Expense'
-                        ];
-                        ?>
+                        <?php $seenDiscount = []; ?>
 
                         <?php foreach ($report as $key => $row): ?>
+
+                            <?php
+                            $tid = $row['transaction_id'] ?? '-';
+                            $discount = floatval($row['discount'] ?? 0);
+                            ?>
+
                             <tr>
 
                                 <!-- Row number -->
@@ -157,8 +155,13 @@
                                 <!-- Date -->
                                 <td><?= date('d M Y', strtotime($row['created_at'])) ?></td>
 
-                                <!-- Transaction ID -->
-                                <td><?= $row['transaction_id'] ?? '-' ?></td>
+                                <!-- Transaction ID (CLICKABLE LINK) -->
+                                <td>
+                                    <a href="<?= site_url('admin/receipt/' . esc($tid)) ?>" target="_blank"
+                                        class="text-primary fw-bold text-decoration-underline">
+                                        <?= esc($tid) ?>
+                                    </a>
+                                </td>
 
                                 <!-- Sender -->
                                 <td><?= $row['sender_name'] ?? '-' ?></td>
@@ -178,9 +181,23 @@
                                     <?= number_format($row['amount'] ?? 0, 2) ?>
                                 </td>
 
-                                <!-- Discount -->
+                                <!-- Discount (SHOW ONLY ONCE PER TRANSACTION ID) -->
                                 <td class="fw-bold text-warning">
-                                    <?= number_format($row['discount'] ?? 0, 2) ?>
+
+                                    <?php if ($discount > 0): ?>
+
+                                        <?php if (isset($seenDiscount[$tid])): ?>
+                                            <!-- duplicate → hide -->
+                                            <span class="text-muted">—</span>
+                                        <?php else: ?>
+                                            <?= number_format($discount, 2) ?>
+                                            <?php $seenDiscount[$tid] = true; ?>
+                                        <?php endif; ?>
+
+                                    <?php else: ?>
+                                        —
+                                    <?php endif; ?>
+
                                 </td>
 
                                 <!-- Month -->
@@ -198,6 +215,7 @@
                             <?php
                             $total += ($row['amount'] - ($row['discount'] ?? 0));
                             ?>
+
                         <?php endforeach; ?>
                     </tbody>
 
