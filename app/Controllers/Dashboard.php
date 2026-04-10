@@ -3633,6 +3633,7 @@ class Dashboard extends Controller
         $this->data['teacherList'] = $this->transactionModel
             ->select('receiver_name')
             ->where('activity', 'teacher')
+            ->where('status', 0)
             ->where('receiver_name !=', null)
             ->distinct()
             ->findAll();
