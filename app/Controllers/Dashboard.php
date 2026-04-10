@@ -3642,7 +3642,7 @@ class Dashboard extends Controller
 
             $builder = $model->where('created_at >=', $start)
                 ->where('created_at <=', $end);
-            echo "type =" . $type;
+            // echo "type =" . $type;
             // ✅ Filter by type using "activity"
             // if ($type && $type != 'all') {
             //     $builder->where('activity', $type);
