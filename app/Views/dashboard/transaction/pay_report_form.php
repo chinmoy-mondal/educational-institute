@@ -19,7 +19,7 @@
                 <div class="row g-3">
 
                     <!-- Start Date -->
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label class="form-label fw-semibold">Start Date</label>
                         <div class="input-group">
                             <span class="input-group-text">
@@ -31,7 +31,7 @@
                     </div>
 
                     <!-- End Date -->
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label class="form-label fw-semibold">End Date</label>
                         <div class="input-group">
                             <span class="input-group-text">
@@ -43,23 +43,39 @@
                     </div>
 
                     <!-- Transaction Type -->
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label class="form-label fw-semibold">Transaction Type</label>
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="fas fa-exchange-alt"></i>
                             </span>
-                            <select name="type" class="form-control">
+                            <select name="type" class="form-control" id="transactionType">
                                 <option value="all">All Transactions</option>
                                 <option value="student" <?= (($_GET['type'] ?? '') == 'student') ? 'selected' : '' ?>>
-                                    Student Payment</option>
+                                    Student Payment
+                                </option>
                                 <option value="teacher" <?= (($_GET['type'] ?? '') == 'teacher') ? 'selected' : '' ?>>
-                                    Teacher Payment</option>
+                                    Teacher Payment
+                                </option>
                                 <option value="salary" <?= (($_GET['type'] ?? '') == 'salary') ? 'selected' : '' ?>>
-                                    Salary</option>
-                                <option value="cost" <?= (($_GET['type'] ?? '') == 'cost') ? 'selected' : '' ?>>Cost /
-                                    Expense</option>
+                                    Salary
+                                </option>
+                                <option value="cost" <?= (($_GET['type'] ?? '') == 'cost') ? 'selected' : '' ?>>
+                                    Cost / Expense
+                                </option>
                             </select>
+                        </div>
+                    </div>
+
+                    <!-- Teacher Name (Conditional Field) -->
+                    <div class="col-md-3 d-none" id="teacherField">
+                        <label class="form-label fw-semibold">Teacher Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-user-tie"></i>
+                            </span>
+                            <input type="text" name="teacher_name" value="<?= $_GET['teacher_name'] ?? '' ?>"
+                                class="form-control" placeholder="Enter teacher name">
                         </div>
                     </div>
 
@@ -83,7 +99,6 @@
             <div class="card-header bg-success text-white d-flex justify-content-between">
                 <h5 class="mb-0">📊 Report Result</h5>
 
-                <!-- Download -->
                 <a href="<?= current_url() . '?' . http_build_query($_GET) ?>&download=1" class="btn btn-light btn-sm">
                     📥 Download
                 </a>
@@ -120,28 +135,22 @@
                             <tr>
                                 <td><?= $key + 1 ?></td>
 
-                                <!-- ✅ FIXED DATE -->
                                 <td><?= date('d M Y', strtotime($row['created_at'])) ?></td>
 
-                                <!-- ✅ FIXED TYPE -->
                                 <td><?= $typeLabels[$row['activity']] ?? ucfirst($row['activity']) ?></td>
 
-                                <!-- EXTRA INFO -->
                                 <td><?= $row['sender_name'] ?? '-' ?></td>
                                 <td><?= $row['receiver_name'] ?? '-' ?></td>
 
-                                <!-- ✅ AMOUNT WITH DISCOUNT -->
                                 <td>
                                     <?= number_format(($row['amount'] - ($row['discount'] ?? 0)), 2) ?>
                                 </td>
 
-                                <!-- ✅ DESCRIPTION -->
                                 <td><?= $row['description'] ?? '-' ?></td>
                             </tr>
 
                             <?php $total += ($row['amount'] - ($row['discount'] ?? 0)); ?>
                         <?php endforeach; ?>
-
                     </tbody>
 
                     <tfoot>
@@ -165,5 +174,28 @@
     <?php endif; ?>
 
 </div>
+
+<!-- ================= JS ================= -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const typeSelect = document.getElementById("transactionType");
+        const teacherField = document.getElementById("teacherField");
+
+        function toggleTeacherField() {
+            if (typeSelect.value === "teacher") {
+                teacherField.classList.remove("d-none");
+            } else {
+                teacherField.classList.add("d-none");
+            }
+        }
+
+        // initial load
+        toggleTeacherField();
+
+        // on change
+        typeSelect.addEventListener("change", toggleTeacherField);
+    });
+</script>
 
 <?= $this->endSection() ?>
