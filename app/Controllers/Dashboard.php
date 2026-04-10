@@ -3630,6 +3630,14 @@ class Dashboard extends Controller
         $type       = $this->request->getGet('type');
 
 
+        $this->data['teacherList'] = $this->transactionModel
+            ->select('receiver_name')
+            ->where('activity', 'teacher')
+            ->where('receiver_name !=', null)
+            ->distinct()
+            ->findAll();
+
+
         $this->data['report'] = [];
 
         if ($start_date && $end_date) {

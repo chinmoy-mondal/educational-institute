@@ -70,12 +70,25 @@
                     <!-- Teacher Name (Conditional Field) -->
                     <div class="col-md-3 d-none" id="teacherField">
                         <label class="form-label fw-semibold">Teacher Name</label>
+
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="fas fa-user-tie"></i>
                             </span>
-                            <input type="text" name="teacher_name" value="<?= $_GET['teacher_name'] ?? '' ?>"
-                                class="form-control" placeholder="Enter teacher name">
+
+                            <select name="teacher_name" class="form-control">
+                                <option value="">All Teachers</option>
+
+                                <?php if (!empty($teacherList)): ?>
+                                    <?php foreach ($teacherList as $t): ?>
+                                        <option value="<?= esc($t['receiver_name']) ?>"
+                                            <?= (($_GET['teacher_name'] ?? '') == $t['receiver_name']) ? 'selected' : '' ?>>
+                                            <?= esc($t['receiver_name']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+
                         </div>
                     </div>
 
