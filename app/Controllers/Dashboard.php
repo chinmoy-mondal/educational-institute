@@ -3630,10 +3630,6 @@ class Dashboard extends Controller
         $type       = $this->request->getGet('type');
         $teacher_name       = $this->request->getGet('teacher_name');
 
-        echo "Type = " . $type;
-        echo "teacher = " . $teacher_name;
-
-
 
         $this->data['teacherList'] = $this->transactionModel
             ->select('receiver_name')
