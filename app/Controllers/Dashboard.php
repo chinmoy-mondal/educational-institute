@@ -3652,11 +3652,12 @@ class Dashboard extends Controller
 
             $builder = $model->where('created_at >=', $start)
                 ->where('created_at <=', $end);
-            // echo "type =" . $type;
+
             // ✅ Filter by type using "activity"
-            // if ($type && $type != 'all') {
-            //     $builder->where('activity', $type);
-            // }
+            if ($type && $type != 'all_transaction') {
+                $builder->where('activity', $type);
+            }
+
 
             $this->data['report'] = $builder
                 ->orderBy('created_at', 'DESC')
