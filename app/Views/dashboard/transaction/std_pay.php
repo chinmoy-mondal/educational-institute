@@ -110,7 +110,7 @@
                                 <td class="text-end">৳ <?= number_format($total_per_month, 2) ?></td>
                                 <td class="text-end">৳ <?= number_format($paid, 2) ?></td>
                                 <td class="text-end">৳ <?= number_format($due, 2) ?></td>
-                                <td class="text-end">
+                                <td class="text-start">
                                     <?php if ($due > 0): ?>
                                         <a href="<?= base_url('admin/pay_student_request/' . $s['id']) ?>"
                                             class="btn btn-sm btn-primary mb-1">
