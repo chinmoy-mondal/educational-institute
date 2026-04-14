@@ -110,24 +110,19 @@
                                 <td class="text-end">৳ <?= number_format($total_per_month, 2) ?></td>
                                 <td class="text-end">৳ <?= number_format($paid, 2) ?></td>
                                 <td class="text-end">৳ <?= number_format($due, 2) ?></td>
-                                <td class="text-center">
-
-                                    <!-- History First -->
-                                    <a href="<?= base_url('admin/studentPaymentHistory/' . esc($s['id'])) ?>"
-                                        class="btn btn-sm btn-info mb-1">
-                                        <i class="fas fa-history"></i> History
-                                    </a>
-
-                                    <!-- Then Pay / Paid -->
+                                <td class="text-end">
                                     <?php if ($due > 0): ?>
                                         <a href="<?= base_url('admin/pay_student_request/' . $s['id']) ?>"
-                                            class="btn btn-sm btn-primary">
+                                            class="btn btn-sm btn-primary mb-1">
                                             <i class="fas fa-money-bill-wave"></i> Pay
                                         </a>
                                     <?php else: ?>
-                                        <span class="badge bg-success">Paid</span>
+                                        <span class="badge bg-success mb-1">Paid</span>
                                     <?php endif; ?>
-
+                                    <a href="<?= base_url('admin/studentPaymentHistory/' . esc($s['id'])) ?>"
+                                        class="btn btn-sm btn-info">
+                                        <i class="fas fa-history"></i> History
+                                    </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
