@@ -104,7 +104,7 @@ body {
             style="background-image: url('<?= base_url("public/assets/img/bg-back.png") ?>');">
             <!-- QR Code -->
             <div class="text-center mb-3">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=<?= urlencode('https://mulss.edu.bd/user-id?q=' . $user['id']) ?>"
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=<?= urlencode('https://dsmfss.edu.bd/user-id?q=' . $user['id']) ?>"
                     class="qr-img" alt="user QR" />
             </div>
 
