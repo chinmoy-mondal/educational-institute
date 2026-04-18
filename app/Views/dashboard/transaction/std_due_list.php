@@ -26,10 +26,11 @@
                 <div class="col-md-3">
                     <label class="form-label">Select Section</label>
                     <select name="section" class="form-control">
-                        <option value="all" <?= ($selectedSection == 'all') ? 'selected' : '' ?>>All</option>
-                        <option value="আবাসিক" <?= ($selectedSection == 'আবাসিক') ? 'selected' : '' ?>>আবাসিক</option>
-                        <option value="অনাবাসিক" <?= ($selectedSection == 'অনাবাসিক') ? 'selected' : '' ?>>অনাবাসিক
+                        <?php foreach ($sections as $value => $label): ?>
+                        <option value="<?= $value ?>" <?= ($selectedSection == $value) ? 'selected' : '' ?>>
+                            <?= $label ?>
                         </option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
 
