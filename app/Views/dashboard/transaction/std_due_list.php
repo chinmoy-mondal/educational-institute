@@ -94,7 +94,7 @@
                             $discount = $paymentSummary[$sid]['discount'] ?? 0;
                             $get = $paid - $discount;
                             $netDue = $totalFee - $paid;
-
+                            echo $netDue;
                             if ($dueType == 'due' && $netDue <= 0) {
                                 continue;
                             }
