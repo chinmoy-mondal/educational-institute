@@ -2882,8 +2882,9 @@ class Dashboard extends Controller
 
 
 
-        $this->data['not_accommodation'] = $sectionTotals['অনাবাসিক'];
-        $this->data['accommodation']     = $sectionTotals['আবাসিক'];
+        // $this->data['not_accommodation'] = $sectionTotals['অনাবাসিক'];
+        // $this->data['accommodation']     = $sectionTotals['আবাসিক'];
+        $this->data['sectionTotals'] = $sectionTotals;
 
 
         $this->data['sections'] = array_column($sections, 'section');
