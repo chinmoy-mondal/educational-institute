@@ -3422,17 +3422,16 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        // ===== Get Filters =====
+        // ===== Filters =====
         $selectedMonth   = (int) ($this->request->getGet('month') ?? date('n'));
         $selectedSection = $this->request->getGet('section') ?? 'all';
         $dueType         = $this->request->getGet('due_type') ?? 'due';
 
-
-
         $this->data['selectedMonth']   = $selectedMonth;
         $this->data['selectedSection'] = $selectedSection;
+        $this->data['dueType']         = $dueType;
 
-        // ===== Calculate Cumulative Fees up to Selected Month =====
+        // ===== Fees Calculation =====
         $fees = $this->feesAmountModel->findAll();
         $cumulativeFees = [];
 
@@ -3451,43 +3450,41 @@ class Dashboard extends Controller
                 }
             }
         }
+
         $this->data['monthFees'] = $cumulativeFees;
 
-        // ===== Get Active Students =====
+        // ===== Students =====
         $students = $this->studentModel
             ->where('permission', '0')
             ->orderBy('student_name', 'ASC')
             ->findAll();
 
-        if ($selectedSection != 'all') {
-            $students = array_filter($students, fn($std) => trim($std['section']) == $selectedSection);
-        }
-        $this->data['students'] = $students;
-
-        // ===== Payment Summary (cumulative) =====
+        // ===== Payments =====
         $paymentSummary = [];
-        $usedTransactionIds = []; // track discount counted per transaction
+        $usedTransactionIds = [];
 
-        $studentsPayments = $this->transactionModel
+        $payments = $this->transactionModel
             ->select('transaction_id, sender_id, amount, discount, month')
             ->where('month <=', $selectedMonth)
-            ->orderBy('id', 'ASC') // ensures first discount is used
+            ->orderBy('id', 'ASC')
             ->findAll();
 
-        foreach ($studentsPayments as $p) {
+        foreach ($payments as $p) {
             $sid = $p['sender_id'];
             $tid = $p['transaction_id'];
 
-            // Paid = sum of amounts up to selected month
-            $paymentSummary[$sid]['paid'] = ($paymentSummary[$sid]['paid'] ?? 0) + $p['amount'];
+            $paymentSummary[$sid]['paid'] =
+                ($paymentSummary[$sid]['paid'] ?? 0) + $p['amount'];
 
-            // Discount = sum of first discount per transaction
             if (!in_array($tid, $usedTransactionIds)) {
-                $paymentSummary[$sid]['discount'] = ($paymentSummary[$sid]['discount'] ?? 0) + ($p['discount'] ?? 0);
-                $usedTransactionIds[] = $tid; // mark this transaction as counted
+                $paymentSummary[$sid]['discount'] =
+                    ($paymentSummary[$sid]['discount'] ?? 0) + ($p['discount'] ?? 0);
+
+                $usedTransactionIds[] = $tid;
             }
         }
 
+        // ===== Sections =====
         $sectionRows = $this->studentModel
             ->select('section')
             ->distinct()
@@ -3495,9 +3492,41 @@ class Dashboard extends Controller
             ->findAll();
 
         $this->data['sectionRows'] = $sectionRows;
-
-        $this->data['dueType']         = $dueType;
         $this->data['paymentSummary'] = $paymentSummary;
+
+        // ===== FINAL STUDENT LIST (FIXED LOGIC) =====
+        $finalStudents = [];
+
+        foreach ($students as $std) {
+
+            $sid = $std['id'];
+            $sec = trim($std['section']);
+
+            $totalFee = $cumulativeFees[$sec] ?? 0;
+            $paid     = $paymentSummary[$sid]['paid'] ?? 0;
+            $discount = $paymentSummary[$sid]['discount'] ?? 0;
+
+            $netDue = $totalFee - $paid;
+
+            $std['totalFee'] = $totalFee;
+            $std['paid']     = $paid;
+            $std['discount'] = $discount;
+            $std['netDue']   = $netDue;
+
+            if ($selectedSection != 'all' && $sec != $selectedSection) {
+                continue;
+            }
+
+            if ($dueType == 'due') {
+                if ($netDue > 0) {
+                    $finalStudents[] = $std;
+                }
+            } else {
+                $finalStudents[] = $std;
+            }
+        }
+
+        $this->data['students'] = $finalStudents;
 
         return view('dashboard/transaction/std_due_list', $this->data);
     }
