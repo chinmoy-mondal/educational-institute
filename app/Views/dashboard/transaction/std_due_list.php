@@ -57,17 +57,15 @@
 
     <!-- ================= DUE TABLE ================= -->
     <div class="card shadow-sm">
-
+        <!-- Download Button -->
         <div class="card-header d-flex justify-content-end">
-            <a href="<?= base_url('admin/std_due_csv?month=' . $selectedMonth . '&section=' . $selectedSection . '&due_type=' . $dueType) ?>"
+            <a href="<?= base_url('admin/std_due_csv?month=' . $selectedMonth . '&section=' . $selectedSection . '&due_type=' . ($dueType ?? 'due')) ?>"
                 class="btn btn-success">
                 ⬇ Download CSV
             </a>
         </div>
-
         <div class="card-body table-responsive">
             <table class="table table-bordered table-hover">
-
                 <thead class="table-dark text-center">
                     <tr>
                         <th>#</th>
@@ -87,20 +85,20 @@
 
                 <tbody>
                     <?php if (!empty($students)): $i = 1; ?>
-                    <?php foreach ($students as $std): ?>
-
-                    <?php
+                    <?php foreach ($students as $std):
                             $sid = $std['id'];
                             $sec = trim($std['section']);
 
-                            $totalFee = $std['totalFee'];
-                            $paid = $std['paid'];
-                            $discount = $std['discount'];
-
+                            $totalFee = $monthFees[$sec] ?? 0;
+                            $paid = $paymentSummary[$sid]['paid'] ?? 0;
+                            $discount = $paymentSummary[$sid]['discount'] ?? 0;
                             $get = $paid - $discount;
-                            $netDue = $std['netDue'];
-                            ?>
+                            $netDue = $totalFee - $paid;
 
+                            if ($dueType == 'due' && $netDue <= 0) {
+                                continue;
+                            }
+                        ?>
                     <tr class="text-center">
                         <td><?= $i++ ?></td>
                         <td><?= esc($sid) ?></td>
@@ -112,16 +110,12 @@
                         </td>
                         <td><?= esc($std['roll']) ?></td>
                         <td><?= esc($sec) ?></td>
-
                         <td class="text-danger fw-bold">৳ <?= number_format($totalFee, 2) ?></td>
                         <td class="text-muted fw-bold">৳ <?= number_format($paid, 2) ?></td>
                         <td class="text-warning fw-bold">৳ <?= number_format($discount, 2) ?></td>
                         <td class="text-success fw-bold">৳ <?= number_format($get, 2) ?></td>
-
-                        <td class="<?= $netDue > 0 ? 'text-danger' : 'text-success' ?> fw-bold">
-                            ৳ <?= number_format($netDue, 2) ?>
-                        </td>
-
+                        <td class="<?= $netDue > 0 ? 'text-danger' : 'text-success' ?> fw-bold">৳
+                            <?= number_format($netDue, 2) ?></td>
                         <td>
                             <a href="<?= base_url('admin/studentPaymentHistory/' . esc($sid)) ?>"
                                 class="btn btn-sm btn-info" target="_blank">
@@ -129,18 +123,15 @@
                             </a>
                         </td>
                     </tr>
-
                     <?php endforeach; ?>
                     <?php else: ?>
                     <tr>
-                        <td colspan="12" class="text-center text-danger">No students found</td>
+                        <td colspan="9" class="text-center text-danger">No students found</td>
                     </tr>
                     <?php endif; ?>
                 </tbody>
-
             </table>
         </div>
-
     </div>
 
 </div>
