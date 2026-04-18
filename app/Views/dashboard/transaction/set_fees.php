@@ -11,12 +11,13 @@
             <div class="col-md-4">
                 <select name="section" class="form-select" onchange="this.form.submit()">
                     <option value="">শাখা নির্বাচন করুন</option>
-                    <option value="আবাসিক" <?= ($selectedSection == 'আবাসিক') ? 'selected' : '' ?>>
-                        আবাসিক
+
+                    <?php foreach ($sectionRows as $row): ?>
+                    <option value="<?= esc($row['section']) ?>"
+                        <?= ($selectedSection == $row['section']) ? 'selected' : '' ?>>
+                        <?= esc($row['section']) ?>
                     </option>
-                    <option value="অনাবাসিক" <?= ($selectedSection == 'অনাবাসিক') ? 'selected' : '' ?>>
-                        অনাবাসিক
-                    </option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 

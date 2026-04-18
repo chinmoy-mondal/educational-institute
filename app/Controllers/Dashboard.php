@@ -3464,6 +3464,17 @@ class Dashboard extends Controller
         }
         $this->data['students'] = $students;
 
+        // ===== Sections for Filter Dropdown =====
+        $sectionRows = $this->studentModel
+            ->select('TRIM(section) as section')
+            ->where('section !=', null)
+            ->where('section !=', '')
+            ->groupBy('section')
+            ->orderBy('section', 'ASC')
+            ->findAll();
+
+        $this->data['sectionRows'] = $sectionRows;
+
         // ===== Payment Summary (cumulative) =====
         $paymentSummary = [];
         $usedTransactionIds = []; // track discount counted per transaction
