@@ -3432,7 +3432,6 @@ class Dashboard extends Controller
         $this->data['selectedMonth']   = $selectedMonth;
         $this->data['selectedSection'] = $selectedSection;
 
-
         // ===== Calculate Cumulative Fees up to Selected Month =====
         $fees = $this->feesAmountModel->findAll();
         $cumulativeFees = [];
@@ -3497,10 +3496,6 @@ class Dashboard extends Controller
 
         $this->data['sectionRows'] = $sectionRows;
 
-
-        echo "<pre>";
-        print_r($dueType);
-        echo "</pre>";
         $this->data['dueType']         = $dueType;
         $this->data['paymentSummary'] = $paymentSummary;
 
