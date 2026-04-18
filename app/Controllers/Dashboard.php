@@ -3432,23 +3432,6 @@ class Dashboard extends Controller
         $this->data['selectedMonth']   = $selectedMonth;
         $this->data['selectedSection'] = $selectedSection;
 
-        // // ===== Get Sections Dynamically =====
-        // $sectionRows = $this->studentModel
-        //     ->select('section')
-        //     ->distinct()
-        //     ->orderBy('section', 'ASC')
-        //     ->findAll();
-
-        // $sections = ['all' => 'All'];
-
-        // foreach ($sectionRows as $row) {
-        //     $sec = trim($row['section']);
-        //     if (!empty($sec)) {
-        //         $sections[$sec] = $sec;
-        //     }
-        // }
-
-        // $this->data['sections'] = $sections;
 
         // ===== Calculate Cumulative Fees up to Selected Month =====
         $fees = $this->feesAmountModel->findAll();
