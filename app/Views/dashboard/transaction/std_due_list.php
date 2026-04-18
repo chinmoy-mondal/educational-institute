@@ -23,7 +23,15 @@
                     </select>
                 </div>
 
-
+                <div class="col-md-3">
+                    <label class="form-label">Select Section</label>
+                    <select name="section" class="form-control">
+                        <option value="all" <?= ($selectedSection == 'all') ? 'selected' : '' ?>>All</option>
+                        <option value="আবাসিক" <?= ($selectedSection == 'আবাসিক') ? 'selected' : '' ?>>আবাসিক</option>
+                        <option value="অনাবাসিক" <?= ($selectedSection == 'অনাবাসিক') ? 'selected' : '' ?>>অনাবাসিক
+                        </option>
+                    </select>
+                </div>
 
                 <div class="col-md-3">
                     <label class="form-label">Show Type</label>

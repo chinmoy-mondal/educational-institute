@@ -3489,6 +3489,17 @@ class Dashboard extends Controller
             }
         }
 
+        $sectionRows = $this->studentModel
+            ->select('section')
+            ->distinct()
+            ->orderBy('section', 'ASC')
+            ->findAll();
+
+        echo "<pre>";
+        print_r($sectionRows);
+        echo "</pre>";
+
+
         $this->data['dueType']         = $dueType;
         $this->data['paymentSummary'] = $paymentSummary;
 
