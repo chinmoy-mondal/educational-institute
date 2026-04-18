@@ -27,9 +27,15 @@
                     <label class="form-label">Select Section</label>
                     <select name="section" class="form-control">
                         <option value="all" <?= ($selectedSection == 'all') ? 'selected' : '' ?>>All</option>
-                        <option value="আবাসিক" <?= ($selectedSection == 'আবাসিক') ? 'selected' : '' ?>>আবাসিক</option>
-                        <option value="অনাবাসিক" <?= ($selectedSection == 'অনাবাসিক') ? 'selected' : '' ?>>অনাবাসিক
+
+                        <?php foreach ($sectionRows as $row): ?>
+                        <?php $sec = trim($row['section']); ?>
+                        <?php if (!empty($sec)): ?>
+                        <option value="<?= $sec ?>" <?= ($selectedSection == $sec) ? 'selected' : '' ?>>
+                            <?= $sec ?>
                         </option>
+                        <?php endif; ?>
+                        <?php endforeach; ?>
                     </select>
                 </div>
 
