@@ -50,11 +50,22 @@
 
                     <div class="row mt-3">
                         <div class="col-md-6">
-                            <label>Section</label>
                             <select name="section" class="form-control">
-                                <option value="আবাসিক" <?= old('section') == 'আবাসিক' ? 'selected' : '' ?>>আবাসিক
+                                <option value="Residential" <?= old('section') == 'Residential' ? 'selected' : '' ?>>
+                                    Residential
                                 </option>
-                                <option value="অনাবাসিক" <?= old('section') == 'অনাবাসিক' ? 'selected' : '' ?>>অনাবাসিক
+
+                                <option value="Non Residential"
+                                    <?= old('section') == 'Non Residential' ? 'selected' : '' ?>>
+                                    Non Residential
+                                </option>
+
+                                <option value="Night Care" <?= old('section') == 'Night Care' ? 'selected' : '' ?>>
+                                    Night Care
+                                </option>
+
+                                <option value="Exam Batch" <?= old('section') == 'Exam Batch' ? 'selected' : '' ?>>
+                                    Exam Batch
                                 </option>
                             </select>
                         </div>
@@ -135,9 +146,9 @@
                             <select name="blood_group" class="form-control">
                                 <option value="">Select Blood Group</option>
                                 <?php
-                $bloods = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-                foreach ($bloods as $bg):
-                ?>
+                                $bloods = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+                                foreach ($bloods as $bg):
+                                ?>
                                 <option value="<?= $bg ?>" <?= old('blood_group') === $bg ? 'selected' : '' ?>>
                                     <?= $bg ?></option>
                                 <?php endforeach; ?>
