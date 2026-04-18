@@ -23,16 +23,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-3">
-                    <label class="form-label">Select Section</label>
-                    <select name="section" class="form-control">
-                        <!-- <?php foreach ($sections as $value => $label): ?>
-                        <option value="<?= $value ?>" <?= ($selectedSection == $value) ? 'selected' : '' ?>>
-                            <?= $label ?>
-                        </option>
-                        <?php endforeach; ?> -->
-                    </select>
-                </div>
+
 
                 <div class="col-md-3">
                     <label class="form-label">Show Type</label>
