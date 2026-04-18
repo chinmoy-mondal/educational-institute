@@ -3499,14 +3499,6 @@ class Dashboard extends Controller
             }
         }
 
-        $sectionRows = $this->studentModel
-            ->select('section')
-            ->distinct()
-            ->orderBy('section', 'ASC')
-            ->findAll();
-
-        $this->data['sectionRows'] = $sectionRows;
-
         $this->data['dueType']         = $dueType;
         $this->data['paymentSummary'] = $paymentSummary;
 
@@ -3953,6 +3945,14 @@ class Dashboard extends Controller
                 }
             }
         }
+
+        $sectionRows = $this->studentModel
+            ->select('section')
+            ->distinct()
+            ->orderBy('section', 'ASC')
+            ->findAll();
+
+        $this->data['sectionRows'] = $sectionRows;
 
         $this->data['existingAmounts'] = $existingAmounts;
         $this->data['existingUnits']   = $existingUnits;
