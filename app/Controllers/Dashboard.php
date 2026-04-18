@@ -3498,6 +3498,9 @@ class Dashboard extends Controller
         $this->data['sectionRows'] = $sectionRows;
 
 
+        echo "<pre>";
+        print_r($dueType);
+        echo "</pre>";
         $this->data['dueType']         = $dueType;
         $this->data['paymentSummary'] = $paymentSummary;
 
