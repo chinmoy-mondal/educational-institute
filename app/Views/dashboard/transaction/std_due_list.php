@@ -94,10 +94,11 @@
                             $discount = $paymentSummary[$sid]['discount'] ?? 0;
                             $get = $paid - $discount;
                             $netDue = $totalFee - $paid;
+                            echo $sid . " = " . $paid . " = " . $paid . " = " . $discount . " = " . $get . " = " . $netDue . "<br>";
 
-                            if ($dueType == 'due' && $netDue <= 0) {
-                                continue;
-                            }
+                            // if ($dueType == 'due' && $netDue <= 0) {
+                            //     continue;
+                            // }
                         ?>
                     <tr class="text-center">
                         <td><?= $i++ ?></td>

@@ -3499,11 +3499,11 @@ class Dashboard extends Controller
         $this->data['dueType']         = $dueType;
         $this->data['paymentSummary'] = $paymentSummary;
 
-        echo "<pre>";
-        print_r($paymentSummary);
-        echo "</pre>";
+        // echo "<pre>";
+        // print_r($paymentSummary);
+        // echo "</pre>";
 
-        // return view('dashboard/transaction/std_due_list', $this->data);
+        return view('dashboard/transaction/std_due_list', $this->data);
     }
 
     public function std_due_csv()
