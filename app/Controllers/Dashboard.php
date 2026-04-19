@@ -4074,6 +4074,16 @@ class Dashboard extends Controller
         $totalPaid = array_sum(array_column($payments, 'amount'));
         $totalDiscount = array_sum(array_column($payments, 'discount'));
 
+        // Logged-in user account_status
+        $user_id = $this->session->get('user_id') ?? 0;
+        $account_status = 0;
+        if ($user_id > 0) {
+            $user = $this->userModel->select('account_status')->find($user_id);
+            if ($user) {
+                $account_status = $user['account_status'];
+            }
+        }
+        echo "account status = " . $account_status;
 
         // 📦 Send to view
         $this->data['student']          = $student;
@@ -4083,8 +4093,10 @@ class Dashboard extends Controller
         $this->data['receiver']         = $receiver;
         $this->data['pay_history']      = $payments;
         $this->data['student_discount'] = $student_discount['amount'] ?? 0;
-        $this->data['totalPaid'] = $totalPaid;
-        $this->data['totalDiscount'] = $totalDiscount;
+        $this->data['totalPaid']        = $totalPaid;
+        $this->data['totalDiscount']    = $totalDiscount;
+        $this->data['account_status']   = $account_status;
+
 
         return view('dashboard/transaction/payStudentRequest', $this->data);
     }
