@@ -9,17 +9,17 @@
 
     <!-- ✅ Flash Messages -->
     <?php if (session()->getFlashdata('success')): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <?= session()->getFlashdata('success') ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <?= session()->getFlashdata('success') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     <?php endif; ?>
 
     <?php if (session()->getFlashdata('error')): ?>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <?= session()->getFlashdata('error') ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <?= session()->getFlashdata('error') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     <?php endif; ?>
 
     <!-- Search Card -->
@@ -43,15 +43,15 @@
                 <div class="col-md-3">
                     <select name="section" class="form-control">
 
-                        <!-- Default Option -->
-                        <option value="" <?= ($selectedSection == '') ? 'selected' : '' ?>>
+                        <!-- Default option -->
+                        <option value="" <?= old('section') == '' ? 'selected' : '' ?>>
                             Select Section
                         </option>
 
                         <?php foreach ($sections as $s): ?>
-                            <option value="<?= esc($s) ?>" <?= ($selectedSection == $s) ? 'selected' : '' ?>>
-                                <?= esc($s) ?>
-                            </option>
+                        <option value="<?= esc($s) ?>" <?= old('section') == $s ? 'selected' : '' ?>>
+                            <?= esc($s) ?>
+                        </option>
                         <?php endforeach; ?>
 
                     </select>
@@ -94,9 +94,9 @@
                 </thead>
                 <tbody>
                     <?php if (!empty($students)): ?>
-                        <?php $i = 1; ?>
-                        <?php foreach ($students as $s): ?>
-                            <?php
+                    <?php $i = 1; ?>
+                    <?php foreach ($students as $s): ?>
+                    <?php
                             $sectionName = trim($s['section']);
                             $total = $sectionFees[$sectionName] ?? 0;  // Total fees per section
 
@@ -105,40 +105,40 @@
                             $paid  = $senderDeposits[$s['id']] ?? 0;   // Amount paid by student
                             $due   = $total_per_month - $paid;                   // Remaining due
                             ?>
-                            <tr>
-                                <td><?= $i++ ?></td>
-                                <td><?= esc($s['roll']) ?></td>
-                                <td><?= esc($s['id']) ?></td>
-                                <td><?= esc($s['student_name']) ?></td>
-                                <td><?= esc($s['section']) ?></td>
-                                <td class="text-end">৳ <?= number_format($total_per_month, 2) ?></td>
-                                <td class="text-end">৳ <?= number_format($paid, 2) ?></td>
-                                <td class="text-end">৳ <?= number_format($due, 2) ?></td>
-                                <td class="text-end">
+                    <tr>
+                        <td><?= $i++ ?></td>
+                        <td><?= esc($s['roll']) ?></td>
+                        <td><?= esc($s['id']) ?></td>
+                        <td><?= esc($s['student_name']) ?></td>
+                        <td><?= esc($s['section']) ?></td>
+                        <td class="text-end">৳ <?= number_format($total_per_month, 2) ?></td>
+                        <td class="text-end">৳ <?= number_format($paid, 2) ?></td>
+                        <td class="text-end">৳ <?= number_format($due, 2) ?></td>
+                        <td class="text-end">
 
-                                    <!-- History First -->
-                                    <a href="<?= base_url('admin/studentPaymentHistory/' . esc($s['id'])) ?>"
-                                        class="btn btn-sm btn-info mb-1">
-                                        <i class="fas fa-history"></i> History
-                                    </a>
+                            <!-- History First -->
+                            <a href="<?= base_url('admin/studentPaymentHistory/' . esc($s['id'])) ?>"
+                                class="btn btn-sm btn-info mb-1">
+                                <i class="fas fa-history"></i> History
+                            </a>
 
-                                    <!-- Then Pay / Paid -->
-                                    <?php if ($due > 0): ?>
-                                        <a href="<?= base_url('admin/pay_student_request/' . $s['id']) ?>"
-                                            class="btn btn-sm btn-primary">
-                                            <i class="fas fa-money-bill-wave"></i> Pay
-                                        </a>
-                                    <?php else: ?>
-                                        <span class="badge bg-success">Paid</span>
-                                    <?php endif; ?>
+                            <!-- Then Pay / Paid -->
+                            <?php if ($due > 0): ?>
+                            <a href="<?= base_url('admin/pay_student_request/' . $s['id']) ?>"
+                                class="btn btn-sm btn-primary">
+                                <i class="fas fa-money-bill-wave"></i> Pay
+                            </a>
+                            <?php else: ?>
+                            <span class="badge bg-success">Paid</span>
+                            <?php endif; ?>
 
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
                     <?php else: ?>
-                        <tr>
-                            <td colspan="9" class="text-center text-muted">No students found.</td>
-                        </tr>
+                    <tr>
+                        <td colspan="9" class="text-center text-muted">No students found.</td>
+                    </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
