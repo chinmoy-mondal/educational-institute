@@ -4083,7 +4083,6 @@ class Dashboard extends Controller
                 $account_status = $user['account_status'];
             }
         }
-        echo "account status = " . $account_status;
 
         // 📦 Send to view
         $this->data['student']          = $student;

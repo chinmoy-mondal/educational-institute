@@ -84,7 +84,7 @@
 
                 <!-- Discount + Last Totals -->
                 <div class="row mb-4">
-                    <?php $isLocked = ($account_status > 1); ?>
+                    <?php $isLocked = ($account_status < 2); ?>
 
                     <div class="col-md-3">
                         <label class="form-label fw-semibold">Discount (৳)</label>
