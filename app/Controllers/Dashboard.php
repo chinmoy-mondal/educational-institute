@@ -2985,7 +2985,7 @@ class Dashboard extends Controller
 
             $totalPaid += $amount;
         }
-        echo $fees['paid'];
+
         $this->data['fees'] = $fees;
         $this->data['discount'] = $discount ?? 0;
         $this->data['totalAmount'] = $totalPaid;
