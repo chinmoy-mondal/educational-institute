@@ -3666,14 +3666,37 @@ class Dashboard extends Controller
             $start = $start_date . ' 00:00:00';
             $end   = $end_date . ' 23:59:59';
 
+            // $builder = $model->where('created_at >=', $start)
+            //     ->where('created_at <=', $end);
+
+            // // ✅ Filter by type using "activity"
+            // if ($type && $type != 'all_transaction') {
+            //     $builder->where('activity', $type);
+            // }
             $builder = $model->where('created_at >=', $start)
                 ->where('created_at <=', $end);
 
-            // ✅ Filter by type using "activity"
+            // ================= TYPE FILTER =================
             if ($type && $type != 'all_transaction') {
-                $builder->where('activity', $type);
-            }
 
+                if ($type == 'student') {
+                    // Student Transaction ID pattern
+                    $builder->like('transaction_id', 'TX-', 'after');
+                } elseif ($type == 'teacher') {
+                    $builder->where('activity', 'teacher');
+
+                    // Filter by teacher name if selected
+                    if (!empty($teacher_name) && $teacher_name != 'all_teacher') {
+                        $builder->where('receiver_name', $teacher_name);
+                    }
+                } elseif ($type == 'salary') {
+                    // Salary transaction ID contains SAL
+                    $builder->like('transaction_id', 'SAL');
+                } elseif ($type == 'cost') {
+                    // Cost transaction ID contains CST
+                    $builder->like('transaction_id', 'CST');
+                }
+            }
 
             $this->data['report'] = $builder
                 ->orderBy('created_at', 'DESC')
