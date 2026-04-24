@@ -84,9 +84,7 @@
 
             <h5 class="mb-0">📊 Report Result</h5>
 
-            <!-- <a href="<?= current_url() . '?' . http_build_query($_GET) ?>&download=1" class="btn btn-light btn-sm">
-                📥 Download Excel
-            </a> -->
+
             <a href="<?= current_url() . '?' . http_build_query($_GET) ?>&download=1"
                 class="btn btn-warning btn-sm shadow-sm fw-bold">
 
