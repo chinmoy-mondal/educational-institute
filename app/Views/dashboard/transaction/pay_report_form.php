@@ -18,21 +18,18 @@
 
                 <div class="row g-3">
 
-                    <!-- Start Date -->
                     <div class="col-md-2">
                         <label class="form-label fw-semibold">Start Date</label>
                         <input type="date" name="start_date" value="<?= $_GET['start_date'] ?? '' ?>"
                             class="form-control" required>
                     </div>
 
-                    <!-- End Date -->
                     <div class="col-md-2">
                         <label class="form-label fw-semibold">End Date</label>
                         <input type="date" name="end_date" value="<?= $_GET['end_date'] ?? '' ?>" class="form-control"
                             required>
                     </div>
 
-                    <!-- Transaction Type -->
                     <div class="col-md-2">
                         <label class="form-label fw-semibold">Transaction Type</label>
                         <select name="type" class="form-control" id="transactionType">
@@ -48,7 +45,6 @@
                         </select>
                     </div>
 
-                    <!-- Teacher Name -->
                     <div class="col-md-3 d-none" id="teacherField">
                         <label class="form-label fw-semibold">Teacher Name</label>
                         <select name="teacher_name" class="form-control">
@@ -62,7 +58,6 @@
                         </select>
                     </div>
 
-                    <!-- Button -->
                     <div class="col-md-3 d-flex align-items-end">
                         <button type="submit" class="btn btn-success w-100">
                             Generate Report
@@ -79,12 +74,13 @@
 
     <?php
         $totalEarn = 0;
+        $totalCost = 0;
         $totalDiscount = 0;
         $seenDiscount = [];
         ?>
 
     <div class="card mt-4">
-        <div class="card-header bg-success text-white d-flex justify-content-between">
+        <div class="card-header bg-success text-white">
             <h5>Report Result</h5>
         </div>
 
@@ -114,11 +110,16 @@
                             $tid = $row['transaction_id'] ?? '-';
                             $amount = floatval($row['amount'] ?? 0);
                             $discount = floatval($row['discount'] ?? 0);
+                            $status = $row['status'] ?? 0;
 
-                            // Total Earn
-                            $totalEarn += $amount;
+                            // Earn vs Cost
+                            if ($status == 0) {
+                                $totalEarn += $amount;
+                            } else {
+                                $totalCost += $amount;
+                            }
 
-                            // Unique Discount
+                            // Discount (unique)
                             $showDiscount = true;
                             if ($discount > 0) {
                                 if (isset($seenDiscount[$tid])) {
@@ -144,18 +145,18 @@
                         <td><?= $row['receiver_name'] ?? '-' ?></td>
 
                         <td>
-                            <?php if (($row['status'] ?? 0) == 0): ?>
+                            <?php if ($status == 0): ?>
                             <span class="badge bg-success">Earn</span>
                             <?php else: ?>
                             <span class="badge bg-danger">Cost</span>
                             <?php endif; ?>
                         </td>
 
-                        <td><?= number_format($amount, 2) ?></td>
+                        <td class="fw-bold"><?= number_format($amount, 2) ?></td>
 
                         <td>
                             <?php if ($discount > 0 && $showDiscount): ?>
-                            <?= number_format($discount, 2) ?>
+                            <span class="text-warning fw-bold"><?= number_format($discount, 2) ?></span>
                             <?php else: ?>
                             —
                             <?php endif; ?>
@@ -169,26 +170,37 @@
                 </tbody>
 
                 <tfoot>
+
                     <tr>
-                        <th colspan="6" class="text-end">Total Earn</th>
+                        <th colspan="6" class="text-end text-success">Total Earn</th>
                         <th><?= number_format($totalEarn, 2) ?></th>
                         <th colspan="3"></th>
                     </tr>
 
                     <tr>
-                        <th colspan="6" class="text-end">Total Discount</th>
+                        <th colspan="6" class="text-end text-danger">Total Cost</th>
+                        <th><?= number_format($totalCost, 2) ?></th>
+                        <th colspan="3"></th>
+                    </tr>
+
+                    <tr>
+                        <th colspan="6" class="text-end text-warning">Total Discount</th>
                         <th><?= number_format($totalDiscount, 2) ?></th>
                         <th colspan="3"></th>
                     </tr>
 
                     <tr class="table-primary fw-bold">
-                        <th colspan="6" class="text-end">Net Amount</th>
-                        <th><?= number_format($totalEarn - $totalDiscount, 2) ?></th>
+                        <th colspan="6" class="text-end">Final Net Amount</th>
+                        <th>
+                            <?= number_format($totalEarn - $totalCost - $totalDiscount, 2) ?>
+                        </th>
                         <th colspan="3"></th>
                     </tr>
+
                 </tfoot>
 
             </table>
+
         </div>
     </div>
 
