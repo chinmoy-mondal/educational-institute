@@ -63,7 +63,6 @@ body {
 /* ================= MEMO BOX (SCREEN + PRINT BASE) ================= */
 .receipt {
     width: 100%;
-    height: 148.5mm;
     /* HALF A4 PAGE */
     background: #fffdeb;
     border: 2px solid #000;
