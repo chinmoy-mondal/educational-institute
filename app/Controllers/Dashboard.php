@@ -3974,18 +3974,22 @@ class Dashboard extends Controller
         $this->data['title'] = 'Transaction Stat';
         $this->data['activeSection'] = 'accounts';
 
-        $transactions = $this->transactionModel->findAll();
+        $builder = $this->transactionModel
+            ->select('transactions.*, students.section')
+            ->join('students', 'students.id = transactions.sender_id', 'left');
+
+        $transactions = $builder->findAll();
 
         $totalEarn = 0;
         $totalCost = 0;
-        $totalDiscount = 0; // ✅ NEW
+        $totalDiscount = 0;
 
         $monthlyData = [];
 
         $residential = 0;
         $nonResidential = 0;
 
-        $seenDiscount = []; // ✅ IMPORTANT
+        $seenDiscount = [];
 
         foreach ($transactions as $t) {
 
@@ -4009,20 +4013,19 @@ class Dashboard extends Controller
                 $monthlyData[$month]['cost'] += $amount;
             }
 
-            // ================= DISCOUNT FIX =================
-            if ($discount > 0) {
-                if (!isset($seenDiscount[$tid])) {
-                    $totalDiscount += $discount;
-                    $seenDiscount[$tid] = true;
-                }
+            // ✅ DISCOUNT (UNIQUE)
+            if ($discount > 0 && !isset($seenDiscount[$tid])) {
+                $totalDiscount += $discount;
+                $seenDiscount[$tid] = true;
             }
 
-            // ================= RESIDENTIAL =================
-            $type = strtolower($t['student_type'] ?? '');
+            // ================= RESIDENTIAL LOGIC =================
+            $section = strtolower($t['section'] ?? '');
 
-            if ($type == 'residential') {
+            // adjust based on your DB values
+            if ($section == 'residential') {
                 $residential += $amount;
-            } elseif ($type == 'non_residential') {
+            } elseif ($section == 'non-residential' || $section == 'day') {
                 $nonResidential += $amount;
             }
         }
@@ -4031,7 +4034,6 @@ class Dashboard extends Controller
         $this->data['totalCost'] = $totalCost;
         $this->data['totalDiscount'] = $totalDiscount;
 
-        // ✅ FINAL NET (CORRECT)
         $this->data['net'] = $totalEarn - $totalCost - $totalDiscount;
 
         $this->data['monthlyData'] = $monthlyData;
