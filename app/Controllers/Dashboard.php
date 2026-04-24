@@ -3622,7 +3622,7 @@ class Dashboard extends Controller
         fclose($output);
         exit;
     }
-
+    
     public function pay_report()
     {
         $this->data['title'] = 'Payment Report';
@@ -3640,12 +3640,11 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        // GET values
         $start_date = $this->request->getGet('start_date');
         $end_date   = $this->request->getGet('end_date');
         $type       = $this->request->getGet('type');
-        $teacher_name       = $this->request->getGet('teacher_name');
-
+        $teacher_name = $this->request->getGet('teacher_name');
+        $download   = $this->request->getGet('download'); // ✅ IMPORTANT
 
         $this->data['teacherList'] = $this->transactionModel
             ->select('receiver_name')
@@ -3655,24 +3654,15 @@ class Dashboard extends Controller
             ->distinct()
             ->findAll();
 
-
         $this->data['report'] = [];
 
         if ($start_date && $end_date) {
 
             $model = new TransactionModel();
 
-            // IMPORTANT: add time for full day coverage
             $start = $start_date . ' 00:00:00';
             $end   = $end_date . ' 23:59:59';
 
-            // $builder = $model->where('created_at >=', $start)
-            //     ->where('created_at <=', $end);
-
-            // // ✅ Filter by type using "activity"
-            // if ($type && $type != 'all_transaction') {
-            //     $builder->where('activity', $type);
-            // }
             $builder = $model->where('created_at >=', $start)
                 ->where('created_at <=', $end);
 
@@ -3680,30 +3670,102 @@ class Dashboard extends Controller
             if ($type && $type != 'all_transaction') {
 
                 if ($type == 'student') {
-                    // Student Transaction ID pattern
                     $builder->like('transaction_id', 'TX-', 'after');
                 } elseif ($type == 'teacher') {
-                    $builder->where('activity', 'teacher');
+                    $builder->where('activity', 'teacher')
+                        ->like('transaction_id', 'TX-', 'after');
 
-                    // ✅ Only TX- transactions (exclude salary, cost etc.)
-                    $builder->like('transaction_id', 'TX-', 'after');
-
-                    // Filter by teacher name if selected
                     if (!empty($teacher_name) && $teacher_name != 'all_teacher') {
                         $builder->where('receiver_name', $teacher_name);
                     }
                 } elseif ($type == 'salary') {
-                    // Salary transaction ID contains SAL
                     $builder->like('transaction_id', 'SAL');
                 } elseif ($type == 'cost') {
-                    // Cost transaction ID contains CST
                     $builder->like('transaction_id', 'CST');
                 }
             }
 
-            $this->data['report'] = $builder
-                ->orderBy('created_at', 'DESC')
-                ->findAll();
+            $report = $builder->orderBy('created_at', 'DESC')->findAll();
+
+            // =================================================
+            // ✅ DOWNLOAD EXCEL (CSV)
+            // =================================================
+            if ($download == 1) {
+
+                $filename = "payment_report_" . date('Ymd_His') . ".csv";
+
+                header("Content-Type: text/csv");
+                header("Content-Disposition: attachment; filename=$filename");
+
+                $output = fopen("php://output", "w");
+
+                // Header row
+                fputcsv($output, [
+                    'Date',
+                    'Transaction ID',
+                    'Sender',
+                    'Receiver',
+                    'Type',
+                    'Amount',
+                    'Discount',
+                    'Month',
+                    'Description'
+                ]);
+
+                $totalEarn = 0;
+                $totalCost = 0;
+                $totalDiscount = 0;
+                $seenDiscount = [];
+
+                foreach ($report as $row) {
+
+                    $tid = $row['transaction_id'] ?? '-';
+                    $amount = floatval($row['amount'] ?? 0);
+                    $discount = floatval($row['discount'] ?? 0);
+                    $status = $row['status'] ?? 0;
+
+                    // Earn vs Cost
+                    $typeLabel = ($status == 0) ? 'Earn' : 'Cost';
+
+                    if ($status == 0) {
+                        $totalEarn += $amount;
+                    } else {
+                        $totalCost += $amount;
+                    }
+
+                    // Unique discount
+                    if (isset($seenDiscount[$tid])) {
+                        $discount = '';
+                    } else {
+                        $totalDiscount += $discount;
+                        $seenDiscount[$tid] = true;
+                    }
+
+                    fputcsv($output, [
+                        date('d-m-Y', strtotime($row['created_at'])),
+                        $tid,
+                        $row['sender_name'] ?? '',
+                        $row['receiver_name'] ?? '',
+                        $typeLabel,
+                        $amount,
+                        $discount,
+                        date('F', strtotime($row['created_at'])),
+                        $row['description'] ?? ''
+                    ]);
+                }
+
+                // Totals
+                fputcsv($output, []);
+                fputcsv($output, ['Total Earn', $totalEarn]);
+                fputcsv($output, ['Total Cost', $totalCost]);
+                fputcsv($output, ['Total Discount', $totalDiscount]);
+                fputcsv($output, ['Net', $totalEarn - $totalCost - $totalDiscount]);
+
+                fclose($output);
+                exit;
+            }
+
+            $this->data['report'] = $report;
         }
 
         return view('dashboard/transaction/pay_report_form', $this->data);
