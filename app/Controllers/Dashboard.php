@@ -3971,22 +3971,41 @@ class Dashboard extends Controller
 
     public function pay_stat()
     {
-        $this->data['title'] = 'Transaction Dashboard';
+        $this->data['title'] = 'Transaction Stat';
         $this->data['activeSection'] = 'accounts';
 
-        $this->data['navbarItems'] = [
-            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
-            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
-            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
-            ['label' => 'Due', 'url' => base_url('admin/std_due')],
-            ['label' => 'Report', 'url' => base_url('admin/pay_report')],
-            ['label' => 'Salary', 'url' => base_url('admin/salary')],
-            ['label' => 'Cost', 'url' => base_url('admin/cost')],
-            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
-            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
-        ];
+        $transactions = $this->transactionModel->findAll();
 
-        // return view('dashboard/transaction/pay_stat', $this->data);
+        $totalEarn = 0;
+        $totalCost = 0;
+
+        $monthlyData = [];
+
+        foreach ($transactions as $t) {
+
+            $month = date('M', strtotime($t['created_at']));
+            $amount = floatval($t['amount']);
+            $status = $t['status'];
+
+            if (!isset($monthlyData[$month])) {
+                $monthlyData[$month] = ['earn' => 0, 'cost' => 0];
+            }
+
+            if ($status == 0) {
+                $totalEarn += $amount;
+                $monthlyData[$month]['earn'] += $amount;
+            } else {
+                $totalCost += $amount;
+                $monthlyData[$month]['cost'] += $amount;
+            }
+        }
+
+        $this->data['totalEarn'] = $totalEarn;
+        $this->data['totalCost'] = $totalCost;
+        $this->data['net'] = $totalEarn - $totalCost;
+        $this->data['monthlyData'] = $monthlyData;
+
+        return view('dashboard/transaction/pay_stat', $this->data);
     }
 
     public function set_fees()

@@ -169,7 +169,6 @@ th {
         padding: 0;
     }
 
-    .page {}
 
     /* 🔥 MAIN FIX: HALF A4 MEMO */
     .receipt {
