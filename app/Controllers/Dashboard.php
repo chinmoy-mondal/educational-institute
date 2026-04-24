@@ -3685,6 +3685,9 @@ class Dashboard extends Controller
                 } elseif ($type == 'teacher') {
                     $builder->where('activity', 'teacher');
 
+                    // ✅ Only TX- transactions (exclude salary, cost etc.)
+                    $builder->like('transaction_id', 'TX-', 'after');
+
                     // Filter by teacher name if selected
                     if (!empty($teacher_name) && $teacher_name != 'all_teacher') {
                         $builder->where('receiver_name', $teacher_name);
