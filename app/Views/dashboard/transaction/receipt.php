@@ -40,8 +40,9 @@ if ($isSalary) {
     $type = 'Student Receipt';
 }
 ?>
+
 <style>
-/* ================= PAGE SIZE ================= */
+/* ================= PAGE SETUP ================= */
 @page {
     size: A4;
     margin: 0;
@@ -54,22 +55,29 @@ body {
     padding: 0;
 }
 
-/* ================= SCREEN LAYOUT ================= */
+/* ================= PAGE CONTAINER ================= */
 .page {
     width: 210mm;
 }
 
+/* ================= MEMO BOX (SCREEN + PRINT BASE) ================= */
 .receipt {
     width: 100%;
-    min-height: 148.5mm;
-    /* HALF A4 */
+    height: 148.5mm;
+    /* HALF A4 PAGE */
     background: #fffdeb;
     border: 2px solid #000;
     padding: 2mm;
     font-size: 12px;
     box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    overflow: hidden;
 }
 
+/* ================= HEADER ================= */
 .copy-label {
     text-align: right;
     font-size: 11px;
@@ -90,11 +98,13 @@ body {
     font-size: 11px;
 }
 
+/* ================= LINE ================= */
 .hr {
     border-top: 1px solid #000;
     margin: 2px 0;
 }
 
+/* ================= INFO SECTION ================= */
 .info {
     font-size: 12px;
     line-height: 1.6;
@@ -108,6 +118,7 @@ body {
     white-space: nowrap;
 }
 
+/* ================= TABLE ================= */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -124,6 +135,7 @@ th {
     background: #f1f1f1;
 }
 
+/* ================= FOOTER ================= */
 .footer {
     font-size: 11px;
 }
@@ -140,12 +152,13 @@ th {
     font-size: 10px;
 }
 
+/* ================= DIVIDER ================= */
 .divider {
     border-top: 2px dashed #000;
     margin: 2mm 0;
 }
 
-/* ================= PRINT ================= */
+/* ================= PRINT MODE ================= */
 @media print {
 
     body {
@@ -162,17 +175,17 @@ th {
         height: 297mm;
     }
 
-    /* 🔥 HALF PAGE FIX */
+    /* 🔥 MAIN FIX: HALF A4 MEMO */
     .receipt {
         width: 100%;
         height: 148.5mm;
         /* EXACT HALF A4 */
         overflow: hidden;
-        page-break-inside: avoid;
 
         border: 2px solid #000;
         background: #fff;
-        font-size: 12px;
+        page-break-inside: avoid;
+
         padding: 2mm;
         box-sizing: border-box;
     }
