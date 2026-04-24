@@ -88,7 +88,7 @@
             <a href="<?= current_url() . '?' . http_build_query($_GET) ?>&download=1"
                 class="btn btn-warning btn-sm shadow-sm fw-bold">
 
-                <i class="fas fa-file-excel"></i> 📥 Download Excel
+                📥 Download Excel
 
             </a>
 
