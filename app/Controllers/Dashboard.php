@@ -3978,19 +3978,29 @@ class Dashboard extends Controller
 
         $totalEarn = 0;
         $totalCost = 0;
+        $totalDiscount = 0; // ✅ NEW
 
         $monthlyData = [];
+
+        $residential = 0;
+        $nonResidential = 0;
+
+        $seenDiscount = []; // ✅ IMPORTANT
 
         foreach ($transactions as $t) {
 
             $month = date('M', strtotime($t['created_at']));
             $amount = floatval($t['amount']);
+            $discount = floatval($t['discount'] ?? 0);
             $status = $t['status'];
+            $tid = $t['transaction_id'];
 
+            // monthly init
             if (!isset($monthlyData[$month])) {
                 $monthlyData[$month] = ['earn' => 0, 'cost' => 0];
             }
 
+            // earn / cost
             if ($status == 0) {
                 $totalEarn += $amount;
                 $monthlyData[$month]['earn'] += $amount;
@@ -3998,12 +4008,36 @@ class Dashboard extends Controller
                 $totalCost += $amount;
                 $monthlyData[$month]['cost'] += $amount;
             }
+
+            // ================= DISCOUNT FIX =================
+            if ($discount > 0) {
+                if (!isset($seenDiscount[$tid])) {
+                    $totalDiscount += $discount;
+                    $seenDiscount[$tid] = true;
+                }
+            }
+
+            // ================= RESIDENTIAL =================
+            $type = strtolower($t['student_type'] ?? '');
+
+            if ($type == 'residential') {
+                $residential += $amount;
+            } elseif ($type == 'non_residential') {
+                $nonResidential += $amount;
+            }
         }
 
         $this->data['totalEarn'] = $totalEarn;
         $this->data['totalCost'] = $totalCost;
-        $this->data['net'] = $totalEarn - $totalCost;
+        $this->data['totalDiscount'] = $totalDiscount;
+
+        // ✅ FINAL NET (CORRECT)
+        $this->data['net'] = $totalEarn - $totalCost - $totalDiscount;
+
         $this->data['monthlyData'] = $monthlyData;
+
+        $this->data['residential'] = $residential;
+        $this->data['nonResidential'] = $nonResidential;
 
         return view('dashboard/transaction/pay_stat', $this->data);
     }

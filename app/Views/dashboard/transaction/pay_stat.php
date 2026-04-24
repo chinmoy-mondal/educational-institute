@@ -6,7 +6,7 @@
     <!-- SUMMARY CARDS -->
     <div class="row">
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card bg-success text-white">
                 <div class="card-body">
                     <h5>Total Earn</h5>
@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card bg-danger text-white">
                 <div class="card-body">
                     <h5>Total Cost</h5>
@@ -24,7 +24,16 @@
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+                <div class="card-body">
+                    <h5>Total Discount</h5>
+                    <h3><?= number_format($totalDiscount ?? 0, 2) ?> ৳</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
             <div class="card bg-primary text-white">
                 <div class="card-body">
                     <h5>Net Balance</h5>
@@ -35,11 +44,34 @@
 
     </div>
 
+    <!-- SECOND ROW CARDS -->
+    <div class="row mt-3">
+
+        <div class="col-md-6">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h6>Residential Income</h6>
+                    <h4><?= number_format($residential ?? 0, 2) ?> ৳</h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card bg-secondary text-white">
+                <div class="card-body">
+                    <h6>Non-Residential Income</h6>
+                    <h4><?= number_format($nonResidential ?? 0, 2) ?> ৳</h4>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
     <!-- CHARTS -->
     <div class="row mt-4">
 
         <!-- Monthly Chart -->
-        <div class="col-md-8">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-header">Monthly Earn vs Cost</div>
                 <div class="card-body">
@@ -49,7 +81,7 @@
         </div>
 
         <!-- Pie Chart -->
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-header">Earn vs Cost</div>
                 <div class="card-body">
@@ -58,6 +90,18 @@
             </div>
         </div>
 
+    </div>
+
+    <!-- RESIDENTIAL CHART -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Residential vs Non-Residential</div>
+                <div class="card-body">
+                    <canvas id="resChart"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>
@@ -96,6 +140,20 @@ new Chart(document.getElementById('pieChart'), {
         labels: ['Earn', 'Cost'],
         datasets: [{
             data: [<?= $totalEarn ?>, <?= $totalCost ?>]
+        }]
+    }
+});
+
+/* ================= RESIDENTIAL CHART ================= */
+new Chart(document.getElementById('resChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['Residential', 'Non-Residential'],
+        datasets: [{
+            data: [
+                <?= $residential ?? 0 ?>,
+                <?= $nonResidential ?? 0 ?>
+            ]
         }]
     }
 });
