@@ -44,10 +44,11 @@ if ($isSalary) {
 <style>
 @page {
     size: A4;
-    margin: 5mm;
+    margin: 0;
 }
 
 @media print {
+
     body {
         margin: 0;
         padding: 0;
@@ -55,27 +56,26 @@ if ($isSalary) {
 
     .container-fluid {
         padding: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
     }
 
     .page {
-        width: 100%;
-        min-height: 297mm;
-        display: flex;
-        flex-direction: column;
+        width: 210mm;
+        height: 297mm;
     }
 
+    /* ✅ HALF PAGE FIX */
     .receipt {
+        width: 100%;
+        height: 148.5mm;
+        /* HALF OF A4 */
+        overflow: hidden;
         page-break-inside: avoid;
-        min-height: 145mm;
-        width: 180mm;
-        background: #fff;
+
         border: 2px solid #000;
-        padding: 1mm;
+        background: #fff;
         font-size: 12px;
-        margin: auto;
+        padding: 2mm;
+        box-sizing: border-box;
     }
 
     .divider,
@@ -93,98 +93,6 @@ if ($isSalary) {
     th {
         background: #f1f1f1;
     }
-}
-
-body {
-    font-family: "Times New Roman", serif;
-}
-
-.page {
-    width: 210mm;
-}
-
-.receipt {
-    width: 100%;
-    min-height: 85mm;
-    background: #fffdeb;
-    border: 2px solid #000;
-    padding: 1mm;
-    font-size: 12px;
-}
-
-.copy-label {
-    text-align: right;
-    font-size: 11px;
-    font-weight: bold;
-}
-
-.header {
-    text-align: center;
-}
-
-.school-name {
-    font-size: 18px;
-    font-weight: bold;
-    color: #b30000;
-}
-
-.school-sub {
-    font-size: 11px;
-}
-
-.hr {
-    border-top: 1px solid #000;
-    margin: 1px 0;
-}
-
-.info {
-    font-size: 12px;
-    line-height: 1.6;
-    display: flex;
-    width: 100%;
-}
-
-.info>div {
-    flex: 1;
-    padding: 0px 8px;
-    white-space: nowrap;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1px;
-}
-
-th,
-td {
-    border: 1px solid #000;
-    padding: 5px;
-}
-
-th {
-    background: #f1f1f1;
-}
-
-.footer {
-    font-size: 11px;
-}
-
-.sign {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 16px;
-}
-
-.note {
-    border-top: 1px solid #000;
-    text-align: center;
-    font-size: 10px;
-}
-
-.divider {
-    border-top: 2px dashed #000;
-    margin: 1mm 0;
 }
 </style>
 
