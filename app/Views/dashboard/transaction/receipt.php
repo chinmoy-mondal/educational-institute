@@ -170,10 +170,7 @@ th {
         padding: 0;
     }
 
-    .page {
-        width: 210mm;
-        height: 297mm;
-    }
+    .page {}
 
     /* 🔥 MAIN FIX: HALF A4 MEMO */
     .receipt {
