@@ -178,7 +178,7 @@ th {
     /* 🔥 MAIN FIX: HALF A4 MEMO */
     .receipt {
         width: 100%;
-        height: 148.5mm;
+        height: 77.5mm;
         /* EXACT HALF A4 */
         overflow: hidden;
 
