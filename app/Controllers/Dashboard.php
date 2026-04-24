@@ -944,7 +944,7 @@ class Dashboard extends Controller
             'birth_registration_number' => $this->request->getPost('birth_registration_number'),
             'father_nid_number'         => $this->request->getPost('father_nid_number'),
             'mother_nid_number'         => $this->request->getPost('mother_nid_number'),
-            'address'         => $this->request->getPost('address'),
+            'address'                   => $this->request->getPost('address'),
         ];
 
         $this->studentModel->insert($data);
@@ -2262,12 +2262,22 @@ class Dashboard extends Controller
             $attendanceMap[$a['student_id']][] = $a['remark'];
         }
 
+        // Distinct classes
+        $classes = $this->studentModel
+            ->select('class')
+            ->distinct()
+            ->where('class IS NOT NULL')
+            ->orderBy('CAST(class as UNSIGNED)', 'ASC')
+            ->findAll();
+
         // Pass data to view
         $this->data['selectedClass']   = $selectedClass;
         $this->data['selectedSection'] = $selectedSection;
         $this->data['selectedDate']    = $selectedDate;
         $this->data['students']        = $students;
         $this->data['attendanceMap']   = $attendanceMap;
+        $this->data['classes']         = $classes;
+
 
         return view('dashboard/attendance_calendar', $this->data);
     }
