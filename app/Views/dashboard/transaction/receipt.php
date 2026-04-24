@@ -57,7 +57,7 @@ body {
 
 /* ================= PAGE CONTAINER ================= */
 .page {
-    width: 210mm;
+    width: 100%;
 }
 
 /* ================= MEMO BOX (SCREEN + PRINT BASE) ================= */
