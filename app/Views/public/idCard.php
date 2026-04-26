@@ -2,45 +2,45 @@
 <?= $this->section("content"); ?>
 
 <style>
-body {
-    background: #f2f4f8;
-    font-family: Arial, sans-serif;
-}
+    body {
+        background: #f2f4f8;
+        font-family: Arial, sans-serif;
+    }
 
-.id-card {
-    width: 350px;
-    height: 550px;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-}
+    .id-card {
+        width: 350px;
+        height: 550px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+    }
 
-.photo {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border: 6px solid #ffffff;
-    border-radius: 50%;
-}
+    .photo {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border: 6px solid #ffffff;
+        border-radius: 50%;
+    }
 
-.qr-img {
-    width: 100px;
-    height: 100px;
-    border: 1px solid #ccc;
-    background: #fff;
-    padding: 4px;
-    border-radius: 6px;
-}
+    .qr-img {
+        width: 100px;
+        height: 100px;
+        border: 1px solid #ccc;
+        background: #fff;
+        padding: 4px;
+        border-radius: 6px;
+    }
 
-.signature {
-    width: 75px;
-}
+    .signature {
+        width: 75px;
+    }
 </style>
 
 <div class="container py-5">
@@ -64,10 +64,10 @@ body {
             <!-- Photo -->
             <div class="d-flex justify-content-center mb-3">
                 <?php if (!empty($student['student_pic'])): ?>
-                <img src="/<?= esc($student['student_pic']) ?>" alt="Photo" class="photo" crossorigin="anonymous">
+                    <img src="/<?= esc($student['student_pic']) ?>" alt="Photo" class="photo" crossorigin="anonymous">
                 <?php else: ?>
-                <img src="<?= base_url('public/assets/img/default.png') ?>" alt="Photo" class="photo"
-                    crossorigin="anonymous">
+                    <img src="<?= base_url('public/assets/img/default.png') ?>" alt="Photo" class="photo"
+                        crossorigin="anonymous">
                 <?php endif; ?>
             </div>
 
@@ -88,9 +88,9 @@ body {
             <div class="d-flex justify-content-end align-items-end mt-auto">
                 <div class="text-end">
                     <?php if (!empty($student['signature'])): ?>
-                    <img src="<?= esc($student['signature']) ?>" alt="Signature" class="signature mb-1" />
+                        <img src="<?= esc($student['signature']) ?>" alt="Signature" class="signature mb-1" />
                     <?php else: ?>
-                    <div class="signature mb-1" style="background:#ccc;width:100px;height:30px;">[Signature]</div>
+                        <div class="signature mb-1" style="background:#ccc;width:100px;height:30px;">[Signature]</div>
                     <?php endif; ?>
                     <div class="small text-muted">Authorized Signature</div>
                 </div>
@@ -102,7 +102,7 @@ body {
             style="background-image: url('<?= base_url("public/assets/img/bg-back.png") ?>');">
             <!-- QR Code -->
             <div class="text-center mb-3">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=<?= urlencode('https://jpscac.com/student-id?q=' . $student['id']) ?>"
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=<?= urlencode('https://mulss.edu.bd/student-id?q=' . $student['id']) ?>"
                     class="qr-img" alt="Student QR" />
             </div>
 
@@ -111,13 +111,13 @@ body {
             <h4 class="text-center fw-bold text-white">Emergency Contact</h4>
             <div class="text-white small px-3 mx-auto" ">
 	  <div class=" mb-1">
-                <i class="fas fa-phone me-2"></i> +880-1309-115832
+                <i class="fas fa-phone me-2"></i> <?= esc($student['ins_phone']) ?>
             </div>
             <div class="mb-1">
-                <i class="fas fa-envelope me-2"></i> s115832mul@gmail.com
+                <i class="fas fa-envelope me-2"></i> <?= esc($student['email']) ?>
             </div>
             <div class="mb-1">
-                <i class="fas fa-globe me-2"></i> www.mulss.edu.bd
+                <i class="fas fa-globe me-2"></i> www.dsmfss.edu.bd
             </div>
         </div>
         <br>
@@ -134,7 +134,7 @@ body {
         </div>
         <br>
         <div class="text-center small text-white mt-2"><?= esc($student['school_name']) ?></div>
-        <div class="text-center small text-white mt-1">Keshabpur, Jessore</div>
+        <div class="text-center small text-white mt-1"><?= esc($student['address']) ?></div>
     </div>
 </div>
 
@@ -150,17 +150,17 @@ body {
 <!-- html2canvas -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-function downloadCard(id, filename) {
-    html2canvas(document.getElementById(id), {
-        scale: 2,
-        useCORS: true
-    }).then(canvas => {
-        const link = document.createElement('a');
-        link.download = filename;
-        link.href = canvas.toDataURL("image/jpeg", 0.95);
-        link.click();
-    });
-}
+    function downloadCard(id, filename) {
+        html2canvas(document.getElementById(id), {
+            scale: 2,
+            useCORS: true
+        }).then(canvas => {
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL("image/jpeg", 0.95);
+            link.click();
+        });
+    }
 </script>
 
 <?= $this->endSection(); ?>

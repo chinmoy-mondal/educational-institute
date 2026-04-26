@@ -207,9 +207,12 @@ class Home extends BaseController
 			echo "no result found";
 		}
 
-		$student['school_name'] = "Jhenaidah Public School & Collage";
-		$student['eiin'] = "EIIN-115832";
-		$student['school_name'] = "MULGRAM SECONDARY SCHOOL";
+		$student['school_name'] = env('school.name');
+		$student['school_code'] = "School Code-" . env('school.code');
+		$student['school_regi'] = env('school.registration');
+		$student['ins_phone'] = env('school.phone');
+		$student['email'] = env('school.email');
+		$student['address'] = env('school.address');
 		$student['logo'] = base_url('public/assets/img/logo.jpg');
 		$student['signature'] = base_url('public/assets/img/sign.png');
 
