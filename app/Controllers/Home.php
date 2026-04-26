@@ -207,13 +207,13 @@ class Home extends BaseController
 			echo "no result found";
 		}
 
-		$student['school_name'] = env('school.name');
-		$student['school_code'] = "S.C. - " . env('school.code');
-		$student['ins_phone'] = env('school.phone');
-		$student['email'] = env('school.email');
-		$student['address'] = env('school.address');
-		$student['logo'] = base_url('public/assets/img/logo.jpg');
-		$student['signature'] = base_url('public/assets/img/sign.png');
+		$student['school_name'] 	= env('school.name');
+		$student['school_code'] 	= env('school.code');
+		$student['ins_phone'] 		= env('school.phone');
+		$student['email'] 			= env('school.email');
+		$student['address'] 		= env('school.address');
+		$student['logo'] 			= base_url('public/assets/img/logo.jpg');
+		$student['signature'] 		= base_url('public/assets/img/sign.png');
 
 		return view('public/idCard', ['student' => $student]);
 	}
