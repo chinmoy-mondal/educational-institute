@@ -80,7 +80,7 @@ body {
                     <span class="mx-1"></span>
                     <i class="fas fa-tint"></i> <?= esc($student['blood_group']) ?>
                 </p>
-                <p class="mb-0">Class: <?= esc($student['class']) ?></p>
+                <p class="mb-0">Class: <?= esc($student['class']) ?> Roll: <?= esc($student['roll']) ?></p>
 
             </div>
 
