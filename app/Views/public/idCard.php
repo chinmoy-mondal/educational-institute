@@ -57,7 +57,7 @@
             </div>
 
             <!-- School name -->
-            <h6 class="text-white text-center fw-bold mb-0"><?= esc($student['eiin']) ?></h6>
+            <h6 class="text-white text-center fw-bold mb-0"><?= esc($student['school_code']) ?></h6>
             <h6 class="text-white text-center fw-bold mb-0"><?= esc($student['school_name']) ?></h6>
             <br>
 
@@ -102,7 +102,7 @@
             style="background-image: url('<?= base_url("public/assets/img/bg-back.png") ?>');">
             <!-- QR Code -->
             <div class="text-center mb-3">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=<?= urlencode('https://mulss.edu.bd/student-id?q=' . $student['id']) ?>"
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=<?= urlencode('https://jpscac.com/student-id?q=' . $student['id']) ?>"
                     class="qr-img" alt="Student QR" />
             </div>
 
