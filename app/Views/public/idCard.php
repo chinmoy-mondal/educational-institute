@@ -57,8 +57,8 @@ body {
             </div>
 
             <!-- School name -->
-            <h6 class="text-white text-center fw-bold mb-0"><?= esc($student['school_code']) ?></h6>
             <h6 class="text-white text-center fw-bold mb-0"><?= esc($student['school_name']) ?></h6>
+            <h6 class="text-white text-center fw-bold mb-0"><?= esc($student['school_code']) ?></h6>
 
 
             <!-- Photo -->
