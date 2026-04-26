@@ -209,7 +209,6 @@ class Home extends BaseController
 
 		$student['school_name'] = env('school.name');
 		$student['school_code'] = "S.C. - " . env('school.code');
-		$student['school_regi'] = env('school.registration');
 		$student['ins_phone'] = env('school.phone');
 		$student['email'] = env('school.email');
 		$student['address'] = env('school.address');
