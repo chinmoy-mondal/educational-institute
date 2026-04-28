@@ -132,10 +132,10 @@
         <!-- Parent Info -->
         <div class="mt-3 text-white small px-3 mx-auto">
             <p class="mb-1">
-                <strong>Father:</strong> <?= esc($student['father']) ?>
+                <strong>Father:</strong> <?= esc($student['father_name']) ?>
             </p>
             <p class="mb-0">
-                <strong>Mother:</strong> <?= esc($student['mother']) ?>
+                <strong>Mother:</strong> <?= esc($student['mother_name']) ?>
             </p>
         </div>
 
