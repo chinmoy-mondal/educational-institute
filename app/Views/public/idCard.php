@@ -75,13 +75,20 @@ body {
             <div class="text-center text-black mb-1">
                 <h4 class="mb-1 fw-bold"><?= esc($student['student_name']) ?></h4>
                 <p class="mb-0 fw-semibold">STUDENT</p>
+
                 <p class="mb-0">
-                    <i class="fas fa-id-card"></i> ID: <?= esc($student['id']) ?>
-                    <span class="mx-1"></span>
+                    <i class="fas fa-id-card"></i> ID: <?= esc($student['roll']) ?>
+                    <span class="mx-2"></span>
+
+                    <i class="fas fa-school"></i> Class: <?= esc($student['class']) ?>
+                    <span class="mx-2"></span>
+
                     <i class="fas fa-tint"></i> <?= esc($student['blood_group']) ?>
                 </p>
-                <p class="mb-0"><i class="fas fa-phone me-2"></i><?= esc($student['phone']) ?></p>
 
+                <p class="mb-0">
+                    <i class="fas fa-phone me-2"></i><?= esc($student['phone']) ?>
+                </p>
             </div>
 
             <!-- Signature -->
@@ -102,7 +109,7 @@ body {
             style="background-image: url('<?= base_url("public/assets/img/bg-back.png") ?>');">
             <!-- QR Code -->
             <div class="text-center mb-3">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=<?= urlencode('https://mulss.edu.bd/student-id?q=' . $student['id']) ?>"
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=<?= urlencode('https://dsmfss.edu.bd/student-id?q=' . $student['id']) ?>"
                     class="qr-img" alt="Student QR" />
             </div>
 
