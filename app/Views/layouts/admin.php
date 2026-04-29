@@ -16,23 +16,116 @@
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
 
   <style>
-    .responsive-money {
+    /* =========================
+   SMALL BOX FIX (ADMINLTE)
+========================= */
+    .small-box .inner h3 {
       font-size: 28px;
-      font-weight: bold;
-      word-break: break-word;
+      font-weight: 700;
+      line-height: 1.2;
+
+      /* Prevent layout breaking */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      max-width: 100%;
+      display: block;
     }
+
+    /* Prevent long text overflow in cards */
+    .small-box .inner p {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Icon positioning fix */
+    .small-box .icon {
+      opacity: 0.2;
+    }
+
+    /* =========================
+   RESPONSIVE FONT CONTROL
+========================= */
 
     /* Tablet */
     @media (max-width: 768px) {
-      .responsive-money {
-        font-size: 22px;
+      .small-box .inner h3 {
+        font-size: 20px;
+      }
+
+      .small-box .inner p {
+        font-size: 13px;
       }
     }
 
     /* Mobile */
     @media (max-width: 480px) {
+      .small-box .inner h3 {
+        font-size: 16px;
+      }
+
+      .small-box .inner p {
+        font-size: 12px;
+      }
+    }
+
+    /* =========================
+   MONEY VALUE SPECIAL FIX
+========================= */
+    .responsive-money {
+      font-weight: 700;
+      font-size: 28px;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      display: block;
+    }
+
+    /* Money responsive scaling */
+    @media (max-width: 768px) {
       .responsive-money {
-        font-size: 18px;
+        font-size: 20px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .responsive-money {
+        font-size: 16px;
+      }
+    }
+
+    /* =========================
+   CARD SPACING FIX
+  ========================= */
+    .small-box {
+      border-radius: 10px;
+    }
+
+    /* Prevent grid overflow issues */
+    .row>div {
+      margin-bottom: 15px;
+    }
+
+    /* =========================
+   ICON FIX
+  ========================= */
+    .small-box .icon i {
+      font-size: 60px;
+    }
+
+    @media (max-width: 768px) {
+      .small-box .icon i {
+        font-size: 45px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .small-box .icon i {
+        font-size: 35px;
       }
     }
   </style>
