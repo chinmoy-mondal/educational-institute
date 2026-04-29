@@ -149,7 +149,7 @@
 
         $expireDate = $expireYear . '-12-31';
         ?>
-
+        <br>
         <div class="text-center small text-danger mt-2 font-weight-bold">
             Expire Date: <?= date('d M Y', strtotime($expireDate)) ?>
         </div>
