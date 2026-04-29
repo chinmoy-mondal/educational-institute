@@ -87,7 +87,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>৳ <?= esc(number_format($total_income, 2)) ?></h3>
+                        <h3 class="responsive-money">৳ <?= esc(number_format($total_income, 2)) ?></h3>
                         <p>Total Income</p>
                     </div>
                     <div class="icon"><i class="fas fa-coins"></i></div>
@@ -100,7 +100,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3>৳ <?= esc(number_format($total_cost, 2)) ?></h3>
+                        <h3 class="responsive-money">৳ <?= esc(number_format($total_cost, 2)) ?></h3>
                         <p>Total Cost</p>
                     </div>
                     <div class="icon"><i class="fas fa-money-bill-wave"></i></div>
