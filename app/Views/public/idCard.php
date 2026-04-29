@@ -77,10 +77,7 @@
                 <p class="mb-0 fw-semibold">STUDENT</p>
 
                 <p class="mb-0">
-                    <i class="fas fa-id-card"></i> ID: <?= esc($student['roll']) ?>
-                    <span class="mx-2"></span>
-
-                    <i class="fas fa-school"></i> Class: <?= esc($student['class']) ?>
+                    <i class="fas fa-id-card"></i> ID: <?= esc($student['id']) ?>
                     <span class="mx-2"></span>
 
                     <i class="fas fa-tint"></i> <?= esc($student['blood_group']) ?>
@@ -117,7 +114,7 @@
             <br>
             <h4 class="text-center fw-bold text-white">Emergency Contact</h4>
             <div class="text-white small px-3 mx-auto" ">
-	  <div class=" mb-1">
+	        <div class=" mb-1">
                 <i class="fas fa-phone me-2"></i> <?= esc($student['ins_phone']) ?>
             </div>
             <div class="mb-1">
@@ -137,6 +134,24 @@
             <p class="mb-0">
                 <strong>Mother:</strong> <?= esc($student['mother_name']) ?>
             </p>
+        </div>
+
+        <?php
+        $class = (int) $student['class'];
+
+        $year = date('Y');
+
+        if ($class == 10) {
+            $expireYear = $year;
+        } else {
+            $expireYear = $year + (10 - $class);
+        }
+
+        $expireDate = $expireYear . '-12-31';
+        ?>
+
+        <div class="text-center small text-danger mt-2 font-weight-bold">
+            Expire Date: <?= date('d M Y', strtotime($expireDate)) ?>
         </div>
 
         <br>
