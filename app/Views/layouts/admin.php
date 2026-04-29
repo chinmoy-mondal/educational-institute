@@ -17,116 +17,68 @@
 
   <style>
     /* =========================
-   SMALL BOX FIX (ADMINLTE)
+   SMALL BOX BASE STYLE
 ========================= */
     .small-box .inner h3 {
-      font-size: 28px;
+      font-size: 22px;
       font-weight: 700;
-      line-height: 1.2;
-
-      /* Prevent layout breaking */
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
-      max-width: 100%;
-      display: block;
+      margin: 0;
     }
 
-    /* Prevent long text overflow in cards */
     .small-box .inner p {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      font-size: 13px;
+      margin: 0;
     }
 
-    /* Icon positioning fix */
+    /* Icon transparency fix */
     .small-box .icon {
       opacity: 0.2;
     }
 
     /* =========================
-   RESPONSIVE FONT CONTROL
+   RESPONSIVE (TABLET)
 ========================= */
-
-    /* Tablet */
     @media (max-width: 768px) {
       .small-box .inner h3 {
-        font-size: 20px;
-      }
-
-      .small-box .inner p {
-        font-size: 13px;
-      }
-    }
-
-    /* Mobile */
-    @media (max-width: 480px) {
-      .small-box .inner h3 {
-        font-size: 16px;
+        font-size: 18px;
       }
 
       .small-box .inner p {
         font-size: 12px;
       }
-    }
 
-    /* =========================
-   MONEY VALUE SPECIAL FIX
-========================= */
-    .responsive-money {
-      font-weight: 700;
-      font-size: 28px;
-
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
-      display: block;
-    }
-
-    /* Money responsive scaling */
-    @media (max-width: 768px) {
-      .responsive-money {
-        font-size: 20px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .responsive-money {
-        font-size: 16px;
-      }
-    }
-
-    /* =========================
-   CARD SPACING FIX
-  ========================= */
-    .small-box {
-      border-radius: 10px;
-    }
-
-    /* Prevent grid overflow issues */
-    .row>div {
-      margin-bottom: 15px;
-    }
-
-    /* =========================
-   ICON FIX
-  ========================= */
-    .small-box .icon i {
-      font-size: 60px;
-    }
-
-    @media (max-width: 768px) {
       .small-box .icon i {
         font-size: 45px;
       }
     }
 
+    /* =========================
+   RESPONSIVE (MOBILE)
+========================= */
     @media (max-width: 480px) {
+      .small-box .inner h3 {
+        font-size: 16px;
+      }
+
+      .small-box .inner p {
+        font-size: 11px;
+      }
+
       .small-box .icon i {
         font-size: 35px;
       }
+    }
+
+    /* =========================
+   BOX STYLE CLEANUP
+========================= */
+    .small-box {
+      border-radius: 10px;
+    }
+
+    /* spacing between cards */
+    .row>div {
+      margin-bottom: 15px;
     }
   </style>
 
