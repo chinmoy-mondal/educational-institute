@@ -4,172 +4,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= esc(env('school.name')) ?></title>
 
+    <title><?= esc(env('clinic.name') ?? 'Victoria Clinic') ?></title>
+
+    <!-- Bootstrap -->
     <link rel="stylesheet" href="<?= base_url('public/assets/css/bootstrap.min.css'); ?>">
     <script src="<?= base_url('public/assets/js/bootstrap.bundle.min.js') ?>"></script>
 
-
-
+    <!-- FontAwesome -->
     <script src="https://kit.fontawesome.com/cbc3035612.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <style>
-    /* First Line (Contact & Social) */
+    body {
+        background: #f5f9ff;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* TOP BAR */
     .top-bar {
-        background: #007bff;
+        background: #0d6efd;
         color: white;
-        padding: 5px 0;
+        padding: 6px 0;
         font-size: 14px;
     }
 
     .top-bar a {
         color: white;
-        margin: 0 10px;
         text-decoration: none;
+        margin-right: 15px;
     }
 
-    /* Second Line (Logo & Navigation) */
+    /* NAVBAR */
     .navbar {
-        background: white;
-        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .navbar-brand {
-        font-weight: bold;
-        font-size: 22px;
+        background: #ffffff !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
 
     .navbar-brand img {
-        width: 60px;
-        /* Set logo width */
-        height: auto;
-        /* Maintain aspect ratio */
-        margin-right: 10px;
-        /* Space between logo and text */
-    }
-
-    .navbar-toggler {
-        border: none;
-    }
-
-    /* Fixed Positioning */
-    .fixed-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 1000;
-    }
-
-    .image-container img {
-        background-color: #f8f9fa;
-        padding: 10px;
-        border-radius: 10px;
-        height: 300px;
-    }
-
-    .welcome-text {
-        text-align: justify;
-    }
-
-    /* Push content down to avoid overlap */
-    .content {
-        margin-top: 150px;
-        /* Adjust based on navbar height */
-    }
-
-    .course-card {
-        border: 2px solid #ddd;
-        /* Light border around the card */
-        border-radius: 15px;
-        /* Rounded corners */
-        padding: 20px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        /* Light shadow for depth */
-        text-align: center;
-        background-color: #fff;
-        /* White background for the card */
-        overflow: hidden;
-        /* Ensure the image is clipped to the rounded corners */
-        position: relative;
-        /* For background-image positioning */
-    }
-
-    .course-card img {
-        width: 100%;
-        /* Ensure the image fills the container */
-        height: 100px;
-        /* Fixed height */
-        object-fit: cover;
-        /* Cover the space without stretching */
-        border-radius: 15px;
-        /* Round the image corners */
-        margin-bottom: 15px;
-        /* Space below the image */
-    }
-
-    /* Optional background image for the card */
-    .course-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-image: url('<?= base_url('public/assets/img/ima1.jpg'); ?>');
-        /* Replace with your background image */
-        background-size: cover;
-        background-position: center;
-        opacity: 0.1;
-        /* Light opacity for subtle background image */
-        border-radius: 15px;
-        /* Ensure the background image has rounded corners */
-        z-index: -1;
-        /* Place the background behind the content */
-    }
-
-    .btn-light-custom {
-        background-color: #28a745;
-        /* Lighter green (adjust as needed) */
-        border: 1px solid #28a745;
-        /* Matching border color */
-        color: white;
-    }
-
-    .btn-light-custom:hover {
-        background-color: #6fda6a;
-        /* A softer hover color */
-        border-color: #6fda6a;
-        /* Border color on hover */
-        color: white;
+        height: 40px;
+        margin-right: 8px;
     }
 
     .nav-item {
-        margin-left: 20px;
-        /* Adjust left spacing */
+        margin-left: 15px;
     }
 
-    /* Responsive Adjustments */
+    .nav-link {
+        font-weight: 500;
+        color: #333 !important;
+    }
+
+    .nav-link:hover {
+        color: #0d6efd !important;
+    }
+
+    /* HERO */
+    .hero {
+        background: linear-gradient(to right, #0d6efd, #00c6ff);
+        color: white;
+        padding: 100px 0;
+        text-align: center;
+    }
+
+    .hero h1 {
+        font-size: 42px;
+        font-weight: 700;
+    }
+
+    .hero p {
+        font-size: 18px;
+        margin-top: 10px;
+    }
+
+    /* BUTTON */
+    .btn-clinic {
+        background: #ffffff;
+        color: #0d6efd;
+        font-weight: 600;
+        border-radius: 30px;
+        padding: 10px 25px;
+        margin-top: 15px;
+    }
+
+    .btn-clinic:hover {
+        background: #e6f0ff;
+    }
+
+    /* CARDS */
+    .card-clinic {
+        border: none;
+        border-radius: 15px;
+        padding: 25px;
+        transition: 0.3s;
+        background: #ffffff;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-clinic:hover {
+        transform: translateY(-8px);
+    }
+
+    /* SECTION TITLE */
+    .section-title {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .section-title h2 {
+        font-weight: 700;
+        color: #0d6efd;
+    }
+
+    /* DOCTOR CARD */
+    .doctor-card img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        border-radius: 15px;
+    }
+
+    /* FOOTER */
+    footer {
+        background: #0d6efd;
+        color: white;
+        padding: 40px 0;
+        margin-top: 60px;
+    }
+
+    footer a {
+        color: white;
+        text-decoration: none;
+    }
+
+    /* CONTENT SPACING */
+    .content {
+        margin-top: 120px;
+    }
+
+    /* MOBILE */
     @media (max-width: 768px) {
-        .top-bar {
-            font-size: 12px;
-            text-align: center;
+        .hero h1 {
+            font-size: 28px;
         }
 
-        .top-bar .d-flex {
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .navbar-brand img {
-            width: 50px;
-            /* Smaller logo on mobile */
+        .hero {
+            padding: 70px 0;
         }
 
         .content {
-            margin-top: 120px;
-            /* Extra space for small screens */
+            margin-top: 100px;
         }
     }
     </style>
@@ -177,9 +165,95 @@
 
 <body>
 
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <div class="container d-flex justify-content-between">
+            <div>
+                <i class="fas fa-phone"></i>
+                <a href="#"><?= esc(env('clinic.phone') ?? '01XXXXXXXXX') ?></a>
 
-    <?= $this->rendersection("content") ?>
+                <i class="fas fa-envelope ms-3"></i>
+                <a href="#"><?= esc(env('clinic.email') ?? 'info@clinic.com') ?></a>
+            </div>
 
+            <div>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+
+            <a class="navbar-brand d-flex align-items-center" href="<?= base_url() ?>">
+                <img src="<?= base_url('public/assets/img/logo.jpg'); ?>">
+                <?= esc(env('clinic.name') ?? 'Victoria Clinic') ?>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="nav">
+
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="<?= base_url() ?>">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Doctors</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Appointments</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+                </ul>
+
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a href="<?= base_url('login') ?>" class="btn btn-primary">Login</a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="content">
+        <?= $this->renderSection("content") ?>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container">
+            <div class="row">
+
+                <div class="col-md-4">
+                    <h5>Contact</h5>
+                    <p><?= esc(env('clinic.address') ?? 'Dhaka, Bangladesh') ?></p>
+                    <p><?= esc(env('clinic.phone')) ?></p>
+                </div>
+
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Doctors</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">Appointments</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-4">
+                    <h5>Location</h5>
+                    <iframe width="100%" height="150" style="border:0"
+                        src="https://maps.google.com/maps?q=dhaka&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
+                </div>
+
+            </div>
+
+            <div class="text-center mt-3">
+                <p>© <?= date('Y') ?> <?= esc(env('clinic.name') ?? 'Victoria Clinic') ?></p>
+            </div>
+        </div>
+    </footer>
 
 </body>
 
