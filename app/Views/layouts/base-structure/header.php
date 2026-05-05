@@ -17,55 +17,32 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
 
+    <!-- Global Style -->
     <style>
         body {
             font-family: 'Poppins', sans-serif;
             background: #f6f9fc;
         }
 
-        /* Page spacing (fix navbar overlap) */
-        .content {
-            padding-top: 85px;
-            padding-bottom: 50px;
-        }
-
-        /* Modern card UI */
+        /* Cards */
         .card {
             border: none;
             border-radius: 16px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
         }
 
-        /* Primary button gradient */
+        /* Buttons */
         .btn-primary {
             background: linear-gradient(90deg, #0d6efd, #20c997);
             border: none;
         }
 
-        /* Smooth transitions */
-        * {
-            transition: 0.2s ease-in-out;
+        /* Content spacing */
+        .content {
+            padding-top: 80px;
         }
     </style>
 
 </head>
 
 <body>
-
-    <!-- HEADER -->
-    <?= $this->include("layouts/base-structure/navbar"); ?>
-
-    <!-- MAIN CONTENT -->
-    <div class="content">
-        <?= $this->renderSection("content"); ?>
-    </div>
-
-    <!-- FOOTER -->
-    <?= $this->include("layouts/base-structure/footer"); ?>
-
-    <!-- SCRIPTS -->
-    <?= $this->include("layouts/base-structure/scripts"); ?>
-
-</body>
-
-</html>
