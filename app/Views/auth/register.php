@@ -4,14 +4,14 @@
 <div class="container content">
 
     <div class="row justify-content-center">
-        <div class="col-lg-7 col-md-9">
+        <div class="col-lg-6 col-md-8">
 
-            <div class="card p-4 shadow-sm">
+            <div class="card p-4 shadow-sm border-0">
 
                 <!-- HEADER -->
                 <div class="text-center mb-4">
                     <h3 class="fw-bold text-primary">Create Account</h3>
-                    <p class="text-muted">Clinic Management System Registration</p>
+                    <p class="text-muted">Clinic Management System</p>
                 </div>
 
                 <!-- ERRORS -->
@@ -34,27 +34,21 @@
                         <div class="col-12">
                             <label class="form-label">Full Name</label>
                             <input type="text" name="name" class="form-control form-control-lg"
-                                value="<?= old('name') ?>">
+                                value="<?= old('name') ?>" placeholder="Enter full name">
                         </div>
 
-                        <!-- ROLE (CLINIC) -->
+                        <!-- ROLE (ONLY ADMIN TYPES) -->
                         <div class="col-12">
-                            <label class="form-label">Role</label>
-                            <select class="form-select form-control-lg" id="role" name="role">
-                                <option value="">Select Role</option>
-                                <option value="Doctor">Doctor</option>
-                                <option value="Nurse">Nurse</option>
-                                <option value="Receptionist">Receptionist</option>
-                                <option value="Lab Technician">Lab Technician</option>
-                                <option value="Pharmacist">Pharmacist</option>
-                                <option value="Staff">Staff</option>
+                            <label class="form-label">Account Type</label>
+                            <select class="form-select form-control-lg" name="role" required>
+                                <option value="">Select Account Type</option>
+                                <option value="Super Admin" <?= old('role') === 'Super Admin' ? 'selected' : '' ?>>
+                                    Super Admin
+                                </option>
+                                <option value="Admin" <?= old('role') === 'Admin' ? 'selected' : '' ?>>
+                                    Admin
+                                </option>
                             </select>
-                        </div>
-
-                        <!-- DESIGNATION -->
-                        <div class="col-12 d-none" id="designationGroup">
-                            <label class="form-label">Designation</label>
-                            <select class="form-select form-control-lg" id="designation" name="designation"></select>
                         </div>
 
                         <!-- GENDER -->
@@ -62,34 +56,38 @@
                             <label class="form-label">Gender</label>
                             <select class="form-select form-control-lg" name="gender">
                                 <option value="">Select</option>
-                                <option>Male</option>
-                                <option>Female</option>
-                                <option>Others</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Others">Others</option>
                             </select>
                         </div>
 
                         <!-- PHONE -->
                         <div class="col-md-6">
                             <label class="form-label">Phone</label>
-                            <input type="text" name="phone" class="form-control form-control-lg">
+                            <input type="text" name="phone" class="form-control form-control-lg"
+                                placeholder="Phone number">
                         </div>
 
                         <!-- EMAIL -->
                         <div class="col-12">
                             <label class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control form-control-lg">
+                            <input type="email" name="email" class="form-control form-control-lg"
+                                placeholder="Email address">
                         </div>
 
                         <!-- PASSWORD -->
                         <div class="col-md-6">
                             <label class="form-label">Password</label>
-                            <input type="password" name="password" class="form-control form-control-lg">
+                            <input type="password" name="password" class="form-control form-control-lg"
+                                placeholder="Password">
                         </div>
 
                         <!-- CONFIRM -->
                         <div class="col-md-6">
                             <label class="form-label">Confirm</label>
-                            <input type="password" name="confirm_password" class="form-control form-control-lg">
+                            <input type="password" name="confirm_password" class="form-control form-control-lg"
+                                placeholder="Confirm password">
                         </div>
 
                         <!-- SUBMIT -->
@@ -102,54 +100,16 @@
                     </div>
                 </form>
 
+                <!-- LOGIN -->
+                <div class="text-center mt-3">
+                    <small>Already have account? <a href="<?= base_url('/login') ?>">Login</a></small>
+                </div>
+
             </div>
 
         </div>
     </div>
 
 </div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-
-        const role = document.getElementById("role");
-        const designationGroup = document.getElementById("designationGroup");
-        const designation = document.getElementById("designation");
-
-        // Clinic designations
-        const map = {
-            "Doctor": ["Senior Doctor", "Junior Doctor", "Consultant"],
-            "Nurse": ["Head Nurse", "Staff Nurse"],
-            "Receptionist": ["Front Desk Officer"],
-            "Lab Technician": ["Lab Assistant", "Senior Lab Tech"],
-            "Pharmacist": ["Pharmacy Officer"],
-            "Staff": ["Cleaner", "Assistant Staff"]
-        };
-
-        role.addEventListener("change", function() {
-
-            let val = this.value;
-
-            if (map[val]) {
-                designationGroup.classList.remove("d-none");
-
-                designation.innerHTML = "";
-
-                map[val].forEach(item => {
-                    let opt = document.createElement("option");
-                    opt.value = item;
-                    opt.textContent = item;
-                    designation.appendChild(opt);
-                });
-
-            } else {
-                designationGroup.classList.add("d-none");
-                designation.innerHTML = "";
-            }
-
-        });
-
-    });
-</script>
 
 <?= $this->endSection(); ?>
