@@ -1,32 +1,60 @@
 <?= $this->extend("layouts/base.php") ?>
 <?= $this->section("content"); ?>
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg">
-                <div class="card-body">
-                    <h3 class="text-center mb-4">Reset Password</h3>
+<!-- CENTER WRAPPER -->
+<div class="container content d-flex align-items-center justify-content-center" style="min-height:80vh;">
 
-                    <form method="post" action="<?= base_url('/reset-password/update') ?>">
-                        <input type="hidden" name="token" value="<?= esc($token) ?>">
+    <div class="row w-100 justify-content-center">
 
-                        <div class="mb-3">
-                            <label>New Password</label>
-                            <input type="password" name="password" class="form-control" required>
-                        </div>
+        <div class="col-md-5 col-lg-4">
 
-                        <div class="mb-3">
-                            <label>Confirm Password</label>
-                            <input type="password" name="password_confirm" class="form-control" required>
-                        </div>
+            <!-- CARD -->
+            <div class="card p-4 shadow-sm border-0">
 
-                        <button type="submit" class="btn btn-success w-100">Update Password</button>
-                    </form>
+                <!-- HEADER -->
+                <div class="text-center mb-4">
+                    <h3 class="fw-bold text-primary">Reset Password</h3>
+                    <p class="text-muted">Create a new secure password</p>
                 </div>
+
+                <form method="post" action="<?= base_url('/reset-password/update') ?>">
+
+                    <input type="hidden" name="token" value="<?= esc($token) ?>">
+
+                    <!-- NEW PASSWORD -->
+                    <div class="mb-3">
+                        <label class="form-label">New Password</label>
+                        <input type="password" name="password" class="form-control form-control-lg"
+                            placeholder="Enter new password" required>
+                    </div>
+
+                    <!-- CONFIRM PASSWORD -->
+                    <div class="mb-3">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" name="password_confirm" class="form-control form-control-lg"
+                            placeholder="Confirm password" required>
+                    </div>
+
+                    <!-- BUTTON -->
+                    <button type="submit" class="btn btn-success btn-lg w-100">
+                        Update Password
+                    </button>
+
+                </form>
+
+                <!-- BACK -->
+                <div class="text-center mt-3">
+                    <a href="<?= base_url('/login') ?>" class="small text-primary">
+                        Back to Login
+                    </a>
+                </div>
+
             </div>
+
         </div>
+
     </div>
+
 </div>
 
 <?= $this->endSection(); ?>
