@@ -14,33 +14,33 @@
     <script src="https://kit.fontawesome.com/cbc3035612.js"></script>
 
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Global Style -->
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f6f9fc;
-        }
+    body {
+        font-family: 'Inter', sans-serif;
+        background: #f5f7fb;
+        color: #1f2937;
+    }
 
-        /* Cards */
-        .card {
-            border: none;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
-        }
+    /* global content spacing */
+    .content {
+        padding-top: 90px;
+        padding-bottom: 50px;
+    }
 
-        /* Buttons */
-        .btn-primary {
-            background: linear-gradient(90deg, #0d6efd, #20c997);
-            border: none;
-        }
+    /* modern card */
+    .card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+    }
 
-        /* Content spacing */
-        .content {
-            padding-top: 80px;
-        }
+    /* smooth UI */
+    a,
+    button {
+        transition: 0.2s;
+    }
     </style>
 
 </head>

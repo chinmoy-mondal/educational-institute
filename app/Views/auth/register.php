@@ -1,187 +1,198 @@
 <?= $this->extend("layouts/base.php") ?>
 <?= $this->section("content"); ?>
 
-<!-- Fixed Wrapper for Navbar -->
-<div class="fixed-header">
-    <?= $this->include("layouts/base-structure/header"); ?>
-</div>
+<div class="container content">
 
-<!-- Registration Form -->
-<div class="container content mb-5 pb-5">
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-lg rounded">
-                <div class="card-body">
-                    <h3 class="card-title text-center mb-4">Register</h3>
+        <div class="col-lg-7 col-md-9">
 
-                    <!-- Error Flash Messages -->
-                    <?php if (session()->getFlashdata('errors')) : ?>
-                        <div class="alert alert-danger">
-                            <ul class="mb-0">
-                                <?php foreach (session()->getFlashdata('errors') as $error) : ?>
-                                    <li><?= esc($error) ?></li>
-                                <?php endforeach; ?>
-                            </ul>
+            <!-- 🌟 CARD -->
+            <div class="card p-4 shadow-sm">
+
+                <!-- HEADER -->
+                <div class="text-center mb-4">
+                    <h3 class="fw-bold text-primary">Create Account</h3>
+                    <p class="text-muted">Clinic Management System Registration</p>
+                </div>
+
+                <!-- ERRORS -->
+                <?php if (session()->getFlashdata('errors')) : ?>
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            <?php foreach (session()->getFlashdata('errors') as $error) : ?>
+                                <li><?= esc($error) ?></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                <?php endif; ?>
+
+                <form action="<?= base_url('/register') ?>" method="post" id="registerForm">
+                    <?= csrf_field() ?>
+
+                    <div class="row g-3">
+
+                        <!-- NAME -->
+                        <div class="col-12">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" name="name" class="form-control form-control-lg"
+                                placeholder="Enter full name" value="<?= old('name') ?>">
                         </div>
-                    <?php endif; ?>
 
-                    <form action="<?= base_url('/register') ?>" method="post" id="registerForm">
-                        <?= csrf_field() ?>
-                        <!-- Full Name -->
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Full Name</label>
-                            <input type="text" class="form-control form-control-lg" id="name" name="name" value="<?= old('name') ?>" placeholder="Enter full name" >
-                        </div>
-
-                        <!-- Role -->
-                        <div class="mb-3">
-                            <label for="role" class="form-label">Role</label>
-                            <select class="form-select form-control-lg" id="role" name="role" >
-                                <option disabled <?= old('role') ? '' : 'selected' ?>>Select Role</option>
-                                <option value="Teacher" <?= old('role') === 'Teacher' ? 'selected' : '' ?>>Teacher</option>
+                        <!-- ROLE -->
+                        <div class="col-12">
+                            <label class="form-label">Role</label>
+                            <select class="form-select form-control-lg" id="role" name="role">
+                                <option value="">Select Role</option>
+                                <option value="Teacher" <?= old('role') === 'Teacher' ? 'selected' : '' ?>>Teacher
+                                </option>
                                 <option value="Staff" <?= old('role') === 'Staff' ? 'selected' : '' ?>>Staff</option>
                             </select>
                         </div>
 
-                        <!-- Designation -->
-			<div class="mb-3 <?= old('role') ? '' : 'd-none' ?>" id="designationGroup">
-			    <label for="designation" class="form-label">Designation</label>
-			    <select class="form-select form-control-lg" id="designation" name="designation">
-				<option disabled selected>Select Designation</option>
-				<!-- Options will be populated by JavaScript -->
-			    </select>
-			</div>
+                        <!-- DESIGNATION -->
+                        <div class="col-12 d-none" id="designationGroup">
+                            <label class="form-label">Designation</label>
+                            <select class="form-select form-control-lg" id="designation" name="designation"></select>
+                        </div>
 
-                                
-
-                        <!-- Subject -->
-                        <div class="mb-3 <?= old('role') === 'Teacher' ? '' : 'd-none' ?>" id="subjectGroup">
-                            <label for="subject" class="form-label">Subject</label>
-                            <select class="form-select form-control-lg" id="subject" name="subject">
-                                <option disabled <?= old('subject') ? '' : 'selected' ?>>Select Subject</option>
+                        <!-- SUBJECT -->
+                        <div class="col-12 d-none" id="subjectGroup">
+                            <label class="form-label">Subject</label>
+                            <select class="form-select form-control-lg" name="subject">
+                                <option value="">Select Subject</option>
                                 <?php
                                 $subjects = [
-                                    'Bangla', 'English', 'Mathematics', 'Science', 'Physics', 'Chemistry', 'Biology',
-                                    'ICT (Information and Communication Technology)', 'Bangladesh and Global Studies',
-                                    'Religion (Hinduism)','Religion (Islam)', 'Physical Education and Health', 'History', 'Civics', 'Sociology',
-                                   'Geography', 'Accounting', 'Finance', 'Agriculture', 'Food Processing & Preservation',
-                                    'Library and Information Science', 'N/A'
+                                    'Bangla',
+                                    'English',
+                                    'Mathematics',
+                                    'Science',
+                                    'Physics',
+                                    'Chemistry',
+                                    'Biology',
+                                    'ICT (Information and Communication Technology)',
+                                    'Bangladesh and Global Studies',
+                                    'Religion (Hinduism)',
+                                    'Religion (Islam)',
+                                    'Physical Education and Health',
+                                    'History',
+                                    'Civics',
+                                    'Sociology',
+                                    'Geography',
+                                    'Accounting',
+                                    'Finance',
+                                    'Agriculture',
+                                    'Food Processing & Preservation',
+                                    'Library and Information Science',
+                                    'N/A'
                                 ];
-                                foreach ($subjects as $subj) :
+                                foreach ($subjects as $subj):
                                 ?>
                                     <option <?= old('subject') === $subj ? 'selected' : '' ?>><?= $subj ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
 
-                        <!-- Gender -->
-                        <div class="mb-3">
-                            <label for="gender" class="form-label">Gender</label>
-                            <select class="form-select form-control-lg" id="gender" name="gender" >
-                                <option disabled <?= old('gender') ? '' : 'selected' ?>>Select Gender</option>
+                        <!-- GENDER -->
+                        <div class="col-md-6">
+                            <label class="form-label">Gender</label>
+                            <select class="form-select form-control-lg" name="gender">
+                                <option value="">Select</option>
                                 <option value="Male" <?= old('gender') === 'Male' ? 'selected' : '' ?>>Male</option>
-                                <option value="Female" <?= old('gender') === 'Female' ? 'selected' : '' ?>>Female</option>
-                                <option value="Others" <?= old('gender') === 'Others' ? 'selected' : '' ?>>Others</option>
+                                <option value="Female" <?= old('gender') === 'Female' ? 'selected' : '' ?>>Female
+                                </option>
+                                <option value="Others" <?= old('gender') === 'Others' ? 'selected' : '' ?>>Others
+                                </option>
                             </select>
                         </div>
 
-                        <!-- Phone -->
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Phone Number</label>
-                            <input type="tel" class="form-control form-control-lg" id="phone" name="phone" value="<?= old('phone') ?>" placeholder="Enter phone number" >
+                        <!-- PHONE -->
+                        <div class="col-md-6">
+                            <label class="form-label">Phone</label>
+                            <input type="text" name="phone" class="form-control form-control-lg"
+                                placeholder="Phone number" value="<?= old('phone') ?>">
                         </div>
 
-                        <!-- Email -->
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email Address</label>
-                            <input type="email" class="form-control form-control-lg" id="email" name="email" value="<?= old('email') ?>" placeholder="Enter email" >
+                        <!-- EMAIL -->
+                        <div class="col-12">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control form-control-lg"
+                                placeholder="Email address" value="<?= old('email') ?>">
                         </div>
 
-                        <!-- Password -->
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Create password" >
+                        <!-- PASSWORD -->
+                        <div class="col-md-6">
+                            <label class="form-label">Password</label>
+                            <input type="password" name="password" class="form-control form-control-lg"
+                                placeholder="Password">
                         </div>
 
-                        <!-- Confirm Password -->
-                        <div class="mb-3">
-                            <label for="confirm_password" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control form-control-lg" id="confirm_password" name="confirm_password" placeholder="Confirm password" >
+                        <!-- CONFIRM -->
+                        <div class="col-md-6">
+                            <label class="form-label">Confirm</label>
+                            <input type="password" name="confirm_password" class="form-control form-control-lg"
+                                placeholder="Confirm password">
                         </div>
 
-                        <!-- Submit -->
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-success btn-lg">Register</button>
+                        <!-- SUBMIT -->
+                        <div class="col-12 mt-3">
+                            <button class="btn btn-primary btn-lg w-100">
+                                Register Account
+                            </button>
                         </div>
-                    </form>
-                    <p class="text-center mt-3">Already have an account? <a href="<?= base_url('/login') ?>">Login here</a></p>
+
+                    </div>
+                </form>
+
+                <!-- LOGIN -->
+                <div class="text-center mt-3">
+                    <small>Already have account? <a href="<?= base_url('/login') ?>">Login</a></small>
                 </div>
+
             </div>
+
         </div>
     </div>
+
 </div>
 
-<!-- Footer -->
-<?= $this->include("layouts/base-structure/footer"); ?>
-
-<!-- JS to Show/Hide Designation and Subject -->
+<!-- JS -->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const roleSelect = document.getElementById("role");
-    const designationSelect = document.getElementById("designation");
-    const subjectGroup = document.getElementById("subjectGroup");
-    const designationGroup = document.getElementById("designationGroup");
+    document.addEventListener("DOMContentLoaded", function() {
 
-    const oldDesignation = "<?= old('designation') ?>";
+        const role = document.getElementById("role");
+        const designationGroup = document.getElementById("designationGroup");
+        const designation = document.getElementById("designation");
+        const subjectGroup = document.getElementById("subjectGroup");
 
-    const teacherDesignations = [
-        'Head Teacher', 'Asst. Head Teacher', 'Asst. Teacher', 'Trade Instructor'
-    ];
+        const teacher = ['Head Teacher', 'Asst. Head Teacher', 'Asst. Teacher', 'Trade Instructor'];
+        const staff = ['Trade Assistant', 'Office Assistant', 'Security Guard', 'Cleaner'];
 
-    const staffDesignations = [
-        'Trade assistant', '3rd Classs Employee', '4th Class Employee', 
-        'Officeassistant(mlss)', 'Security Guard', 'Cleaner', 'Ayah'
-    ];
+        role.addEventListener("change", function() {
 
-    function toggleFields() {
-        const selectedRole = roleSelect.value;
-
-        if (selectedRole === "Teacher" || selectedRole === "Staff") {
             designationGroup.classList.remove("d-none");
-        } else {
-            designationGroup.classList.add("d-none");
-        }
 
-        if (selectedRole === "Teacher") {
-            populateDesignation(teacherDesignations);
-            subjectGroup.classList.remove("d-none");
-        } else if (selectedRole === "Staff") {
-            populateDesignation(staffDesignations);
-            subjectGroup.classList.add("d-none");
-        } else {
-            designationSelect.innerHTML = '<option disabled selected>Select Designation</option>';
-            subjectGroup.classList.add("d-none");
-        }
-    }
+            let list = [];
 
-    function populateDesignation(designationOptions) {
-        designationSelect.innerHTML = '<option disabled>Select Designation</option>';
-        designationOptions.forEach(function(designation) {
-            const option = document.createElement("option");
-            option.value = designation;
-            option.textContent = designation;
-
-            // Check if this was previously selected
-            if (designation === oldDesignation) {
-                option.selected = true;
+            if (this.value === "Teacher") {
+                list = teacher;
+                subjectGroup.classList.remove("d-none");
+            } else {
+                list = staff;
+                subjectGroup.classList.add("d-none");
             }
 
-            designationSelect.appendChild(option);
-        });
-    }
+            designation.innerHTML = "";
 
-    roleSelect.addEventListener("change", toggleFields);
-    toggleFields(); // run on page load
-});
+            list.forEach(item => {
+                let opt = document.createElement("option");
+                opt.value = item;
+                opt.textContent = item;
+                designation.appendChild(opt);
+            });
+
+        });
+
+    });
 </script>
+
 <?= $this->endSection(); ?>

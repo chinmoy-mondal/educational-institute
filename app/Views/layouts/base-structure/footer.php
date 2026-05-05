@@ -1,7 +1,8 @@
-<footer class="bg-white text-center py-4 mt-5 shadow-sm">
+<footer class="bg-dark text-white text-center py-4 mt-5">
     <div class="container">
-        <small>
-            © <?= date('Y') ?> <?= esc(env('clinic.name') ?? 'Clinic System') ?> | All Rights Reserved
-        </small>
+        <p class="mb-0">
+            © <?= date('Y') ?> <?= esc(env('clinic.name') ?? 'Clinic System') ?>
+        </p>
+        <small class="text-muted">All Rights Reserved</small>
     </div>
 </footer>
