@@ -6,7 +6,6 @@
     <div class="row justify-content-center">
         <div class="col-lg-7 col-md-9">
 
-            <!-- 🌟 CARD -->
             <div class="card p-4 shadow-sm">
 
                 <!-- HEADER -->
@@ -26,7 +25,7 @@
                     </div>
                 <?php endif; ?>
 
-                <form action="<?= base_url('/register') ?>" method="post" id="registerForm">
+                <form action="<?= base_url('/register') ?>" method="post">
                     <?= csrf_field() ?>
 
                     <div class="row g-3">
@@ -35,17 +34,20 @@
                         <div class="col-12">
                             <label class="form-label">Full Name</label>
                             <input type="text" name="name" class="form-control form-control-lg"
-                                placeholder="Enter full name" value="<?= old('name') ?>">
+                                value="<?= old('name') ?>">
                         </div>
 
-                        <!-- ROLE -->
+                        <!-- ROLE (CLINIC) -->
                         <div class="col-12">
                             <label class="form-label">Role</label>
                             <select class="form-select form-control-lg" id="role" name="role">
                                 <option value="">Select Role</option>
-                                <option value="Teacher" <?= old('role') === 'Teacher' ? 'selected' : '' ?>>Teacher
-                                </option>
-                                <option value="Staff" <?= old('role') === 'Staff' ? 'selected' : '' ?>>Staff</option>
+                                <option value="Doctor">Doctor</option>
+                                <option value="Nurse">Nurse</option>
+                                <option value="Receptionist">Receptionist</option>
+                                <option value="Lab Technician">Lab Technician</option>
+                                <option value="Pharmacist">Pharmacist</option>
+                                <option value="Staff">Staff</option>
                             </select>
                         </div>
 
@@ -55,98 +57,50 @@
                             <select class="form-select form-control-lg" id="designation" name="designation"></select>
                         </div>
 
-                        <!-- SUBJECT -->
-                        <div class="col-12 d-none" id="subjectGroup">
-                            <label class="form-label">Subject</label>
-                            <select class="form-select form-control-lg" name="subject">
-                                <option value="">Select Subject</option>
-                                <?php
-                                $subjects = [
-                                    'Bangla',
-                                    'English',
-                                    'Mathematics',
-                                    'Science',
-                                    'Physics',
-                                    'Chemistry',
-                                    'Biology',
-                                    'ICT (Information and Communication Technology)',
-                                    'Bangladesh and Global Studies',
-                                    'Religion (Hinduism)',
-                                    'Religion (Islam)',
-                                    'Physical Education and Health',
-                                    'History',
-                                    'Civics',
-                                    'Sociology',
-                                    'Geography',
-                                    'Accounting',
-                                    'Finance',
-                                    'Agriculture',
-                                    'Food Processing & Preservation',
-                                    'Library and Information Science',
-                                    'N/A'
-                                ];
-                                foreach ($subjects as $subj):
-                                ?>
-                                    <option <?= old('subject') === $subj ? 'selected' : '' ?>><?= $subj ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
                         <!-- GENDER -->
                         <div class="col-md-6">
                             <label class="form-label">Gender</label>
                             <select class="form-select form-control-lg" name="gender">
                                 <option value="">Select</option>
-                                <option value="Male" <?= old('gender') === 'Male' ? 'selected' : '' ?>>Male</option>
-                                <option value="Female" <?= old('gender') === 'Female' ? 'selected' : '' ?>>Female
-                                </option>
-                                <option value="Others" <?= old('gender') === 'Others' ? 'selected' : '' ?>>Others
-                                </option>
+                                <option>Male</option>
+                                <option>Female</option>
+                                <option>Others</option>
                             </select>
                         </div>
 
                         <!-- PHONE -->
                         <div class="col-md-6">
                             <label class="form-label">Phone</label>
-                            <input type="text" name="phone" class="form-control form-control-lg"
-                                placeholder="Phone number" value="<?= old('phone') ?>">
+                            <input type="text" name="phone" class="form-control form-control-lg">
                         </div>
 
                         <!-- EMAIL -->
                         <div class="col-12">
                             <label class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control form-control-lg"
-                                placeholder="Email address" value="<?= old('email') ?>">
+                            <input type="email" name="email" class="form-control form-control-lg">
                         </div>
 
                         <!-- PASSWORD -->
                         <div class="col-md-6">
                             <label class="form-label">Password</label>
-                            <input type="password" name="password" class="form-control form-control-lg"
-                                placeholder="Password">
+                            <input type="password" name="password" class="form-control form-control-lg">
                         </div>
 
                         <!-- CONFIRM -->
                         <div class="col-md-6">
                             <label class="form-label">Confirm</label>
-                            <input type="password" name="confirm_password" class="form-control form-control-lg"
-                                placeholder="Confirm password">
+                            <input type="password" name="confirm_password" class="form-control form-control-lg">
                         </div>
 
                         <!-- SUBMIT -->
                         <div class="col-12 mt-3">
                             <button class="btn btn-primary btn-lg w-100">
-                                Register Account
+                                Create Account
                             </button>
                         </div>
 
                     </div>
                 </form>
-
-                <!-- LOGIN -->
-                <div class="text-center mt-3">
-                    <small>Already have account? <a href="<?= base_url('/login') ?>">Login</a></small>
-                </div>
 
             </div>
 
@@ -155,40 +109,43 @@
 
 </div>
 
-<!-- JS -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
 
         const role = document.getElementById("role");
         const designationGroup = document.getElementById("designationGroup");
         const designation = document.getElementById("designation");
-        const subjectGroup = document.getElementById("subjectGroup");
 
-        const teacher = ['Head Teacher', 'Asst. Head Teacher', 'Asst. Teacher', 'Trade Instructor'];
-        const staff = ['Trade Assistant', 'Office Assistant', 'Security Guard', 'Cleaner'];
+        // Clinic designations
+        const map = {
+            "Doctor": ["Senior Doctor", "Junior Doctor", "Consultant"],
+            "Nurse": ["Head Nurse", "Staff Nurse"],
+            "Receptionist": ["Front Desk Officer"],
+            "Lab Technician": ["Lab Assistant", "Senior Lab Tech"],
+            "Pharmacist": ["Pharmacy Officer"],
+            "Staff": ["Cleaner", "Assistant Staff"]
+        };
 
         role.addEventListener("change", function() {
 
-            designationGroup.classList.remove("d-none");
+            let val = this.value;
 
-            let list = [];
+            if (map[val]) {
+                designationGroup.classList.remove("d-none");
 
-            if (this.value === "Teacher") {
-                list = teacher;
-                subjectGroup.classList.remove("d-none");
+                designation.innerHTML = "";
+
+                map[val].forEach(item => {
+                    let opt = document.createElement("option");
+                    opt.value = item;
+                    opt.textContent = item;
+                    designation.appendChild(opt);
+                });
+
             } else {
-                list = staff;
-                subjectGroup.classList.add("d-none");
+                designationGroup.classList.add("d-none");
+                designation.innerHTML = "";
             }
-
-            designation.innerHTML = "";
-
-            list.forEach(item => {
-                let opt = document.createElement("option");
-                opt.value = item;
-                opt.textContent = item;
-                designation.appendChild(opt);
-            });
 
         });
 
