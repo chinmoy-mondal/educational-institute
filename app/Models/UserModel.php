@@ -12,26 +12,13 @@ class UserModel extends Model
 	protected $allowedFields = [
 		'name',
 		'role',
-		'designation',
-		'subject',
 		'gender',
 		'phone',
 		'email',
-		'picture',
-		'assagin_sub',
-		'account_status',
-		'permit_by',
-		'blood_group',
-		'index_number',
-		'dob',
-		'joining_date',
-		'religion',
-		'mpo_date',
-		'bio',
-		'position',
-		'social_profile',
-		'password'  // <-- must include this
+		'password',
+		'account_status'
 	];
+
 	protected $useTimestamps = true;
 	protected $createdField  = 'created_at';
 	protected $updatedField  = 'updated_at';
