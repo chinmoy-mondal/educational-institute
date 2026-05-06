@@ -4,7 +4,7 @@
 <div class="container content">
 
     <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-8">
+        <div class="col-lg-6 col-md-8" style="margin-top: 20px;">
 
             <div class="card p-4 shadow-sm border-0">
 
@@ -16,13 +16,13 @@
 
                 <!-- ERRORS -->
                 <?php if (session()->getFlashdata('errors')) : ?>
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            <?php foreach (session()->getFlashdata('errors') as $error) : ?>
-                                <li><?= esc($error) ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        <?php foreach (session()->getFlashdata('errors') as $error) : ?>
+                        <li><?= esc($error) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
                 <?php endif; ?>
 
                 <form action="<?= base_url('/register') ?>" method="post">

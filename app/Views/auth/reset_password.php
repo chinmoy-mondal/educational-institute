@@ -6,7 +6,7 @@
 
     <div class="row w-100 justify-content-center">
 
-        <div class="col-md-5 col-lg-4">
+        <div class="col-md-5 col-lg-4" style="margin-top: 20px;">
 
             <!-- CARD -->
             <div class="card p-4 shadow-sm border-0">
