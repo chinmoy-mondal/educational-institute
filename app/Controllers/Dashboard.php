@@ -61,7 +61,7 @@ class Dashboard extends BaseController
             ->where('account_status', 0)
             ->countAllResults();
 
-        return view('dashboard/index', $this->data);
+        // return view('dashboard/index', $this->data);
     }
 
     // =========================
@@ -82,7 +82,7 @@ class Dashboard extends BaseController
 
         $this->data['user'] = $user;
 
-        return view('dashboard/profile', $this->data);
+        // return view('dashboard/profile', $this->data);
     }
 
     // =========================
@@ -101,7 +101,7 @@ class Dashboard extends BaseController
 
         $this->data['user'] = $user;
 
-        return view('dashboard/profile', $this->data);
+        // return view('dashboard/profile', $this->data);
     }
 
     // =========================
