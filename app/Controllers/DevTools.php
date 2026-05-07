@@ -66,7 +66,7 @@ class DevTools extends BaseController
             $db = \Config\Database::connect();
 
             // 1. Clear migration history safely
-            $db->table('ci_migrations')->truncate();
+            $db->table('migrations')->truncate();
 
             return "✅ Migration history cleared successfully. Now run migrate again.";
         } catch (\Throwable $e) {
@@ -86,7 +86,7 @@ class DevTools extends BaseController
 
         try {
             $db = \Config\Database::connect();
-            $builder = $db->table('ci_migrations');
+            $builder = $db->table('migrations');
 
             $migrations = $builder->get()->getResultArray();
 
