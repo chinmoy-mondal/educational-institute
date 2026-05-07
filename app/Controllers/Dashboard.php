@@ -21,7 +21,7 @@ class Dashboard extends BaseController
             exit;
         }
 
-        // 🌟 CATEGORY ONLY (GLOBAL SIDEBAR STRUCTURE)
+        // 🌟 ONLY CATEGORIES (GLOBAL)
         $this->data['sidebarCategories'] = [
             [
                 'label' => 'Dashboard',
@@ -30,13 +30,11 @@ class Dashboard extends BaseController
                 'url'   => 'dashboard',
                 'section' => 'dashboard'
             ],
-
             [
                 'label' => 'User Management',
                 'icon'  => 'fas fa-users',
                 'type'  => 'category'
             ],
-
             [
                 'label' => 'Clinic',
                 'icon'  => 'fas fa-hospital',
@@ -53,7 +51,7 @@ class Dashboard extends BaseController
         $this->data['title'] = 'Dashboard';
         $this->data['activeSection'] = 'dashboard';
 
-        // 🌟 SUBCATEGORIES ONLY (PAGE SPECIFIC)
+        // 🌟 ONLY SUBCATEGORIES (PAGE SPECIFIC)
         $this->data['sidebarSubItems'] = [
             'User Management' => [
                 [

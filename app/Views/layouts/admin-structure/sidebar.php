@@ -60,40 +60,44 @@
     <?php foreach ($sidebarItems ?? [] as $item): ?>
 
     <!-- SINGLE ITEM -->
-    <?php if ($item['type'] === 'single'): ?>
+    <?php if (($item['type'] ?? '') === 'single'): ?>
 
-    <a href="<?= base_url($item['url']) ?>"
-        class="<?= (($activeSection ?? '') === $item['section']) ? 'active' : '' ?>">
+    <a href="<?= base_url($item['url'] ?? '#') ?>"
+        class="<?= (($activeSection ?? '') === ($item['section'] ?? '')) ? 'active' : '' ?>">
 
-        <i class="<?= esc($item['icon']) ?>"></i>
-        <?= esc($item['label']) ?>
+        <i class="<?= esc($item['icon'] ?? '') ?>"></i>
+        <?= esc($item['label'] ?? '') ?>
     </a>
 
     <?php endif; ?>
 
 
     <!-- CATEGORY -->
-    <?php if ($item['type'] === 'category'): ?>
+    <?php if (($item['type'] ?? '') === 'category'): ?>
 
     <div class="category">
-        <i class="<?= esc($item['icon']) ?>"></i>
-        <?= esc($item['label']) ?>
+        <i class="<?= esc($item['icon'] ?? '') ?>"></i>
+        <?= esc($item['label'] ?? '') ?>
     </div>
 
-    <?php if (!empty($item['children'])): ?>
+    <?php $children = $item['children'] ?? []; ?>
+
+    <?php if (!empty($children) && is_array($children)): ?>
+
     <div class="submenu">
 
-        <?php foreach ($item['children'] as $child): ?>
+        <?php foreach ($children as $child): ?>
 
-        <a href="<?= base_url($child['url']) ?>"
-            class="<?= (($activeSection ?? '') === $child['section']) ? 'active' : '' ?>">
+        <a href="<?= base_url($child['url'] ?? '#') ?>"
+            class="<?= (($activeSection ?? '') === ($child['section'] ?? '')) ? 'active' : '' ?>">
 
-            <?= esc($child['label']) ?>
+            <?= esc($child['label'] ?? '') ?>
         </a>
 
         <?php endforeach; ?>
 
     </div>
+
     <?php endif; ?>
 
     <?php endif; ?>
