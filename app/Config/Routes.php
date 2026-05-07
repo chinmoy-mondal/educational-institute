@@ -42,10 +42,10 @@ $routes->get('activity-details/(:num)', 'Home::activityDetails/$1');
 
 // Migration DevTools routes (protected by secret key)
 $routes->get('run-migration/(:any)', 'DevTools::migrate/$1');
-$routes->get('run-rollback/(:any)', 'DevTools::rollback/$1');
-$routes->get('run-reset/(:any)', 'DevTools::reset/$1');
+// $routes->get('run-rollback/(:any)', 'DevTools::rollback/$1');
+// $routes->get('run-reset/(:any)', 'DevTools::reset/$1');
 $routes->get('run-status/(:any)', 'DevTools::status/$1');
-$routes->get('run-drop-attendance/(:any)', 'DevTools::dropAttendance/$1');
+// $routes->get('run-drop-attendance/(:any)', 'DevTools::dropAttendance/$1');
 
 #$routes->get('run-seed/(:any)', 'DevTools::seed/$1');
 
