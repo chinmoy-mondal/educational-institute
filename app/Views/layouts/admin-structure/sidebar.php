@@ -15,7 +15,6 @@
     margin-bottom: 25px;
 }
 
-/* MAIN LINK */
 .sidebar a {
     color: #cbd5e1;
     padding: 12px 20px;
@@ -33,7 +32,6 @@
     transform: translateX(5px);
 }
 
-/* CATEGORY TITLE */
 .sidebar .category {
     color: #94a3b8;
     font-size: 12px;
@@ -41,13 +39,11 @@
     text-transform: uppercase;
 }
 
-/* SUB MENU */
 .sidebar .submenu a {
     padding-left: 35px;
     font-size: 14px;
 }
 
-/* ICON */
 .sidebar i {
     margin-right: 8px;
 }
@@ -57,41 +53,39 @@
 
     <h4>🏥 Clinic Pro</h4>
 
-    <?php foreach ($sidebarItems ?? [] as $item): ?>
+    <?php foreach ($sidebarCategories ?? [] as $cat): ?>
 
     <!-- SINGLE ITEM -->
-    <?php if (($item['type'] ?? '') === 'single'): ?>
+    <?php if (($cat['type'] ?? '') === 'single'): ?>
 
-    <a href="<?= base_url($item['url'] ?? '#') ?>"
-        class="<?= (($activeSection ?? '') === ($item['section'] ?? '')) ? 'active' : '' ?>">
+    <a href="<?= base_url($cat['url']) ?>" class="<?= (($activeSection ?? '') === $cat['section']) ? 'active' : '' ?>">
 
-        <i class="<?= esc($item['icon'] ?? '') ?>"></i>
-        <?= esc($item['label'] ?? '') ?>
+        <i class="<?= esc($cat['icon']) ?>"></i>
+        <?= esc($cat['label']) ?>
     </a>
 
     <?php endif; ?>
 
-
     <!-- CATEGORY -->
-    <?php if (($item['type'] ?? '') === 'category'): ?>
+    <?php if (($cat['type'] ?? '') === 'category'): ?>
 
     <div class="category">
-        <i class="<?= esc($item['icon'] ?? '') ?>"></i>
-        <?= esc($item['label'] ?? '') ?>
+        <i class="<?= esc($cat['icon']) ?>"></i>
+        <?= esc($cat['label']) ?>
     </div>
 
-    <?php $children = $item['children'] ?? []; ?>
+    <?php $children = $sidebarSubItems[$cat['label']] ?? []; ?>
 
-    <?php if (!empty($children) && is_array($children)): ?>
+    <?php if (!empty($children)): ?>
 
     <div class="submenu">
 
         <?php foreach ($children as $child): ?>
 
-        <a href="<?= base_url($child['url'] ?? '#') ?>"
-            class="<?= (($activeSection ?? '') === ($child['section'] ?? '')) ? 'active' : '' ?>">
+        <a href="<?= base_url($child['url']) ?>"
+            class="<?= (($activeSection ?? '') === $child['section']) ? 'active' : '' ?>">
 
-            <?= esc($child['label'] ?? '') ?>
+            <?= esc($child['label']) ?>
         </a>
 
         <?php endforeach; ?>
