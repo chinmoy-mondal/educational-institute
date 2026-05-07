@@ -21,7 +21,8 @@
 
             <div class="col-md-4">
                 <input type="text" name="phone" class="form-control" placeholder="Enter phone number..."
-                    value="<?= esc($_GET['phone'] ?? '') ?>">
+                    value="<?= esc($_GET['phone'] ?? '') ?>" maxlength="11"
+                    oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,11);">
             </div>
 
             <div class="col-md-2">
@@ -35,9 +36,7 @@
     </form>
 
 
-    <!-- ========================= -->
     <!-- TABLE -->
-    <!-- ========================= -->
     <?php if (!empty($patients)): ?>
 
     <div class="card border-0 shadow-sm rounded-4">
@@ -57,7 +56,7 @@
                             <th>Age</th>
                             <th>Gender</th>
                             <th>Address</th>
-                            <th>Created At</th>
+                            <th>Created</th>
                             <th>Status</th>
                             <th class="text-end">Action</th>
                         </tr>
@@ -70,42 +69,35 @@
 
                         <tr>
 
-                            <!-- SL -->
                             <td><?= $key + 1 ?></td>
 
-                            <!-- NAME -->
                             <td>
                                 <div class="d-flex align-items-center">
                                     <img src="https://i.pravatar.cc/50?img=<?= esc($patient['id']) ?>"
                                         class="rounded-circle me-2" width="40">
-                                    <strong><?= esc($patient['name']) ?></strong>
+
+                                    <strong><?= esc($patient['name'] ?? '-') ?></strong>
                                 </div>
                             </td>
 
-                            <!-- PHONE -->
-                            <td><?= esc($patient['phone']) ?></td>
+                            <td><?= esc($patient['phone'] ?? '-') ?></td>
 
-                            <!-- AGE -->
                             <td><?= esc($patient['age'] ?? '-') ?></td>
 
-                            <!-- GENDER -->
                             <td>
                                 <span class="badge bg-secondary">
                                     <?= esc($patient['gender'] ?? '-') ?>
                                 </span>
                             </td>
 
-                            <!-- ADDRESS -->
+                            <td><?= esc($patient['address'] ?? '-') ?></td>
+
                             <td>
-                                <?= esc($patient['address'] ?? '-') ?>
+                                <?= !empty($patient['created_at'])
+                                            ? date('d M Y', strtotime($patient['created_at']))
+                                            : '-' ?>
                             </td>
 
-                            <!-- CREATED AT -->
-                            <td>
-                                <?= esc($patient['created_at'] ?? '-') ?>
-                            </td>
-
-                            <!-- STATUS -->
                             <td>
                                 <?php if (($patient['account_status'] ?? 1) == 1): ?>
                                 <span class="badge bg-success">Active</span>
@@ -114,7 +106,6 @@
                                 <?php endif; ?>
                             </td>
 
-                            <!-- ACTION -->
                             <td class="text-end">
 
                                 <a href="<?= base_url('dashboard/patients/edit/' . $patient['id']) ?>"
