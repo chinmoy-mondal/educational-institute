@@ -25,11 +25,16 @@ $routes->post('/forgot-password/send', 'Auth::sendResetLink');
 $routes->get('/reset-password/(:segment)', 'Auth::resetPassword/$1');
 $routes->post('/reset-password/update', 'Auth::updatePassword');
 
-#Dashboard
 $routes->group('dashboard', function ($routes) {
 
     $routes->get('/', 'Dashboard::index');
+
     $routes->get('patients', 'Dashboard::patients');
+
+    // ➕ ADD NEW PATIENT
+    $routes->get('patients/create', 'Dashboard::createPatient');
+    $routes->post('patients/store', 'Dashboard::storePatient');
+
     $routes->get('users', 'Dashboard::users');
     $routes->get('profile', 'Dashboard::profile');
 });

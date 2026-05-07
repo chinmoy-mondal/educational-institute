@@ -148,4 +148,33 @@ class Dashboard extends BaseController
 
         return view('dashboard/patients', $this->data);
     }
+    
+    public function createPatient()
+    {
+        $this->data['title'] = 'Add Patient';
+        $this->data['activeSection'] = 'patients';
+
+        return view('dashboard/patient_create', $this->data);
+    }
+
+    public function storePatient()
+    {
+        $patientModel = new PatientModel();
+
+        $data = [
+            'name'            => $this->request->getPost('name'),
+            'phone'           => $this->request->getPost('phone'),
+            'age'             => $this->request->getPost('age'),
+            'gender'          => $this->request->getPost('gender'),
+            'address'         => $this->request->getPost('address'),
+            'nid'             => $this->request->getPost('nid'),
+            'account_status'  => 1,
+        ];
+
+        $patientModel->insert($data);
+
+        return redirect()->to('/dashboard/patients')
+            ->with('success', 'Patient added successfully');
+    }
+    
 }
