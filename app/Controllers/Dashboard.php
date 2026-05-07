@@ -159,18 +159,15 @@ class Dashboard extends BaseController
 
     public function storePatient()
     {
-        $patientModel = new PatientModel();
-
         $data = [
-            'name'            => $this->request->getPost('name'),
-            'phone'           => $this->request->getPost('phone'),
-            'age'             => $this->request->getPost('age'),
-            'gender'          => $this->request->getPost('gender'),
-            'address'         => $this->request->getPost('address'),
-            'account_status'  => 1,
+            'name'    => $this->request->getPost('name'),
+            'phone'   => $this->request->getPost('phone'),
+            'age'     => $this->request->getPost('age'),
+            'gender'  => $this->request->getPost('gender'),
+            'address' => $this->request->getPost('address'),
         ];
 
-        $patientModel->insert($data);
+        $this->patientModel->insert($data);
 
         return redirect()->to('/dashboard/patients')
             ->with('success', 'Patient added successfully');

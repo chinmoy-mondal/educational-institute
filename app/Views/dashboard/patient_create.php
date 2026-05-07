@@ -8,52 +8,68 @@
 
         <div class="card-body">
 
-            <h4 class="mb-4">➕ Add New Patient</h4>
+            <!-- HEADER -->
+            <div class="mb-4">
+                <h4 class="mb-1">➕ Add New Patient</h4>
+                <p class="text-muted mb-0">Fill all required patient information</p>
+            </div>
 
+            <!-- FORM -->
             <form action="<?= base_url('dashboard/patients/store') ?>" method="post">
 
                 <div class="row g-3">
 
+                    <!-- NAME -->
                     <div class="col-md-6">
-                        <label>Name</label>
-                        <input type="text" name="name" class="form-control" required>
+                        <label class="form-label">Full Name <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control" placeholder="Enter patient name" required>
                     </div>
 
+                    <!-- PHONE -->
                     <div class="col-md-6">
-                        <label>Phone</label>
-                        <input type="text" name="phone" class="form-control" required>
+                        <label class="form-label">Phone <span class="text-danger">*</span></label>
+                        <input type="text" name="phone" class="form-control" placeholder="01XXXXXXXXX" required>
                     </div>
 
+                    <!-- AGE -->
                     <div class="col-md-4">
-                        <label>Age</label>
-                        <input type="number" name="age" class="form-control">
+                        <label class="form-label">Age</label>
+                        <input type="number" name="age" class="form-control" placeholder="e.g. 25">
                     </div>
 
+                    <!-- GENDER -->
                     <div class="col-md-4">
-                        <label>Gender</label>
-                        <select name="gender" class="form-control">
-                            <option value="">Select</option>
-                            <option>Male</option>
-                            <option>Female</option>
-                            <option>Other</option>
+                        <label class="form-label">Gender</label>
+                        <select name="gender" class="form-select">
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
                         </select>
                     </div>
 
+                    <!-- EMPTY SPACER -->
+                    <div class="col-md-4"></div>
+
+                    <!-- ADDRESS -->
                     <div class="col-12">
-                        <label>Address</label>
-                        <textarea name="address" class="form-control" rows="2"></textarea>
+                        <label class="form-label">Address</label>
+                        <textarea name="address" class="form-control" rows="3" placeholder="Full address..."></textarea>
                     </div>
 
                 </div>
 
-                <div class="mt-4">
-                    <button class="btn btn-primary">
+                <!-- ACTION BUTTONS -->
+                <div class="mt-4 d-flex gap-2">
+
+                    <button type="submit" class="btn btn-primary px-4">
                         💾 Save Patient
                     </button>
 
-                    <a href="<?= base_url('dashboard/patients') ?>" class="btn btn-secondary">
+                    <a href="<?= base_url('dashboard/patients') ?>" class="btn btn-outline-secondary px-4">
                         Cancel
                     </a>
+
                 </div>
 
             </form>

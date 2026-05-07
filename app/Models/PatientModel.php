@@ -14,9 +14,7 @@ class PatientModel extends Model
         'phone',
         'age',
         'gender',
-        'address',
-        'nid',
-        'account_status'
+        'address'
     ];
 
     protected $useTimestamps = true;
