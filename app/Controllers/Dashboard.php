@@ -70,7 +70,7 @@ class Dashboard extends BaseController
                 [
                     'label' => 'Patients',
                     'url'   => 'patients',
-                    'section' => 'patients'
+                    'section' => 'dashboard/patients'
                 ],
                 [
                     'label' => 'Doctors',
