@@ -1,355 +1,215 @@
-<!DOCTYPE html>
-<html lang="en">
+<?= $this->extend('layouts/admin') ?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<?= $this->section('content') ?>
 
-    <title><?= esc($title ?? 'Clinic Dashboard') ?></title>
+<div class="container-fluid">
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- PAGE HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-    <!-- FontAwesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+        <div>
+            <h2 class="fw-bold mb-1">
+                Welcome,
+                <?= esc(session()->get('user_name')) ?>
+            </h2>
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+            <p class="text-muted mb-0">
+                Clinic dashboard overview
+            </p>
+        </div>
 
-    <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+    </div>
 
-    body {
-        font-family: 'Poppins', sans-serif;
-        background: #f1f5f9;
-    }
+    <!-- STATS -->
+    <div class="row g-4">
 
-    /* =========================
-       SIDEBAR
-    ========================== */
+        <!-- TOTAL USERS -->
+        <div class="col-xl-4 col-md-6">
 
-    .sidebar {
-        width: 260px;
-        height: 100vh;
-        position: fixed;
-        top: 0;
-        left: 0;
-        background: linear-gradient(180deg, #0f172a, #1e293b);
-        padding-top: 20px;
-        z-index: 1050;
-        overflow-y: auto;
-        transition: 0.3s;
-    }
+            <div class="card border-0 shadow-sm rounded-4 h-100">
 
-    .sidebar h4 {
-        color: #fff;
-        text-align: center;
-        margin-bottom: 25px;
-        font-weight: 600;
-    }
+                <div class="card-body position-relative">
 
-    .sidebar a {
-        color: #cbd5e1;
-        padding: 12px 20px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        text-decoration: none;
-        border-radius: 10px;
-        margin: 5px 10px;
-        transition: 0.2s;
-        font-size: 15px;
-    }
+                    <h6 class="text-muted">
+                        Total Users
+                    </h6>
 
-    .sidebar a:hover,
-    .sidebar a.active {
-        background: linear-gradient(90deg, #6366f1, #22c55e);
-        color: #fff;
-        transform: translateX(5px);
-    }
+                    <h2 class="fw-bold">
+                        <?= esc($total_users ?? 0) ?>
+                    </h2>
 
-    .sidebar .submenu a {
-        padding-left: 45px;
-        font-size: 14px;
-    }
+                    <i class="fas fa-users fa-3x text-primary opacity-25 position-absolute"
+                        style="right:20px; top:20px;"></i>
 
-    .sidebar i {
-        margin-right: 10px;
-    }
-
-    .caret {
-        font-size: 12px;
-    }
-
-    /* =========================
-       NAVBAR
-    ========================== */
-
-    .top-navbar {
-        margin-left: 260px;
-        height: 65px;
-        background: #fff;
-
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        padding: 0 20px;
-
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-
-        position: sticky;
-        top: 0;
-        z-index: 1040;
-
-        transition: 0.3s;
-    }
-
-    .left-side {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .left-side h5 {
-        margin: 0;
-        font-size: 20px;
-        font-weight: 600;
-    }
-
-    .menu-btn {
-        width: 42px;
-        height: 42px;
-        border: none;
-        border-radius: 10px;
-        background: #f1f5f9;
-        display: none;
-    }
-
-    .profile-btn {
-        display: flex;
-        align-items: center;
-        text-decoration: none;
-        color: #111827;
-        cursor: pointer;
-    }
-
-    .profile-btn img {
-        width: 38px;
-        height: 38px;
-        border-radius: 50%;
-        margin-right: 10px;
-        object-fit: cover;
-    }
-
-    /* =========================
-       CONTENT
-    ========================== */
-
-    .content {
-        margin-left: 260px;
-        padding: 25px;
-        transition: 0.3s;
-    }
-
-    /* =========================
-       MOBILE
-    ========================== */
-
-    @media(max-width:768px) {
-
-        .sidebar {
-            transform: translateX(-100%);
-        }
-
-        .sidebar.active {
-            transform: translateX(0);
-        }
-
-        .top-navbar {
-            margin-left: 0;
-            padding: 0 15px;
-        }
-
-        .content {
-            margin-left: 0;
-            padding: 15px;
-        }
-
-        .menu-btn {
-            display: block;
-        }
-
-        .profile-btn span {
-            display: none;
-        }
-
-        .left-side h5 {
-            font-size: 17px;
-        }
-    }
-    </style>
-</head>
-
-<body>
-
-    <!-- =========================
-         SIDEBAR
-    ========================== -->
-
-    <div class="sidebar" id="sidebar">
-
-        <h4>🏥 Clinic Pro</h4>
-
-        <?php foreach (($sidebarCategories ?? []) as $cat): ?>
-
-        <!-- SINGLE -->
-        <?php if (($cat['type'] ?? '') === 'single'): ?>
-
-        <a href="<?= base_url($cat['url'] ?? '#') ?>"
-            class="<?= (($activeSection ?? '') === ($cat['section'] ?? '')) ? 'active' : '' ?>">
-
-            <span>
-                <i class="<?= esc($cat['icon'] ?? '') ?>"></i>
-                <?= esc($cat['label'] ?? '') ?>
-            </span>
-
-        </a>
-
-        <?php endif; ?>
-
-        <!-- CATEGORY -->
-        <?php if (($cat['type'] ?? '') === 'category'): ?>
-
-        <?php
-                $collapseId = 'menu_' . md5($cat['label']);
-                $children   = $sidebarSubItems[$cat['label']] ?? [];
-
-                $isOpen = false;
-
-                foreach ($children as $child) {
-                    if (($activeSection ?? '') === ($child['section'] ?? '')) {
-                        $isOpen = true;
-                    }
-                }
-                ?>
-
-        <a data-bs-toggle="collapse" href="#<?= $collapseId ?>" role="button" class="<?= $isOpen ? 'active' : '' ?>">
-
-            <span>
-                <i class="<?= esc($cat['icon'] ?? '') ?>"></i>
-                <?= esc($cat['label'] ?? '') ?>
-            </span>
-
-            <i class="fas fa-chevron-down caret"></i>
-
-        </a>
-
-        <div class="collapse <?= $isOpen ? 'show' : '' ?>" id="<?= $collapseId ?>">
-
-            <div class="submenu">
-
-                <?php foreach ($children as $child): ?>
-
-                <a href="<?= base_url($child['url'] ?? '#') ?>"
-                    class="<?= (($activeSection ?? '') === ($child['section'] ?? '')) ? 'active' : '' ?>">
-
-                    <?= esc($child['label'] ?? '') ?>
-
-                </a>
-
-                <?php endforeach; ?>
+                </div>
 
             </div>
 
         </div>
 
-        <?php endif; ?>
+        <!-- ACTIVE USERS -->
+        <div class="col-xl-4 col-md-6">
 
-        <?php endforeach; ?>
+            <div class="card border-0 shadow-sm rounded-4 h-100">
 
-    </div>
+                <div class="card-body position-relative">
 
-    <!-- =========================
-         NAVBAR
-    ========================== -->
+                    <h6 class="text-muted">
+                        Active Users
+                    </h6>
 
-    <nav class="top-navbar">
+                    <h2 class="fw-bold text-success">
+                        <?= esc($active_users ?? 0) ?>
+                    </h2>
 
-        <div class="left-side">
+                    <i class="fas fa-user-check fa-3x text-success opacity-25 position-absolute"
+                        style="right:20px; top:20px;"></i>
 
-            <button class="menu-btn" onclick="toggleSidebar()">
-                <i class="fas fa-bars"></i>
-            </button>
+                </div>
 
-            <h5><?= esc($title ?? 'Dashboard') ?></h5>
-
-        </div>
-
-        <div class="dropdown">
-
-            <a class="profile-btn dropdown-toggle" data-bs-toggle="dropdown">
-
-                <img src="https://i.pravatar.cc/100?img=5">
-
-                <span>
-                    <?= esc(session()->get('user_name') ?? 'Admin') ?>
-                </span>
-
-            </a>
-
-            <ul class="dropdown-menu dropdown-menu-end">
-
-                <li>
-                    <a class="dropdown-item" href="<?= base_url('dashboard/profile') ?>">
-                        <i class="fas fa-user me-2"></i>
-                        Profile
-                    </a>
-                </li>
-
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-
-                <li>
-                    <a class="dropdown-item text-danger" href="<?= base_url('logout') ?>">
-                        <i class="fas fa-sign-out-alt me-2"></i>
-                        Logout
-                    </a>
-                </li>
-
-            </ul>
+            </div>
 
         </div>
 
-    </nav>
+        <!-- INACTIVE USERS -->
+        <div class="col-xl-4 col-md-6">
 
-    <!-- =========================
-         CONTENT
-    ========================== -->
+            <div class="card border-0 shadow-sm rounded-4 h-100">
 
-    <div class="content">
+                <div class="card-body position-relative">
 
-        <?= $this->renderSection('content') ?>
+                    <h6 class="text-muted">
+                        Inactive Users
+                    </h6>
+
+                    <h2 class="fw-bold text-danger">
+                        <?= esc($inactive_users ?? 0) ?>
+                    </h2>
+
+                    <i class="fas fa-user-times fa-3x text-danger opacity-25 position-absolute"
+                        style="right:20px; top:20px;"></i>
+
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 
-    <!-- =========================
-         SCRIPTS
-    ========================== -->
+    <!-- SECOND ROW -->
+    <div class="row mt-4 g-4">
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- CHART -->
+        <div class="col-lg-8">
 
-    <script>
-    function toggleSidebar() {
-        document.getElementById("sidebar").classList.toggle("active");
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body">
+
+                    <h5 class="fw-semibold mb-4">
+                        Patient Growth
+                    </h5>
+
+                    <canvas id="patientChart" height="100"></canvas>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- APPOINTMENTS -->
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm rounded-4">
+
+                <div class="card-body">
+
+                    <h5 class="fw-semibold mb-4">
+                        Today's Appointments
+                    </h5>
+
+                    <!-- APPOINTMENT -->
+                    <div class="d-flex align-items-center mb-3">
+
+                        <img src="https://i.pravatar.cc/50?img=1" class="rounded-circle me-3" width="45">
+
+                        <div>
+                            <strong>Rahim</strong><br>
+
+                            <small class="text-muted">
+                                10:30 AM
+                            </small>
+                        </div>
+
+                    </div>
+
+                    <!-- APPOINTMENT -->
+                    <div class="d-flex align-items-center mb-3">
+
+                        <img src="https://i.pravatar.cc/50?img=2" class="rounded-circle me-3" width="45">
+
+                        <div>
+                            <strong>Karim</strong><br>
+
+                            <small class="text-muted">
+                                12:00 PM
+                            </small>
+                        </div>
+
+                    </div>
+
+                    <!-- APPOINTMENT -->
+                    <div class="d-flex align-items-center">
+
+                        <img src="https://i.pravatar.cc/50?img=3" class="rounded-circle me-3" width="45">
+
+                        <div>
+                            <strong>Sakib</strong><br>
+
+                            <small class="text-muted">
+                                2:15 PM
+                            </small>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- CHART JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+new Chart(document.getElementById('patientChart'), {
+
+    type: 'line',
+
+    data: {
+
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+
+        datasets: [{
+            label: 'Patients',
+
+            data: [10, 20, 15, 30, 25, 40],
+
+            borderColor: '#6366f1',
+
+            tension: 0.4,
+
+            fill: false
+        }]
     }
-    </script>
+});
+</script>
 
-</body>
-
-</html>
+<?= $this->endSection() ?>

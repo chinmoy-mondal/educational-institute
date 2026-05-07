@@ -1,147 +1,150 @@
 <style>
-.top-navbar {
-    margin-left: 260px;
-    height: 65px;
-    background: #fff;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    background: linear-gradient(180deg, #0f172a, #1e293b);
+
+    padding-top: 20px;
+
+    z-index: 1050;
+
+    overflow-y: auto;
+
+    transition: 0.3s;
+}
+
+.sidebar h4 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.sidebar a {
+    color: #cbd5e1;
+
+    padding: 12px 20px;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
 
-    padding: 0 20px;
-
-    position: sticky;
-    top: 0;
-    z-index: 1040;
-
-    transition: 0.3s;
-}
-
-/* LEFT SIDE */
-.top-navbar .left-side {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.top-navbar h5 {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 600;
-}
-
-/* MOBILE MENU BUTTON */
-.menu-btn {
-    display: none;
-    border: none;
-    background: #f1f5f9;
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
-}
-
-/* RIGHT SIDE */
-.top-navbar .right-side {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-/* PROFILE */
-.profile-btn {
-    display: flex;
-    align-items: center;
     text-decoration: none;
-    color: #111827;
-    cursor: pointer;
+
+    border-radius: 10px;
+
+    margin: 5px 10px;
+
+    transition: 0.2s;
 }
 
-.profile-btn img {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    object-fit: cover;
+.sidebar a:hover,
+.sidebar a.active {
+    background: linear-gradient(90deg, #6366f1, #22c55e);
+    color: #fff;
+    transform: translateX(5px);
+}
+
+.sidebar .submenu a {
+    padding-left: 45px;
+    font-size: 14px;
+}
+
+.sidebar i {
     margin-right: 10px;
+}
+
+.caret {
+    font-size: 12px;
 }
 
 /* MOBILE */
 @media(max-width:768px) {
 
-    .top-navbar {
-        margin-left: 0;
-        padding: 0 15px;
+    .sidebar {
+        transform: translateX(-100%);
     }
 
-    .menu-btn {
-        display: block;
-    }
-
-    .top-navbar h5 {
-        font-size: 17px;
-    }
-
-    .profile-btn span {
-        display: none;
+    .sidebar.active {
+        transform: translateX(0);
     }
 }
 </style>
 
-<nav class="top-navbar">
+<div class="sidebar" id="sidebar">
 
-    <!-- LEFT -->
-    <div class="left-side">
+    <h4>🏥 Clinic Pro</h4>
 
-        <!-- MOBILE BUTTON -->
-        <button class="menu-btn" onclick="toggleSidebar()">
-            <i class="fas fa-bars"></i>
-        </button>
+    <?php foreach (($sidebarCategories ?? []) as $cat): ?>
 
-        <h5><?= esc($title ?? 'Dashboard') ?></h5>
+    <!-- SINGLE -->
+    <?php if (($cat['type'] ?? '') === 'single'): ?>
 
-    </div>
+    <a href="<?= base_url($cat['url'] ?? '#') ?>"
+        class="<?= (($activeSection ?? '') === ($cat['section'] ?? '')) ? 'active' : '' ?>">
 
-    <!-- RIGHT -->
-    <div class="right-side">
+        <span>
+            <i class="<?= esc($cat['icon'] ?? '') ?>"></i>
+            <?= esc($cat['label'] ?? '') ?>
+        </span>
 
-        <div class="dropdown">
+    </a>
 
-            <a class="profile-btn dropdown-toggle" data-bs-toggle="dropdown">
+    <?php endif; ?>
 
-                <img src="https://i.pravatar.cc/100?img=5">
+    <!-- CATEGORY -->
+    <?php if (($cat['type'] ?? '') === 'category'): ?>
 
-                <span>
-                    <?= esc(session()->get('user_name') ?? 'Admin') ?>
-                </span>
+    <?php
+            $collapseId = 'menu_' . md5($cat['label']);
+
+            $children = $sidebarSubItems[$cat['label']] ?? [];
+
+            $isOpen = false;
+
+            foreach ($children as $child) {
+                if (($activeSection ?? '') === ($child['section'] ?? '')) {
+                    $isOpen = true;
+                }
+            }
+            ?>
+
+    <a data-bs-toggle="collapse" href="#<?= $collapseId ?>" class="<?= $isOpen ? 'active' : '' ?>">
+
+        <span>
+            <i class="<?= esc($cat['icon'] ?? '') ?>"></i>
+            <?= esc($cat['label'] ?? '') ?>
+        </span>
+
+        <i class="fas fa-chevron-down caret"></i>
+
+    </a>
+
+    <div class="collapse <?= $isOpen ? 'show' : '' ?>" id="<?= $collapseId ?>">
+
+        <div class="submenu">
+
+            <?php foreach ($children as $child): ?>
+
+            <a href="<?= base_url($child['url'] ?? '#') ?>"
+                class="<?= (($activeSection ?? '') === ($child['section'] ?? '')) ? 'active' : '' ?>">
+
+                <?= esc($child['label'] ?? '') ?>
 
             </a>
 
-            <ul class="dropdown-menu dropdown-menu-end">
-
-                <li>
-                    <a class="dropdown-item" href="<?= base_url('dashboard/profile') ?>">
-
-                        <i class="fas fa-user me-2"></i>
-                        Profile
-                    </a>
-                </li>
-
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-
-                <li>
-                    <a class="dropdown-item text-danger" href="<?= base_url('logout') ?>">
-
-                        <i class="fas fa-sign-out-alt me-2"></i>
-                        Logout
-                    </a>
-                </li>
-
-            </ul>
+            <?php endforeach; ?>
 
         </div>
 
     </div>
 
-</nav>
+    <?php endif; ?>
+
+    <?php endforeach; ?>
+
+</div>
