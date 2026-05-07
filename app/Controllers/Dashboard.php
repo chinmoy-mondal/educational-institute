@@ -69,12 +69,12 @@ class Dashboard extends BaseController
             'Clinic' => [
                 [
                     'label' => 'Patients',
-                    'url'   => 'patients',
-                    'section' => 'dashboard/patients'
+                    'url'   => 'dashboard/patients',
+                    'section' => 'patients'
                 ],
                 [
                     'label' => 'Doctors',
-                    'url'   => 'doctors',
+                    'url'   => 'dashboard/doctors',
                     'section' => 'doctors'
                 ],
             ]
