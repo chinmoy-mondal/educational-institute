@@ -14,7 +14,7 @@
 
     </div>
 
-    <!-- SEARCH FORM -->
+    <!-- SEARCH -->
     <form method="get" action="<?= base_url('dashboard/patients') ?>" class="mb-4">
 
         <div class="row g-2">
@@ -36,7 +36,7 @@
 
 
     <!-- ========================= -->
-    <!-- IF PATIENT FOUND -->
+    <!-- PATIENT TABLE -->
     <!-- ========================= -->
     <?php if (!empty($patients)): ?>
 
@@ -46,17 +46,20 @@
 
             <div class="table-responsive">
 
-                <table class="table align-middle">
+                <table class="table table-hover align-middle">
 
-                    <thead class="table-light">
+                    <thead class="table-dark">
+
                         <tr>
                             <th>#</th>
                             <th>Patient</th>
                             <th>Phone</th>
-                            <th>NID</th>
+                            <th>Age</th>
+                            <th>Gender</th>
                             <th>Status</th>
-                            <th>Action</th>
+                            <th class="text-end">Action</th>
                         </tr>
+
                     </thead>
 
                     <tbody>
@@ -65,29 +68,48 @@
 
                         <tr>
 
+                            <!-- SL -->
                             <td><?= $key + 1 ?></td>
 
+                            <!-- NAME -->
                             <td>
                                 <div class="d-flex align-items-center">
+
                                     <img src="https://i.pravatar.cc/50?img=<?= esc($patient['id']) ?>"
                                         class="rounded-circle me-2" width="40">
-                                    <?= esc($patient['name']) ?>
+
+                                    <div>
+                                        <strong><?= esc($patient['name']) ?></strong>
+                                    </div>
+
                                 </div>
                             </td>
 
+                            <!-- PHONE -->
                             <td><?= esc($patient['phone']) ?></td>
 
-                            <td><?= esc($patient['nid'] ?? 'N/A') ?></td>
+                            <!-- AGE -->
+                            <td><?= esc($patient['age'] ?? '-') ?></td>
 
+                            <!-- GENDER -->
                             <td>
-                                <?php if (($patient['account_status'] ?? 0) == 1): ?>
+                                <span class="badge bg-secondary">
+                                    <?= esc($patient['gender'] ?? '-') ?>
+                                </span>
+                            </td>
+
+                            <!-- STATUS -->
+                            <td>
+                                <?php if (($patient['account_status'] ?? 1) == 1): ?>
                                 <span class="badge bg-success">Active</span>
                                 <?php else: ?>
                                 <span class="badge bg-danger">Inactive</span>
                                 <?php endif; ?>
                             </td>
 
-                            <td>
+                            <!-- ACTION -->
+                            <td class="text-end">
+
                                 <a href="<?= base_url('dashboard/patients/edit/' . $patient['id']) ?>"
                                     class="btn btn-sm btn-warning">
                                     Edit
@@ -97,6 +119,7 @@
                                     class="btn btn-sm btn-danger" onclick="return confirm('Delete this patient?')">
                                     Delete
                                 </a>
+
                             </td>
 
                         </tr>
@@ -115,9 +138,7 @@
 
     <?php else: ?>
 
-    <!-- ========================= -->
-    <!-- NO PATIENT FOUND -->
-    <!-- ========================= -->
+    <!-- EMPTY STATE -->
     <div class="card border-0 shadow-sm rounded-4">
 
         <div class="card-body text-center py-5">
