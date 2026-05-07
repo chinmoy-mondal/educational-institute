@@ -2,47 +2,75 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title><?= esc($title ?? 'School Admin Dashboard') ?></title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- AdminLTE CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <title><?= $title ?? 'Clinic Dashboard' ?></title>
 
-  <!-- FontAwesome -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <!-- Optional: Select2 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- FontAwesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: #f1f5f9;
+    }
+
+    .content {
+        margin-left: 260px;
+        padding: 25px;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+        position: relative;
+    }
+
+    .stat-icon {
+        font-size: 40px;
+        opacity: 0.15;
+        position: absolute;
+        right: 15px;
+        bottom: 10px;
+    }
+
+    .card {
+        border-radius: 18px;
+        border: none;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+    }
+
+    /* sidebar space already handled in sidebar.php */
+    </style>
+
 </head>
 
-<body class="hold-transition sidebar-mini">
+<body>
 
-  <div class="wrapper">
-
-    <!-- Navbar -->
+    <?= $this->include('layouts/admin-structure/sidebar') ?>
     <?= $this->include('layouts/admin-structure/navbar') ?>
 
-    <!-- Sidebar -->
-    <?= $this->include('layouts/admin-structure/sidebar') ?>
-
-    <!-- Main Content -->
-    <div class="content-wrapper">
-      <?= $this->renderSection('content') ?>
+    <div class="content">
+        <?= $this->renderSection('content') ?>
     </div>
 
-  </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- ✅ Scripts (jQuery first, only once) -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-  <!-- Bootstrap Bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-
-  <!-- AdminLTE -->
-  <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-
-
+    <script>
+    function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("active");
+    }
+    </script>
 
 </body>
 

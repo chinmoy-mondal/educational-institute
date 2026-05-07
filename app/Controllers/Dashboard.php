@@ -63,7 +63,7 @@ class Dashboard extends BaseController
 
         echo "successful login test";
 
-        // return view('dashboard/index', $this->data);
+        return view('dashboard/index', $this->data);
     }
 
     // =========================
