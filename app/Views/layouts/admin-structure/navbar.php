@@ -26,7 +26,16 @@
             <li>
                 <hr>
             </li>
-            <li><a class="dropdown-item text-danger" href="#">Logout</a></li>
+            <li>
+                <a class="dropdown-item text-danger" href="<?= base_url('logout') ?>">
+                    Logout
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item text-danger" href="<?= base_url('logout') ?>">
+                    Logout
+                </a>
+            </li>
         </ul>
     </div>
 
