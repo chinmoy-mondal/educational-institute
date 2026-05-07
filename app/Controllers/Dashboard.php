@@ -61,7 +61,7 @@ class Dashboard extends BaseController
             ->where('account_status', 0)
             ->countAllResults();
 
-        echo "successful login";
+        echo "successful login test";
 
         // return view('dashboard/index', $this->data);
     }
