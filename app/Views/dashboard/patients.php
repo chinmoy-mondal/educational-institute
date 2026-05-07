@@ -9,23 +9,19 @@
 
         <div>
             <h2 class="fw-bold mb-1">Patients Management</h2>
-            <p class="text-muted mb-0">Manage all clinic patients</p>
+            <p class="text-muted mb-0">Search patients by phone number</p>
         </div>
-
-        <a href="<?= base_url('dashboard/patients/create') ?>" class="btn btn-primary rounded-3">
-            <i class="fas fa-plus me-1"></i> Add Patient
-        </a>
 
     </div>
 
-    <!-- SEARCH -->
+    <!-- SEARCH FORM -->
     <form method="get" action="<?= base_url('dashboard/patients') ?>" class="mb-4">
 
         <div class="row g-2">
 
             <div class="col-md-4">
-                <input type="text" name="nid" class="form-control" placeholder="Search by NID..."
-                    value="<?= esc($_GET['nid'] ?? '') ?>">
+                <input type="text" name="phone" class="form-control" placeholder="Enter phone number..."
+                    value="<?= esc($_GET['phone'] ?? '') ?>">
             </div>
 
             <div class="col-md-2">
@@ -38,8 +34,9 @@
 
     </form>
 
+
     <!-- ========================= -->
-    <!-- IF PATIENTS EXIST -->
+    <!-- IF PATIENT FOUND -->
     <!-- ========================= -->
     <?php if (!empty($patients)): ?>
 
@@ -52,16 +49,14 @@
                 <table class="table align-middle">
 
                     <thead class="table-light">
-
                         <tr>
                             <th>#</th>
                             <th>Patient</th>
-                            <th>Email</th>
+                            <th>Phone</th>
                             <th>NID</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
-
                     </thead>
 
                     <tbody>
@@ -74,20 +69,15 @@
 
                             <td>
                                 <div class="d-flex align-items-center">
-
                                     <img src="https://i.pravatar.cc/50?img=<?= esc($patient['id']) ?>"
                                         class="rounded-circle me-2" width="40">
-
                                     <?= esc($patient['name']) ?>
-
                                 </div>
                             </td>
 
-                            <td><?= esc($patient['email']) ?></td>
+                            <td><?= esc($patient['phone']) ?></td>
 
-                            <td>
-                                <?= esc($patient['nid'] ?? 'N/A') ?>
-                            </td>
+                            <td><?= esc($patient['nid'] ?? 'N/A') ?></td>
 
                             <td>
                                 <?php if (($patient['account_status'] ?? 0) == 1): ?>
@@ -98,7 +88,6 @@
                             </td>
 
                             <td>
-
                                 <a href="<?= base_url('dashboard/patients/edit/' . $patient['id']) ?>"
                                     class="btn btn-sm btn-warning">
                                     Edit
@@ -108,7 +97,6 @@
                                     class="btn btn-sm btn-danger" onclick="return confirm('Delete this patient?')">
                                     Delete
                                 </a>
-
                             </td>
 
                         </tr>
@@ -125,21 +113,21 @@
 
     </div>
 
-    <!-- ========================= -->
-    <!-- EMPTY STATE -->
-    <!-- ========================= -->
     <?php else: ?>
 
+    <!-- ========================= -->
+    <!-- NO PATIENT FOUND -->
+    <!-- ========================= -->
     <div class="card border-0 shadow-sm rounded-4">
 
         <div class="card-body text-center py-5">
 
-            <i class="fas fa-user-injured fa-3x text-muted mb-3"></i>
+            <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
 
-            <h5>No Patients Found</h5>
+            <h5>No Patient Found</h5>
 
             <p class="text-muted">
-                Start by adding your first patient
+                No patient matched this phone number
             </p>
 
             <a href="<?= base_url('dashboard/patients/create') ?>" class="btn btn-primary">

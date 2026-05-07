@@ -3,17 +3,20 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
+use App\Models\PatientModel;
 
 class Dashboard extends BaseController
 {
     protected $userModel;
+    protected $patientModel;
     protected $session;
     protected $data = [];
 
     public function __construct()
     {
-        $this->userModel = new UserModel();
-        $this->session   = session();
+        $this->userModel    = new UserModel();
+        $this->patientModel = new PatientModel();
+        $this->session      = session();
 
         // Auth check
         if (!$this->session->get('isLoggedIn')) {
@@ -127,10 +130,21 @@ class Dashboard extends BaseController
 
     public function patients()
     {
-
         $this->data['title'] = 'Patients';
-
         $this->data['activeSection'] = 'patients';
+
+        $phone = $this->request->getGet('phone');
+
+        // $patientModel = new PatientModel();
+
+        $builder = $this->patientModel;
+
+        // search by phone if given
+        if (!empty($phone)) {
+            $builder = $builder->like('phone', $phone);
+        }
+
+        $this->data['patients'] = $builder->findAll();
 
         return view('dashboard/patients', $this->data);
     }
