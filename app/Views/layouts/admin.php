@@ -22,11 +22,14 @@
         background: #f1f5f9;
     }
 
+    /* CONTENT AREA */
     .content {
         margin-left: 260px;
         padding: 25px;
+        transition: 0.3s;
     }
 
+    /* CARD STYLE */
     .stat-card {
         background: white;
         border-radius: 18px;
@@ -49,20 +52,30 @@
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
     }
 
-    /* sidebar space already handled in sidebar.php */
+    /* RESPONSIVE */
+    @media(max-width:768px) {
+        .content {
+            margin-left: 0;
+        }
+    }
     </style>
 
 </head>
 
 <body>
 
+    <!-- SIDEBAR -->
     <?= $this->include('layouts/admin-structure/sidebar') ?>
+
+    <!-- NAVBAR -->
     <?= $this->include('layouts/admin-structure/navbar') ?>
 
+    <!-- CONTENT -->
     <div class="content">
         <?= $this->renderSection('content') ?>
     </div>
 
+    <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
