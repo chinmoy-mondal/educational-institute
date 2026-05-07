@@ -1,0 +1,14 @@
+---
+deployment:
+  tasks:
+    # Set deployment path
+    - export DEPLOYPATH=/home/notescom/public_html/vc.notes.com.bd
+
+    # Optional: clear old files (clean deploy)
+    - /bin/rm -rf $DEPLOYPATH/*
+
+    # Copy ONLY public folder (CI4 safe method)
+    - /bin/cp -R public/. $DEPLOYPATH/
+
+    # Ensure correct permissions (optional but useful)
+    - /bin/chmod -R 755 $DEPLOYPATH
