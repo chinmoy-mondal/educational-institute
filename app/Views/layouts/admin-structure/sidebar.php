@@ -6,6 +6,7 @@
     background: linear-gradient(180deg, #0f172a, #1e293b);
     padding-top: 20px;
     z-index: 1050;
+    overflow-y: auto;
 }
 
 .sidebar h4 {
@@ -14,6 +15,7 @@
     margin-bottom: 25px;
 }
 
+/* MAIN LINK */
 .sidebar a {
     color: #cbd5e1;
     padding: 12px 20px;
@@ -31,6 +33,21 @@
     transform: translateX(5px);
 }
 
+/* CATEGORY TITLE */
+.sidebar .category {
+    color: #94a3b8;
+    font-size: 12px;
+    padding: 10px 20px 5px;
+    text-transform: uppercase;
+}
+
+/* SUB MENU */
+.sidebar .submenu a {
+    padding-left: 35px;
+    font-size: 14px;
+}
+
+/* ICON */
 .sidebar i {
     margin-right: 8px;
 }
@@ -42,12 +59,44 @@
 
     <?php foreach ($sidebarItems ?? [] as $item): ?>
 
+    <!-- SINGLE ITEM -->
+    <?php if ($item['type'] === 'single'): ?>
+
     <a href="<?= base_url($item['url']) ?>"
-        class="<?= (isset($activeSection) && $activeSection === $item['section']) ? 'active' : '' ?>">
+        class="<?= (($activeSection ?? '') === $item['section']) ? 'active' : '' ?>">
 
         <i class="<?= esc($item['icon']) ?>"></i>
         <?= esc($item['label']) ?>
     </a>
+
+    <?php endif; ?>
+
+
+    <!-- CATEGORY -->
+    <?php if ($item['type'] === 'category'): ?>
+
+    <div class="category">
+        <i class="<?= esc($item['icon']) ?>"></i>
+        <?= esc($item['label']) ?>
+    </div>
+
+    <?php if (!empty($item['children'])): ?>
+    <div class="submenu">
+
+        <?php foreach ($item['children'] as $child): ?>
+
+        <a href="<?= base_url($child['url']) ?>"
+            class="<?= (($activeSection ?? '') === $child['section']) ? 'active' : '' ?>">
+
+            <?= esc($child['label']) ?>
+        </a>
+
+        <?php endforeach; ?>
+
+    </div>
+    <?php endif; ?>
+
+    <?php endif; ?>
 
     <?php endforeach; ?>
 

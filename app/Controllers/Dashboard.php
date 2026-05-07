@@ -15,31 +15,32 @@ class Dashboard extends BaseController
         $this->userModel = new UserModel();
         $this->session   = session();
 
-        // Auth check (simple safe version)
+        // Auth check
         if (!$this->session->get('isLoggedIn')) {
             redirect()->to('/login')->send();
             exit;
         }
 
-        // Sidebar data (dynamic)
-        $this->data['sidebarItems'] = [
+        // 🌟 CATEGORY ONLY (GLOBAL SIDEBAR STRUCTURE)
+        $this->data['sidebarCategories'] = [
             [
                 'label' => 'Dashboard',
+                'icon'  => 'fas fa-home',
+                'type'  => 'single',
                 'url'   => 'dashboard',
-                'icon'  => 'fas fa-tachometer-alt',
                 'section' => 'dashboard'
             ],
+
             [
-                'label' => 'Users',
-                'url'   => 'dashboard/users',
+                'label' => 'User Management',
                 'icon'  => 'fas fa-users',
-                'section' => 'users'
+                'type'  => 'category'
             ],
+
             [
-                'label' => 'Profile',
-                'url'   => 'dashboard/profile',
-                'icon'  => 'fas fa-user',
-                'section' => 'profile'
+                'label' => 'Clinic',
+                'icon'  => 'fas fa-hospital',
+                'type'  => 'category'
             ],
         ];
     }
@@ -52,6 +53,36 @@ class Dashboard extends BaseController
         $this->data['title'] = 'Dashboard';
         $this->data['activeSection'] = 'dashboard';
 
+        // 🌟 SUBCATEGORIES ONLY (PAGE SPECIFIC)
+        $this->data['sidebarSubItems'] = [
+            'User Management' => [
+                [
+                    'label' => 'All Users',
+                    'url'   => 'dashboard/users',
+                    'section' => 'users'
+                ],
+                [
+                    'label' => 'Add User',
+                    'url'   => 'dashboard/users/create',
+                    'section' => 'users_create'
+                ],
+            ],
+
+            'Clinic' => [
+                [
+                    'label' => 'Patients',
+                    'url'   => 'patients',
+                    'section' => 'patients'
+                ],
+                [
+                    'label' => 'Doctors',
+                    'url'   => 'doctors',
+                    'section' => 'doctors'
+                ],
+            ]
+        ];
+
+        // Stats
         $this->data['total_users'] = $this->userModel->countAll();
         $this->data['active_users'] = $this->userModel
             ->where('account_status', 1)
