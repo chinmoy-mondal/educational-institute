@@ -119,4 +119,19 @@ class Dashboard extends BaseController
 
         return view('dashboard/profile', $this->data);
     }
+
+
+    // =========================
+    // patients
+    // =========================
+
+    public function patients()
+    {
+
+        $this->data['title'] = 'Patients';
+
+        $this->data['activeSection'] = 'patients';
+
+        return view('dashboard/patients', $this->data);
+    }
 }
