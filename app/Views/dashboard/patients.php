@@ -36,7 +36,7 @@
 
 
     <!-- ========================= -->
-    <!-- PATIENT TABLE -->
+    <!-- TABLE -->
     <!-- ========================= -->
     <?php if (!empty($patients)): ?>
 
@@ -56,6 +56,8 @@
                             <th>Phone</th>
                             <th>Age</th>
                             <th>Gender</th>
+                            <th>Address</th>
+                            <th>Created At</th>
                             <th>Status</th>
                             <th class="text-end">Action</th>
                         </tr>
@@ -74,14 +76,9 @@
                             <!-- NAME -->
                             <td>
                                 <div class="d-flex align-items-center">
-
                                     <img src="https://i.pravatar.cc/50?img=<?= esc($patient['id']) ?>"
                                         class="rounded-circle me-2" width="40">
-
-                                    <div>
-                                        <strong><?= esc($patient['name']) ?></strong>
-                                    </div>
-
+                                    <strong><?= esc($patient['name']) ?></strong>
                                 </div>
                             </td>
 
@@ -96,6 +93,16 @@
                                 <span class="badge bg-secondary">
                                     <?= esc($patient['gender'] ?? '-') ?>
                                 </span>
+                            </td>
+
+                            <!-- ADDRESS -->
+                            <td>
+                                <?= esc($patient['address'] ?? '-') ?>
+                            </td>
+
+                            <!-- CREATED AT -->
+                            <td>
+                                <?= esc($patient['created_at'] ?? '-') ?>
                             </td>
 
                             <!-- STATUS -->
@@ -138,7 +145,7 @@
 
     <?php else: ?>
 
-    <!-- EMPTY STATE -->
+    <!-- EMPTY -->
     <div class="card border-0 shadow-sm rounded-4">
 
         <div class="card-body text-center py-5">
