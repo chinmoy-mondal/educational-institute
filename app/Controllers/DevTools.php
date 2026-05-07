@@ -62,16 +62,13 @@ class DevTools extends BaseController
             return $this->response->setStatusCode(403)->setBody('Unauthorized');
         }
 
-        $migrations = Services::migrations();
-
         try {
-            // Keep rolling back until no migrations are left
-            while (true) {
-                $batch = $migrations->regress();
-                if ($batch === false) break;
-            }
+            $db = \Config\Database::connect();
 
-            return "✅ All migrations have been rolled back (reset).";
+            // 1. Clear migration history safely
+            $db->table('ci_migrations')->truncate();
+
+            return "✅ Migration history cleared successfully. Now run migrate again.";
         } catch (\Throwable $e) {
             return "❌ Reset failed: " . $e->getMessage();
         }
