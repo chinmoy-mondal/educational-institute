@@ -40,10 +40,9 @@ $routes->group('dashboard', function ($routes) {
 
 // Migration DevTools routes (protected by secret key)
 $routes->get('run-migration/(:any)', 'DevTools::migrate/$1');
-$routes->get('run-rollback/(:any)', 'DevTools::rollback/$1');
-$routes->get('run-reset/(:any)', 'DevTools::reset/$1');
+// $routes->get('run-rollback/(:any)', 'DevTools::rollback/$1');
+// $routes->get('run-reset/(:any)', 'DevTools::reset/$1');
 $routes->get('run-status/(:any)', 'DevTools::status/$1');
-$routes->get('run-drop-attendance/(:any)', 'DevTools::dropAttendance/$1');
 
 
 $routes->set404Override(function () {
