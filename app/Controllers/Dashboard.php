@@ -167,7 +167,6 @@ class Dashboard extends BaseController
             'age'             => $this->request->getPost('age'),
             'gender'          => $this->request->getPost('gender'),
             'address'         => $this->request->getPost('address'),
-            'nid'             => $this->request->getPost('nid'),
             'account_status'  => 1,
         ];
 

@@ -39,11 +39,6 @@
                         </select>
                     </div>
 
-                    <div class="col-md-4">
-                        <label>NID</label>
-                        <input type="text" name="nid" class="form-control">
-                    </div>
-
                     <div class="col-12">
                         <label>Address</label>
                         <textarea name="address" class="form-control" rows="2"></textarea>
