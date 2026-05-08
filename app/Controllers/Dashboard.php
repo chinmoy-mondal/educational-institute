@@ -4211,6 +4211,7 @@ class Dashboard extends Controller
 
         $payments = $this->transactionModel
             ->where('sender_id', $id)
+            ->like('transaction_id', 'TX-', 'after')
             ->orderBy('created_at', 'DESC')
             ->findAll();
 
