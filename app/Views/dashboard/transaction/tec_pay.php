@@ -51,7 +51,12 @@
                         foreach ($teachers as $t): ?>
                     <tr class="text-center">
                         <td><?= $i++ ?></td>
-                        <td class="text-left"><?= esc($t['name']) ?></td>
+                        <td class="text-left">
+                            <a href="<?= base_url('admin/view_tec_pay_details/' . $t['id']) ?>"
+                                class="text-decoration-none">
+                                <?= esc($t['name']) ?>
+                            </a>
+                        </td>
                         <?php if (!empty($account_status) && $account_status > 1): ?>
                         <td class="decimal-align">৳ <?= number_format($t['total_earned'], 2) ?></td>
                         <td class="decimal-align">৳ <?= number_format($t['total_paid'], 2) ?></td>
