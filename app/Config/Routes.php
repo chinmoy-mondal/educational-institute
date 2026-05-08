@@ -133,6 +133,7 @@ $routes->post('admin/updateNotice/(:num)', 'Dashboard::updateNotice/$1');
 // Transaction routes
 $routes->get('admin/transactions', 'Dashboard::transactionDashboard');
 $routes->get('admin/tec_pay', 'Dashboard::tec_pay');
+$routes->get('admin/view_tec_pay_details/(:num)', 'Dashboard::view_tec_pay_details/$1');
 $routes->post('admin/reset_amount/(:num)', 'Dashboard::reset_amount/$1');
 $routes->get('admin/std_pay', 'Dashboard::std_pay');
 $routes->get('admin/std_due', 'Dashboard::std_due');
