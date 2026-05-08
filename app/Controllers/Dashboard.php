@@ -2819,7 +2819,6 @@ class Dashboard extends Controller
 
         $feesDeposit = $this->transactionModel
             ->select('sender_id, sender_name, SUM(amount) AS total_deposit')
-            ->like('transaction_id', 'TX-', 'after')
             ->groupBy('sender_id, sender_name')
             ->orderBy('sender_name', 'ASC')
             ->get()
