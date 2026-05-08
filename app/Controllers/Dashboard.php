@@ -4392,6 +4392,7 @@ class Dashboard extends Controller
         // ✅ Fetch all transactions for this student
         $payments = $this->transactionModel
             ->where('sender_id', $studentId)
+            ->like('transaction_id', 'TX-', 'after')
             ->orderBy('created_at', 'DESC')
             ->findAll();
 
