@@ -132,7 +132,7 @@
                         </td>
 
                         <td class="decimal-align">
-                            ৳ <?= number_format($pay['amount_paid'] ?? 0, 2) ?>
+                            <?= number_format($pay['amount_paid'] ?? 0, 2) ?>৳
                         </td>
 
                         <td>
