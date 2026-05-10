@@ -3037,19 +3037,19 @@ class Dashboard extends Controller
         $student   = $studentId ? $this->studentModel->find($studentId) : [];
 
         $this->data['student'] = [
-            'student_name' => $student['student_name'] ?? $first['sender_name'] ?? '',
-            'id'           => $studentId ?? '',
-            'roll'        => $student['roll'] ??  '',
-            'section'      => $student['section'] ?? $first['student_section'] ?? '',
+            'student_name'  => $first['sender_name'] ?? 'error',
+            'id'            => $studentId ?? '',
+            'roll'          => $student['roll'] ??  '',
+            'section'       => $first['student_section'] ?? 'error',
         ];
 
         // Receiver info
         $this->data['receiver'] = [
-            'name' => $first['receiver_name'] ?? ''
+            'name' => $first['receiver_name'] ?? 'error'
         ];
 
         $this->data['transaction_id'] = $transactionId;
-        $this->data['date'] = $first['created_at'] ?? date('Y-m-d');
+        $this->data['date'] = $first['created_at'] ?? 'error';
 
         // Month names for display
         $monthNames = [
