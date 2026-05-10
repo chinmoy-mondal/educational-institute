@@ -60,6 +60,7 @@
                     <tr>
                         <th>#</th>
                         <th>Transaction ID</th>
+                        <th>Sender Name</th>
                         <th>Receiver Name</th>
                         <th>Amount (৳)</th>
                         <th>Discount (৳)</th>
@@ -88,6 +89,7 @@
                                 <?= esc($p['transaction_id']) ?>
                             </a>
                         </td>
+                        <td><?= esc($p['sender_name']) ?></td>
                         <td><?= esc($p['receiver_name']) ?></td>
                         <td><?= number_format($p['amount'], 2) ?></td>
                         <td>
