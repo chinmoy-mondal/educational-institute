@@ -228,7 +228,7 @@ th {
             <div class="hr"></div>
 
             <div class="info">
-                <b>Date:</b> <?= date('d F Y', strtotime($date)) ?>&nbsp;&nbsp;
+                <b>Date: </b> <?= date('d F Y', strtotime($date)) ?>&nbsp;&nbsp;
                 <b>Receipt No:</b> <?= esc($receiptNo ?: 'N/A') ?>
             </div>
 
