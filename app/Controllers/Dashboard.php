@@ -1090,53 +1090,81 @@ class Dashboard extends Controller
 
     public function softDelete($id)
     {
-
-        // Get current student
-        $student = $this->studentModel->find($id);
-
-        if ($student) {
-
-            // Update student
-            $this->studentModel->update($id, ['permission' => 1]);
-
-            return redirect()->back()->with('success', 'Permission updated successfully');
+        // Logged-in user account_status
+        $user_id = $this->session->get('user_id') ?? 0;
+        $account_status = 0;
+        if ($user_id > 0) {
+            $user = $this->userModel->select('account_status')->find($user_id);
+            if ($user) {
+                $account_status = $user['account_status'];
+            }
         }
 
-        return redirect()->back()->with('error', 'Student not found');
+        // Fetch teachers
+        // 🔹 Check permission before update
+        if ($account_status > 1) {
+            // Get current student
+            $student = $this->studentModel->find($id);
+
+            if ($student) {
+                // Update student
+                $this->studentModel->update($id, ['permission' => 1]);
+
+                return redirect()->back()->with('success', 'Permission updated successfully');
+            }
+
+            return redirect()->back()->with('error', 'Student not found');
+        } else {
+            return redirect()->back()->with('error', 'Sorry, you are not permitted to delete the student.');
+        }
     }
 
     public function hardDelete($id)
     {
-        // Load student record
-        $student = $this->studentModel->find($id);
-
-        if ($student) {
-            // Check if student has a photo
-            if (!empty($student['student_pic'])) {
-                // Build full path to the file
-                $photoPath = FCPATH . $student['student_pic'];
-
-                // If file exists, delete it
-                if (file_exists($photoPath)) {
-                    unlink($photoPath);
-                }
+        // Logged-in user account_status
+        $user_id = $this->session->get('user_id') ?? 0;
+        $account_status = 0;
+        if ($user_id > 0) {
+            $user = $this->userModel->select('account_status')->find($user_id);
+            if ($user) {
+                $account_status = $user['account_status'];
             }
-
-            // Delete student record from database
-            $this->studentModel->delete($id);
-
-            // Redirect with success message
-            return redirect()->back()->with('success', 'Student and picture deleted successfully.');
         }
 
-        // If student not found
-        return redirect()->back()->with('error', 'Student not found.');
+        // Fetch teachers
+        // 🔹 Check permission before update
+        if ($account_status > 1) {
+            // Load student record
+            $student = $this->studentModel->find($id);
+
+            if ($student) {
+                // Check if student has a photo
+                if (!empty($student['student_pic'])) {
+                    // Build full path to the file
+                    $photoPath = FCPATH . $student['student_pic'];
+
+                    // If file exists, delete it
+                    if (file_exists($photoPath)) {
+                        unlink($photoPath);
+                    }
+                }
+
+                // Delete student record from database
+                $this->studentModel->delete($id);
+
+                // Redirect with success message
+                return redirect()->back()->with('success', 'Student and picture deleted successfully.');
+            }
+
+            // If student not found
+            return redirect()->back()->with('error', 'Student not found.');
+        } else {
+            return redirect()->back()->with('error', 'Sorry, you are not permitted to delete the student.');
+        }
     }
 
     public function deleted_student()
     {
-
-
         // Get filter inputs
         $q       = $this->request->getGet('q');
         $class   = $this->request->getGet('class');
@@ -1209,18 +1237,34 @@ class Dashboard extends Controller
     public function softActive($id)
     {
 
-        // Get current student
-        $student = $this->studentModel->find($id);
-
-        if ($student) {
-
-            // Update student
-            $this->studentModel->update($id, ['permission' => 0]);
-
-            return redirect()->back()->with('success', 'Permission updated successfully');
+        // Logged-in user account_status
+        $user_id = $this->session->get('user_id') ?? 0;
+        $account_status = 0;
+        if ($user_id > 0) {
+            $user = $this->userModel->select('account_status')->find($user_id);
+            if ($user) {
+                $account_status = $user['account_status'];
+            }
         }
 
-        return redirect()->back()->with('error', 'Student not found');
+        // Fetch teachers
+        // 🔹 Check permission before update
+        if ($account_status > 1) {
+            // Get current student
+            $student = $this->studentModel->find($id);
+
+            if ($student) {
+
+                // Update student
+                $this->studentModel->update($id, ['permission' => 0]);
+
+                return redirect()->back()->with('success', 'Permission updated successfully');
+            }
+
+            return redirect()->back()->with('error', 'Student not found');
+        } else {
+            return redirect()->back()->with('error', 'Sorry, you are not permitted to delete the student.');
+        }
     }
 
     public function stAssaginSubView()
