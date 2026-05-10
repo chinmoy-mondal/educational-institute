@@ -2069,9 +2069,31 @@ class Dashboard extends Controller
             'blood_group'
         ]);
 
-        $this->studentModel->update($id, $data);
+        // Logged-in user account_status
+        $user_id = $this->session->get('user_id') ?? 0;
+        $account_status = 0;
+        if ($user_id > 0) {
+            $user = $this->userModel->select('account_status')->find($user_id);
+            if ($user) {
+                $account_status = $user['account_status'];
+            }
+        }
 
-        return redirect()->to('admin/students/view/' . $id)->with('message', 'Student updated successfully.');
+        // Fetch teachers
+        // 🔹 Check permission before update
+        if ($account_status > 1) {
+
+            $this->studentModel->update($id, $data);
+
+            return redirect()
+                ->to('admin/students/view/' . $id)
+                ->with('success', 'Student updated successfully.');
+        } else {
+
+            return redirect()
+                ->to('admin/students/view/' . $id)
+                ->with('error', 'Sorry, you are not permitted to edit this information.');
+        }
     }
 
     public function editStudentPhoto($id)
