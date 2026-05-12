@@ -8,11 +8,15 @@ class SmsLogModel extends Model
 {
     protected $table      = 'sms_logs';
     protected $primaryKey = 'id';
+
     protected $allowedFields = [
         'student_name',
         'phone_number',
         'message',
         'status',
+        'response',
+        'error',
+        'http_code',
         'created_at'
     ];
 

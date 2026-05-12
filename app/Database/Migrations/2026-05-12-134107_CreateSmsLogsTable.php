@@ -16,7 +16,7 @@ class CreateSmsLogsTable extends Migration
                 'auto_increment' => true,
             ],
 
-            'student_name' => [               // NEW FIELD
+            'student_name' => [
                 'type'       => 'VARCHAR',
                 'constraint' => 255,
                 'null'       => false,
@@ -31,6 +31,22 @@ class CreateSmsLogsTable extends Migration
             'message' => [
                 'type' => 'TEXT',
                 'null' => false,
+            ],
+
+            'response' => [
+                'type' => 'TEXT',
+                'null' => true,
+            ],
+
+            'error' => [
+                'type' => 'TEXT',
+                'null' => true,
+            ],
+
+            'http_code' => [
+                'type'       => 'INT',
+                'constraint' => 5,
+                'null'       => true,
             ],
 
             'status' => [
