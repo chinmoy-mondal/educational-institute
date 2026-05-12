@@ -3251,7 +3251,7 @@ class Dashboard extends Controller
             $studentPhone = '880' . ltrim($studentPhone, '0');
             $message = $sms['message'];
 
-            $apiKey = "5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8"; // Replace with real API key
+            $apiKey = env('sms.api'); // Replace with real API key
             $callerID = "1234";
 
             $smsUrl = "https://bulksmsdhaka.net/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
@@ -4446,7 +4446,7 @@ class Dashboard extends Controller
 
             $message = "Dear {$student['student_name']}, your payment for {$monthName} is {$paymentStatusText}. --Jhenaidah Cadet Coaching";
 
-            $apiKey = "5d26df93e2c2cab8f4dc3ff3d31eaf483f2d54c8";   // Replace with real API key
+            $apiKey = $apiKey = env('sms.api');   // Replace with real API key
             $callerID = "1234";
 
             $smsUrl = "https://bulksmsdhaka.net/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
