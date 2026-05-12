@@ -135,12 +135,20 @@ class Dashboard extends BaseController
 
         $phone = $this->request->getGet('phone');
 
-        // $patientModel = new PatientModel();
-
         $builder = $this->patientModel;
 
-        // search by phone if given
+        // Search by phone if given
         if (!empty($phone)) {
+
+            // Remove spaces
+            $phone = trim($phone);
+
+            // Check if phone is exactly 11 digits
+            if (!preg_match('/^[0-9]{11}$/', $phone)) {
+
+                return redirect()->back()->with('error', 'Phone number must be exactly 11 digits.');
+            }
+
             $builder = $builder->like('phone', $phone);
         }
 
