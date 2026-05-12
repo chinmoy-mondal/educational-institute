@@ -1,3 +1,29 @@
+<?php
+function smsStatusMeaning($code)
+{
+    return [
+        '1018' => 'API key is missing',
+        '1017' => 'Message ID is missing',
+        '1016' => 'Duplicate or invalid message ID',
+        '1015' => 'Authorization failed',
+        '1014' => 'Internal server error',
+        '1013' => 'Balance validity not available',
+        '2001' => 'Insufficient balance',
+        '1012' => 'Must send Bengali SMS for masking',
+        '1011' => 'Sender ID not found',
+        '1010' => 'Account disabled',
+        '1009' => 'Account not verified',
+        '1008' => 'IP not whitelisted',
+        '1006' => 'Content validation failed',
+        '1005' => 'Spam detected',
+        '1000' => 'SMS sent successfully',
+        '1001' => 'Request sent',
+        '1002' => 'Request pending',
+        '1003' => 'Request failed',
+    ][$code] ?? 'Unknown status';
+}
+?>
+
 <?= $this->extend('layouts/admin') ?>
 <?= $this->section('content') ?>
 
@@ -119,17 +145,28 @@
                             <th>Phone Number</th>
                             <th>Message</th>
                             <th>Status</th>
+                            <th>Response</th>
+                            <th>Meaning</th>
                             <th>Sent At</th>
                         </tr>
                     </thead>
+
                     <tbody>
                         <?php $sl = 1; ?>
                         <?php foreach ($smsList as $sms): ?>
+
                             <tr>
                                 <td><?= $sl++ ?></td>
+
                                 <td><?= esc($sms['student_name'] ?? '-') ?></td>
+
                                 <td><?= esc($sms['phone_number'] ?? '-') ?></td>
-                                <td><?= esc($sms['message'] ?? '-') ?></td>
+
+                                <td style="max-width:250px; word-wrap:break-word;">
+                                    <?= esc($sms['message'] ?? '-') ?>
+                                </td>
+
+                                <!-- STATUS -->
                                 <td>
                                     <?php if (($sms['status'] ?? 0) == 1): ?>
                                         <span class="badge bg-success">Sent</span>
@@ -137,9 +174,34 @@
                                         <span class="badge bg-danger">Failed</span>
                                     <?php endif; ?>
                                 </td>
-                                <td><?= isset($sms['created_at']) ? date('d M, Y h:i A', strtotime($sms['created_at'])) : '-' ?>
+
+                                <!-- RESPONSE CODE -->
+                                <td>
+                                    <?php
+                                    $response = $sms['response'] ?? '-';
+                                    ?>
+                                    <span class="badge bg-dark">
+                                        <?= esc($response) ?>
+                                    </span>
+                                </td>
+
+                                <!-- MEANING -->
+                                <td>
+                                    <small>
+                                        <?php
+                                        echo smsStatusMeaning($sms['response'] ?? '');
+                                        ?>
+                                    </small>
+                                </td>
+
+                                <!-- SENT AT -->
+                                <td>
+                                    <?= isset($sms['created_at'])
+                                        ? date('d M, Y h:i A', strtotime($sms['created_at']))
+                                        : '-' ?>
                                 </td>
                             </tr>
+
                         <?php endforeach ?>
                     </tbody>
                 </table>
