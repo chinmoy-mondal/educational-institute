@@ -3041,7 +3041,7 @@ class Dashboard extends Controller
             'student_name'  => $first['sender_name'] ?? 'error',
             'id'            => $studentId ?? '',
             'roll'          => $student['roll'] ??  '',
-            'section'       => $student['student_section'] ?? 'error',
+            'section'       => $student['section'] ?? 'error',
         ];
 
         // Receiver info
