@@ -3240,41 +3240,69 @@ class Dashboard extends Controller
 
     public function resendFailedSms()
     {
-        $failedSms = $this->smsLogModel->where('status', 0)->findAll();
+        $failedSms = $this->smsLogModel
+            ->where('status', 0)
+            ->findAll();
 
         $resendCount = 0;
+
         foreach ($failedSms as $sms) {
+
             $studentPhone = $sms['phone_number'] ?? '';
-            if (!$studentPhone) continue;
+
+            if (!$studentPhone) {
+                continue;
+            }
 
             // Ensure Bangladesh country code
             $studentPhone = '880' . ltrim($studentPhone, '0');
+
             $message = $sms['message'];
 
-            $apiKey = env('sms.api'); // Replace with real API key
+            $apiKey  = env('sms.api');
             $callerID = "1234";
 
             $smsUrl = "https://bulksmsdhaka.net/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
 
             $ch = curl_init();
+
             curl_setopt($ch, CURLOPT_URL, $smsUrl);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+
             $response = curl_exec($ch);
             $error = curl_error($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
             curl_close($ch);
 
-            // Update SMS log status if sent successfully
-            if (!$error) {
-                $this->smsLogModel->update($sms['id'], [
-                    'status' => 1,
-                    'updated_at' => date('Y-m-d H:i:s')
-                ]);
+            // Default failed
+            $status = 0;
+
+            // Check API response
+            if (!$error && trim($response) == '1000') {
+                $status = 1;
                 $resendCount++;
             }
+
+            // Update existing SMS log
+            $this->smsLogModel->update($sms['id'], [
+
+                'status' => $status,
+
+                'response' => $response,
+
+                'error' => $error,
+
+                'http_code' => $httpCode,
+            ]);
         }
 
-        session()->setFlashdata('success', "$resendCount SMS(es) resent successfully.");
+        session()->setFlashdata(
+            'success',
+            "$resendCount SMS(es) resent successfully."
+        );
+
         return redirect()->to(base_url('admin/sms-log'));
     }
 
@@ -4440,32 +4468,51 @@ class Dashboard extends Controller
 
         // ---------- SEND SMS ----------
         $studentPhone = $student['phone'] ?? '';
+
         if ($studentPhone) {
-            // Ensure Bangladesh country code
-            $studentPhone = '880' . ltrim($studentPhone, '0');
+
+            // Prevent duplicate 880
+            if (!str_starts_with($studentPhone, '880')) {
+                $studentPhone = '880' . ltrim($studentPhone, '0');
+            }
 
             $message = "Dear {$student['student_name']}, your payment for {$monthName} is {$paymentStatusText}. --Jhenaidah Cadet Coaching";
 
-            $apiKey = $apiKey = env('sms.api');   // Replace with real API key
+            $apiKey  = env('sms.api');
             $callerID = "1234";
 
             $smsUrl = "https://bulksmsdhaka.net/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
 
             $ch = curl_init();
+
             curl_setopt($ch, CURLOPT_URL, $smsUrl);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+
             $response = curl_exec($ch);
             $error = curl_error($ch);
+
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
+
+            // Default failed
+            $smsStatus = 0;
+
+            // Only success if API returns 1000
+            if (!$error && trim($response) == '1000') {
+                $smsStatus = 1;
+            }
 
             // ---------- LOG SMS ----------
             $this->smsLogModel->insert([
                 'student_name' => $student['student_name'],
                 'phone_number' => $studentPhone,
-                'message'      => $message,
-                'status'       => $error ? 0 : 1,
-                'created_at'   => date('Y-m-d H:i:s'),
+                'message' => $message,
+                'response' => $response,
+                'error' => $error,
+                'http_code' => $httpCode,
+                'status' => $smsStatus,
+                'created_at' => date('Y-m-d H:i:s'),
             ]);
         }
 
