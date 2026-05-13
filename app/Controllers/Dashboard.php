@@ -3241,20 +3241,22 @@ class Dashboard extends Controller
 
         $resendCount = 0;
 
+        $successCodes = ['1000', '1001', '1002'];
+
         foreach ($failedSms as $sms) {
 
             $studentPhone = $sms['phone_number'] ?? '';
 
-            if (!$studentPhone) {
-                continue;
-            }
+            if (!$studentPhone) continue;
 
-            // Ensure Bangladesh country code
-            $studentPhone = '880' . ltrim($studentPhone, '0');
+            // Prevent duplicate 880
+            if (!str_starts_with($studentPhone, '880')) {
+                $studentPhone = '880' . ltrim($studentPhone, '0');
+            }
 
             $message = $sms['message'];
 
-            $apiKey  = env('sms.api');
+            $apiKey   = env('sms.api');
             $callerID = "1234";
 
             $smsUrl = "https://bulksmsdhaka.net/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
@@ -3265,36 +3267,35 @@ class Dashboard extends Controller
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
-            $response = curl_exec($ch);
-            $error = curl_error($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $response  = curl_exec($ch);
+            $error     = curl_error($ch);
+            $httpCode  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
             curl_close($ch);
 
-            // Default failed
             $status = 0;
+            $code   = null;
 
-            // Success response codes
-            $successCodes = ['1000', '1001', '1002'];
+            // ✅ FIX: decode JSON response
+            if (!$error && $response) {
 
-            // Check API response
-            if (!$error && in_array(trim($response), $successCodes)) {
+                $data = json_decode($response, true);
 
-                $status = 1;
+                $code = $data['Status'] ?? null;
 
-                $resendCount++;
+                if (in_array($code, $successCodes)) {
+                    $status = 1;
+                    $resendCount++;
+                }
             }
 
-            // Update existing SMS log
+            // Update log
             $this->smsLogModel->update($sms['id'], [
-
-                'status' => $status,
-
-                'response' => $response,
-
-                'error' => $error,
-
-                'http_code' => $httpCode,
+                'status'     => $status,
+                'response'   => $response,
+                'status_code' => $code,
+                'error'      => $error,
+                'http_code'  => $httpCode,
             ]);
         }
 
@@ -4478,7 +4479,7 @@ class Dashboard extends Controller
 
             $message = "Dear {$student['student_name']}, your payment for {$monthName} is {$paymentStatusText}. --Jhenaidah Cadet Coaching";
 
-            $apiKey  = env('sms.api');
+            $apiKey   = env('sms.api');
             $callerID = "1234";
 
             $smsUrl = "https://bulksmsdhaka.net/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
@@ -4490,32 +4491,43 @@ class Dashboard extends Controller
             curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
             $response = curl_exec($ch);
-            $error = curl_error($ch);
-
+            $error    = curl_error($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
             curl_close($ch);
 
-            // Default failed
+            // ---------- DEFAULT ----------
             $smsStatus = 0;
+            $code      = null;
 
-            // Success response codes
             $successCodes = ['1000', '1001', '1002'];
 
-            // Success if no cURL error and API response is valid
-            if (!$error && in_array(trim($response), $successCodes)) {
-                $smsStatus = 1;
+            // ---------- SAFE JSON CHECK ----------
+            if (!$error && $response) {
+
+                $data = json_decode($response, true);
+
+                if (json_last_error() === JSON_ERROR_NONE) {
+
+                    $code = $data['Status'] ?? null;
+
+                    if (in_array($code, $successCodes)) {
+                        $smsStatus = 1;
+                    }
+                }
             }
 
             // ---------- LOG SMS ----------
             $this->smsLogModel->insert([
                 'student_name' => $student['student_name'],
                 'phone_number' => $studentPhone,
-                'message' => $message,
-                'response' => $response,
-                'error' => $error,
-                'http_code' => $httpCode,
-                'status' => $smsStatus,
-                'created_at' => date('Y-m-d H:i:s'),
+                'message'      => $message,
+                'response'     => $response,
+                'status_code'  => $code,
+                'error'        => $error,
+                'http_code'    => $httpCode,
+                'status'       => $smsStatus,
+                'created_at'   => date('Y-m-d H:i:s'),
             ]);
         }
 
