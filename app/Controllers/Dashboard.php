@@ -3190,49 +3190,44 @@ class Dashboard extends Controller
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
-        // Optional filter: status
+        // Filter
         $selectedStatus = $this->request->getGet('status');
         $this->data['selectedStatus'] = $selectedStatus;
 
-        // Base query
-        $query = $this->smsLogModel->orderBy('id', 'DESC');
+        // Query
+        $query = $this->smsLogModel
+            ->orderBy('created_at', 'DESC');
 
-        if ($selectedStatus !== null && $selectedStatus !== '') {
+        if ($selectedStatus !== '' && $selectedStatus !== null) {
             $query->where('status', $selectedStatus);
         }
 
-        // Fetch SMS records
-        $allSms = $this->smsLogModel->findAll();
+        // Pagination
+        $this->data['smsList'] = $query->paginate(20);
+        $this->data['pager']   = $this->smsLogModel->pager;
 
-        // Fetch sms for pagination
-        $smsList = $query->paginate(20);
-        $this->data['smsList'] = $smsList;
-        $this->data['pager'] = $this->smsLogModel->pager;
+        // Stats
+        $allSms = clone $query;
 
-        $totalSms = 0;
+        $totalSms  = 0;
         $failedSms = 0;
 
-        foreach ($allSms as $row) {
+        foreach ($allSms->findAll() as $row) {
 
-            $message = $row['message'];
-            $length = mb_strlen($message, 'UTF-8');
+            $length = mb_strlen($row['message'], 'UTF-8');
 
-            $isUnicode = preg_match('/[^\x00-\x7F]/', $message);
+            $segments = preg_match('/[^\x00-\x7F]/', $row['message'])
+                ? (($length <= 70) ? 1 : ceil($length / 67))
+                : (($length <= 160) ? 1 : ceil($length / 153));
 
-            if ($isUnicode) {
-                $segments = ($length <= 70) ? 1 : ceil($length / 67);
-            } else {
-                $segments = ($length <= 160) ? 1 : ceil($length / 153);
-            }
-
-            if ($row['status'] == 1) {
+            if ($row['status']) {
                 $totalSms += $segments;
             } else {
                 $failedSms += $segments;
             }
         }
 
-        $this->data['smsTotal'] = $totalSms;
+        $this->data['smsTotal']  = $totalSms;
         $this->data['smsFailed'] = $failedSms;
 
         return view('dashboard/transaction/sms_log', $this->data);
