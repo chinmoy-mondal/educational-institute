@@ -175,22 +175,29 @@ function smsStatusMeaning($code)
                             <?php endif; ?>
                         </td>
 
-                        <!-- RESPONSE CODE -->
+                        <!-- RESPONSE -->
                         <td>
-                            <small>
-                                <?php
-                                        $response = $sms['response'] ?? null;
+                            <?php
+                                    $response = $sms['response'] ?? null;
 
-                                        $code = null;
+                                    $messageId = '-';
+                                    $success   = '-';
+                                    $msgText   = '-';
 
-                                        if ($response) {
-                                            $data = json_decode($response, true);
-                                            $code = $data['Status'] ?? null;
-                                        }
+                                    if ($response) {
+                                        $data = json_decode($response, true);
 
-                                        echo smsStatusMeaning($code);
-                                        ?>
-                            </small>
+                                        $messageId = $data['message_id'] ?? '-';
+                                        $success   = $data['Success'] ?? '-';
+                                        $msgText   = $data['Message'] ?? '-';
+                                    }
+                                    ?>
+
+                            <div style="font-size: 12px;">
+                                <div><strong>ID:</strong> <?= esc($messageId) ?></div>
+                                <div><strong>Success:</strong> <?= esc($success) ?></div>
+                                <div><strong>Message:</strong> <?= esc($msgText) ?></div>
+                            </div>
                         </td>
 
                         <!-- MEANING -->
@@ -206,8 +213,19 @@ function smsStatusMeaning($code)
                                             $code = $data['Status'] ?? null;
                                         }
 
-                                        echo smsStatusMeaning($code);
+                                        $httpCode = $sms['http_code'] ?? '-';
                                         ?>
+
+                                <div>
+                                    <?= smsStatusMeaning($code) ?>
+                                </div>
+
+                                <div>
+                                    <span class="badge bg-primary">
+                                        HTTP: <?= esc($httpCode) ?>
+                                    </span>
+                                </div>
+
                             </small>
                         </td>
 
