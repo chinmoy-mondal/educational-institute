@@ -3274,9 +3274,14 @@ class Dashboard extends Controller
             // Default failed
             $status = 0;
 
+            // Success response codes
+            $successCodes = ['1000', '1001', '1002'];
+
             // Check API response
-            if (!$error && trim($response) == '1000') {
+            if (!$error && in_array(trim($response), $successCodes)) {
+
                 $status = 1;
+
                 $resendCount++;
             }
 
@@ -4493,8 +4498,11 @@ class Dashboard extends Controller
             // Default failed
             $smsStatus = 0;
 
-            // Only success if API returns 1000
-            if (!$error && trim($response) == '1000') {
+            // Success response codes
+            $successCodes = ['1000', '1001', '1002'];
+
+            // Success if no cURL error and API response is valid
+            if (!$error && in_array(trim($response), $successCodes)) {
                 $smsStatus = 1;
             }
 
