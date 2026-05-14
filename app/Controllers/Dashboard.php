@@ -122,6 +122,7 @@ class Dashboard extends BaseController
 
         return view('dashboard/profile', $this->data);
     }
+    
 
 
     // =========================
