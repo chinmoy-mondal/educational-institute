@@ -38,8 +38,8 @@
 
         <div class="col-md-4">
 
-            <input type="text" id="patientSearch" class="form-control" placeholder="Search patient..."
-                oninput="filterPatients(this.value)">
+            <input type="tel" id="patientSearch" class="form-control" placeholder="Search patient..." maxlength="11"
+                inputmode="numeric" pattern="[0-9]*" oninput="filterPatients(this.value)">
 
         </div>
 
@@ -174,10 +174,17 @@
 <!-- SCRIPT -->
 <script>
     function filterPatients(value) {
-        value = value.toLowerCase().trim();
+        // keep only numbers
+        value = value.replace(/[^0-9]/g, '');
+
+        // force max 11 digits
+        if (value.length > 11) {
+            value = value.slice(0, 11);
+        }
+
+        document.getElementById('patientSearch').value = value;
 
         let rows = document.querySelectorAll('.patientRow');
-
         let found = false;
 
         rows.forEach(function(row) {
