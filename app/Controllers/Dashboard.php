@@ -171,8 +171,23 @@ class Dashboard extends BaseController
         $this->data['title'] = 'Add Patient';
         $this->data['activeSection'] = 'patients_create';
 
-        // accept phone from URL (?phone=)
-        $this->data['phone'] = $this->request->getGet('phone');
+        $phone = $this->request->getGet('phone');
+
+        // If phone exists, validate it
+        if (!empty($phone)) {
+
+            $phone = trim($phone);
+
+            // ❌ invalid phone → go back
+            if (!preg_match('/^[0-9]{11}$/', $phone)) {
+
+                return redirect()->to('/dashboard/patients')
+                    ->with('error', 'Phone number must be exactly 11 digits.');
+            }
+        }
+
+        // ✅ valid phone or empty
+        $this->data['phone'] = $phone;
 
         return view('dashboard/patient_create', $this->data);
     }
