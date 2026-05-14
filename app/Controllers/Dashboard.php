@@ -44,15 +44,6 @@ class Dashboard extends BaseController
                 'type'  => 'category'
             ],
         ];
-    }
-
-    // =========================
-    // DASHBOARD HOME
-    // =========================
-    public function index()
-    {
-        $this->data['title'] = 'Dashboard';
-        $this->data['activeSection'] = 'dashboard';
 
         // 🌟 ONLY SUBCATEGORIES (PAGE SPECIFIC)
         $this->data['sidebarSubItems'] = [
@@ -82,6 +73,15 @@ class Dashboard extends BaseController
                 ],
             ]
         ];
+    }
+
+    // =========================
+    // DASHBOARD HOME
+    // =========================
+    public function index()
+    {
+        $this->data['title'] = 'Dashboard';
+        $this->data['activeSection'] = 'dashboard';
 
         // Stats
         $this->data['total_users'] = $this->userModel->countAll();
