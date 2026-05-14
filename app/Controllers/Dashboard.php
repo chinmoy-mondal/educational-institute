@@ -133,10 +133,33 @@ class Dashboard extends BaseController
         $this->data['title'] = 'Patients';
         $this->data['activeSection'] = 'patients';
 
-        // Load all patients once
-        $this->data['patients'] = $this->patientModel
-            ->orderBy('id', 'DESC')
-            ->findAll();
+        $phone = $this->request->getGet('phone');
+
+        $builder = $this->patientModel;
+
+        if (!empty($phone)) {
+
+            $phone = trim($phone);
+
+            if (!preg_match('/^[0-9]{11}$/', $phone)) {
+
+                return redirect()->back()
+                    ->with('error', 'Phone number must be exactly 11 digits.');
+            }
+
+            $builder = $builder->like('phone', $phone);
+        }
+
+        $patients = $builder->findAll();
+
+        // Redirect only if searched and no patient found
+        if (!empty($phone) && empty($patients)) {
+
+            return redirect()->to('dashboard/patients/create')
+                ->with('error', 'No patient found. Please add new patient.');
+        }
+
+        $this->data['patients'] = $patients;
 
         return view('dashboard/patients', $this->data);
     }
