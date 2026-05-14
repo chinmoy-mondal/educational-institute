@@ -18,13 +18,15 @@ class Dashboard extends BaseController
         $this->patientModel = new PatientModel();
         $this->session      = session();
 
-        // Auth check
+        // AUTH CHECK
         if (!$this->session->get('isLoggedIn')) {
             redirect()->to('/login')->send();
             exit;
         }
 
-        // 🌟 ONLY CATEGORIES (GLOBAL)
+        // =========================
+        // SIDEBAR CATEGORIES
+        // =========================
         $this->data['sidebarCategories'] = [
             [
                 'label' => 'Dashboard',
@@ -45,7 +47,9 @@ class Dashboard extends BaseController
             ],
         ];
 
-        // 🌟 ONLY SUBCATEGORIES (PAGE SPECIFIC)
+        // =========================
+        // SIDEBAR SUB ITEMS
+        // =========================
         $this->data['sidebarSubItems'] = [
             'User Management' => [
                 [
@@ -54,9 +58,9 @@ class Dashboard extends BaseController
                     'section' => 'users'
                 ],
                 [
-                    'label' => 'Add User',
-                    'url'   => 'dashboard/users/create',
-                    'section' => 'users_create'
+                    'label' => 'Profile',
+                    'url'   => 'dashboard/profile',
+                    'section' => 'profile'
                 ],
             ],
 
@@ -65,6 +69,11 @@ class Dashboard extends BaseController
                     'label' => 'Patients',
                     'url'   => 'dashboard/patients',
                     'section' => 'patients'
+                ],
+                [
+                    'label' => 'Add Patient',
+                    'url'   => 'dashboard/patients/create',
+                    'section' => 'patients_create'
                 ],
                 [
                     'label' => 'Doctors',
@@ -83,8 +92,8 @@ class Dashboard extends BaseController
         $this->data['title'] = 'Dashboard';
         $this->data['activeSection'] = 'dashboard';
 
-        // Stats
         $this->data['total_users'] = $this->userModel->countAll();
+
         $this->data['active_users'] = $this->userModel
             ->where('account_status', 1)
             ->countAllResults();
@@ -122,13 +131,10 @@ class Dashboard extends BaseController
 
         return view('dashboard/profile', $this->data);
     }
-    
-
 
     // =========================
-    // patients
+    // PATIENTS LIST
     // =========================
-
     public function patients()
     {
         $this->data['title'] = 'Patients';
@@ -143,7 +149,6 @@ class Dashboard extends BaseController
             $phone = trim($phone);
 
             if (!preg_match('/^[0-9]{11}$/', $phone)) {
-
                 return redirect()->back()
                     ->with('error', 'Phone number must be exactly 11 digits.');
             }
@@ -153,33 +158,41 @@ class Dashboard extends BaseController
 
         $patients = $builder->findAll();
 
-        // Redirect only if searched and no patient found
-        if (!empty($phone) && empty($patients)) {
-
-            return redirect()->to('dashboard/patients/create')
-                ->with('error', 'No patient found. Please add new patient.');
-        }
-
         $this->data['patients'] = $patients;
 
         return view('dashboard/patients', $this->data);
     }
 
+    // =========================
+    // CREATE PATIENT
+    // =========================
     public function createPatient()
     {
         $this->data['title'] = 'Add Patient';
-        $this->data['activeSection'] = 'patients';
+        $this->data['activeSection'] = 'patients_create';
 
+        // accept phone from URL (?phone=)
         $this->data['phone'] = $this->request->getGet('phone');
 
         return view('dashboard/patient_create', $this->data);
     }
 
+    // =========================
+    // STORE PATIENT
+    // =========================
     public function storePatient()
     {
+        $phone = $this->request->getPost('phone');
+
+        // VALIDATION
+        if (!preg_match('/^[0-9]{11}$/', $phone)) {
+            return redirect()->back()
+                ->with('error', 'Phone number must be exactly 11 digits.');
+        }
+
         $data = [
             'name'    => $this->request->getPost('name'),
-            'phone'   => $this->request->getPost('phone'),
+            'phone'   => $phone,
             'age'     => $this->request->getPost('age'),
             'gender'  => $this->request->getPost('gender'),
             'address' => $this->request->getPost('address'),
@@ -190,5 +203,4 @@ class Dashboard extends BaseController
         return redirect()->to('/dashboard/patients')
             ->with('success', 'Patient added successfully');
     }
-    
 }
