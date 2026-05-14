@@ -173,21 +173,15 @@ class Dashboard extends BaseController
 
         $phone = $this->request->getGet('phone');
 
-        // If phone exists, validate it
-        if (!empty($phone)) {
+        // ❌ BLOCK if phone is missing OR not exactly 11 digits
+        if (empty($phone) || !preg_match('/^[0-9]{11}$/', trim($phone))) {
 
-            $phone = trim($phone);
-
-            // ❌ invalid phone → go back
-            if (!preg_match('/^[0-9]{11}$/', $phone)) {
-
-                return redirect()->to('/dashboard/patients')
-                    ->with('error', 'Phone number must be exactly 11 digits.');
-            }
+            return redirect()->to('/dashboard/patients')
+                ->with('error', 'Please enter a valid 11-digit phone number first.');
         }
 
-        // ✅ valid phone or empty
-        $this->data['phone'] = $phone;
+        // ✅ valid phone only comes here
+        $this->data['phone'] = trim($phone);
 
         return view('dashboard/patient_create', $this->data);
     }
