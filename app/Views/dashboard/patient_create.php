@@ -28,7 +28,8 @@
                     <!-- PHONE -->
                     <div class="col-md-6">
                         <label class="form-label">Phone <span class="text-danger">*</span></label>
-                        <input type="text" name="phone" class="form-control" placeholder="01XXXXXXXXX" required>
+                        <input type="text" name="phone" class="form-control" placeholder="01XXXXXXXXX" maxlength="11"
+                            value="<?= esc($phone ?? '') ?>" required>
                     </div>
 
                     <!-- AGE -->

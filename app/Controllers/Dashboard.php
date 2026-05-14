@@ -163,11 +163,13 @@ class Dashboard extends BaseController
 
         return view('dashboard/patients', $this->data);
     }
-    
+
     public function createPatient()
     {
         $this->data['title'] = 'Add Patient';
         $this->data['activeSection'] = 'patients';
+
+        $this->data['phone'] = $this->request->getGet('phone');
 
         return view('dashboard/patient_create', $this->data);
     }
