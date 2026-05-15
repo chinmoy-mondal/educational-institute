@@ -2575,8 +2575,8 @@ class Dashboard extends Controller
         ) AS discount
 
     FROM transactions t1
-    WHERE DATE(created_at) = '$today'
-    GROUP BY HOUR(created_at)
+    WHERE DATE(t1.created_at) = '$today'
+    GROUP BY HOUR(t1.created_at)
     ORDER BY HOUR(created_at)
 ")->getResultArray();
 
