@@ -2565,12 +2565,12 @@ class Dashboard extends Controller
         (
             SELECT SUM(d.discount)
             FROM (
-                SELECT transaction_id, MAX(discount) AS discount
+                SELECT t2.transaction_id, MAX(t2.discount) AS discount
                 FROM transactions t2
-                WHERE status = 0
-                  AND DATE(created_at) = '$today'
-                  AND HOUR(created_at) = HOUR(t1.created_at)
-                GROUP BY transaction_id
+                WHERE t2.status = 0
+                  AND DATE(t2.created_at) = '$today'
+                  AND HOUR(t2.created_at) = HOUR(t1.created_at)
+                GROUP BY t2.transaction_id
             ) d
         ) AS discount
 
