@@ -2665,16 +2665,6 @@ class Dashboard extends Controller
             $yearData
         );
 
-        $this->data['monthEarns'] = array_map(
-            fn($d) => floatval($d['earn']),
-            $yearData
-        );
-
-        $this->data['monthDiscounts'] = array_map(
-            fn($d) => floatval($d['discount']),
-            $yearData
-        );
-
         $this->data['monthNetEarns'] = array_map(
             fn($d) => floatval($d['earn'] - $d['discount']),
             $yearData
@@ -2685,24 +2675,6 @@ class Dashboard extends Controller
             $yearData
         );
 
-        echo '<pre>';
-
-        foreach ($this->data['monthLabels'] as $index => $month) {
-
-            echo 'Month: ' . $month . PHP_EOL;
-
-            echo 'Earn: ' . $this->data['monthEarns'][$index] . PHP_EOL;
-
-            echo 'Discount: ' . $this->data['monthDiscounts'][$index] . PHP_EOL;
-
-            echo 'Earn - Discount: ' . $this->data['monthNetEarns'][$index] . PHP_EOL;
-
-            echo 'Cost: ' . $this->data['monthCosts'][$index] . PHP_EOL;
-
-            echo '----------------------' . PHP_EOL;
-        }
-
-        echo '</pre>';
 
         return view('dashboard/transaction/transaction_dashboard', $this->data);
     }
