@@ -2659,10 +2659,22 @@ class Dashboard extends Controller
     ORDER BY MONTH(t1.created_at)
 ")->getResultArray();
 
-        $this->data['monthLabels'] = array_map(
-            fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)),
-            $yearData
-        );
+        echo '<pre>';
+
+        foreach ($yearData as $index => $d) {
+
+            echo 'Month: ' . $this->data['monthLabels'][$index] . PHP_EOL;
+
+            echo 'Earn: ' . $this->data['monthEarns'][$index] . PHP_EOL;
+
+            echo 'Cost: ' . $this->data['monthCosts'][$index] . PHP_EOL;
+
+            echo '------------------------' . PHP_EOL;
+        }
+
+        echo '</pre>';
+
+        $this->data['monthLabels'] = array_map(  fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)),            $yearData        );
 
         $this->data['monthEarns'] = array_map(
             fn($d) => floatval($d['earn'] - $d['discount']),
