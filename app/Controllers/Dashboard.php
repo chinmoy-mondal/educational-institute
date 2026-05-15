@@ -2573,10 +2573,10 @@ class Dashboard extends Controller
     FROM transactions t1
     WHERE DATE(t1.created_at) = '$today'
     GROUP BY HOUR(t1.created_at)
-    ORDER BY hour
+    ORDER BY HOUR(t1.created_at)
 ")->getResultArray();
 
-        // Prepare labels and values
+
         $this->data['todayLabels'] = array_map(fn($d) => $d['hour'] . ':00', $todayData);
         $this->data['todayEarns']  = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $todayData);
         $this->data['todayCosts']  = array_map(fn($d) => floatval($d['cost']), $todayData);
@@ -2605,14 +2605,17 @@ class Dashboard extends Controller
         ) AS discount
 
     FROM transactions t1
-    WHERE t1.created_at BETWEEN '$monthStart' AND '$monthEnd'
+    WHERE t1.created_at >= '$monthStart'
+      AND t1.created_at <= '$monthEnd 23:59:59'
     GROUP BY DATE(t1.created_at)
     ORDER BY DATE(t1.created_at)
 ")->getResultArray();
 
+
         $this->data['dailyLabels'] = array_column($currentMonthData, 'date');
         $this->data['dailyEarns']  = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $currentMonthData);
         $this->data['dailyCosts']  = array_map(fn($d) => floatval($d['cost']), $currentMonthData);
+
 
         /* ================= ⭐ YEARLY MONTHLY SUMMARY ================= */
         $year = date('Y');
@@ -2641,6 +2644,7 @@ class Dashboard extends Controller
     GROUP BY MONTH(t1.created_at)
     ORDER BY MONTH(t1.created_at)
 ")->getResultArray();
+
 
         $this->data['monthLabels'] = array_map(
             fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)),
