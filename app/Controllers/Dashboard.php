@@ -2555,9 +2555,13 @@ class Dashboard extends Controller
     SELECT
         HOUR(t1.created_at) AS hour,
 
+        -- total earn
         SUM(CASE WHEN t1.status = 0 THEN t1.amount ELSE 0 END) AS earn,
+
+        -- total cost
         SUM(CASE WHEN t1.status = 1 THEN t1.amount ELSE 0 END) AS cost,
 
+        -- discount counted ONCE per transaction per hour
         (
             SELECT SUM(d.discount)
             FROM (
@@ -2576,7 +2580,7 @@ class Dashboard extends Controller
     ORDER BY HOUR(t1.created_at)
 ")->getResultArray();
 
-
+        // Prepare labels and values
         $this->data['todayLabels'] = array_map(fn($d) => $d['hour'] . ':00', $todayData);
         $this->data['todayEarns']  = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $todayData);
         $this->data['todayCosts']  = array_map(fn($d) => floatval($d['cost']), $todayData);
@@ -2605,17 +2609,14 @@ class Dashboard extends Controller
         ) AS discount
 
     FROM transactions t1
-    WHERE t1.created_at >= '$monthStart'
-      AND t1.created_at <= '$monthEnd 23:59:59'
+    WHERE t1.created_at BETWEEN '$monthStart' AND '$monthEnd'
     GROUP BY DATE(t1.created_at)
     ORDER BY DATE(t1.created_at)
 ")->getResultArray();
 
-
         $this->data['dailyLabels'] = array_column($currentMonthData, 'date');
         $this->data['dailyEarns']  = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $currentMonthData);
         $this->data['dailyCosts']  = array_map(fn($d) => floatval($d['cost']), $currentMonthData);
-
 
         /* ================= ⭐ YEARLY MONTHLY SUMMARY ================= */
         $year = date('Y');
@@ -2644,8 +2645,6 @@ class Dashboard extends Controller
     GROUP BY MONTH(t1.created_at)
     ORDER BY MONTH(t1.created_at)
 ")->getResultArray();
-
-
         $this->data['monthLabels'] = array_map(
             fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)),
             $yearData
