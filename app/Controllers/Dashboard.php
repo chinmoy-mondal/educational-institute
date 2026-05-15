@@ -2665,7 +2665,7 @@ class Dashboard extends Controller
             $yearData
         );
 
-        $this->data['monthNetEarns'] = array_map(
+        $this->data['monthEarns'] = array_map(
             fn($d) => floatval($d['earn'] - $d['discount']),
             $yearData
         );
