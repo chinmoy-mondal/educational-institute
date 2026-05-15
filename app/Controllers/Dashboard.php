@@ -2625,7 +2625,6 @@ class Dashboard extends Controller
         $this->data['dailyEarns']  = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $currentMonthData);
         $this->data['dailyCosts']  = array_map(fn($d) => floatval($d['cost']), $currentMonthData);
 
-        /* ================= ⭐ YEARLY MONTHLY SUMMARY ================= */
         $year = date('Y');
 
         $yearData = db_connect()->query("
@@ -2635,21 +2634,29 @@ class Dashboard extends Controller
         SUM(CASE WHEN t1.status = 0 THEN t1.amount ELSE 0 END) AS earn,
         SUM(CASE WHEN t1.status = 1 THEN t1.amount ELSE 0 END) AS cost,
 
-        SUM(CASE WHEN t1.status = 0 THEN t1.discount ELSE 0 END) AS discount
+        COALESCE(SUM(d.discount),0) AS discount
 
     FROM transactions t1
+
+    LEFT JOIN (
+        SELECT 
+            transaction_id,
+            MONTH(created_at) AS month,
+            MAX(discount) AS discount
+        FROM transactions
+        WHERE status = 0
+          AND YEAR(created_at) = $year
+        GROUP BY transaction_id, MONTH(created_at)
+    ) d 
+    ON d.transaction_id = t1.transaction_id
+    AND d.month = MONTH(t1.created_at)
 
     WHERE YEAR(t1.created_at) = $year
 
     GROUP BY MONTH(t1.created_at)
 
     ORDER BY MONTH(t1.created_at)
-
 ")->getResultArray();
-        $this->data['monthLabels'] = array_map(
-            fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)),
-            $yearData
-        );
 
         $this->data['monthEarns'] = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $yearData);
         $this->data['monthCosts'] = array_map(fn($d) => floatval($d['cost']), $yearData);
