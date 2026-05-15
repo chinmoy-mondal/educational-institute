@@ -2553,7 +2553,7 @@ class Dashboard extends Controller
 
         $todayData = db_connect()->query("
     SELECT
-        HOUR(t1.created) AS hour,
+        HOUR(t1.created_at) AS hour,
 
         SUM(CASE WHEN t1.status = 0 THEN t1.amount ELSE 0 END) AS earn,
 
@@ -2574,7 +2574,7 @@ class Dashboard extends Controller
     FROM transactions t1
     WHERE DATE(t1.created_at) = '$today'
     GROUP BY HOUR(t1.created_at)
-    ORDER BY HOUR(t1.createdcreated_at)
+    ORDER BY HOUR(t1.created_at)
 ")->getResultArray();
 
         // Prepare labels and values
