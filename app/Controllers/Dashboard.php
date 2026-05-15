@@ -2629,30 +2629,23 @@ class Dashboard extends Controller
         $year = date('Y');
 
         $yearData = db_connect()->query("
-            SELECT 
-                MONTH(created_at) AS month,
+    SELECT 
+        MONTH(t1.created_at) AS month,
 
-                SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
-                SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
+        SUM(CASE WHEN t1.status = 0 THEN t1.amount ELSE 0 END) AS earn,
+        SUM(CASE WHEN t1.status = 1 THEN t1.amount ELSE 0 END) AS cost,
 
-                (
-                    SELECT SUM(d.discount)
-                    FROM (
-                        SELECT transaction_id, MAX(discount) AS discount
-                        FROM transactions t2
-                        WHERE t2.status = 0
-                        AND YEAR(t2.created_at) = $year
-                        AND MONTH(t2.created_at) = MONTH(t1.created_at)
-                        GROUP BY transaction_id
-                    ) d
-                ) AS discount
+        SUM(CASE WHEN t1.status = 0 THEN t1.discount ELSE 0 END) AS discount
 
-            FROM transactions t1
-            WHERE YEAR(created_at) = $year
-            GROUP BY MONTH(created_at)
-            ORDER BY MONTH(created_at)
-        ")->getResultArray();
+    FROM transactions t1
 
+    WHERE YEAR(t1.created_at) = $year
+
+    GROUP BY MONTH(t1.created_at)
+
+    ORDER BY MONTH(t1.created_at)
+
+")->getResultArray();
         $this->data['monthLabels'] = array_map(
             fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)),
             $yearData
