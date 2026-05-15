@@ -2556,7 +2556,6 @@ class Dashboard extends Controller
         HOUR(t1.created_at) AS hour,
 
         SUM(CASE WHEN t1.status = 0 THEN t1.amount ELSE 0 END) AS earn,
-
         SUM(CASE WHEN t1.status = 1 THEN t1.amount ELSE 0 END) AS cost,
 
         (
@@ -2574,7 +2573,7 @@ class Dashboard extends Controller
     FROM transactions t1
     WHERE DATE(t1.created_at) = '$today'
     GROUP BY HOUR(t1.created_at)
-    ORDER BY HOUR(t1.created_at)
+    ORDER BY hour
 ")->getResultArray();
 
         // Prepare labels and values
