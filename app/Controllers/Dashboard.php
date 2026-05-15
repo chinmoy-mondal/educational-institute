@@ -2565,16 +2565,16 @@ class Dashboard extends Controller
                 SELECT transaction_id, MAX(discount) AS discount
                 FROM transactions t2
                 WHERE t2.status = 0
-                  AND DATE(t2.created) = '$today'
-                  AND HOUR(t2.created) = HOUR(t1.created)
+                  AND DATE(t2.created_at) = '$today'
+                  AND HOUR(t2.created_at) = HOUR(t1.created_at)
                 GROUP BY transaction_id
             ) d
         ) AS discount
 
     FROM transactions t1
-    WHERE DATE(t1.created) = '$today'
-    GROUP BY HOUR(t1.created)
-    ORDER BY HOUR(t1.created)
+    WHERE DATE(t1.created_at) = '$today'
+    GROUP BY HOUR(t1.created_at)
+    ORDER BY HOUR(t1.createdcreated_at)
 ")->getResultArray();
 
         // Prepare labels and values
