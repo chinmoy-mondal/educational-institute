@@ -2630,33 +2630,29 @@ class Dashboard extends Controller
 
         $yearData = db_connect()->query("
     SELECT 
-        MONTH(t1.created_at) AS month,
+        t.month,
 
-        SUM(CASE WHEN t1.status = 0 THEN t1.amount ELSE 0 END) AS earn,
-        SUM(CASE WHEN t1.status = 1 THEN t1.amount ELSE 0 END) AS cost,
+        SUM(t.earn) AS earn,
+        SUM(t.cost) AS cost,
+        SUM(t.discount) AS discount
 
-        COALESCE(SUM(d.discount), 0) AS discount
-
-    FROM transactions t1
-
-    LEFT JOIN (
-        SELECT 
-            transaction_id,
+    FROM (
+        SELECT
             MONTH(created_at) AS month,
-            MAX(discount) AS discount
+            transaction_id,
+
+            MAX(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
+            MAX(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
+
+            MAX(CASE WHEN status = 0 THEN discount ELSE 0 END) AS discount
+
         FROM transactions
-        WHERE status = 0
-          AND YEAR(created_at) = $year
+        WHERE YEAR(created_at) = $year
         GROUP BY transaction_id, MONTH(created_at)
-    ) d 
-    ON d.transaction_id = t1.transaction_id
-    AND d.month = MONTH(t1.created_at)
+    ) t
 
-    WHERE YEAR(t1.created_at) = $year
-
-    GROUP BY MONTH(t1.created_at)
-
-    ORDER BY MONTH(t1.created_at)
+    GROUP BY t.month
+    ORDER BY t.month
 ")->getResultArray();
 
 
