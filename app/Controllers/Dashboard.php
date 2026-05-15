@@ -2604,21 +2604,28 @@ class Dashboard extends Controller
 
         $currentMonthData = db_connect()->query("
     SELECT 
-        DATE(t1.created_at) AS date,
+        t1.date,
+        SUM(t1.earn) AS earn,
+        SUM(t1.cost) AS cost,
+        COALESCE(SUM(t1.discount),0) AS discount
 
-        SUM(CASE WHEN t1.status = 0 THEN t1.amount ELSE 0 END) AS earn,
-        SUM(CASE WHEN t1.status = 1 THEN t1.amount ELSE 0 END) AS cost,
+    FROM (
+        SELECT 
+            DATE(created_at) AS date,
+            transaction_id,
 
-        SUM(CASE WHEN t1.status = 0 THEN t1.discount ELSE 0 END) AS discount
+            SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
+            SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
 
-    FROM transactions t1
+            MAX(CASE WHEN status = 0 THEN discount ELSE 0 END) AS discount
 
-    WHERE t1.created_at BETWEEN '$monthStart' AND '$monthEnd'
+        FROM transactions
+        WHERE created_at BETWEEN '$monthStart' AND '$monthEnd'
+        GROUP BY transaction_id, DATE(created_at)
+    ) t1
 
-    GROUP BY DATE(t1.created_at)
-
-    ORDER BY DATE(t1.created_at)
-
+    GROUP BY t1.date
+    ORDER BY t1.date
 ")->getResultArray();
 
         $this->data['dailyLabels'] = array_column($currentMonthData, 'date');
