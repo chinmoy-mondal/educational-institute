@@ -2660,10 +2660,22 @@ class Dashboard extends Controller
 ")->getResultArray();
 
 
-
-        $this->data['monthLabels'] = array_map(  fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)),            $yearData        );
+        $this->data['monthLabels'] = array_map(
+            fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)),
+            $yearData
+        );
 
         $this->data['monthEarns'] = array_map(
+            fn($d) => floatval($d['earn']),
+            $yearData
+        );
+
+        $this->data['monthDiscounts'] = array_map(
+            fn($d) => floatval($d['discount']),
+            $yearData
+        );
+
+        $this->data['monthNetEarns'] = array_map(
             fn($d) => floatval($d['earn'] - $d['discount']),
             $yearData
         );
@@ -2680,6 +2692,10 @@ class Dashboard extends Controller
             echo 'Month: ' . $month . PHP_EOL;
 
             echo 'Earn: ' . $this->data['monthEarns'][$index] . PHP_EOL;
+
+            echo 'Discount: ' . $this->data['monthDiscounts'][$index] . PHP_EOL;
+
+            echo 'Earn - Discount: ' . $this->data['monthNetEarns'][$index] . PHP_EOL;
 
             echo 'Cost: ' . $this->data['monthCosts'][$index] . PHP_EOL;
 
