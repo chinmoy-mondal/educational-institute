@@ -53,11 +53,18 @@
             color: green;
         }
 
-        .danger {
-            color: red;
-            font-weight: bold;
-            text-align: center;
+        .status {
             margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .expired {
+            color: red;
+        }
+
+        .active {
+            color: green;
         }
 
         .btn-pay {
@@ -77,9 +84,10 @@
 
     <?php
     $today = new DateTime();
-    $end = new DateTime($end_date);
+    $start = new DateTime($start_date);
+    $end   = new DateTime($end_date);
 
-    // calculate difference
+    // difference
     $diff = $today->diff($end);
     $days_over = ($today > $end) ? $diff->days : 0;
     $is_expired = $today > $end;
@@ -120,15 +128,14 @@
 
         </div>
 
-        <?php if ($is_expired): ?>
-            <div class="danger">
+        <!-- STATUS -->
+        <div class="status <?= $is_expired ? 'expired' : 'active' ?>">
+            <?php if ($is_expired): ?>
                 ⚠️ Expired by <?= $days_over ?> day(s)
-            </div>
-        <?php else: ?>
-            <div class="danger" style="color:green;">
+            <?php else: ?>
                 ✔ Active Subscription
-            </div>
-        <?php endif; ?>
+            <?php endif; ?>
+        </div>
 
         <div class="contact">
             📞 Contact: 01920232269

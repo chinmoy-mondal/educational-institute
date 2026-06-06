@@ -722,10 +722,15 @@ class Home extends BaseController
 
 	public function payment()
 	{
+		$start = env('school.subscription');
+
+		$end = date('Y-m-d', strtotime($start . ' +1 year'));
+
 		return view('payment', [
-			'subscription' => env('school.subscription'),
-			'domain'       => env('school.domain'),
-			'due'          => env('school.due'),
+			'start_date' => $start,
+			'end_date'   => $end,
+			'domain'     => env('school.domain'),
+			'due'        => env('school.due'),
 		]);
 	}
 }
