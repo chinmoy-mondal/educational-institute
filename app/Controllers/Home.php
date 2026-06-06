@@ -719,4 +719,13 @@ class Home extends BaseController
 
 		return $message;
 	}
+
+	public function payment()
+	{
+		return view('payment', [
+			'subscription' => env('school.subscription'),
+			'domain'       => env('school.domain'),
+			'due'          => env('school.due'),
+		]);
+	}
 }

@@ -5,7 +5,16 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
+$subscription = env('school.subscription');
 
+if ($subscription && time() > strtotime($subscription)) {
+
+    // Expired routes
+
+    $routes->get('/', 'Home::payment');
+
+    $routes->add('(:any)', 'Home::payment');
+} else {
 # website page
 $routes->get('/', 'Home::index');
 $routes->get('home', 'Home::index');
@@ -223,3 +232,4 @@ $routes->set404Override(function () {
     $controller = new \App\Controllers\ErrorController();
     return $controller->show404();
 });
+}
