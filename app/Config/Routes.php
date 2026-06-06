@@ -7,7 +7,7 @@ use CodeIgniter\Router\RouteCollection;
  */
 $subscription = env('school.subscription');
 
-if ($subscription && time() > strtotime($subscription)) {
+if ($subscription && time() > strtotime($subscription . ' +1 year')) {
 
     // Expired routes
 
