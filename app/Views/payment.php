@@ -53,14 +53,37 @@
             color: green;
         }
 
+        .danger {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 15px;
+        }
+
         .btn-pay {
             margin-top: 25px;
             width: 100%;
+        }
+
+        .contact {
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body>
+
+    <?php
+    $today = new DateTime();
+    $end = new DateTime($end_date);
+
+    // calculate difference
+    $diff = $today->diff($end);
+    $days_over = ($today > $end) ? $diff->days : 0;
+    $is_expired = $today > $end;
+    ?>
 
     <div class="receipt shadow">
 
@@ -71,8 +94,13 @@
         <div class="box">
 
             <div class="row-item">
-                <div class="label">Subscription End Date</div>
-                <div class="value"><?= esc($subscription) ?></div>
+                <div class="label">Subscription Start</div>
+                <div class="value"><?= date('d-m-Y', strtotime($start_date)) ?></div>
+            </div>
+
+            <div class="row-item">
+                <div class="label">Subscription End</div>
+                <div class="value"><?= date('d-m-Y', strtotime($end_date)) ?></div>
             </div>
 
             <div class="row-item">
@@ -90,6 +118,20 @@
                 <div>৳ <?= esc($domain + $due) ?></div>
             </div>
 
+        </div>
+
+        <?php if ($is_expired): ?>
+            <div class="danger">
+                ⚠️ Expired by <?= $days_over ?> day(s)
+            </div>
+        <?php else: ?>
+            <div class="danger" style="color:green;">
+                ✔ Active Subscription
+            </div>
+        <?php endif; ?>
+
+        <div class="contact">
+            📞 Contact: 01920232269
         </div>
 
         <button class="btn btn-success btn-pay">
