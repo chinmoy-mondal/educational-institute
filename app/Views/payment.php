@@ -83,14 +83,26 @@
 <body>
 
     <?php
+    // SAFE FALLBACKS (NO ERROR EVER)
+    $start_date = $start_date ?? env('school.subscription') ?? date('Y-m-d');
+
+    // AUTO 1 YEAR END DATE
+    $end_date = $end_date ?? date('Y-m-d', strtotime($start_date . ' +1 year'));
+
+    $domain = $domain ?? env('school.domain') ?? 0;
+    $due    = $due ?? env('school.due') ?? 0;
+
+    // DATE OBJECTS
     $today = new DateTime();
     $start = new DateTime($start_date);
     $end   = new DateTime($end_date);
 
-    // difference
-    $diff = $today->diff($end);
-    $days_over = ($today > $end) ? $diff->days : 0;
+    // EXPIRED CHECK
     $is_expired = $today > $end;
+
+    // DAYS OVER
+    $diff = $today->diff($end);
+    $days_over = $is_expired ? $diff->days : 0;
     ?>
 
     <div class="receipt shadow">
