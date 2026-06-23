@@ -7,7 +7,7 @@
         <div class="row justify-content-center mt-4">
             <div class="col-md-6">
 
-                <!-- CARD START -->
+                <!-- CARD -->
                 <div class="card card-primary shadow-sm">
 
                     <div class="card-header">
@@ -18,22 +18,22 @@
 
                         <form action="<?= base_url('admin/print_topsheet') ?>" method="get">
 
-                            <!-- ================= CLASS ================= -->
+                            <!-- CLASS -->
                             <div class="form-group">
                                 <label>Select Class</label>
                                 <select name="class" id="class" class="form-control" required>
                                     <option value="">Select Class</option>
 
                                     <?php foreach ($class as $c): ?>
-                                    <option value="<?= $c['class'] ?>">
-                                        Class <?= $c['class'] ?>
-                                    </option>
+                                        <option value="<?= $c['class'] ?>">
+                                            Class <?= $c['class'] ?>
+                                        </option>
                                     <?php endforeach; ?>
 
                                 </select>
                             </div>
 
-                            <!-- ================= EXAM ================= -->
+                            <!-- EXAM -->
                             <div class="form-group mt-3">
                                 <label>Select Exam</label>
                                 <select name="exam" id="exam" class="form-control" required>
@@ -41,7 +41,7 @@
                                 </select>
                             </div>
 
-                            <!-- ================= SUBMIT ================= -->
+                            <!-- SUBMIT -->
                             <div class="text-center mt-4">
                                 <button type="submit" class="btn btn-success btn-lg">
                                     Make Top Sheet
@@ -53,7 +53,6 @@
                     </div>
 
                 </div>
-                <!-- CARD END -->
 
             </div>
         </div>
@@ -65,40 +64,44 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-$('#class').on('change', function() {
+    $(document).ready(function() {
 
-    let classId = $(this).val();
+        $('#class').on('change', function() {
 
-    // reset exam dropdown
-    $('#exam').html('<option value="">Select Exam</option>');
+            let classId = $(this).val();
 
-    if (classId === "") return;
+            // reset
+            $('#exam').html('<option value="">Select Exam</option>');
 
-    let options = '<option value="">Select Exam</option>';
+            if (classId === "") return;
 
-    // ================= CLASS 10 =================
-    if (classId == 10) {
+            let options = '<option value="">Select Exam</option>';
 
-        options += `
-            <option value="Pre-Test Exam">Pre-Test Exam</option>
-            <option value="Test Exam">Test Exam</option>
-        `;
+            // ================= CLASS 10 =================
+            if (classId == 10) {
 
-    }
+                options += `
+                <option value="Pre-Test Exam">Pre-Test Exam</option>
+                <option value="Test Exam">Test Exam</option>
+            `;
 
-    // ================= CLASS 6–9 =================
-    else if (classId >= 6 && classId <= 9) {
+            }
 
-        options += `
-            <option value="Half Yearly Exam">Half Yearly Exam</option>
-            <option value="Annual Exam">Annual Exam</option>
-        `;
+            // ================= CLASS 6–9 =================
+            else if (classId >= 6 && classId <= 9) {
 
-    }
+                options += `
+                <option value="Half Yearly Exam">Half Yearly Exam</option>
+                <option value="Annual Exam">Annual Exam</option>
+            `;
 
-    $('#exam').html(options);
+            }
 
-});
+            $('#exam').html(options);
+
+        });
+
+    });
 </script>
 
 <?= $this->endSection() ?>
