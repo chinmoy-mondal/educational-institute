@@ -7,8 +7,9 @@
         <div class="row justify-content-center mt-4">
             <div class="col-md-6">
 
-                <!-- Card Start -->
+                <!-- CARD START -->
                 <div class="card card-primary shadow-sm">
+
                     <div class="card-header">
                         <h3 class="card-title text-center mb-0">Make Top Sheet</h3>
                     </div>
@@ -17,28 +18,30 @@
 
                         <form action="<?= base_url('admin/print_topsheet') ?>" method="get">
 
-                            <!-- CLASS -->
+                            <!-- ================= CLASS ================= -->
                             <div class="form-group">
-                                <label for="class">Select Class</label>
+                                <label>Select Class</label>
                                 <select name="class" id="class" class="form-control" required>
                                     <option value="">Select Class</option>
+
                                     <?php foreach ($class as $c): ?>
                                     <option value="<?= $c['class'] ?>">
                                         Class <?= $c['class'] ?>
                                     </option>
                                     <?php endforeach; ?>
+
                                 </select>
                             </div>
 
-                            <!-- EXAM (DYNAMIC) -->
+                            <!-- ================= EXAM ================= -->
                             <div class="form-group mt-3">
-                                <label for="exam">Select Exam</label>
+                                <label>Select Exam</label>
                                 <select name="exam" id="exam" class="form-control" required>
                                     <option value="">Select Exam</option>
                                 </select>
                             </div>
 
-                            <!-- SUBMIT -->
+                            <!-- ================= SUBMIT ================= -->
                             <div class="text-center mt-4">
                                 <button type="submit" class="btn btn-success btn-lg">
                                     Make Top Sheet
@@ -48,8 +51,9 @@
                         </form>
 
                     </div>
+
                 </div>
-                <!-- Card End -->
+                <!-- CARD END -->
 
             </div>
         </div>
@@ -65,26 +69,35 @@ $('#class').on('change', function() {
 
     let classId = $(this).val();
 
-    let examOptions = '<option value="">Select Exam</option>';
+    // reset exam dropdown
+    $('#exam').html('<option value="">Select Exam</option>');
 
+    if (classId === "") return;
+
+    let options = '<option value="">Select Exam</option>';
+
+    // ================= CLASS 10 =================
     if (classId == 10) {
 
-        // Class 10 → Pre-Test + Test only
-        examOptions += `
+        options += `
             <option value="Pre-Test Exam">Pre-Test Exam</option>
             <option value="Test Exam">Test Exam</option>
         `;
 
-    } else if (classId >= 6 && classId <= 9) {
+    }
 
-        // Class 6–9 → Half Yearly + Annual
-        examOptions += `
+    // ================= CLASS 6–9 =================
+    else if (classId >= 6 && classId <= 9) {
+
+        options += `
             <option value="Half Yearly Exam">Half Yearly Exam</option>
             <option value="Annual Exam">Annual Exam</option>
         `;
+
     }
 
-    $('#exam').html(examOptions);
+    $('#exam').html(options);
+
 });
 </script>
 
