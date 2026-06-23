@@ -91,16 +91,11 @@ $routes->get('admin/exam-routine', 'Dashboard::exam_routine');
     $routes->post('admin/exam-routine/update/(:num)', 'Dashboard::update_exam_routine/$1');
     $routes->post('admin/exam-routine/delete/(:num)', 'Dashboard::delete_exam_routine/$1');
 
-    $routes->get('admin/calendar', 'Dashboard::calendar');
-    $routes->get('admin/calendar/events', 'Dashboard::events');
-    
-// $routes->get('calendar', 'Dashboard::calendar');
-
-
-// $routes->get('calendar/events', 'Dashboard::events');
-// $routes->post('calendar/add', 'Dashboard::addEvent');
-// $routes->post('calendar/update', 'Dashboard::updateEvent');
-// $routes->post('calendar/delete', 'Dashboard::deleteEvent');
+    $routes->get('calendar', 'Dashboard::calendar');
+    $routes->get('calendar/events', 'Dashboard::events');
+    $routes->post('calendar/add', 'Dashboard::addEvent');
+    $routes->post('calendar/update', 'Dashboard::updateEvent');
+    $routes->post('calendar/delete', 'Dashboard::deleteEvent');
 
 // Holiday 
 $routes->get('admin/holiday', 'Dashboard::holiday');
