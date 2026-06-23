@@ -32,7 +32,7 @@
                     <div class="col-md-3">
                         <label>Class</label>
                         <select name="class" class="form-control" required>
-                            <?php for ($i = 1; $i <= 10; $i++): ?>
+                            <?php for ($i = 6; $i <= 10; $i++): ?>
                             <option value="<?= $i ?>" <?= ($event['class'] == $i) ? 'selected' : '' ?>>
                                 Class <?= $i ?>
                             </option>
