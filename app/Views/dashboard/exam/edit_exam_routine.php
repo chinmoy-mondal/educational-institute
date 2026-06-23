@@ -11,10 +11,23 @@
         <div class="card-body">
 
             <form action="<?= base_url('admin/exam-routine/update/' . $event['id']) ?>" method="post">
-
                 <?= csrf_field() ?>
 
+                <!-- TITLE -->
                 <div class="row">
+                    <div class="col-md-6">
+                        <label>Title</label>
+                        <input type="text" name="title" class="form-control" value="<?= $event['title'] ?>" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Description</label>
+                        <input type="text" name="description" class="form-control" value="<?= $event['description'] ?>">
+                    </div>
+                </div>
+
+                <!-- CLASS & SUBJECT -->
+                <div class="row mt-3">
 
                     <div class="col-md-3">
                         <label>Class</label>
@@ -30,31 +43,40 @@
                     <div class="col-md-3">
                         <label>Subject</label>
                         <select name="subject" class="form-control" required>
-
                             <?php foreach ($subjects as $sub): ?>
                             <option value="<?= $sub['id'] ?>"
                                 <?= ($event['subject'] == $sub['id']) ? 'selected' : '' ?>>
                                 <?= $sub['subject'] ?>
                             </option>
                             <?php endforeach; ?>
-
                         </select>
                     </div>
 
                     <div class="col-md-3">
-                        <label>Exam Date</label>
+                        <label>Category</label>
+                        <input type="text" name="category" class="form-control" value="<?= $event['category'] ?>">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Sub Category</label>
+                        <input type="text" name="subcategory" class="form-control" value="<?= $event['subcategory'] ?>">
+                    </div>
+
+                </div>
+
+                <!-- DATE & TIME -->
+                <div class="row mt-3">
+
+                    <div class="col-md-3">
+                        <label>Start Date</label>
                         <input type="date" name="start_date" class="form-control" value="<?= $event['start_date'] ?>"
                             required>
                     </div>
 
                     <div class="col-md-3">
-                        <label>Color</label>
-                        <input type="color" name="color" class="form-control" value="<?= $event['color'] ?>">
+                        <label>End Date</label>
+                        <input type="date" name="end_date" class="form-control" value="<?= $event['end_date'] ?>">
                     </div>
-
-                </div>
-
-                <div class="row mt-3">
 
                     <div class="col-md-3">
                         <label>Start Time</label>
@@ -68,15 +90,18 @@
                             required>
                     </div>
 
-                    <div class="col-md-3">
-                        <label>Category</label>
-                        <input type="text" class="form-control" value="Exam" readonly>
-                    </div>
-
                 </div>
 
-                <div class="mt-4">
+                <!-- COLOR -->
+                <div class="row mt-3">
+                    <div class="col-md-3">
+                        <label>Color</label>
+                        <input type="color" name="color" class="form-control" value="<?= $event['color'] ?>">
+                    </div>
+                </div>
 
+                <!-- BUTTONS -->
+                <div class="mt-4">
                     <button type="submit" class="btn btn-success">
                         Update Routine
                     </button>
@@ -84,7 +109,6 @@
                     <a href="<?= base_url('admin/exam-routine') ?>" class="btn btn-secondary">
                         Back
                     </a>
-
                 </div>
 
             </form>

@@ -527,17 +527,21 @@ class Dashboard extends Controller
     public function update_exam_routine($id)
     {
         $this->calendarModel->update($id, [
-            'class'      => $this->request->getPost('class'),
-            'subject'    => $this->request->getPost('subject'),
-            'start_date' => $this->request->getPost('start_date'),
-            'start_time' => $this->request->getPost('start_time'),
-            'end_time'   => $this->request->getPost('end_time'),
-            'category'   => 'Exam',
-            'color'      => $this->request->getPost('color')
+            'title'       => $this->request->getPost('title'),
+            'description' => $this->request->getPost('description'),
+            'start_date'  => $this->request->getPost('start_date'),
+            'start_time'  => $this->request->getPost('start_time'),
+            'end_date'    => $this->request->getPost('end_date'),
+            'end_time'    => $this->request->getPost('end_time'),
+            'color'       => $this->request->getPost('color'),
+            'class'       => $this->request->getPost('class'),
+            'category'    => $this->request->getPost('category'),
+            'subcategory' => $this->request->getPost('subcategory'),
+            'subject'     => $this->request->getPost('subject'),
         ]);
 
         return redirect()->to(base_url('admin/exam-routine'))
-            ->with('success', 'Exam routine updated successfully');
+            ->with('success', 'Routine Updated Successfully');
     }
 
     public function holiday()
