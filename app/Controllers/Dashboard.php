@@ -514,6 +514,16 @@ class Dashboard extends Controller
 
         return view('dashboard/exam/create_exam_routine', $this->data);
     }
+    public function getSubjectsByClass()
+    {
+        $class = $this->request->getGet('class');
+
+        // $model = new \App\Models\SubjectModel();
+
+        $data = $this->subjectModel->where('class', $class)->findAll();
+
+        return $this->response->setJSON($data);
+    }
 
     public function store_exam_routine()
     {
