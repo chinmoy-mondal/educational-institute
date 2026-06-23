@@ -544,6 +544,21 @@ class Dashboard extends Controller
             ->with('success', 'Routine Updated Successfully');
     }
 
+    public function delete_exam_routine($id)
+    {
+        $event = $this->calendarModel->find($id);
+
+        if (!$event) {
+            return redirect()->to(base_url('admin/exam-routine'))
+                ->with('error', 'Routine not found.');
+        }
+
+        $this->calendarModel->delete($id);
+
+        return redirect()->to(base_url('admin/exam-routine'))
+            ->with('success', 'Routine deleted successfully.');
+    }
+
     public function holiday()
     {
         $this->data['title'] = 'Calendar';

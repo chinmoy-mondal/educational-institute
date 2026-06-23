@@ -105,12 +105,13 @@
                             <a href="<?= base_url('admin/exam-routine/edit/' . $e['id']) ?>"
                                 class="btn btn-primary btn-sm">Edit</a>
 
-                            <form action="<?= base_url('calendar/delete') ?>" method="post"
+                            <form action="<?= base_url('admin/exam-routine/delete/' . $e['id']) ?>" method="post"
                                 style="display:inline-block;">
-                                <input type="hidden" name="<?= csrf_token() ?>" value="<?= csrf_hash() ?>">
-                                <input type="hidden" name="id" value="<?= $e['id'] ?>">
 
-                                <button class="btn btn-danger btn-sm" onclick="return confirm('Delete this item?')">
+                                <?= csrf_field() ?>
+
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Are you sure you want to delete this routine?')">
                                     Delete
                                 </button>
                             </form>
