@@ -3766,6 +3766,37 @@ class Dashboard extends Controller
         return view('dashboard/calendar', $this->data);
     }
 
+    public function events()
+    {
+        $events = $this->calendarModel->findAll();
+
+        $data = [];
+
+        foreach ($events as $event) {
+
+            // build datetime
+            $start = $event['start_date'];
+            if (!empty($event['start_time'])) {
+                $start .= 'T' . $event['start_time'];
+            }
+
+            $end = $event['end_date'];
+            if (!empty($event['end_time'])) {
+                $end .= 'T' . $event['end_time'];
+            }
+
+            $data[] = [
+                'id'    => $event['id'],
+                'title' => $event['title'],
+                'start' => $start,
+                'end'   => $end,
+                'color' => $event['color'] ?? '#0d6efd'
+            ];
+        }
+
+        return $this->response->setJSON($data);
+    }
+
     public function attendanceCalendar()
     {
         $this->data['title'] = 'Attendance';

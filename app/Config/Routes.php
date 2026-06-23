@@ -93,9 +93,6 @@ $routes->get('admin/exam-routine', 'Dashboard::exam_routine');
 
     $routes->get('calendar', 'Dashboard::calendar');
     $routes->get('calendar/events', 'Dashboard::events');
-    $routes->post('calendar/add', 'Dashboard::addEvent');
-    $routes->post('calendar/update', 'Dashboard::updateEvent');
-    $routes->post('calendar/delete', 'Dashboard::deleteEvent');
 
 // Holiday 
 $routes->get('admin/holiday', 'Dashboard::holiday');
