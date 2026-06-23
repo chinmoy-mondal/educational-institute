@@ -42,7 +42,7 @@
                         </select>
                     </div>
 
-                    <!-- SUBJECT (DYNAMIC) -->
+                    <!-- SUBJECT -->
                     <div class="col-md-3">
                         <label>Subject</label>
                         <select name="subject" id="subject" class="form-control">
@@ -50,14 +50,11 @@
                         </select>
                     </div>
 
-                    <!-- CATEGORY -->
+                    <!-- SUB CATEGORY -->
                     <div class="col-md-3">
                         <label>Sub Category</label>
-                        <select name="subcategory" class="form-control">
-                            <option value="Half Yearly Exam">Half Yearly Exam</option>
-                            <option value="Annual Exam">Annual Exam</option>
-                            <option value="Pre-Test Exam">Pre-Test Exam</option>
-                            <option value="Test Exam">Test Exam</option>
+                        <select name="subcategory" id="subcategory" class="form-control">
+                            <option value="">Select Category</option>
                         </select>
                     </div>
 
@@ -115,11 +112,15 @@ $('#class').on('change', function() {
 
     let classId = $(this).val();
 
-    if (classId === "") {
-        $('#subject').html('<option value="">Select Subject</option>');
-        return;
-    }
+    // RESET
+    $('#subject').html('<option value="">Select Subject</option>');
+    $('#subcategory').html('<option value="">Select Category</option>');
 
+    if (classId === "") return;
+
+    // =====================
+    // LOAD SUBJECTS
+    // =====================
     $('#subject').html('<option>Loading...</option>');
 
     $.ajax({
@@ -138,11 +139,29 @@ $('#class').on('change', function() {
             });
 
             $('#subject').html(options);
-        },
-        error: function() {
-            $('#subject').html('<option value="">Error loading subjects</option>');
         }
     });
+
+    // =====================
+    // LOAD SUBCATEGORY RULES
+    // =====================
+    let catOptions = '<option value="">Select Category</option>';
+
+    if (classId == 10) {
+        catOptions += `
+            <option value="Half Yearly Exam">Half Yearly Exam</option>
+            <option value="Annual Exam">Annual Exam</option>
+            <option value="Pre-Test Exam">Pre-Test Exam</option>
+            <option value="Test Exam">Test Exam</option>
+        `;
+    } else {
+        catOptions += `
+            <option value="Half Yearly Exam">Half Yearly Exam</option>
+            <option value="Annual Exam">Annual Exam</option>
+        `;
+    }
+
+    $('#subcategory').html(catOptions);
 
 });
 </script>
