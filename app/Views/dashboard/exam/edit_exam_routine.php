@@ -59,7 +59,30 @@
 
                     <div class="col-md-3">
                         <label>Sub Category</label>
-                        <input type="text" name="subcategory" class="form-control" value="<?= $event['subcategory'] ?>">
+                        <select name="subcategory" class="form-control">
+
+                            <option value="">Select Sub Category</option>
+
+                            <option value="Half Yearly Exam"
+                                <?= ($event['subcategory'] == 'Half Yearly Exam') ? 'selected' : '' ?>>
+                                Half Yearly Exam
+                            </option>
+
+                            <option value="Annual Exam"
+                                <?= ($event['subcategory'] == 'Annual Exam') ? 'selected' : '' ?>>
+                                Annual Exam
+                            </option>
+
+                            <option value="Pre-Test Exam"
+                                <?= ($event['subcategory'] == 'Pre-Test Exam') ? 'selected' : '' ?>>
+                                Pre-Test Exam
+                            </option>
+
+                            <option value="Test Exam" <?= ($event['subcategory'] == 'Test Exam') ? 'selected' : '' ?>>
+                                Test Exam
+                            </option>
+
+                        </select>
                     </div>
 
                 </div>
