@@ -37,7 +37,7 @@
                         <select name="class" id="class" class="form-control">
                             <option value="">Select Class</option>
                             <?php for ($i = 6; $i <= 10; $i++): ?>
-                            <option value="<?= $i ?>">Class <?= $i ?></option>
+                                <option value="<?= $i ?>">Class <?= $i ?></option>
                             <?php endfor; ?>
                         </select>
                     </div>
@@ -108,62 +108,60 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-$('#class').on('change', function() {
+    $('#class').on('change', function() {
 
-    let classId = $(this).val();
+        let classId = $(this).val();
 
-    // RESET
-    $('#subject').html('<option value="">Select Subject</option>');
-    $('#subcategory').html('<option value="">Select Category</option>');
+        // RESET
+        $('#subject').html('<option value="">Select Subject</option>');
+        $('#subcategory').html('<option value="">Select Category</option>');
 
-    if (classId === "") return;
+        if (classId === "") return;
 
-    // =====================
-    // LOAD SUBJECTS
-    // =====================
-    $('#subject').html('<option>Loading...</option>');
+        // =====================
+        // LOAD SUBJECTS
+        // =====================
+        $('#subject').html('<option>Loading...</option>');
 
-    $.ajax({
-        url: "<?= base_url('admin/get-subjects') ?>",
-        type: "GET",
-        data: {
-            class: classId
-        },
-        dataType: "json",
-        success: function(data) {
+        $.ajax({
+            url: "<?= base_url('admin/get-subjects') ?>",
+            type: "GET",
+            data: {
+                class: classId
+            },
+            dataType: "json",
+            success: function(data) {
 
-            let options = '<option value="">Select Subject</option>';
+                let options = '<option value="">Select Subject</option>';
 
-            data.forEach(function(item) {
-                options += `<option value="${item.id}">${item.subject}</option>`;
-            });
+                data.forEach(function(item) {
+                    options += `<option value="${item.id}">${item.subject}</option>`;
+                });
 
-            $('#subject').html(options);
-        }
-    });
+                $('#subject').html(options);
+            }
+        });
 
-    // =====================
-    // LOAD SUBCATEGORY RULES
-    // =====================
-    let catOptions = '<option value="">Select Category</option>';
+        // =====================
+        // LOAD SUBCATEGORY RULES
+        // =====================
+        let catOptions = '<option value="">Select Category</option>';
 
-    if (classId == 10) {
-        catOptions += `
-            <option value="Half Yearly Exam">Half Yearly Exam</option>
-            <option value="Annual Exam">Annual Exam</option>
+        if (classId == 10) {
+            catOptions += `
             <option value="Pre-Test Exam">Pre-Test Exam</option>
             <option value="Test Exam">Test Exam</option>
         `;
-    } else {
-        catOptions += `
+        } else {
+            catOptions += `
             <option value="Half Yearly Exam">Half Yearly Exam</option>
             <option value="Annual Exam">Annual Exam</option>
         `;
-    }
+        }
 
-    $('#subcategory').html(catOptions);
+        $('#subcategory').html(catOptions);
 
-});
+    });
 </script>
 
 <?= $this->endSection() ?>
