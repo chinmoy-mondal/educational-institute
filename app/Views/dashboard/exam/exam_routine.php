@@ -38,12 +38,16 @@
                 <thead class="bg-light">
                     <tr>
                         <th>ID</th>
+                        <th>Title</th>
+                        <th>Description</th>
                         <th>Class</th>
                         <th>Subject</th>
-                        <th>Date</th>
-                        <th>Start</th>
-                        <th>End</th>
                         <th>Category</th>
+                        <th>Sub Category</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
                         <th>Color</th>
                         <th>Created</th>
                         <th width="180">Action</th>
@@ -56,6 +60,11 @@
                     <tr>
 
                         <td><?= $e['id'] ?></td>
+
+                        <td><?= $e['title'] ?></td>
+
+                        <td><?= $e['description'] ?></td>
+
                         <td>Class <?= $e['class'] ?></td>
 
                         <!-- SUBJECT -->
@@ -72,12 +81,18 @@
                                     ?>
                         </td>
 
-                        <td><?= $e['start_date'] ?></td>
-                        <td><?= $e['start_time'] ?></td>
-                        <td><?= $e['end_time'] ?></td>
                         <td><?= $e['category'] ?></td>
 
-                        <!-- COLOR -->
+                        <td><?= $e['subcategory'] ?></td>
+
+                        <td><?= $e['start_date'] ?></td>
+
+                        <td><?= $e['end_date'] ?></td>
+
+                        <td><?= $e['start_time'] ?></td>
+
+                        <td><?= $e['end_time'] ?></td>
+
                         <td>
                             <span style="background:<?= $e['color'] ?>;padding:5px 15px;border-radius:4px;">
                             </span>
@@ -105,7 +120,7 @@
                     <?php endforeach; ?>
                     <?php else: ?>
                     <tr>
-                        <td colspan="10" class="text-center">No data found</td>
+                        <td colspan="14" class="text-center">No data found</td>
                     </tr>
                     <?php endif; ?>
                 </tbody>
