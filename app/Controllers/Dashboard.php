@@ -506,6 +506,35 @@ class Dashboard extends Controller
         return view('dashboard/exam/exam_routine', $this->data);
     }
 
+    public function create_exam_routine()
+    {
+        $this->data['title'] = 'Create Exam Routine';
+        $this->data['activeSection'] = 'calendar';
+        $this->data['subjects'] = $this->subjectModel->findAll();
+
+        return view('dashboard/exam/create_exam_routine', $this->data);
+    }
+
+    public function store_exam_routine()
+    {
+        $this->calendarModel->save([
+            'title'       => $this->request->getPost('title'),
+            'description' => $this->request->getPost('description'),
+            'start_date'  => $this->request->getPost('start_date'),
+            'start_time'  => $this->request->getPost('start_time'),
+            'end_date'    => $this->request->getPost('end_date'),
+            'end_time'    => $this->request->getPost('end_time'),
+            'color'       => $this->request->getPost('color'),
+            'class'       => $this->request->getPost('class'),
+            'category'    => 'Exam',
+            'subcategory' => $this->request->getPost('subcategory'),
+            'subject'     => $this->request->getPost('subject'),
+        ]);
+
+        return redirect()->to(base_url('admin/exam-routine'))
+            ->with('success', 'Exam Routine Created Successfully');
+    }
+
     public function edit_exam_routine($id)
     {
         $this->data['title'] = 'Edit Exam Routine';

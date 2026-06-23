@@ -84,6 +84,8 @@ $routes->get('restrict/(:num)', 'Dashboard::restrict/$1');
 
 #Exam routine
 $routes->get('admin/exam-routine', 'Dashboard::exam_routine');
+    $routes->get('admin/exam-routine/create', 'Calendar::create_exam_routine');
+    $routes->post('admin/exam-routine/store', 'Calendar::store_exam_routine');
     $routes->get('admin/exam-routine/edit/(:num)', 'Dashboard::edit_exam_routine/$1');
     $routes->post('admin/exam-routine/update/(:num)', 'Dashboard::update_exam_routine/$1');
     $routes->post('admin/exam-routine/delete/(:num)', 'Dashboard::delete_exam_routine/$1');
