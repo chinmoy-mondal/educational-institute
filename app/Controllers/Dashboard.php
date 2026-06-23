@@ -85,7 +85,7 @@ class Dashboard extends Controller
 
         $this->data['navbarItems'] = [
             ['label' => 'Dashboard', 'url' => base_url('dashboard')],
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Calendar', 'url' => base_url('admin/calendar')],
             ['label' => 'Result', 'url' => base_url('ad-result')],
             ['label' => 'Accounts', 'url' => base_url('accounts')],
         ];
@@ -170,7 +170,7 @@ class Dashboard extends Controller
 
         $this->data['navbarItems'] = [
             ['label' => 'Dashboard', 'url' => base_url('dashboard')],
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Calendar', 'url' => base_url('admin/calendar')],
             ['label' => 'Result', 'url' => base_url('ad-result')],
             ['label' => 'Accounts', 'url' => base_url('accounts')],
         ];
@@ -237,7 +237,7 @@ class Dashboard extends Controller
 
         $this->data['navbarItems'] = [
             ['label' => 'Dashboard', 'url' => base_url('dashboard')],
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Calendar', 'url' => base_url('admin/calendar')],
             ['label' => 'Result', 'url' => base_url('ad-result')],
             ['label' => 'Accounts', 'url' => base_url('accounts')],
         ];
@@ -280,7 +280,7 @@ class Dashboard extends Controller
 
         $this->data['navbarItems'] = [
             ['label' => 'Dashboard', 'url' => base_url('dashboard')],
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Calendar', 'url' => base_url('admin/calendar')],
             ['label' => 'Result', 'url' => base_url('ad-result')],
             ['label' => 'Accounts', 'url' => base_url('accounts')],
         ];
@@ -376,7 +376,7 @@ class Dashboard extends Controller
 
         $this->data['navbarItems'] = [
             ['label' => 'Dashboard', 'url' => base_url('dashboard')],
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Calendar', 'url' => base_url('admin/calendar')],
             ['label' => 'Result', 'url' => base_url('ad-result')],
             ['label' => 'Accounts', 'url' => base_url('accounts')],
         ];
@@ -476,7 +476,7 @@ class Dashboard extends Controller
 
         // Navbar
         $this->data['navbarItems'] = [
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Calendar', 'url' => base_url('admin/calendar')],
             ['label' => 'Leave', 'url' => base_url('admin/leave')],
             ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
             ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
@@ -514,7 +514,7 @@ class Dashboard extends Controller
 
         // Navbar
         $this->data['navbarItems'] = [
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Calendar', 'url' => base_url('admin/calendar')],
             ['label' => 'Leave', 'url' => base_url('admin/leave')],
             ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
             ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
@@ -533,7 +533,7 @@ class Dashboard extends Controller
         $this->data['activeSection'] = 'calendar';
         // Navbar
         $this->data['navbarItems'] = [
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Calendar', 'url' => base_url('admin/calendar')],
             ['label' => 'Leave', 'url' => base_url('admin/leave')],
             ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
             ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
@@ -633,7 +633,7 @@ class Dashboard extends Controller
         // Common navbar and sidebar for all views
         // Navbar
         $this->data['navbarItems'] = [
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Calendar', 'url' => base_url('admin/calendar')],
             ['label' => 'Leave', 'url' => base_url('admin/leave')],
             ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
             ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
@@ -652,7 +652,7 @@ class Dashboard extends Controller
 
         // Common navbar and sidebar for all views
         $this->data['navbarItems'] = [
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Calendar', 'url' => base_url('admin/calendar')],
             ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
         ];
 
@@ -726,7 +726,7 @@ class Dashboard extends Controller
 
         // Common navbar and sidebar for all views
         $this->data['navbarItems'] = [
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Calendar', 'url' => base_url('admin/calendar')],
             ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
         ];
 
@@ -784,7 +784,7 @@ class Dashboard extends Controller
 
         // Navbar
         $this->data['navbarItems'] = [
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Calendar', 'url' => base_url('admin/calendar')],
             ['label' => 'Leave', 'url' => base_url('admin/leave')],
             ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
             ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
@@ -834,7 +834,7 @@ class Dashboard extends Controller
 
         // Navbar
         $this->data['navbarItems'] = [
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Calendar', 'url' => base_url('admin/calendar')],
             ['label' => 'Leave', 'url' => base_url('admin/leave')],
             ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
             ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
@@ -3743,7 +3743,7 @@ class Dashboard extends Controller
 
         // ================= NAVBAR ITEMS =================
         $this->data['navbarItems'] = [
-            ['label' => 'Calendar', 'url' => base_url('admin/public-calendar')],
+            ['label' => 'Calendar', 'url' => base_url('admin/calendar')],
             ['label' => 'Leave', 'url' => base_url('admin/leave')],
             ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
             ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
