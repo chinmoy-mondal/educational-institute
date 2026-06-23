@@ -506,6 +506,40 @@ class Dashboard extends Controller
         return view('dashboard/exam/exam_routine', $this->data);
     }
 
+    public function edit_exam_routine($id)
+    {
+        $this->data['title'] = 'Edit Exam Routine';
+        $this->data['activeSection'] = 'calendar';
+
+        $this->data['subjects'] = $this->subjectModel->findAll();
+
+        $event = $this->calendarModel->find($id);
+
+        if (!$event) {
+            return redirect()->back()->with('error', 'Routine not found');
+        }
+
+        $this->data['event'] = $event;
+
+        return view('dashboard/exam/edit_exam_routine', $this->data);
+    }
+
+    public function update_exam_routine($id)
+    {
+        $this->calendarModel->update($id, [
+            'class'      => $this->request->getPost('class'),
+            'subject'    => $this->request->getPost('subject'),
+            'start_date' => $this->request->getPost('start_date'),
+            'start_time' => $this->request->getPost('start_time'),
+            'end_time'   => $this->request->getPost('end_time'),
+            'category'   => 'Exam',
+            'color'      => $this->request->getPost('color')
+        ]);
+
+        return redirect()->to(base_url('admin/exam-routine'))
+            ->with('success', 'Exam routine updated successfully');
+    }
+
     public function holiday()
     {
         $this->data['title'] = 'Calendar';
