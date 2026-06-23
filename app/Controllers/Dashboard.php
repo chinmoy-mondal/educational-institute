@@ -528,7 +528,21 @@ class Dashboard extends Controller
 
     public function admit_print_view()
     {
-        return view('dashboard/exam/print_admit_card');
+
+        $this->data['title'] = 'Create Exam Routine';
+        $this->data['activeSection'] = 'calendar';
+        // Navbar
+        $this->data['navbarItems'] = [
+            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Leave', 'url' => base_url('admin/leave')],
+            ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
+            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
+            ['label' => 'Admit', 'url' => base_url('admin/print-admit-form')],
+        ];
+        
+
+
+        return view('dashboard/exam/print_admit_card', $this->data);
     }
 
     public function getSubjectsByClass()
