@@ -23,8 +23,7 @@ $routes->get('home/history', 'Home::history');
 $routes->get('home/mission', 'Home::mission');
 $routes->get('home/staff', 'Home::staff');
 $routes->get('user-id', 'Home::userProfile');
-$routes->get('user', 'User::index');
-$routes->get('print-admit-form', 'Home::admit_print_view');
+    $routes->get('user', 'User::index');
 $routes->post('print-admit', 'Home::printAdmit');
 $routes->get('student', 'Home::student');
 $routes->get('student_stat', 'Home::student_stat');
@@ -85,6 +84,7 @@ $routes->get('restrict/(:num)', 'Dashboard::restrict/$1');
 #Exam routine
 $routes->get('admin/exam-routine', 'Dashboard::exam_routine');
     $routes->get('admin/exam-routine/create', 'Dashboard::create_exam_routine');
+    $routes->get('admin/print-admit-form', 'Dashboard::admit_print_view');
     $routes->post('admin/exam-routine/store', 'Dashboard::store_exam_routine');
     $routes->get('admin/get-subjects', 'Dashboard::getSubjectsByClass');
     $routes->get('admin/exam-routine/edit/(:num)', 'Dashboard::edit_exam_routine/$1');

@@ -279,13 +279,6 @@ class Home extends BaseController
 		return view('public/teacher_idcard', ['user' => $user]);
 	}
 
-	public function admit_print_view()
-	{
-		$studentModel = new StudentModel();
-		$eventModel = new CalendarModel();
-
-		return view('public/print_admit_card');
-	}
 
 	public function printAdmit()
 	{

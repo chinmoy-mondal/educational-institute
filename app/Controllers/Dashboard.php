@@ -478,8 +478,9 @@ class Dashboard extends Controller
         $this->data['navbarItems'] = [
             ['label' => 'Calendar', 'url' => base_url('calendar')],
             ['label' => 'Leave', 'url' => base_url('admin/leave')],
-            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
             ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
+            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
+            ['label' => 'Admit', 'url' => base_url('admin/print-admit-form')],
         ];
 
         // Subjects
@@ -510,18 +511,30 @@ class Dashboard extends Controller
     {
         $this->data['title'] = 'Create Exam Routine';
         $this->data['activeSection'] = 'calendar';
+
+        // Navbar
+        $this->data['navbarItems'] = [
+            ['label' => 'Calendar', 'url' => base_url('calendar')],
+            ['label' => 'Leave', 'url' => base_url('admin/leave')],
+            ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
+            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
+            ['label' => 'Admit', 'url' => base_url('admin/print-admit-form')],
+        ];
+
         $this->data['subjects'] = $this->subjectModel->findAll();
 
         return view('dashboard/exam/create_exam_routine', $this->data);
     }
+
+    public function admit_print_view()
+    {
+        return view('dashboard/exam/print_admit_card');
+    }
+
     public function getSubjectsByClass()
     {
         $class = $this->request->getGet('class');
-
-        // $model = new \App\Models\SubjectModel();
-
         $data = $this->subjectModel->where('class', $class)->findAll();
-
         return $this->response->setJSON($data);
     }
 
@@ -604,11 +617,13 @@ class Dashboard extends Controller
         $this->data['activeSection'] = 'calendar';
 
         // Common navbar and sidebar for all views
+        // Navbar
         $this->data['navbarItems'] = [
             ['label' => 'Calendar', 'url' => base_url('calendar')],
             ['label' => 'Leave', 'url' => base_url('admin/leave')],
-            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
             ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
+            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
+            ['label' => 'Admit', 'url' => base_url('admin/print-admit-form')],
         ];
 
         $this->data['holidays'] = $this->holidayModel->orderBy('start_date', 'ASC')->findAll();
@@ -757,8 +772,9 @@ class Dashboard extends Controller
         $this->data['navbarItems'] = [
             ['label' => 'Calendar', 'url' => base_url('calendar')],
             ['label' => 'Leave', 'url' => base_url('admin/leave')],
-            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
             ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
+            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
+            ['label' => 'Admit', 'url' => base_url('admin/print-admit-form')],
         ];
 
         // 🔥 Logged-in user
@@ -802,11 +818,13 @@ class Dashboard extends Controller
         $this->data['title'] = 'Leave Form';
         $this->data['activeSection'] = 'calendar';
 
+        // Navbar
         $this->data['navbarItems'] = [
             ['label' => 'Calendar', 'url' => base_url('calendar')],
             ['label' => 'Leave', 'url' => base_url('admin/leave')],
-            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
             ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
+            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
+            ['label' => 'Admit', 'url' => base_url('admin/print-admit-form')],
         ];
 
         $userId = session()->get('user_id');
@@ -3710,11 +3728,13 @@ class Dashboard extends Controller
         $this->data['activeSection'] = 'calendar';
 
         // Common navbar and sidebar for all views
+        // Navbar
         $this->data['navbarItems'] = [
             ['label' => 'Calendar', 'url' => base_url('calendar')],
             ['label' => 'Leave', 'url' => base_url('admin/leave')],
-            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
             ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
+            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
+            ['label' => 'Admit', 'url' => base_url('admin/print-admit-form')],
         ];
 
         $user = [
