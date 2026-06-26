@@ -1194,12 +1194,6 @@ class Dashboard extends Controller
             $subjectBuilder = $subjectBuilder->where('class', $class);
         }
 
-        if (stripos($section, 'B') !== false) {
-            $filteredSection = 'B';
-        } else {
-            $filteredSection = 'A';
-        }
-
         if ($filteredSection) {
             $subjectBuilder = $subjectBuilder->where('section', $filteredSection);
         }
