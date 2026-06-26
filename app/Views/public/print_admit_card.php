@@ -21,7 +21,7 @@
                         <select id="class" name="class" class="form-select" required>
                             <option value="">-- Select Class --</option>
                             <?php for ($i = 6; $i <= 10; $i++): ?>
-                                <option value="<?= $i ?>">Class <?= $i ?></option>
+                            <option value="<?= $i ?>">Class <?= $i ?></option>
                             <?php endfor; ?>
                         </select>
                     </div>
@@ -40,7 +40,7 @@
                         <select id="year" name="year" class="form-select" required>
                             <option value="">-- Select Year --</option>
                             <?php for ($y = date('Y'); $y >= 2015; $y--): ?>
-                                <option value="<?= $y ?>"><?= $y ?></option>
+                            <option value="<?= $y ?>"><?= $y ?></option>
                             <?php endfor; ?>
                         </select>
                     </div>
@@ -50,7 +50,7 @@
                         <select id="exam_name" name="exam_name" class="form-select" required>
                             <option value="">-- Select Exam --</option>
                             <option value="Pre-Test Exam">Pre-Test Exam</option>
-                            <option value="Second Term">Second Term</option>
+                            <option value="Half Yearly Exam">Half Yearly Exam</option>
                             <option value="Annual Exam">Annual Exam</option>
                             <option value="Test Exam">Test Exam</option>
                         </select>
