@@ -1194,8 +1194,8 @@ class Dashboard extends Controller
             $subjectBuilder = $subjectBuilder->where('class', $class);
         }
 
-        if ($filteredSection) {
-            $subjectBuilder = $subjectBuilder->where('section', $filteredSection);
+        if ($section) {
+            $subjectBuilder = $subjectBuilder->where('section', $section);
         }
 
         $subjects = $subjectBuilder->findAll();
