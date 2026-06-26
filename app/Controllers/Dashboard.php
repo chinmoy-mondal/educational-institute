@@ -1154,8 +1154,6 @@ class Dashboard extends Controller
 
     public function stAssaginSubView()
     {
-
-
         // Get filter inputs
         $q       = $this->request->getGet('q');
         $class   = $this->request->getGet('class');
@@ -1196,10 +1194,10 @@ class Dashboard extends Controller
             $subjectBuilder = $subjectBuilder->where('class', $class);
         }
 
-        if (stripos($section, 'Vocational') !== false) {
-            $filteredSection = 'Vocational';
+        if (stripos($section, 'B') !== false) {
+            $filteredSection = 'B';
         } else {
-            $filteredSection = 'General';
+            $filteredSection = 'A';
         }
 
         if ($filteredSection) {
