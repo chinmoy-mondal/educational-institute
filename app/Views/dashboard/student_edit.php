@@ -42,15 +42,18 @@
               <label>Class</label>
               <select name="class" id="class-select" class="form-control" required>
                 <option value="">Select Class</option>
+
                 <?php for ($i = 6; $i <= 10; $i++): ?>
-                  <option value="<?= $i ?>" <?= old('class') == $i ? 'selected' : '' ?>><?= $i ?></option>
+                  <option value="<?= $i ?>" <?= ($student['class'] == $i) ? 'selected' : '' ?>>
+                    <?= $i ?>
+                  </option>
                 <?php endfor; ?>
               </select>
             </div>
           </div>
 
           <div class="row mt-3">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <label>Group (optional, only for Class 9 & 10)</label>
               <select name="group" class="form-control">
                 <option value="">Select Group</option>
