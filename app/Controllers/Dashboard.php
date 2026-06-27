@@ -2841,10 +2841,11 @@ class Dashboard extends Controller
         // ✅ Step 4: Pass to view
         $this->data['title'] = 'Student Details';
         $this->data['activeSection'] = 'student';
-        $this->data['navbarItems'] = [
-            ['label' => 'Student List', 'url' => base_url('ad-student')],
-            ['label' => 'Add Student', 'url' => base_url('student_create')],
-            ['label' => 'View Student', 'url' => current_url()],
+        $this->data['navbarItems']   = [
+            ['label' => 'Student List', 'url' => base_url('admin/student')],
+            ['label' => 'Add Student', 'url' => base_url('admin/student/create')],
+            ['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
+            ['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
         ];
         $this->data['student'] = $student;
         $this->data['subjectsStr'] = $subject_str_id;
@@ -2913,8 +2914,6 @@ class Dashboard extends Controller
 
     public function editStudent($id)
     {
-
-        $this->studentModel = new StudentModel();
         $student = $this->studentModel->find($id);
 
         if (!$student) {
@@ -2923,10 +2922,11 @@ class Dashboard extends Controller
 
         $this->data['title'] = 'Edit Student';
         $this->data['activeSection'] = 'student';
-        $this->data['navbarItems'] = [
-            ['label' => 'Student List', 'url' => base_url('ad-student')],
-            ['label' => 'Add Student', 'url' => base_url('student_create')],
-            ['label' => 'Edit Student', 'url' => current_url()],
+        $this->data['navbarItems']   = [
+            ['label' => 'Student List', 'url' => base_url('admin/student')],
+            ['label' => 'Add Student', 'url' => base_url('admin/student/create')],
+            ['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
+            ['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
         ];
         
         $sections = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
@@ -2982,8 +2982,10 @@ class Dashboard extends Controller
             'title' => 'Edit Photo',
             'activeSection' => 'student',
             'navbarItems' => [
-                ['label' => 'Student List', 'url' => base_url('ad-student')],
-                ['label' => 'Edit Photo', 'url' => current_url()],
+                ['label' => 'Student List', 'url' => base_url('admin/student')],
+                ['label' => 'Add Student', 'url' => base_url('admin/student/create')],
+                ['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
+                ['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
             ],
             'student' => $student
         ];
