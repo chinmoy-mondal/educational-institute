@@ -40,7 +40,12 @@
             </div>
             <div class="col-md-3">
               <label>Class</label>
-              <input type="text" name="class" class="form-control" value="<?= esc($student['class']) ?>">
+              <select name="class" id="class-select" class="form-control" required>
+                <option value="">Select Class</option>
+                <?php for ($i = 6; $i <= 10; $i++): ?>
+                  <option value="<?= $i ?>" <?= old('class') == $i ? 'selected' : '' ?>><?= $i ?></option>
+                <?php endfor; ?>
+              </select>
             </div>
           </div>
 
