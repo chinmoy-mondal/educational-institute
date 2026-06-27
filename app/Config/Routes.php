@@ -9,6 +9,7 @@ use CodeIgniter\Router\RouteCollection;
 # website page
 $routes->get('/', 'Home::index');
 $routes->get('home', 'Home::index');
+# new code
 
 
 
