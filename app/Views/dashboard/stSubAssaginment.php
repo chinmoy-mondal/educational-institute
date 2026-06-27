@@ -70,7 +70,7 @@
                             <div class="form-group">
                                 <label for="group">Group</label>
                                 <select name="group" id="group" class="form-control">
-                                    <option value="" <?= ($religion ?? '') === '' ? 'selected' : '' ?>>All Religions
+                                    <option value="" <?= ($religion ?? '') === '' ? 'selected' : '' ?>>All groups
                                     </option>
                                     <?php foreach ($groups as $r): ?>
                                         <option value="<?= esc($r['group']) ?>"
