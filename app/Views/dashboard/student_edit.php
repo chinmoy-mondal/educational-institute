@@ -4,7 +4,8 @@
 <div class="content-header">
   <div class="container-fluid">
     <h1 class="mb-3">Edit Student</h1>
-    <a href="<?= site_url('admin/students/view/' . $student['id']) ?>" class="btn btn-secondary mb-3">← Back to Profile</a>
+    <a href="<?= site_url('admin/students/view/' . $student['id']) ?>" class="btn btn-secondary mb-3">← Back to
+      Profile</a>
   </div>
 </div>
 
@@ -16,9 +17,23 @@
         <div class="card-body">
 
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <label>Name</label>
-              <input type="text" name="student_name" class="form-control" value="<?= esc($student['student_name']) ?>" required>
+              <input type="text" name="student_name" class="form-control"
+                value="<?= esc($student['student_name']) ?>" required>
+            </div>
+            <div class="col-md-4">
+              <label>Section</label>
+              <select name="section" class="form-control">
+                <option value="">Select Section</option>
+                <?php foreach ($sections as $sec): ?>
+                  <option value="<?= esc($sec['section']) ?>"
+                    <?= $student['section'] === $sec['section'] ? 'selected' : '' ?>>
+                    <?= esc($sec['section']) ?>
+                  </option>
+                <?php endforeach; ?>
+
+              </select>
             </div>
             <div class="col-md-3">
               <label>Roll</label>
@@ -31,18 +46,17 @@
           </div>
 
           <div class="row mt-3">
-            <div class="col-md-4">
-              <label>Section</label>
-              <select name="section" class="form-control">
-                <option value="">Select Section</option>
-
-                <?php foreach ($sections as $sec): ?>
-                  <option value="<?= esc($sec['section']) ?>"
-                    <?= $student['section'] === $sec['section'] ? 'selected' : '' ?>>
-                    <?= esc($sec['section']) ?>
-                  </option>
-                <?php endforeach; ?>
-
+            <div class="col-md-6">
+              <label>Group (optional, only for Class 9 & 10)</label>
+              <select name="group" class="form-control">
+                <option value="">Select Group</option>
+                <option value="n/a" <?= old('group') == 'n/a' ? 'selected' : '' ?>>N/A</option>
+                <option value="General - Science"
+                  <?= old('group') == 'General - Science' ? 'selected' : '' ?>>General → Science
+                </option>
+                <option value="General - Humanities"
+                  <?= old('group') == 'General - Humanities' ? 'selected' : '' ?>>General → Humanities
+                </option>
               </select>
             </div>
 
@@ -59,22 +73,26 @@
           <div class="row mt-3">
             <div class="col-md-6">
               <label>Father's Name</label>
-              <input type="text" name="father_name" class="form-control" value="<?= esc($student['father_name']) ?>">
+              <input type="text" name="father_name" class="form-control"
+                value="<?= esc($student['father_name']) ?>">
             </div>
             <div class="col-md-6">
               <label>Father's NID</label>
-              <input type="text" name="father_nid_number" class="form-control" value="<?= esc($student['father_nid_number']) ?>">
+              <input type="text" name="father_nid_number" class="form-control"
+                value="<?= esc($student['father_nid_number']) ?>">
             </div>
           </div>
 
           <div class="row mt-3">
             <div class="col-md-6">
               <label>Mother's Name</label>
-              <input type="text" name="mother_name" class="form-control" value="<?= esc($student['mother_name']) ?>">
+              <input type="text" name="mother_name" class="form-control"
+                value="<?= esc($student['mother_name']) ?>">
             </div>
             <div class="col-md-6">
               <label>Mother's NID</label>
-              <input type="text" name="mother_nid_number" class="form-control" value="<?= esc($student['mother_nid_number']) ?>">
+              <input type="text" name="mother_nid_number" class="form-control"
+                value="<?= esc($student['mother_nid_number']) ?>">
             </div>
           </div>
 
@@ -86,40 +104,50 @@
             <div class="col-md-4">
               <label>Gender</label>
               <select name="gender" class="form-control">
-                <option value="Male" <?= $student['gender'] === 'Male' ? 'selected' : '' ?>>Male</option>
-                <option value="Female" <?= $student['gender'] === 'Female' ? 'selected' : '' ?>>Female</option>
+                <option value="Male" <?= $student['gender'] === 'Male' ? 'selected' : '' ?>>Male
+                </option>
+                <option value="Female" <?= $student['gender'] === 'Female' ? 'selected' : '' ?>>Female
+                </option>
               </select>
             </div>
             <div class="col-md-4">
               <label>Birth Registration No.</label>
-              <input type="text" name="birth_registration_number" class="form-control" value="<?= esc($student['birth_registration_number']) ?>">
+              <input type="text" name="birth_registration_number" class="form-control"
+                value="<?= esc($student['birth_registration_number']) ?>">
             </div>
           </div>
 
           <div class="row mt-3">
             <div class="col-md-6">
-	      <label>Religion</label>
-<select name="religion" class="form-control">
-  <option value="">Select Religion</option>
-  <option value="Islam" <?= $student['religion'] === 'Islam' ? 'selected' : '' ?>>Islam</option>
-  <option value="Hinduism" <?= $student['religion'] === 'Hinduism' ? 'selected' : '' ?>>Hinduism</option>
-  <option value="Christianity" <?= $student['religion'] === 'Christianity' ? 'selected' : '' ?>>Christianity</option>
-  <option value="Buddhism" <?= $student['religion'] === 'Buddhism' ? 'selected' : '' ?>>Buddhism</option>
-  <option value="Other" <?= $student['religion'] === 'Other' ? 'selected' : '' ?>>Other</option>
-  </select>
+              <label>Religion</label>
+              <select name="religion" class="form-control">
+                <option value="">Select Religion</option>
+                <option value="Islam" <?= $student['religion'] === 'Islam' ? 'selected' : '' ?>>Islam
+                </option>
+                <option value="Hinduism" <?= $student['religion'] === 'Hinduism' ? 'selected' : '' ?>>
+                  Hinduism</option>
+                <option value="Christianity"
+                  <?= $student['religion'] === 'Christianity' ? 'selected' : '' ?>>Christianity
+                </option>
+                <option value="Buddhism" <?= $student['religion'] === 'Buddhism' ? 'selected' : '' ?>>
+                  Buddhism</option>
+                <option value="Other" <?= $student['religion'] === 'Other' ? 'selected' : '' ?>>Other
+                </option>
+              </select>
 
             </div>
             <div class="col-md-6">
               <label>Blood Group</label>
-		<select name="blood_group" class="form-control">
-			  <option value="">Select Blood Group</option>
-		  <?php
-		    $bloods = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-		    foreach ($bloods as $bg):
-		  ?>
-		    <option value="<?= $bg ?>" <?= $student['blood_group'] === $bg ? 'selected' : '' ?>><?= $bg ?></option>
-		  <?php endforeach; ?>
-		</select>
+              <select name="blood_group" class="form-control">
+                <option value="">Select Blood Group</option>
+                <?php
+                $bloods = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+                foreach ($bloods as $bg):
+                ?>
+                  <option value="<?= $bg ?>" <?= $student['blood_group'] === $bg ? 'selected' : '' ?>>
+                    <?= $bg ?></option>
+                <?php endforeach; ?>
+              </select>
 
 
             </div>
@@ -136,4 +164,3 @@
 </div>
 
 <?= $this->endSection() ?>
-
