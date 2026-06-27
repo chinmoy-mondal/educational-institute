@@ -22,7 +22,7 @@
               <input type="text" name="student_name" class="form-control"
                 value="<?= esc($student['student_name']) ?>" required>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
               <label>Section</label>
               <select name="section" class="form-control">
                 <option value="">Select Section</option>
@@ -32,7 +32,6 @@
                     <?= esc($sec['section']) ?>
                   </option>
                 <?php endforeach; ?>
-
               </select>
             </div>
             <div class="col-md-3">
