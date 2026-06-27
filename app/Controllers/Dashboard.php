@@ -881,49 +881,69 @@ class Dashboard extends Controller
             'dob'          => 'required|valid_date',
             'gender'       => 'required',
             'phone'        => 'required',
-            'student_pic'  => 'permit_empty',
             'birth_registration_number' => 'required',
             'father_nid_number'         => 'required',
             'mother_nid_number'         => 'required',
+
+            'student_pic' => [
+                'rules' => 'uploaded[student_pic]'
+                    . '|is_image[student_pic]'
+                    . '|mime_in[student_pic,image/jpg,image/jpeg,image/png]'
+                    . '|max_size[student_pic,150]'
+                    . '|max_dims[student_pic,300,300]'
+                    . '|min_dims[student_pic,300,300]',
+                'errors' => [
+                    'uploaded' => 'Please select a student photo.',
+                    'is_image' => 'The uploaded file must be an image.',
+                    'mime_in'  => 'Only JPG, JPEG and PNG images are allowed.',
+                    'max_size' => 'Image size must not exceed 150 KB.',
+                    'max_dims' => 'Image must be exactly 300 × 300 pixels.',
+                    'min_dims' => 'Image must be exactly 300 × 300 pixels.',
+                ]
+            ]
         ];
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        // Handle student picture
+        // Upload image
         $file = $this->request->getFile('student_pic');
+        $fileName = '';
 
-        if ($file && $file->isValid() && !$file->hasMoved()) {
+        if ($file->isValid() && !$file->hasMoved()) {
             $fileName = $file->getRandomName();
-            $file->move('uploads/students', $fileName);
+            $file->move(FCPATH . 'uploads/students', $fileName);
         } else {
-            return redirect()->back()->withInput()->with('errors', ['student_pic' => 'File upload failed.']);
+            return redirect()->back()->withInput()->with('errors', [
+                'student_pic' => 'Failed to upload student photo.'
+            ]);
         }
 
-        // Prepare student data
+        // Prepare data
         $data = [
-            'student_name' => $this->request->getPost('student_name'),
-            'roll'         => $this->request->getPost('roll'),
-            'class'        => $this->request->getPost('class'),
-            'group'        => $this->request->getPost('group'),
-            'section'      => $this->request->getPost('section'),
-            'esif'         => $this->request->getPost('esif'),
-            'father_name'  => $this->request->getPost('father_name'),
-            'mother_name'  => $this->request->getPost('mother_name'),
-            'dob'          => $this->request->getPost('dob'),
-            'gender'       => $this->request->getPost('gender'),
-            'phone'        => $this->request->getPost('phone'),
-            'student_pic'  => 'uploads/students/' . $fileName,
+            'student_name'               => $this->request->getPost('student_name'),
+            'roll'                       => $this->request->getPost('roll'),
+            'class'                      => $this->request->getPost('class'),
+            'group'                      => $this->request->getPost('group'),
+            'section'                    => $this->request->getPost('section'),
+            'esif'                       => $this->request->getPost('esif'),
+            'father_name'                => $this->request->getPost('father_name'),
+            'mother_name'                => $this->request->getPost('mother_name'),
+            'dob'                        => $this->request->getPost('dob'),
+            'gender'                     => $this->request->getPost('gender'),
+            'phone'                      => $this->request->getPost('phone'),
+            'student_pic'                => 'uploads/students/' . $fileName,
             'birth_registration_number' => $this->request->getPost('birth_registration_number'),
             'father_nid_number'         => $this->request->getPost('father_nid_number'),
             'mother_nid_number'         => $this->request->getPost('mother_nid_number'),
         ];
 
-        // Save to DB
+        // Save student
         $this->studentModel->insert($data);
 
-        return redirect()->to(site_url('admin/student/create'))->with('success', 'Student registered successfully!');
+        return redirect()->to(site_url('admin/student/create'))
+            ->with('success', 'Student registered successfully!');
     }
 
     public function student()
@@ -2950,6 +2970,7 @@ class Dashboard extends Controller
             'student_name',
             'roll',
             'class',
+            'group',
             'section',
             'esif',
             'father_name',
@@ -2995,33 +3016,68 @@ class Dashboard extends Controller
 
     public function updateStudentPhoto($id)
     {
+        helper(['form']);
+
         $this->studentModel = new StudentModel();
+
         $student = $this->studentModel->find($id);
 
         if (!$student) {
-            return redirect()->to('admin/students')->with('error', 'Student not found.');
+            return redirect()->to(base_url('admin/students'))
+                ->with('error', 'Student not found.');
+        }
+
+        $rules = [
+            'student_pic' => [
+                'rules' => 'uploaded[student_pic]'
+                    . '|is_image[student_pic]'
+                    . '|mime_in[student_pic,image/jpg,image/jpeg,image/png]'
+                    . '|max_size[student_pic,150]'
+                    . '|max_dims[student_pic,300,300]'
+                    . '|min_dims[student_pic,300,300]',
+                'errors' => [
+                    'uploaded' => 'Please select a student photo.',
+                    'is_image' => 'The uploaded file must be an image.',
+                    'mime_in'  => 'Only JPG, JPEG and PNG images are allowed.',
+                    'max_size' => 'Image size must not exceed 150 KB.',
+                    'max_dims' => 'Image must be exactly 300 × 300 pixels.',
+                    'min_dims' => 'Image must be exactly 300 × 300 pixels.',
+                ]
+            ]
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('errors', $this->validator->getErrors());
         }
 
         $file = $this->request->getFile('student_pic');
 
-        if ($file && $file->isValid() && !$file->hasMoved()) {
+        if ($file->isValid() && !$file->hasMoved()) {
+
             $newName = $file->getRandomName();
             $file->move(FCPATH . 'uploads/students', $newName);
 
-            // Delete old photo if it exists and is not default
-            if (!empty($student['student_pic']) && file_exists(FCPATH . $student['student_pic'])) {
+            // Delete old photo
+            if (
+                !empty($student['student_pic']) &&
+                file_exists(FCPATH . $student['student_pic'])
+            ) {
                 unlink(FCPATH . $student['student_pic']);
             }
 
-            // Update DB
+            // Update database
             $this->studentModel->update($id, [
                 'student_pic' => 'uploads/students/' . $newName,
             ]);
 
-            return redirect()->to('admin/students/view/' . $id)->with('message', 'Photo updated successfully.');
+            return redirect()->to(base_url('admin/students/view/' . $id))
+                ->with('success', 'Student photo updated successfully.');
         }
 
-        return redirect()->back()->with('error', 'Photo upload failed.');
+        return redirect()->back()
+            ->with('error', 'Photo upload failed.');
     }
 
 
