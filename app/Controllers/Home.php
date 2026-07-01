@@ -264,13 +264,7 @@ class Home extends BaseController
 		$studentModel->where('class', $class)
 			->where('permission', 0); // only students with permission = 0
 
-		if (strtolower($section) === 'general') {
-			// Exclude any section containing "Vocational"
-			$studentModel->notLike('section', 'Vocational');
-		} else {
-			// Partial match for section
-			$studentModel->like('section', $section);
-		}
+		$studentModel->like('section', $section);
 
 		$students = $studentModel->findAll();
 

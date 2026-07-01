@@ -30,8 +30,8 @@
                         <label for="section" class="form-label">Section</label>
                         <select id="section" name="section" class="form-select" required>
                             <option value="">-- Select Section --</option>
-                            <option value="General">General</option>
-                            <option value="Vocational">Vocational</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
                         </select>
                     </div>
 
