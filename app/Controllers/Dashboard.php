@@ -200,7 +200,6 @@ class Dashboard extends Controller
             $total_subjects = $this->calendarModel
                 ->whereIn('subcategory', $examNames)
                 ->where('category', 'Exam')
-                ->where('year', $year)
                 ->findAll();
         } else {
             $given_subjects = []; // No open exams → no teachers
