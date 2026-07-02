@@ -187,17 +187,20 @@ class Dashboard extends Controller
         if (!empty($openExams)) {
             // Extract exam names
             $examNames = array_column($openExams, 'exam_name');
-
-            // Get unique teacher IDs from results
+            $year = date('Y');
+            // Get unique subject IDs from results
             $given_subjects = $this->resultModel
                 ->distinct()
                 ->select('subject_id')
                 ->whereIn('exam', $examNames)
+                ->where('year', $year)
                 ->findAll();
 
+            // Get total subjects from calendar
             $total_subjects = $this->calendarModel
                 ->whereIn('subcategory', $examNames)
                 ->where('category', 'Exam')
+                ->where('year', $year)
                 ->findAll();
         } else {
             $given_subjects = []; // No open exams → no teachers
