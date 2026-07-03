@@ -267,7 +267,9 @@ class Home extends BaseController
 		$studentModel->like('section', $section);
 
 		$students = $studentModel->findAll();
-
+		echo "<pre>";
+		print_r($students);
+		echo "</pre>";
 
 		$allData = [];
 
