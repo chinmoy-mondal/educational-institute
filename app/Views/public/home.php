@@ -11,162 +11,162 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
-    body {
-        background: #f4f7fb;
-        font-family: Arial, Helvetica, sans-serif;
-    }
+        body {
+            background: #f4f7fb;
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
-    .navbar {
-        box-shadow: 0 5px 20px rgba(0, 0, 0, .08);
-    }
+        .navbar {
+            box-shadow: 0 5px 20px rgba(0, 0, 0, .08);
+        }
 
-    .hero {
+        .hero {
 
-        background: linear-gradient(135deg, #0056d2, #00b7ff);
-        color: white;
-        padding: 120px 0;
+            background: linear-gradient(135deg, #0056d2, #00b7ff);
+            color: white;
+            padding: 120px 0;
 
-    }
+        }
 
-    .hero h1 {
-        font-size: 60px;
-        font-weight: 700;
-    }
+        .hero h1 {
+            font-size: 60px;
+            font-weight: 700;
+        }
 
-    .hero p {
-        font-size: 20px;
-    }
+        .hero p {
+            font-size: 20px;
+        }
 
-    .hero img {
-        width: 100%;
-    }
+        .hero img {
+            width: 100%;
+        }
 
-    .section-title {
+        .section-title {
 
-        text-align: center;
-        margin-bottom: 50px;
+            text-align: center;
+            margin-bottom: 50px;
 
-    }
+        }
 
-    .section-title h2 {
+        .section-title h2 {
 
-        font-weight: bold;
+            font-weight: bold;
 
-    }
+        }
 
-    .service {
+        .service {
 
-        background: white;
-        border-radius: 15px;
-        padding: 35px;
-        text-align: center;
-        transition: .3s;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
+            background: white;
+            border-radius: 15px;
+            padding: 35px;
+            text-align: center;
+            transition: .3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
 
-    }
+        }
 
-    .service:hover {
+        .service:hover {
 
-        transform: translateY(-10px);
+            transform: translateY(-10px);
 
-    }
+        }
 
-    .service i {
+        .service i {
 
-        font-size: 55px;
-        color: #0d6efd;
-        margin-bottom: 20px;
+            font-size: 55px;
+            color: #0d6efd;
+            margin-bottom: 20px;
 
-    }
+        }
 
-    .package {
+        .package {
 
-        background: white;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, .08);
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, .08);
 
-    }
+        }
 
-    .package-header {
+        .package-header {
 
-        background: #0d6efd;
-        color: white;
-        text-align: center;
-        padding: 25px;
+            background: #0d6efd;
+            color: white;
+            text-align: center;
+            padding: 25px;
 
-    }
+        }
 
-    .package-price {
+        .package-price {
 
-        font-size: 50px;
-        font-weight: bold;
+            font-size: 50px;
+            font-weight: bold;
 
-    }
+        }
 
-    .package ul {
+        .package ul {
 
-        list-style: none;
-        padding: 30px;
+            list-style: none;
+            padding: 30px;
 
-    }
+        }
 
-    .package li {
+        .package li {
 
-        padding: 8px;
+            padding: 8px;
 
-    }
+        }
 
-    .stats {
+        .stats {
 
-        background: #0d6efd;
-        color: white;
-        padding: 70px 0;
+            background: #0d6efd;
+            color: white;
+            padding: 70px 0;
 
-    }
+        }
 
-    .counter {
+        .counter {
 
-        text-align: center;
+            text-align: center;
 
-    }
+        }
 
-    .counter h1 {
+        .counter h1 {
 
-        font-size: 55px;
+            font-size: 55px;
 
-    }
+        }
 
-    .coverage {
+        .coverage {
 
-        background: white;
-        border-radius: 15px;
-        padding: 25px;
-        text-align: center;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
 
-    }
+        }
 
-    .footer {
+        .footer {
 
-        background: #0f172a;
-        color: white;
-        padding: 60px 0;
+            background: #0f172a;
+            color: white;
+            padding: 60px 0;
 
-    }
+        }
 
-    .footer a {
+        .footer a {
 
-        color: #ddd;
-        text-decoration: none;
+            color: #ddd;
+            text-decoration: none;
 
-    }
+        }
 
-    .footer a:hover {
+        .footer a:hover {
 
-        color: white;
+            color: white;
 
-    }
+        }
     </style>
 
 </head>
@@ -569,7 +569,7 @@
 
                 <div class="col-md-4">
 
-                    <h4>TelWin Network</h4>
+                    <h4>Rohan Cable Network</h4>
 
                     <p>
 
@@ -617,7 +617,7 @@
 
             <div class="text-center">
 
-                © 2026 TelWin Cable TV Network. All Rights Reserved.
+                © 2026 Rohan Cable Network. All Rights Reserved.
 
             </div>
 
