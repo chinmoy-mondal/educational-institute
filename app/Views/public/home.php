@@ -11,162 +11,162 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
     <style>
-        body {
-            background: #f4f7fb;
-            font-family: Arial, Helvetica, sans-serif;
-        }
+    body {
+        background: #f4f7fb;
+        font-family: Arial, Helvetica, sans-serif;
+    }
 
-        .navbar {
-            box-shadow: 0 5px 20px rgba(0, 0, 0, .08);
-        }
+    .navbar {
+        box-shadow: 0 5px 20px rgba(0, 0, 0, .08);
+    }
 
-        .hero {
+    .hero {
 
-            background: linear-gradient(135deg, #0056d2, #00b7ff);
-            color: white;
-            padding: 120px 0;
+        background: linear-gradient(135deg, #0056d2, #00b7ff);
+        color: white;
+        padding: 120px 0;
 
-        }
+    }
 
-        .hero h1 {
-            font-size: 60px;
-            font-weight: 700;
-        }
+    .hero h1 {
+        font-size: 60px;
+        font-weight: 700;
+    }
 
-        .hero p {
-            font-size: 20px;
-        }
+    .hero p {
+        font-size: 20px;
+    }
 
-        .hero img {
-            width: 100%;
-        }
+    .hero img {
+        width: 100%;
+    }
 
-        .section-title {
+    .section-title {
 
-            text-align: center;
-            margin-bottom: 50px;
+        text-align: center;
+        margin-bottom: 50px;
 
-        }
+    }
 
-        .section-title h2 {
+    .section-title h2 {
 
-            font-weight: bold;
+        font-weight: bold;
 
-        }
+    }
 
-        .service {
+    .service {
 
-            background: white;
-            border-radius: 15px;
-            padding: 35px;
-            text-align: center;
-            transition: .3s;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
+        background: white;
+        border-radius: 15px;
+        padding: 35px;
+        text-align: center;
+        transition: .3s;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
 
-        }
+    }
 
-        .service:hover {
+    .service:hover {
 
-            transform: translateY(-10px);
+        transform: translateY(-10px);
 
-        }
+    }
 
-        .service i {
+    .service i {
 
-            font-size: 55px;
-            color: #0d6efd;
-            margin-bottom: 20px;
+        font-size: 55px;
+        color: #0d6efd;
+        margin-bottom: 20px;
 
-        }
+    }
 
-        .package {
+    .package {
 
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, .08);
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, .08);
 
-        }
+    }
 
-        .package-header {
+    .package-header {
 
-            background: #0d6efd;
-            color: white;
-            text-align: center;
-            padding: 25px;
+        background: #0d6efd;
+        color: white;
+        text-align: center;
+        padding: 25px;
 
-        }
+    }
 
-        .package-price {
+    .package-price {
 
-            font-size: 50px;
-            font-weight: bold;
+        font-size: 50px;
+        font-weight: bold;
 
-        }
+    }
 
-        .package ul {
+    .package ul {
 
-            list-style: none;
-            padding: 30px;
+        list-style: none;
+        padding: 30px;
 
-        }
+    }
 
-        .package li {
+    .package li {
 
-            padding: 8px;
+        padding: 8px;
 
-        }
+    }
 
-        .stats {
+    .stats {
 
-            background: #0d6efd;
-            color: white;
-            padding: 70px 0;
+        background: #0d6efd;
+        color: white;
+        padding: 70px 0;
 
-        }
+    }
 
-        .counter {
+    .counter {
 
-            text-align: center;
+        text-align: center;
 
-        }
+    }
 
-        .counter h1 {
+    .counter h1 {
 
-            font-size: 55px;
+        font-size: 55px;
 
-        }
+    }
 
-        .coverage {
+    .coverage {
 
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, .08);
 
-        }
+    }
 
-        .footer {
+    .footer {
 
-            background: #0f172a;
-            color: white;
-            padding: 60px 0;
+        background: #0f172a;
+        color: white;
+        padding: 60px 0;
 
-        }
+    }
 
-        .footer a {
+    .footer a {
 
-            color: #ddd;
-            text-decoration: none;
+        color: #ddd;
+        text-decoration: none;
 
-        }
+    }
 
-        .footer a:hover {
+    .footer a:hover {
 
-            color: white;
+        color: white;
 
-        }
+    }
     </style>
 
 </head>
@@ -178,7 +178,7 @@
         <div class="container">
 
             <a class="navbar-brand fw-bold text-primary" href="#">
-                📺 <?= env('company.name') ?>rrr
+                📺 <?= env('company.name') ?>
             </a>
 
             <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
@@ -501,23 +501,26 @@
 
     <section class="py-5">
         <div class="container">
+
             <div class="section-title">
                 <h2>Coverage Area</h2>
             </div>
+
             <div class="row g-4">
+
+                <?php for ($i = 1; $i <= 4; $i++): ?>
+                <?php if (env('company.coverage' . $i)): ?>
                 <div class="col-md-3">
-                    <div class="coverage">📍 Kaliganj</div>
+                    <div class="coverage">
+                        <i class="bi bi-geo-alt-fill text-danger me-2"></i>
+                        <?= env('company.coverage' . $i) ?>
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="coverage">📍 Jhenaidah</div>
-                </div>
-                <div class="col-md-3">
-                    <div class="coverage">📍 Jashore</div>
-                </div>
-                <div class="col-md-3">
-                    <div class="coverage">📍 Magura</div>
-                </div>
+                <?php endif; ?>
+                <?php endfor; ?>
+
             </div>
+
         </div>
     </section>
 
@@ -556,21 +559,46 @@
 
                 <div class="col-md-3">
                     <h5>Support</h5>
-                    <p>📞 017XXXXXXXX</p>
-                    <p>✉ support@telwin.com</p>
+                    <p>
+                        <i class="bi bi-telephone-fill me-2"></i>
+                        <a href="tel:<?= env('company.phone') ?>" class="text-white text-decoration-none">
+                            <?= env('company.phone') ?>
+                        </a>
+                    </p>
+
+                    <p>
+                        <i class="bi bi-envelope-fill me-2"></i>
+                        <a href="mailto:<?= env('company.email') ?>" class="text-white text-decoration-none">
+                            <?= env('company.email') ?>
+                        </a>
+                    </p>
+
+                    <p>
+                        <i class="bi bi-geo-alt-fill me-2"></i>
+                        <?= env('company.address') ?>
+                    </p>
                 </div>
 
                 <div class="col-md-3">
                     <h5>Follow Us</h5>
-                    <i class="bi bi-facebook fs-3 me-3"></i>
-                    <i class="bi bi-youtube fs-3 me-3"></i>
-                    <i class="bi bi-instagram fs-3"></i>
+
+                    <a href="<?= env('company.facebook') ?>" target="_blank" class="text-white me-3">
+                        <i class="bi bi-facebook fs-3"></i>
+                    </a>
+
+                    <a href="<?= env('company.youtube') ?>" target="_blank" class="text-white me-3">
+                        <i class="bi bi-youtube fs-3"></i>
+                    </a>
+
+                    <a href="<?= env('company.instagram') ?>" target="_blank" class="text-white">
+                        <i class="bi bi-instagram fs-3"></i>
+                    </a>
                 </div>
 
             </div>
             <hr>
             <div class="text-center">
-                © 2026 Rohan Cable Network. All Rights Reserved.
+                &copy; <?= date('Y') ?> <?= env('company.name') ?>. All Rights Reserved.
             </div>
         </div>
 
