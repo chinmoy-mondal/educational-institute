@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Rohan Cable Network</title>
+    <title><?= env('company.name') ?></title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
@@ -178,7 +178,7 @@
         <div class="container">
 
             <a class="navbar-brand fw-bold text-primary" href="#">
-                📺 Rohan Cable Network
+                📺 <?= env('company.name') ?>rrr
             </a>
 
             <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu">
@@ -487,39 +487,24 @@
                 </div>
 
                 <div class="col-md-3 counter">
-
                     <h1>99.9%</h1>
-
                     <p>Network Uptime</p>
-
                 </div>
-
                 <div class="col-md-3 counter">
-
                     <h1>15+</h1>
-
                     <p>Years Experience</p>
-
                 </div>
-
             </div>
-
         </div>
 
     </section>
 
     <section class="py-5">
-
         <div class="container">
-
             <div class="section-title">
-
                 <h2>Coverage Area</h2>
-
             </div>
-
             <div class="row g-4">
-
                 <div class="col-md-3">
                     <div class="coverage">📍 Kaliganj</div>
                 </div>
@@ -532,31 +517,19 @@
                 <div class="col-md-3">
                     <div class="coverage">📍 Magura</div>
                 </div>
-
             </div>
-
         </div>
-
     </section>
 
     <section class="py-5 text-center bg-primary text-white">
-
         <div class="container">
-
             <h2>Ready To Get Connected?</h2>
-
             <p class="lead">
-
                 Get Digital Cable TV & High-Speed Internet Today.
-
             </p>
-
             <a href="#" class="btn btn-light btn-lg rounded-pill">
-
                 Apply Now
-
             </a>
-
         </div>
 
     </section>
@@ -564,25 +537,17 @@
     <footer class="footer">
 
         <div class="container">
-
             <div class="row">
-
                 <div class="col-md-4">
-
                     <h4>Rohan Cable Network</h4>
-
                     <p>
-
                         Providing Digital Cable TV & Broadband Internet with quality service.
-
                     </p>
-
                 </div>
 
                 <div class="col-md-2">
 
                     <h5>Company</h5>
-
                     <p><a href="#">About</a></p>
                     <p><a href="#">Packages</a></p>
                     <p><a href="#">Coverage</a></p>
@@ -590,37 +555,23 @@
                 </div>
 
                 <div class="col-md-3">
-
                     <h5>Support</h5>
-
                     <p>📞 017XXXXXXXX</p>
-
                     <p>✉ support@telwin.com</p>
-
                 </div>
 
                 <div class="col-md-3">
-
                     <h5>Follow Us</h5>
-
                     <i class="bi bi-facebook fs-3 me-3"></i>
-
                     <i class="bi bi-youtube fs-3 me-3"></i>
-
                     <i class="bi bi-instagram fs-3"></i>
-
                 </div>
 
             </div>
-
             <hr>
-
             <div class="text-center">
-
                 © 2026 Rohan Cable Network. All Rights Reserved.
-
             </div>
-
         </div>
 
     </footer>
