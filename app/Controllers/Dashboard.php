@@ -2389,14 +2389,36 @@ class Dashboard extends Controller
             ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
             ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
             ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Due', 'url' => base_url('admin/std_due')],
+            ['label' => 'Report', 'url' => base_url('admin/pay_report')],
             ['label' => 'Salary', 'url' => base_url('admin/salary')],
             ['label' => 'Cost', 'url' => base_url('admin/cost')],
             ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
             ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
         ];
 
+        $user_id = $this->session->get('user_id') ?? 0;
+        $account_status = 0;
+        if ($user_id > 0) {
+            $user = $this->userModel->select('account_status')->find($user_id);
+            if ($user) {
+                $account_status = $user['account_status'];
+            }
+        }
+
+        $this->data['account_status'] = $account_status;
+
+
         // ================= ALL TRANSACTIONS =================
+        // $this->data['transactions'] = $this->transactionModel
+        //     ->orderBy('created_at', 'DESC')
+        //     ->findAll();
+        $monthStart = date('Y-m-01 00:00:00');
+        $monthEnd   = date('Y-m-t 23:59:59');
+
         $this->data['transactions'] = $this->transactionModel
+            ->where('created_at >=', $monthStart)
+            ->where('created_at <=', $monthEnd)
             ->orderBy('created_at', 'DESC')
             ->findAll();
 
@@ -2443,66 +2465,66 @@ class Dashboard extends Controller
 
         $todayData = db_connect()->query("
     SELECT
-    HOUR(t1.created_at) AS hour,
+        t1.hour,
 
-    -- Total Earn
-    SUM(CASE WHEN t1.status = 0 THEN t1.amount ELSE 0 END) AS earn,
+        SUM(t1.earn) AS earn,
+        SUM(t1.cost) AS cost,
+        COALESCE(SUM(t1.discount),0) AS discount
 
-    -- Total Cost
-    SUM(CASE WHEN t1.status = 1 THEN t1.amount ELSE 0 END) AS cost,
+    FROM (
+        SELECT
+            HOUR(created_at) AS hour,
+            transaction_id,
 
-    -- Total Discount (counted once per transaction)
-    (
-        SELECT COALESCE(SUM(d.discount), 0)
-        FROM (
-            SELECT
-                t2.transaction_id,
-                MAX(t2.discount) AS discount
-            FROM transactions t2
-            WHERE t2.status = 0
-              AND DATE(t2.created_at) = '$today'
-              AND HOUR(t2.created_at) = HOUR(t1.created_at)
-            GROUP BY t2.transaction_id
-        ) d
-    ) AS discount
+            SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
+            SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
 
-FROM transactions t1
-WHERE DATE(t1.created_at) = '$today'
-GROUP BY HOUR(t1.created_at)
-ORDER BY HOUR(t1.created_at);
+            MAX(CASE WHEN status = 0 THEN discount ELSE 0 END) AS discount
+
+        FROM transactions
+        WHERE DATE(created_at) = '$today'
+        GROUP BY transaction_id, HOUR(created_at)
+    ) t1
+
+    GROUP BY t1.hour
+    ORDER BY t1.hour
 ")->getResultArray();
 
         // Prepare labels and values
         $this->data['todayLabels'] = array_map(fn($d) => $d['hour'] . ':00', $todayData);
         $this->data['todayEarns']  = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $todayData);
         $this->data['todayCosts']  = array_map(fn($d) => floatval($d['cost']), $todayData);
+
+
         /* ================= ⭐ CURRENT MONTH DAILY REPORT ================= */
         $monthStart = date('Y-m-01');
         $monthEnd   = date('Y-m-t');
 
         $currentMonthData = db_connect()->query("
-            SELECT 
-                DATE(created_at) AS date,
+    SELECT 
+        t1.date,
+        SUM(t1.earn) AS earn,
+        SUM(t1.cost) AS cost,
+        COALESCE(SUM(t1.discount),0) AS discount
 
-                SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
-                SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
+    FROM (
+        SELECT 
+            DATE(created_at) AS date,
+            transaction_id,
 
-                (
-                    SELECT SUM(d.discount)
-                    FROM (
-                        SELECT transaction_id, MAX(discount) AS discount
-                        FROM transactions t2
-                        WHERE t2.status = 0
-                        AND DATE(t2.created_at) = DATE(t1.created_at)
-                        GROUP BY transaction_id
-                    ) d
-                ) AS discount
+            SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
+            SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
 
-            FROM transactions t1
-            WHERE created_at BETWEEN '$monthStart' AND '$monthEnd'
-            GROUP BY DATE(created_at)
-            ORDER BY DATE(created_at)
-        ")->getResultArray();
+            MAX(CASE WHEN status = 0 THEN discount ELSE 0 END) AS discount
+
+        FROM transactions
+        WHERE created_at BETWEEN '$monthStart' AND '$monthEnd'
+        GROUP BY transaction_id, DATE(created_at)
+    ) t1
+
+    GROUP BY t1.date
+    ORDER BY t1.date
+")->getResultArray();
 
         $this->data['dailyLabels'] = array_column($currentMonthData, 'date');
         $this->data['dailyEarns']  = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $currentMonthData);
@@ -2512,37 +2534,52 @@ ORDER BY HOUR(t1.created_at);
         $year = date('Y');
 
         $yearData = db_connect()->query("
-            SELECT 
-                MONTH(created_at) AS month,
+    SELECT 
+        t1.month,
 
-                SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
-                SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
+        SUM(t1.earn) AS earn,
+        SUM(t1.cost) AS cost,
+        COALESCE(SUM(t1.discount), 0) AS discount
 
-                (
-                    SELECT SUM(d.discount)
-                    FROM (
-                        SELECT transaction_id, MAX(discount) AS discount
-                        FROM transactions t2
-                        WHERE t2.status = 0
-                        AND YEAR(t2.created_at) = $year
-                        AND MONTH(t2.created_at) = MONTH(t1.created_at)
-                        GROUP BY transaction_id
-                    ) d
-                ) AS discount
+    FROM (
+        SELECT 
+            MONTH(created_at) AS month,
+            transaction_id,
 
-            FROM transactions t1
-            WHERE YEAR(created_at) = $year
-            GROUP BY MONTH(created_at)
-            ORDER BY MONTH(created_at)
-        ")->getResultArray();
+            -- earn: count ALL records (not grouped per transaction)
+            SUM(CASE WHEN status = 0 THEN amount ELSE 0 END) AS earn,
+
+            -- cost: normal sum
+            SUM(CASE WHEN status = 1 THEN amount ELSE 0 END) AS cost,
+
+            -- discount: only ONE per transaction_id
+            MAX(CASE WHEN status = 0 THEN discount ELSE 0 END) AS discount
+
+        FROM transactions
+        WHERE YEAR(created_at) = $year
+        GROUP BY transaction_id, MONTH(created_at)
+    ) t1
+
+    GROUP BY t1.month
+    ORDER BY t1.month
+")->getResultArray();
+
 
         $this->data['monthLabels'] = array_map(
             fn($m) => date('M', mktime(0, 0, 0, $m['month'], 10)),
             $yearData
         );
 
-        $this->data['monthEarns'] = array_map(fn($d) => floatval($d['earn'] - $d['discount']), $yearData);
-        $this->data['monthCosts'] = array_map(fn($d) => floatval($d['cost']), $yearData);
+        $this->data['monthEarns'] = array_map(
+            fn($d) => floatval($d['earn'] - $d['discount']),
+            $yearData
+        );
+
+        $this->data['monthCosts'] = array_map(
+            fn($d) => floatval($d['cost']),
+            $yearData
+        );
+
 
         return view('dashboard/transaction/transaction_dashboard', $this->data);
     }
