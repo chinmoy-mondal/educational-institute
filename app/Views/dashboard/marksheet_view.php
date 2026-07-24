@@ -783,7 +783,17 @@ if (!is_null($roll)) {
 
                 <th class="text-end"><?= $totalMarks ?></th>
                 <th colspan="2">
-                    <?= $subjectCount > 0 ? (($golden_gpa = ($totalGPA + $forthGPA) / $subjectCount) > 5 ? '5.00*' : number_format($golden_gpa, 2)) : '0.00' ?>
+                    <?php
+          if ($totalFailed > 0) {
+            echo '0.00';
+          } else {
+            echo $subjectCount > 0
+              ? (($golden_gpa = ($totalGPA + $forthGPA) / $subjectCount) > 5
+                ? '5.00*'
+                : number_format($golden_gpa, 2))
+              : '0.00';
+          }
+          ?>
                 </th>
             </tr>
         </tfoot>
