@@ -279,17 +279,10 @@ if (!is_null($roll)) {
             <tr>
                 <th rowspan="2">Subject</th>
                 <th rowspan="2">Full Marks</th>
-                <th rowspan="2">Obtained Marks</th>
                 <th colspan="4">Marks Distribution</th>
                 <th rowspan="2">Total Marks</th>
                 <th rowspan="2">Letter Grade</th>
                 <th rowspan="2">GP</th>
-            </tr>
-            <tr>
-                <th>Wri</th>
-                <th>MCQ</th>
-                <th>Pra</th>
-                <th>%</th>
             </tr>
         </thead>
         <tbody>
@@ -315,11 +308,7 @@ if (!is_null($roll)) {
                         ?>
                 </td>
                 <td><?= esc($mark['full_mark'] ?? 100) ?></td>
-                <td><?= esc($mark['obtained'] ?? $mark['total']) ?></td>
-                <td><?= esc($mark['written']) ?></td>
-                <td><?= esc($mark['mcq']) ?></td>
-                <td><?= esc($mark['practical']) ?></td>
-                <td><?= esc(round($mark['total'] / $mark['full_mark'] * 100, 2)) ?>%</td>
+
 
                 <?php
                     // Handle 1st Paper (rowspan with empty cells to fill later)
