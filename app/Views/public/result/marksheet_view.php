@@ -157,17 +157,7 @@ if (!is_null($roll)) {
     }
 ?>
 
-<div class="no-print mb-3 text-center">
-    <a href="<?= makeUrl($class, $group, $prevRoll, $exam, $year) ?>" class="btn btn-outline-primary">
-        ← Previous
-    </a>
-    <a href="<?= makeUrl($class, $group, $roll, $exam, $year) ?>" class="btn btn-outline-secondary">
-        Current
-    </a>
-    <a href="<?= makeUrl($class, $group, $nextRoll, $exam, $year) ?>" class="btn btn-outline-primary">
-        Next →
-    </a>
-</div>
+
 
 <?php } ?>
 <div class="marksheet-wrapper">
@@ -764,9 +754,8 @@ if (!is_null($roll)) {
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="2">Total Marks</th>
+                <th colspan="3">Total Marks</th>
 
-                <th class="text-end"><?= $totalMarks ?></th>
                 <th colspan="2">
                     <?= $subjectCount > 0 ? (($golden_gpa = ($totalGPA + $forthGPA) / $subjectCount) > 5 ? '5.00*' : number_format($golden_gpa, 2)) : '0.00' ?>
                 </th>
