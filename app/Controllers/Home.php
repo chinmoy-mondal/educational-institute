@@ -364,7 +364,7 @@ class Home extends BaseController
 			$this->data['student'] = $student;
 			$this->data['marksheet'] = $marksheet;
 
-			return view('dashboard/marksheet_view', $this->data);
+			return view('public/result/marksheet_view', $this->data);
 		} elseif ($searchType === 'roll') {
 			$class   = $request->getGet('class');
 			$section = $request->getGet('section');
@@ -443,7 +443,7 @@ class Home extends BaseController
 			// print_r($marksheet);
 			// echo '</pre>';
 
-			return view('dashboard/marksheet_view', $this->data);
+			return view('public/result/marksheet_view', $this->data);
 		}
 
 		return redirect()->back()->with('error', 'Invalid search method.');
