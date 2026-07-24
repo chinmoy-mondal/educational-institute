@@ -311,7 +311,14 @@ class Home extends BaseController
 
 	public function showMarksheet()
 	{
-		
+		$this->data['title'] = 'Marksheet';
+		$this->data['activeSection'] = 'result';
+		$this->data['navbarItems'] = [
+			['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
+			['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
+			['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
+			['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
+		];
 
 		$request = service('request');
 		$searchType = $request->getGet('search_type');
