@@ -694,57 +694,6 @@ if (!is_null($roll)) {
             </tr>
         </tfoot>
     </table>
-    <div class="row qr-signature">
-        <div class="col-md-9">
-            <table class="table table-bordered text-center">
-                <tbody>
-                    <tr>
-                        <!-- Left Block -->
-                        <td>
-                            <table class="table table-bordered text-center mb-0">
-                                <tbody>
-                                    <tr>
-                                        <td><strong>Position</strong></td>
-                                        <td>---</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>GPA (Without 4th)</strong></td>
-                                        <td>
-                                            <?= $subjectCount > 0 ? number_format($totalGPA / $subjectCount, 2) : '0.00' ?>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Failed Subject</strong></td>
-                                        <td><?= $totalFailed ?></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Working Days</strong></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Total Present</strong></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-
-                        <!-- Middle Block -->
-                        <td>
-                        </td>
-
-                        <!-- Right Block -->
-                        <td style="vertical-align: middle;">
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-    </div>
-
-
 </div>
 
 <?= $this->include('layouts/base-structure/footer') ?>
