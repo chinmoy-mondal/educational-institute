@@ -47,6 +47,7 @@ $routes->get('activity-details/(:num)', 'Home::activityDetails/$1');
 
     // Result 
     $routes->get('select-marksheet', 'Home::selectMarksheet');
+    $routes->get('show-marksheet', 'Home::showMarksheet');
 
 
 
