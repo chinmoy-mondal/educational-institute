@@ -220,21 +220,81 @@ body {
                                 <div class="mb-4">
 
                                     <label class="form-label">
-
                                         Student ID
-
                                     </label>
 
                                     <div class="input-group">
 
                                         <span class="input-group-text">
-
                                             <i class="bi bi-person-fill"></i>
-
                                         </span>
 
                                         <input type="text" class="form-control" name="student_id"
                                             placeholder="Enter Student ID">
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-6 mb-4">
+
+                                        <label class="form-label">
+                                            Examination
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text">
+                                                <i class="bi bi-journal-text"></i>
+                                            </span>
+
+                                            <select name="exam" class="form-select">
+
+                                                <option value="">Select Examination</option>
+
+                                                <?php foreach ($exams as $exam): ?>
+
+                                                <option value="<?= esc($exam['exam']) ?>">
+                                                    <?= esc($exam['exam']) ?>
+                                                </option>
+
+                                                <?php endforeach; ?>
+
+                                            </select>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-6 mb-4">
+
+                                        <label class="form-label">
+                                            Academic Year
+                                        </label>
+
+                                        <div class="input-group">
+
+                                            <span class="input-group-text">
+                                                <i class="bi bi-calendar-event"></i>
+                                            </span>
+
+                                            <select name="year" class="form-select">
+
+                                                <option value="">Select Year</option>
+
+                                                <?php foreach ($years as $year): ?>
+
+                                                <option value="<?= esc($year['year']) ?>">
+                                                    <?= esc($year['year']) ?>
+                                                </option>
+
+                                                <?php endforeach; ?>
+
+                                            </select>
+
+                                        </div>
 
                                     </div>
 
