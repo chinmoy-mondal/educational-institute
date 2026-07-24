@@ -162,76 +162,8 @@ if (!is_null($roll)) {
 <?php } ?>
 <div class="marksheet-wrapper">
     <!-- School Info -->
-    <div class="school-header">
-        <h2>Mulgram Secondary School</h2>
-        <h5>Keshabpur, Jashore</h5>
-    </div>
 
-    <div class="row align-items-center">
-        <!-- Left: Student Photo -->
-        <div class="col-md-3 text-left">
-            <?php if (!empty($student['student_pic'])): ?>
-            <img src="<?= base_url($student['student_pic']) ?>" alt="Student Photo" width="150">
-            <?php else: ?>
-            <img src="<?= base_url('public/assets/img/default.png') ?>" alt="No Photo" width="150">
-            <?php endif; ?>
-        </div>
 
-        <!-- Center: School Logo & Transcript Title -->
-        <div class="col-md-6 transcript-title">
-            <img src="<?= base_url('public/assets/img/logo.jpg'); ?>" alt="School Logo" width="60">
-            <h4 style="margin-top: 10px; border-bottom: 4px solid green; display: inline-block; font-weight: bold;">
-                Academic Transcript</h4>
-        </div>
-
-        <!-- Right: Grade Chart -->
-        <div class="col-md-3">
-            <div class="grade-box">
-                <table class="table table-bordered text-center grade-table">
-                    <tr>
-                        <th>Range</th>
-                        <th>Grade</th>
-                        <th>GPA</th>
-                    </tr>
-                    <tr>
-                        <td>80 - 100</td>
-                        <td>A+</td>
-                        <td>5.0</td>
-                    </tr>
-                    <tr>
-                        <td>70 - 79</td>
-                        <td>A</td>
-                        <td>4.0</td>
-                    </tr>
-                    <tr>
-                        <td>60 - 69</td>
-                        <td>A-</td>
-                        <td>3.5</td>
-                    </tr>
-                    <tr>
-                        <td>50 - 59</td>
-                        <td>B</td>
-                        <td>3.0</td>
-                    </tr>
-                    <tr>
-                        <td>40 - 49</td>
-                        <td>C</td>
-                        <td>2.0</td>
-                    </tr>
-                    <tr>
-                        <td>33 - 39</td>
-                        <td>D</td>
-                        <td>1.0</td>
-                    </tr>
-                    <tr>
-                        <td>0 - 32</td>
-                        <td>F</td>
-                        <td>0.0</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
     <!-- Student + Exam Info -->
     <table class="student-info">
         <tr>
@@ -799,93 +731,20 @@ if (!is_null($roll)) {
 
                         <!-- Middle Block -->
                         <td>
-                            <table class="table table-bordered text-center mb-0">
-                                <thead>
-                                    <tr>
-                                        <th colspan="2">Moral & Behaviour Evaluation</th>
-                                    </tr>
-                                    <tr>
-                                        <th></th>
-                                        <th>Best</th>
-                                    </tr>
-                                    <tr>
-                                        <th></th>
-                                        <th>Better</th>
-                                    </tr>
-                                    <tr>
-                                        <th></th>
-                                        <th>Good</th>
-                                    </tr>
-                                    <tr>
-                                        <th></th>
-                                        <th>Need Imporovement</th>
-                                    </tr>
-                                </thead>
-                            </table>
                         </td>
 
                         <!-- Right Block -->
                         <td style="vertical-align: middle;">
-                            <table class="table table-bordered text-center mb-0">
-                                <thead>
-                                    <tr>
-                                        <th colspan="2">Co-Curricular Activities</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <th>Sports</th>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <th>Cultural Function</th>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <th>Scout / BNCC</th>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        <th>Math Olympiad</th>
-                                    </tr>
-                                </tbody>
-                            </table>
+
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <?php
-        $url = 'https://mulss.edu.bd/student-id?q=' . $student['id'];
-        ?>
-        <div class="col-md-3 qr-code text-center">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=<?= urlencode($url) ?>"
-                class="qr-img" alt="Student QR">
-            <p style="font-size: 12px;">Scan to Verify</p>
-        </div>
-    </div>
-    <div class="row">
-
-        <div class="col-md-6 signature text-left">
-            <img src="<?= base_url('public/assets/img/sign.png') ?>" alt="Signature" class="d-block"
-                style="height: 41px;">
-            ____________________<br>
-            Head Teacher
-        </div>
-        <div class="col-md-6 signature text-right">
-            <br><br>
-            ____________________<br>
-            Class Teacher
-        </div>
     </div>
 
-    <div class="text-center mt-3 no-print">
-        <button onclick="window.print()" class="btn btn-primary">
-            <i class="fas fa-print"></i> Print Marksheet
-        </button>
-    </div>
+
 </div>
 
 <?= $this->include('layouts/base-structure/footer') ?>
