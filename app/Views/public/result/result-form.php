@@ -107,6 +107,30 @@ body {
     display: none;
 }
 
+.form-label {
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.input-group-text {
+    width: 45px;
+}
+
+.form-control,
+.form-select {
+    height: 48px;
+}
+
+.card-body {
+    padding: 30px;
+}
+
+@media(min-width:992px) {
+    .col-lg-7 {
+        max-width: 850px;
+    }
+}
+
 @media(max-width:768px) {
 
     .card-body {
@@ -220,170 +244,75 @@ body {
 
                             <div class="search-roll">
 
-                                <div class="mb-4">
+                                <div class="row">
 
-                                    <label class="form-label">
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">Class</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-book"></i></span>
+                                            <select name="class" class="form-select">
+                                                <option value="">Select Class</option>
+                                                <?php foreach ($classes as $class): ?>
+                                                <option value="<?= esc($class['class']) ?>"><?= esc($class['class']) ?>
+                                                </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                    </div>
 
-                                        Class
-
-                                    </label>
-
-                                    <div class="input-group">
-
-                                        <span class="input-group-text">
-
-                                            <i class="bi bi-book"></i>
-
-                                        </span>
-
-                                        <select name="class" class="form-select">
-
-                                            <option value="">Select Class</option>
-
-                                            <?php foreach ($classes as $class): ?>
-
-                                            <option value="<?= esc($class['class']) ?>">
-
-                                                <?= esc($class['class']) ?>
-
-                                            </option>
-
-                                            <?php endforeach; ?>
-
-                                        </select>
-
+                                    <div class="col-md-6 mb-4">
+                                        <label class="form-label">Section</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-people"></i></span>
+                                            <select name="section" class="form-select">
+                                                <option value="">Select Section</option>
+                                                <?php foreach ($sections as $sec): ?>
+                                                <option value="<?= esc($sec['section']) ?>">
+                                                    <?= ucfirst(esc($sec['section'])) ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
                                     </div>
 
                                 </div>
 
-                                <div class="mb-4">
+                                <div class="row">
 
-                                    <label class="form-label">
-
-                                        Section
-
-                                    </label>
-
-                                    <div class="input-group">
-
-                                        <span class="input-group-text">
-
-                                            <i class="bi bi-people"></i>
-
-                                        </span>
-
-                                        <select name="section" class="form-select">
-
-                                            <option value="">Select Section</option>
-
-                                            <?php foreach ($sections as $sec): ?>
-
-                                            <option value="<?= esc($sec['section']) ?>">
-
-                                                <?= ucfirst(esc($sec['section'])) ?>
-
-                                            </option>
-
-                                            <?php endforeach; ?>
-
-                                        </select>
-
+                                    <div class="col-md-4 mb-4">
+                                        <label class="form-label">Roll Number</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-123"></i></span>
+                                            <input type="text" class="form-control" name="roll" placeholder="Roll">
+                                        </div>
                                     </div>
 
-                                </div>
-
-                                <div class="mb-4">
-
-                                    <label class="form-label">
-
-                                        Roll Number
-
-                                    </label>
-
-                                    <div class="input-group">
-
-                                        <span class="input-group-text">
-
-                                            <i class="bi bi-123"></i>
-
-                                        </span>
-
-                                        <input type="text" class="form-control" name="roll"
-                                            placeholder="Enter Roll Number">
-
+                                    <div class="col-md-4 mb-4">
+                                        <label class="form-label">Examination</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-journal-text"></i></span>
+                                            <select name="exam" class="form-select">
+                                                <option value="">Select Exam</option>
+                                                <?php foreach ($exams as $exam): ?>
+                                                <option value="<?= esc($exam['exam']) ?>"><?= esc($exam['exam']) ?>
+                                                </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
                                     </div>
 
-                                </div>
-
-                            </div>
-
-                            <div class="mb-4">
-
-                                <label class="form-label">
-
-                                    Examination
-
-                                </label>
-
-                                <div class="input-group">
-
-                                    <span class="input-group-text">
-
-                                        <i class="bi bi-journal-text"></i>
-
-                                    </span>
-
-                                    <select name="exam" class="form-select">
-
-                                        <option value="">Select Examination</option>
-
-                                        <?php foreach ($exams as $exam): ?>
-
-                                        <option value="<?= esc($exam['exam']) ?>">
-
-                                            <?= esc($exam['exam']) ?>
-
-                                        </option>
-
-                                        <?php endforeach; ?>
-
-                                    </select>
-
-                                </div>
-
-                            </div>
-
-                            <div class="mb-5">
-
-                                <label class="form-label">
-
-                                    Academic Year
-
-                                </label>
-
-                                <div class="input-group">
-
-                                    <span class="input-group-text">
-
-                                        <i class="bi bi-calendar-event"></i>
-
-                                    </span>
-
-                                    <select name="year" class="form-select">
-
-                                        <option value="">Select Year</option>
-
-                                        <?php foreach ($years as $year): ?>
-
-                                        <option value="<?= esc($year['year']) ?>">
-
-                                            <?= esc($year['year']) ?>
-
-                                        </option>
-
-                                        <?php endforeach; ?>
-
-                                    </select>
+                                    <div class="col-md-4 mb-5">
+                                        <label class="form-label">Academic Year</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                                            <select name="year" class="form-select">
+                                                <option value="">Select Year</option>
+                                                <?php foreach ($years as $year): ?>
+                                                <option value="<?= esc($year['year']) ?>"><?= esc($year['year']) ?>
+                                                </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                    </div>
 
                                 </div>
 
