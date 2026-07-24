@@ -11,6 +11,8 @@
     max-width: 850px;
     font-family: 'Arial', sans-serif;
     font-size: 14px;
+    margin-top: 50px;
+    margin-bottom: 50px;
 }
 
 .school-header {
