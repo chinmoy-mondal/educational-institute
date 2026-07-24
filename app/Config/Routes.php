@@ -45,6 +45,8 @@ $routes->get('attendanceStats', 'Home::attendanceStats');
 $routes->get('course-details/(:num)', 'Home::courseDetails/$1');
 $routes->get('activity-details/(:num)', 'Home::activityDetails/$1');
 
+    // Result 
+    $routes->get('select-marksheet', 'Home::selectMarksheet');
 
 
 

@@ -12,6 +12,7 @@ use App\Models\NoticeModel;
 use App\Models\WelcomeMessageModel;
 use App\Models\SliderModel;
 use App\Models\RfidLogModel;
+use App\Models\ResultModel;
 
 class Home extends BaseController
 {
@@ -25,6 +26,7 @@ class Home extends BaseController
 	protected $welcomeMessageModel;
 	protected $sliderModel; // <-- Add this
 	protected $rfidLogModel;
+	protected $resultModel;
 	protected $data = [];
 
 	public function __construct()
@@ -39,6 +41,7 @@ class Home extends BaseController
 		$this->welcomeMessageModel 	= new WelcomeMessageModel();
 		$this->sliderModel 			= new SliderModel(); // <-- Initialize
 		$this->rfidLogModel         = new RfidLogModel();
+		$this->resultModel         = new ResultModel();
 	}
 
 	public function index()
@@ -277,6 +280,33 @@ class Home extends BaseController
 		$user['signature'] = base_url('public/assets/img/sign.png');
 
 		return view('public/teacher_idcard', ['user' => $user]);
+	}
+
+	public function selectMarksheet()
+	{
+		$classes = $this->studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
+		$sections = [
+			['section' => 'general'],
+			['section' => 'vocational'],
+		];
+		$exams = $this->resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
+		$years = $this->resultModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
+
+		$this->data['title']         = 'Select Marksheet Info';
+		$this->data['activeSection'] = 'result';
+		$this->data['navbarItems'] = [
+
+			['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
+			['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
+			['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
+			['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
+		];
+		$this->data['classes']       = $classes;
+		$this->data['sections']      = $sections;
+		$this->data['exams']         = $exams;
+		$this->data['years']         = $years;
+
+		return view('public/result/result-form', $this->data);
 	}
 
 
