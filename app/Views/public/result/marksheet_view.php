@@ -279,6 +279,7 @@ if (!is_null($roll)) {
             <tr>
                 <th rowspan="2">Subject</th>
                 <th rowspan="2">Full Marks</th>
+                <th rowspan="2">Total Marks</th>
                 <th rowspan="2">Letter Grade</th>
                 <th rowspan="2">GP</th>
             </tr>
@@ -305,6 +306,7 @@ if (!is_null($roll)) {
                         }
                         ?>
                 </td>
+                <td><?= esc($mark['full_mark'] ?? 100) ?></td>
 
 
                 <?php
@@ -766,7 +768,7 @@ if (!is_null($roll)) {
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="7">Total Marks</th>
+                <th colspan="5">Total Marks</th>
 
                 <th class="text-end"><?= $totalMarks ?></th>
                 <th colspan="2">
