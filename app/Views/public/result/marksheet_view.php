@@ -279,8 +279,6 @@ if (!is_null($roll)) {
             <tr>
                 <th rowspan="2">Subject</th>
                 <th rowspan="2">Full Marks</th>
-                <th colspan="4">Marks Distribution</th>
-                <th rowspan="2">Total Marks</th>
                 <th rowspan="2">Letter Grade</th>
                 <th rowspan="2">GP</th>
             </tr>
