@@ -279,7 +279,6 @@ if (!is_null($roll)) {
             <tr>
                 <th rowspan="2">Subject</th>
                 <th rowspan="2">Full Marks</th>
-                <th rowspan="2">Total Marks</th>
                 <th rowspan="2">Letter Grade</th>
                 <th rowspan="2">GP</th>
             </tr>
@@ -314,9 +313,9 @@ if (!is_null($roll)) {
                     if (in_array($mark['subject'], ['Bangla 1st Paper', 'English 1st Paper'])):
                         $subjectKey = strtolower(str_replace(' ', '_', explode(' ', $mark['subject'])[0]));
                     ?>
-                <!-- <td id="combined_mark_<?= $subjectKey ?>" rowspan="2"></td>
+                <td id="combined_mark_<?= $subjectKey ?>" rowspan="2"></td>
                 <td id="combined_grade_<?= $subjectKey ?>" rowspan="2"></td>
-                <td id="combined_gpa_<?= $subjectKey ?>" rowspan="2"></td> -->
+                <td id="combined_gpa_<?= $subjectKey ?>" rowspan="2"></td>
 
                 <?php
                     // Handle 2nd Paper (inject values into previous IDs)
@@ -745,7 +744,6 @@ if (!is_null($roll)) {
 
                         ?>
 
-                <td><?= esc($mark['total']) ?></td>
                 <td><?= esc($grade) ?></td>
                 <td>
                     <?= esc($gpa) ?>
