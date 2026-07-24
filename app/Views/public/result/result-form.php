@@ -2,33 +2,82 @@
 
 <?= $this->section('content') ?>
 
-<!-- Header -->
 <div class="fixed-header">
     <?= $this->include('layouts/base-structure/header') ?>
 </div>
 
 <style>
-.hero-section {
-    margin-top: 80px;
-    background: linear-gradient(135deg, #0d6efd, #0b5ed7);
-    color: #fff;
-    padding: 80px 0;
+body {
+    background: #f5f7fb;
+}
+
+.marksheet-section {
+    margin-top: 110px;
+    margin-bottom: 70px;
 }
 
 .search-card {
     border: none;
-    border-radius: 18px;
+    border-radius: 20px;
+    overflow: hidden;
     box-shadow: 0 15px 40px rgba(0, 0, 0, .08);
 }
 
-.search-card .card-body {
+.card-header-custom {
+    background: linear-gradient(135deg, #0d6efd, #2563eb);
+    color: #fff;
+    padding: 35px;
+    text-align: center;
+}
+
+.card-header-custom i {
+    font-size: 55px;
+    margin-bottom: 10px;
+}
+
+.card-header-custom h3 {
+    margin: 0;
+    font-weight: 700;
+}
+
+.card-header-custom p {
+    margin-top: 8px;
+    opacity: .9;
+}
+
+.card-body {
     padding: 40px;
+}
+
+.section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: #6c757d;
+    margin-bottom: 15px;
+}
+
+.btn-group .btn {
+    padding: 12px;
+    font-weight: 600;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.input-group-text {
+    background: #f8f9fa;
+    width: 55px;
+    justify-content: center;
+    border-right: none;
 }
 
 .form-control,
 .form-select {
-    height: 52px;
-    border-radius: 10px;
+    height: 54px;
+    border-left: none;
+    font-size: 15px;
 }
 
 .form-control:focus,
@@ -37,72 +86,41 @@
     border-color: #0d6efd;
 }
 
-.form-check {
-    margin-right: 20px;
+.input-group:focus-within .input-group-text {
+    border-color: #0d6efd;
 }
 
 .btn-search {
-    height: 55px;
-    font-size: 18px;
+    height: 56px;
     border-radius: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    transition: .3s;
 }
 
-.section-title {
-    font-weight: 700;
-    margin-bottom: 5px;
+.btn-search:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(13, 110, 253, .25);
 }
 
-.section-subtitle {
-    color: #6c757d;
-}
-
-.logo-circle {
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    background: #f8f9fa;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, .08);
-}
-
-.logo-circle img {
-    width: 65px;
+.search-roll {
+    display: none;
 }
 
 @media(max-width:768px) {
 
-    .hero-section {
-        padding: 60px 0;
+    .card-body {
+        padding: 25px;
     }
 
-    .search-card .card-body {
+    .card-header-custom {
         padding: 25px;
     }
 
 }
 </style>
 
-<!-- Hero -->
-<section class="hero-section">
-
-    <div class="container text-center">
-
-        <h1 class="fw-bold">
-            Student Marksheet Portal
-        </h1>
-
-        <p class="lead mb-0">
-            Search and view your academic marksheet online.
-        </p>
-
-    </div>
-
-</section>
-
-<section class="py-5">
+<section class="marksheet-section">
 
     <div class="container">
 
@@ -112,28 +130,24 @@
 
                 <div class="card search-card">
 
-                    <div class="card-body">
+                    <div class="card-header-custom">
 
-                        <div class="logo-circle mb-4">
+                        <i class="bi bi-mortarboard-fill"></i>
 
-                            <img src="<?= base_url('public/assets/img/logo.jpg') ?>">
+                        <h3>Student Marksheet</h3>
 
-                        </div>
-
-                        <h3 class="text-center section-title">
-                            Search Marksheet
-                        </h3>
-
-                        <p class="text-center section-subtitle mb-4">
-                            Search by Student ID or by Class & Roll.
+                        <p>
+                            Search your academic result instantly.
                         </p>
+
+                    </div>
+
+                    <div class="card-body">
 
                         <?php if (session()->getFlashdata('success')): ?>
 
                         <div class="alert alert-success">
-
                             <?= session()->getFlashdata('success') ?>
-
                         </div>
 
                         <?php endif; ?>
@@ -141,58 +155,45 @@
                         <?php if (session()->getFlashdata('error')): ?>
 
                         <div class="alert alert-danger">
-
                             <?= session()->getFlashdata('error') ?>
-
                         </div>
 
                         <?php endif; ?>
 
                         <form action="<?= base_url('show-marksheet') ?>" method="get">
 
-                            <div class="mb-4">
+                            <div class="section-title">
+                                Search Method
+                            </div>
 
-                                <label class="fw-bold mb-2">
-                                    Search Method
+                            <div class="btn-group w-100 mb-4">
+
+                                <input type="radio" class="btn-check" name="search_type" id="searchById" value="id"
+                                    checked>
+
+                                <label class="btn btn-outline-primary" for="searchById">
+
+                                    <i class="bi bi-person-badge"></i>
+
+                                    Student ID
+
                                 </label>
 
-                                <div>
+                                <input type="radio" class="btn-check" name="search_type" id="searchByRoll" value="roll">
 
-                                    <div class="form-check form-check-inline">
+                                <label class="btn btn-outline-primary" for="searchByRoll">
 
-                                        <input class="form-check-input" type="radio" name="search_type" id="searchById"
-                                            value="id" checked>
+                                    <i class="bi bi-list-ol"></i>
 
-                                        <label class="form-check-label" for="searchById">
+                                    Class & Roll
 
-                                            Student ID
-
-                                        </label>
-
-                                    </div>
-
-                                    <div class="form-check form-check-inline">
-
-                                        <input class="form-check-input" type="radio" name="search_type"
-                                            id="searchByRoll" value="roll">
-
-                                        <label class="form-check-label" for="searchByRoll">
-
-                                            Class & Roll
-
-                                        </label>
-
-                                    </div>
-
-                                </div>
+                                </label>
 
                             </div>
 
-                            <!-- Student ID -->
-
                             <div class="search-id">
 
-                                <div class="mb-3">
+                                <div class="mb-4">
 
                                     <label class="form-label">
 
@@ -200,18 +201,26 @@
 
                                     </label>
 
-                                    <input type="text" name="student_id" class="form-control"
-                                        placeholder="Enter Student ID">
+                                    <div class="input-group">
+
+                                        <span class="input-group-text">
+
+                                            <i class="bi bi-person-fill"></i>
+
+                                        </span>
+
+                                        <input type="text" class="form-control" name="student_id"
+                                            placeholder="Enter Student ID">
+
+                                    </div>
 
                                 </div>
 
                             </div>
 
-                            <!-- Class Roll -->
+                            <div class="search-roll">
 
-                            <div class="search-roll" style="display:none;">
-
-                                <div class="mb-3">
+                                <div class="mb-4">
 
                                     <label class="form-label">
 
@@ -219,27 +228,35 @@
 
                                     </label>
 
-                                    <select name="class" class="form-select">
+                                    <div class="input-group">
 
-                                        <option value="">
-                                            Select Class
-                                        </option>
+                                        <span class="input-group-text">
 
-                                        <?php foreach ($classes as $class): ?>
+                                            <i class="bi bi-book"></i>
 
-                                        <option value="<?= esc($class['class']) ?>">
+                                        </span>
 
-                                            <?= esc($class['class']) ?>
+                                        <select name="class" class="form-select">
 
-                                        </option>
+                                            <option value="">Select Class</option>
 
-                                        <?php endforeach; ?>
+                                            <?php foreach ($classes as $class): ?>
 
-                                    </select>
+                                            <option value="<?= esc($class['class']) ?>">
+
+                                                <?= esc($class['class']) ?>
+
+                                            </option>
+
+                                            <?php endforeach; ?>
+
+                                        </select>
+
+                                    </div>
 
                                 </div>
 
-                                <div class="mb-3">
+                                <div class="mb-4">
 
                                     <label class="form-label">
 
@@ -247,17 +264,84 @@
 
                                     </label>
 
-                                    <select name="section" class="form-select">
+                                    <div class="input-group">
 
-                                        <option value="">
-                                            Select Section
-                                        </option>
+                                        <span class="input-group-text">
 
-                                        <?php foreach ($sections as $sec): ?>
+                                            <i class="bi bi-people"></i>
 
-                                        <option value="<?= esc($sec['section']) ?>">
+                                        </span>
 
-                                            <?= ucfirst(esc($sec['section'])) ?>
+                                        <select name="section" class="form-select">
+
+                                            <option value="">Select Section</option>
+
+                                            <?php foreach ($sections as $sec): ?>
+
+                                            <option value="<?= esc($sec['section']) ?>">
+
+                                                <?= ucfirst(esc($sec['section'])) ?>
+
+                                            </option>
+
+                                            <?php endforeach; ?>
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="mb-4">
+
+                                    <label class="form-label">
+
+                                        Roll Number
+
+                                    </label>
+
+                                    <div class="input-group">
+
+                                        <span class="input-group-text">
+
+                                            <i class="bi bi-123"></i>
+
+                                        </span>
+
+                                        <input type="text" class="form-control" name="roll"
+                                            placeholder="Enter Roll Number">
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="mb-4">
+
+                                <label class="form-label">
+
+                                    Examination
+
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+
+                                        <i class="bi bi-journal-text"></i>
+
+                                    </span>
+
+                                    <select name="exam" class="form-select">
+
+                                        <option value="">Select Examination</option>
+
+                                        <?php foreach ($exams as $exam): ?>
+
+                                        <option value="<?= esc($exam['exam']) ?>">
+
+                                            <?= esc($exam['exam']) ?>
 
                                         </option>
 
@@ -267,77 +351,47 @@
 
                                 </div>
 
-                                <div class="mb-3">
+                            </div>
 
-                                    <label class="form-label">
+                            <div class="mb-5">
 
-                                        Roll
+                                <label class="form-label">
 
-                                    </label>
+                                    Academic Year
 
-                                    <input type="text" class="form-control" name="roll" placeholder="Enter Roll Number">
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+
+                                        <i class="bi bi-calendar-event"></i>
+
+                                    </span>
+
+                                    <select name="year" class="form-select">
+
+                                        <option value="">Select Year</option>
+
+                                        <?php foreach ($years as $year): ?>
+
+                                        <option value="<?= esc($year['year']) ?>">
+
+                                            <?= esc($year['year']) ?>
+
+                                        </option>
+
+                                        <?php endforeach; ?>
+
+                                    </select>
 
                                 </div>
 
                             </div>
 
-                            <div class="mb-3">
+                            <button type="submit" class="btn btn-primary btn-search w-100">
 
-                                <label class="form-label">
-
-                                    Examination
-
-                                </label>
-
-                                <select class="form-select" name="exam">
-
-                                    <option value="">
-                                        Select Examination
-                                    </option>
-
-                                    <?php foreach ($exams as $exam): ?>
-
-                                    <option value="<?= esc($exam['exam']) ?>">
-
-                                        <?= esc($exam['exam']) ?>
-
-                                    </option>
-
-                                    <?php endforeach; ?>
-
-                                </select>
-
-                            </div>
-
-                            <div class="mb-4">
-
-                                <label class="form-label">
-
-                                    Year
-
-                                </label>
-
-                                <select class="form-select" name="year">
-
-                                    <option value="">
-                                        Select Year
-                                    </option>
-
-                                    <?php foreach ($years as $year): ?>
-
-                                    <option value="<?= esc($year['year']) ?>">
-
-                                        <?= esc($year['year']) ?>
-
-                                    </option>
-
-                                    <?php endforeach; ?>
-
-                                </select>
-
-                            </div>
-
-                            <button class="btn btn-primary btn-search w-100">
+                                <i class="bi bi-search me-2"></i>
 
                                 Show Marksheet
 
