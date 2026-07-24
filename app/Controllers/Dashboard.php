@@ -1945,7 +1945,7 @@ class Dashboard extends Controller
             ['section' => 'General'],
             ['section' => 'Vocational'],
             ['section' => 'Science'],
-            ['section' => 'arts'],
+            ['section' => 'Humanities'],
         ];
 
 
