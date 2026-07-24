@@ -313,7 +313,6 @@ if (!is_null($roll)) {
                     if (in_array($mark['subject'], ['Bangla 1st Paper', 'English 1st Paper'])):
                         $subjectKey = strtolower(str_replace(' ', '_', explode(' ', $mark['subject'])[0]));
                     ?>
-                <td id="combined_mark_<?= $subjectKey ?>" rowspan="2"></td>
                 <td id="combined_grade_<?= $subjectKey ?>" rowspan="2"></td>
                 <td id="combined_gpa_<?= $subjectKey ?>" rowspan="2"></td>
 
@@ -437,7 +436,6 @@ if (!is_null($roll)) {
                     ?>
                 <script>
                 document.addEventListener("DOMContentLoaded", function() {
-                    document.getElementById("combined_mark_<?= $subjectKey ?>").textContent = "<?= $total ?>";
                     document.getElementById("combined_grade_<?= $subjectKey ?>").textContent = "<?= $grade ?>";
                     document.getElementById("combined_gpa_<?= $subjectKey ?>").textContent = "<?= $gpa ?>";
                 });
@@ -766,7 +764,7 @@ if (!is_null($roll)) {
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="3">Total Marks</th>
+                <th colspan="2">Total Marks</th>
 
                 <th class="text-end"><?= $totalMarks ?></th>
                 <th colspan="2">
