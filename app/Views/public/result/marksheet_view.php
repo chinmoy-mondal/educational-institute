@@ -768,7 +768,7 @@ if (!is_null($roll)) {
         </tbody>
         <tfoot>
             <tr>
-                <th colspan="5">Total Marks</th>
+                <th colspan="3">Total Marks</th>
 
                 <th class="text-end"><?= $totalMarks ?></th>
                 <th colspan="2">
