@@ -3228,6 +3228,9 @@ class Dashboard extends Controller
             ['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
             ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
         ];
+
+        $this->data['exams'] = $this->resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
+
         $this->data['class'] = $this->studentModel
             ->select('class')
             ->distinct()

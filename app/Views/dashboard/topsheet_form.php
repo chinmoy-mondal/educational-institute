@@ -69,12 +69,11 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Exam</label>
-                                <select name="exam" class="form-control" required>
+                                <select name="exam" class="form-control">
                                     <option value="">Select Exam</option>
-                                    <option value="Half-Yearly">Half-Yearly</option>
-                                    <option value="Pre-Test Exam">Pre-Test Exam</option>
-                                    <option value="Test Exam">Test Exam</option>
-                                    <option value="Annual Exam">Annual Exam</option>
+                                    <?php foreach ($exams as $exam): ?>
+                                    <option value="<?= esc($exam['exam']) ?>"><?= esc($exam['exam']) ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
