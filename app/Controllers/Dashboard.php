@@ -1506,12 +1506,15 @@ class Dashboard extends Controller
         $year    = $this->request->getPost('year');
 
 
-        $builder = $this->studentModel->where('class', $class);
+        $builder = $this->studentModel->where([
+            'class'   => $class,
+            'section' => $section,
+        ]);
 
-        // If class is NOT 6 to 8, add section filter
-        if (!in_array($class, ['6', '7', '8'])) {
-            $builder->like('section', $section);
-        }
+        // it should be group not section update in dattanogor schollo
+        // if (!in_array($class, ['6', '7', '8'])) {
+        //     $builder->like('section', $section);
+        // }
 
         $students = $builder
             ->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
