@@ -1022,6 +1022,15 @@ class Dashboard extends Controller
             ['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
             ['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
         ];
+
+
+
+        $latestYear = $this->resultModel
+            ->selectMax('year', 'latest_year')
+            ->first()['latest_year'];
+
+        $data['latestYear'] = $latestYear;
+        
         $this->data['students']   = $students;
         $this->data['pager']      = $this->studentModel->pager;
         $this->data['q']          = $q;
