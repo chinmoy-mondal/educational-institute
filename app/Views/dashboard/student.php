@@ -185,26 +185,6 @@
                             <td><?= esc($s['class']) ?></td>
                             <td><?= esc($s['section']) ?></td>
                             <td>
-                                <!-- Exam Dropdown -->
-                                <!-- Exam Dropdown -->
-                                <?php
-                                        $student_class = $s['class'] ?? 6;
-                                        $currentMonth  = date('n'); // 1–12
-
-                                        if ($currentMonth < 6) {
-                                            // January–May
-                                            $exams = ['Half-Yearly', 'Annual Exam'];
-                                        } elseif ($currentMonth == 12) {
-                                            // December
-                                            $exams = ['Pre-Test Exam', 'Test Exam'];
-                                        } elseif ($currentMonth > 6) {
-                                            // July–November
-                                            $exams = ['Annual Exam'];
-                                        } else {
-                                            // June (fallback / safety)
-                                            $exams = ['Half-Yearly', 'Annual Exam'];
-                                        }
-                                        ?>
 
                                 <div class="dropdown d-inline-block me-1">
                                     <button class="btn btn-success btn-sm dropdown-toggle" type="button"
@@ -213,31 +193,26 @@
                                         <i class="fas fa-file-alt"></i> Result
                                     </button>
 
+                                    <?php
+                                            $class = (int) $s['class'];
+
+                                            if ($class == 10) {
+                                                $examList = $examsClass10;
+                                            } elseif (in_array($class, [6, 7, 8, 9])) {
+                                                $examList = $examsClass69;
+                                            } else {
+                                                $examList = $examsClass69; // Default
+                                            }
+                                            ?>
+
                                     <ul class="dropdown-menu" aria-labelledby="examDropdown<?= $s['id'] ?>">
-                                        <?php foreach ($exams as $exam): ?>
-
-                                        <?php
-                                                    $class = (int) $s['class'];
-                                                    $hasTest = stripos($exam, 'Test') !== false;
-
-                                                    // Class 6-9: Hide exams containing "Test"
-                                                    if (in_array($class, [6, 7, 8, 9]) && $hasTest) {
-                                                        continue;
-                                                    }
-
-                                                    // Class 10: Show only exams containing "Test"
-                                                    if ($class == 10 && !$hasTest) {
-                                                        continue;
-                                                    }
-                                                    ?>
-
+                                        <?php foreach ($examList as $exam): ?>
                                         <li>
                                             <a class="dropdown-item" target="_blank"
                                                 href="<?= site_url('admin/test_result') ?>?student_id=<?= $s['id'] ?>&year=<?= $latestYear ?>&exam=<?= urlencode($exam) ?>">
                                                 <?= esc($exam) ?>
                                             </a>
                                         </li>
-
                                         <?php endforeach; ?>
                                     </ul>
                                 </div>

@@ -1029,25 +1029,35 @@ class Dashboard extends Controller
         $latestYear = $this->resultModel
             ->selectMax('year', 'latest_year')
             ->first()['latest_year'];
-        echo "<pre>";
-        print_r($latestYear);
-        echo "</pre>";
+
         $this->data['latestYear'] = $latestYear;
 
-        // Get exams only from latest year
-        $exams = $this->resultModel
+        // Get all exams for latest year
+        $examRows = $this->resultModel
             ->select('exam')
             ->where('year', $latestYear)
             ->groupBy('exam')
             ->orderBy('exam', 'ASC')
             ->findAll();
 
-        echo "<pre>";
-        print_r($exams);
-        echo "</pre>";
+        $examsClass69 = [];
+        $examsClass10 = [];
 
-        $this->data['exams'] = array_column($exams, 'exam');
-        
+        foreach ($examRows as $row) {
+            $exam = $row['exam'];
+
+            if (stripos($exam, 'Test') !== false) {
+                // Contains "Test" -> Class 10 only
+                $examsClass10[] = $exam;
+            } else {
+                // Does not contain "Test" -> Classes 6-9
+                $examsClass69[] = $exam;
+            }
+        }
+
+        $this->data['examsClass69'] = $examsClass69;
+        $this->data['examsClass10'] = $examsClass10;
+
         $this->data['students']   = $students;
         $this->data['pager']      = $this->studentModel->pager;
         $this->data['q']          = $q;
