@@ -1029,7 +1029,9 @@ class Dashboard extends Controller
         $latestYear = $this->resultModel
             ->selectMax('year', 'latest_year')
             ->first()['latest_year'];
-
+        echo "<pre>";
+        print_r($latestYear);
+        echo "</pre>";
         $this->data['latestYear'] = $latestYear;
 
         // Get exams only from latest year
@@ -1039,6 +1041,10 @@ class Dashboard extends Controller
             ->groupBy('exam')
             ->orderBy('exam', 'ASC')
             ->findAll();
+
+        echo "<pre>";
+        print_r($exams);
+        echo "</pre>";
 
         $this->data['exams'] = array_column($exams, 'exam');
         
