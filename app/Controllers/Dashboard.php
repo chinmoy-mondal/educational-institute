@@ -1025,11 +1025,22 @@ class Dashboard extends Controller
 
 
 
+        // Get latest year
         $latestYear = $this->resultModel
             ->selectMax('year', 'latest_year')
             ->first()['latest_year'];
 
-        $data['latestYear'] = $latestYear;
+        $this->data['latestYear'] = $latestYear;
+
+        // Get exams only from latest year
+        $exams = $this->resultModel
+            ->select('exam')
+            ->where('year', $latestYear)
+            ->groupBy('exam')
+            ->orderBy('exam', 'ASC')
+            ->findAll();
+
+        $this->data['exams'] = array_column($exams, 'exam');
         
         $this->data['students']   = $students;
         $this->data['pager']      = $this->studentModel->pager;

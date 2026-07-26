@@ -215,12 +215,29 @@
 
                                     <ul class="dropdown-menu" aria-labelledby="examDropdown<?= $s['id'] ?>">
                                         <?php foreach ($exams as $exam): ?>
+
+                                        <?php
+                                                    $class = (int) $s['class'];
+                                                    $hasTest = stripos($exam, 'Test') !== false;
+
+                                                    // Class 6-9: Hide exams containing "Test"
+                                                    if (in_array($class, [6, 7, 8, 9]) && $hasTest) {
+                                                        continue;
+                                                    }
+
+                                                    // Class 10: Show only exams containing "Test"
+                                                    if ($class == 10 && !$hasTest) {
+                                                        continue;
+                                                    }
+                                                    ?>
+
                                         <li>
                                             <a class="dropdown-item" target="_blank"
                                                 href="<?= site_url('admin/test_result') ?>?student_id=<?= $s['id'] ?>&year=<?= $latestYear ?>&exam=<?= urlencode($exam) ?>">
                                                 <?= esc($exam) ?>
                                             </a>
                                         </li>
+
                                         <?php endforeach; ?>
                                     </ul>
                                 </div>
