@@ -1481,6 +1481,44 @@ class Dashboard extends Controller
 
         $sections = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
 
+
+
+
+        // Get latest year
+        $latestYear = $this->resultModel
+            ->selectMax('year', 'latest_year')
+            ->first()['latest_year'];
+
+        $this->data['latestYear'] = $latestYear;
+
+        // Get all exams for latest year
+        $examRows = $this->resultModel
+            ->select('exam')
+            ->where('year', $latestYear)
+            ->groupBy('exam')
+            ->orderBy('exam', 'ASC')
+            ->findAll();
+
+        $examsClass69 = [];
+        $examsClass10 = [];
+
+        foreach ($examRows as $row) {
+            $exam = $row['exam'];
+
+            if (stripos($exam, 'Test') !== false) {
+                // Contains "Test" -> Class 10 only
+                $examsClass10[] = $exam;
+            } else {
+                // Does not contain "Test" -> Classes 6-9
+                $examsClass69[] = $exam;
+            }
+        }
+
+        $this->data['examsClass69'] = $examsClass69;
+        $this->data['examsClass10'] = $examsClass10;
+
+        
+
         $this->data['title']         = 'Student Management';
         $this->data['activeSection'] = 'student';
         $this->data['navbarItems']   = [
