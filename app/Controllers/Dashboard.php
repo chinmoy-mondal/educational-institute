@@ -1460,23 +1460,13 @@ class Dashboard extends Controller
         // ✅ Distinct class list from students
         $classes = $this->studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
 
-        $rawSections = $this->studentModel
-            ->distinct()
-            ->select('section')
-            ->orderBy('section', 'ASC')
-            ->findAll();
 
-        $sections = [
-            ['section' => 'General'],
-            ['section' => 'Vocational'],
-            ['section' => 'Science'],
-            ['section' => 'arts'],
-        ];
 
 
         // ✅ Distinct exam names and years from results
         $exams = $this->resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
         $years = $this->resultModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
+        $sections = $this->resultModel->distinct()->select('year')->orderBy('section', 'DESC')->findAll();
         // Send to view
         $this->data['title']    = 'Select Tabulation Info';
         $this->data['activeSection'] = 'result';
@@ -1491,6 +1481,7 @@ class Dashboard extends Controller
         $this->data['sections'] = $sections;
         $this->data['exams']    = $exams;
         $this->data['years']    = $years;
+        $this->data['sections'] = $sections;
 
         return view('dashboard/select_exam_info', $this->data);
     }
