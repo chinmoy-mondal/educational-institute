@@ -39,19 +39,23 @@
                     <td class="text-start"><?= esc($entry['teacher']['name']) ?></td>
                     <td>
                       <div class="progress" style="height: 20px;">
-                        <div class="progress-bar <?= $entry['progress'] == 100 ? 'bg-success' : 'bg-warning' ?>" style="width: <?= $entry['progress'] ?>%;">
+                        <div class="progress-bar <?= $entry['progress'] == 100 ? 'bg-success' : 'bg-warning' ?>"
+                          style="width: <?= $entry['progress'] ?>%;">
                           <?= $entry['marks_entered'] ?> / <?= $entry['total_rows'] ?>
                         </div>
                       </div>
                     </td>
                     <td>
-                      <a href="<?= site_url('profile_id/' . $entry['teacher']['user_id']) ?>" class="btn btn-sm btn-info me-1" title="View Profile">
+                      <a href="<?= site_url('profile_id/' . $entry['teacher']['user_id']) ?>"
+                        class="btn btn-sm btn-info me-1" title="View Profile">
                         <i class="fas fa-user"></i>
                       </a>
-                      <a href="tel:<?= esc($entry['teacher']['phone'] ?? '') ?>" class="btn btn-sm btn-success me-1" title="Call Teacher">
+                      <a href="tel:<?= esc($entry['teacher']['phone'] ?? '') ?>"
+                        class="btn btn-sm btn-success me-1" title="Call Teacher">
                         <i class="fas fa-phone"></i>
                       </a>
-                      <a href="<?= site_url('teacher_result/' . $entry['teacher']['user_id']) ?>" class="btn btn-sm btn-warning" title="View Results">
+                      <a href="<?= site_url('assignSubject/' . $entry['teacher']['user_id']) ?>"
+                        class="btn btn-sm btn-warning" title="View Results">
                         <i class="fas fa-chart-bar"></i>
                       </a>
                     </td>
