@@ -54,10 +54,19 @@
                                         class="btn btn-sm btn-success me-1" title="Call Teacher">
                                         <i class="fas fa-phone"></i>
                                     </a>
-                                    <a href="<?= site_url('assignSubject/' . $entry['teacher']['user_id']) ?>"
-                                        class="btn btn-sm btn-warning" title="View Results">
-                                        <i class="fas fa-chart-bar"></i>
-                                    </a>
+                                    <form action="<?= site_url('admin/resultCheck') ?>" method="post" class="d-inline">
+                                        <?= csrf_field() ?>
+
+                                        <input type="hidden" name="user_id"
+                                            value="<?= esc($entry['teacher']['user_id']) ?>">
+                                        <input type="hidden" name="subject_id"
+                                            value="<?= esc($entry['subject']['subject_id']) ?>">
+                                        <input type="hidden" name="exam_name" value="<?= esc($entry['exam']) ?>">
+
+                                        <button type="submit" class="btn btn-sm btn-warning" title="View Results">
+                                            <i class="fas fa-chart-bar"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                             <?php endforeach; ?>
