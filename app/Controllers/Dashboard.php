@@ -1489,6 +1489,43 @@ class Dashboard extends Controller
             ['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
             ['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
         ];
+
+
+
+
+        // Get latest year
+        $latestYear = $this->resultModel
+            ->selectMax('year', 'latest_year')
+            ->first()['latest_year'];
+
+        $this->data['latestYear'] = $latestYear;
+
+        // Get all exams for latest year
+        $examRows = $this->resultModel
+            ->select('exam')
+            ->where('year', $latestYear)
+            ->groupBy('exam')
+            ->orderBy('exam', 'ASC')
+            ->findAll();
+
+        $examsClass69 = [];
+        $examsClass10 = [];
+
+        foreach ($examRows as $row) {
+            $exam = $row['exam'];
+
+            if (stripos($exam, 'Test') !== false) {
+                // Contains "Test" -> Class 10 only
+                $examsClass10[] = $exam;
+            } else {
+                // Does not contain "Test" -> Classes 6-9
+                $examsClass69[] = $exam;
+            }
+        }
+
+        $this->data['examsClass69'] = $examsClass69;
+        $this->data['examsClass10'] = $examsClass10;
+
         $this->data['students']   = $students;
         $this->data['pager']      = $this->studentModel->pager;
         $this->data['q']          = $q;
@@ -2551,14 +2588,14 @@ class Dashboard extends Controller
         }
 
         // ---------------- STUDENT BACKUP ----------------
-        $studentBackup = $this->studentBackupModel
-            ->where('student_id', $studentId)
-            ->where('year', $year)
-            ->first();
+        // $studentBackup = $this->studentBackupModel
+        //     ->where('student_id', $studentId)
+        //     ->where('year', $year)
+        //     ->first();
 
-        if (!$studentBackup) {
-            return "Student backup not found";
-        }
+        // if (!$studentBackup) {
+        //     return "Student backup not found";
+        // }
 
 
         echo "test -";
