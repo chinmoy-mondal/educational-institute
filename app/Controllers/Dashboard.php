@@ -2754,13 +2754,13 @@ class Dashboard extends Controller
             $assigned = explode(',', $student['assign_sub'] ?? '');
             $orderMap = array_flip($assigned);
 
-            echo "<pre>";
-            print_r($assigned);
-            echo "</pre>";
-            
-            echo "<pre>";
-            print_r($orderMap);
-            echo "</pre>";
+            // echo "<pre>";
+            // print_r($assigned);
+            // echo "</pre>";
+
+            // echo "<pre>";
+            // print_r($orderMap);
+            // echo "</pre>";
 
             usort($marksheet, function ($a, $b) use ($orderMap) {
                 $posA = $orderMap[$a['subject_id']] ?? PHP_INT_MAX;
@@ -2768,9 +2768,9 @@ class Dashboard extends Controller
                 return $posA <=> $posB;
             });
 
-            echo "<pre>";
-            print_r($marksheet);
-            echo "</pre>";
+            // echo "<pre>";
+            // print_r($marksheet);
+            // echo "</pre>";
 
             $this->data['examName'] = $exam;
             $this->data['examYear'] = $year;
