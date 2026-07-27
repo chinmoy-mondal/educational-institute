@@ -2620,9 +2620,10 @@ class Dashboard extends Controller
                 $practical,
                 $percentage
             );
-            echo "<pre>";
-            print_r($gradeInfo);
-            echo "</pre>";
+            echo "test ";
+            // echo "<pre>";
+            // print_r($gradeInfo);
+            // echo "</pre>";
 
             $marksheetNumeric[] = [
                 'subject'   => $row['subject'],
