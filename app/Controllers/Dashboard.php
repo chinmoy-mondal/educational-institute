@@ -2917,9 +2917,9 @@ class Dashboard extends Controller
                 'updated_at'            => date('Y-m-d H:i:s'),
             ];
 
-            // echo "<pre>";
-            // print_r($rankingData);
-            // echo "</pre>";
+            echo "<pre>";
+            print_r($rankingData);
+            echo "</pre>";
             // ---------------- INSERT OR UPDATE ----------------
             $existing = $this->rankingModel
                 ->where(['student_id' => $student['id'], 'year' => $year])
