@@ -2539,7 +2539,10 @@ class Dashboard extends Controller
 
     public function test_result_single_exam($studentId = null, $year = null, $exam = null, $view = null)
     {
-        echo "test";
+        echo "student id " . $studentId . "<br>";
+        echo "year " . $year . "<br>";
+        echo "exam " . $exam . "<br>";
+        echo "view " . $view . "<br>";
         if (!$studentId || !$year || !$exam) {
             return "Student ID, Year and Exam are required";
         }
