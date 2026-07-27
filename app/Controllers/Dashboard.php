@@ -1338,9 +1338,11 @@ class Dashboard extends Controller
         }
 
         $students = $this->studentModel
-            ->where("FIND_IN_SET(" . (int)$subjectId . ", assign_sub) >", 0, false)
+            ->groupStart()
+            ->where("FIND_IN_SET('" . $subjectId . "', assign_sub) >", 0, false)
+            ->orWhere("FIND_IN_SET('" . $subjectId . "*', assign_sub) >", 0, false)
+            ->groupEnd()
             ->where('permission', 0)
-            ->where('class <=', 10)
             ->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
             ->findAll();
 
