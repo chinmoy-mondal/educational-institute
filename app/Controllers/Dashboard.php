@@ -1343,6 +1343,10 @@ class Dashboard extends Controller
             ->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
             ->findAll();
 
+            echo "<pre>";
+            print_r($students);
+            echo "</pre>";
+
         // 🔄 Load existing results for this teacher and subject
         $results = $this->resultModel
             ->where('teacher_id', $userId)
