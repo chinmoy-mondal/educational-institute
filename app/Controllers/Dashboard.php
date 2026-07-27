@@ -1512,8 +1512,8 @@ class Dashboard extends Controller
         $this->data['navbarItems'] = [
             ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
             ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
-            ['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
-            ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
+            ['label' => 'Make Top Sheet', 'url' => base_url('admin/select-marksheet')],
+            ['label' => 'Print Top Sheet', 'url' => base_url('admin/select-marksheet')],
         ];
 
         $this->data['classes']  = $classes;
@@ -1534,8 +1534,8 @@ class Dashboard extends Controller
 
             ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
             ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
-            ['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
-            ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
+            ['label' => 'Make Top Sheet', 'url' => base_url('admin/select-marksheet')],
+            ['label' => 'Print Top Sheet', 'url' => base_url('admin/select-marksheet')],
         ];
 
 
@@ -1632,8 +1632,8 @@ class Dashboard extends Controller
 
             ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
             ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
-            ['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
-            ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
+            ['label' => 'Make Top Sheet', 'url' => base_url('admin/select-marksheet')],
+            ['label' => 'Print Top Sheet', 'url' => base_url('admin/select-marksheet')],
         ];
         $this->data['classes']       = $classes;
         $this->data['sections']      = $sections;
@@ -2719,8 +2719,8 @@ class Dashboard extends Controller
         $this->data['navbarItems'] = [
             ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
             ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
-            ['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
-            ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
+            ['label' => 'Make Top Sheet', 'url' => base_url('admin/select-marksheet')],
+            ['label' => 'Print Top Sheet', 'url' => base_url('admin/select-marksheet')],
         ];
 
         $request = service('request');
@@ -2756,23 +2756,11 @@ class Dashboard extends Controller
             $assigned = explode(',', $student['assign_sub'] ?? '');
             $orderMap = array_flip($assigned);
 
-            // echo "<pre>";
-            // print_r($assigned);
-            // echo "</pre>";
-
-            // echo "<pre>";
-            // print_r($orderMap);
-            // echo "</pre>";
-
             usort($marksheet, function ($a, $b) use ($orderMap) {
                 $posA = $orderMap[$a['subject_id']] ?? PHP_INT_MAX;
                 $posB = $orderMap[$b['subject_id']] ?? PHP_INT_MAX;
                 return $posA <=> $posB;
             });
-
-            // echo "<pre>";
-            // print_r($marksheet);
-            // echo "</pre>";
 
             $this->data['examName'] = $exam;
             $this->data['examYear'] = $year;
