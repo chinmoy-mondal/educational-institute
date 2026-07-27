@@ -1489,6 +1489,43 @@ class Dashboard extends Controller
             ['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
             ['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
         ];
+
+
+
+
+        // Get latest year
+        $latestYear = $this->resultModel
+            ->selectMax('year', 'latest_year')
+            ->first()['latest_year'];
+
+        $this->data['latestYear'] = $latestYear;
+
+        // Get all exams for latest year
+        $examRows = $this->resultModel
+            ->select('exam')
+            ->where('year', $latestYear)
+            ->groupBy('exam')
+            ->orderBy('exam', 'ASC')
+            ->findAll();
+
+        $examsClass69 = [];
+        $examsClass10 = [];
+
+        foreach ($examRows as $row) {
+            $exam = $row['exam'];
+
+            if (stripos($exam, 'Test') !== false) {
+                // Contains "Test" -> Class 10 only
+                $examsClass10[] = $exam;
+            } else {
+                // Does not contain "Test" -> Classes 6-9
+                $examsClass69[] = $exam;
+            }
+        }
+
+        $this->data['examsClass69'] = $examsClass69;
+        $this->data['examsClass10'] = $examsClass10;
+
         $this->data['students']   = $students;
         $this->data['pager']      = $this->studentModel->pager;
         $this->data['q']          = $q;
@@ -2539,6 +2576,7 @@ class Dashboard extends Controller
 
     public function test_result_single_exam($studentId = null, $year = null, $exam = null, $view = null)
     {
+
         if (!$studentId || !$year || !$exam) {
             return "Student ID, Year and Exam are required";
         }
@@ -2550,14 +2588,17 @@ class Dashboard extends Controller
         }
 
         // ---------------- STUDENT BACKUP ----------------
-        $studentBackup = $this->studentBackupModel
-            ->where('student_id', $studentId)
-            ->where('year', $year)
-            ->first();
+        // $studentBackup = $this->studentBackupModel
+        //     ->where('student_id', $studentId)
+        //     ->where('year', $year)
+        //     ->first();
 
-        if (!$studentBackup) {
-            return "Student backup not found";
-        }
+        // if (!$studentBackup) {
+        //     return "Student backup not found";
+        // }
+
+
+        echo "test -";
 
         // ---------------- ASSIGNED SUBJECT ORDER ----------------
         $assignSubArr = explode(',', $studentBackup['assign_sub']);
@@ -2731,10 +2772,9 @@ class Dashboard extends Controller
             'exam'          => $exam,
             'year'          => $year
         ];
-
-        // echo "<pre>";
-        // print_r($marksheetNumeric);
-        // echo "<pre>";
+        echo "<pre>";
+        print_r($marksheetNumeric);
+        echo "<pre>";
         if ($view) {
             $this->saveRankingFromResult($data);
         } else {
@@ -2750,9 +2790,9 @@ class Dashboard extends Controller
         $exam           = $data['exam'];
         $year           = $data['year'];
 
-        // echo "<pre>";
-        // print_r($marksheet);
-        // echo "</pre>";
+        echo "<pre>";
+        print_r($marksheet);
+        echo "</pre>";
 
         if ($exam == 'Annual Exam') {
             $total_fail = 0;
@@ -2917,9 +2957,9 @@ class Dashboard extends Controller
                 'updated_at'            => date('Y-m-d H:i:s'),
             ];
 
-            // echo "<pre>";
-            // print_r($rankingData);
-            // echo "</pre>";
+            echo "<pre>";
+            print_r($rankingData);
+            echo "</pre>";
             // ---------------- INSERT OR UPDATE ----------------
             $existing = $this->rankingModel
                 ->where(['student_id' => $student['id'], 'year' => $year])
@@ -2998,17 +3038,17 @@ class Dashboard extends Controller
             $view = 1;
             $section   = $student['section'];
 
-            echo "{$studentId}  | {$section} | {$year}  | {$exam} <br>";
+            // echo "{$studentId}  | {$section} | {$year}  | {$exam} <br>";
 
             if ($exam === 'Annual Exam') {
                 // Annual exam goes to full result function
                 $this->test_result($studentId, $year, $exam, $view);
-            } elseif (in_array($exam, ['Pre-Test Exam', 'Half-Yearly', 'Test Exam'])) {
+            } elseif (in_array($exam, ['Pre-Test Exam', 'Half Yearly Exam', 'Test Exam'])) {
                 // Other exams go to single exam function
                 $this->test_result_single_exam($studentId, $year, $exam, $view);
             }
         }
-        echo $this->updateNewRollByClass($class, $year, $exam, $section_student) ? 'New Roll also saved' . '<br>' : 'New Roll is not saved' . '<br>';
+        // echo $this->updateNewRollByClass($class, $year, $exam, $section_student) ? 'New Roll also saved' . '<br>' : 'New Roll is not saved' . '<br>';
     }
 
     public function updateNewRollByClass($class, $year, $exam, $section)
@@ -3068,7 +3108,7 @@ class Dashboard extends Controller
         if ($exam === 'Annual Exam') {
             // Annual exam goes to full result function
             return $this->test_result($studentId, $year, $exam, $view);
-        } elseif (in_array($exam, ['Pre-Test Exam', 'Half-Yearly', 'Test Exam'])) {
+        } elseif (in_array($exam, ['Pre-Test Exam', 'Half Yearly Exam', 'Test Exam'])) {
             // Other exams go to single exam function
             return $this->test_result_single_exam($studentId, $year, $exam, $view);
         }
@@ -3117,6 +3157,10 @@ class Dashboard extends Controller
             ->orderBy('fail', 'ASC')
             ->orderBy('total', 'DESC')
             ->findAll();
+
+        echo "<pre>";
+        print_r($rankings);
+        echo "</pre>";
 
         return view('dashboard/print_topsheet', [
             'class'    => $class,
