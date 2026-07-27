@@ -3118,6 +3118,10 @@ class Dashboard extends Controller
             ->orderBy('total', 'DESC')
             ->findAll();
 
+        echo "<pre>";
+        print_r($rankings);
+        echo "</pre>";
+
         return view('dashboard/print_topsheet', [
             'class'    => $class,
             'rankings' => $rankings,
