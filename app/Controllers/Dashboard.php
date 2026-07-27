@@ -2767,6 +2767,10 @@ class Dashboard extends Controller
                 return $posA <=> $posB;
             });
 
+            echo "<pre>";
+            print_r($marksheet);
+            echo "</pre>";
+
             $this->data['examName'] = $exam;
             $this->data['examYear'] = $year;
             $this->data['student'] = $student;
