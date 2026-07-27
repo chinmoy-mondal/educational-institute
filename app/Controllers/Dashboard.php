@@ -3003,7 +3003,7 @@ class Dashboard extends Controller
             if ($exam === 'Annual Exam') {
                 // Annual exam goes to full result function
                 $this->test_result($studentId, $year, $exam, $view);
-            } elseif (in_array($exam, ['Pre-Test Exam', 'Half-Yearly', 'Test Exam'])) {
+            } elseif (in_array($exam, ['Pre-Test Exam', 'Half Yearly Exam', 'Test Exam'])) {
                 // Other exams go to single exam function
                 $this->test_result_single_exam($studentId, $year, $exam, $view);
             }
@@ -3068,7 +3068,7 @@ class Dashboard extends Controller
         if ($exam === 'Annual Exam') {
             // Annual exam goes to full result function
             return $this->test_result($studentId, $year, $exam, $view);
-        } elseif (in_array($exam, ['Pre-Test Exam', 'Half-Yearly', 'Test Exam'])) {
+        } elseif (in_array($exam, ['Pre-Test Exam', 'Half Yearly Exam', 'Test Exam'])) {
             // Other exams go to single exam function
             return $this->test_result_single_exam($studentId, $year, $exam, $view);
         }
