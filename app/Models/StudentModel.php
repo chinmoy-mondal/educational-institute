@@ -17,7 +17,6 @@ class StudentModel extends Model
         'student_name',
         'roll',
         'class',
-        'group',
         'section',
         'esif',
         'father_name',
@@ -32,6 +31,7 @@ class StudentModel extends Model
         'religion',
         'blood_group',
         'assign_sub',
+        'rfid',
         'permission',
         'created_at',
         'updated_at'

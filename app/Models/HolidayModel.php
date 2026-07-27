@@ -4,26 +4,20 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class CalendarModel extends Model
+class HolidayModel extends Model
 {
-    protected $table = 'events';
+    protected $table = 'holidays';
     protected $primaryKey = 'id';
 
     protected $allowedFields = [
-        'title',
-        'description',
+        'name',
+        'desc',
         'start_date',
-        'start_time',
-        'end_date',
-        'end_time',
-        'color',
-        'class',
-        'category',
-        'subcategory',
-        'subject'
+        'end_date'
     ];
 
     protected $useTimestamps = true;
+
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
 }

@@ -19,6 +19,7 @@ class UserModel extends Model
 		'email',
 		'picture',
 		'assagin_sub',
+		'rfid',
 		'account_status',
 		'permit_by',
 		'blood_group',
