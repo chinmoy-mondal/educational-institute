@@ -3005,6 +3005,7 @@ class Dashboard extends Controller
                 $this->test_result($studentId, $year, $exam, $view);
             } elseif (in_array($exam, ['Pre-Test Exam', 'Half Yearly Exam', 'Test Exam'])) {
                 // Other exams go to single exam function
+                echo "test single exam";
                 $this->test_result_single_exam($studentId, $year, $exam, $view);
             }
         }
