@@ -2556,10 +2556,9 @@ class Dashboard extends Controller
             ->where('year', $year)
             ->first();
 
-        echo "test sdf";
-        // if (!$studentBackup) {
-        //     return "Student backup not found";
-        // }
+        if (!$studentBackup) {
+            return "Student backup not found";
+        }
 
 
         echo "test -";
