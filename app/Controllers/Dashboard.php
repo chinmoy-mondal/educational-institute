@@ -17,12 +17,6 @@ use App\Models\TransactionModel;
 use App\Models\TeacherAttendanceModel;
 use App\Models\RankingModel;
 use App\Models\StudentBackupModel;
-use App\Models\WelcomeMessageModel;
-use App\Models\SliderModel;
-use App\Models\RfidLogModel;
-use App\Models\HolidayModel;
-use App\Models\LeaveModel;
-
 use CodeIgniter\Exceptions\PageNotFoundException;
 use PhpParser\Node\Expr\Print_;
 use Symfony\Component\Stopwatch\Section;
@@ -41,13 +35,9 @@ class Dashboard extends Controller
     protected $feesModel;
     protected $feesAmountModel;
     protected $transactionModel;
-    protected $welcomeMessageModel;
+    protected $welcomeModel;
     protected $teacherAttendanceModel;
     protected $rankingModel;
-    protected $sliderModel;
-    protected $rfidLogModel;
-    protected $holidayModel;
-    protected $leaveModel;
 
     protected $session;
     protected $data;
@@ -66,13 +56,8 @@ class Dashboard extends Controller
         $this->feesModel        = new FeesModel();
         $this->feesAmountModel  = new FeesAmountModel();
         $this->transactionModel = new TransactionModel();
-        $this->welcomeMessageModel    = new WelcomeMessageModel();
         $this->teacherAttendanceModel = new TeacherAttendanceModel();
-        $this->rankingModel           = new RankingModel();
-        $this->sliderModel            = new SliderModel();
-        $this->rfidLogModel           = new RfidLogModel();
-        $this->holidayModel           = new HolidayModel();
-        $this->leaveModel             = new LeaveModel();
+        $this->rankingModel = new RankingModel();
 
 
         $this->session       = session();
@@ -145,12 +130,6 @@ class Dashboard extends Controller
                 'section' => 'welcome_message'
             ],
             [
-                'label' => 'Slider',
-                'url' => base_url('admin/sliders'),
-                'icon' => 'fas fa-image',
-                'section' => 'slider'
-            ],
-            [
                 'label' => 'Teacher Attendance',
                 'url' => base_url('admin/teacher-attendance'),
                 'icon' => 'fas fa-user-tie',
@@ -187,16 +166,14 @@ class Dashboard extends Controller
         if (!empty($openExams)) {
             // Extract exam names
             $examNames = array_column($openExams, 'exam_name');
-            $year = date('Y');
-            // Get unique subject IDs from results
+
+            // Get unique teacher IDs from results
             $given_subjects = $this->resultModel
                 ->distinct()
                 ->select('subject_id')
                 ->whereIn('exam', $examNames)
-                ->where('year', $year)
                 ->findAll();
 
-            // Get total subjects from calendar
             $total_subjects = $this->calendarModel
                 ->whereIn('subcategory', $examNames)
                 ->where('category', 'Exam')
@@ -297,13 +274,13 @@ class Dashboard extends Controller
         // Convert assigned subject IDs to subject names as an array
         $assignedSubjects = [];
         if (!empty($teacher['assagin_sub'])) {
-            // $subjectModel = new \App\Models\SubjectModel();
+            $subjectModel = new \App\Models\SubjectModel();
 
             // Handle multiple subjects (comma-separated IDs)
             $subjectIds = explode(',', $teacher['assagin_sub']);
 
             foreach ($subjectIds as $subId) {
-                $sub = $this->subjectModel->where('id', trim($subId))->first();
+                $sub = $subjectModel->where('id', trim($subId))->first();
                 if ($sub) {
                     $assignedSubjects[] = $sub['subject'];
                 }
@@ -315,39 +292,6 @@ class Dashboard extends Controller
 
         return view('dashboard/profile', $this->data);
     }
-
-    public function updateCard($id)
-    {
-        $rfidRow = $this->rfidLogModel->find(1);
-
-        if (!$rfidRow || empty($rfidRow['card_id'])) {
-            return redirect()->back()->with('error', 'Card number not found');
-        }
-
-        $this->userModel->update($id, [
-            'rfid' => $rfidRow['card_id']  // ✅ only single value
-        ]);
-
-        return redirect()->to(base_url('profile_id/' . $id))
-            ->with('success', 'Card updated successfully');
-    }
-
-    public function studentUpdateCard($id)
-    {
-        $rfidRow = $this->rfidLogModel->find(1);
-
-        if (!$rfidRow || empty($rfidRow['card_id'])) {
-            return redirect()->back()->with('error', 'Card number not found');
-        }
-
-        $this->studentModel->update($id, [
-            'rfid' => $rfidRow['card_id']  // ✅ only single valuesdf 
-        ]);
-
-        return redirect()->to(base_url('admin/students/view/' . $id))
-            ->with('success', 'Card updated successfully');
-    }
-
 
     public function restrict($id)
     {
@@ -471,542 +415,109 @@ class Dashboard extends Controller
         }
     }
 
-    public function exam_routine()
+    public function calendar()
     {
-        $this->data['title'] = 'Exam Routine';
+        $this->data['title'] = 'Calendar';
         $this->data['activeSection'] = 'calendar';
 
-        // Navbar
+        // Common navbar and sidebar for all views
         $this->data['navbarItems'] = [
+            ['label' => 'Dashboard', 'url' => base_url('dashboard')],
             ['label' => 'Calendar', 'url' => base_url('calendar')],
-            ['label' => 'Leave', 'url' => base_url('admin/leave')],
-            ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
-            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
-            ['label' => 'Admit', 'url' => base_url('admin/print-admit-form')],
         ];
 
-        // Subjects
-        $this->data['subjects'] = $this->subjectModel->findAll();
-
-        // Get search input
-        $search = $this->request->getGet('search');
-
-        $builder = $this->calendarModel;
-
-        // Only Exam
-        $builder->where('category', 'Exam');
-
-        // ✅ Search ONLY by date
-        if (!empty($search)) {
-            $builder->like('start_date', $search);
-        }
-
-        // Final data
-        $this->data['events'] = $builder
-            ->orderBy('start_date', 'ASC')
-            ->findAll();
-
-        return view('dashboard/exam/exam_routine', $this->data);
-    }
-
-    public function create_exam_routine()
-    {
-        $this->data['title'] = 'Create Exam Routine';
-        $this->data['activeSection'] = 'calendar';
-
-        // Navbar
-        $this->data['navbarItems'] = [
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
-            ['label' => 'Leave', 'url' => base_url('admin/leave')],
-            ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
-            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
-            ['label' => 'Admit', 'url' => base_url('admin/print-admit-form')],
+        $user = [
+            'name' => $this->session->get('name'),
+            'email' => $this->session->get('email'),
+            'phone' => $this->session->get('phone'),
+            'role' => $this->session->get('role')
         ];
 
-        $this->data['subjects'] = $this->subjectModel->findAll();
+        $subjects = $this->subjectModel->findAll();
 
-        return view('dashboard/exam/create_exam_routine', $this->data);
+        $this->data['user'] = $user;
+        $this->data['subjects'] = $subjects;
+
+        return view('dashboard/calendar', $this->data);
     }
 
-    public function admit_print_view()
+    public function events()
     {
+        $events = $this->calendarModel->findAll();
 
-        $this->data['title'] = 'Create Exam Routine';
-        $this->data['activeSection'] = 'calendar';
-        // Navbar
-        $this->data['navbarItems'] = [
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
-            ['label' => 'Leave', 'url' => base_url('admin/leave')],
-            ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
-            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
-            ['label' => 'Admit', 'url' => base_url('admin/print-admit-form')],
-        ];
-        
+        $data = array_map(function ($event) {
+            $hasTime = strpos($event['end_date'], 'T') !== false;
 
+            $endDate = $hasTime
+                ? $event['end_date']
+                : date('Y-m-d', strtotime($event['end_date'] . ' +1 day'));
 
-        return view('dashboard/exam/print_admit_card', $this->data);
-    }
+            return [
+                'id'          => $event['id'],
+                'title'       => $event['title'],
+                'start'       => $event['start_date'],
+                'end'         => $endDate,
+                'color'       => $event['color'],
+                'description' => $event['description'],
+                'category'    => $event['category'],     // ✅ added
+                'subcategory' => $event['subcategory'],  // ✅ added
+                'class'       => $event['class'],        // ✅ added
+                'subject'     => $event['subject'],      // ✅ added
+                'allDay'      => true
+            ];
+        }, $events);
 
-    public function getSubjectsByClass()
-    {
-        $class = $this->request->getGet('class');
-        $data = $this->subjectModel->where('class', $class)->findAll();
         return $this->response->setJSON($data);
     }
 
-    public function store_exam_routine()
-    {
-        $this->calendarModel->save([
-            'title'       => $this->request->getPost('title'),
-            'description' => $this->request->getPost('description'),
-            'start_date'  => $this->request->getPost('start_date'),
-            'start_time'  => $this->request->getPost('start_time'),
-            'end_date'    => $this->request->getPost('end_date'),
-            'end_time'    => $this->request->getPost('end_time'),
-            'color'       => $this->request->getPost('color'),
-            'class'       => $this->request->getPost('class'),
-            'category'    => 'Exam',
-            'subcategory' => $this->request->getPost('subcategory'),
-            'subject'     => $this->request->getPost('subject'),
-        ]);
-
-        return redirect()->to(base_url('admin/exam-routine'))
-            ->with('success', 'Exam Routine Created Successfully');
-    }
-
-    public function edit_exam_routine($id)
-    {
-        $this->data['title'] = 'Edit Exam Routine';
-        $this->data['activeSection'] = 'calendar';
-
-        $this->data['subjects'] = $this->subjectModel->findAll();
-
-        $event = $this->calendarModel->find($id);
-
-        if (!$event) {
-            return redirect()->back()->with('error', 'Routine not found');
-        }
-
-        $this->data['event'] = $event;
-
-        return view('dashboard/exam/edit_exam_routine', $this->data);
-    }
-
-    public function update_exam_routine($id)
-    {
-        $this->calendarModel->update($id, [
-            'title'       => $this->request->getPost('title'),
-            'description' => $this->request->getPost('description'),
-            'start_date'  => $this->request->getPost('start_date'),
-            'start_time'  => $this->request->getPost('start_time'),
-            'end_date'    => $this->request->getPost('end_date'),
-            'end_time'    => $this->request->getPost('end_time'),
-            'color'       => $this->request->getPost('color'),
-            'class'       => $this->request->getPost('class'),
-            'category'    => $this->request->getPost('category'),
-            'subcategory' => $this->request->getPost('subcategory'),
-            'subject'     => $this->request->getPost('subject'),
-        ]);
-
-        return redirect()->to(base_url('admin/exam-routine'))
-            ->with('success', 'Routine Updated Successfully');
-    }
-
-    public function delete_exam_routine($id)
-    {
-        $event = $this->calendarModel->find($id);
-
-        if (!$event) {
-            return redirect()->to(base_url('admin/exam-routine'))
-                ->with('error', 'Routine not found.');
-        }
-
-        $this->calendarModel->delete($id);
-
-        return redirect()->to(base_url('admin/exam-routine'))
-            ->with('success', 'Routine deleted successfully.');
-    }
-
-    public function holiday()
-    {
-        $this->data['title'] = 'Calendar';
-        $this->data['activeSection'] = 'calendar';
-
-        // Common navbar and sidebar for all views
-        // Navbar
-        $this->data['navbarItems'] = [
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
-            ['label' => 'Leave', 'url' => base_url('admin/leave')],
-            ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
-            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
-            ['label' => 'Admit', 'url' => base_url('admin/print-admit-form')],
-        ];
-
-        $this->data['holidays'] = $this->holidayModel->orderBy('start_date', 'ASC')->findAll();
-
-        return view('dashboard/holiday/holiday_list', $this->data);
-    }
-
-    public function addHolidayForm()
-    {
-        $this->data['title'] = 'Calendar';
-        $this->data['activeSection'] = 'calendar';
-
-        // Common navbar and sidebar for all views
-        $this->data['navbarItems'] = [
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
-            ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
-        ];
-
-        return view('dashboard/holiday/add_holiday', $this->data);
-    }
-
-    public function saveHoliday()
-    {
-
-        // ✅ Validation rules
-        $rules = [
-            'name' => 'required|min_length[3]',
-            'start_date' => 'required|valid_date',
-            'end_date' => 'required|valid_date',
-        ];
-
-        // Custom error messages (optional)
-        $messages = [
-            'name' => [
-                'required' => 'Holiday name is required'
-            ],
-            'start_date' => [
-                'required' => 'Start date is required'
-            ],
-            'end_date' => [
-                'required' => 'End date is required'
-            ]
-        ];
-
-        // ✅ Validate
-        if (!$this->validate($rules, $messages)) {
-            return redirect()->back()
-                ->withInput()
-                ->with('error', implode('<br>', $this->validator->getErrors()));
-        }
-
-        $start = $this->request->getPost('start_date');
-        $end   = $this->request->getPost('end_date');
-
-        // ✅ Date logic check
-        if ($end < $start) {
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'End date must be greater than or equal to Start date');
-        }
-
-        // ✅ Insert Data
-        try {
-            $this->holidayModel->insert([
-                'name'       => $this->request->getPost('name'),
-                'start_date' => $start,
-                'end_date'   => $end,
-                'desc'       => $this->request->getPost('desc'),
-            ]);
-
-            return redirect()->to(base_url('admin/holiday'))
-                ->with('success', 'Holiday Added Successfully');
-        } catch (\Exception $e) {
-
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Something went wrong: ' . $e->getMessage());
-        }
-    }
-
-    public function editHoliday($id)
-    {
-
-        $this->data['title'] = 'Calendar';
-        $this->data['activeSection'] = 'calendar';
-
-        // Common navbar and sidebar for all views
-        $this->data['navbarItems'] = [
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
-            ['label' => 'Holiday List', 'url' => base_url('admin/holiday')],
-        ];
-
-        $this->data['holiday'] = $this->holidayModel->find($id);
-
-        if (!$this->data['holiday']) {
-            return redirect()->to(base_url('admin/holiday'))
-                ->with('error', 'Holiday not found');
-        }
-
-        $this->data['holiday'] = $this->holidayModel->find($id);
-        return view('dashboard/holiday/add_holiday', $this->data);
-    }
-
-    public function updateHoliday($id)
+    public function addEvent()
     {
         $data = [
-            'name'       => $this->request->getPost('name'),
-            'start_date' => $this->request->getPost('start_date'),
-            'end_date'   => $this->request->getPost('end_date'),
-            'desc'       => $this->request->getPost('desc'),
-            'updated_at' => date('Y-m-d H:i:s'),
+            'title'       => $this->request->getPost('title'),
+            'description' => $this->request->getPost('description'),
+            'start_date'  => $this->request->getPost('start_date'),
+            'start_time'  => $this->request->getPost('start_time'),
+            'end_date'    => $this->request->getPost('end_date'),
+            'end_time'    => $this->request->getPost('end_time'),
+            'color'       => $this->request->getPost('color') ?? '#007bff',
+            'category'    => $this->request->getPost('category'),
+            'subcategory' => $this->request->getPost('subcategory'),
+            'class'       => $this->request->getPost('class'),
+            'subject'     => $this->request->getPost('subject')
         ];
 
-        $this->holidayModel->update($id, $data);
-
-        return redirect()->to(base_url('admin/holiday'))
-            ->with('success', 'Holiday Updated Successfully');
+        $this->calendarModel->save($data);
+        return $this->response->setJSON(['status' => 'success']);
     }
 
-    public function deleteHoliday($id)
-    {
-
-        // Check if holiday exists
-        $holiday = $this->holidayModel->find($id);
-
-        if (!$holiday) {
-            return redirect()->to(base_url('admin/holiday'))
-                ->with('error', 'Holiday not found!');
-        }
-
-        // Delete the record
-        $this->holidayModel->delete($id);
-
-        return redirect()->to(base_url('admin/holiday'))
-            ->with('success', 'Holiday deleted successfully!');
-    }
-
-    // leave form
-
-    public function leaveList()
-    {
-        $this->data['title'] = 'Calendar';
-        $this->data['activeSection'] = 'calendar';
-
-        // Navbar
-        $this->data['navbarItems'] = [
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
-            ['label' => 'Leave', 'url' => base_url('admin/leave')],
-            ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
-            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
-            ['label' => 'Admit', 'url' => base_url('admin/print-admit-form')],
-        ];
-
-        // 🔥 Logged-in user
-        $userId = session()->get('user_id');
-        $this->data['loginUser'] = $this->userModel->find($userId);
-
-        // 🔍 Filters
-        $search = $this->request->getGet('search');
-        $status = $this->request->getGet('status');
-
-        // 🔥 Fresh Builder
-        $builder = $this->leaveModel
-            ->select('leaves.*, users.name as user_name')
-            ->join('users', 'users.id = leaves.user_id', 'left');
-
-        // 🔍 Search
-        if (!empty($search)) {
-            $builder->groupStart()
-                ->like('leaves.reason', $search)
-                ->orLike('leaves.leave_type', $search)
-                ->orLike('users.name', $search)
-                ->groupEnd();
-        }
-
-        // 🔽 Status filter
-        if (!empty($status)) {
-            $builder->where('leaves.status', $status);
-        }
-
-        // 🔥 Get data
-        $this->data['leaves'] = $builder
-            // ->where('leaves.status', 'Pending') // 👈 only pending
-            ->orderBy('leaves.id', 'DESC')
-            ->findAll();
-
-        return view('dashboard/leave/leave_list', $this->data);
-    }
-
-    public function leave_form($id = null)
-    {
-        $this->data['title'] = 'Leave Form';
-        $this->data['activeSection'] = 'calendar';
-
-        // Navbar
-        $this->data['navbarItems'] = [
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
-            ['label' => 'Leave', 'url' => base_url('admin/leave')],
-            ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
-            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
-            ['label' => 'Admit', 'url' => base_url('admin/print-admit-form')],
-        ];
-
-        $userId = session()->get('user_id');
-
-        $user = $this->userModel->find($userId);
-
-        if (!$user) {
-            return redirect()->to('admin/leave')
-                ->with('error', 'User not found or not logged in');
-        }
-
-        // 🔥 DEFAULT
-        $leave = null;
-
-        // 🔥 IF EDIT MODE
-        if ($id) {
-            $leave = $this->leaveModel->find($id);
-
-            if (!$leave) {
-                return redirect()->to('admin/leave')
-                    ->with('error', 'Leave not found');
-            }
-
-            // 🚫 BLOCK EDIT IF APPROVED
-            if ($leave['status'] == 'Approved') {
-                return redirect()->to('admin/leave')
-                    ->with('error', 'Approved leave cannot be edited');
-            }
-        }
-
-        // 🔥 Count leaves
-        $usedLeaves = $this->leaveModel
-            ->where('user_id', $userId)
-            ->where('status', 'Approved')
-            ->countAllResults();
-
-        $totalAllowedLeaves = 20;
-        $remainingLeaves = $totalAllowedLeaves - $usedLeaves;
-
-        // Pass data
-        $this->data['user'] = $user;
-        $this->data['leave'] = $leave; // 👈 important
-        $this->data['usedLeaves'] = $usedLeaves;
-        $this->data['remainingLeaves'] = $remainingLeaves;
-        $this->data['totalAllowedLeaves'] = $totalAllowedLeaves;
-
-
-
-
-        if (!empty($id)) {
-
-            $userId = session()->get('user_id');
-            $leave = $this->leaveModel->find($id);
-
-            if ($userId != $leave['user_id']) {
-                return redirect()->back()->with('error', 'You are not allowed to edit this leave');
-            }
-        }
-
-        return view('dashboard/leave/leave_form', $this->data);
-    }
-
-    public function saveLeave()
+    public function updateEvent()
     {
         $id = $this->request->getPost('id');
 
         $data = [
-            'user_id'       => $this->request->getPost('user_id'),
-            'leave_type'    => $this->request->getPost('leave_type'),
-            'from_datetime' => $this->request->getPost('from_datetime'),
-            'to_datetime'   => $this->request->getPost('to_datetime'),
-            'reason'        => $this->request->getPost('reason'),
-            'updated_at'    => date('Y-m-d H:i:s'),
+            'title'       => $this->request->getPost('title'),
+            'description' => $this->request->getPost('description'),
+            'start_date'  => $this->request->getPost('start_date'),
+            'start_time'  => $this->request->getPost('start_time'),
+            'end_date'    => $this->request->getPost('end_date'),
+            'end_time'    => $this->request->getPost('end_time'),
+            'color'       => $this->request->getPost('color') ?? '#007bff',
+            'category'    => $this->request->getPost('category'),
+            'subcategory' => $this->request->getPost('subcategory'),
+            'class'       => $this->request->getPost('class'),
+            'subject'     => $this->request->getPost('subject')
         ];
 
-        // 🔥 If ID exists → UPDATE
-        if ($id) {
-            $leave = $this->leaveModel->find($id);
-
-            // 🚫 Block if approved
-            if ($leave['status'] == 'Approved') {
-                return redirect()->back()->with('error', 'Approved leave cannot be updated');
-            }
-
-            $this->leaveModel->update($id, $data);
-
-            return redirect()->to('admin/leave')
-                ->with('success', 'Leave updated successfully');
-        }
-
-        // 🔥 Else → INSERT
-        $data['status'] = 'Pending';
-
-        $this->leaveModel->insert($data);
-
-        return redirect()->to('admin/leave')
-            ->with('success', 'Leave submitted successfully');
+        $this->calendarModel->update($id, $data);
+        return $this->response->setJSON(['status' => 'success']);
     }
 
-    public function approve_leave($id)
+    public function deleteEvent()
     {
-        $userId = session()->get('user_id');
 
-        $loginUser = $this->userModel->find($userId);
+        $this->calendarModel->delete($this->request->getPost('id'));
 
-        // 🚫 Check permission
-        if (($loginUser['account_status'] ?? 0) <= 1) {
-            return redirect()->back()->with('error', 'You are not allowed to approve leave');
-        }
-
-        // 🔍 Get leave
-        $leave = $this->leaveModel->find($id);
-
-        // 🚫 Check if already approved
-        if (!$leave) {
-            return redirect()->back()->with('error', 'Leave not found');
-        }
-
-        if ($leave['status'] == 'Approved') {
-            return redirect()->back()->with('error', 'Already approved');
-        }
-
-        // ✅ Update status
-        $this->leaveModel->update($id, [
-            'status'     => 'Approved',
-            'updated_at' => date('Y-m-d H:i:s')
-        ]);
-
-        return redirect()->to(base_url('admin/leave'))
-            ->with('success', 'Leave approved successfully');
-    }
-
-    public function deleteLeave($id)
-    {
-        if (!$id) {
-            return redirect()->back()->with('error', 'Invalid ID');
-        }
-
-        // Get leave
-        $leave = $this->leaveModel->find($id);
-
-        if (!$leave) {
-            return redirect()->back()->with('error', 'Leave not found');
-        }
-
-        // Get logged in user
-        $userId = session()->get('user_id');
-        $loginUser = $this->userModel->find($userId);
-
-        if (!$loginUser) {
-            return redirect()->back()->with('error', 'User not found');
-        }
-
-        // 🔐 ADMIN CHECK
-        if (($loginUser['account_status'] ?? 0) <= 1) {
-
-            // ❌ Not admin → only own leave allowed
-            if ($loginUser['id'] != $leave['user_id']) {
-                return redirect()->back()->with('error', 'You are not allowed to delete this leave');
-            }
-        }
-
-        // ✅ Delete
-        $this->leaveModel->delete($id);
-
-        return redirect()->back()->with('success', 'Leave deleted successfully');
+        return $this->response->setJSON(['status' => 'success']);
     }
 
     public function teachers()
@@ -1362,55 +873,77 @@ class Dashboard extends Controller
             'student_name' => 'required',
             'roll'         => 'required|numeric',
             'class'        => 'required',
-            'section'      => 'permit_empty',
+            'section'      => 'required',
+            'group'        => 'permit_empty',
             'esif'         => 'required',
             'father_name'  => 'required',
             'mother_name'  => 'required',
             'dob'          => 'required|valid_date',
             'gender'       => 'required',
             'phone'        => 'required',
-            'student_pic'  => 'uploaded[student_pic]|is_image[student_pic]',
             'birth_registration_number' => 'required',
             'father_nid_number'         => 'required',
             'mother_nid_number'         => 'required',
+
+            'student_pic' => [
+                'rules' => 'uploaded[student_pic]'
+                    . '|is_image[student_pic]'
+                    . '|mime_in[student_pic,image/jpg,image/jpeg,image/png]'
+                    . '|max_size[student_pic,150]'
+                    . '|max_dims[student_pic,300,300]'
+                    . '|min_dims[student_pic,300,300]',
+                'errors' => [
+                    'uploaded' => 'Please select a student photo.',
+                    'is_image' => 'The uploaded file must be an image.',
+                    'mime_in'  => 'Only JPG, JPEG and PNG images are allowed.',
+                    'max_size' => 'Image size must not exceed 150 KB.',
+                    'max_dims' => 'Image must be exactly 300 × 300 pixels.',
+                    'min_dims' => 'Image must be exactly 300 × 300 pixels.',
+                ]
+            ]
         ];
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        // Handle student picture
+        // Upload image
         $file = $this->request->getFile('student_pic');
+        $fileName = '';
 
-        if ($file && $file->isValid() && !$file->hasMoved()) {
+        if ($file->isValid() && !$file->hasMoved()) {
             $fileName = $file->getRandomName();
-            $file->move('uploads/students', $fileName);
+            $file->move(FCPATH . 'uploads/students', $fileName);
         } else {
-            return redirect()->back()->withInput()->with('errors', ['student_pic' => 'File upload failed.']);
+            return redirect()->back()->withInput()->with('errors', [
+                'student_pic' => 'Failed to upload student photo.'
+            ]);
         }
 
-        // Prepare student data
+        // Prepare data
         $data = [
-            'student_name' => $this->request->getPost('student_name'),
-            'roll'         => $this->request->getPost('roll'),
-            'class'        => $this->request->getPost('class'),
-            'section'      => $this->request->getPost('section'),
-            'esif'         => $this->request->getPost('esif'),
-            'father_name'  => $this->request->getPost('father_name'),
-            'mother_name'  => $this->request->getPost('mother_name'),
-            'dob'          => $this->request->getPost('dob'),
-            'gender'       => $this->request->getPost('gender'),
-            'phone'        => $this->request->getPost('phone'),
-            'student_pic'  => 'uploads/students/' . $fileName,
+            'student_name'               => $this->request->getPost('student_name'),
+            'roll'                       => $this->request->getPost('roll'),
+            'class'                      => $this->request->getPost('class'),
+            'group'                      => $this->request->getPost('group'),
+            'section'                    => $this->request->getPost('section'),
+            'esif'                       => $this->request->getPost('esif'),
+            'father_name'                => $this->request->getPost('father_name'),
+            'mother_name'                => $this->request->getPost('mother_name'),
+            'dob'                        => $this->request->getPost('dob'),
+            'gender'                     => $this->request->getPost('gender'),
+            'phone'                      => $this->request->getPost('phone'),
+            'student_pic'                => 'uploads/students/' . $fileName,
             'birth_registration_number' => $this->request->getPost('birth_registration_number'),
             'father_nid_number'         => $this->request->getPost('father_nid_number'),
             'mother_nid_number'         => $this->request->getPost('mother_nid_number'),
         ];
 
-        // Save to DB
+        // Save student
         $this->studentModel->insert($data);
 
-        return redirect()->to(site_url('admin/student/create'))->with('success', 'Student registered successfully!');
+        return redirect()->to(site_url('admin/student/create'))
+            ->with('success', 'Student registered successfully!');
     }
 
     public function student()
@@ -1481,6 +1014,14 @@ class Dashboard extends Controller
 
         $sections = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
 
+        $this->data['title']         = 'Student Management';
+        $this->data['activeSection'] = 'student';
+        $this->data['navbarItems']   = [
+            ['label' => 'Student List', 'url' => base_url('admin/student')],
+            ['label' => 'Add Student', 'url' => base_url('admin/student/create')],
+            ['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
+            ['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
+        ];
 
 
 
@@ -1517,16 +1058,6 @@ class Dashboard extends Controller
         $this->data['examsClass69'] = $examsClass69;
         $this->data['examsClass10'] = $examsClass10;
 
-        
-
-        $this->data['title']         = 'Student Management';
-        $this->data['activeSection'] = 'student';
-        $this->data['navbarItems']   = [
-            ['label' => 'Student List', 'url' => base_url('admin/student')],
-            ['label' => 'Add Student', 'url' => base_url('admin/student/create')],
-            ['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
-            ['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
-        ];
         $this->data['students']   = $students;
         $this->data['pager']      = $this->studentModel->pager;
         $this->data['q']          = $q;
@@ -1679,13 +1210,11 @@ class Dashboard extends Controller
 
     public function stAssaginSubView()
     {
-
-
         // Get filter inputs
         $q       = $this->request->getGet('q');
         $class   = $this->request->getGet('class');
         $section = $this->request->getGet('section');
-        $religion = $this->request->getGet('religion');
+        $group = $this->request->getGet('group');
 
         // Build query
         $builder = $this->studentModel;
@@ -1703,8 +1232,8 @@ class Dashboard extends Controller
         if ($section) {
             $builder = $builder->where('section', $section);
         }
-        if ($religion) {
-            $builder = $builder->where('religion', $religion);
+        if ($group) {
+            $builder = $builder->where('group', $group);
         }
 
         $students = $builder
@@ -1714,21 +1243,16 @@ class Dashboard extends Controller
             ->getResultArray();
 
         $sections = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
-        $religions = $this->studentModel->select('religion')->distinct()->where('religion IS NOT NULL')->orderBy('religion')->findAll();
+        $groups = $this->studentModel->select('group')->distinct()->where('group IS NOT NULL')->orderBy('religion')->findAll();
+
         $subjectBuilder = $this->subjectModel;
 
         if ($class) {
             $subjectBuilder = $subjectBuilder->where('class', $class);
         }
 
-        if (stripos($section, 'Vocational') !== false) {
-            $filteredSection = 'Vocational';
-        } else {
-            $filteredSection = 'General';
-        }
-
-        if ($filteredSection) {
-            $subjectBuilder = $subjectBuilder->where('section', $filteredSection);
+        if ($section) {
+            $subjectBuilder = $subjectBuilder->where('section', $section);
         }
 
         $subjects = $subjectBuilder->findAll();
@@ -1748,8 +1272,8 @@ class Dashboard extends Controller
         $this->data['class']         = $class;
         $this->data['section']       = $section;
         $this->data['sections']      = $sections;
-        $this->data['religion']      = $religion;
-        $this->data['religions']     = $religions;
+        $this->data['group']      = $group;
+        $this->data['groups']     = $groups;
 
         return view('dashboard/stSubAssaginment', $this->data);
     }
@@ -1816,7 +1340,6 @@ class Dashboard extends Controller
         $students = $this->studentModel
             ->where("FIND_IN_SET(" . (int)$subjectId . ", assign_sub) >", 0, false)
             ->where('permission', 0)
-            ->where('class <=', 10)
             ->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
             ->findAll();
 
@@ -1973,37 +1496,28 @@ class Dashboard extends Controller
         // ✅ Distinct class list from students
         $classes = $this->studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
 
-        $rawSections = $this->studentModel
-            ->distinct()
-            ->select('section')
-            ->orderBy('section', 'ASC')
-            ->findAll();
 
-        $sections = [
-            ['section' => 'General'],
-            ['section' => 'Vocational'],
-            ['section' => 'Science'],
-            ['section' => 'Humanities'],
-        ];
 
 
         // ✅ Distinct exam names and years from results
         $exams = $this->resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
         $years = $this->resultModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
+        $sections = $this->studentModel->distinct()->select('section')->orderBy('section', 'ASC')->findAll();
         // Send to view
         $this->data['title']    = 'Select Tabulation Info';
         $this->data['activeSection'] = 'result';
         $this->data['navbarItems'] = [
             ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
             ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
-            ['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
-            ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
+            ['label' => 'Make Top Sheet', 'url' => base_url('admin/select-marksheet')],
+            ['label' => 'Print Top Sheet', 'url' => base_url('admin/select-marksheet')],
         ];
 
         $this->data['classes']  = $classes;
         $this->data['sections'] = $sections;
         $this->data['exams']    = $exams;
         $this->data['years']    = $years;
+        $this->data['sections'] = $sections;
 
         return view('dashboard/select_exam_info', $this->data);
     }
@@ -2017,8 +1531,8 @@ class Dashboard extends Controller
 
             ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
             ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
-            ['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
-            ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
+            ['label' => 'Make Top Sheet', 'url' => base_url('admin/select-marksheet')],
+            ['label' => 'Print Top Sheet', 'url' => base_url('admin/select-marksheet')],
         ];
 
 
@@ -2028,12 +1542,15 @@ class Dashboard extends Controller
         $year    = $this->request->getPost('year');
 
 
-        $builder = $this->studentModel->where('class', $class);
+        $builder = $this->studentModel->where([
+            'class'   => $class,
+            'section' => $section,
+        ]);
 
-        // If class is NOT 6 to 8, add section filter
-        if (!in_array($class, ['6', '7', '8'])) {
-            $builder->like('section', $section);
-        }
+        // it should be group not section update in dattanogor schollo
+        // if (!in_array($class, ['6', '7', '8'])) {
+        //     $builder->like('section', $section);
+        // }
 
         $students = $builder
             ->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
@@ -2112,8 +1629,8 @@ class Dashboard extends Controller
 
             ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
             ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
-            ['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
-            ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
+            ['label' => 'Make Top Sheet', 'url' => base_url('admin/select-marksheet')],
+            ['label' => 'Print Top Sheet', 'url' => base_url('admin/select-marksheet')],
         ];
         $this->data['classes']       = $classes;
         $this->data['sections']      = $sections;
@@ -2974,42 +2491,13 @@ class Dashboard extends Controller
         $class = $this->request->getGet('class');
         $year  = $this->request->getGet('year');
         $exam  = $this->request->getGet('exam');
-        $section_student = in_array($class, [9, 10]) ? $this->request->getGet('section') : 'general';
-
-        // Get logged-in user ID
-        $user_id = $this->session->get('user_id') ?? 0;
-
-        // Default account status
-        $account_status = 0;
-
-        if ($user_id > 0) {
-            // Fetch only the account_status column
-            $user = $this->userModel->select('account_status')->find($user_id);
-
-            if (!empty($user)) {
-                $account_status = (int) $user['account_status'];
-                if ($account_status < 2)
-                    return redirect()->back()->with('error', 'Sorry, you are not permitted to perform this action');
-            } else {
-                return redirect()->back()->with('error', 'Sorry, you are not permitted to perform this action');
-            }
-        } else {
-            return redirect()->back()->with('error', 'Sorry, you are not permitted to perform this action');
-        }
+        $section_student = in_array($class, [9, 10])
+            ? $this->request->getGet('section')
+            : 'general';
 
         if (!$class || !$year) {
             return redirect()->back()->with('error', 'Class and Year are required');
         }
-
-        $exam_db = $this->markingModel->where('exam_name', $exam)->first();
-
-        $status = $exam_db['status'] ?? null;
-
-        if ($exam_db == null || $status == 'closed') {
-            return redirect()->back()->with('error', 'Sorry this exam is not open yet');
-        }
-
-
         if (!$section_student) {
             return redirect()->back()->with('error', 'Section is required');
         }
@@ -3034,28 +2522,30 @@ class Dashboard extends Controller
             $view = 1;
             $section   = $student['section'];
 
-            echo "{$studentId}  | {$section} | {$year}  | {$exam} <br>";
+            echo "{$studentId}  | {$section}<br>";
 
             if ($exam === 'Annual Exam') {
                 // Annual exam goes to full result function
                 $this->test_result($studentId, $year, $exam, $view);
             } elseif (in_array($exam, ['Pre-Test Exam', 'Half-Yearly', 'Test Exam'])) {
                 // Other exams go to single exam function
+
                 $this->test_result_single_exam($studentId, $year, $exam, $view);
             }
+            // $this->test_result($studentId, $year, $view);
         }
-        echo $this->updateNewRollByClass($class, $year, $exam, $section_student) ? 'New Roll also saved' . '<br>' : 'New Roll is not saved' . '<br>';
+        // echo "Ranking data saved";
+        echo $this->updateNewRollByClass($class, $section_student) ? 'New Roll also saved' . '<br>' : 'New Roll is not saved' . '<br>';
+        // // return redirect()->back()->with('success', 'Top sheet processed for all students.');
     }
 
-    public function updateNewRollByClass($class, $year, $exam, $section)
+    public function updateNewRollByClass($class, $section)
     {
         if ($section == 'vocational') {
             // 1️⃣ Get ordered ranking list
             $rankings = $this->rankingModel
                 ->where('section LIKE', '%Vocational%')
                 ->where('class', $class)
-                ->where('year', $year)
-                ->where('exam', $exam)
                 ->orderBy('fail', 'ASC')
                 ->orderBy('total', 'DESC')
                 ->findAll();
@@ -3063,8 +2553,6 @@ class Dashboard extends Controller
             $rankings = $this->rankingModel
                 ->where('section NOT LIKE', '%Vocational%')
                 ->where('class', $class)
-                ->where('year', $year)
-                ->where('exam', $exam)
                 ->orderBy('fail', 'ASC')
                 ->orderBy('total', 'DESC')
                 ->findAll();
@@ -3104,7 +2592,7 @@ class Dashboard extends Controller
         if ($exam === 'Annual Exam') {
             // Annual exam goes to full result function
             return $this->test_result($studentId, $year, $exam, $view);
-        } elseif (in_array($exam, ['Pre-Test Exam', 'Half Yearly Exam', 'Test Exam'])) {
+        } elseif (in_array($exam, ['Pre-Test Exam', 'Half-Yearly', 'Test Exam'])) {
             // Other exams go to single exam function
             return $this->test_result_single_exam($studentId, $year, $exam, $view);
         }
@@ -3113,14 +2601,8 @@ class Dashboard extends Controller
         return "no execution";
     }
 
-    public function print_topsheet()
+    public function print_topsheet($class)
     {
-        $class = $this->request->getGet('class');
-
-        if (!$class) {
-            return redirect()->back()->with('error', 'Please select a class');
-        }
-
         // Class 9 & 10 → separate General and Vocational
         if (in_array($class, [9, 10])) {
 
@@ -3162,38 +2644,6 @@ class Dashboard extends Controller
 
     public function class_promote()
     {
-        // Get logged-in user ID
-        $user_id = $this->session->get('user_id') ?? 0;
-
-        // Default account status
-        $account_status = 0;
-
-        if ($user_id > 0) {
-            // Fetch only the account_status column
-            $user = $this->userModel->select('account_status')->find($user_id);
-
-            if (!empty($user)) {
-                $account_status = (int) $user['account_status'];
-                if ($account_status < 2)
-                    return redirect()->back()->with('error', 'Sorry, you are not permitted to perform this action');
-            } else {
-                return redirect()->back()->with('error', 'Sorry, you are not permitted to perform this action');
-            }
-        } else {
-            return redirect()->back()->with('error', 'Sorry, you are not permitted to perform this action');
-        }
-
-        $exam_db = $this->markingModel
-            ->where('exam_name', 'Annual Exam')
-            ->where('exam_name', 'Test Exam')
-            ->first();
-
-        $status = $exam_db['status'] ?? null;
-
-        if ($exam_db == null || $status == 'closed') {
-            return redirect()->back()->with('error', 'Sorry this exam is not open yet');
-        }
-
         $students_info = $this->studentModel
             ->select('id, roll, class, section, assign_sub')
             ->where('class <', 11)
@@ -3256,49 +2706,7 @@ class Dashboard extends Controller
             ->with('success', 'Student backup completed (one-time per year).');
     }
 
-    public function topsheet_form()
-    {
-        $this->data['title'] = 'Top Sheet';
-        $this->data['activeSection'] = 'result';
-        $this->data['navbarItems'] = [
-            ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
-            ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
-            ['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
-            ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
-        ];
 
-        $this->data['exams'] = $this->resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
-
-        $this->data['class'] = $this->studentModel
-            ->select('class')
-            ->distinct()
-            ->where('class <=', 10)  // <-- skip classes greater than 10
-            ->orderBy('class', 'ASC')
-            ->findAll();
-
-        return view('dashboard/topsheet_form', $this->data);
-    }
-
-    public function print_topsheet_form()
-    {
-        $this->data['title'] = 'Top Sheet';
-        $this->data['activeSection'] = 'result';
-        $this->data['navbarItems'] = [
-            ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
-            ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
-            ['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
-            ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
-        ];
-
-        $this->data['class'] = $this->studentModel
-            ->select('class')
-            ->distinct()
-            ->where('class <=', 10)  // <-- skip classes greater than 10
-            ->orderBy('class', 'ASC')
-            ->findAll();
-
-        return view('dashboard/print_topsheet_form', $this->data);
-    }
 
 
     public function showMarksheet()
@@ -3308,8 +2716,8 @@ class Dashboard extends Controller
         $this->data['navbarItems'] = [
             ['label' => 'Tabulation Sheet', 'url' => base_url('admin/tabulation_form')],
             ['label' => 'Marksheet', 'url' => base_url('admin/select-marksheet')],
-            ['label' => 'Make Top Sheet', 'url' => base_url('admin/topsheet_form')],
-            ['label' => 'Print Top Sheet', 'url' => base_url('admin/print_topsheet_form')],
+            ['label' => 'Make Top Sheet', 'url' => base_url('admin/select-marksheet')],
+            ['label' => 'Print Top Sheet', 'url' => base_url('admin/select-marksheet')],
         ];
 
         $request = service('request');
@@ -3344,6 +2752,14 @@ class Dashboard extends Controller
             // Sort based on assigned subjects
             $assigned = explode(',', $student['assign_sub'] ?? '');
             $orderMap = array_flip($assigned);
+
+            echo "<pre>";
+            print_r($assigned);
+            echo "</pre>";
+            
+            echo "<pre>";
+            print_r($orderMap);
+            echo "</pre>";
 
             usort($marksheet, function ($a, $b) use ($orderMap) {
                 $posA = $orderMap[$a['subject_id']] ?? PHP_INT_MAX;
@@ -3483,10 +2899,11 @@ class Dashboard extends Controller
         // ✅ Step 4: Pass to view
         $this->data['title'] = 'Student Details';
         $this->data['activeSection'] = 'student';
-        $this->data['navbarItems'] = [
-            ['label' => 'Student List', 'url' => base_url('ad-student')],
-            ['label' => 'Add Student', 'url' => base_url('student_create')],
-            ['label' => 'View Student', 'url' => current_url()],
+        $this->data['navbarItems']   = [
+            ['label' => 'Student List', 'url' => base_url('admin/student')],
+            ['label' => 'Add Student', 'url' => base_url('admin/student/create')],
+            ['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
+            ['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
         ];
         $this->data['student'] = $student;
         $this->data['subjectsStr'] = $subject_str_id;
@@ -3555,8 +2972,6 @@ class Dashboard extends Controller
 
     public function editStudent($id)
     {
-
-        $this->studentModel = new StudentModel();
         $student = $this->studentModel->find($id);
 
         if (!$student) {
@@ -3565,10 +2980,11 @@ class Dashboard extends Controller
 
         $this->data['title'] = 'Edit Student';
         $this->data['activeSection'] = 'student';
-        $this->data['navbarItems'] = [
-            ['label' => 'Student List', 'url' => base_url('ad-student')],
-            ['label' => 'Add Student', 'url' => base_url('student_create')],
-            ['label' => 'Edit Student', 'url' => current_url()],
+        $this->data['navbarItems']   = [
+            ['label' => 'Student List', 'url' => base_url('admin/student')],
+            ['label' => 'Add Student', 'url' => base_url('admin/student/create')],
+            ['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
+            ['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
         ];
         
         $sections = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
@@ -3592,6 +3008,7 @@ class Dashboard extends Controller
             'student_name',
             'roll',
             'class',
+            'group',
             'section',
             'esif',
             'father_name',
@@ -3624,8 +3041,10 @@ class Dashboard extends Controller
             'title' => 'Edit Photo',
             'activeSection' => 'student',
             'navbarItems' => [
-                ['label' => 'Student List', 'url' => base_url('ad-student')],
-                ['label' => 'Edit Photo', 'url' => current_url()],
+                ['label' => 'Student List', 'url' => base_url('admin/student')],
+                ['label' => 'Add Student', 'url' => base_url('admin/student/create')],
+                ['label' => 'Assagin Subject', 'url' => base_url('admin/stAssaginSubView')],
+                ['label' => 'Deleted Student', 'url' => base_url('admin/deletedStudent')],
             ],
             'student' => $student
         ];
@@ -3635,33 +3054,68 @@ class Dashboard extends Controller
 
     public function updateStudentPhoto($id)
     {
+        helper(['form']);
+
         $this->studentModel = new StudentModel();
+
         $student = $this->studentModel->find($id);
 
         if (!$student) {
-            return redirect()->to('admin/students')->with('error', 'Student not found.');
+            return redirect()->to(base_url('admin/students'))
+                ->with('error', 'Student not found.');
+        }
+
+        $rules = [
+            'student_pic' => [
+                'rules' => 'uploaded[student_pic]'
+                    . '|is_image[student_pic]'
+                    . '|mime_in[student_pic,image/jpg,image/jpeg,image/png]'
+                    . '|max_size[student_pic,150]'
+                    . '|max_dims[student_pic,300,300]'
+                    . '|min_dims[student_pic,300,300]',
+                'errors' => [
+                    'uploaded' => 'Please select a student photo.',
+                    'is_image' => 'The uploaded file must be an image.',
+                    'mime_in'  => 'Only JPG, JPEG and PNG images are allowed.',
+                    'max_size' => 'Image size must not exceed 150 KB.',
+                    'max_dims' => 'Image must be exactly 300 × 300 pixels.',
+                    'min_dims' => 'Image must be exactly 300 × 300 pixels.',
+                ]
+            ]
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('errors', $this->validator->getErrors());
         }
 
         $file = $this->request->getFile('student_pic');
 
-        if ($file && $file->isValid() && !$file->hasMoved()) {
+        if ($file->isValid() && !$file->hasMoved()) {
+
             $newName = $file->getRandomName();
             $file->move(FCPATH . 'uploads/students', $newName);
 
-            // Delete old photo if it exists and is not default
-            if (!empty($student['student_pic']) && file_exists(FCPATH . $student['student_pic'])) {
+            // Delete old photo
+            if (
+                !empty($student['student_pic']) &&
+                file_exists(FCPATH . $student['student_pic'])
+            ) {
                 unlink(FCPATH . $student['student_pic']);
             }
 
-            // Update DB
+            // Update database
             $this->studentModel->update($id, [
                 'student_pic' => 'uploads/students/' . $newName,
             ]);
 
-            return redirect()->to('admin/students/view/' . $id)->with('message', 'Photo updated successfully.');
+            return redirect()->to(base_url('admin/students/view/' . $id))
+                ->with('success', 'Student photo updated successfully.');
         }
 
-        return redirect()->back()->with('error', 'Photo upload failed.');
+        return redirect()->back()
+            ->with('error', 'Photo upload failed.');
     }
 
 
@@ -3778,67 +3232,6 @@ class Dashboard extends Controller
         }
 
         return redirect()->to('admin/notices')->with('success', 'Notice deleted successfully!');
-    }
-
-    public function calendar()
-    {
-        $this->data['title'] = 'Calendar';
-        $this->data['activeSection'] = 'calendar';
-
-        // Common navbar and sidebar for all views
-        // Navbar
-        $this->data['navbarItems'] = [
-            ['label' => 'Calendar', 'url' => base_url('calendar')],
-            ['label' => 'Leave', 'url' => base_url('admin/leave')],
-            ['label' => 'Holiday', 'url' => base_url('admin/holiday')],
-            ['label' => 'Routine', 'url' => base_url('admin/exam-routine')],
-            ['label' => 'Admit', 'url' => base_url('admin/print-admit-form')],
-        ];
-
-        $user = [
-            'name' => $this->session->get('name'),
-            'email' => $this->session->get('email'),
-            'phone' => $this->session->get('phone'),
-            'role' => $this->session->get('role')
-        ];
-
-        $subjects = $this->subjectModel->findAll();
-
-        $this->data['user'] = $user;
-        $this->data['subjects'] = $subjects;
-
-        return view('dashboard/calendar', $this->data);
-    }
-
-    public function events()
-    {
-        $events = $this->calendarModel->findAll();
-
-        $data = [];
-
-        foreach ($events as $event) {
-
-            // build datetime
-            $start = $event['start_date'];
-            if (!empty($event['start_time'])) {
-                $start .= 'T' . $event['start_time'];
-            }
-
-            $end = $event['end_date'];
-            if (!empty($event['end_time'])) {
-                $end .= 'T' . $event['end_time'];
-            }
-
-            $data[] = [
-                'id'    => $event['id'],
-                'title' => $event['title'],
-                'start' => $start,
-                'end'   => $end,
-                'color' => $event['color'] ?? '#0d6efd'
-            ];
-        }
-
-        return $this->response->setJSON($data);
     }
 
     public function attendanceCalendar()
@@ -4537,133 +3930,36 @@ class Dashboard extends Controller
         return view('dashboard/student_payment_history', $this->data);
     }
 
-    public function welcomeMessages()
-    {
-        $this->data['title'] = 'Welcome Message List';
-        $this->data['activeSection'] = 'welcome_message';
-        $this->data['navbarItems'] = [
-            ['label' => 'Welcome Messages', 'url' => current_url()],
-            ['label' => 'Add Welcome Message', 'url' => base_url('admin/welcomeMessageForm')],
-        ];
-
-        // Fetch all welcome messages (Newest first)
-        $this->data['welcomeMessages'] = $this->welcomeMessageModel
-            ->orderBy('id', 'DESC')
-            ->findAll();
-
-        return view('dashboard/welcome_message_list', $this->data);
-    }
-
-    public function welcomeMessageForm($id = null)
-    {
-        $this->data['title'] = $id ? 'Edit Welcome Message' : 'Add Welcome Message';
-        $this->data['activeSection'] = 'welcome_message';
-        $this->data['navbarItems'] = [
-            ['label' => 'Welcome Messages', 'url' => base_url('admin/welcome-message')],
-            ['label' => 'Add Welcome Message', 'url' => current_url()],
-        ];
-
-        if ($id) {
-            $this->data['welcome'] = $this->welcomeMessageModel->find($id);
-        }
-
-        return view('dashboard/welcome_message_form', $this->data);
-    }
-
-    public function saveWelcomeMessage()
-    {
-        $id     = $this->request->getPost('id');
-        $status = $this->request->getPost('status');
-
-        $data = [
-            'title'   => $this->request->getPost('title'),
-            'message' => $this->request->getPost('message'),
-            'status'  => $status,
-        ];
-
-        // Handle Photo Upload
-        $photo = $this->request->getFile('photo');
-        if ($photo && $photo->isValid() && !$photo->hasMoved()) {
-            $newName = $photo->getRandomName();
-            $photo->move(FCPATH . 'uploads/welcome/', $newName);
-            $data['photo'] = $newName;
-        }
-
-        if ($status == 1) {
-
-            if ($id) {
-                // Editing → make all OTHER records inactive
-                $this->welcomeMessageModel
-                    ->where('id !=', $id)
-                    ->set(['status' => 0])
-                    ->update();
-            } else {
-                // Inserting new → make ALL existing inactive
-                $this->welcomeMessageModel
-                    ->where('id >', 0)   // safe condition
-                    ->set(['status' => 0])
-                    ->update();
-            }
-        }
-
-        // Insert or Update
-        if ($id) {
-            $this->welcomeMessageModel->update($id, $data);
-            session()->setFlashdata('success', 'Welcome Message Updated Successfully');
-        } else {
-            $this->welcomeMessageModel->insert($data);
-            session()->setFlashdata('success', 'Welcome Message Added Successfully');
-        }
-
-        return redirect()->to(base_url('admin/welcomeMessages'));
-    }
-
-    public function deleteWelcomeMessage($id)
-    {
-        $welcome = $this->welcomeMessageModel->find($id);
-
-        if (!$welcome) {
-            session()->setFlashdata('error', 'Welcome Message Not Found');
-            return redirect()->back();
-        }
-
-        // Delete image if exists
-        if (!empty($welcome['photo']) && file_exists(FCPATH . 'uploads/welcome/' . $welcome['photo'])) {
-            unlink(FCPATH . 'uploads/welcome/' . $welcome['photo']);
-        }
-
-        $this->welcomeMessageModel->delete($id);
-
-        session()->setFlashdata('success', 'Welcome Message Deleted Successfully');
-
-        return redirect()->to(base_url('admin/welcomeMessages'));
-    }
-
     public function teacherAttendance()
     {
-        $selectedMonth   = $this->request->getGet('month') ?? date('Y-m');
+        // Filters
+        $selectedMonth = $this->request->getGet('month') ?? date('Y-m');
         $selectedTeacher = $this->request->getGet('teacher');
 
+        // Page setup
         $this->data['title'] = 'Teacher Attendance';
         $this->data['activeSection'] = 'teacher_attendance';
+        $this->data['navbarItems'] = [
+            ['label' => 'Accounts', 'url' => base_url('admin/transactions')],
+            ['label' => 'Teacher', 'url' => base_url('admin/tec_pay')],
+            ['label' => 'Students', 'url' => base_url('admin/std_pay')],
+            ['label' => 'Statistics', 'url' => base_url('admin/pay_stat')],
+            ['label' => 'Set Fees', 'url' => base_url('admin/set_fees')],
+        ];
 
-        // ✅ All Active Teachers
+        // Teacher list (all with account_status > 0)
+        $allTeachers = $this->userModel->where('account_status >', 0)->orderBy('position', 'ASC')->findAll();
+
+        // Filtered teacher list
         $builder = $this->userModel->where('account_status >', 0);
-
         if (!empty($selectedTeacher)) {
             $builder->where('id', $selectedTeacher);
         }
+        $teacherList = $builder->orderBy('position', 'ASC')->findAll();
 
-        $teachers = $builder->orderBy('position', 'ASC')->findAll();
-        $allTeachers = $this->userModel
-            ->where('account_status >', 0)
-            ->orderBy('position', 'ASC')
-            ->findAll();
-
-        // ✅ Build Month Days
+        // Build days of the month
         $daysInMonth = [];
         $numDays = date('t', strtotime($selectedMonth . '-01'));
-
         for ($d = 1; $d <= $numDays; $d++) {
             $date = $selectedMonth . '-' . sprintf("%02d", $d);
             $daysInMonth[] = [
@@ -4672,25 +3968,18 @@ class Dashboard extends Controller
             ];
         }
 
-        // ✅ Fetch Attendance Records
+        // Fetch teacher attendance for month
         $attendanceData = $this->teacherAttendanceModel
             ->where('created_at >=', $selectedMonth . '-01 00:00:00')
             ->where('created_at <=', $selectedMonth . '-' . $numDays . ' 23:59:59')
             ->findAll();
 
+        // Map attendance by teacher + date
         $attendanceMap = [];
-
-        $schoolStart = '10:00:00';
-        $schoolEnd   = '16:00:00';
-
-        // -------------------------
-        // STORE ARRIVAL & LEAVE
-        // -------------------------
         foreach ($attendanceData as $record) {
-
             if (!isset($record['teacher_id'])) continue;
 
-            $tid  = $record['teacher_id'];
+            $tid = $record['teacher_id'];
             $date = date('Y-m-d', strtotime($record['created_at']));
             $time = date('H:i:s', strtotime($record['created_at']));
 
@@ -4698,80 +3987,50 @@ class Dashboard extends Controller
                 $attendanceMap[$tid][$date] = [
                     'arrival' => null,
                     'leave'   => null,
-                    'remark'  => 'A'
+                    'remark'  => 'A', // default Absent
                 ];
             }
 
-            if ($record['remark'] === 'A') {
-                $attendanceMap[$tid][$date]['arrival'] = $time;
+            // Morning → arrival, Afternoon → leave
+            if ($time <= '12:00:00') {
+                $attendanceMap[$tid][$date]['arrival'] = $record['remark'];
+            } else {
+                $attendanceMap[$tid][$date]['leave'] = $record['remark'];
             }
 
-            if ($record['remark'] === 'L') {
-                $attendanceMap[$tid][$date]['leave'] = $time;
-            }
-        }
+            // Determine final remark
+            $arrival = $attendanceMap[$tid][$date]['arrival'];
+            $leave   = $attendanceMap[$tid][$date]['leave'];
 
-        // -------------------------
-        // FINAL STATUS CALCULATION
-        // -------------------------
-        foreach ($attendanceMap as $tid => $dates) {
-            foreach ($dates as $date => $data) {
-
-                $arrival = $data['arrival'];
-                $leave   = $data['leave'];
-
-                // If only arrival exists
-                if ($arrival && !$leave) {
-                    $attendanceMap[$tid][$date]['remark'] = 'C';
-                    continue;
-                }
-
-                // If only leave exists
-                if (!$arrival && $leave) {
-                    $attendanceMap[$tid][$date]['remark'] = 'P';
-                    continue;
-                }
-
-                // If no punch at all
-                if (!$arrival && !$leave) {
-                    $attendanceMap[$tid][$date]['remark'] = 'A';
-                    continue;
-                }
-
-                if ($arrival <= $schoolStart && $leave >= $schoolEnd) {
-                    $attendanceMap[$tid][$date]['remark'] = 'P';
-                } elseif ($arrival <= $schoolStart && $leave < $schoolEnd) {
-                    $attendanceMap[$tid][$date]['remark'] = 'E';
-                } elseif ($arrival > $schoolStart && $leave >= $schoolEnd) {
-                    $attendanceMap[$tid][$date]['remark'] = 'L';
-                } else {
-                    $attendanceMap[$tid][$date]['remark'] = 'L/E';
-                }
+            if ($arrival === 'Present' || $leave === 'Present') {
+                $attendanceMap[$tid][$date]['remark'] = 'P';
+            } elseif ($arrival === 'Late' || $leave === 'Late') {
+                $attendanceMap[$tid][$date]['remark'] = 'L';
+            } elseif ($arrival === 'Leave' || $leave === 'Leave') {
+                $attendanceMap[$tid][$date]['remark'] = 'E';
+            } else {
+                $attendanceMap[$tid][$date]['remark'] = 'A';
             }
         }
 
-        // -------------------------
-        // FILL MISSING DAYS
-        // -------------------------
-        foreach ($allTeachers as $teacher) {
+        // Fill missing days with Absent or Holiday
+        foreach ($allTeachers as $t) {
             foreach ($daysInMonth as $day) {
-
                 $date = $day['date'];
                 $dayName = $day['day'];
-                $tid = $teacher['id'];
 
-                if (!isset($attendanceMap[$tid][$date])) {
-
-                    $attendanceMap[$tid][$date] = [
+                if (!isset($attendanceMap[$t['id']][$date])) {
+                    $attendanceMap[$t['id']][$date] = [
+                        'remark' => in_array($dayName, ['Fri', 'Sat']) ? 'H' : 'A',
                         'arrival' => null,
-                        'leave'   => null,
-                        'remark'  => in_array($dayName, ['Fri', 'Sat']) ? 'H' : 'A'
+                        'leave' => null
                     ];
                 }
             }
         }
 
-        $this->data['teachers'] = $teachers;
+        // Pass data to view
+        $this->data['teachers'] = $teacherList;
         $this->data['allTeachers'] = $allTeachers;
         $this->data['selectedTeacher'] = $selectedTeacher;
         $this->data['selectedMonth'] = $selectedMonth;
@@ -4779,138 +4038,5 @@ class Dashboard extends Controller
         $this->data['attendanceMap'] = $attendanceMap;
 
         return view('dashboard/teacher_attendance', $this->data);
-    }
-
-    // Show all sliders
-    public function sliders()
-    {
-        $this->data['title'] = 'Slider List';
-        $this->data['activeSection'] = 'slider';
-        $this->data['navbarItems'] = [
-            ['label' => 'Slider List', 'url' => current_url()],
-            ['label' => 'Add Slider', 'url' => base_url('admin/sliderForm')],
-        ];
-
-        $this->data['sliders'] = $this->sliderModel
-            ->orderBy('id', 'DESC')
-            ->findAll();
-
-        return view('dashboard/slider/slider_list', $this->data);
-    }
-
-    // Show add form
-    public function sliderForm()
-    {
-        $this->data['title'] = 'Slider Form';
-        $this->data['activeSection'] = 'slider';
-        $this->data['navbarItems'] = [
-            ['label' => 'Slider List', 'url' => base_url('admin/sliders')],
-            ['label' => 'Add Slider', 'url' => current_url()],
-        ];
-
-        return view('dashboard/slider/slider_form', $this->data);
-    }
-
-    // Save new slider
-    public function saveSlider()
-    {
-        $status = $this->request->getPost('status') ?? 0;
-
-        $data = [
-            'title'      => $this->request->getPost('title'),
-            'caption'    => $this->request->getPost('caption'),
-            'status'     => $status,
-            'created_at' => date('Y-m-d H:i:s'),
-        ];
-
-        // Handle image upload
-        $file = $this->request->getFile('image');
-        if ($file && $file->isValid() && !$file->hasMoved()) {
-            $newName = $file->getRandomName();
-            $file->move('uploads/sliders', $newName);
-            $data['image'] = $newName;
-        }
-
-
-        $this->sliderModel->insert($data);
-
-        return redirect()->to('admin/sliders')
-            ->with('success', 'Slider added successfully!');
-    }
-
-    // Edit form update
-    public function editSlider($id)
-    {
-        $this->data['title'] = 'Edit Slider';
-        $this->data['activeSection'] = 'slider';
-        $this->data['navbarItems'] = [
-            ['label' => 'Slider List', 'url' => base_url('admin/sliders')],
-            ['label' => 'Edit Slider', 'url' => current_url()],
-        ];
-
-        $this->data['slider'] = $this->sliderModel->find($id);
-
-        if (!$this->data['slider']) {
-            return redirect()->to('admin/sliders')
-                ->with('error', 'Slider not found');
-        }
-
-        return view('dashboard/slider/slider_form_edit', $this->data);
-    }
-
-    // Update existing slider
-    public function updateSlider($id)
-    {
-        $slider = $this->sliderModel->find($id);
-
-        if (!$slider) {
-            return redirect()->to('admin/sliders')
-                ->with('error', 'Slider not found');
-        }
-
-        $status = $this->request->getPost('status');
-
-        $data = [
-            'title'   => $this->request->getPost('title'),
-            'caption' => $this->request->getPost('caption'),
-            'status'  => $status,
-        ];
-
-        // Image update
-        $file = $this->request->getFile('image');
-        if ($file && $file->isValid() && !$file->hasMoved()) {
-
-            if (!empty($slider['image']) && file_exists('uploads/sliders/' . $slider['image'])) {
-                unlink('uploads/sliders/' . $slider['image']);
-            }
-
-            $newName = $file->getRandomName();
-            $file->move('uploads/sliders', $newName);
-            $data['image'] = $newName;
-        }
-
-
-        $this->sliderModel->update($id, $data);
-
-        return redirect()->to('admin/sliders')
-            ->with('success', 'Slider updated successfully!');
-    }
-
-    // Delete slider
-    public function deleteSlider($id)
-    {
-        $slider = $this->sliderModel->find($id);
-
-        if ($slider) {
-
-            if (!empty($slider['image']) && file_exists('uploads/sliders/' . $slider['image'])) {
-                unlink('uploads/sliders/' . $slider['image']);
-            }
-
-            $this->sliderModel->delete($id);
-        }
-
-        return redirect()->to('admin/sliders')
-            ->with('success', 'Slider deleted successfully!');
     }
 }
