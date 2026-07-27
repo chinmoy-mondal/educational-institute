@@ -3008,7 +3008,7 @@ class Dashboard extends Controller
                 $this->test_result_single_exam($studentId, $year, $exam, $view);
             }
         }
-        echo $this->updateNewRollByClass($class, $year, $exam, $section_student) ? 'New Roll also saved' . '<br>' : 'New Roll is not saved' . '<br>';
+        // echo $this->updateNewRollByClass($class, $year, $exam, $section_student) ? 'New Roll also saved' . '<br>' : 'New Roll is not saved' . '<br>';
     }
 
     public function updateNewRollByClass($class, $year, $exam, $section)
