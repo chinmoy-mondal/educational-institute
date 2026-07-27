@@ -2543,7 +2543,7 @@ class Dashboard extends Controller
         if (!$studentId || !$year || !$exam) {
             return "Student ID, Year and Exam are required";
         }
-        echo "test";
+        
         // ---------------- STUDENT ----------------
         $student = $this->studentModel->find($studentId);
         if (!$student) {
@@ -2556,6 +2556,7 @@ class Dashboard extends Controller
             ->where('year', $year)
             ->first();
 
+        echo "test sdf";
         if (!$studentBackup) {
             return "Student backup not found";
         }
