@@ -2935,7 +2935,6 @@ class Dashboard extends Controller
 
     public function make_top_sheet()
     {
-        echo "check top sheet";
         $class = $this->request->getGet('class');
         $year  = $this->request->getGet('year');
         $exam  = $this->request->getGet('exam');
@@ -2999,7 +2998,7 @@ class Dashboard extends Controller
             $view = 1;
             $section   = $student['section'];
 
-            echo "{$studentId}  | {$section} | {$year}  | {$exam} <br>";
+            // echo "{$studentId}  | {$section} | {$year}  | {$exam} <br>";
 
             if ($exam === 'Annual Exam') {
                 // Annual exam goes to full result function
