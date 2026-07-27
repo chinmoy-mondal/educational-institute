@@ -172,8 +172,8 @@ if (!is_null($roll)) {
 <div class="marksheet-wrapper">
     <!-- School Info -->
     <div class="school-header">
-        <h2>Mulgram Secondary School</h2>
-        <h5>Keshabpur, Jashore</h5>
+        <h2><?= env('school.name') ?></h2>
+        <h5><?= env('school.address') ?></h5>
     </div>
 
     <div class="row align-items-center">
