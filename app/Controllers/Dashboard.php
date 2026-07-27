@@ -2620,7 +2620,6 @@ class Dashboard extends Controller
                 $practical,
                 $percentage
             );
-            echo "test ";
             // echo "<pre>";
             // print_r($gradeInfo);
             // echo "</pre>";
@@ -2733,9 +2732,9 @@ class Dashboard extends Controller
             'year'          => $year
         ];
 
-        // echo "<pre>";
-        // print_r($marksheetNumeric);
-        // echo "<pre>";
+        echo "<pre>";
+        print_r($marksheetNumeric);
+        echo "<pre>";
         if ($view) {
             $this->saveRankingFromResult($data);
         } else {
