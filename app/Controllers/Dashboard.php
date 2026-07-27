@@ -2559,6 +2559,9 @@ class Dashboard extends Controller
             return "Student backup not found";
         }
 
+
+        echo "test -";
+
         // ---------------- ASSIGNED SUBJECT ORDER ----------------
         $assignSubArr = explode(',', $studentBackup['assign_sub']);
         $normalSubs = [];
@@ -2731,7 +2734,6 @@ class Dashboard extends Controller
             'exam'          => $exam,
             'year'          => $year
         ];
-        echo "test -";
         echo "<pre>";
         print_r($marksheetNumeric);
         echo "<pre>";
