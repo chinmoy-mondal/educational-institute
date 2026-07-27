@@ -2935,6 +2935,7 @@ class Dashboard extends Controller
 
     public function make_top_sheet()
     {
+        echo "check top sheet";
         $class = $this->request->getGet('class');
         $year  = $this->request->getGet('year');
         $exam  = $this->request->getGet('exam');
