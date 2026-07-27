@@ -2731,7 +2731,7 @@ class Dashboard extends Controller
             'exam'          => $exam,
             'year'          => $year
         ];
-
+        echo "test -";
         echo "<pre>";
         print_r($marksheetNumeric);
         echo "<pre>";
