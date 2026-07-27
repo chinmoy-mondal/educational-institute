@@ -2539,6 +2539,7 @@ class Dashboard extends Controller
 
     public function test_result_single_exam($studentId = null, $year = null, $exam = null, $view = null)
     {
+        echo "check test sin";
         if (!$studentId || !$year || !$exam) {
             return "Student ID, Year and Exam are required";
         }
@@ -3005,7 +3006,6 @@ class Dashboard extends Controller
                 $this->test_result($studentId, $year, $exam, $view);
             } elseif (in_array($exam, ['Pre-Test Exam', 'Half Yearly Exam', 'Test Exam'])) {
                 // Other exams go to single exam function
-                echo "test single exam";
                 $this->test_result_single_exam($studentId, $year, $exam, $view);
             }
         }
