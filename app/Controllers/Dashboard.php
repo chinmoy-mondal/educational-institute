@@ -1975,7 +1975,7 @@ class Dashboard extends Controller
         $classes = $this->studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
 
 
-        $group = [
+        $groups = [
             ['section' => 'General'],
             ['section' => 'Science'],
             ['section' => 'Humanities'],
@@ -1999,7 +1999,7 @@ class Dashboard extends Controller
 
         $this->data['classes']  = $classes;
         $this->data['sections'] = $sections;
-        $this->data['group']    = $group;
+        $this->data['groups']    = $groups;
         $this->data['exams']    = $exams;
         $this->data['years']    = $years;
 
