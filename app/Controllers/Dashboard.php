@@ -1985,7 +1985,7 @@ class Dashboard extends Controller
         // ✅ Distinct exam names and years from results
         $exams = $this->resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
         $years = $this->resultModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
-        $sections = $this->studentModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
+        $sections = $this->studentModel->distinct()->select('section')->orderBy('section', 'ASC')->findAll();
 
         // Send to view
         $this->data['title']    = 'Select Tabulation Info';
