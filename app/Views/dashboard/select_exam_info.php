@@ -36,7 +36,7 @@
           <select name="group" class="form-control" required>
             <option value="">Select</option>
             <?php foreach ($groups as $s): ?>
-              <option value="<?= esc($s['groups']) ?>"><?= ucfirst(esc($s['groups'])) ?></option>
+              <option value="<?= esc($s['group']) ?>"><?= ucfirst(esc($s['group'])) ?></option>
             <?php endforeach; ?>
           </select>
         </div>

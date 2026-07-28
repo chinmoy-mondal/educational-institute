@@ -1976,9 +1976,9 @@ class Dashboard extends Controller
 
 
         $groups = [
-            ['section' => 'General'],
-            ['section' => 'Science'],
-            ['section' => 'Humanities'],
+            ['group' => 'General'],
+            ['group' => 'Science'],
+            ['group' => 'Humanities'],
         ];
 
 
@@ -2022,7 +2022,7 @@ class Dashboard extends Controller
 
         $class   = $this->request->getPost('class');
         $section = $this->request->getPost('section');
-        $group = $this->request->getPost('groups');
+        $group = $this->request->getPost('group');
         $exam    = $this->request->getPost('exam');
         $year    = $this->request->getPost('year');
 
