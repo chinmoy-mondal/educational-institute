@@ -1999,7 +1999,7 @@ class Dashboard extends Controller
 
         $this->data['classes']  = $classes;
         $this->data['sections'] = $sections;
-        $this->data['groups']    = $groups;
+        $this->data['groups']   = $groups;
         $this->data['exams']    = $exams;
         $this->data['years']    = $years;
 
@@ -2022,7 +2022,7 @@ class Dashboard extends Controller
 
         $class   = $this->request->getPost('class');
         $section = $this->request->getPost('section');
-        $group = $this->request->getPost('group');
+        $group = $this->request->getPost('groups');
         $exam    = $this->request->getPost('exam');
         $year    = $this->request->getPost('year');
 
