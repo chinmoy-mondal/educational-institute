@@ -16,15 +16,15 @@
 
         <!-- Flash Messages -->
         <?php if (session()->has('success')): ?>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <?= session('success') ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <?= session('success') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <?php elseif (session()->has('error')): ?>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <?= session('error') ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <?= session('error') ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
         <?php endif; ?>
 
         <!-- Search & Filter Form -->
@@ -45,8 +45,8 @@
                                 <select name="class" id="class" class="form-control">
                                     <option value="" <?= ($class ?? '') === '' ? 'selected' : '' ?>>All Classes</option>
                                     <?php for ($i = 6; $i <= 10; $i++): ?>
-                                        <option value="<?= $i ?>" <?= ($class ?? '') == $i ? 'selected' : '' ?>>Class
-                                            <?= $i ?></option>
+                                    <option value="<?= $i ?>" <?= ($class ?? '') == $i ? 'selected' : '' ?>>Class
+                                        <?= $i ?></option>
                                     <?php endfor; ?>
                                 </select>
                             </div>
@@ -58,10 +58,10 @@
                                     <option value="" <?= ($section ?? '') === '' ? 'selected' : '' ?>>All Sections
                                     </option>
                                     <?php foreach ($sections as $sec): ?>
-                                        <option value="<?= esc($sec['section']) ?>"
-                                            <?= ($section ?? '') === $sec['section'] ? 'selected' : '' ?>>
-                                            <?= esc($sec['section']) ?>
-                                        </option>
+                                    <option value="<?= esc($sec['section']) ?>"
+                                        <?= ($section ?? '') === $sec['section'] ? 'selected' : '' ?>>
+                                        <?= esc($sec['section']) ?>
+                                    </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -70,13 +70,13 @@
                             <div class="form-group">
                                 <label for="group">Group</label>
                                 <select name="group" id="group" class="form-control">
-                                    <option value="" <?= ($religion ?? '') === '' ? 'selected' : '' ?>>All groups
+                                    <option value="" <?= ($groups ?? '') === '' ? 'selected' : '' ?>>All groups
                                     </option>
                                     <?php foreach ($groups as $r): ?>
-                                        <option value="<?= esc($r['group']) ?>"
-                                            <?= ($religion ?? '') === $r['group'] ? 'selected' : '' ?>>
-                                            <?= esc(ucfirst($r['group'])) ?>
-                                        </option>
+                                    <option value="<?= esc($r['group']) ?>"
+                                        <?= ($religion ?? '') === $r['group'] ? 'selected' : '' ?>>
+                                        <?= esc($r['group']) ?>
+                                    </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -103,10 +103,10 @@
                         <select multiple class="form-control select2" id="leftSelect" name="left_select[]"
                             style="height: 400px; width: 100%;">
                             <?php foreach ($students as $s): ?>
-                                <option value="<?= esc($s['id']) ?>">
-                                    <?= esc($s['class']) ?> &nbsp;&nbsp; <?= esc($s['roll']) ?> &nbsp;&nbsp;
-                                    <?= esc($s['student_name']) ?>
-                                </option>
+                            <option value="<?= esc($s['id']) ?>">
+                                <?= esc($s['class']) ?> &nbsp;&nbsp; <?= esc($s['roll']) ?> &nbsp;&nbsp;
+                                <?= esc($s['student_name']) ?>
+                            </option>
                             <?php endforeach ?>
                         </select>
                     </div>
@@ -119,12 +119,12 @@
                         <select multiple class="form-control select2" id="rightSelect" name="right_select[]"
                             style="height:400px; width: 100%;">
                             <?php foreach ($subjects as $s): ?>
-                                <option value="<?= esc($s['id']) ?>">
-                                    <?= esc($s['class']) ?> &nbsp;&nbsp;
-                                    <?= esc($s['section']) ?>&nbsp;&nbsp;
-                                    <?= esc($s['subject']) ?>
+                            <option value="<?= esc($s['id']) ?>">
+                                <?= esc($s['class']) ?> &nbsp;&nbsp;
+                                <?= esc($s['section']) ?>&nbsp;&nbsp;
+                                <?= esc($s['subject']) ?>
 
-                                </option>
+                            </option>
                             <?php endforeach ?>
                         </select>
                     </div>
@@ -149,10 +149,10 @@
 
 <!-- ✅ Init Select2 (optional) -->
 <script>
-    $(document).ready(function() {
-        $('.select2').select2({
-            placeholder: "Select Subjects",
-            closeOnSelect: false
-        });
+$(document).ready(function() {
+    $('.select2').select2({
+        placeholder: "Select Subjects",
+        closeOnSelect: false
     });
+});
 </script>
