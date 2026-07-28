@@ -1726,10 +1726,7 @@ class Dashboard extends Controller
         }
         if ($section) {
             $subjectBuilder = $subjectBuilder->where('section', $section);
-        }
-        if ($group) {
-            $subjectBuilder = $subjectBuilder->where('group', $group);
-        }      
+        } 
 
 
         $subjects = $subjectBuilder->findAll();
