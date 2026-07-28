@@ -1974,13 +1974,8 @@ class Dashboard extends Controller
         // ✅ Distinct class list from students
         $classes = $this->studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
 
-        $rawSections = $this->studentModel
-            ->distinct()
-            ->select('section')
-            ->orderBy('section', 'ASC')
-            ->findAll();
 
-        $sections = [
+        $group = [
             ['section' => 'General'],
             ['section' => 'Science'],
             ['section' => 'Humanities'],
@@ -1990,6 +1985,8 @@ class Dashboard extends Controller
         // ✅ Distinct exam names and years from results
         $exams = $this->resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
         $years = $this->resultModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
+        $sections = $this->studentModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
+
         // Send to view
         $this->data['title']    = 'Select Tabulation Info';
         $this->data['activeSection'] = 'result';
@@ -2002,6 +1999,7 @@ class Dashboard extends Controller
 
         $this->data['classes']  = $classes;
         $this->data['sections'] = $sections;
+        $this->data['group']    = $group;
         $this->data['exams']    = $exams;
         $this->data['years']    = $years;
 
@@ -2024,15 +2022,19 @@ class Dashboard extends Controller
 
         $class   = $this->request->getPost('class');
         $section = $this->request->getPost('section');
+        $group = $this->request->getPost('group');
         $exam    = $this->request->getPost('exam');
         $year    = $this->request->getPost('year');
 
 
-        $builder = $this->studentModel->where('class', $class);
+        $builder = $this->studentModel->where([
+            'class'   => $class,
+            'section' => $section
+        ]);
 
         // If class is NOT 6 to 8, add section filter
         if (!in_array($class, ['6', '7', '8'])) {
-            $builder->like('section', $section);
+            $builder->like('group', $group);
         }
 
         $students = $builder
