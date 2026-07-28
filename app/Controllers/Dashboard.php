@@ -1967,18 +1967,10 @@ class Dashboard extends Controller
         // ✅ Distinct class list from students
         $classes = $this->studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
 
-        $rawSections = $this->studentModel
-            ->distinct()
-            ->select('section')
-            ->orderBy('section', 'ASC')
-            ->findAll();
 
-        $sections = [
-            ['section' => 'General'],
-            ['section' => 'Vocational'],
-            ['section' => 'Science'],
-            ['section' => 'Humanities'],
-        ];
+
+        $sections = $this->studentModel->distinct()->select('section')->orderBy('section', 'ASC')->findAll();
+        $groups = $this->studentModel->distinct()->select('group')->orderBy('group', 'ASC')->findAll();
 
 
         // ✅ Distinct exam names and years from results
@@ -1996,6 +1988,7 @@ class Dashboard extends Controller
 
         $this->data['classes']  = $classes;
         $this->data['sections'] = $sections;
+        $this->data['groups'] = $groups;
         $this->data['exams']    = $exams;
         $this->data['years']    = $years;
 
@@ -2018,15 +2011,19 @@ class Dashboard extends Controller
 
         $class   = $this->request->getPost('class');
         $section = $this->request->getPost('section');
+        $group = $this->request->getPost('group');
         $exam    = $this->request->getPost('exam');
         $year    = $this->request->getPost('year');
 
 
-        $builder = $this->studentModel->where('class', $class);
+        $builder = $this->studentModel->where([
+            'class'   => $class,
+            'section' => $section
+        ]);
 
         // If class is NOT 6 to 8, add section filter
         if (!in_array($class, ['6', '7', '8'])) {
-            $builder->like('section', $section);
+            $builder->like('group', $group);
         }
 
         $students = $builder
