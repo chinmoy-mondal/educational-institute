@@ -1716,7 +1716,8 @@ class Dashboard extends Controller
 
         $sections = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
         $religions = $this->studentModel->select('religion')->distinct()->where('religion IS NOT NULL')->orderBy('religion')->findAll();
-        $groups = $this->studentModel->select('group')->distinct()->where('group IS NOT NULL')->orderBy('religion')->findAll();
+
+        $groups = $this->studentModel->select('group')->distinct()->orderBy('group', 'ASC')->findAll();
 
         
         $subjectBuilder = $this->subjectModel;
