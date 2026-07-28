@@ -1678,11 +1678,13 @@ class Dashboard extends Controller
 
     public function stAssaginSubView()
     {
+
+
         // Get filter inputs
         $q       = $this->request->getGet('q');
         $class   = $this->request->getGet('class');
         $section = $this->request->getGet('section');
-        $group = $this->request->getGet('group');
+        $religion = $this->request->getGet('religion');
 
         // Build query
         $builder = $this->studentModel;
@@ -1700,8 +1702,8 @@ class Dashboard extends Controller
         if ($section) {
             $builder = $builder->where('section', $section);
         }
-        if ($group) {
-            $builder = $builder->where('group', $group);
+        if ($religion) {
+            $builder = $builder->where('religion', $religion);
         }
 
         $students = $builder
@@ -1711,16 +1713,21 @@ class Dashboard extends Controller
             ->getResultArray();
 
         $sections = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
-        $groups = $this->studentModel->select('group')->distinct()->where('group IS NOT NULL')->orderBy('religion')->findAll();
-
+        $religions = $this->studentModel->select('religion')->distinct()->where('religion IS NOT NULL')->orderBy('religion')->findAll();
         $subjectBuilder = $this->subjectModel;
 
         if ($class) {
             $subjectBuilder = $subjectBuilder->where('class', $class);
         }
 
-        if ($section) {
-            $subjectBuilder = $subjectBuilder->where('section', $section);
+        if (stripos($section, 'Vocational') !== false) {
+            $filteredSection = 'Vocational';
+        } else {
+            $filteredSection = 'General';
+        }
+
+        if ($filteredSection) {
+            $subjectBuilder = $subjectBuilder->where('section', $filteredSection);
         }
 
         $subjects = $subjectBuilder->findAll();
@@ -1740,8 +1747,8 @@ class Dashboard extends Controller
         $this->data['class']         = $class;
         $this->data['section']       = $section;
         $this->data['sections']      = $sections;
-        $this->data['group']      = $group;
-        $this->data['groups']     = $groups;
+        $this->data['religion']      = $religion;
+        $this->data['religions']     = $religions;
 
         return view('dashboard/stSubAssaginment', $this->data);
     }
@@ -1967,10 +1974,18 @@ class Dashboard extends Controller
         // ✅ Distinct class list from students
         $classes = $this->studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
 
+        $rawSections = $this->studentModel
+            ->distinct()
+            ->select('section')
+            ->orderBy('section', 'ASC')
+            ->findAll();
 
-
-        $sections = $this->studentModel->distinct()->select('section')->orderBy('section', 'ASC')->findAll();
-        $groups = $this->studentModel->distinct()->select('group')->orderBy('group', 'ASC')->findAll();
+        $sections = [
+            ['section' => 'General'],
+            ['section' => 'Vocational'],
+            ['section' => 'Science'],
+            ['section' => 'Humanities'],
+        ];
 
 
         // ✅ Distinct exam names and years from results
@@ -1988,7 +2003,6 @@ class Dashboard extends Controller
 
         $this->data['classes']  = $classes;
         $this->data['sections'] = $sections;
-        $this->data['groups'] = $groups;
         $this->data['exams']    = $exams;
         $this->data['years']    = $years;
 
@@ -2011,19 +2025,15 @@ class Dashboard extends Controller
 
         $class   = $this->request->getPost('class');
         $section = $this->request->getPost('section');
-        $group = $this->request->getPost('group');
         $exam    = $this->request->getPost('exam');
         $year    = $this->request->getPost('year');
 
 
-        $builder = $this->studentModel->where([
-            'class'   => $class,
-            'section' => $section
-        ]);
+        $builder = $this->studentModel->where('class', $class);
 
         // If class is NOT 6 to 8, add section filter
         if (!in_array($class, ['6', '7', '8'])) {
-            $builder->like('group', $group);
+            $builder->like('section', $section);
         }
 
         $students = $builder
@@ -2090,7 +2100,10 @@ class Dashboard extends Controller
     {
 
         $classes = $this->studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
-        $sections = $this->studentModel->distinct()->select('section')->orderBy('section', 'ASC')->findAll();
+        $sections = [
+            ['section' => 'general'],
+            ['section' => 'vocational'],
+        ];
         $exams = $this->resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
         $years = $this->resultModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
 
@@ -3588,7 +3601,6 @@ class Dashboard extends Controller
             'roll',
             'class',
             'section',
-            'group',
             'esif',
             'father_name',
             'mother_name',

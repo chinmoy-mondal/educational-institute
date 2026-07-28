@@ -31,15 +31,6 @@
           </select>
         </div>
 
-        <div class="form-group">
-          <label for="section">Group</label>
-          <select name="section" class="form-control" required>
-            <option value="">Select</option>
-            <?php foreach ($groups as $s): ?>
-              <option value="<?= esc($s['group']) ?>"><?= ucfirst(esc($s['group'])) ?></option>
-            <?php endforeach; ?>
-          </select>
-        </div>
 
         <div class="form-group">
           <label for="exam">Exam</label>
