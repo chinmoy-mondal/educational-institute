@@ -1678,13 +1678,11 @@ class Dashboard extends Controller
 
     public function stAssaginSubView()
     {
-
-
         // Get filter inputs
         $q       = $this->request->getGet('q');
         $class   = $this->request->getGet('class');
         $section = $this->request->getGet('section');
-        $religion = $this->request->getGet('religion');
+        $group = $this->request->getGet('group');
 
         // Build query
         $builder = $this->studentModel;
@@ -1702,8 +1700,8 @@ class Dashboard extends Controller
         if ($section) {
             $builder = $builder->where('section', $section);
         }
-        if ($religion) {
-            $builder = $builder->where('religion', $religion);
+        if ($group) {
+            $builder = $builder->where('group', $group);
         }
 
         $students = $builder
@@ -1713,21 +1711,16 @@ class Dashboard extends Controller
             ->getResultArray();
 
         $sections = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
-        $religions = $this->studentModel->select('religion')->distinct()->where('religion IS NOT NULL')->orderBy('religion')->findAll();
+        $groups = $this->studentModel->select('group')->distinct()->where('group IS NOT NULL')->orderBy('religion')->findAll();
+
         $subjectBuilder = $this->subjectModel;
 
         if ($class) {
             $subjectBuilder = $subjectBuilder->where('class', $class);
         }
 
-        if (stripos($section, 'Vocational') !== false) {
-            $filteredSection = 'Vocational';
-        } else {
-            $filteredSection = 'General';
-        }
-
-        if ($filteredSection) {
-            $subjectBuilder = $subjectBuilder->where('section', $filteredSection);
+        if ($section) {
+            $subjectBuilder = $subjectBuilder->where('section', $section);
         }
 
         $subjects = $subjectBuilder->findAll();
@@ -1747,8 +1740,8 @@ class Dashboard extends Controller
         $this->data['class']         = $class;
         $this->data['section']       = $section;
         $this->data['sections']      = $sections;
-        $this->data['religion']      = $religion;
-        $this->data['religions']     = $religions;
+        $this->data['group']      = $group;
+        $this->data['groups']     = $groups;
 
         return view('dashboard/stSubAssaginment', $this->data);
     }
