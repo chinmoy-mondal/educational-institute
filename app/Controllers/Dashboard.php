@@ -1982,7 +1982,6 @@ class Dashboard extends Controller
 
         $sections = [
             ['section' => 'General'],
-            ['section' => 'Vocational'],
             ['section' => 'Science'],
             ['section' => 'Humanities'],
         ];
