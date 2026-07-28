@@ -2093,10 +2093,7 @@ class Dashboard extends Controller
     {
 
         $classes = $this->studentModel->distinct()->select('class')->orderBy('class', 'ASC')->findAll();
-        $sections = [
-            ['section' => 'general'],
-            ['section' => 'vocational'],
-        ];
+        $sections = $this->studentModel->distinct()->select('section')->orderBy('section', 'ASC')->findAll();
         $exams = $this->resultModel->distinct()->select('exam')->orderBy('exam', 'ASC')->findAll();
         $years = $this->resultModel->distinct()->select('year')->orderBy('year', 'DESC')->findAll();
 
