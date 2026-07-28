@@ -1682,6 +1682,7 @@ class Dashboard extends Controller
         $q       = $this->request->getGet('q');
         $class   = $this->request->getGet('class');
         $section = $this->request->getGet('section');
+        $group = $this->request->getGet('group');
         $religion = $this->request->getGet('religion');
 
         // Build query
@@ -1700,6 +1701,9 @@ class Dashboard extends Controller
         if ($section) {
             $builder = $builder->where('section', $section);
         }
+        if ($group) {
+            $builder = $builder->where('group', $group);
+        }
         if ($religion) {
             $builder = $builder->where('religion', $religion);
         }
@@ -1713,21 +1717,20 @@ class Dashboard extends Controller
         $sections = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
         $religions = $this->studentModel->select('religion')->distinct()->where('religion IS NOT NULL')->orderBy('religion')->findAll();
         $groups = $this->studentModel->select('group')->distinct()->where('group IS NOT NULL')->orderBy('religion')->findAll();
+
+        
         $subjectBuilder = $this->subjectModel;
 
         if ($class) {
             $subjectBuilder = $subjectBuilder->where('class', $class);
         }
-
-        if (stripos($section, 'Vocational') !== false) {
-            $filteredSection = 'Vocational';
-        } else {
-            $filteredSection = 'General';
+        if ($section) {
+            $subjectBuilder = $subjectBuilder->where('section', $section);
         }
+        if ($group) {
+            $subjectBuilder = $subjectBuilder->where('group', $group);
+        }      
 
-        if ($filteredSection) {
-            $subjectBuilder = $subjectBuilder->where('section', $filteredSection);
-        }
 
         $subjects = $subjectBuilder->findAll();
 
