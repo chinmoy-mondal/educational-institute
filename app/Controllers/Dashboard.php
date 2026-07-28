@@ -1678,8 +1678,6 @@ class Dashboard extends Controller
 
     public function stAssaginSubView()
     {
-
-
         // Get filter inputs
         $q       = $this->request->getGet('q');
         $class   = $this->request->getGet('class');
@@ -1714,6 +1712,7 @@ class Dashboard extends Controller
 
         $sections = $this->studentModel->select('section')->distinct()->orderBy('section')->findAll();
         $religions = $this->studentModel->select('religion')->distinct()->where('religion IS NOT NULL')->orderBy('religion')->findAll();
+        $groups = $this->studentModel->select('group')->distinct()->where('group IS NOT NULL')->orderBy('religion')->findAll();
         $subjectBuilder = $this->subjectModel;
 
         if ($class) {
@@ -1749,6 +1748,8 @@ class Dashboard extends Controller
         $this->data['sections']      = $sections;
         $this->data['religion']      = $religion;
         $this->data['religions']     = $religions;
+        $this->data['religions']     = $religions;
+        $this->data['groups']        = $groups;
 
         return view('dashboard/stSubAssaginment', $this->data);
     }
