@@ -17,6 +17,7 @@ class StudentModel extends Model
         'student_name',
         'roll',
         'class',
+        'group',
         'section',
         'esif',
         'father_name',
