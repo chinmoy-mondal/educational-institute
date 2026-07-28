@@ -56,7 +56,7 @@
             <div class="col-md-4">
               <label>Group (optional, only for Class 9 & 10)</label>
               <select name="group" class="form-control">
-                <option value="">Select Group</option>
+                <option value="n/a">Select Group</option>
                 <option value="n/a" <?= old('group') == 'n/a' ? 'selected' : '' ?>>N/A</option>
                 <option value="General - Science"
                   <?= old('group') == 'General - Science' ? 'selected' : '' ?>>General → Science

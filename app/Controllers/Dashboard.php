@@ -3588,6 +3588,7 @@ class Dashboard extends Controller
             'roll',
             'class',
             'section',
+            'group',
             'esif',
             'father_name',
             'mother_name',
