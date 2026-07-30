@@ -343,7 +343,7 @@ if (!is_null($roll)) {
                 $gpa = '0.00';
                 $totalFailed++;
               } else {
-                $fullMark = $mark['full_mark'] + ($marksheet[$i - 1]['full_mark'] ?? 0);
+                $fullMark = $mark['full_mark'] + ($prevMark['full_mark'] ?? 0 ?? 0);
                 $percentage = $total / $fullMark * 100;
 
                 if ($percentage >= 80) {
@@ -374,13 +374,13 @@ if (!is_null($roll)) {
               $subject == 'Bangla 2nd Paper'
             ) {
 
-              if (($mark['written'] + $marksheet[$i - 1]['written']) < 40 || ($mark['mcq'] + $marksheet[$i - 1]['mcq']) < 20) {
+              if (($mark['written'] + $prevMark['written'] ?? 0) < 40 || ($mark['mcq'] + $prevMark['mcq'] ?? 0) < 20) {
                 $grade = 'F';
                 $gpa = '0.00';
 
                 $totalFailed++;
               } else {
-                $fullMark = $mark['full_mark'] + ($marksheet[$i - 1]['full_mark'] ?? 0);
+                $fullMark = $mark['full_mark'] + ($prevMark['full_mark'] ?? 0 ?? 0);
                 $percentage = $total / $fullMark * 100;
 
                 if ($percentage >= 80) {
@@ -411,13 +411,13 @@ if (!is_null($roll)) {
               $subject == 'English 2nd Paper'
             ) {
 
-              if (($mark['written'] + $marksheet[$i - 1]['written']) < 66) {
+              if (($mark['written'] + $prevMark['written'] ?? 0) < 66) {
                 $grade = 'F';
                 $gpa = '0.00';
 
                 $totalFailed++;
               } else {
-                $fullMark = $mark['full_mark'] + $marksheet[$i - 1]['full_mark'];
+                $fullMark = $mark['full_mark'] + $prevMark['full_mark'] ?? 0;
                 $percentage = $total / $fullMark * 100;
 
                 if ($percentage >= 80) {
