@@ -338,12 +338,12 @@ if (!is_null($roll)) {
             $subject = $mark['subject'];
 
             if (in_array((int)$student['class'], [6, 7, 8])) {
-              if (($mark['total'] + ($marksheet[$i - 1]['total'] ?? 0)) < 49) {
+              if (($mark['total'] + ($prevMark['total'] ?? 0)) < 49) {
                 $grade = 'F';
                 $gpa = '0.00';
                 $totalFailed++;
               } else {
-                $fullMark = $mark['full_mark'] + ($prevMark['full_mark'] ?? 0 ?? 0);
+                $fullMark = $mark['full_mark'] + ($prevMark['full_mark'] ?? 0);
                 $percentage = $total / $fullMark * 100;
 
                 if ($percentage >= 80) {
@@ -417,7 +417,7 @@ if (!is_null($roll)) {
 
                 $totalFailed++;
               } else {
-                $fullMark = $mark['full_mark'] + $prevMark['full_mark'] ?? 0;
+                $fullMark = $mark['full_mark'] + ($prevMark['full_mark'] ?? 0);
                 $percentage = $total / $fullMark * 100;
 
                 if ($percentage >= 80) {
