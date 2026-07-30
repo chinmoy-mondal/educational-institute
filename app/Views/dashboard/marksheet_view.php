@@ -814,7 +814,15 @@ if (!is_null($roll)) {
                   <tr>
                     <td><strong>GPA (Without 4th)</strong></td>
                     <td>
-                      <?= $subjectCount > 0 ? number_format($totalGPA / $subjectCount, 2) : '0.00' ?>
+                      <?php
+                      if ($totalFailed > 0) {
+                        echo '0.00';
+                      } else {
+                        echo $subjectCount > 0
+                          ? number_format($totalGPA / $subjectCount, 2)
+                          : '0.00';
+                      }
+                      ?>
                     </td>
                   </tr>
                   <tr>
