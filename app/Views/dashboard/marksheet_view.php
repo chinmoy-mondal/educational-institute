@@ -330,12 +330,20 @@ if (!is_null($roll)) {
                 <td id="combined_gpa_<?= $subjectKey ?>" rowspan="2"></td>
 
                 <?php
-          // Handle 2nd Paper (inject values into previous IDs)
-          elseif (in_array($mark['subject'], ['Bangla 2nd Paper', 'English 2nd Paper'])):
-            $subjectKey = strtolower(str_replace(' ', '_', explode(' ', $mark['subject'])[0]));
-            $total = $mark['total'] + ($marksheet[$i - 1]['total'] ?? 0); // Combine 1st + 2nd paper total
+                // Handle 2nd Paper (inject values into previous IDs)
+                elseif (in_array($mark['subject'], ['Bangla 2nd Paper', 'English 2nd Paper'])):
 
-            $subject = $mark['subject'];
+                  $subjectKey = strtolower(str_replace(' ', '_', explode(' ', $mark['subject'])[0]));
+
+                  // Get previous paper safely
+                  $prevMark = [];
+                  if ($i > 0 && isset($marksheet[$i - 1])) {
+                    $prevMark = $marksheet[$i - 1];
+                  }
+
+                  $total = $mark['total'] + ($prevMark['total'] ?? 0);
+
+                  $subject = $mark['subject'];
 
             if (in_array((int)$student['class'], [6, 7, 8])) {
               if (($mark['total'] + ($prevMark['total'] ?? 0)) < 49) {
