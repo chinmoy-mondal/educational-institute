@@ -1814,10 +1814,11 @@ class Dashboard extends Controller
 
         $students = $this->studentModel
             ->groupStart()
-            ->where("FIND_IN_SET('" . $subjectId . "', assign_sub) >", 0, false)
-            ->orWhere("FIND_IN_SET('" . $subjectId . "*', assign_sub) >", 0, false)
+            ->where("FIND_IN_SET('81', assign_sub) >", 0, false)
+            ->orWhere("FIND_IN_SET('81*', assign_sub) >", 0, false)
             ->groupEnd()
             ->where('permission', 0)
+            ->where('CAST(class AS UNSIGNED) <=', 10, false)
             ->orderBy('CAST(roll AS UNSIGNED)', 'ASC', false)
             ->findAll();
 
