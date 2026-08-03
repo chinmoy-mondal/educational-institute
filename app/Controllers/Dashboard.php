@@ -1990,11 +1990,21 @@ class Dashboard extends Controller
         }
 
         // Delete the result
-        if ($this->resultModel->delete($resultId)) {
-            return redirect()->back()->with('success', 'Result deleted successfully.');
-        }
+        // Delete the result
+        $success = $this->resultModel->delete($resultId);
 
-        return redirect()->back()->with('error', 'Failed to delete the result.');
+        return view('dashboard/post_redirect', [
+            'url' => site_url('admin/resultCheck'),
+            'fields' => [
+                'user_id'    => $result['teacher_id'],
+                'subject_id' => $result['subject_id'],
+                'exam_name'  => $result['exam'],
+            ],
+            'message' => $success
+                ? 'Result deleted successfully.'
+                : 'Failed to delete the result.',
+            'messageType' => $success ? 'success' : 'error',
+        ]);
     }
 
     public function selectTabulationForm()
