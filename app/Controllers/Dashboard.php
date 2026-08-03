@@ -1995,14 +1995,12 @@ class Dashboard extends Controller
             $success ? 'Result deleted successfully.' : 'Failed to delete the result.'
         );
 
-        return view('dashboard/post_redirect', [
-            'url' => site_url('admin/resultCheck'),
-            'fields' => [
-                'user_id'    => $result['teacher_id'],
-                'subject_id' => $result['subject_id'],
-                'exam_name'  => $result['exam'],
-            ],
-        ]);
+        // Re-populate the current request so ResultCheck() can read the same POST values.
+        $_POST['user_id'] = $result['teacher_id'];
+        $_POST['subject_id'] = $result['subject_id'];
+        $_POST['exam_name'] = $result['exam'];
+
+        return $this->ResultCheck();
     }
 
     public function selectTabulationForm()
