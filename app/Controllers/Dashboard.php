@@ -1975,23 +1975,24 @@ class Dashboard extends Controller
 
     public function delete_result_permission()
     {
-        $resultId  = $this->request->getPost('result_id');
-        $studentId = $this->request->getPost('student_id');
+        $resultId = $this->request->getPost('result_id');
 
         if (empty($resultId)) {
             return redirect()->back()->with('error', 'Invalid result ID.');
         }
 
-        // Check if the result exists
         $result = $this->resultModel->find($resultId);
 
         if (!$result) {
             return redirect()->back()->with('error', 'Result not found.');
         }
 
-        // Delete the result
-        // Delete the result
         $success = $this->resultModel->delete($resultId);
+
+        session()->setFlashdata(
+            $success ? 'success' : 'error',
+            $success ? 'Result deleted successfully.' : 'Failed to delete the result.'
+        );
 
         return view('dashboard/post_redirect', [
             'url' => site_url('admin/resultCheck'),
@@ -2000,10 +2001,6 @@ class Dashboard extends Controller
                 'subject_id' => $result['subject_id'],
                 'exam_name'  => $result['exam'],
             ],
-            'message' => $success
-                ? 'Result deleted successfully.'
-                : 'Failed to delete the result.',
-            'messageType' => $success ? 'success' : 'error',
         ]);
     }
 
