@@ -1973,6 +1973,30 @@ class Dashboard extends Controller
         return view('dashboard/resultCheck', $this->data);
     }
 
+    public function delete_result_permission()
+    {
+        $resultId  = $this->request->getPost('result_id');
+        $studentId = $this->request->getPost('student_id');
+
+        if (empty($resultId)) {
+            return redirect()->back()->with('error', 'Invalid result ID.');
+        }
+
+        // Check if the result exists
+        $result = $this->resultModel->find($resultId);
+
+        if (!$result) {
+            return redirect()->back()->with('error', 'Result not found.');
+        }
+
+        // Delete the result
+        if ($this->resultModel->delete($resultId)) {
+            return redirect()->back()->with('success', 'Result deleted successfully.');
+        }
+
+        return redirect()->back()->with('error', 'Failed to delete the result.');
+    }
+
     public function selectTabulationForm()
     {
 

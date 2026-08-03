@@ -140,6 +140,7 @@ $routes->post('ad-result', 'Dashboard::result');
 $routes->get('exam_name/(:num)/(:num)', 'Dashboard::exam_name/$1/$2');
 $routes->get('admin/exam_name_result_check/(:num)/(:num)', 'Dashboard::exam_name_result_check/$1/$2');
 $routes->post('admin/resultCheck', 'Dashboard::ResultCheck');
+$routes->post('delete_result_permission', 'Dashboard::delete_result_permission');
 $routes->post('results/submit', 'Dashboard::submitResults');
 
 $routes->get('admin/tabulation_form', 'Dashboard::selectTabulationForm');

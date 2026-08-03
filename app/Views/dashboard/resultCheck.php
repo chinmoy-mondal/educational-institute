@@ -2,6 +2,21 @@
 <?= $this->section('content') ?>
 
 <div class="container-fluid">
+    <?php if (session()->getFlashdata('success')): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        <?= session()->getFlashdata('success') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <?php endif; ?>
+
+    <?php if (session()->getFlashdata('error')): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <?= session()->getFlashdata('error') ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <?php endif; ?>
     <h1 class="mb-4"><?= esc($title ?? 'Result Check') ?></h1>
 
     <div class="card shadow-sm">
@@ -46,7 +61,7 @@
                 <table class="table table-bordered table-hover table-striped">
                     <thead class="table-secondary text-center">
                         <tr>
-                            <th colspan="6" class="h5 text-primary">Student Results</th>
+                            <th colspan="7" class="h5 text-primary">Student Results</th>
                         </tr>
                         <tr>
                             <th>Roll</th>
@@ -69,9 +84,18 @@
                             <td><?= esc($res['practical']) ?></td>
                             <td class="text-success fw-bold"><?= esc($res['total']) ?></td>
                             <td>
-                                <a href="<?= site_url('result_details/' . $res['id']) ?>" class="btn btn-sm btn-info">
-                                    <i class="fas fa-eye"></i> More
-                                </a>
+                                <form action="<?= site_url('delete_result_permission') ?>" method="post"
+                                    class="d-inline"
+                                    onsubmit="return confirm('Are you sure you want to delete this user permission?');">
+                                    <?= csrf_field() ?>
+
+                                    <input type="hidden" name="result_id" value="<?= $res['id'] ?>">
+                                    <input type="hidden" name="student_id" value="<?= $res['student_id'] ?>">
+
+                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete Permission">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                         <?php endforeach ?>
