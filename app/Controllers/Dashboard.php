@@ -1956,6 +1956,7 @@ class Dashboard extends Controller
             ->where('results.subject_id', $subjectId)
             ->where('results.teacher_id', $userId)
             ->where('results.exam', $exam_name)
+            ->where('results.year', date('Y'))
             ->orderBy('CAST(students.roll AS UNSIGNED)', 'ASC', false)
             ->findAll();
 
