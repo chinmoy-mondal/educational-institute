@@ -688,7 +688,7 @@ if (!is_null($roll)) {
                       $gpa = '0.00';
                     }
                   }
-                } elseif (in_array($subject, ['Physics', 'Chemistry', 'Higher Mathematics', 'Biology'])) {
+                      } elseif (in_array($subject, ['Physics', 'Chemistry', 'Higher Mathematics', 'Biology', 'Agriculture Studies'])) {
                   if ($written < 17 || $mcq < 8 || $practical < 8) {
                     $grade = 'F';
                     $gpa = '0.00';
