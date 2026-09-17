@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateFeesAmountTable extends Migration
+class CreateStudentDiscountTable extends Migration
 {
     public function up()
     {
@@ -14,47 +14,35 @@ class CreateFeesAmountTable extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-
-            'class' => [
-                'type'       => 'VARCHAR',
-                'constraint' => 50,
-            ],
-
-            'title_id' => [
+            'student_id' => [
                 'type'     => 'INT',
                 'unsigned' => true,
+                'null'     => false,
             ],
-
-            'unit' => [
-                'type'       => 'TINYINT',
-                'constraint' => 2,
-                'null'       => true,
-                'comment'    => 'Unit (1–12)',
-            ],
-
-            'fees' => [
+            'amount' => [
                 'type'       => 'DECIMAL',
                 'constraint' => '10,2',
-                'default'    => 0.00,
+                'default'    => 0,
+                'null'       => false,
             ],
-
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
             ],
-
             'updated_at' => [
                 'type' => 'DATETIME',
                 'null' => true,
             ],
         ]);
 
-        $this->forge->addKey('id', true);
-        $this->forge->createTable('fees_amount');
+        $this->forge->addKey('id', true); // primary key
+        $this->forge->addKey('student_id'); // index
+
+        $this->forge->createTable('student_discount', true);
     }
 
     public function down()
     {
-        $this->forge->dropTable('fees_amount');
+        $this->forge->dropTable('student_discount', true);
     }
 }
