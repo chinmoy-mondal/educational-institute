@@ -150,7 +150,6 @@ $routes->get('admin/cost_type/delete/(:num)', 'Dashboard::delete_cost_type/$1');
 $routes->get('admin/pay_stat', 'Dashboard::pay_stat');
 $routes->get('admin/set_fees', 'Dashboard::set_fees');
 $routes->post('admin/save_fees', 'Dashboard::save_fees');
-
 $routes->get('admin/receipt/(:any)', 'Dashboard::receipt/$1');
 
 $routes->get('admin/pay_student_request/(:num)', 'Dashboard::payStudentRequest/$1');
