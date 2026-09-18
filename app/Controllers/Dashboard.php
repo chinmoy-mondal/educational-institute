@@ -68,6 +68,7 @@ class Dashboard extends Controller
         $this->feesModel        = new FeesModel();
         $this->feesAmountModel  = new FeesAmountModel();
         $this->transactionModel = new TransactionModel();
+        $this->userCollectionsPayModel = new UserCollectionsPayModel();
         $this->welcomeMessageModel    = new WelcomeMessageModel();
         $this->teacherAttendanceModel = new TeacherAttendanceModel();
         $this->rankingModel           = new RankingModel();
