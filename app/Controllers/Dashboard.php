@@ -14,6 +14,7 @@ use App\Models\AttendanceModel;
 use App\Models\FeesModel;
 use App\Models\FeesAmountModel;
 use App\Models\TransactionModel;
+use App\Models\UserCollectionsPayModel;
 use App\Models\TeacherAttendanceModel;
 use App\Models\RankingModel;
 use App\Models\StudentBackupModel;
@@ -41,6 +42,7 @@ class Dashboard extends Controller
     protected $feesModel;
     protected $feesAmountModel;
     protected $transactionModel;
+    protected $userCollectionsPayModel;
     protected $welcomeMessageModel;
     protected $teacherAttendanceModel;
     protected $rankingModel;
