@@ -5809,9 +5809,9 @@ class Dashboard extends Controller
         $existingUpdates = [];
         $totalAmount     = 0;
 
-        if ($section) {
+        if ($class) {
             $amounts = $this->feesAmountModel
-                ->where('section', $section)
+                ->where('section', $class)
                 ->findAll();
 
             foreach ($amounts as $a) {
