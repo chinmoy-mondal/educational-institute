@@ -28,7 +28,7 @@
 
     <!-- Fees Setup Form -->
     <form method="post" action="<?= base_url('admin/save_fees') ?>">
-        <input type="hidden" name="section" value="<?= esc($selectedClass) ?>">
+        <input type="hidden" name="class" value="<?= esc($selectedClass) ?>">
 
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
