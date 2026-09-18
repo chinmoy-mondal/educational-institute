@@ -5856,13 +5856,13 @@ class Dashboard extends Controller
         $unitsData = $this->request->getPost('unit');
         echo "test";
 
-        if (!$class) {
-            return redirect()->back()->with('error', 'Please select a section before saving.');
-        }
+        // if (!$class) {
+        //     return redirect()->back()->with('error', 'Please select a section before saving.');
+        // }
 
-        if (empty($feesData)) {
-            return redirect()->back()->with('error', 'No fee amounts to save.');
-        }
+        // if (empty($feesData)) {
+        //     return redirect()->back()->with('error', 'No fee amounts to save.');
+        // }
 
         // $amountModel = new FeesAmountModel();
 
