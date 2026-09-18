@@ -15,6 +15,7 @@ use App\Models\FeesModel;
 use App\Models\FeesAmountModel;
 use App\Models\TransactionModel;
 use App\Models\UserCollectionsPayModel;
+use App\Models\CostTypeModel;
 use App\Models\TeacherAttendanceModel;
 use App\Models\RankingModel;
 use App\Models\StudentBackupModel;
@@ -43,6 +44,7 @@ class Dashboard extends Controller
     protected $feesAmountModel;
     protected $transactionModel;
     protected $userCollectionsPayModel;
+    protected $costTypeModel;
     protected $welcomeMessageModel;
     protected $teacherAttendanceModel;
     protected $rankingModel;
@@ -69,6 +71,7 @@ class Dashboard extends Controller
         $this->feesAmountModel  = new FeesAmountModel();
         $this->transactionModel = new TransactionModel();
         $this->userCollectionsPayModel = new UserCollectionsPayModel();
+        $this->costTypeModel          = new CostTypeModel();
         $this->welcomeMessageModel    = new WelcomeMessageModel();
         $this->teacherAttendanceModel = new TeacherAttendanceModel();
         $this->rankingModel           = new RankingModel();
