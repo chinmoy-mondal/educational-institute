@@ -200,10 +200,10 @@ $routes->post('admin/updateNotice/(:num)', 'Dashboard::updateNotice/$1');
 
     // Transaction routes
     $routes->get('admin/transactions', 'Dashboard::transactionDashboard');
-$routes->get('admin/tec_pay', 'Dashboard::tec_pay');
+    $routes->get('admin/tec_pay', 'Dashboard::tec_pay');
     $routes->get('admin/view_tec_pay_details/(:num)', 'Dashboard::view_tec_pay_details/$1');
-$routes->post('admin/reset_amount/(:num)', 'Dashboard::reset_amount/$1');
-$routes->get('admin/std_pay', 'Dashboard::std_pay');
+    $routes->post('admin/reset_amount/(:num)', 'Dashboard::reset_amount/$1');
+    $routes->get('admin/std_pay', 'Dashboard::std_pay');
     $routes->get('admin/std_due', 'Dashboard::std_due');
     $routes->get('admin/std_due_csv', 'Dashboard::std_due_csv');
     $routes->get('admin/pay_report', 'Dashboard::pay_report');
@@ -215,14 +215,20 @@ $routes->get('admin/std_pay', 'Dashboard::std_pay');
     $routes->get('admin/cost_type', 'Dashboard::cost_type');   // Show form/list
     $routes->post('admin/save_cost_type', 'Dashboard::save_cost_type');
     $routes->get('admin/cost_type/delete/(:num)', 'Dashboard::delete_cost_type/$1');
-$routes->get('admin/pay_stat', 'Dashboard::pay_stat');
-$routes->get('admin/set_fees', 'Dashboard::set_fees');
-$routes->post('admin/save_fees', 'Dashboard::save_fees');
+    $routes->get('admin/pay_stat', 'Dashboard::pay_stat');
+    $routes->get('admin/set_fees', 'Dashboard::set_fees');
+
+    // $routes->post('admin/save_fees', 'Dashboard::save_fees');
+
+    $routes->post('admin/save_fees', function () {
+        return 'save_fees route is working';
+    });
+
     $routes->get('admin/receipt/(:any)', 'Dashboard::receipt/$1');
 
     $routes->get('admin/pay_student_request/(:num)', 'Dashboard::payStudentRequest/$1');
     $routes->post('admin/student-payment', 'Dashboard::studentPayment');
-$routes->get('admin/studentPaymentHistory/(:num)', 'Dashboard::studentPaymentHistory/$1');
+    $routes->get('admin/studentPaymentHistory/(:num)', 'Dashboard::studentPaymentHistory/$1');
     $routes->get('admin/student-payment-report', 'Dashboard::studentPaymentReport');
 
 
