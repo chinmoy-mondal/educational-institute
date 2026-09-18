@@ -5851,11 +5851,11 @@ class Dashboard extends Controller
 
     public function save_fees()
     {
-        $section   = $this->request->getPost('section');
+        $class   = $this->request->getPost('class');
         $feesData  = $this->request->getPost('fees');
         $unitsData = $this->request->getPost('unit');
 
-        if (!$section) {
+        if (!$class) {
             return redirect()->back()->with('error', 'Please select a section before saving.');
         }
 
@@ -5874,7 +5874,7 @@ class Dashboard extends Controller
             $unit = $unitsData[$title_id] ?? null;
 
             $existing = $this->feesAmountModel
-                ->where('section', $section)
+                ->where('class', $class)
                 ->where('title_id', $title_id)
                 ->first();
 
@@ -5888,7 +5888,7 @@ class Dashboard extends Controller
             } else {
                 // INSERT
                 $amountModel->insert([
-                    'section'    => $section,
+                    'class'    => $class,
                     'title_id'   => $title_id,
                     'fees'       => $amount,
                     'unit'       => $unit,
