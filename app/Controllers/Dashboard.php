@@ -5825,13 +5825,20 @@ class Dashboard extends Controller
             }
         }
 
+        // $classRows = $this->studentModel
+        //     ->select('class')
+        //     ->where('class <=', 10)
+        //     ->distinct()
+        //     ->orderBy('class', 'ASC')
+        //     ->findAll();
+
         $classRows = $this->studentModel
             ->select('class')
-            ->where('class <=', 10)
+            ->where('CAST(class AS UNSIGNED) <=', 10)
             ->distinct()
-            ->orderBy('class', 'ASC')
+            ->orderBy('CAST(class AS UNSIGNED)', 'ASC')
             ->findAll();
-
+            
         $this->data['classRows'] = $classRows;
 
         $this->data['existingAmounts'] = $existingAmounts;
