@@ -15,7 +15,7 @@
                     <?php foreach ($classRows as $row): ?>
                     <option value="<?= esc($row['class']) ?>"
                         <?= ($selectedClass == $row['class']) ? 'selected' : '' ?>>
-                        <?= esc($row['section']) ?>
+                        <?= esc($row['class']) ?>
                     </option>
                     <?php endforeach; ?>
                 </select>
@@ -24,16 +24,16 @@
         </div>
     </form>
 
-    <?php if (!empty($selectedSection)): ?>
+    <?php if (!empty($selectedClass)): ?>
 
     <!-- Fees Setup Form -->
     <form method="post" action="<?= base_url('admin/save_fees') ?>">
-        <input type="hidden" name="section" value="<?= esc($selectedSection) ?>">
+        <input type="hidden" name="section" value="<?= esc($selectedClass) ?>">
 
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
                 <strong>
-                    Fees for <?= esc($selectedSection) ?>
+                    Fees for <?= esc($selectedClass) ?>
                 </strong>
             </div>
 
@@ -98,7 +98,7 @@
     <!-- Total Amount -->
     <div class="alert alert-info mt-3">
         <strong>
-            Total Fees (<?= esc($selectedSection) ?>):
+            Total Fees (<?= esc($selectedClass) ?>):
         </strong>
         <?= number_format($totalAmount, 2) ?> ৳
     </div>
