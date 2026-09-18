@@ -5854,6 +5854,7 @@ class Dashboard extends Controller
         $class   = $this->request->getPost('class');
         $feesData  = $this->request->getPost('fees');
         $unitsData = $this->request->getPost('unit');
+        echo "test";
 
         if (!$class) {
             return redirect()->back()->with('error', 'Please select a section before saving.');
@@ -5863,42 +5864,42 @@ class Dashboard extends Controller
             return redirect()->back()->with('error', 'No fee amounts to save.');
         }
 
-        $amountModel = new FeesAmountModel();
+        // $amountModel = new FeesAmountModel();
 
-        foreach ($feesData as $title_id => $amount) {
+        // foreach ($feesData as $title_id => $amount) {
 
-            if ($amount === '' || $amount === null) {
-                continue;
-            }
+        //     if ($amount === '' || $amount === null) {
+        //         continue;
+        //     }
 
-            $unit = $unitsData[$title_id] ?? null;
+        //     $unit = $unitsData[$title_id] ?? null;
 
-            $existing = $this->feesAmountModel
-                ->where('class', $class)
-                ->where('title_id', $title_id)
-                ->first();
+        //     $existing = $this->feesAmountModel
+        //         ->where('class', $class)
+        //         ->where('title_id', $title_id)
+        //         ->first();
 
-            if ($existing) {
-                // UPDATE
-                $amountModel->update($existing['id'], [
-                    'fees'       => $amount,
-                    'unit'       => $unit,
-                    'updated_at' => date('Y-m-d H:i:s')
-                ]);
-            } else {
-                // INSERT
-                $amountModel->insert([
-                    'class'    => $class,
-                    'title_id'   => $title_id,
-                    'fees'       => $amount,
-                    'unit'       => $unit,
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s')
-                ]);
-            }
-        }
+        //     if ($existing) {
+        //         // UPDATE
+        //         $amountModel->update($existing['id'], [
+        //             'fees'       => $amount,
+        //             'unit'       => $unit,
+        //             'updated_at' => date('Y-m-d H:i:s')
+        //         ]);
+        //     } else {
+        //         // INSERT
+        //         $amountModel->insert([
+        //             'class'    => $class,
+        //             'title_id'   => $title_id,
+        //             'fees'       => $amount,
+        //             'unit'       => $unit,
+        //             'created_at' => date('Y-m-d H:i:s'),
+        //             'updated_at' => date('Y-m-d H:i:s')
+        //         ]);
+        //     }
+        // }
 
-        return redirect()->back()->with('success', 'Fees updated successfully!');
+        // return redirect()->back()->with('success', 'Fees updated successfully!');
     }
 
     public function payStudentRequest($id)

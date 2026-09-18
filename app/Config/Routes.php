@@ -218,11 +218,11 @@ $routes->post('admin/updateNotice/(:num)', 'Dashboard::updateNotice/$1');
     $routes->get('admin/pay_stat', 'Dashboard::pay_stat');
     $routes->get('admin/set_fees', 'Dashboard::set_fees');
 
-    // $routes->post('admin/save_fees', 'Dashboard::save_fees');
+    $routes->post('admin/save_fees', 'Dashboard::save_fees');
 
-    $routes->post('admin/save_fees', function () {
-        return 'save_fees route is working';
-    });
+    // $routes->post('admin/save_fees', function () {
+    //     return 'save_fees route is working';
+    // });
 
     $routes->get('admin/receipt/(:any)', 'Dashboard::receipt/$1');
 
