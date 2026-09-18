@@ -5899,6 +5899,7 @@ class Dashboard extends Controller
             }
         }
 
+
         return redirect()->back()->with('success', 'Fees updated successfully!');
     }
 
