@@ -5797,9 +5797,9 @@ class Dashboard extends Controller
         ];
 
         // ✅ ONLY SECTION
-        $section = $this->request->getGet('section');
+        $class = $this->request->getGet('class');
 
-        $this->data['selectedSection'] = $section;
+        $this->data['selectedClass'] = $class;
 
         // Fee titles
         $this->data['titles'] = $this->feesModel->findAll();
@@ -5825,13 +5825,14 @@ class Dashboard extends Controller
             }
         }
 
-        $sectionRows = $this->studentModel
-            ->select('section')
+        $classRows = $this->studentModel
+            ->select('class')
+            ->where('class <=', 10)
             ->distinct()
-            ->orderBy('section', 'ASC')
+            ->orderBy('class', 'ASC')
             ->findAll();
 
-        $this->data['sectionRows'] = $sectionRows;
+        $this->data['classRows'] = $classRows;
 
         $this->data['existingAmounts'] = $existingAmounts;
         $this->data['existingUnits']   = $existingUnits;

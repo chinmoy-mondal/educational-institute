@@ -9,12 +9,12 @@
         <div class="row g-2 align-items-center">
 
             <div class="col-md-4">
-                <select name="section" class="form-select" onchange="this.form.submit()">
-                    <option value="">শাখা নির্বাচন করুন</option>
+                <select name="class" class="form-select" onchange="this.form.submit()">
+                    <option value="">ক্লাস নির্বাচন করুন</option>
 
-                    <?php foreach ($sectionRows as $row): ?>
-                    <option value="<?= esc($row['section']) ?>"
-                        <?= ($selectedSection == $row['section']) ? 'selected' : '' ?>>
+                    <?php foreach ($classRows as $row): ?>
+                    <option value="<?= esc($row['class']) ?>"
+                        <?= ($selectedClass == $row['class']) ? 'selected' : '' ?>>
                         <?= esc($row['section']) ?>
                     </option>
                     <?php endforeach; ?>
