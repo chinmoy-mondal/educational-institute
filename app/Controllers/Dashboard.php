@@ -6086,68 +6086,68 @@ class Dashboard extends Controller
         }
 
         // ---------- SEND SMS ----------
-        $studentPhone = $student['phone'] ?? '';
+        // $studentPhone = $student['phone'] ?? '';
 
-        if ($studentPhone) {
+        // if ($studentPhone) {
 
-            // Prevent duplicate 880
-            if (!str_starts_with($studentPhone, '880')) {
-                $studentPhone = '880' . ltrim($studentPhone, '0');
-            }
+        //     // Prevent duplicate 880
+        //     if (!str_starts_with($studentPhone, '880')) {
+        //         $studentPhone = '880' . ltrim($studentPhone, '0');
+        //     }
 
-            $message = "Dear {$student['student_name']}, your payment for {$monthName} is {$paymentStatusText}. --Jhenaidah Cadet Coaching";
+        //     $message = "Dear {$student['student_name']}, your payment for {$monthName} is {$paymentStatusText}. --Jhenaidah Cadet Coaching";
 
-            $apiKey   = env('sms.api');
-            $callerID = "1234";
+        //     $apiKey   = env('sms.api');
+        //     $callerID = "1234";
 
-            $smsUrl = "https://bulksmsdhaka.net/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
+        //     $smsUrl = "https://bulksmsdhaka.net/api/sendtext?apikey={$apiKey}&callerID={$callerID}&number={$studentPhone}&message=" . urlencode($message);
 
-            $ch = curl_init();
+        //     $ch = curl_init();
 
-            curl_setopt($ch, CURLOPT_URL, $smsUrl);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        //     curl_setopt($ch, CURLOPT_URL, $smsUrl);
+        //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        //     curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
-            $response = curl_exec($ch);
-            $error    = curl_error($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        //     $response = curl_exec($ch);
+        //     $error    = curl_error($ch);
+        //     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-            curl_close($ch);
+        //     curl_close($ch);
 
-            // ---------- DEFAULT ----------
-            $smsStatus = 0;
-            $code      = null;
+        //     // ---------- DEFAULT ----------
+        //     $smsStatus = 0;
+        //     $code      = null;
 
-            $successCodes = ['1000', '1001', '1002'];
+        //     $successCodes = ['1000', '1001', '1002'];
 
-            // ---------- SAFE JSON CHECK ----------
-            if (!$error && $response) {
+        //     // ---------- SAFE JSON CHECK ----------
+        //     if (!$error && $response) {
 
-                $data = json_decode($response, true);
+        //         $data = json_decode($response, true);
 
-                if (json_last_error() === JSON_ERROR_NONE) {
+        //         if (json_last_error() === JSON_ERROR_NONE) {
 
-                    $code = $data['Status'] ?? null;
+        //             $code = $data['Status'] ?? null;
 
-                    if (in_array($code, $successCodes)) {
-                        $smsStatus = 1;
-                    }
-                }
-            }
+        //             if (in_array($code, $successCodes)) {
+        //                 $smsStatus = 1;
+        //             }
+        //         }
+        //     }
 
-            // ---------- LOG SMS ----------
-            $this->smsLogModel->insert([
-                'student_name' => $student['student_name'],
-                'phone_number' => $studentPhone,
-                'message'      => $message,
-                'response'     => $response,
-                'status_code'  => $code,
-                'error'        => $error,
-                'http_code'    => $httpCode,
-                'status'       => $smsStatus,
-                'created_at'   => date('Y-m-d H:i:s'),
-            ]);
-        }
+        //     // ---------- LOG SMS ----------
+        //     // $this->smsLogModel->insert([
+        //     //     'student_name' => $student['student_name'],
+        //     //     'phone_number' => $studentPhone,
+        //     //     'message'      => $message,
+        //     //     'response'     => $response,
+        //     //     'status_code'  => $code,
+        //     //     'error'        => $error,
+        //     //     'http_code'    => $httpCode,
+        //     //     'status'       => $smsStatus,
+        //     //     'created_at'   => date('Y-m-d H:i:s'),
+        //     // ]);
+        // }
 
         // ---------- REDIRECT TO RECEIPT ----------
         return redirect()->to(base_url('admin/receipt/' . $transactionId));
