@@ -86,7 +86,7 @@
                             <tr>
                                 <td><?= $sl++ ?></td>
                                 <td><?= esc($f['title']) ?></td>
-                                <td><?= $unit && $amount ? esc($unit . ' × ' . $amount . '       ( ' . $amount . ' x '   . $payCount . ' )') : '-' ?>
+                                <td><?= $unit && $amount ? esc($unit . ' × ' . $amount . '      \t\t ( ' . $payCountam . ' x '   . $ount . ' )') : '-' ?>
                                 </td>
                                 <td>
                                     <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['id']) ?>">
