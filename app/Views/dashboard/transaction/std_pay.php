@@ -97,11 +97,11 @@
                     <?php $i = 1; ?>
                     <?php foreach ($students as $s): ?>
                     <?php
-                            $sectionName = trim($s['section']);
-                            $total = $sectionFees[$sectionName] ?? 0;  // Total fees per section
+                            $className = trim($s['class']);
+                            $total = $sectionFees[$className] ?? 0;  // Total fees per section
 
                             // $total_per_month = ($sectionName == 'আবাসিক') ? $accommodation : $not_accommodation;
-                            $total_per_month = $sectionTotals[$sectionName] ?? 0;
+                            $total_per_month = $sectionTotals[$className] ?? 0;
                             $paid  = $senderDeposits[$s['id']] ?? 0;   // Amount paid by student
                             $due   = $total_per_month - $paid;                   // Remaining due
                             ?>

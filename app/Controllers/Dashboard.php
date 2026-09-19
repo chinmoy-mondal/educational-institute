@@ -4529,13 +4529,9 @@ class Dashboard extends Controller
             ->get()
             ->getResultArray();
 
-        // $senderDeposits = [];
-        // foreach ($feesDeposit as $row) {
-        //     $senderDeposits[$row['sender_id']] = (float)$row['total_deposit'];
-        // }
-        // echo "<pre>";
-        // print_r($feesDeposit);
-        // echo "</pre>";
+
+
+
 
         $senderDeposits = [];
 
@@ -4588,10 +4584,6 @@ class Dashboard extends Controller
         }
 
 
-
-
-        // $this->data['not_accommodation'] = $sectionTotals['অনাবাসিক'];
-        // $this->data['accommodation']     = $sectionTotals['আবাসিক'];
         $this->data['classTotals'] = $classTotals;
 
 
