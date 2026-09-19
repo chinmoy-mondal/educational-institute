@@ -5815,7 +5815,7 @@ class Dashboard extends Controller
 
         if ($class) {
             $amounts = $this->feesAmountModel
-                ->where('section', $class)
+                ->where('class', $class)
                 ->findAll();
 
             foreach ($amounts as $a) {
@@ -5828,6 +5828,10 @@ class Dashboard extends Controller
                 }
             }
         }
+
+        echo "<pre>";
+        print_r($amounts);
+        echo "</pre>";
 
         // $classRows = $this->studentModel
         //     ->select('class')

@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 
 <div class="container-fluid">
-    <h4 class="mb-4">Student Fees Setup (Section Wise)</h4>
+    <h4 class="mb-4">Student Fees Setup (Class Wise)</h4>
 
     <!-- Select class Only -->
     <form method="get" action="<?= base_url('admin/set_fees') ?>" class="mb-4">
