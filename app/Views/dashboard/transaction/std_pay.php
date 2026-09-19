@@ -49,7 +49,7 @@
                         </option>
 
                         <?php foreach ($class as $s): ?>
-                        <option value="<?= esc($s) ?>" <?= old('section') == $s ? 'selected' : '' ?>>
+                        <option value="<?= esc($s) ?>" <?= old('class') == $s ? 'selected' : '' ?>>
                             <?= esc($s) ?>
                         </option>
                         <?php endforeach; ?>

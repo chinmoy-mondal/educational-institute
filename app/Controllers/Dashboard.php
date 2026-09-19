@@ -4484,7 +4484,7 @@ class Dashboard extends Controller
 
         /* Get search & section */
         $search  = $this->request->getGet('search');
-        $section = $this->request->getGet('section');
+        $class = $this->request->getGet('class');
 
         /* Search: roll / ID / name */
         if ($search) {
@@ -4496,8 +4496,8 @@ class Dashboard extends Controller
         }
 
         /* Section filter only (আবাসিক / অনাবাসিক) */
-        if ($section) {
-            $builder->where('section', $section);
+        if ($class) {
+            $builder->where('class', $class);
         }
 
         /* Students list */
@@ -4508,18 +4508,18 @@ class Dashboard extends Controller
             ->getResultArray();
 
         $feesSummary = $this->feesAmountModel
-            ->select('section, SUM(CASE WHEN unit = 0 THEN fees ELSE fees * unit END) AS total_fees')
-            ->groupBy('section')
-            ->orderBy('section', 'ASC')
+            ->select('class, SUM(CASE WHEN unit = 0 THEN fees ELSE fees * unit END) AS total_fees')
+            ->groupBy('class')
+            ->orderBy('class', 'ASC')
             ->get()
             ->getResultArray();
 
-        $sectionFees = [];
+        $classFees = [];
         foreach ($feesSummary as $row) {
-            $section = trim($row['section']);
-            $sectionFees[$section] = (float)$row['total_fees'];
+            $class = trim($row['class']);
+            $classFees[$class] = (float)$row['total_fees'];
         }
-        $this->data['sectionFees'] = $sectionFees;
+        $this->data['classFees'] = $classFees;
 
         $feesDeposit = $this->transactionModel
             ->select('sender_id, sender_name, SUM(amount) AS total_deposit')
@@ -4565,10 +4565,10 @@ class Dashboard extends Controller
 
         $month = date('n'); // 1–12
 
-        $sectionTotals = [];
+        $classTotals = [];
 
         foreach ($fees as $f) {
-            $section = trim($f['section']);
+            $class = trim($f['class']);
             $unit    = (int) $f['unit'];
             $fee     = (float) $f['fees'];
 
@@ -4580,7 +4580,7 @@ class Dashboard extends Controller
             for ($m = 1; $m <= $month; $m++) {
 
                 if ($m === 1 || (($m - 1) % $interval === 0)) {
-                    $sectionTotals[$section] = ($sectionTotals[$section] ?? 0) + $fee;
+                    $classTotals[$class] = ($classTotals[$class] ?? 0) + $fee;
                 }
             }
         }
@@ -4590,14 +4590,14 @@ class Dashboard extends Controller
 
         // $this->data['not_accommodation'] = $sectionTotals['অনাবাসিক'];
         // $this->data['accommodation']     = $sectionTotals['আবাসিক'];
-        $this->data['sectionTotals'] = $sectionTotals;
+        $this->data['classTotals'] = $classTotals;
 
 
         $this->data['class'] = array_column($class, 'class');
 
         /* Pass values to view */
         $this->data['search'] = $search;
-        $this->data['selectedSection'] = $section;
+        $this->data['selectedClass'] = $class;
 
         return view('dashboard/transaction/std_pay', $this->data);
     }
