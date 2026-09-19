@@ -43,7 +43,6 @@
                 <div class="col-md-3">
                     <select name="class" class="form-control">
 
-                        <!-- Default option -->
                         <option value="" <?= empty($selectedClass) ? 'selected' : '' ?>>
                             Select Class
                         </option>
