@@ -92,7 +92,7 @@
                                     <input type="number" step="10.0" name="amount[<?= $index ?>]"
                                         class="form-control form-control-sm fee-amount" data-unit="<?= esc($unit) ?>"
                                         data-base="<?= esc($amount) ?>" data-title="<?= esc($f['title']) ?>"
-                                        data-max="<?= esc($max) ?>" value="<?= esc($payAmount) ?>" min="0">
+                                        data-max="<?= esc($max) ?>" value="" min="0">
                                 </td>
                             </tr>
                             <?php endforeach; ?>
