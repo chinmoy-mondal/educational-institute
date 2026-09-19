@@ -65,9 +65,22 @@
                                 $amount = $feeAmounts[$f['id']] ?? 0;
                                 $max    = $unit * $amount;
 
-                                echo $currentMonth . " currnt month <br>";
-                                echo $amount . " amount <br>";
-                                echo $amount * $amount . "corrent amount <br>";
+
+                                $payCount = 0;
+
+                                if ($unit > 0) {
+                                    $interval = 12 / $unit;
+
+                                    for ($m = 1; $m <= $currentMonth; $m++) {
+                                        if (($m - 1) % $interval === 0) {
+                                            $payCount++;
+                                        }
+                                    }
+                                }
+
+                                $payAmount = $payCount * $amount;
+                                
+                                echo $payAmount . "corrent amount <br>";
 
 
                             ?>
