@@ -4597,7 +4597,7 @@ class Dashboard extends Controller
 
         /* Pass values to view */
         $this->data['search'] = $search;
-        $this->data['selectedClass'] = $classs;
+        $this->data['selectedClass'] = $selectClass;
 
         return view('dashboard/transaction/std_pay', $this->data);
     }
