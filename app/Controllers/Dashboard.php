@@ -4525,6 +4525,11 @@ class Dashboard extends Controller
             $class = trim($row['class']);
             $classFees[$class] = (float)$row['total_fees'];
         }
+
+        echo "<pre>";
+        print_r($classFees);
+        echo "</pre>";
+
         $this->data['classFees'] = $classFees;
 
         $feesDeposit = $this->transactionModel
