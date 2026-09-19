@@ -72,7 +72,7 @@
                                     $interval = 12 / $unit;
 
                                     for ($m = 1; $m <= $currentMonth; $m++) {
-                                        $payCount = $currentMonth % $interval;
+                                        $payCount = floor($currentMonth / $interval);
                                     }
                                 }
 
