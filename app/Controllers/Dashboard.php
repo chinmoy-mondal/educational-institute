@@ -5853,7 +5853,7 @@ class Dashboard extends Controller
         $this->data['existingUpdates'] = $existingUpdates;
         $this->data['totalAmount']     = $totalAmount;
 
-        // return view('dashboard/transaction/set_fees', $this->data);
+        return view('dashboard/transaction/set_fees', $this->data);
     }
 
     public function save_fees()
