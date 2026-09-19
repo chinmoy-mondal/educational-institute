@@ -4516,9 +4516,7 @@ class Dashboard extends Controller
 
 
 
-        echo "<pre>";
-        print_r($feesSummary);
-        echo "</pre>";
+
 
         $classFees = [];
         foreach ($feesSummary as $row) {
@@ -4526,9 +4524,7 @@ class Dashboard extends Controller
             $classFees[$class] = (float)$row['total_fees'];
         }
 
-        echo "<pre>";
-        print_r($classFees);
-        echo "</pre>";
+
 
         $this->data['classFees'] = $classFees;
 
@@ -4539,10 +4535,6 @@ class Dashboard extends Controller
             ->orderBy('sender_name', 'ASC')
             ->get()
             ->getResultArray();
-
-
-
-
 
         $senderDeposits = [];
 
@@ -4594,9 +4586,7 @@ class Dashboard extends Controller
             }
         }
 
-        echo "<pre>";
-        print_r($classTotals);
-        echo "</pre>";
+
 
 
         $this->data['classTotals'] = $classTotals;
