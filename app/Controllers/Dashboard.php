@@ -4597,14 +4597,14 @@ class Dashboard extends Controller
         $this->data['classTotals'] = $classTotals;
 
 
-        // $this->data['class'] = array_column($class, 'class');
-        $this->data['class'] = $class;
+        $this->data['class'] = array_column($class, 'class');
+        // $this->data['class'] = $class;
 
         /* Pass values to view */
         $this->data['search'] = $search;
         $this->data['selectedClass'] = $class;
 
-        return view('dashboard/transaction/std_pay', $this->data);
+        // return view('dashboard/transaction/std_pay', $this->data);
     }
 
 
