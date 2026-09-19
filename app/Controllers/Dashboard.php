@@ -4598,6 +4598,7 @@ class Dashboard extends Controller
 
 
         // $this->data['class'] = array_column($class, 'class');
+        $this->data['class'] = $class;
 
         /* Pass values to view */
         $this->data['search'] = $search;
