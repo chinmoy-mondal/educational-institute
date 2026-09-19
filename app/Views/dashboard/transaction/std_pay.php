@@ -100,8 +100,6 @@
                             $className = trim($s['class']);
                         $total = $classFees[$className] ?? 0;  // Total fees per section
 
-                        echo "Total = " . $className;
-
                         // $total_per_month = ($sectionName == 'আবাসিক') ? $accommodation : $not_accommodation;
                         $total_per_month = $classTotals[$className] ?? 0;
                             $paid  = $senderDeposits[$s['id']] ?? 0;   // Amount paid by student
