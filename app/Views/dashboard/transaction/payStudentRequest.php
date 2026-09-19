@@ -79,8 +79,8 @@
                                 }
 
                                 $payAmount = $payCount * $amount;
-                                
-                                echo $payAmount . "corrent amount <br>";
+
+                                echo $amount . " X " . $payCount . " =" . $payAmount . "corrent amount <br>";
 
 
                             ?>
