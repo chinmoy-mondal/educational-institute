@@ -4604,7 +4604,7 @@ class Dashboard extends Controller
         $this->data['search'] = $search;
         $this->data['selectedClass'] = $classs;
 
-        // return view('dashboard/transaction/std_pay', $this->data);
+        return view('dashboard/transaction/std_pay', $this->data);
     }
 
 
