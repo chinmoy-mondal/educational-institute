@@ -89,7 +89,7 @@
                                 </td>
                                 <td>
                                     <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['id']) ?>">
-                                    <input type="number" step="10.0" name="amount[<?= $index ?>]"
+                                    <input type="number" step="0.01" name="amount[<?= $index ?>]"
                                         class="form-control form-control-sm fee-amount" data-unit="<?= esc($unit) ?>"
                                         data-base="<?= esc($amount) ?>" data-title="<?= esc($f['title']) ?>"
                                         data-max="<?= esc($max) ?>" value="<?= esc($payAmount) ?>" min="0">
