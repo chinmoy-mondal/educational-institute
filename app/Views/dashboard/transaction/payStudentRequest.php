@@ -80,20 +80,21 @@
 
                                 $payAmount = $payCount * $amount;
 
-                                echo $amount . " X " . $payCount . " =" . $payAmount . "corrent amount <br>";
+                                // echo $amount . " X " . $payCount . " =" . $payAmount . "corrent amount <br>";
 
 
                             ?>
                             <tr>
                                 <td><?= $sl++ ?></td>
                                 <td><?= esc($f['title']) ?></td>
-                                <td><?= $unit && $amount ? esc($unit . ' × ' . $amount) : '-' ?></td>
+                                <td><?= $unit && $amount ? esc($unit . ' × ' . $amount . '(' . $amount . 'X'   . $payCount . ')') : '-' ?>
+                                </td>
                                 <td>
                                     <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['id']) ?>">
                                     <input type="number" step="10.0" name="amount[<?= $index ?>]"
                                         class="form-control form-control-sm fee-amount" data-unit="<?= esc($unit) ?>"
                                         data-base="<?= esc($amount) ?>" data-title="<?= esc($f['title']) ?>"
-                                        data-max="<?= esc($max) ?>" value="0.00" min="0">
+                                        data-max="<?= esc($max) ?>" value="<?= esc($payAmount) ?>" min="0">
                                 </td>
                             </tr>
                             <?php endforeach; ?>
