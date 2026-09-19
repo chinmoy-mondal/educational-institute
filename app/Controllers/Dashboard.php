@@ -4484,7 +4484,7 @@ class Dashboard extends Controller
 
         /* Get search & section */
         $search  = $this->request->getGet('search');
-        $class = $this->request->getGet('class');
+        $selectClass = $this->request->getGet('class');
 
         /* Search: roll / ID / name */
         if ($search) {
@@ -4496,8 +4496,8 @@ class Dashboard extends Controller
         }
 
         /* Section filter only (আবাসিক / অনাবাসিক) */
-        if ($class) {
-            $builder->where('class', $class);
+        if ($selectClass) {
+            $builder->where('class', $selectClass);
         }
 
         /* Students list */
@@ -4552,7 +4552,7 @@ class Dashboard extends Controller
 
         $this->data['senderDeposits'] = $senderDeposits;
 
-        $class = $this->studentModel
+        $classs = $this->studentModel
             ->select('class')
             ->where('CAST(class AS UNSIGNED) <=', 10)
             ->distinct()
@@ -4561,7 +4561,7 @@ class Dashboard extends Controller
             ->getResultArray();
             
             echo "<pre>";
-            print_r($class);
+            print_r($classs);
             echo "</pre>";
 
         $fees  = $this->feesAmountModel->findAll();
@@ -4597,12 +4597,12 @@ class Dashboard extends Controller
         $this->data['classTotals'] = $classTotals;
 
 
-        // $this->data['class'] = array_column($class, 'class');
+        $this->data['class'] = array_column($classs, 'class');
         // $this->data['class'] = $class;
 
         /* Pass values to view */
         $this->data['search'] = $search;
-        $this->data['selectedClass'] = $class;
+        $this->data['selectedClass'] = $classs;
 
         // return view('dashboard/transaction/std_pay', $this->data);
     }
