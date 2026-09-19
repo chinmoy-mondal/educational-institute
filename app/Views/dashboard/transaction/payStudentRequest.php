@@ -75,6 +75,7 @@
                                         $payCount = floor($currentMonth / $interval);
                                     }
                                 }
+                                $payCount = max(1, $payCount);
 
                                 $payAmount = $payCount * $amount;
 
@@ -84,7 +85,7 @@
                             <tr>
                                 <td><?= $sl++ ?></td>
                                 <td><?= esc($f['title']) ?></td>
-                                <td><?= $unit && $amount ? esc($unit . ' times/yr. But now ' . $payCount . ' x '   . $amount) : '-' ?>
+                                <td><?= $unit && $amount ? esc($unit . '/Yr. Now ' . $payCount . ' x '   . $amount) : '-' ?>
                                 </td>
                                 <td>
                                     <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['id']) ?>">
