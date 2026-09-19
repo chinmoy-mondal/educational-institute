@@ -80,14 +80,13 @@
 
                                 $payAmount = $payCount * $amount;
 
-                                // echo $amount . " X " . $payCount . " =" . $payAmount . "corrent amount <br>";
 
 
                             ?>
                             <tr>
                                 <td><?= $sl++ ?></td>
                                 <td><?= esc($f['title']) ?></td>
-                                <td><?= $unit && $amount ? esc($unit . ' × ' . $amount . '(' . $amount . 'X'   . $payCount . ')') : '-' ?>
+                                <td><?= $unit && $amount ? esc($unit . ' × ' . $amount . '       ( ' . $amount . ' x '   . $payCount . ' )') : '-' ?>
                                 </td>
                                 <td>
                                     <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['id']) ?>">
