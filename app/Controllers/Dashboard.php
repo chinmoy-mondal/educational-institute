@@ -4552,10 +4552,10 @@ class Dashboard extends Controller
 
         $this->data['senderDeposits'] = $senderDeposits;
 
-        $sections = $this->studentModel
-            ->select('section')
+        $class = $this->studentModel
+            ->select('class')
             ->distinct()
-            ->orderBy('section', 'ASC')
+            ->orderBy('class', 'ASC')
             ->get()
             ->getResultArray();
 
@@ -4592,7 +4592,7 @@ class Dashboard extends Controller
         $this->data['sectionTotals'] = $sectionTotals;
 
 
-        $this->data['sections'] = array_column($sections, 'section');
+        $this->data['class'] = array_column($class, 'section');
 
         /* Pass values to view */
         $this->data['search'] = $search;
