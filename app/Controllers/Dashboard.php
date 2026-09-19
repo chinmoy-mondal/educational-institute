@@ -5799,7 +5799,7 @@ class Dashboard extends Controller
         // ✅ ONLY SECTION
         $class = $this->request->getGet('class');
 
-        echo "receive result " . $class . "<br>";
+        // echo "receive result " . $class . "<br>";
         // echo "receive result " . $feesData . "<br>";
         // echo "receive result " . $unitsData . "<br>";
 
@@ -5829,9 +5829,9 @@ class Dashboard extends Controller
             }
         }
 
-        echo "<pre>";
-        print_r($amounts);
-        echo "</pre>";
+        // echo "<pre>";
+        // print_r($amounts);
+        // echo "</pre>";
 
         // $classRows = $this->studentModel
         //     ->select('class')
