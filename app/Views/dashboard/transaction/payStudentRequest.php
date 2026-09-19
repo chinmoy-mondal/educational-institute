@@ -65,7 +65,7 @@
                                 $amount = $feeAmounts[$f['id']] ?? 0;
                                 $max    = $unit * $amount;
 
-                                echo $unit . " unit <br>";
+                                echo $key . " unit <br>";
                             ?>
                             <tr>
                                 <td><?= $sl++ ?></td>
