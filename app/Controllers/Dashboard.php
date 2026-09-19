@@ -4559,10 +4559,8 @@ class Dashboard extends Controller
             ->orderBy('CAST(class AS UNSIGNED)', 'ASC', false)
             ->get()
             ->getResultArray();
-            
-            echo "<pre>";
-            print_r($classs);
-            echo "</pre>";
+
+
 
         $fees  = $this->feesAmountModel->findAll();
 
