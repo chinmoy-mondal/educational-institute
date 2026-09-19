@@ -72,9 +72,7 @@
                                     $interval = 12 / $unit;
 
                                     for ($m = 1; $m <= $currentMonth; $m++) {
-                                        if (($m - 1) % $interval === 0) {
-                                            $payCount++;
-                                        }
+                                        $payCount = $currentMonth % $interval;
                                     }
                                 }
 
@@ -86,7 +84,7 @@
                             <tr>
                                 <td><?= $sl++ ?></td>
                                 <td><?= esc($f['title']) ?></td>
-                                <td><?= $unit && $amount ? esc($unit . ' × ' . $amount . '~ ( ' . $payCount . ' x '   . $amount . ' )') : '-' ?>
+                                <td><?= $unit && $amount ? esc($unit . ' × ' . $amount . ' ~ ( ' . $payCount . ' x '   . $amount . ' )') : '-' ?>
                                 </td>
                                 <td>
                                     <input type="hidden" name="fee_id[<?= $index ?>]" value="<?= esc($f['id']) ?>">
