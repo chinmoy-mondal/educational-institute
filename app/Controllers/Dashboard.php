@@ -5795,9 +5795,6 @@ class Dashboard extends Controller
         // ✅ ONLY SECTION
         $class = $this->request->getGet('class');
 
-        // echo "receive result " . $class . "<br>";
-        // echo "receive result " . $feesData . "<br>";
-        // echo "receive result " . $unitsData . "<br>";
 
         $this->data['selectedClass'] = $class;
 
@@ -5813,6 +5810,11 @@ class Dashboard extends Controller
             $amounts = $this->feesAmountModel
                 ->where('class', $class)
                 ->findAll();
+
+
+                echo "<pre>";
+                print_r($amounts);
+                echo "</pre>";
 
             foreach ($amounts as $a) {
                 $existingAmounts[$a['title_id']] = $a['fees'];
@@ -5850,7 +5852,7 @@ class Dashboard extends Controller
         $this->data['existingUpdates'] = $existingUpdates;
         $this->data['totalAmount']     = $totalAmount;
 
-        return view('dashboard/transaction/set_fees', $this->data);
+        // return view('dashboard/transaction/set_fees', $this->data);
     }
 
     public function save_fees()
