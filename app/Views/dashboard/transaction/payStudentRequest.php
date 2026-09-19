@@ -67,6 +67,8 @@
 
                                 echo $currentMonth . " currnt month <br>";
                                 echo $amount . " amount <br>";
+                                echo $amount * $amount . "corrent amount <br>";
+
 
                             ?>
                             <tr>
