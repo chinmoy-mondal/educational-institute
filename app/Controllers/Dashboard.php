@@ -4514,6 +4514,12 @@ class Dashboard extends Controller
             ->get()
             ->getResultArray();
 
+
+
+        echo "<pre>";
+        print_r($feesSummary);
+        echo "</pre>";
+
         $classFees = [];
         foreach ($feesSummary as $row) {
             $class = trim($row['class']);
@@ -5811,10 +5817,6 @@ class Dashboard extends Controller
                 ->where('class', $class)
                 ->findAll();
 
-
-                echo "<pre>";
-                print_r($amounts);
-                echo "</pre>";
 
             foreach ($amounts as $a) {
                 $existingAmounts[$a['title_id']] = $a['fees'];
