@@ -4559,6 +4559,10 @@ class Dashboard extends Controller
             ->orderBy('CAST(class AS UNSIGNED)', 'ASC', false)
             ->get()
             ->getResultArray();
+            
+            echo "<pre>";
+            print_r($class);
+            echo "</pre>";
 
         $fees  = $this->feesAmountModel->findAll();
 
@@ -4593,7 +4597,7 @@ class Dashboard extends Controller
         $this->data['classTotals'] = $classTotals;
 
 
-        $this->data['class'] = array_column($class, 'class');
+        // $this->data['class'] = array_column($class, 'class');
 
         /* Pass values to view */
         $this->data['search'] = $search;
