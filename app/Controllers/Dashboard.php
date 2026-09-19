@@ -4594,6 +4594,10 @@ class Dashboard extends Controller
             }
         }
 
+        echo "<pre>";
+        print_r($classTotals);
+        echo "</pre>";
+
 
         $this->data['classTotals'] = $classTotals;
 
