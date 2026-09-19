@@ -5811,7 +5811,7 @@ class Dashboard extends Controller
 
         if ($class) {
             $amounts = $this->feesAmountModel
-                ->where('class', $class)
+                ->where('section', $class)
                 ->findAll();
 
             foreach ($amounts as $a) {
@@ -5854,14 +5854,16 @@ class Dashboard extends Controller
         $class   = $this->request->getPost('class');
         $feesData  = $this->request->getPost('fees');
         $unitsData = $this->request->getPost('unit');
-        // echo "test";
+        echo "receive result " . $class . "<br>";
+        echo "receive result " . $feesData . "<br>";
+        echo "receive result " . $unitsData . "<br>";
 
         if (!$class) {
-            return redirect()->back()->with('error', 'Please select a section before saving.');
+            // return redirect()->back()->with('error', 'Please select a section before saving.');
         }
 
         if (empty($feesData)) {
-            return redirect()->back()->with('error', 'No fee amounts to save.');
+            // return redirect()->back()->with('error', 'No fee amounts to save.');
         }
 
         $amountModel = new FeesAmountModel();
@@ -5899,8 +5901,7 @@ class Dashboard extends Controller
             }
         }
 
-
-        return redirect()->back()->with('success', 'Fees updated successfully!');
+        // return redirect()->back()->with('success', 'Fees updated successfully!');
     }
 
     public function payStudentRequest($id)

@@ -41,14 +41,14 @@
 
                 <!-- Section Select 2-->
                 <div class="col-md-3">
-                    <select name="section" class="form-control">
+                    <select name="class" class="form-control">
 
                         <!-- Default option -->
-                        <option value="" <?= old('section') == '' ? 'selected' : '' ?>>
-                            Select Section
+                        <option value="" <?= old('class') == '' ? 'selected' : '' ?>>
+                            Select Class
                         </option>
 
-                        <?php foreach ($sections as $s): ?>
+                        <?php foreach ($class as $s): ?>
                         <option value="<?= esc($s) ?>" <?= old('section') == $s ? 'selected' : '' ?>>
                             <?= esc($s) ?>
                         </option>

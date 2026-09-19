@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <h4 class="mb-4">Student Fees Setup (Section Wise)</h4>
 
-    <!-- Select Section Only -->
+    <!-- Select class Only -->
     <form method="get" action="<?= base_url('admin/set_fees') ?>" class="mb-4">
         <div class="row g-2 align-items-center">
 
