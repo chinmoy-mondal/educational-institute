@@ -4597,7 +4597,7 @@ class Dashboard extends Controller
         $this->data['classTotals'] = $classTotals;
 
 
-        $this->data['class'] = array_column($class, 'class');
+        // $this->data['class'] = array_column($class, 'class');
         // $this->data['class'] = $class;
 
         /* Pass values to view */
