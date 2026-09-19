@@ -4554,8 +4554,9 @@ class Dashboard extends Controller
 
         $class = $this->studentModel
             ->select('class')
+            ->where('CAST(class AS UNSIGNED) <=', 10)
             ->distinct()
-            ->orderBy('class', 'ASC')
+            ->orderBy('CAST(class AS UNSIGNED)', 'ASC', false)
             ->get()
             ->getResultArray();
 
