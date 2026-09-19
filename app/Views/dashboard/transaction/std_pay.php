@@ -44,12 +44,12 @@
                     <select name="class" class="form-control">
 
                         <!-- Default option -->
-                        <option value="" <?= old('class') == '' ? 'selected' : '' ?>>
+                        <option value="" <?= empty($selectedClass) ? 'selected' : '' ?>>
                             Select Class
                         </option>
 
                         <?php foreach ($class as $s): ?>
-                        <option value="<?= esc($s) ?>" <?= old('class') == $s ? 'selected' : '' ?>>
+                        <option value="<?= esc($s) ?>" <?= (string)$selectedClass === (string)$s ? 'selected' : '' ?>>
                             <?= esc($s) ?>
                         </option>
                         <?php endforeach; ?>
@@ -98,10 +98,10 @@
                     <?php foreach ($students as $s): ?>
                     <?php
                             $className = trim($s['class']);
-                        $total = $classFees[$className] ?? 0;  // Total fees per section
+                            $total = $classFees[$className] ?? 0;  // Total fees per section
 
-                        // $total_per_month = ($sectionName == 'আবাসিক') ? $accommodation : $not_accommodation;
-                        $total_per_month = $classTotals[$className] ?? 0;
+                            // $total_per_month = ($sectionName == 'আবাসিক') ? $accommodation : $not_accommodation;
+                            $total_per_month = $classTotals[$className] ?? 0;
                             $paid  = $senderDeposits[$s['id']] ?? 0;   // Amount paid by student
                             $due   = $total_per_month - $paid;                   // Remaining due
                             ?>
