@@ -1074,8 +1074,9 @@ class Dashboard extends Controller
 
         // Only Admin / Accountant can update permission
         if ($account_status <= 1) {
-            return redirect()->back()
-                ->with('error', 'You do not have permission to update student permission.');
+            echo "general admin";
+            // return redirect()->back()
+            //     ->with('error', 'You do not have permission to update student permission.');
         }
 
         // Get current student
