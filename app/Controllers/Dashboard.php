@@ -2012,11 +2012,34 @@ class Dashboard extends Controller
 
     public function updateStudent($id)
     {
-        $this->studentModel = new StudentModel();
+        // $this->studentModel = new StudentModel();
+
+        // Logged-in user account_status
+        $user_id = $this->session->get('user_id') ?? 0;
+        $account_status = 0;
+
+        if ($user_id > 0) {
+            $user = $this->userModel
+                ->select('account_status')
+                ->find($user_id);
+
+            if ($user) {
+                $account_status = $user['account_status'];
+            }
+        }
+
+        // Only Admin / Accountant can update
+        if ($account_status <= 1) {
+            return redirect()->to('admin/students/view/' . $id)
+                ->with('error', 'You do not have permission to update this student.');
+        }
+
+        // Get student
         $student = $this->studentModel->find($id);
 
         if (!$student) {
-            return redirect()->to('ad-student')->with('error', 'Student not found.');
+            return redirect()->to('ad-student')
+                ->with('error', 'Student not found.');
         }
 
         $data = $this->request->getPost([
@@ -2039,8 +2062,41 @@ class Dashboard extends Controller
 
         $this->studentModel->update($id, $data);
 
-        return redirect()->to('admin/students/view/' . $id)->with('message', 'Student updated successfully.');
+        return redirect()->to('admin/students/view/' . $id)
+            ->with('message', 'Student updated successfully.');
     }
+
+    // public function updateStudent($id)
+    // {
+    //     $this->studentModel = new StudentModel();
+    //     $student = $this->studentModel->find($id);
+
+    //     if (!$student) {
+    //         return redirect()->to('ad-student')->with('error', 'Student not found.');
+    //     }
+
+    //     $data = $this->request->getPost([
+    //         'student_name',
+    //         'roll',
+    //         'class',
+    //         'section',
+    //         'esif',
+    //         'father_name',
+    //         'mother_name',
+    //         'dob',
+    //         'gender',
+    //         'phone',
+    //         'birth_registration_number',
+    //         'father_nid_number',
+    //         'mother_nid_number',
+    //         'religion',
+    //         'blood_group'
+    //     ]);
+
+    //     $this->studentModel->update($id, $data);
+
+    //     return redirect()->to('admin/students/view/' . $id)->with('message', 'Student updated successfully.');
+    // }
 
     public function editStudentPhoto($id)
     {
