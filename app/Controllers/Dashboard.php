@@ -1058,29 +1058,74 @@ class Dashboard extends Controller
 
     public function softDelete($id)
     {
+        // Logged-in user account_status
+        $user_id = $this->session->get('user_id') ?? 0;
+        $account_status = 0;
+
+        if ($user_id > 0) {
+            $user = $this->userModel
+                ->select('account_status')
+                ->find($user_id);
+
+            if ($user) {
+                $account_status = $user['account_status'];
+            }
+        }
+
+        // Only Admin / Accountant can update permission
+        if ($account_status <= 1) {
+            return redirect()->back()
+                ->with('error', 'You do not have permission to update student permission.');
+        }
 
         // Get current student
         $student = $this->studentModel->find($id);
 
         if ($student) {
 
-            // Update student
-            $this->studentModel->update($id, ['permission' => 1]);
+            // Update student permission
+            $this->studentModel->update($id, [
+                'permission' => 1
+            ]);
 
-            return redirect()->back()->with('success', 'Permission updated successfully');
+            return redirect()->back()
+                ->with('success', 'Permission updated successfully');
         }
 
-        return redirect()->back()->with('error', 'Student not found');
+        return redirect()->back()
+            ->with('error', 'Student not found');
     }
 
     public function hardDelete($id)
     {
+        // Logged-in user account_status
+        $user_id = $this->session->get('user_id') ?? 0;
+        $account_status = 0;
+
+        if ($user_id > 0) {
+            $user = $this->userModel
+                ->select('account_status')
+                ->find($user_id);
+
+            if ($user) {
+                $account_status = $user['account_status'];
+            }
+        }
+
+        // Only Admin / Accountant can permanently delete
+        if ($account_status <= 1) {
+            return redirect()->back()
+                ->with('error', 'You do not have permission to delete this student.');
+        }
+
         // Load student record
         $student = $this->studentModel->find($id);
 
         if ($student) {
+
             // Check if student has a photo
             if (!empty($student['student_pic'])) {
+
                 // Build full path to the file
                 $photoPath = FCPATH . $student['student_pic'];
 
@@ -1094,11 +1139,16 @@ class Dashboard extends Controller
             $this->studentModel->delete($id);
 
             // Redirect with success message
-            return redirect()->back()->with('success', 'Student and picture deleted successfully.');
+            return redirect()->back()
+                ->with(
+                    'success',
+                    'Student and picture deleted successfully.'
+                );
         }
 
-        // If student not found
-        return redirect()->back()->with('error', 'Student not found.');
+        // Student not found
+        return redirect()->back()
+            ->with('error', 'Student not found.');
     }
 
     public function deleted_student()
@@ -2066,37 +2116,6 @@ class Dashboard extends Controller
             ->with('message', 'Student updated successfully.');
     }
 
-    // public function updateStudent($id)
-    // {
-    //     $this->studentModel = new StudentModel();
-    //     $student = $this->studentModel->find($id);
-
-    //     if (!$student) {
-    //         return redirect()->to('ad-student')->with('error', 'Student not found.');
-    //     }
-
-    //     $data = $this->request->getPost([
-    //         'student_name',
-    //         'roll',
-    //         'class',
-    //         'section',
-    //         'esif',
-    //         'father_name',
-    //         'mother_name',
-    //         'dob',
-    //         'gender',
-    //         'phone',
-    //         'birth_registration_number',
-    //         'father_nid_number',
-    //         'mother_nid_number',
-    //         'religion',
-    //         'blood_group'
-    //     ]);
-
-    //     $this->studentModel->update($id, $data);
-
-    //     return redirect()->to('admin/students/view/' . $id)->with('message', 'Student updated successfully.');
-    // }
 
     public function editStudentPhoto($id)
     {
