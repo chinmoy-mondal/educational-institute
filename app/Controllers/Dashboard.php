@@ -1058,43 +1058,44 @@ class Dashboard extends Controller
 
     public function softDelete($id)
     {
-        // Logged-in user account_status
-        $user_id = $this->session->get('user_id') ?? 0;
-        $account_status = 0;
+        echo "not working ";
+        // // Logged-in user account_status
+        // $user_id = $this->session->get('user_id') ?? 0;
+        // $account_status = 0;
 
-        if ($user_id > 0) {
-            $user = $this->userModel
-                ->select('account_status')
-                ->find($user_id);
+        // if ($user_id > 0) {
+        //     $user = $this->userModel
+        //         ->select('account_status')
+        //         ->find($user_id);
 
-            if ($user) {
-                $account_status = $user['account_status'];
-            }
-        }
+        //     if ($user) {
+        //         $account_status = $user['account_status'];
+        //     }
+        // }
 
-        // Only Admin / Accountant can update permission
-        if ($account_status <= 1) {
-            echo "general admin";
-            // return redirect()->back()
-            //     ->with('error', 'You do not have permission to update student permission.');
-        }
+        // // Only Admin / Accountant can update permission
+        // if ($account_status <= 1) {
+        //     echo "general admin";
+        //     // return redirect()->back()
+        //     //     ->with('error', 'You do not have permission to update student permission.');
+        // }
 
-        // Get current student
-        $student = $this->studentModel->find($id);
+        // // Get current student
+        // $student = $this->studentModel->find($id);
 
-        if ($student) {
+        // if ($student) {
 
-            // Update student permission
-            $this->studentModel->update($id, [
-                'permission' => 1
-            ]);
+        //     // Update student permission
+        //     $this->studentModel->update($id, [
+        //         'permission' => 1
+        //     ]);
 
-            return redirect()->back()
-                ->with('success', 'Permission updated successfully');
-        }
+        //     return redirect()->back()
+        //         ->with('success', 'Permission updated successfully');
+        // }
 
-        return redirect()->back()
-            ->with('error', 'Student not found');
+        // return redirect()->back()
+        //     ->with('error', 'Student not found');
     }
 
     public function hardDelete($id)
